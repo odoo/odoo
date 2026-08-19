@@ -1,7 +1,11 @@
-import { animationFrame, tick, waitFor, queryAll, advanceTime } from "@odoo/hoot-dom";
+import { animationFrame, press, tick, waitFor, queryAll, advanceTime } from "@odoo/hoot-dom";
 import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+
+export function normalizeText(text) {
+    return text.replaceAll("\u00a0", " ").trim();
+}
 
 export function isMobile() {
     return getService("ui").isSmall;
@@ -620,4 +624,164 @@ export function getSelectValue() {
 export function getCustomAttributeValue() {
     const input = document.querySelector(".modal input.custom_value");
     return input ? input.value : null;
+}
+export function dialogTitle() {
+    const el = document.querySelector(".modal .modal-title");
+    return el ? normalizeText(el.textContent) : null;
+}
+
+export async function dialogBody() {
+    await waitFor(".modal .modal-body");
+    return normalizeText(document.querySelector(".modal .modal-body").textContent);
+}
+
+export function numberPopupValue() {
+    const el = document.querySelector(".modal .popup-input .input-value");
+    return el ? normalizeText(el.textContent) : null;
+}
+
+export async function clickNumberPopupType(name) {
+    await contains(`.modal .number-popup-types .number-popup-type-${name}`).click();
+    await animationFrame();
+}
+
+export function selectedNumberPopupType() {
+    const el = document.querySelector(".modal .number-popup-types .number-popup-type.text-primary");
+    const type = el && [...el.classList].find((cls) => cls.startsWith("number-popup-type-"));
+    return type ? type.slice("number-popup-type-".length) : null;
+}
+
+export async function confirmNumberPopup() {
+    await press("Enter");
+    await animationFrame();
+}
+
+export async function createFloatingOrder() {
+    await contains(".pos-leftheader .list-plus-btn").click();
+    await waitFor(".product-screen");
+    await animationFrame();
+}
+
+export async function clickFloatingOrder(name) {
+    const button = `.floating-order-container button:contains("${name}")`;
+    const toggle = document.querySelector(".pos-leftheader .list-container-items > button");
+    if (toggle) {
+        await contains(toggle).click();
+        await waitFor(".modal .list-container-items");
+        await contains(`.modal ${button}`).click();
+    } else {
+        await contains(`.pos-leftheader ${button}`).click();
+    }
+    await animationFrame();
+}
+
+export function setFlatProductPrice(store, price) {
+    store.models["product.pricelist.item"].get(1).fixed_price = price;
+    store.models["product.template"].get(5).taxes_id = [];
+}
+
+function paymentlineSelector({ name, amount, nth, selected } = {}) {
+    const selectedSelector = selected ? ".selected" : "";
+    const nameSelector = name ? `:has(.payment-name:contains("${name}"))` : "";
+    const amountSelector = amount ? `:has(.payment-amount:contains("${amount}"))` : "";
+    const nthSelector = nth ? `:nth-of-type(${nth})` : "";
+
+    return `.paymentlines .paymentline${nthSelector}${selectedSelector}${nameSelector}${amountSelector}`;
+}
+
+export async function clickPaymentline(opts) {
+    await contains(`${paymentlineSelector(opts)} .payment-infos`).click();
+    await animationFrame();
+}
+
+export async function deletePaymentline(opts) {
+    await contains(`${paymentlineSelector(opts)} .delete-button`).click();
+    await animationFrame();
+}
+
+export function countPaymentlines() {
+    return document.querySelectorAll(".paymentlines .paymentline").length;
+}
+
+export function selectedPaymentline() {
+    const line = document.querySelector(".paymentlines .paymentline.selected");
+    if (!line) {
+        return null;
+    }
+    return {
+        name: normalizeText(line.querySelector(".payment-name").textContent),
+        amount: normalizeText(line.querySelector(".payment-amount").textContent),
+    };
+}
+
+export function actionState() {
+    const title = document.querySelector(".paymentline_status .paymentline_status_title");
+    const state =
+        title && [...title.classList].find((cls) => cls.startsWith("paymentline_status_title_"));
+    return state ? state.slice("paymentline_status_title_".length) : null;
+}
+
+async function clickActionButton(id) {
+    await contains(`.paymentline_status_actions .paymentline_status_actions_button_${id}`, {
+        visible: false,
+    }).click();
+    await animationFrame();
+    await animationFrame();
+}
+
+export async function clickSendButton() {
+    await clickActionButton("send");
+}
+
+export async function clickRetryButton() {
+    await clickActionButton("retry");
+}
+
+export async function clickCancelButton() {
+    await clickActionButton("cancel");
+}
+
+export async function clickForceDoneButton() {
+    await clickActionButton("force_done");
+}
+
+export function isQrPopupShown() {
+    return Boolean(document.querySelector(".modal .o_qr_popup"));
+}
+
+export async function qrPopupAmount() {
+    await waitFor(".modal .o_qr_popup .qr-code-amount");
+    return normalizeText(document.querySelector(".modal .o_qr_popup .qr-code-amount").textContent);
+}
+
+export async function closeQrPopup() {
+    await contains(".o_qr_popup .qr-code-popup-footer .cancel-button").click();
+    await animationFrame();
+}
+
+export async function showQrPopup(opts) {
+    await contains(`${paymentlineSelector(opts)} .paymentline_show_qr_code`).click();
+    await animationFrame();
+}
+
+export function isShowQrPopupDisabled(opts) {
+    return (
+        queryAll(`${paymentlineSelector(opts)} .paymentline_show_qr_code[disabled]`).length === 1
+    );
+}
+
+export function notifications() {
+    return [...document.querySelectorAll(".o_notification")].map((el) => ({
+        type: [...el.querySelector(".o_notification_bar").classList]
+            .find((cls) => cls.startsWith("bg-"))
+            .slice("bg-".length),
+        message: normalizeText(el.querySelector(".o_notification_content").textContent),
+    }));
+}
+
+export async function closeNotifications() {
+    for (const button of [...document.querySelectorAll(".o_notification_close")]) {
+        await contains(button).click();
+    }
+    await animationFrame();
 }
