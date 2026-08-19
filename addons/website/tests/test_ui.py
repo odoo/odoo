@@ -914,7 +914,21 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_seo_multilang_alt_check(self):
         self.add_fr_language_to_website()
-        self.start_tour(self.env['website'].get_client_action_url("/", True), "seo_multilang_alt_check", login="admin")
+        website = self.env.ref('base.default_website')
+        homepage = website.with_context(website_id=website.id).viewref('website.homepage')
+        homepage.arch = """
+            <t t-name="website.homepage">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure">
+                        <section class="s_text_image">
+                            <p>a paragraph</p>
+                            <img src="/web/image/website.s_banner_default_image" alt="alt text in English"/>
+                        </section>
+                    </div>
+                </t>
+            </t>
+        """
+        self.start_tour(website.get_client_action_url("/fr"), "seo_multilang_alt_check", login="admin")
 
     def test_header_bg_blur_option(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'header_bg_blur_option', login='admin')

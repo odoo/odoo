@@ -189,6 +189,29 @@ const getSeo = async (self, onlyKeywords = false) => {
     }
 };
 
+/**
+ * Render the given page with `edit_translations`, which marks the terms whose
+ * translation is delayed, and tell whether it has any.
+ *
+ * @param {string} pageUrl
+ * @returns {Promise<boolean>}
+ */
+async function fetchDelayedTranslations(pageUrl) {
+    const url = new URL(pageUrl);
+    url.searchParams.set("edit_translations", "1");
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
+        }
+        const doc = new DOMParser().parseFromString(await response.text(), "text/html");
+        return !!doc.querySelector("#wrap .o_delay_translation");
+    } catch (error) {
+        console.warn(`Could not load delayed translations for ${url}`, error);
+        return true;
+    }
+}
+
 class MetaImage extends Component {
     static template = "website.MetaImage";
     static props = ["active", "src", "custom", "selectImage"];
@@ -769,7 +792,7 @@ export class SeoChecks extends Component {
         this.website = useService("website");
         this.seoContext = proxy(seoContext);
         const {
-            metadata: { mainObject, seoObject },
+            metadata: { mainObject, seoObject, path },
         } = this.website.currentWebsite;
         this.object = seoObject || mainObject;
         this.state = proxy({
@@ -783,6 +806,9 @@ export class SeoChecks extends Component {
         onWillStart(async () => {
             this.state.altAttributes = await this.getAltAttributes();
             this.seoContext.updatedAlts = [];
+            if (!this.props.isDefaultLang) {
+                this.hasDelayedTranslation = await fetchDelayedTranslations(path);
+            }
         });
         onMounted(() => {
             if (this.props.isDefaultLang) {
