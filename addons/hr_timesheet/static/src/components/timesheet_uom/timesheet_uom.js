@@ -5,16 +5,14 @@ import { FloatToggleField } from "@web/views/fields/float_toggle/float_toggle_fi
 import { FloatTimeField } from "@web/views/fields/float_time/float_time_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 export class TimesheetUOM extends Component {
-    static props = {
-        ...standardFieldProps,
-    };
-
     static template = "hr_timesheet.TimesheetUOM";
 
     static components = { FloatFactorField, FloatToggleField, FloatTimeField };
+
+    props = useProps(standardFieldProps);
 
     setup() {
         this.timesheetUOMService = useService("timesheet_uom");

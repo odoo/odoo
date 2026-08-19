@@ -1,13 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class SubtaskCounter extends Component {
     static template = "project.SubtaskCounter";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     onClick() {
         this.props.record.toggleSubtasksList();
