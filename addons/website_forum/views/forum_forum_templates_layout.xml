@@ -224,7 +224,7 @@
             <t t-call="website_forum.user_sidebar_body"/>
         </div>
         <div t-if="forum" class="o_wforum_sidebar_footer mt-3 px-3 pb-2 text-center">
-            <a class="btn btn-sm btn-link" t-attf-href="/forum/#{slug(forum)}/faq">
+            <a class="small" t-attf-href="/forum/#{slug(forum)}/faq">
                 <i class="fa fa-info-circle fa-fw"/> About this forum
             </a>
         </div>
@@ -239,7 +239,7 @@
         <div class="offcanvas-body d-flex flex-column py-0 nav">
             <t t-call="website_forum.user_sidebar_body"/>
             <div t-if="forum" class="mb-2 d-flex justify-content-center align-items-end flex-grow-1">
-                <a class="btn btn-sm btn-link" t-att-href="_forum_path + '/faq'">
+                <a class="small" t-att-href="_forum_path + '/faq'">
                     <i class="fa fa-info-circle fa-fw"/> About this forum
                 </a>
             </div>
