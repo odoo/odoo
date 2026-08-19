@@ -694,6 +694,31 @@ class TestActivityMixin(TestActivityCommon):
             ])
             self.assertFalse(record, "Should not find record if the only late activity is done")
 
+    @mute_logger('odoo.addons.mail.models.mail_activity_mixin')
+    def test_activity_schedule_create_vals_inconsistent_type_falls_back(self):
+        """An activity type restricted to another model must be replaced by the model default type."""
+        fallback_type = self.env['mail.activity.type'].create({
+            'name': 'Fallback Type',
+            'res_model': self.test_record._name,
+            'sequence': -10,  # ensure it is the default type for self.test_record
+        })
+        wrong_model_type = self.env['mail.activity.type'].create({
+            'name': 'Wrong Model Type',
+            'res_model': 'mail.test.simple',
+        })
+
+        create_vals = self.test_record._activity_schedule_create_vals(
+            activity_type_id=wrong_model_type.id,
+            note='<p>Plan note</p>',
+            summary='Plan summary',
+            user_id=self.user_employee.id,
+        )
+        self.assertEqual(len(create_vals), 1)
+        self.assertEqual(create_vals[0]['activity_type_id'], fallback_type.id)
+        self.assertEqual(create_vals[0]['note'], '<p>Plan note</p>')
+        self.assertEqual(create_vals[0]['summary'], 'Plan summary')
+        self.assertEqual(create_vals[0]['user_id'], self.user_employee.id)
+
     @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
