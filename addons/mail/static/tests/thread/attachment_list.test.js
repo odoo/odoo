@@ -43,9 +43,9 @@ test("simplest layout", async () => {
     await contains(".o-mail-AttachmentCard-image");
     expect(".o-mail-AttachmentCard-image:first").toHaveClass("o_image"); // required for mimetype.scss style
     expect(".o-mail-AttachmentCard-image:first").toHaveAttribute("data-mimetype", "text/plain"); // required for mimetype.scss style
-    await contains(".o-mail-AttachmentButtons button", { count: 2 });
-    await contains(".o-mail-Attachment-unlink");
-    await contains(".o-mail-AttachmentButtons button[title='Download']");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await contains(".dropdown-item:text('Remove')");
+    await contains(".dropdown-item:text('Download')");
 });
 
 test("layout with card details and filename and extension", async () => {
@@ -100,17 +100,12 @@ test("link-type attachment should have open button instead of download button", 
     await contains(".o-mail-AttachmentCard", { count: 2 });
     await contains(".o-mail-AttachmentCard:eq(0):text('url.example')");
     await contains(".o-mail-AttachmentCard:eq(1):text('test.txt')");
-    await contains(
-        ".o-mail-AttachmentContainer:eq(0) .o-mail-AttachmentButtons a[title='Open Link']"
-    );
-    await contains(
-        ".o-mail-AttachmentContainer:eq(0) .o-mail-AttachmentButtons button[title='Download']",
-        { count: 0 }
-    );
-    await contains(
-        ".o-mail-AttachmentContainer:eq(1) .o-mail-AttachmentButtons button[title='Download']"
-    );
-    await contains(`.o-mail-AttachmentButtons a[title='Open Link'][target='_blank']`);
+    await click(".o-mail-AttachmentContainer:eq(0) [title='Actions']");
+    await contains(".dropdown-item:text('Remove')");
+    await contains(".dropdown-item:text('Open Link')");
+    await contains(".dropdown-item:text('Download')", { count: 0 });
+    await click(".o-mail-AttachmentContainer:eq(1) [title='Actions']");
+    await contains(".dropdown-item:text('Download')");
 });
 
 test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
@@ -133,11 +128,12 @@ test("clicking on the delete attachment button multiple times should do the rpc 
     onRpcBefore("/mail/attachment/delete", () => expect.step("attachment_unlink"));
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Attachment-unlink");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
-    await contains(".o-mail-Attachment-unlink", { count: 0 });
+    await contains(".o-mail-AttachmentContainer", { count: 0 });
     await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
 });
 
@@ -428,8 +424,6 @@ test("download url of non-viewable binary file", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("[data-icon='download']");
-
     patchWithCleanup(download, {
         _download: (options) => {
             expect(options.url).toBe(
@@ -437,7 +431,8 @@ test("download url of non-viewable binary file", async () => {
             );
         },
     });
-    await click("[data-icon='download']");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await click(".dropdown-item:text('Download')");
 });
 
 test("check actions in mobile view", async () => {

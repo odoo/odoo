@@ -114,31 +114,7 @@
                                         <t t-out="Math.round(attachment.file_size / 1024, 4)" /> KB </span>
                                 </div>
                             </t>
-                            <!-- buttons on hover -->
-                            <div t-if="!this.props.isSelecting"
-                                class="o-mail-AttachmentButtons btn-group position-absolute top-0 end-0 p-2">
-                                <a t-if="!attachment.isImage and attachment.type === 'url'"
-                                    class="btn btn-secondary" t-att-href="attachment.url"
-                                    target='_blank' title="Open Link">
-                                    <i class="oi" data-icon="open_in_new" role="img"
-                                        aria-label="Open Link" />
-                                </a>
-                                <button t-elif="this.canDownload(attachment)"
-                                    class="btn btn-secondary"
-                                    t-on-click.stop="() => this.onClickDownload(attachment)"
-                                    title="Download">
-                                    <i class="oi" data-icon="download" role="img"
-                                        aria-label="Download" />
-                                </button>
-                                <button t-if="this.showDelete(attachment)"
-                                    class="o-mail-Attachment-unlink btn btn-secondary"
-                                    t-att-class="{ 'o-inComposer': this.env.inComposer }"
-                                    t-on-click.stop="() => this.onClickUnlink(attachment, group.duplicates)"
-                                    title="Remove">
-                                    <i class="oi oi-filled" data-icon="delete" role="img"
-                                        aria-label="Remove" />
-                                </button>
-                            </div>
+                            <Actions t-if="!this.props.isSelecting" actions="this.getActions(attachment, group.duplicates)" />
                         </div>
                         <!-- dropdown (for mobile view only) -->
                         <Actions t-elif="!this.props.isSelecting" actions="this.getActions(attachment, group.duplicates)" />
@@ -186,9 +162,9 @@
     </t>
 
     <t t-name="mail.Actions">
-        <div class="position-absolute end-0 p-1">
+        <div t-if="this.props.actions.length" class="position-absolute top-0 end-0 p-1">
             <button t-if="this.props.actions.length === 1" class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" t-att-aria-label="this.props.actions[0].label" t-att-title="this.props.actions[0].label" role="menuitem" t-on-click.stop="this.props.actions[0].onSelect">
-                <i t-att-data-icon="this.props.actions[0].icon"/>
+                <i class="oi oi-fw" t-att-data-icon="this.props.actions[0].icon" t-att-class="this.props.actions[0].iconClass" role="img"/>
             </button>
             <Dropdown t-else="" menuClass="'d-flex flex-column py-0'" state="this.actionsMenuState" position="'right-start'">
                 <button class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">

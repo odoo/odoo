@@ -3,6 +3,7 @@ import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -26,6 +27,7 @@ class Actions extends Component {
             t.object({
                 label: t.string(),
                 icon: t.string(),
+                iconClass: t.string().optional(),
                 onSelect: t.function([t.instanceOf(Event)]),
             })
         ),
@@ -209,7 +211,13 @@ export class AttachmentList extends Component {
                 onSelect: () => this.onClickUnlink(attachment, duplicates),
             });
         }
-        if (this.canDownload(attachment)) {
+        if (!attachment.isImage && attachment.type === "url") {
+            res.push({
+                label: _t("Open Link"),
+                icon: "open_in_new",
+                onSelect: () => browser.open(attachment.url, "_blank"),
+            });
+        } else if (this.canDownload(attachment)) {
             res.push({
                 label: _t("Download"),
                 icon: "download",

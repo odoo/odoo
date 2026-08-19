@@ -208,7 +208,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: `${editedMessageSelector} .o-mail-AttachmentContainer:contains("text.txt")`,
         },
         {
-            trigger: `${editedMessageSelector} .o-mail-AttachmentContainer:contains("extra.txt") .o-mail-Attachment-unlink`,
+            trigger: `${editedMessageSelector} .o-mail-AttachmentContainer:contains("extra.txt") [title='Actions']`,
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-item:contains(Remove)",
             run: "click",
         },
         {
