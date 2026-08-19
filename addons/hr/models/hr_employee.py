@@ -245,7 +245,20 @@ class HrEmployee(models.Model):
         ("office", "Office"),
         ("other", "Other")], compute="_compute_work_location_type", tracking=True)
 
-    # All version fields needing a specific group to be accessible should also have `inherited=True` set on its definition to make sure those fields are linked to `_inherits` on `hr.version`
+    # Since groups don't naturally propagate to related fields (see _add_inherited_fields in model_classes.py),
+    # we explicitly redefine some version fields on the employee model to enforce access rights.
+    #
+    # However, redefining them bypasses the standard _inherits mapping.
+    # This causes the ORM to update them via inverse methods after creation, which breaks database constraints.
+    # Adding inherited=True solves this by simulating the standard _inherits behavior.
+    # It ensures these fields are injected directly into the version's create dictionary (vals),
+    # so constraints pass right away without having to hack the employee methods.
+    #
+    # This change did cause a side effect: an AccessError.
+    # When fetching missing default values for the version,
+    # the ORM blindly included these restricted fields without checking user groups.
+    # The extra fix just strips those restricted fields out of the vals before the create method crashes,
+    # keeping everything safe and working.
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True,
                                     help="The date of the first contract of the employee in the company.")
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_user")
