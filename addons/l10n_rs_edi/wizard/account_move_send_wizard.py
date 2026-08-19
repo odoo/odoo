@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class AccountMoveSendWizard(models.TransientModel):

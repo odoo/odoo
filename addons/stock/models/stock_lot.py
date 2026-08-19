@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import operator as py_operator
-from operator import attrgetter
 from re import findall as regex_findall, split as regex_split
 from collections import defaultdict
 

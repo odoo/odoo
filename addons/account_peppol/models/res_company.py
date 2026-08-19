@@ -5,7 +5,6 @@ from stdnum import get_cc_module, ean
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 try:

@@ -21,7 +21,6 @@ from odoo.tools import (
     create_index,
     float_is_zero,
     format_amount,
-    format_date,
     is_html_empty,
     SQL,
 )
@@ -1746,7 +1745,6 @@ class SaleOrder(models.Model):
             for group in [g for g in groups if g[0] in ('portal_customer', 'portal', 'follower', 'customer')]:
                 group[2]['has_button_access'] = False
             return groups
-        local_msg_vals = dict(msg_vals or {})
 
         # portal customers have full access (existence not granted, depending on partner_id)
         try:

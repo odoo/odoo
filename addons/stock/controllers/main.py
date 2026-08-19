@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import werkzeug
 from werkzeug.exceptions import InternalServerError
 
 from odoo import http

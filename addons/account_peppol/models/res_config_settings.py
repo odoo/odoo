@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo

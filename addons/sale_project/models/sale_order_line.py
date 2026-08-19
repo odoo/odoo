@@ -1,11 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import format_list
-from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrderLine(models.Model):

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 class SnailmailLetterFormatError(models.TransientModel):
     _name = 'snailmail.letter.format.error'

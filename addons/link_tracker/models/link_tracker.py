@@ -6,7 +6,7 @@ import string
 
 from werkzeug import urls
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.mail import validate_url

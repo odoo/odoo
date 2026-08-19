@@ -7,7 +7,7 @@ from hashlib import sha1
 from lxml import etree
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value

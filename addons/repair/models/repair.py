@@ -6,7 +6,7 @@ from random import randint
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, clean_context
+from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import format_date, groupby
 
 MAP_REPAIR_TO_PICKING_LOCATIONS = {

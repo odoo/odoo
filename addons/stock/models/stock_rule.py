@@ -7,9 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.registry import Registry
 from odoo.osv import expression
-from odoo.sql_db import BaseCursor
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import split_every
 
