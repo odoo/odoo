@@ -451,15 +451,89 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if (self.state == 'done' and self.is_in) or (self.state != 'done' and self._is_in()):
-            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if (self.state == 'done' and self.is_out) or (self.state != 'done' and self._is_out()):
-            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
-        if self.is_dropship:
-            if lot:
-                return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
-            return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
-        return 0
+        return self._get_valued_qty_batch()[self._origin.id][lot or False]
+
+    def _get_location_domains(self, company):
+        base_domain = (
+            Domain([('picked', '=', True)])
+            & (
+                Domain([('owner_id', '=', False)])
+                |
+                Domain([('owner_id', '=', company.partner_id.id)])
+            )
+        )
+        # location IS valued: belongs to a company and is internal/transit
+        valued_dest = Domain([
+            ('location_dest_id.company_id', '!=', False),
+            ('location_dest_id.usage', 'in', ['internal', 'transit']),
+        ])
+        # location is NOT valued: no company or external usage
+        not_valued_src = (
+            Domain([('location_id.company_id', '=', False)])
+            | Domain([('location_id.usage', 'not in', ['internal', 'transit'])])
+        )
+        valued_src = Domain([
+            ('location_id.company_id', '!=', False),
+            ('location_id.usage', 'in', ['internal', 'transit']),
+        ])
+        not_valued_dest = (
+            Domain([('location_dest_id.company_id', '=', False)])
+            | Domain([('location_dest_id.usage', 'not in', ['internal', 'transit'])])
+        )
+        return base_domain, valued_dest, not_valued_src, valued_src, not_valued_dest
+
+    def _get_valued_qty_batch(self):
+        """Return {move.id: {False: total_valued_qty, lot: lot_valued_qty}} for each move.
+
+        The False key holds the total across all lots; lot keys hold per-lot quantities.
+        Uses location conditions directly (same logic as _get_in/out_move_lines) so results
+        are correct regardless of whether the move's stored is_in/is_out fields have been
+        recomputed yet (they depend on state='done' which may not be set at call time).
+        """
+        valued_qty_by_move_by_lot = defaultdict(lambda: defaultdict(float))
+
+        for company, moves in self.grouped('company_id').items():
+            base_domain, valued_dest, not_valued_src, valued_src, not_valued_dest =\
+                self._get_location_domains(company)
+
+            for lot_valuated, sub_moves in moves.grouped(lambda m: m.product_id.lot_valuated).items():
+                # IN-direction: source not valued → dest valued (covers is_in and !is_dropshipped_returned).
+                # OUT-direction: source valued → dest not valued (covers is_out and !is_dropshipped).
+                # Both queries run over all moves; only lines whose locations match appear in results.
+                in_domain = not_valued_src & valued_dest
+                out_domain = valued_src & not_valued_dest
+
+                groupby = ['move_id'] + (['lot_id'] if lot_valuated else [])
+
+                for direction_domain in (in_domain, out_domain):
+                    for *keys, qty in self.env['stock.move.line']._read_group(
+                        domain=Domain([('move_id', 'in', sub_moves.ids)]) & base_domain & direction_domain,
+                        groupby=groupby,
+                        aggregates=['quantity_product_uom:sum'],
+                    ):
+                        move = keys[0]
+                        lot = keys[1] if lot_valuated else None
+                        valued_qty_by_move_by_lot[move.id][False] += qty
+                        if lot:
+                            valued_qty_by_move_by_lot[move.id][lot] = qty
+
+            # Dropship moves: neither location is a valued internal/transit location.
+            # For the no-lot total use move.quantity with UOM conversion (mirrors original logic);
+            # for lot-specific quantities, sum the matching move lines.
+            moves_dropship = moves.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
+            if moves_dropship:
+                for move, lot, qty in self.env['stock.move.line']._read_group(
+                    domain=[('move_id', 'in', moves_dropship.filtered('product_id.lot_valuated').ids), ('lot_id', '!=', False)],
+                    groupby=['move_id', 'lot_id'],
+                    aggregates=['quantity_product_uom:sum'],
+                ):
+                    valued_qty_by_move_by_lot[move.id][lot] = qty
+                for move in moves_dropship:
+                    valued_qty_by_move_by_lot[move.id][False] = move.product_uom._compute_quantity(
+                        move.quantity, move.product_id.uom_id,
+                    )
+
+        return valued_qty_by_move_by_lot
 
     def _get_manual_value(self, quantity, at_date=None):
         valuation_data = dict(VALUATION_DICT)
