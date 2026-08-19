@@ -20,7 +20,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'country_id': self.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'siret': '96851575905877',
+            'siret': '96851575905873',
             'invoice_edi_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
@@ -36,7 +36,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'country_id': self.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
+            'company_registry': '96851575905873',
             'invoice_edi_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
@@ -170,7 +170,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner = self.partner_a
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905823")
+            ('pdp', "0225:968515759_96851575905824")
         )
         self.assertRecordValues(partner, [{
             'peppol_verification_state': 'not_valid',
@@ -183,10 +183,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
             if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
-            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905824")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905824"):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905824")
 
         partner.invoice_sending_method = False
         with (

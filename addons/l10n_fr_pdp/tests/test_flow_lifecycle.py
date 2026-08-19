@@ -29,7 +29,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_pilot_phase': True,
             'l10n_fr_pdp_send_to_ppf': True,
             'name': 'NOM MATELAS',
-            'siret': '34057796400024',
+            'siret': '34057796400026',
             'vat': 'FR23334175221',
         })
         cls.company.invalidate_recordset([
