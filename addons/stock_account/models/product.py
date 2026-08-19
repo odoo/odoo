@@ -207,6 +207,11 @@ class ProductProduct(models.Model):
             if at_date:
                 products = products.with_context(at_date=at_date, to_date=at_date)
 
+            available_quantities = {p.id: p.qty_available for p in products}
+            available_quantities_whole_company = available_quantities
+            if 'warehouse_id' in self.env.context:
+                available_quantities_whole_company = {p.id: p.with_context(warehouse_id=False).qty_available for p in products}
+
             env = products.env
 
             if lot_valuated_products_ids:
@@ -226,7 +231,7 @@ class ProductProduct(models.Model):
                 ).mapped('total_value')
                 for product, lots in lots_by_product:
                     value = sum(lots.mapped('total_value'))
-                    std_price_by_product_id[product.id] = value / product.qty_available if product.qty_available else product.standard_price
+                    std_price_by_product_id[product.id] = value / available_quantities[product.id] if available_quantities.get(product.id) else product.standard_price
                     total_value_by_product_id[product.id] = value
 
             product_ids_grouped_by_cost_method = defaultdict(set)
@@ -234,25 +239,22 @@ class ProductProduct(models.Model):
             for product in products:
                 if product.lot_valuated:
                     continue
-                product_whole_company_context = product
-                if 'warehouse_id' in self.env.context:
-                    product_whole_company_context = product.with_context(warehouse_id=False)
-                if product.uom_id.is_zero(product.qty_available):
+                if product.uom_id.is_zero(available_quantities.get(product.id, 0)):
                     total_value_by_product_id[product.id] = 0
                     std_price_by_product_id[product.id] = product.standard_price
                     continue
-                if product.uom_id.is_zero(product_whole_company_context.qty_available):
-                    total_value_by_product_id[product.id] = product.standard_price * product.qty_available
+                if product.uom_id.is_zero(available_quantities_whole_company.get(product.id, 0)):
+                    total_value_by_product_id[product.id] = product.standard_price * available_quantities.get(product.id, 0)
                     std_price_by_product_id[product.id] = product.standard_price
                     continue
-                if product.uom_id.compare(product.qty_available, product_whole_company_context.qty_available) != 0:
-                    ratio = product.qty_available / product_whole_company_context.qty_available
+                if product.uom_id.compare(available_quantities.get(product.id, 0), available_quantities_whole_company.get(product.id, 0)) != 0:
+                    ratio = available_quantities.get(product.id, 0) / available_quantities_whole_company.get(product.id, 0)
                     ratio_by_product_id[product.id] = ratio
 
                 product_ids_grouped_by_cost_method[product.cost_method].add(product.id)
 
             for cost_method, product_ids in product_ids_grouped_by_cost_method.items():
-                products_to_value = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
+                products_to_value = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False, available_quantities=available_quantities_whole_company)
                 # To remove once price_unit isn't truncate in sql anymore (no need of force_recompute)
                 if cost_method == 'standard':
                     std_prices, total_values = products_to_value._run_standard_batch(at_date=at_date)
@@ -267,7 +269,7 @@ class ProductProduct(models.Model):
             for product in products:
                 total_value = total_value_by_product_id.get(product.id, 0)
                 total_value_by_product_id[product.id] = total_value * ratio_by_product_id.get(product.id, 1)
-                valued_quantity_by_product_id[product.id] += product.qty_available
+                valued_quantity_by_product_id[product.id] += available_quantities.get(product.id, 0)
 
             std_price_by_company_id[company.id] = std_price_by_product_id
             total_value_by_company_id[company.id] = total_value_by_product_id
@@ -398,8 +400,47 @@ class ProductProduct(models.Model):
                 product.id: product_value_by_product[product].value if product in product_value_by_product else product.standard_price
                 for product in self
             }
-        value_by_product_id = {p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self}
+        available_quantities = self.env.context.get("available_quantities", {})
+        if available_quantities:
+            value_by_product_id = {p.id: available_quantities.get(p.id, 0) * std_price_by_product_id.get(p.id, 0) for p in self}
+        else:
+            value_by_product_id = {p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self}
         return std_price_by_product_id, value_by_product_id
+
+    def _get_qty_available_at_dates(self, date_by_product_id, from_date):
+        """ Return {product_id: qty_available at its own date}, in one pass.
+
+        Same formula as `_compute_quantities_dict` in the past: the current quants minus the
+        moves done since
+        todo: check owner
+        """
+        products = self.browse(date_by_product_id)
+        domain_quant, domain_move_in, domain_move_out = products._get_domain_locations()
+        domain_quant &= Domain('product_id', 'in', products.ids)
+        domain_move = Domain('product_id', 'in', products.ids) & Domain('state', '=', 'done') & Domain('date', '>', from_date)
+        if 'owners' in self.env.context:
+            owners = self.env.context['owners']
+            domain_quant &= Domain('owner_id', 'in', owners) if owners else Domain('owner_id', '=', False)
+            domain_move &= Domain('move_line_ids.owner_id', 'in', owners) if owners else Domain('move_line_ids.owner_id', '=', False)
+
+        qty_by_product_id = defaultdict(float)
+        for product, quantity in self.env['stock.quant'].with_context(active_test=False)._read_group(
+                domain_quant, ['product_id'], ['quantity:sum']):
+            qty_by_product_id[product.id] = quantity
+
+        Move = self.env['stock.move'].with_context(active_test=False)
+        for sign, domain_location in ((-1.0, domain_move_in), (1.0, domain_move_out)):
+            #for move_ids in split_every(10000, Move.search(domain_move & domain_location).ids)
+            for move_ids in split_every(50000, Move.search(domain_move & domain_location).ids):
+                moves = Move.browse(move_ids)
+                moves.fetch(['product_id', 'date', 'product_uom', 'quantity'])
+                for move in moves:
+                    if move.date > date_by_product_id[move.product_id.id]:
+                        qty_by_product_id[move.product_id.id] += sign * move.product_uom._compute_quantity(
+                            move.quantity, move.product_id.uom_id)
+                Move.invalidate_model()
+
+        return {product.id: product.uom_id.round(qty_by_product_id[product.id]) for product in products}
 
     def _run_average_batch(self, at_date=None, lot=None, force_recompute=False):
         std_price_by_product_id = {}
@@ -409,7 +450,11 @@ class ProductProduct(models.Model):
 
         if not at_date and not force_recompute:
             std_price_by_product_id = {p.id: p.standard_price for p in self}
-            value_by_product_id = {p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self}
+            available_quantities = self.env.context.get("available_quantities", {})
+            if available_quantities:
+                value_by_product_id = {p.id: available_quantities.get(p.id, 0) * std_price_by_product_id.get(p.id, 0) for p in self}
+            else:
+                value_by_product_id = {p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self}
             return std_price_by_product_id, value_by_product_id
 
         moves_domain = Domain([
@@ -431,17 +476,15 @@ class ProductProduct(models.Model):
         if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
-        product_ids_by_manual_value_date = defaultdict(list)
-        if not lot:
-            for manual_value in last_manual_value_by_product.values():
-                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
+        anchor_qty_by_product_id = {} if lot else self._get_qty_available_at_dates(
+            {mv.product_id.id: mv.date for mv in last_manual_value_by_product.values()}, oldest_manual_value)
 
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
             if lot:
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
+                quantity = anchor_qty_by_product_id.get(product.id, 0.0)
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -460,7 +503,7 @@ class ProductProduct(models.Model):
             self._get_moves_with_manual_value(product_ids=self.ids)
 
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
+        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'state', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
 
         product, valuation_from_date = False, False
@@ -488,7 +531,11 @@ class ProductProduct(models.Model):
             moves_batch.move_line_ids.fetch(move_line_fields)
             for move in moves_batch:
                 quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                if move.product_id.id in std_price_by_product_id:
+                    average_cost = std_price_by_product_id[move.product_id.id]
+                else:
+                    valued_qty = move._get_valued_qty()
+                    average_cost = move.value / valued_qty if valued_qty else 0
                 value = value_by_product_id.get(move.product_id.id, 0.0)
                 if move.is_in or move.is_dropship:
                     in_qty = move._get_valued_qty()
@@ -536,7 +583,8 @@ class ProductProduct(models.Model):
         std_price_by_product_id = {}
         value_by_product_id = {}
         for product in self:
-            quantity = product.qty_available
+            available_quantities = self.env.context.get("available_quantities", {})
+            quantity = available_quantities.get(product.id, 0) if available_quantities else product.qty_available
             if lot:
                 quantity = lot.product_qty
             value = product._run_fifo(quantity, lot, at_date, location)

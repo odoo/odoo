@@ -492,10 +492,71 @@ class ProductProduct(models.Model):
         return self._search_product_quantity(operator, value, 'free_qty')
 
     def _search_product_quantity(self, operator, value, field):
-        # Order the search on `id` to prevent the default order on the product name which slows
-        # down the search.
-        ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
-        return [('id', 'in', ids)]
+        op = PY_OPERATORS.get(operator)
+        # Aggregate the underlying quants/moves once and evaluate the operator per
+        # product, instead of computing `field` for every product in the database and
+        # filtering in Python. Fall back to the generic (slow) per-product path for
+        # non-scalar operators or a context that changes the computed value
+        # (dates/lot/owner/package/expiration), none of which the aggregation accounts for.
+        special_context = {'from_date', 'to_date', 'lot_id', 'owner_id', 'package_id', 'owners', 'with_expiration'}
+        if op is None or operator in ('in', 'not in') or (special_context & set(self.env.context.keys())):
+            # Order the search on `id` to prevent the default order on the product name
+            # which slows down the search.
+            ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
+            return [('id', 'in', ids)]
+        value = float(value)
+
+        need_quant = field in ('qty_available', 'free_qty', 'virtual_available')
+        need_in = field in ('incoming_qty', 'virtual_available')
+        need_out = field in ('outgoing_qty', 'virtual_available')
+
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        Move = self.env['stock.move'].with_context(active_test=False)
+        Quant = self.env['stock.quant'].with_context(active_test=False)
+        todo_states = ('waiting', 'confirmed', 'assigned', 'partially_available')
+
+        quants = {}
+        if need_quant:
+            for product, quantity, reserved in Quant._read_group(
+                domain_quant_loc, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'],
+            ):
+                quants[product.id] = (quantity, reserved)
+        moves_in = {}
+        if need_in:
+            for product, quantity in Move._read_group(
+                [('state', 'in', todo_states)] + domain_move_in_loc, ['product_id'], ['product_qty:sum'],
+            ):
+                moves_in[product.id] = quantity
+        moves_out = {}
+        if need_out:
+            for product, quantity in Move._read_group(
+                [('state', 'in', todo_states)] + domain_move_out_loc, ['product_id'], ['product_qty:sum'],
+            ):
+                moves_out[product.id] = quantity
+
+        def product_value(product_id):
+            quantity, reserved = quants.get(product_id, (0.0, 0.0))
+            if field == 'qty_available':
+                return quantity
+            if field == 'free_qty':
+                return quantity - reserved
+            if field == 'incoming_qty':
+                return moves_in.get(product_id, 0.0)
+            if field == 'outgoing_qty':
+                return moves_out.get(product_id, 0.0)
+            return quantity + moves_in.get(product_id, 0.0) - moves_out.get(product_id, 0.0)  # virtual_available
+
+        processed_product_ids = set(quants) | set(moves_in) | set(moves_out)
+        product_ids = {pid for pid in processed_product_ids if op(product_value(pid), value)}
+
+        # Products with neither quant nor move have a value of 0 in the current domain.
+        if op(0.0, value):
+            products_without_data = self.env['product.product'].search([
+                ('is_storable', '=', True),
+                ('id', 'not in', list(processed_product_ids)),
+            ], order='id')
+            product_ids |= set(products_without_data.ids)
+        return [('id', 'in', list(product_ids))]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
