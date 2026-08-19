@@ -341,10 +341,34 @@ class AccountMove(models.Model):
         standard_moves.l10n_in_adjustment_type = 'standard'
         (self - standard_moves).l10n_in_adjustment_type = False
 
+<<<<<<< 30e12f47bc1f776f4aaf9fbfbfdfa4c42221a1ba
     @api.depends('company_id.l10n_in_gst_registration_type')
     def _compute_l10n_in_is_gst_registered_enabled(self):
         for record in self:
             record.l10n_in_is_gst_registered_enabled = bool(record.company_id.l10n_in_gst_registration_type)
+||||||| 40e9be2b5ab8828bdab450fb6c8c40f2104a36a6
+    def _compute_l10n_in_total_withholding_amount(self):
+        for move in self:
+            if self.env.company.l10n_in_tds_feature:
+                move.l10n_in_total_withholding_amount = sum(
+                    move.l10n_in_withhold_move_ids.filtered(
+                        lambda m: m.state == 'posted'
+                    ).l10n_in_withholding_line_ids.mapped('l10n_in_withhold_tax_amount')
+                )
+            else:
+                move.l10n_in_total_withholding_amount = 0.0
+=======
+    def _compute_l10n_in_total_withholding_amount(self):
+        for move in self:
+            if move.company_id.l10n_in_tds_feature:
+                move.l10n_in_total_withholding_amount = sum(
+                    move.l10n_in_withhold_move_ids.filtered(
+                        lambda m: m.state == 'posted'
+                    ).l10n_in_withholding_line_ids.mapped('l10n_in_withhold_tax_amount')
+                )
+            else:
+                move.l10n_in_total_withholding_amount = 0.0
+>>>>>>> f2b98a7680fe0191cb912e8005eab3ec572bad14
 
     def _l10n_in_get_invoice_totals_for_self_invoice(self):
         """
