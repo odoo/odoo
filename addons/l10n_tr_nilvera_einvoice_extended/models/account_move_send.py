@@ -15,7 +15,7 @@ class AccountMoveSend(models.AbstractModel):
 
         # Warning alert if a line has no product and is missing CTSP Number
         if non_eligible_tr_lines := export_nilvera_moves.invoice_line_ids.filtered(
-            lambda line: not (line.product_id or line.l10n_tr_ctsp_number),
+            lambda line: line.display_type == 'product' and not (line.product_id or line.l10n_tr_ctsp_number),
         ):
             alerts["l10n_tr_non_eligible_products"] = {
                 "message": _(
