@@ -143,7 +143,7 @@ class PosOrderLine(models.Model):
             body = _("%(product_name)s: Ordered quantity: %(old_qty)s", product_name=self.full_product_name, old_qty=self.qty)
             body += Markup(" &rarr; ") + str(vals.get('qty'))
             for line in self:
-                line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
+                line.order_id.message_post(body=body)
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
@@ -153,7 +153,7 @@ class PosOrderLine(models.Model):
         for line in self:
             line.order_id.has_deleted_line = True
             body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
-            line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
+            line.order_id.message_post(body=body)
 
     @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _onchange_amount_line_all(self):
