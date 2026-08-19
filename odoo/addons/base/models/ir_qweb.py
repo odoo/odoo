@@ -352,7 +352,6 @@ structure.
 """
 from __future__ import annotations
 
-import ast
 import fnmatch
 import glob
 import io
@@ -393,8 +392,7 @@ from odoo.tools.safe_eval import (
     _BLACKLIST,
     _BUILTINS,
     _EXPR_OPCODES,
-    assert_valid_codeobj,
-    safe_transform,
+    evaluation,
     to_opcodes,
 )
 from odoo.tools.lru import LRU
@@ -1067,7 +1065,7 @@ class IrQweb(models.AbstractModel):
         assert isinstance(self, IrQweb)
         ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
 
-        code, options, def_name, error = self._generate_code(template)
+        code, options, expr_funcs, def_name, error = self._generate_code(template)
 
         if error:
             Error, message, stack = error
@@ -1083,7 +1081,7 @@ class IrQweb(models.AbstractModel):
             return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options), ''
 
         wrap_code = '\n'.join([
-            "def generate_functions():",
+            "def generate_functions(expr):",
             indent_code(code, 1),
             f"    code = {code!r}",
             "    return template_functions, code",
@@ -1093,7 +1091,9 @@ class IrQweb(models.AbstractModel):
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
 
-        template_functions, code = globals_dict['generate_functions']()
+        template_functions, code = globals_dict['generate_functions'](
+            lambda id_, values: expr_funcs[id_](values)
+        )
         return template_functions, def_name, frozendict(options), code
 
     def _generate_code(self, template: int | str | etree._Element):
@@ -1130,7 +1130,7 @@ class IrQweb(models.AbstractModel):
             if hasattr(e, 'context') and e.context.get('view'):
                 message = f"{message} (view: {e.context['view'].key})"
             error = (e.__class__, message, traceback.format_exc())
-            return (None, options, 'not_found_template', error)
+            return (None, options, None, 'not_found_template', error)
 
         compile_context.pop('raise_if_not_found', None)
 
@@ -1150,6 +1150,8 @@ class IrQweb(models.AbstractModel):
         compile_context['root'] = element.getroottree()
         # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
         compile_context['_qweb_error_path_xml'] = compile_context.get('_qweb_error_path_xml', [None, None, None])
+        # Reference to expressions
+        compile_context['_qweb_expr_funcs'] = {}
 
         compile_context['nsmap'] = {
             ns_prefix: str(ns_definition)
@@ -1220,7 +1222,7 @@ class IrQweb(models.AbstractModel):
         compile_context['_qweb_error_path_xml'][1] = None
         compile_context['_qweb_error_path_xml'][2] = None
 
-        return (code, options, def_name, None)
+        return (code, options, compile_context['_qweb_expr_funcs'], def_name, None)
 
     # read and load input template
 
@@ -1655,13 +1657,16 @@ class IrQweb(models.AbstractModel):
 
         return ''.join(code)
 
-    def _compile_expr(self, expr, compile_context, raise_on_missing=False):
+    def _compile_expr(self, expr, compile_context=None, raise_on_missing=False):
         """Transform string coming into a python instruction in textual form by
         adding the namepaces for the dynamic values.
         This method tokenize the string and call ``_compile_expr_tokens``
         method.
 
         :param expr: string: python expression
+        :param dict compile_context:
+            If present, the expression will be compiled and placed in
+            `_qweb_expr_funcs` sub dictionary.
         :param bool raise_on_missing:
             Compile has `values['product'].price` instead of
             `values.get('product').price` to raise an error when get the
@@ -1678,17 +1683,18 @@ class IrQweb(models.AbstractModel):
 
         expression = self._compile_expr_tokens(tokens, ALLOWED_KEYWORD, raise_on_missing=raise_on_missing)
 
-        if safe_eval.unsafe_policy():
-            # Note: if the generated safe expression is evaluated using `safe_eval`,
-            # there will be double wrapping: `CALL_ID(CALL_ID(...))`.
-            # Example: `_guess_qweb_variables.qweb_like_eval`
-            tree = ast.parse(expression.strip(), mode='eval')
-            tree = safe_transform(tree)
-            expression = ast.unparse(tree)
+        code_obj = evaluation.compile_codeobj(expression)
+        evaluation.assert_valid_codeobj(_SAFE_QWEB_OPCODES, code_obj, expr)
 
-        assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(expression, '<>', 'eval'), expr)
+        if not compile_context:
+            return f"({expression})"
 
-        return f"({expression})"
+        expr_name = compile_context['make_name']('expr')
+        code_obj = evaluation.compile_codeobj(f'lambda values: {expression}')
+        expr_func = evaluation.eval_codeobj(code_obj, {}, expr)  # No assertion (it may include closures)
+        compile_context['_qweb_expr_funcs'][expr_name] = expr_func
+
+        return f"(expr({expr_name!r}, values))"
 
     def _compile_bool(self, attr, default=False):
         """Convert the statements as a boolean."""

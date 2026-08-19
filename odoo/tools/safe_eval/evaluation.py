@@ -334,9 +334,11 @@ def eval_codeobj(code_obj: types.CodeType, context: dict, expr: str):
 
     finally:
         if context is not None:
+            # Leave `__name__` in the globals because objects that will be
+            # created in this namespace must have a corresponding `__module__`.
             del globals_dict['__builtins__']
-            del globals_dict['__name__']
             context.update(globals_dict)
+            del context['__name__']
 
 
 def const_eval(expr):
