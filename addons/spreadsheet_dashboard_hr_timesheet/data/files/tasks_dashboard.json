@@ -351,7 +351,7 @@
       "rowNumber": 90,
       "rows": {},
       "cols": {
-        "0": { "size": 119 },
+        "0": { "size": 125 },
         "1": { "size": 119 },
         "2": { "size": 97 },
         "3": { "size": 144 },
@@ -364,6 +364,8 @@
         "A3": "=_t(\"Hours logged\")",
         "A4": "=_t(\"Days to assign\")",
         "A5": "=_t(\"Days to close\")",
+        "A6": "=_t(\"Allocated Hours\")",
+        "A7": "=_t(\"% of allocated hours\")",
         "B1": "=_t(\"Current\")",
         "B2": "=PIVOT.VALUE(5,\"nbr\")",
         "B3": {
@@ -378,6 +380,11 @@
           "N": "=",
           "S": ["working_days_close"]
         },
+        "B6": {
+          "N": "+2",
+          "S": ["allocated_hours:sum"]
+        },
+        "B7": "=B3/B6",
         "C1": "=_t(\"Previous\")",
         "C2": "=PIVOT.VALUE(6,\"nbr\")",
         "C3": {
@@ -392,18 +399,80 @@
           "N": "=",
           "S": ["working_days_close"]
         },
+        "C6": {
+          "N": "+2",
+          "S": ["allocated_hours:sum"]
+        },
+        "C7": "=C3/C6",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
         "D3": { "R": "+R1" },
         "D4": "=CONCATENATE(ROUND(B4),_t(\" days\"))",
         "D5": "=CONCATENATE(ROUND(B5),_t(\" days\"))",
+        "D6": "=FORMAT.LARGE.NUMBER(B6)",
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
         "E3": { "R": "+R1" },
         "E4": "=ROUND(C4)",
-        "E5": { "R": "+R1" }
+        "E5": { "R": "+R1" },
+        "E6": "=FORMAT.LARGE.NUMBER(C6)"
       },
       "styles": { "A1:E1": 1, "D4:E5": 2 },
+      "formats": { "B6:C6": 1, "B7:C7": 2, "D6:E6": 3 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "88d6c774-e742",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "customFormula",
+            "style": { "fillColor": "", "textColor": "#D44C59" },
+            "values": ["=AND(NOT(ISERROR($B$7)), $B$7>1)"]
+          },
+          "ranges": ["D3"]
+        },
+        {
+          "id": "f3b6efb2-8097",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "customFormula",
+            "style": { "fillColor": "", "textColor": "#E99D00" },
+            "values": ["=AND(NOT(ISERROR($B$7)), $B$7>=0.8, $B$7<=1)"]
+          },
+          "ranges": ["D3"]
+        },
+        {
+          "id": "dbed76f4-023a",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "customFormula",
+            "style": { "fillColor": "", "textColor": "#00A04A" },
+            "values": ["=AND(NOT(ISERROR($B$7)), $B$7<0.8)"]
+          },
+          "ranges": ["D3"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "74f25158-6c7a",
+      "name": "Project (copy) (Pivot #8)",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {},
+      "merges": [],
+      "cells": { "A1": "=PIVOT(8)" },
+      "styles": {},
       "formats": {},
       "borders": {},
       "conditionalFormats": [],
@@ -412,6 +481,7 @@
       "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "isLocked": false,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -491,7 +561,7 @@
         "H2": 6,
         "C1": 7
       },
-      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "formats": { "A2:A13": 4, "B4:B51": 5, "D4": 6, "H2": 7 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -592,7 +662,7 @@
         "H2": 6,
         "C1": 7
       },
-      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "formats": { "A2:A13": 4, "B4:B51": 5, "D4": 6, "H2": 7 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -693,7 +763,7 @@
         "H2": 6,
         "C1": 7
       },
-      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "formats": { "A2:A13": 4, "B4:B51": 5, "D4": 6, "H2": 7 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -794,7 +864,7 @@
         "H2": 6,
         "C1": 7
       },
-      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "formats": { "A2:A13": 4, "B4:B51": 5, "D4": 6, "H2": 7 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -845,7 +915,15 @@
     "8": {},
     "9": { "textColor": "#434343" }
   },
-  "formats": { "1": "@", "2": "hhhh\"h\"mm\"m\"", "3": "hh\"h\"mm\"m\"", "4": "hhhh:mm" },
+  "formats": {
+    "1": "0",
+    "2": "0.00%",
+    "3": "0[$]",
+    "4": "@",
+    "5": "hhhh\"h\"mm\"m\"",
+    "6": "hh\"h\"mm\"m\"",
+    "7": "hhhh:mm"
+  },
   "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
@@ -1118,9 +1196,51 @@
       "formulaId": "6",
       "columns": [],
       "rows": []
+    },
+    "75c22214-9318": {
+      "type": "ODOO",
+      "name": "Project",
+      "model": "project.project",
+      "rows": [],
+      "columns": [],
+      "measures": [
+        {
+          "id": "allocated_hours:sum",
+          "fieldName": "allocated_hours",
+          "aggregator": "sum"
+        }
+      ],
+      "style": { "tableStyleId": "PivotTableStyleMedium12" },
+      "filters": [],
+      "formulaId": "7",
+      "domain": [],
+      "fieldMatching": {
+        "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 }
+      }
+    },
+    "3e2df9e4-d747": {
+      "type": "ODOO",
+      "name": "Project (copy)",
+      "model": "project.project",
+      "rows": [],
+      "columns": [],
+      "measures": [
+        {
+          "id": "allocated_hours:sum",
+          "fieldName": "allocated_hours",
+          "aggregator": "sum"
+        }
+      ],
+      "style": { "tableStyleId": "PivotTableStyleMedium12" },
+      "filters": [],
+      "formulaId": "8",
+      "domain": [],
+      "fieldMatching": {
+        "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": -1 }
+      }
     }
   },
-  "pivotNextId": 7,
+  "pivotNextId": 9,
   "customTableStyles": {},
   "namedRanges": {},
   "globalFilters": [
