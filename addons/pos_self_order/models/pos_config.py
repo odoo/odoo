@@ -167,6 +167,9 @@ class PosConfig(models.Model):
 
     def write(self, vals):
         self._prepare_self_order_splash_screen([vals])
+        product_delivery_template = self.env.ref('pos_self_order.product_delivery_template', raise_if_not_found=False)
+        if vals.get('self_ordering_mode') in ('kiosk', 'mobile') and not product_delivery_template.active:
+            product_delivery_template.active = True
         for record in self:
             if vals.get('self_ordering_mode') == 'kiosk' or (vals.get('pos_self_ordering_mode') == 'mobile' and vals.get('pos_self_ordering_service_mode') == 'counter'):
                 vals['self_ordering_pay_after'] = 'each'
@@ -417,7 +420,7 @@ class PosConfig(models.Model):
             ('type', '!=', 'cash'),
             ('id', 'in', payment_methods_ids),
         ]).ids
-        self.env['pos.config'].create({
+        config = self.env['pos.config'].create({
             'name': _('Kiosk'),
             'company_id': self.env.company.id,
             'journal_id': journal.id,
@@ -425,6 +428,8 @@ class PosConfig(models.Model):
             'limit_categories': True,
             'iface_available_categ_ids': restaurant_categories,
             'module_pos_restaurant': True,
+        })
+        config.write({
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
         })

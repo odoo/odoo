@@ -14,10 +14,10 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
                 self.pos_config.write({"self_ordering_default_user_id": False})
 
     def test_product_sorting(self):
-        """Verify that products are sorted by favorite then by sequence and then by name in self ordering"""
+        """Verify that products are sorted by favorite then by pos_sequence and then by name in self ordering"""
         self.pos_config.write({"self_ordering_mode": "mobile"})
         names = [item["display_name"] for item in self.env["product.template"]._load_pos_self_data_search_read({}, self.pos_config)]
-        self.assertEqual(names, ['[12345] Coca-Cola', '[12345] Free', 'Fanta', 'Ketchup', 'Desk Organizer', '[DELIVERY] Delivery Fee (Self-order)', '[FEE] Service Fee'])
+        self.assertEqual(names, ['[FEE] Service Fee', '[DELIVERY] Delivery Fee (Self-order)', '[12345] Coca-Cola', '[12345] Free', 'Fanta', 'Ketchup', 'Desk Organizer'])
 
     def test_self_order_products_sorting_order(self):
         """Test self order products sorting order should follow: favorite, pos_sequence, name"""

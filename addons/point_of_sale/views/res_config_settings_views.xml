@@ -125,7 +125,7 @@
                                 <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip" documentation="/applications/sales/point_of_sale/restaurant/tips.html">
                                     <field name="pos_iface_tipproduct"/>
                                     <div class="content-group" invisible="not pos_iface_tipproduct">
-                                        <div class="row mt16" id="tip_product">
+                                        <div class="row mt16" id="tip_product" groups="base.group_no_one">
                                             <label string="Tip Product" for="pos_tip_product_id" class="col-lg-3 o_light_label "/>
                                             <field name="pos_tip_product_id"/>
                                         </div>

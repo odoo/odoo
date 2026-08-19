@@ -17,3 +17,8 @@ class ProductTemplate(models.Model):
             read_data.extend(product)
 
         return read_data
+
+    def _get_special_products_to_archive(self):
+        return super()._get_special_products_to_archive() | self.env.ref(
+            "pos_discount.product_product_consumable"
+        ).product_tmpl_id

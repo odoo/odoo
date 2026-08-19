@@ -52,7 +52,7 @@ class PosPreset(models.Model):
         default=lambda self: (
             self.env.ref("pos_self_order.product_delivery_template", raise_if_not_found=False)
             or self.env["product.template"]
-        ).product_variant_ids[:1],
+        ).with_context(active_test=False).product_variant_ids[:1],
         help="Product used for delivery fees in self order.",
     )
     delivery_product_price = fields.Float(

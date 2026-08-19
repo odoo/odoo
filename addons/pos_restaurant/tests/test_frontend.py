@@ -256,7 +256,7 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
     def test_05_tip_screen(self):
-        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
+        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTipScreenTour')
 
