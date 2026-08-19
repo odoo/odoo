@@ -69,6 +69,7 @@
                             <span class='d-block d-md-none'>Ref.</span>
                         </th>
                         <th class="text-end">Order Date</th>
+                        <th class="text-end" name="order_delivery">Shipping Status</th>
                         <th name="order_total" class="text-end">Total</th>
                     </tr>
                 </thead>
@@ -78,6 +79,38 @@
                         <td class="text-end">
                             <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                             <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
+                        </td>
+                        <td class="text-end" name="order_delivery_status">
+                            <span
+                                t-if="order.delivery_status == 'pending'"
+                                class="badge rounded-pill text-bg-warning"
+                            >
+                                Not Delivered
+                            </span>
+                            <span
+                                t-elif="order.delivery_status == 'started'"
+                                class="badge rounded-pill text-bg-primary"
+                            >
+                                Started
+                            </span>
+                            <span
+                                t-elif="order.delivery_status == 'partial'"
+                                class="badge rounded-pill text-bg-info"
+                            >
+                                Partially Delivered
+                            </span>
+                            <span
+                                t-elif="order.delivery_status == 'full'"
+                                class="badge rounded-pill text-bg-success"
+                            >
+                                Delivered
+                            </span>
+                            <span
+                                t-else=""
+                                class="badge rounded-pill text-bg-danger"
+                            >
+                                Not Available
+                            </span>
                         </td>
                         <td name="order_amount_total" class="text-end">
                             <span t-field="order.amount_total"/>
