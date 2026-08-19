@@ -8,7 +8,7 @@ from odoo import Command, fields
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import Form, users, warmup, tagged
+from odoo.tests import Form, RecordCapturer, tagged, users, warmup
 from odoo.tools import mute_logger, formataddr
 
 
@@ -347,6 +347,40 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=12, employee=11):  # tm: 8 / 8
             activity.action_feedback(feedback='Zizisse Done !')
+
+    @warmup
+    def test_activity_notify_batch(self):
+        """Check performance of batch activity notifying."""
+        records = self.env['mail.test.activity'].create([
+            {'name': f'Test Notify {idx}'} for idx in range(10)
+        ])
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+        activities = self.env['mail.activity'].with_context(
+            default_res_model='mail.test.activity',
+            # skip the notification at create, to keep only 'action_notify' in the assertQueryCount block.
+            mail_activity_quick_update=True,
+            # prefetching records doesn't help if the mails are sent right away.
+            mail_notify_force_send=False,
+        ).create([{
+            'activity_type_id': activity_type.id,
+            'res_id': record.id,
+            'res_model_id': self.env['ir.model']._get_id(record._name),
+            'summary': f'Test Activity {idx}',
+            'user_id': self.user_emp_email.id,
+        } for idx, record in enumerate(records)])
+
+        self.env.flush_all()
+        self.env.invalidate_all()
+        with RecordCapturer(self.env['mail.message']) as capture, self.assertQueryCount(112):
+            activities.action_notify()
+
+        notifications = self.env['mail.message'].search([
+            ('id', 'in', capture.records.ids),
+            ('model', '=', records._name),
+            ('res_id', 'in', records.ids),
+            ('message_type', '=', 'user_notification'),
+        ])
+        self.assertEqual(len(notifications), 10, 'One message per record')
 
     @warmup
     def test_activity_mixin_batched(self):

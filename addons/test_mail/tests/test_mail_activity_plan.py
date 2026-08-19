@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import fields, tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import Form, tagged, users
-from odoo.tools.misc import format_date
+from odoo.tests import Form, RecordCapturer, tagged, users
 
 
 @tagged('mail_activity', 'mail_activity_plan')
@@ -348,6 +349,38 @@ class TestActivitySchedule(ActivityScheduleCase):
                     expected_deadlines=[plan_date + relativedelta(days=-1),
                                         plan_date + relativedelta(days=7)],
                     expected_responsible=responsible_id)
+
+            with self.subTest(test_case=f'Consolidated notifications: {test_case}', on_n_records=len(test_records)):
+                form = self._instantiate_activity_schedule_wizard(test_records)
+                form.plan_id = self.plan_party
+                form.plan_date = plan_date
+                form.plan_on_demand_user_id = self.user_admin
+                self.assertEqual(form.plan_id.template_ids.mapped('responsible_id'), self.user_admin,
+                                 "All activities should be assigned to the admin user.")
+
+                with RecordCapturer(self.env['mail.message']) as capture_messages:
+                    form.save().action_schedule_plan()
+                notifications = capture_messages.records.filtered(
+                    lambda m: m.partner_ids == self.partner_admin
+                              and m.model == test_records._name and m.res_id in test_records.ids
+                              and re.match(r'2 activities.*test_record_\d', m.subject))
+                self.assertEqual(len(notifications), len(test_records),
+                                 "One message per record (as all activities share the same responsible)")
+                self.assertEqual(set(notifications.mapped('res_id')), set(test_records.ids))
+                for notification in notifications:
+                    record = self.env[test_records._name].browse(notification.res_id)
+                    self.assertIn(record, test_records)
+                    self.assertIn(f'Dear <span>{self.partner_admin.name}</span>', notification.body)
+                    self.assertIn(self.partner_employee.name, notification.body)
+                    self.assertIn('has just assigned you the following activities on document', notification.body)
+                    self.assertIn(f'"{record.display_name}" ({self.env['ir.model']._get(record._name).display_name})',
+                                  notification.body)
+                    self.assertIn('Book a place', notification.body)
+                    self.assertIn(f'deadline: <span>{tools.format_date(self.env, deadline_1)}</span>',
+                                  notification.body)
+                    self.assertIn('Invite special guest', notification.body)
+                    self.assertIn(f'deadline: <span>{tools.format_date(self.env, deadline_2)}</span>',
+                                  notification.body)
 
     @users('admin')
     def test_plan_setup_model_consistency(self):

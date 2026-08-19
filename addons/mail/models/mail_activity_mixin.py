@@ -337,8 +337,8 @@ class MailActivityMixin(models.AbstractModel):
 
         return self.env['mail.activity'].search(domain)
 
-    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', activity_user_id_fname='', **act_values):
-        """ Schedule an activity on each record of the current record set.
+    def _activity_schedule_create_vals(self, act_type_xmlid='', date_deadline=None, summary='', note='', activity_user_id_fname='', **act_values):
+        """ Return a list of create values to schedule activities on the current recordset.
         This method allow to provide as parameter act_type_xmlid. This is an
         xml_id of activity type instead of directly giving an activity_type_id.
         It is useful to avoid having various "env.ref" in the code and allow
@@ -353,10 +353,9 @@ class MailActivityMixin(models.AbstractModel):
           as responsible for the activity. Can be a related field path.
           Useless if 'user_id' is already provided in act_values.
         :type activity_user_id_fname: str
+        :returns: a list of activity create vals
+        :rtype: list[dict]
         """
-        if self.env.context.get('mail_activity_automation_skip'):
-            return False
-
         if not date_deadline:
             date_deadline = fields.Date.context_today(self)
         if isinstance(date_deadline, datetime):
@@ -409,6 +408,14 @@ class MailActivityMixin(models.AbstractModel):
             if not create_vals.get('user_id') and not create_vals.get('role_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
+        return create_vals_list
+
+    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', activity_user_id_fname='', **act_values):
+        """ Schedule activities on each record of the current record set (see `_activity_schedule_create_vals`). """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+        create_vals_list = self._activity_schedule_create_vals(
+            act_type_xmlid, date_deadline, summary, note, activity_user_id_fname, **act_values)
         activities = self.env['mail.activity'].with_context(clean_context(self.env.context)).create(create_vals_list)
         return activities.with_context(self.env.context)
 

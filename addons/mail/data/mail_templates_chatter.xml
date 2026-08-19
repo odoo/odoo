@@ -30,16 +30,20 @@
 
         <template id="message_activity_assigned">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
-    Dear <span t-field="activity.user_id.name"/>,
+    <!-- All activities must be assigned to the same user (activities.user_id). -->
+    Dear <span t-field="activities.user_id.name"/>,
     <br/><br/>
     <p>
-        <span t-field="activity.create_uid.name"/> has just assigned you the following activity:
+        <span t-field="author.name"/>
+        <t t-if="len(activities) == 1">has just assigned you the following activity on document</t>
+        <t t-else="">has just assigned you the following activities on document</t>
+        "<t t-out="activities[0].res_name"/>"<t t-if="model_description"> (<t t-out="model_description"/>)</t>:
         <ul>
-            <li>Document: "<t t-out="activity.res_name"/>"
-                <t t-if="model_description"> (<t t-out="model_description"/>)</t>
+            <li t-foreach="activities" t-as="activity">
+                <span t-if="activity.summary" t-field="activity.summary"/>
+                <span t-else="" t-field="activity.activity_type_id.name"/>
+                - deadline: <span t-field="activity.date_deadline"/>
             </li>
-            <li t-if="activity.summary">Summary: <span t-field="activity.summary"/></li>
-            <li>Deadline: <span t-field="activity.date_deadline"/></li>
         </ul>
     </p>
 </div>
