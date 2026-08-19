@@ -1,8 +1,9 @@
-import { useAutofocus } from "@web/core/utils/hooks";
+import { Component, onWillStart, proxy, signal, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { useAutofocus } from "@web/core/utils/hooks";
 
 const allowedQwebExpressionsService = {
     dependencies: ["orm"],
@@ -31,6 +32,8 @@ export class DynamicPlaceholderPopover extends Component {
     props = useProps(["resModel", "validate", "close"]);
 
     autofocusRef = signal.ref();
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });

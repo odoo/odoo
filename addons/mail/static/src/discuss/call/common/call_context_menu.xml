@@ -19,7 +19,7 @@
                     <i class="oi oi-fw oi-filled" data-icon="cancel"/>Remove from call
                 </button>
             </t>
-            <t t-if="this.env.debug and !this.isSelf and this.rtc.connectionType === this.rtcConnectionTypes.P2P">
+            <t t-if="this.debugMode.isActive() and !this.isSelf and this.rtc.connectionType === this.rtcConnectionTypes.P2P">
                 <hr class="w-100 border-top"/>
                 <div><span class="fw-bolder">RTC Session ID: </span><t t-out="this.props.rtcSession.id"/></div>
                 <div><span class="fw-bolder">Connection type: </span><t t-out="this.rtc.connectionType"/></div>
@@ -38,7 +38,7 @@
                 <div><span class="fw-bolder">Packets received: </span><t t-out="this.state.peerStats.packetsReceived"/></div>
                 <div><span class="fw-bolder">Log step: </span><t t-out="this.props.rtcSession.logStep"/></div>
             </t>
-            <t t-elif="this.env.debug and this.isSelf and this.rtc.connectionType === this.rtcConnectionTypes.SERVER">
+            <t t-elif="this.debugMode.isActive() and this.isSelf and this.rtc.connectionType === this.rtcConnectionTypes.SERVER">
                 <div><span class="fw-bolder">Connection type: </span><t t-out="this.rtc.connectionType"/></div>
                 <div><span class="fw-bolder">RTC Session ID: </span><t t-out="this.props.rtcSession.id"/></div>
                 <hr class="w-100 border-top"/>

@@ -1,9 +1,20 @@
-import { Component, onMounted, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUpdateProps,
+    proxy,
+    signal,
+    t,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { ModelSelector } from "@web/core/model_selector/model_selector";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -14,7 +25,6 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
 import { PropertyValue } from "./property_value";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export const PROPERTIES_INFO = {
     char: {
@@ -119,6 +129,8 @@ export class PropertyDefinition extends Component {
     props = useProps(propertyDefinitionProps);
 
     propertyDefinitionRef = signal.ref();
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         this.orm = useService("orm");

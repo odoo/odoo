@@ -1,13 +1,10 @@
-import { before, expect, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, before, click, expect, queryOne, test } from "@odoo/hoot";
 import { Component, proxy, useEffect, useProps, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     defineModels,
     expectMarkup,
     fields,
-    getMockEnv,
     getService,
     makeTestApp,
     mockService,
@@ -17,11 +14,10 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
-import { View } from "@web/views/view";
 import { CallbackRecorder } from "@web/search/action_hook";
+import { View } from "@web/views/view";
 
 const viewRegistry = registry.category("views");
 
@@ -1185,9 +1181,9 @@ test("Cache: refresh with debug mode", async () => {
         views: {},
     };
 
-    getMockEnv().debug = "";
+    serverState.debug = "";
     expect(await getService("view").loadViews(context)).toEqual(expected);
-    getMockEnv().debug = "1";
+    serverState.debug = "1";
     expect(await getService("view").loadViews(context)).toEqual(expected);
     expect.verifySteps(["Fetch, debug = false", "Fetch, debug = true"]);
 });

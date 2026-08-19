@@ -1,4 +1,5 @@
-import { Component, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -53,6 +54,8 @@ export class FieldSelectorPopover extends Component {
         filter: t.function().optional(),
     });
 
+    debugMode = usePlugin(DebugModePlugin);
+
     autofocusRef = signal.ref();
 
     setup() {
@@ -89,7 +92,7 @@ export class FieldSelectorPopover extends Component {
             close: () => this.fieldSelectorPopover.close(),
             filter: this.props.filter,
             followRelation: this.props.followRelation,
-            isDebugMode: !!this.env.debug,
+            isDebugMode: this.debugMode.isActive(),
             path: this.state.path,
             readProperty: true,
             resModel: this.resModel,

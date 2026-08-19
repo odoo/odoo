@@ -8,6 +8,7 @@ import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
 import { PosRouterPlugin } from "./plugins/pos_router_plugin";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -34,7 +35,8 @@ export class Chrome extends Component {
 
         window.posmodel = this.pos;
         useOwnDebugContext();
-        if (this.env.debug) {
+        const debugMode = usePlugin(DebugModePlugin);
+        if (debugMode.isActive()) {
             initDebugFormatters();
         }
 

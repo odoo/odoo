@@ -1,10 +1,14 @@
+import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from '@web/core/debug_mode_plugin';
+import { Domain } from "@web/core/domain";
 import { useBus, useService } from '@web/core/utils/hooks';
 import { formatMonetary } from "@web/views/fields/formatters";
-import { Component, onWillStart, proxy } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
+
 export class ExpenseDashboard extends Component {
     static template = "hr_expense.ExpenseDashboard";
     static props = {};
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         super.setup();

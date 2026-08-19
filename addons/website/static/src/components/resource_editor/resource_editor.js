@@ -23,7 +23,9 @@ import {
     signal,
     t,
     useEffect,
+    usePlugin,
 } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const BUNDLES_RESTRICTION = [
     "web.assets_frontend",
@@ -47,6 +49,8 @@ export class ResourceEditor extends Component {
 
     editorRef = signal.ref();
 
+    debugMode = usePlugin(DebugModePlugin);
+
     setup() {
         this.website = useService("website");
         this.orm = useService("orm");
@@ -54,7 +58,6 @@ export class ResourceEditor extends Component {
 
         this.keepLast = new KeepLast();
 
-        this.debug = this.env.debug;
         this.viewKey =
             this.website.pageDocument &&
             this.website.pageDocument.documentElement.dataset.viewXmlid;
@@ -256,7 +259,7 @@ export class ResourceEditor extends Component {
             // Compute labels
             Object.values(this.state.resources.xml).forEach((view) => {
                 view.label = `${"-".repeat(view.level)} ${view.name}`;
-                if (this.debug && view.xml_id) {
+                if (this.debugMode.isActive() && view.xml_id) {
                     view.label += ` (${view.xml_id})`;
                 }
             });
@@ -274,7 +277,7 @@ export class ResourceEditor extends Component {
                 files.forEach((file) => {
                     // Compute labels
                     file.label = file.url.split("/").at(-1).split(".")[0];
-                    if (this.debug) {
+                    if (this.debugMode.isActive()) {
                         file.label += ` (${file.url})`;
                     }
 

@@ -1,17 +1,18 @@
+import { effect, EventBus, proxy, usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { registry } from "@web/core/registry";
-import { ProfilingItem } from "./profiling_item";
 import { session } from "@web/session";
-import { profilingSystrayItem } from "./profiling_systray_item";
-
-import { effect, EventBus, proxy } from "@odoo/owl";
+import { ProfilingItem } from "@web/webclient/debug/profiling/profiling_item";
+import { profilingSystrayItem } from "@web/webclient/debug/profiling/profiling_systray_item";
 
 const systrayRegistry = registry.category("systray");
 
 export const profilingService = {
     dependencies: ["action", "orm"],
     start(env, { action, orm }) {
+        const debugMode = usePlugin(DebugModePlugin);
         // Only set up profiling when in debug mode
-        if (!env.debug) {
+        if (!debugMode.isActive()) {
             return;
         }
 

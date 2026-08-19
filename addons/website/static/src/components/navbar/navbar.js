@@ -4,6 +4,8 @@ import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
+import { usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 websiteSystrayRegistry.add("UserMenu", { Component: UserMenu }, { sequence: 14 });
@@ -19,7 +21,8 @@ patch(NavBar.prototype, {
         // are not related).
         useBus(websiteSystrayRegistry, "EDIT-WEBSITE", () => render(this, true));
 
-        if (this.env.debug && !websiteSystrayRegistry.contains("web.debug_mode_menu")) {
+        const debugMode = usePlugin(DebugModePlugin);
+        if (debugMode.isActive() && !websiteSystrayRegistry.contains("web.debug_mode_menu")) {
             websiteSystrayRegistry.add(
                 "web.debug_mode_menu",
                 registry.category("systray").get("web.debug_mode_menu"),

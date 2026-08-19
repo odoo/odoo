@@ -14,7 +14,7 @@
                     <i class="oi oi-3x" data-icon="keyboard_arrow_right"/>
                 </div>
             </t>
-            <div class="oi flex-grow-0.5 d-flex flex-column p-3 border-bottom text-center" data-icon="help_outline" t-if="this.env.debug" data-tooltip="Numbers computed from your personal expenses."/>
+            <div class="oi flex-grow-0.5 d-flex flex-column p-3 border-bottom text-center" data-icon="help_outline" t-if="this.debugMode.isActive()" data-tooltip="Numbers computed from your personal expenses."/>
         </div>
     </t>
 </templates>

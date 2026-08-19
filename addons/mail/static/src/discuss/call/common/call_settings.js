@@ -1,4 +1,4 @@
-import { Component, onWillStart, t, useListener, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -9,10 +9,13 @@ import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
     static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         super.setup();

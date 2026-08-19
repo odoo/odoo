@@ -2,7 +2,8 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
 import { isBrowserFirefox, isBrowserChrome } from "@web/core/browser/feature_detection";
-import { useScope } from "@odoo/owl";
+import { usePlugin, useScope } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class HTMLElementLoadingError extends Error {
     static message = "Error loading an HTML Element";
@@ -49,6 +50,7 @@ export class ThirdPartyScriptError extends UncaughtError {
 
 export const errorService = {
     start(env) {
+        const debugMode = usePlugin(DebugModePlugin);
         const scope = useScope();
         function handleError(uncaughtError, retry = true) {
             function shouldLogError() {
@@ -118,7 +120,7 @@ export const errorService = {
                 // Firefox doesn't hide details of errors occuring in third-party scripts, check origin explicitly
                 (isBrowserFirefox() && new URL(filename).origin !== window.location.origin);
             // Don't display error dialogs for third party script errors unless we are in debug mode
-            if (isThirdPartyScriptError && !odoo.debug) {
+            if (isThirdPartyScriptError && !debugMode.isActive()) {
                 return;
             }
             let uncaughtError;
@@ -133,7 +135,7 @@ export const errorService = {
                 uncaughtError.event = ev;
                 if (error instanceof Error) {
                     error.errorEvent = ev;
-                    const annotated = env.debug && env.debug.includes("assets");
+                    const annotated = debugMode.isActive("assets");
                     await completeUncaughtError(uncaughtError, error, annotated);
                 }
             }
@@ -178,7 +180,7 @@ export const errorService = {
                 // to have extension's errors in the main business page.
                 // We want to ignore those errors as they are not produced by us, and are parasiting
                 // the navigation. We do this according to the heuristic expressed in the if.
-                if (!odoo.debug) {
+                if (!debugMode.isActive()) {
                     return;
                 }
                 traceback =
@@ -192,7 +194,7 @@ export const errorService = {
             uncaughtError.traceback = traceback;
             if (error instanceof Error) {
                 error.errorEvent = ev;
-                const annotated = env.debug && env.debug.includes("assets");
+                const annotated = debugMode.isActive("assets");
                 await completeUncaughtError(uncaughtError, error, annotated);
             }
             uncaughtError.cause = error;

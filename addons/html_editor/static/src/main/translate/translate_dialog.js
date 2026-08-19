@@ -1,10 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, markup, useProps, proxy, t } from "@odoo/owl";
+import { Component, onWillDestroy, markup, useProps, proxy, t, usePlugin } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { GoogleTranslator, ChatGPTTranslator } from "./translator";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur", "yi", "ps", "ku", "sd", "ug", "dv", "ha"]);
 
@@ -71,11 +72,13 @@ export class TranslateDialog extends Component {
         document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
     });
 
+    debugMode = usePlugin(DebugModePlugin);
+
     setup() {
         const google_translate = new GoogleTranslator("translate_google", "Google Translate");
         this.translators = [google_translate];
 
-        if (this.env.debug) {
+        if (this.debugMode.isActive()) {
             const chatgpt_translate = new ChatGPTTranslator("translate_gpt", "ChatGPT");
             this.translators.push(chatgpt_translate);
         }
@@ -155,7 +158,7 @@ export class TranslateDialog extends Component {
             isError: translateResult.isError,
         });
         // only select the new translation if there was no error and under non-debug mode
-        if (!translateResult.isError && !this.env.debug) {
+        if (!translateResult.isError && !this.debugMode.isActive()) {
             this.state.selectedMessageId = messageId;
         }
     }

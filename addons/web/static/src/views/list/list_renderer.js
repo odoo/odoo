@@ -34,15 +34,16 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
-    usePlugin,
     proxy,
     signal,
     status,
     t,
     useListener,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -151,6 +152,8 @@ export class ListRenderer extends Component {
     debugOpenView = signal(false);
     editedRecord = signal(null);
     optionalActiveFields = proxy(this.props.optionalActiveFields || {});
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         this.uiService = useService("ui");
@@ -373,7 +376,9 @@ export class ListRenderer extends Component {
     }
 
     get hasOptionalOpenFormViewColumn() {
-        return this.props.editable && this.env.debug && !this.props.hasOpenFormViewButton;
+        return (
+            this.props.editable && this.debugMode.isActive() && !this.props.hasOpenFormViewButton
+        );
     }
 
     get hasActionsColumn() {
@@ -2383,10 +2388,6 @@ export class ListRenderer extends Component {
             return;
         }
         this.props.list.leaveEditMode();
-    }
-
-    get isDebugMode() {
-        return Boolean(odoo.debug);
     }
 
     /**
