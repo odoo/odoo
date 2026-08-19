@@ -93,6 +93,7 @@ describe("Add image", () => {
     test("Adding an image in gallery doesn't show a hidden pause button", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_image_gallery", {
             loadIframeBundles: true,
+            loadIframeBuilderTemplates: true,
         });
         await contains(":iframe .s_image_gallery").click();
         await waitSidebarUpdated();
@@ -107,6 +108,7 @@ describe("Add image", () => {
     test("Adding an image in gallery doesn't hide a visible pause button", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_image_gallery", {
             loadIframeBundles: true,
+            loadIframeBuilderTemplates: true,
         });
         await contains(":iframe .s_image_gallery").click();
         await waitSidebarUpdated();
@@ -153,7 +155,7 @@ test("Empty image gallery is removed on save", async () => {
         resultSave.push(args[1]);
         return true;
     });
-    await setupWebsiteBuilderWithSnippet("s_image_gallery");
+    await setupWebsiteBuilderWithSnippet("s_image_gallery", { loadIframeBuilderTemplates: true });
     await contains(":iframe .s_image_gallery").click();
     await unfoldAllOptionsGroups();
     await contains("[data-action-id='removeAllImages']").click();
