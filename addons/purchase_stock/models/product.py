@@ -26,7 +26,8 @@ class ProductTemplate(models.Model):
     @api.model
     def _get_buy_route(self):
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
-        return buy_route.ids if buy_route else []
+        # Use sudo to check the route company even when the user cannot access it.
+        return buy_route.sudo().filtered(lambda route: not route.company_id or route.company_id in self.env.companies).ids
 
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
 
