@@ -22,7 +22,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { useAnimationMark } from "@web/core/utils/animation";
+import { ANIMATION_DURATION, useAnimationMark } from "@web/core/utils/animation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -98,7 +98,10 @@ const chatterPatch = {
                 ? CHATTER_PANEL.ATTACHMENT
                 : CHATTER_PANEL.NONE,
             composerType: false,
-            hasToggledComposer: false,
+            // Read by the composer and by the activities as they mount, so that
+            // only the mount a click brings about is animated.
+            justToggledComposer: useAnimationMark(ANIMATION_DURATION.mount),
+            justToggledActivities: useAnimationMark(ANIMATION_DURATION.mount),
             isSelectingAttachments: false,
             /** @type {number[]} ids of the attachments standing for the selected groups */
             selectedAttachmentIds: [],
@@ -529,6 +532,11 @@ const chatterPatch = {
 
     toggleActivities() {
         this.state.showActivities = !this.state.showActivities;
+        // Only on the way in: folding the section takes the activities away, and
+        // there is nothing appearing to acknowledge.
+        if (this.state.showActivities) {
+            this.state.justToggledActivities.mark();
+        }
     },
 
     /** @param {import("models").Attachment} attachment */
@@ -549,9 +557,9 @@ const chatterPatch = {
                     await this.updateRecipients(this.webChatterProps.record, mode);
                 }
                 this.state.composerType = mode;
-                // Read and cleared by the composer as it mounts, so that only
-                // the mount this click brings about is animated.
-                this.state.hasToggledComposer = Boolean(mode);
+                if (mode) {
+                    this.state.justToggledComposer.mark();
+                }
             }
         };
         if (this.state.thread.id) {

@@ -1,5 +1,6 @@
 import { proxy, signal, t, useEffect, useOnChange, useProps } from "@odoo/owl";
 
+import { useUnfoldOnMount } from "@web/core/utils/animation";
 import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
@@ -61,6 +62,10 @@ patch(Composer.prototype, {
                 this.chatterState.isCcEnabled = true;
             }
         });
+        // Grows in on a click on "Send message" or "Log note", and on nothing
+        // else: the composer is keyed on the thread, so moving from one record
+        // to the next mounts it again with nothing having been toggled.
+        useUnfoldOnMount(this.rootRef, () => this.env.inChatter?.justToggledComposer);
     },
 
     async onClickFullComposerGetAction() {

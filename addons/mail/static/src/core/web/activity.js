@@ -5,8 +5,9 @@ import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, computed, t, useProps } from "@odoo/owl";
+import { Component, computed, signal, t, useProps } from "@odoo/owl";
 
+import { useUnfoldOnMount } from "@web/core/utils/animation";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -16,6 +17,8 @@ import { FileUploader } from "@web/views/fields/file_handler";
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
     static template = "mail.Activity";
+
+    rootRef = signal.ref();
 
     setup() {
         super.setup();
@@ -33,6 +36,9 @@ export class Activity extends Component {
             })
         );
         this.attachmentUploader = useAttachmentUploader(this.thread);
+        // Grows in on unfolding the planned activities, and on nothing else: the
+        // chatter mounts its activities again on every record it moves to.
+        useUnfoldOnMount(this.rootRef, () => this.env.inChatter?.justToggledActivities);
     }
 
     get displayName() {
