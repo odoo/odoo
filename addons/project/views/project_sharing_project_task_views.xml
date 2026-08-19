@@ -37,7 +37,7 @@
                         <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="relative_date"/>
                         <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
                         <footer t-if="!selection_mode">
-                            <field name="priority" class="pt-1" widget="priority"/>
+                            <field name="priority" class="pt-1" widget="priority" readonly="not context.get('portal_can_advanced_edit', False)"/>
                             <div class="d-flex ms-auto text-truncate">
                                 <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2 text-truncate" t-att-title="record.portal_user_names.raw_value">
                                     <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
@@ -73,6 +73,7 @@
                 default_order="priority desc, sequence, state, date_deadline asc, id desc"
             >
                 <field name="state"/>
+                <field name="stage_id" readonly="not context.get('portal_can_advanced_edit', False)" invisible="1"/>
                 <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "300"}'/>
                 <templates>
                     <t t-name="menu" t-if="!selection_mode">
@@ -113,6 +114,10 @@
             <field name="rotting_days" position="replace"/>
             <field name="stage_id" position="attributes">
                 <attribute name="widget">badges_many2one</attribute>
+                <attribute name="readonly">not context.get('portal_can_advanced_edit', False)</attribute>
+            </field>
+            <field name="priority" position="attributes">
+                <attribute name="readonly">not context.get('portal_can_advanced_edit', False)</attribute>
             </field>
         </field>
     </record>
@@ -125,7 +130,7 @@
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
-                    <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
+                    <field name="stage_id" readonly="not context.get('portal_can_advanced_edit', False)" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
                 </header>
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                     <div class="text-center">This is a preview of how the project will look when it's shared with customers and they have editing access.
@@ -169,11 +174,11 @@
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="Task Title..."/>
                         </h1>
                         <div class="d-flex justify-content-between justify-content-lg-end align-items-center px-1 w-100 w-lg-auto" invisible="not active or is_template">
-                            <field name="priority" class="h3 pe-2" widget="priority"/>
+                            <field name="priority" class="h3 pe-2" widget="priority" readonly="not context.get('portal_can_advanced_edit', False)"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
                         <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active and not is_template">
-                            <field name="priority" class="h3 pe-2" widget="priority"/>
+                            <field name="priority" class="h3 pe-2" widget="priority" readonly="not context.get('portal_can_advanced_edit', False)"/>
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
                     </div>
@@ -198,10 +203,9 @@
                             <field name="state" invisible="1" />
                             <field name="depend_on_count" invisible="1" />
                             <field name="allow_task_dependencies" invisible="1" />
-                            <field name="current_user_same_company_partner" invisible="1"/>
                             <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True}"/>
-                            <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
-                            <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
+                            <field name="partner_id" readonly="1" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
+                            <field name="date_deadline" readonly="1" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                             <field name="recurring_task" invisible="not allow_recurring_tasks or not active or parent_id" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task or not allow_recurring_tasks" groups="project.group_project_recurring_tasks"/>
                             <div invisible="not recurring_task or not allow_recurring_tasks" class="d-flex" groups="project.group_project_recurring_tasks" name="repeat_intervals">
@@ -248,9 +252,9 @@
                                     <field name="user_ids" column_invisible="True" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="not context.get('portal_can_advanced_edit', False)"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
-                                    <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
+                                    <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]" readonly="not context.get('portal_can_advanced_edit', False)"/>
                                     <button name="action_open_task" type="object" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
                                             invisible="project_id != context.get('active_id')"/>
