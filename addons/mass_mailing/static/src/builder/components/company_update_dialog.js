@@ -56,7 +56,7 @@ export class ResCompanyUpdateDialog extends Component {
         resId: Number,
     };
     static defaultProps = {
-        onRecordSaved: () => {},
+        onRecordSaved: async () => {},
         onCancel: () => {},
     };
 
@@ -83,7 +83,7 @@ export class ResCompanyUpdateDialog extends Component {
         await this.orm.call("res.company", "update_social_links", [this.props.resId], {
             social_links: this.state,
         });
-        this.props.onRecordSaved({ ...this.state });
+        await this.props.onRecordSaved({ ...this.state });
         this.props.close();
     }
     cancel() {
