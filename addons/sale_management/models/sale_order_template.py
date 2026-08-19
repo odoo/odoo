@@ -8,6 +8,7 @@ from odoo.fields import Command, Domain
 class SaleOrderTemplate(models.Model):
     _name = "sale.order.template"
     _description = "Order Templates"
+    _inherit = ["product.catalog.mixin"]
     _order = "sequence, id"
 
     active = fields.Boolean(
@@ -325,3 +326,20 @@ class SaleOrderTemplate(models.Model):
             return self.sudo().unlink()
 
         return False
+
+    # === CATALOG ===#
+
+    def _get_catalog_currency(self):
+        self.ensure_one()
+        return self.currency_id or self.company_id.currency_id or self.env.company.currency_id
+
+    def _get_product_catalog_domain(self):
+        return super()._get_product_catalog_domain() & Domain(
+            self.env["sale.order.template.line"]._product_id_domain()
+        )
+
+    def _show_prices(self) -> bool:
+        return False
+
+    def _has_sections(self) -> bool:
+        return True
