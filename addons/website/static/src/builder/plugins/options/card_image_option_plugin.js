@@ -2,7 +2,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { renderToElement } from "@web/core/utils/render";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
@@ -115,8 +114,11 @@ export class RemoveCoverImageAction extends BuilderAction {
 }
 export class AddCoverImageAction extends BuilderAction {
     static id = "addCoverImage";
+    static dependencies = ["websiteBridge"];
     apply({ editingElement }) {
-        const imageWrapper = renderToElement("website.s_card.imageWrapper");
+        const imageWrapper = this.dependencies.websiteBridge.renderToElement(
+            "website.s_card.imageWrapper"
+        );
         editingElement.prepend(imageWrapper);
         editingElement.classList.add("o_card_img_top");
     }
