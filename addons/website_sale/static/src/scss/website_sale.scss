@@ -1010,6 +1010,7 @@ $-product-ratios-map: (
     .o_wsale_image_viewer_ratio_#{$-ratio-name},
     .o_wsale_product_page_opt_image_ratio_#{$-ratio-name} {
         --o-wsale-product-image-ratio: #{$-ratio-value};
+        --o-wsale-product-thumbnail-ratio: #{if($-ratio-name == 'auto', 1, $-ratio-value)};
         @if($-ratio-name == 'auto') {
             & img {
                 object-fit: contain !important;
@@ -1533,6 +1534,10 @@ $-product-radius-map: (
         aspect-ratio: var(--o-wsale-product-image-ratio);
     }
 
+    .carousel-item > .o_product_detail_img_wrapper {
+        min-height: inherit;
+    }
+
     // Hide controls when not hovering on desktop
     @include media-breakpoint-up(xl) {
         &:not(:hover) {
@@ -1572,7 +1577,7 @@ $-product-radius-map: (
                     & > div,
                     & > div > img {
                         border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-                        aspect-ratio: var(--o-wsale-product-image-ratio);
+                        aspect-ratio: var(--o-wsale-product-thumbnail-ratio);
                     }
 
                     .o_product_video_thumb {
