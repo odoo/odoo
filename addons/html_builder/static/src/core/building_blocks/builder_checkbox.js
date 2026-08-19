@@ -12,6 +12,7 @@ import { BuilderComponent } from "./builder_component";
 export class BuilderCheckbox extends Component {
     static template = "html_builder.BuilderCheckbox";
     static components = { BuilderComponent, CheckBox };
+
     static props = {
         ...clickableBuilderComponentProps,
     };

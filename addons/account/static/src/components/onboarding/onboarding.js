@@ -2,13 +2,12 @@ import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 class AccountOnboardingWidget extends Component {
     static template = "account.Onboarding";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
