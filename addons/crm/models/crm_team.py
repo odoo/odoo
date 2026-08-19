@@ -466,6 +466,10 @@ class Team(models.Model):
         # the first transaction can be long which we want to avoid
         if auto_commit:
             self._cr.commit()
+            # the commit above opens a new snapshot: re-sync against it so leads deleted
+            # by a transaction that committed in the meantime aren't fed into the loop below
+            for team_data in teams_data.values():
+                team_data["leads"] = team_data["leads"].exists()
 
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
@@ -475,7 +479,7 @@ class Team(models.Model):
             team = random.choices(population, weights=weights, k=1)[0]
 
             # filter remaining leads, remove team if no more leads for it
-            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids).exists()
+            teams_data[team]["leads"] = teams_data[team]["leads"].filtered(lambda l: l.id not in leads_done_ids)
             if not teams_data[team]["leads"]:
                 population_index = population.index(team)
                 population.pop(population_index)
@@ -498,6 +502,10 @@ class Team(models.Model):
                 self.env['crm.lead'].browse(lead_unlink_ids).unlink()
                 lead_unlink_ids = set()
                 self._cr.commit()
+                # re-sync remaining leads against the DB now that some may have been
+                # unlinked (own bundle unlink above, or a concurrent external delete)
+                for team_data in teams_data.values():
+                    team_data["leads"] = team_data["leads"].exists()
 
         # unlink duplicates once
         self.env['crm.lead'].browse(lead_unlink_ids).unlink()
