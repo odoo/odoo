@@ -22,12 +22,12 @@
                 <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
                         groups="account.group_account_invoice"
                         class="oe_highlight"
-                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('out_invoice', 'out_refund')"/>
+                        invisible="not l10n_my_edi_is_applicable or l10n_my_edi_state not in (False, 'invalid', 'cancelled') or move_type not in ('out_invoice', 'out_refund')"/>
             </button>
             <button name="action_register_payment" position="after">
                 <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
                         groups="account.group_account_invoice"
-                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('in_invoice', 'in_refund')"/>
+                        invisible="not l10n_my_edi_is_applicable or l10n_my_edi_state not in (False, 'invalid', 'cancelled') or move_type not in ('in_invoice', 'in_refund')"/>
             </button>
             <xpath expr="//header" position="inside">
                 <!-- The invalid/cancelled states should be final. -->
@@ -47,8 +47,8 @@
                         <group>
                             <!-- Only displayed if the invoice contains a tax of type Exempt -->
                             <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
-                            <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state != False"/>
-                            <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state != False"/>
+                            <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state and l10n_my_edi_state not in ('invalid', 'cancelled')"/>
+                            <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state and l10n_my_edi_state not in ('invalid', 'cancelled')"/>
                         </group>
                     </group>
                 </page>
