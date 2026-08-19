@@ -176,7 +176,8 @@ class ProjectCustomerPortal(CustomerPortal):
         return session_info
 
     @http.route(['/my/projects/<int:project_id>/project_sharing', '/my/projects/<int:project_id>/project_sharing/<path:subpath>'], type='http', auth='user', methods=['GET'])
-    def render_project_backend_view(self, project_id, subpath=None):
+    def render_project_backend_view(self, project_id, subpath=None, *, highlight_message_id=None):
+        # highlight_message_id is used JS side by parsing the query string
         project = request.env['project.project'].sudo().browse(project_id)
         if not (
             project.exists()

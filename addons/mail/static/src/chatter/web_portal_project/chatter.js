@@ -79,10 +79,6 @@ export class Chatter extends Component {
         return ["messages"];
     }
 
-    get onCloseFullComposerRequestList() {
-        return this.state.thread.fullComposerCloseRequestList;
-    }
-
     get initialRequestList() {
         return [...this.requestList, "messages"];
     }
@@ -136,11 +132,9 @@ export class Chatter extends Component {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        await thread.fetchThreadData(requestList);
-    }
-
-    onCloseFullComposerCallback() {
-        this.load(this.state.thread, this.onCloseFullComposerRequestList);
+        if (requestList.includes("messages")) {
+            thread.fetchNewMessages();
+        }
     }
 
     _onMounted() {

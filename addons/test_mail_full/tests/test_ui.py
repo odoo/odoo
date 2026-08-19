@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from urllib.parse import urlencode
 
 from odoo import tests
@@ -165,3 +166,23 @@ class TestUIPortal(TestPortal):
             "portal_message_highlight_tour",
             login=self.user_portal.login,
         )
+
+    def test_message_link(self):
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Linked Record"})
+        target_message = record.message_post(
+            body="Target message",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        user_portal = self._create_portal_user()
+        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Public channel")
+        link = f"{record.get_base_url()}/mail/message/{target_message.id}"
+        channel.message_post(
+            body=Markup(
+                '<a class="o_message_redirect" data-oe-model="mail.message" data-oe-id="%(id)s" href="%(link)s">%(link)s</a>'
+            )
+            % {"id": target_message.id, "link": link},
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.start_tour(channel.invitation_url, "portal_message_link_tour", login=user_portal.login)

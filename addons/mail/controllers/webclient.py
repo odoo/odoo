@@ -45,13 +45,9 @@ class WebclientController(ThreadController):
             else:
                 store.add(messages, "_store_message_fields", fields_params=fields_params)
 
-    @store_handler("mail.thread", audience="everyone")
-    def store_mail_thread(
-        self, store, thread_model, thread_id, request_list, access_params=None, **kwargs
-    ):
-        thread = self._get_thread_with_access(
-            thread_model, thread_id, mode="read", **(access_params or {})
-        )
+    @store_handler("mail.thread", audience="internal")
+    def store_mail_thread(self, store, thread_model, thread_id, request_list):
+        thread = self._get_thread_with_access(thread_model, thread_id, mode="read")
         if not thread:
             thread = request.env[thread_model].browse(thread_id)
             store.add(
@@ -63,10 +59,6 @@ class WebclientController(ThreadController):
                 as_thread=True,
             )
         else:
-            if not request.env.user._is_internal() or not thread.sudo(False).with_context(
-                allowed_company_ids=[]
-            ).has_access("read"):
-                request_list = []
             store.add(
                 thread,
                 "_store_thread_fields",

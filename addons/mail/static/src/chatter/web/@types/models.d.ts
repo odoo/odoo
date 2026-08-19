@@ -10,4 +10,8 @@ declare module "models" {
         send: () => Promise<void>;
         textContent: string;
     }
+    export interface Thread {
+        fetchThreadData: (requestList: string[]) => Promise<void>;
+        fullComposerCloseRequestList: Readonly<string[]>;
+    }
 }

@@ -29,7 +29,12 @@ export function messageActionOpenFullComposer(title, context, { message, store, 
         },
     };
     store.env.services.action.doAction(action, {
-        onClose: () => thread.fetchThreadData(thread.fullComposerCloseRequestList),
+        onClose: () => {
+            thread.fetchNewMessages();
+            thread.fetchThreadData(
+                thread.fullComposerCloseRequestList.filter((r) => r !== "messages")
+            );
+        },
     });
 }
 
