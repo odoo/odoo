@@ -19,7 +19,7 @@ services:
       INVOICE_AI_JWT_AUDIENCE: invoice-ai
       INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       # Redis — LLM extraction result cache (avoids redundant Claude calls)
-      REDIS_URL: ${REDIS_URL:-redis://localhost:6379/0}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       LLM_CACHE_TTL_HOURS: "168"
     healthcheck:
       test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8100/healthz', timeout=5)\"" ]
@@ -151,7 +151,7 @@ services:
       INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
       INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       # Redis — LLM extraction result cache (avoids redundant Claude calls)
-      REDIS_URL: ${REDIS_URL:-redis://localhost:6379/0}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       LLM_CACHE_TTL_HOURS: "168"
     logging:
       driver: json-file
@@ -164,6 +164,35 @@ services:
           memory: 768M
         reservations:
           memory: 256M
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Session store (session_redis) + LLM extraction cache (llm_cache)
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    # Loopback-only for local Redis debugging. App containers reach Redis
+    # over the private compose network as `redis:6379` — never via localhost.
+    ports:
+      - "127.0.0.1:6379:6379"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
 
   odoo:
     build:
@@ -196,7 +225,7 @@ services:
       # Value comes exclusively from the environment (see .env / env_file).
       URL: ${URL:-}
       # Redis — used by session_redis addon for HTTP session storage
-      REDIS_URL: ${REDIS_URL:-redis://localhost:6379/0}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       ODOO_SESSION_REDIS_PREFIX: "odoo-session:"
       ODOO_SESSION_REDIS_TTL_DAYS: "7"
     ports:
@@ -282,6 +311,8 @@ volumes:
     name: odoo-web-data
   rabbitmq-data:
     name: rabbitmq-data
+  redis-data:
+    name: redis-data
   certbot-www:
     name: certbot-www
   certbot-conf:

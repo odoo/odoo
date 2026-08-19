@@ -168,6 +168,7 @@ async def healthz() -> dict[str, str]:
 @app.post("/v1/extract", response_model=ExtractionResponse)
 @limiter.limit("10/minute")
 async def extract_invoice(
+    request: Request,
     claude: Annotated[ClaudeService, Depends(get_claude_service)],
     _auth: Annotated[dict, Depends(require_token)],
     file: Annotated[UploadFile | None, File()] = None,
@@ -245,6 +246,7 @@ async def _voyage_error_handler(_: Request, exc: VoyageEmbeddingError) -> JSONRe
 @app.post("/v1/embed", response_model=EmbedResponse)
 @limiter.limit("30/minute")
 async def embed_texts(
+    request: Request,
     embedder: Annotated[VoyageEmbedder, Depends(get_embedder)],
     _auth: Annotated[dict, Depends(require_token)],
     payload: EmbedRequest,
@@ -275,6 +277,7 @@ async def embed_texts(
 @app.post("/rag/vendor-context", response_model=VendorContextResponse)
 @limiter.limit("20/minute")
 async def vendor_context(
+    request: Request,
     embedder: Annotated[VoyageEmbedder, Depends(get_embedder)],
     _auth: Annotated[dict, Depends(require_token)],
     payload: VendorContextRequest,
