@@ -1,5 +1,8 @@
+from markupsafe import Markup
+
 from odoo import Command
 from odoo.tests import HttpCase, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -176,3 +179,40 @@ class TestProjectSharingUi(HttpCase):
         user_employee = mail_new_test_user(self.env, "alice", name="Alice")
         self.project_portal.message_subscribe(partner_ids=user_employee.partner_id.ids)
         self.start_tour("/my/projects", "portal_project_sharing_chatter_mention_users", login="georges1")
+
+    @mute_logger("odoo.http")
+    def test_06_project_sharing_chatter_message_link(self):
+        self.env["project.share.wizard"].create(
+            {
+                "res_model": "project.project",
+                "res_id": self.project_portal.id,
+                "collaborator_ids": [
+                    Command.create({"partner_id": self.partner_portal.id, "access_mode": "edit"}),
+                ],
+            }
+        )
+        task_source, task_target = (
+            self.env["project.task"]
+            .with_context({"mail_create_nolog": True})
+            .create(
+                [
+                    {"name": "Source Task", "project_id": self.project_portal.id},
+                    {"name": "Target Task", "project_id": self.project_portal.id},
+                ]
+            )
+        )
+        target_message = task_target.message_post(
+            body="Target message",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        link = f"{task_source.get_base_url()}/mail/message/{target_message.id}"
+        task_source.message_post(
+            body=Markup(
+                '<a class="o_message_redirect" data-oe-model="mail.message" data-oe-id="%(id)s" href="%(link)s">%(link)s</a>'
+            )
+            % {"id": target_message.id, "link": link},
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.start_tour("/my/projects", "project_sharing_chatter_message_link", login="georges1")
