@@ -180,3 +180,13 @@ class StockPicking(models.Model):
                 finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
                 finished_move.move_dest_ids = [Command.set(move.ids)]
             grouped_mo.action_assign()
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        # Explicitly remove reference_ids from duplicated stock moves
+        for picking, vals in zip(self, vals_list):
+            if any(m.is_subcontract for m in picking.move_ids) and 'move_ids' in vals:
+                for command in vals['move_ids']:
+                    if command[0] == Command.CREATE:
+                        command[2].pop('reference_ids', None)
+        return vals_list

@@ -1469,6 +1469,26 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_id': self.comp2.id, 'product_uom_qty': 10.0},
         ])
 
+    def test_duplicate_subcontract_picking(self):
+        """ Duplicating subcontracting pickings should not break the exclusive linkage between moves and MOs. """
+        reference = self.env['stock.reference'].create({'name': 'Reference'})
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': 10.0,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+                'reference_ids': [Command.link(reference.id)],
+            })],
+        })
+        self.assertEqual(receipt.reference_ids, reference)
+        duplicated_receipt = receipt.copy()
+        self.assertNotEqual(duplicated_receipt.move_ids.reference_ids, receipt.move_ids.reference_ids,
+            "If the duplicate subcontracting moves share the same reference_ids, they will merge into the same picking, which is not good.",
+        )
+
 
 class TestSubcontractingSerialMassReceipt(TransactionCase):
 
