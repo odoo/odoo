@@ -9,7 +9,7 @@ access_hr_employee_resource_user,resource.resource.user,resource.resource,hr.gro
 access_hr_department_user,hr.department.user,hr.department,hr.group_hr_user,crd,
 hr_dept_hr_officer_access_rule,Department Access For HR Officers,hr.department,hr.group_hr_user,u,
 access_hr_department_employee,hr.department.employee,hr.department,base.group_user,r,
-hr_dept_manager_access_rule,Department Access For Managers,hr.department,base.group_user,u,"[
+hr_dept_manager_access_rule,Department Access For Managers,hr.department,base.group_user_regular,u,"[
             '|',
             ('manager_id', 'in', user.employee_id.ids),
             ('manager_id.is_subordinate', '=', True)
