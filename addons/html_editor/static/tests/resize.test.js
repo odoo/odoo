@@ -1426,13 +1426,13 @@ describe("table reset", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table>
+                <div class="o_table_wrapper"><table>
                     <tbody>
                         <tr><td class="a">1[]</td></tr>
                         <tr><td class="b">2</td></tr>
                     </tbody>
-                </table>
-                <p data-selection-placeholder=""><br></p>
+                </table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
     });
@@ -1456,13 +1456,13 @@ describe("table reset", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table>
+                <div class="o_table_wrapper"><table>
                     <tbody>
                         <tr><td class="a">1[]</td></tr>
                         <tr><td class="b">2</td></tr>
                     </tbody>
-                </table>
-                <p data-selection-placeholder=""><br></p>
+                </table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
     });
@@ -1496,7 +1496,7 @@ describe("table reset", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table">
                         <tbody>
                             <tr>
                                 <td>1</td>
@@ -1508,7 +1508,7 @@ describe("table reset", () => {
                                 <td>3</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -1542,7 +1542,7 @@ describe("table reset", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table">
                         <tbody>
                             <tr style="height: 50px;">
                                 <td>1</td>
@@ -1554,7 +1554,7 @@ describe("table reset", () => {
                                 <td>3</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -1584,8 +1584,8 @@ describe("table reset", () => {
             });
             expect(getContent(el)).toBe(
                 unformat(`
-                    <p data-selection-placeholder="" style="margin: 20px 0px -21px;"><br></p>
-                    <table class="table table-bordered o_table">
+                    <p data-selection-placeholder=""><br></p>
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table">
                         <tbody>
                             <tr>
                                 <td class="a">1[]</td>
@@ -1594,7 +1594,7 @@ describe("table reset", () => {
                                 <td>2</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -1642,7 +1642,7 @@ describe("table reset", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table">
                         <tbody>
                             <tr>
                                 <td class="a">1</td>
@@ -1659,7 +1659,7 @@ describe("table reset", () => {
                                 <td class="j">10</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -1716,7 +1716,7 @@ describe("table reset", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table">
                         <tbody>
                             <tr>
                                 <td>1</td>
@@ -1744,7 +1744,7 @@ describe("table reset", () => {
                                 <td>17</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -1796,7 +1796,7 @@ describe("table reset", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_table" style="width: 700px">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 700px">
                         <colgroup>
                             <col style="width: 120px;">
                             <col style="width: 80px;">
@@ -1826,7 +1826,7 @@ describe("table reset", () => {
                                 <td class="n">14</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -1866,7 +1866,7 @@ describe("table reset", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="table table-bordered o_table">
+                    <div class="o_table_wrapper"><table class="table table-bordered o_table">
                         <tbody>
                             <tr>
                                 <td class="a">1[]</td>
@@ -1879,7 +1879,7 @@ describe("table reset", () => {
                                 <td>6</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table></div>
                     <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
@@ -2037,13 +2037,13 @@ describe("fit to content (dblclick)", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr><td><p><br></p></td></tr>
                         <tr><td><p><br></p></td></tr>
                         <tr style="height: 100px;"><td><p><br></p></td></tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -2090,14 +2090,14 @@ describe("fit to content (dblclick)", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );

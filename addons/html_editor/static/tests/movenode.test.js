@@ -292,14 +292,14 @@ describe("drag", () => {
         expect(getContent(el)).toBe(
             unformat(
                 `<p>ef</p>
-                <table>
+                <div class="o_table_wrapper"><table>
                     <tbody>
                         <tr>
                             <td>[]ab</td>
                             <td>cd</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p>gh</p>`
             )
         );
@@ -331,14 +331,14 @@ describe("drag", () => {
         expect(getContent(el)).toBe(
             unformat(
                 `<p>ef</p>
-                <table>
+                <div class="o_table_wrapper"><table>
                     <tbody>
                         <tr>
                             <td>ab</td>
                             <td>c[]d</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p>gh</p>`
             )
         );
@@ -501,7 +501,7 @@ describe("click", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="o_selected_table">
+                <div class="o_table_wrapper"><table class="o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[<br></p></td>
@@ -509,7 +509,7 @@ describe("click", () => {
                             <td class="o_selected_td"><p>]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p><br></p>
             `)
         );
@@ -544,7 +544,7 @@ describe("click", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">[\u200b</font></p></td>
@@ -552,7 +552,7 @@ describe("click", () => {
                             <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">\u200b]</font></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p><br></p>
             `)
         );

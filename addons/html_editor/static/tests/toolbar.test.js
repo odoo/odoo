@@ -1011,26 +1011,26 @@ test("toolbar works: ArrowUp/Down moves focus to font size dropdown on mobile", 
 test.tags("desktop");
 test("toolbar should not open on keypress tab inside table", async () => {
     const contentBefore = unformat(`
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p>[]ab</p></td>
                     <td><p>cd</p></td>
                 </tr>
             </tbody>
-        </table>
+        </table></div>
     `);
     const contentAfter = unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p>ab</p></td>
                     <td><p>cd[]</p></td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
     `);
 
     const { el } = await setupEditor(contentBefore);
@@ -1042,7 +1042,7 @@ test("toolbar should not open on keypress tab inside table", async () => {
 
 test("toolbar open on single selected cell in table", async () => {
     const contentBefore = unformat(`
-        <table class="table table-bordered o_table">
+        <div class="o_table_wrapper"><table class="table table-bordered o_table">
             <tbody>
                 <tr>
                     <td><p>[]<br></p></td>
@@ -1053,7 +1053,7 @@ test("toolbar open on single selected cell in table", async () => {
                     <td><p><br></p></td>
                 </tr>
             </tbody>
-        </table>
+        </table></div>
     `);
 
     const { el } = await setupEditor(contentBefore);
@@ -1283,26 +1283,26 @@ test("should select table single formatted cell when entire content is selected 
 test.tags("desktop");
 test("toolbar should close on keypress tab inside table", async () => {
     const contentBefore = unformat(`
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p>[ab]</p></td>
                     <td><p>cd</p></td>
                 </tr>
             </tbody>
-        </table>
+        </table></div>
     `);
     const contentAfter = unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p>ab</p></td>
                     <td><p>cd[]</p></td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
     `);
 
     const { el } = await setupEditor(contentBefore);
@@ -1341,7 +1341,7 @@ test("toolbar works: show the correct vertical alignment", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr style="height: 100px;">
                         <td class="o_selected_td" style="vertical-align: middle;">[1</td>
@@ -1354,7 +1354,7 @@ test("toolbar works: show the correct vertical alignment", async () => {
                         <td>6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -1387,7 +1387,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr style="height: 100px;">
                         <td>1</td>
@@ -1398,7 +1398,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
                         <td class="o_selected_td" style="vertical-align: bottom;">4]</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -1408,7 +1408,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr style="height: 100px;">
                         <td>1</td>
@@ -1419,7 +1419,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
                         <td>4]</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -1429,7 +1429,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr style="height: 100px;">
                         <td>1</td>
@@ -1440,7 +1440,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
                         <td class="o_selected_td" style="vertical-align: bottom;">4]</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
