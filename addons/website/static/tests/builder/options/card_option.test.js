@@ -64,7 +64,7 @@ test("set card alignment", async () => {
 });
 
 test("remove/add cover image", async () => {
-    await setupWebsiteBuilderWithSnippet("s_card");
+    await setupWebsiteBuilderWithSnippet("s_card", { loadIframeBuilderTemplates: true });
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='removeCoverImage']");
     // Button to remove cover image is available
@@ -99,7 +99,7 @@ const nestedCardsWithOneCover = `
 `;
 
 test("cover image options only appear on the right card when two of them are nested", async () => {
-    await setupWebsiteBuilder(nestedCardsWithOneCover);
+    await setupWebsiteBuilder(nestedCardsWithOneCover, { loadIframeBuilderTemplates: true });
     await contains(":iframe .outer_card").click();
     // No cover image options are displayed for the outer card
     expect("[data-action-id='setCoverImagePosition']").toHaveCount(0);
