@@ -26,10 +26,10 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
         };
         this.classIcons = {
             normal: "o_status",
-            changes_requested: "oi-lg",
+            changes_requested: "",
             approved: "o_status o_status_green",
-            done: "oi-lg oi-filled",
-            cancelled: "oi-lg oi-filled",
+            done: "oi-filled",
+            cancelled: "oi-filled",
         };
         this.colorIcons = {
             normal: "",
