@@ -3,7 +3,7 @@ name: Build and Push Images to Docker Hub
 on:
     push:
         branches:
-            - main
+            - production
 
 jobs:
     build-and-push:
@@ -22,20 +22,10 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            # 1. بناء ونشر odoo-invoice-ai
-            - name: Build and push Invoice AI Image
-              uses: docker/build-push-action@v5
+            - name: Build and push Odoo Image
+              uses: docker/build-push-action@v6
               with:
                   context: .
-                  file: ./Dockerfile # مسار الـ Dockerfile الخاص بالمشروع
-                  push: true
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/odoo-invoice-ai:latest
-
-            # 2. بناء ونشر odoo:19
-            - name: Build and push Odoo 19 Image
-              uses: docker/build-push-action@v5
-              with:
-                  context: .
-                  file: ./Dockerfile.odoo19 # ضع مسار الـ Dockerfile الخاص بـ odoo 19 هنا
+                  file: ./Dockerfile # أو حددي المسار الصحيح للـ Dockerfile في مجلدك
                   push: true
                   tags: ${{ secrets.DOCKERHUB_USERNAME }}/odoo:19
