@@ -143,9 +143,10 @@ class ResCompany(models.Model):
         )
         if not companies:
             return
+        parents = self.parent_id if self else self.env['res.company']
         account_ids = self.env['account.account'].search([
             ('account_type', 'in', ['asset_receivable', 'liability_payable']),
-            ('company_ids', 'parent_of', companies.ids),
+            ('company_ids', 'in', (companies | parents).ids),
         ]).ids
         date_company_conditions = SQL(
             '(%s)',
