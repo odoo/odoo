@@ -22,7 +22,7 @@ class TestProjectSharingHrTimesheet(TestProjectSharingUi):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
         project_share_wizard.action_send_mail()
