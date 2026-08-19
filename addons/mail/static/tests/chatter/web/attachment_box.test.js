@@ -67,8 +67,8 @@ test("remove attachment should ask for confirmation", async () => {
             </form>`,
     });
     await waitFor(".o-mail-AttachmentCard:count(1)");
-    await waitFor("button[title='Remove']:count(1)");
-    await click("button[title='Remove']");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await waitFor(
         ".modal-body:text('Are you sure you want to delete \"Blah.txt\"? This action cannot be undone.'):count(1)"
     );
@@ -296,7 +296,8 @@ test("removing a group of copies asks confirmation and removes all of them at on
                 <chatter open_attachments="True"/>
             </form>`,
     });
-    await click(".o-mail-AttachmentContainer[aria-label='signature.png'] [title='Remove']");
+    await click(".o-mail-AttachmentContainer[aria-label='signature.png'] button[title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await waitFor(
         ".modal-body:text('Are you sure you want to delete the 2 copies of \"signature.png\"? This action cannot be undone.'):count(1)"
     );
@@ -327,7 +328,8 @@ test("removing a group of copies can spare the attachment it stands for", async 
                 <chatter open_attachments="True"/>
             </form>`,
     });
-    await click(".o-mail-AttachmentContainer[aria-label='signature.png'] [title='Remove']");
+    await click(".o-mail-AttachmentContainer[aria-label='signature.png'] button[title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await click(".modal-footer button:text('Delete only Duplicates')");
     await waitFor(".o-mail-AttachmentContainer:count(1)");
     await waitFor(".o-mail-AttachmentContainer[aria-label='signature.png']:count(1)");
@@ -362,7 +364,8 @@ test("removing a copy posted on a message only removes it from the list", async 
     await waitFor(
         ".o-mail-Message .o-mail-AttachmentContainer[aria-label='signature.png']:count(1)"
     );
-    await click(".o-mail-AttachmentBox .o-mail-AttachmentContainer [title='Remove']");
+    await click(".o-mail-AttachmentBox .o-mail-AttachmentContainer button[title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await click(".modal-footer button:text('Delete only Duplicates')");
     await waitFor(".o-mail-AttachmentBox .o-mail-AttachmentContainer:count(1)");
     await waitFor(".o-mail-Chatter [aria-label='Attach files']:text('1'):count(1)");
@@ -489,7 +492,8 @@ test("removing the last attachment should close the attachment box", async () =>
             </form>`,
     });
     await waitFor(".o-mail-AttachmentBox:count(1)");
-    await click("button[title='Remove']");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await waitFor(
         ".modal-body:text('Are you sure you want to delete \"Blah.txt\"? This action cannot be undone.'):count(1)"
     );
