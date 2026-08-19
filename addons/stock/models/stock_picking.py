@@ -2290,7 +2290,7 @@ class StockPicking(models.Model):
             if picking.picking_type_id.auto_print_reception_report_labels:
                 moves_to_print_label |= picking.move_ids.move_dest_ids
         if pickings_to_print_reception_report:
-            action = self.env.ref('stock.stock_reception_report_action').report_action(pickings_to_print_reception_report, config=False)
+            action = self.env.ref('stock.action_report_picking').report_action(pickings_to_print_reception_report, config=False)
             clean_action(action, self.env)
             report_actions.append(action)
         if moves_to_print_label:
