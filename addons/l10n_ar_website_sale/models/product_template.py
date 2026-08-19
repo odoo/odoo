@@ -67,11 +67,6 @@ class ProductTemplate(models.Model):
                 product=product_or_template,
             )['total_excluded']
 
-            # Check if a discount is applied and adjust the tax-excluded price accordingly
-            if combination_info['has_discounted_price']:
-                discount_percent = (combination_info['list_price'] - combination_info['price']) / combination_info['list_price']
-                total_excluded_value = total_excluded_value * (1 - discount_percent)
-
             # Store the tax-excluded price in the res for use in showing both prices
             combination_info['l10n_ar_price_tax_excluded'] = total_excluded_value
 
