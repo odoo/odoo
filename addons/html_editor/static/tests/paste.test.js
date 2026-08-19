@@ -3792,6 +3792,22 @@ describe("Odoo editor own html", () => {
             },
         });
     });
+
+    test("should unwrap tables if scrollable tables are not allowed", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    `<p>a</p><div class="o_table_wrapper"><table><tbody><tr><td><p>b</p></td></tr></tbody></table></div><p>c</p>`
+                );
+            },
+            contentAfterEdit: `<p>a</p><table><tbody><tr><td><p>b</p></td></tr></tbody></table><p>c[]</p>`,
+            config: {
+                allowScrollableTables: false,
+            },
+        });
+    });
 });
 
 describe("editable in iframe", () => {
@@ -4745,7 +4761,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[x1</p></td>
@@ -4756,7 +4772,7 @@ describe("paste table cells into an existing table", () => {
                             <td><p>b2</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -4788,7 +4804,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p><strong>[x11</strong></p></td>
@@ -4799,7 +4815,7 @@ describe("paste table cells into an existing table", () => {
                             <td class="o_selected_td"><p>x22]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -4830,7 +4846,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -4845,7 +4861,7 @@ describe("paste table cells into an existing table", () => {
                             <td><p>b</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -4877,7 +4893,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[x11</p></td>
@@ -4888,7 +4904,7 @@ describe("paste table cells into an existing table", () => {
                             <td class="o_selected_td"><p>x22]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -4919,7 +4935,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p>[x1</p></td>
@@ -4930,7 +4946,7 @@ describe("paste table cells into an existing table", () => {
                             <td><p>b2</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -4962,7 +4978,7 @@ describe("paste table cells into an existing table", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p>a1</p></td>
@@ -4980,7 +4996,7 @@ describe("paste table cells into an existing table", () => {
                             <td class="o_selected_td"><p>x23]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );

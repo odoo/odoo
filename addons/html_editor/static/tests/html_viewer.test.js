@@ -24,6 +24,24 @@ test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, asyn
     );
 });
 
+test(`tables are wrapped in a scroll container in a standalone HtmlViewer`, async () => {
+    await mountWithCleanup(WebClient);
+
+    registry.category("main_components").add("mycomponent", {
+        Component: HtmlViewer,
+        props: {
+            config: {
+                value: markup(
+                    `<table class="o_table"><tbody><tr><td><table class="o_table"><tbody><tr><td>a</td></tr></tbody></table></td></tr></tbody></table>`
+                ),
+            },
+        },
+    });
+    await animationFrame();
+    expect(".o_readonly > .o_table_wrapper > table").toHaveCount(1);
+    expect("td .o_table_wrapper").toHaveCount(0);
+});
+
 test(`copy from HtmlViewer must support application/vnd.odoo.odoo-editor`, async () => {
     await mountWithCleanup(WebClient);
 
