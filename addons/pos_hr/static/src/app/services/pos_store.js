@@ -10,6 +10,12 @@ patch(PosStore.prototype, {
         this.employeeBuffer = [];
         await super.setup(...arguments);
         if (this.config.module_pos_hr) {
+            // Sent along every request made by the data service, so the backend
+            // always knows which employee is currently using the POS.
+            this.data.registerExecutionContext(() => {
+                const cashier = this.getCashier();
+                return cashier?.id ? { current_cashier_id: cashier.id } : {};
+            });
             this.login = Boolean(odoo.from_backend) && !this.config.module_pos_hr;
             if (!this.accessRight.hasLoggedIn()) {
                 this.navigate("LoginScreen");
@@ -159,10 +165,18 @@ patch(PosStore.prototype, {
 
         return super.addLineToCurrentOrder(vals, opt, configure);
     },
-    /**{name: null, id: null, barcode: null, user_id:null, pin:null}
-     * If pos_hr is activated, return {name: string, id: int, barcode: string, pin: string, user_id: int}
-     * @returns {null|*}
-     */
+    getCashier() {
+        if (this.config.module_pos_hr) {
+            return this.cashier;
+        }
+        return super.getCashier(...arguments);
+    },
+    getCashierUserId() {
+        if (this.config.module_pos_hr) {
+            return this.cashier.user_id ? this.cashier.user_id : null;
+        }
+        return super.getCashierUserId(...arguments);
+    },
     getSyncAllOrdersContext(orders, options = {}) {
         const context = super.getSyncAllOrdersContext(orders, options);
         const cashier = this.accessRight.loggedCashier;
@@ -170,7 +184,7 @@ patch(PosStore.prototype, {
             context.current_cashier_id = cashier.id;
         }
         return context;
-    },
+    }
     async logEmployeeMessage(action, message) {
         if (!this.config.module_pos_hr) {
             super.logEmployeeMessage(...arguments);
