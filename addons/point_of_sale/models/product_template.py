@@ -303,8 +303,16 @@ class ProductTemplate(models.Model):
                     "the configuration first.",
                 ))
 
+    def _get_special_products_to_archive(self):
+        return self.env.ref(
+            "point_of_sale.product_product_tip"
+        ).product_tmpl_id | self.env.ref(
+            "point_of_sale.product_product_service_fee"
+        ).product_tmpl_id
+
     def action_archive(self):
-        self._check_is_special_product()
+        special_products = self._get_special_products_to_archive()
+        (self - special_products)._check_is_special_product()
         self._ensure_unused_in_pos()
         return super().action_archive()
 

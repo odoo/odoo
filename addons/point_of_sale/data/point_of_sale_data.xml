@@ -29,8 +29,6 @@
             <field name="name">Tips</field>
             <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
             <field name="default_code">TIPS</field>
-            <field name="weight">0.01</field>
-            <field name="available_in_pos">False</field>
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
@@ -39,7 +37,6 @@
             <field name="available_in_pos">True</field>
             <field name="standard_price">0.00</field>
             <field name="list_price">0.0</field>
-            <field name="weight">0.00</field>
             <field name="type">service</field>
             <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -47,6 +44,16 @@
             <field name="purchase_ok">False</field>
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
+        <function model="product.template" name="write">
+            <value
+                model="product.template"
+                eval="(
+                    obj().env.ref('point_of_sale.product_product_tip').product_tmpl_id
+                    | obj().env.ref('point_of_sale.product_product_service_fee').product_tmpl_id
+                ).ids"
+            />
+            <value eval="{'active': False}"/>
+        </function>
 
         <record id="uom.product_uom_unit" model="uom.uom">
             <field name="is_pos_groupable">True</field>

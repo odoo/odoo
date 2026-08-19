@@ -652,6 +652,9 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        service_fee_product = self.env.ref('point_of_sale.product_product_service_fee', raise_if_not_found=False).product_tmpl_id
+        if not service_fee_product.active:
+            service_fee_product.active = True
         for vals in vals_list:
             if not vals.get('iface_tipproduct', False):
                 vals['tip_product_id'] = False
@@ -735,10 +738,14 @@ class PosConfig(models.Model):
         if 'iface_tipproduct' in vals and not vals['iface_tipproduct']:
             vals['tip_product_id'] = False
             vals['set_tip_after_payment'] = False
-        elif vals.get('iface_tipproduct') and 'tip_product_id' not in vals \
-                and not all(config.tip_product_id for config in self) \
-                and (default_tip := self._get_default_tip_product()):
-            vals['tip_product_id'] = default_tip.id
+        else:
+            product = self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False).product_tmpl_id
+            if vals.get('iface_tipproduct') and not product.active:
+                product.active = True
+            if 'tip_product_id' not in vals \
+                    and not all(config.tip_product_id for config in self) \
+                    and (default_tip := self._get_default_tip_product()):
+                vals['tip_product_id'] = default_tip.id
 
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)

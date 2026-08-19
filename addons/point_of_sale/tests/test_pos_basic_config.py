@@ -92,6 +92,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product3.write({'company_id': False})
 
         def get_top_product_ids(count):
+            session.config_id.iface_tipproduct = True
             data = session.load_data([])
             special_product = session.config_id._get_special_products().ids
             available_top_product = [product for product in data['product.template'] if product['product_variant_ids'][0] not in special_product]
@@ -351,6 +352,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertFalse(test_journal.active, "Journal should be archived when not linked to a POS payment method.")
 
     def test_archive_delete_special_product(self):
+        self.config.iface_tipproduct = True
         special_product = self.env.ref('point_of_sale.product_product_tip')
         with self.assertRaisesRegex(UserError, "a special product in a Point of Sale configuration"):
             special_product.action_archive()

@@ -241,6 +241,12 @@ class TestUi(TestPosHrHttpCommon):
 
     @users('pos_admin')
     def test_create_pos_config_without_hr_right(self):
+        self.pos_admin.write({
+                    'group_ids': [
+                        (4, self.env.ref('product.group_product_manager').id),
+                        (4, self.env.ref('account.group_account_manager').id),
+                    ]
+                })
         self.env['pos.config'].create({
             'name': 'My cute pos config',
             'module_pos_hr': True,

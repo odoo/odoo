@@ -63,7 +63,7 @@ export function clickCancel() {
 export function checkOrderTotal(amount) {
     return {
         content: `Confirm '${amount}' is displayed correctly`,
-        trigger: `.o_self_product_list_page .o_self_shadow_bottom .o-so-tabular-nums:contains('${amount}')`,
+        trigger: `.o_self_product_list_page .order-total:contains('${amount}')`,
     };
 }
 
