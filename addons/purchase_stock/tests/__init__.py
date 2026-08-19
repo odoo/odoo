@@ -23,3 +23,5 @@ from . import test_stock_valuation
 from . import test_stockvaluation
 from . import test_supplier
 from . import test_uninstall
+from . import test_accrued_purchase_orders
+from . import test_purchase_downpayment

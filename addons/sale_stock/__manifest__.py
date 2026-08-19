@@ -39,6 +39,7 @@ Preferences
         'data/sale_stock_data.xml',
 
         'wizard/stock_rules_report_views.xml',
+        'wizard/stock_account_accrued_orders_wizard_views.xml',
         'security/ir.access.csv',
     ],
     'demo': ['data/sale_order_demo.xml'],

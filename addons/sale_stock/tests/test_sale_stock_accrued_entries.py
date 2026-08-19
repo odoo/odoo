@@ -91,7 +91,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         pick.button_validate()
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
         }).create({
@@ -148,7 +148,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         inv.invoice_date = fields.Date.to_date('2020-01-08')
         inv.action_post()
 
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
         }).create({
@@ -222,7 +222,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         sale_order_1.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         sale_order_1.picking_ids.button_validate()
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
         }).create({
@@ -260,7 +260,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         invoice.line_ids.price_unit = 140  # Must be different than SO line unit cost.
         invoice.action_post()
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_2.id],
         }).create({
@@ -341,7 +341,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         invoice.action_post()
 
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order.line',
             'active_ids': sale_order.order_line.ids,
         }).create({
@@ -424,7 +424,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         invoice_2.action_post()
 
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order.line',
             'active_ids': sale_order.order_line.ids,
         }).create({
@@ -496,7 +496,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         invoice.line_ids.quantity = 5
         invoice.action_post()
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
         }).create({
@@ -563,7 +563,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         invoice.line_ids.price_unit = 30
         invoice.action_post()
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
         }).create({
@@ -590,7 +590,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         backorder_delivery.button_validate()
 
         # Use accrued order wizard and check generated values.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
         }).create({
@@ -637,7 +637,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         sale_order._create_invoices()
 
         sale_order.order_line.invalidate_recordset(['qty_invoiced'])
-        wizard = self.env['account.accrued.orders.wizard'].with_context(
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context(
             active_model='sale.order',
             active_ids=sale_order.ids,
         ).create({
@@ -704,7 +704,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         sale_order_2.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         sale_order_2.picking_ids.button_validate()
 
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': (sale_order_1 | sale_order_2).ids,
         }).create({

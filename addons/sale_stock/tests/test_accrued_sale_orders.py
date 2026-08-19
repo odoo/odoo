@@ -68,7 +68,7 @@ class TestAccruedSaleOrders(TestSaleCommon):
         cls.account_revenue = cls.company_data["default_account_revenue"]
         cls.wizard = (
             cls
-            .env["account.accrued.orders.wizard"]
+            .env["stock_account.accrued.orders.wizard"]
             .with_context({"active_model": "sale.order", "active_ids": cls.sale_order.ids})
             .create({"account_id": cls.account_expense.id, "date": fields.Date.today()})
         )

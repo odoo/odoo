@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from odoo import fields, Command
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo.exceptions import UserError
@@ -18,7 +17,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with purchase_stock installed
         cls.product_a.update({'type': 'service', 'purchase_method': 'receive'})
         cls.product_b.update({'type': 'service', 'purchase_method': 'receive'})
-        #analytic distribution
+        # analytic distribution
         cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
@@ -42,8 +41,8 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'price_unit': cls.product_a.list_price,
                     'tax_ids': False,
                     'analytic_distribution': {
-                        cls.analytic_account_a.id : 80.0,
-                        cls.analytic_account_b.id : 20.0,
+                        cls.analytic_account_a.id: 80.0,
+                        cls.analytic_account_b.id: 20.0,
                     },
                 }),
                 Command.create({
@@ -54,7 +53,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'price_unit': cls.product_b.list_price,
                     'tax_ids': False,
                     'analytic_distribution': {
-                        cls.analytic_account_b.id : 100.0,
+                        cls.analytic_account_b.id: 100.0,
                     },
                 }),
             ],
@@ -62,7 +61,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         cls.purchase_order.button_confirm()
         cls.account_revenue = cls.company_data['default_account_revenue']
         cls.account_expense = cls.company_data['default_account_expense']
-        cls.wizard = cls.env['account.accrued.orders.wizard'].with_context({
+        cls.wizard = cls.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': cls.purchase_order.ids
         }).create({
@@ -209,21 +208,21 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
     def test_error_when_different_currencies_accrued(self):
         """
-        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
+        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry,
         a UserError is raised.
         """
         purchase_orders = self.env['purchase.order'].create([
             {
                 'partner_id': self.partner_a.id,
                 'currency_id': self.company_data['currency'].id,
-            }, 
+            },
             {
                 'partner_id': self.partner_a.id,
                 'currency_id': self.other_currency.id,
             }
         ])
         purchase_orders.button_confirm()
-        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+        accrued_wizard = self.env['stock_account.accrued.orders.wizard'].with_context(
             active_model='purchase.order',
             active_ids=purchase_orders.ids,
         ).new()
@@ -247,7 +246,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         })
         purchase_order.button_confirm()
         purchase_order.order_line.qty_received = 10
-        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+        accrued_wizard = self.env['stock_account.accrued.orders.wizard'].with_context(
             active_model='purchase.order',
             active_ids=purchase_order.ids,
         ).create({

@@ -76,7 +76,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_menuitem.xml',
         'wizard/account_secure_entries_wizard.xml',
         'views/mail_message_views.xml',
-        'wizard/accrued_orders.xml',
         'views/bill_preview_template.xml',
         'data/account_reports_data.xml',
         'views/uom_uom_views.xml',
