@@ -144,7 +144,7 @@ class SaleOrder(models.Model):
 
     validity_date = fields.Date(
         string="Expiration",
-        help="Validity of the order, after that you will not able to sign & pay the quotation.",
+        help="Validity of the quotation. After this date, you will no longer be able to sign and pay it.",
         compute='_compute_validity_date',
         store=True, readonly=False, copy=False, precompute=True)
     journal_id = fields.Many2one(
