@@ -23,8 +23,8 @@ export class EventStateSelection extends StateSelectionField {
         this.classIcons = {
             normal: "o_status",
             done: "o_status o_status_green",
-            blocked: "oi-lg",
-            cancel: "oi-lg",
+            blocked: "oi-filled",
+            cancel: "oi-filled",
         };
         this.colorIcons = {
             normal: "",

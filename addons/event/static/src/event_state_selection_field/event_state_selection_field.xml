@@ -2,7 +2,7 @@
     <t t-name="event.EventStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary">
         <xpath expr="//Dropdown/button/div" position="replace">
             <div class="d-flex align-items-center">
-                <i t-attf-class="oi {{ this.stateIconClass(currentValue) }} {{ this.statusColor(currentValue) }} " t-att-data-icon="this.stateIcon(currentValue)"/>
+                <i t-attf-class="oi {{ this.stateIconClass(this.currentValue) }} {{ this.statusColor(this.currentValue) }} " t-att-data-icon="this.stateIcon(this.currentValue)"/>
             </div>
         </xpath>
         <!-- Dropdown Selection-->
