@@ -28,6 +28,7 @@ const ILLEGAL_TABLE_STRATEGY_NODES = new Set(["TABLE", "TBODY", "TR", "THEAD", "
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
     static dependencies = [
+        "border",
         "contextStyle",
         "math",
         "measurementSnapshot",
@@ -51,7 +52,6 @@ export class TableStrategyPlugin extends Plugin {
         "extractRowsFromBands",
         "fillTableContainer",
         "getCellBackgroundStyleInfo",
-        "getCellBorderStyleInfo",
         "getCellMarginStyleInfo",
         "getClusterEmailNodes",
         "getVerticalAlign",
@@ -96,7 +96,6 @@ export class TableStrategyPlugin extends Plugin {
             emptyCell: this.buildEmptyCell.bind(this, buildContext),
             cellWithOffset: this.buildCellWithOffset.bind(this, buildContext),
         });
-        this.borderStyleRules = new Rules();
         this.backgroundStyleRules = new Rules();
         this.cellMarginStyleRules = new Rules();
         this.provideStyleRules();
@@ -127,19 +126,10 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     provideStyleRules() {
-        const borderRules = this.borderStyleRules.forPlugin(TableStrategyPlugin.id);
         const backgroundRules = this.backgroundStyleRules.forPlugin(TableStrategyPlugin.id);
         const cellMarginRules = this.cellMarginStyleRules.forPlugin(TableStrategyPlugin.id);
-        borderRules.allow(/^border.*/);
         backgroundRules.allow(/^background.*/);
         cellMarginRules.allow(/^margin-(top|bottom)$/);
-    }
-
-    getCellBorderStyleInfo(styleInfo, referenceNode) {
-        if (!styleInfo) {
-            return styleInfo;
-        }
-        return this.filterStyleInfo(styleInfo, referenceNode, this.borderStyleRules);
     }
 
     getCellBackgroundStyleInfo(styleInfo, referenceNode) {
@@ -353,7 +343,7 @@ export class TableStrategyPlugin extends Plugin {
             return defaultEmailNodeArguments;
         }
         const styleInfo = layout.getRef().styleInfo;
-        const borderStyleInfo = this.getCellBorderStyleInfo(styleInfo, referenceNode);
+        const borderStyleInfo = this.getBorderStyleInfo(styleInfo, referenceNode);
         const backgroundStyleInfo = this.getCellBackgroundStyleInfo(styleInfo, referenceNode);
         if (
             (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) ||

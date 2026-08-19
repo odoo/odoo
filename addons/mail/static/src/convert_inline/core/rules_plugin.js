@@ -64,6 +64,8 @@ export class RulesPlugin extends Plugin {
         return targetElement;
     }
 
+    // TODO EGGMAIL: allow providing callbacks to do extra processing during
+    // processData
     filterAttributes(attributes, referenceNode, rules = this.attributeRules) {
         if (typeof referenceNode === "string") {
             referenceNode = this.config.referenceDocument.createElement(referenceNode);
@@ -128,6 +130,12 @@ export class RulesPlugin extends Plugin {
     /**
      * Return a new styleInfo instance filtered with rules
      */
+    // WORKING HERE, (good idea)
+    // TODO EGGMAIL: allow providing callbacks to do extra processing during
+    // processData -> this would be necessary for eg image_strategy_plugin neutralization
+    // => then, we could use border_plugin neutralizeBorders with callbacks
+    // => then, no need to manually remove keys from a styleInfo to copy
+    // them on another styleInfo, we can directly filter the styleInfo + extra processing
     filterStyleInfo(styleInfo, referenceNode, rules = this.styleRules) {
         if (typeof referenceNode === "string") {
             referenceNode = this.config.referenceDocument.createElement(referenceNode);

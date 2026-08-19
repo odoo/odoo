@@ -9,7 +9,7 @@ const GRID_CELL_SELECTOR = `.o_masonry_grid_container > .row > [data-name='Block
 
 export class MasonryStrategyPlugin extends Plugin {
     static id = "masonryStrategy";
-    static dependencies = ["mosaicStrategy", "rules", "style", "tableStrategy"];
+    static dependencies = ["border", "mosaicStrategy", "rules", "style", "tableStrategy"];
     resources = {
         mosaic_cells_providers_processors: this.provideMosaicCells.bind(this),
         mosaic_cells_element_options_providers_processors:
@@ -50,7 +50,7 @@ export class MasonryStrategyPlugin extends Plugin {
         const cellStyleInfo = StyleInfo.from({ "vertical-align": "middle" });
         const styleInfo = emailNode.layout.getRef().styleInfo;
         const backgroundStyleInfo = this.getCellBackgroundStyleInfo(styleInfo, referenceNode);
-        const borderStyleInfo = this.getCellBorderStyleInfo(styleInfo, referenceNode);
+        const borderStyleInfo = this.getBorderStyleInfo(styleInfo, referenceNode);
         for (const propertyName of [...backgroundStyleInfo.keys(), ...borderStyleInfo.keys()]) {
             styleInfo.removeProperty(propertyName);
         }

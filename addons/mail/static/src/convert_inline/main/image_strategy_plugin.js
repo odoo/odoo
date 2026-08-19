@@ -3,15 +3,16 @@ import { Plugin } from "../plugin";
 import { StyleInfo } from "../core/style_models";
 import { parseCssValue } from "../css_parsers";
 import { ImageLayout, ImageLinkLayout } from "./image_models";
-import { Rules } from "../core/rules_models";
 import { isParagraphRelatedElement, isPhrasingContent } from "@html_editor/utils/dom_info";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
+import { Rules } from "../core/rules_models";
 
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
     static dependencies = [
+        "border",
         "math",
         "measurementSnapshot",
         "responsiveBlock",
@@ -35,10 +36,14 @@ export class ImageStrategyPlugin extends Plugin {
     };
 
     setup() {
+        // Custom Rules used to neutralize all border-related properties
+        // on an image
         this.imageBorderStyleRules = new Rules();
         this.provideImageBorderStyleRules();
     }
 
+    // TODO EGGMAIL: see rules_plugin, remove these rules and allow
+    // providing processData callbacks
     provideImageBorderStyleRules() {
         const borderRules = this.imageBorderStyleRules.forPlugin(ImageStrategyPlugin.id);
         borderRules.allow(/^border(-.*)?$/, {
@@ -400,14 +405,6 @@ export class ImageStrategyPlugin extends Plugin {
         };
     }
 
-    getBorderStyleInfo(imageNode) {
-        return this.filterStyleInfo(
-            this.getRawStyleInfo(imageNode),
-            imageNode,
-            this.imageBorderStyleRules
-        );
-    }
-
     buildImageLayout(options) {
         let imageRef;
         if (this.isImg({ referenceNode: options.imageNode })) {
@@ -415,7 +412,9 @@ export class ImageStrategyPlugin extends Plugin {
         } else {
             imageRef = this.buildFontIconImageRef(options);
         }
-        imageRef.style = imageRef.style.merge(this.getBorderStyleInfo(options.imageNode));
+        imageRef.style = imageRef.style.merge(
+            this.getBorderStyleInfo(this.getRawStyleInfo(options.imageNode), options.imageNode)
+        );
         return new ImageLayout({ refs: { root: imageRef } });
     }
 
@@ -427,7 +426,9 @@ export class ImageStrategyPlugin extends Plugin {
         } else {
             imageRef = this.buildFontIconImageRef({ imageNode, shouldBeBlock });
         }
-        imageRef.style = imageRef.style.merge(this.getBorderStyleInfo(imageNode));
+        imageRef.style = imageRef.style.merge(
+            this.getBorderStyleInfo(this.getRawStyleInfo(imageNode), imageNode)
+        );
         return new ImageLinkLayout({
             refs: {
                 root: {

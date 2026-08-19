@@ -2,17 +2,42 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, INDIRECT_CSS_PROPERTY_VALUES } from "../core/utils";
 import { StyleInfo } from "../core/style_models";
+import { Rules } from "../core/rules_models";
 
 export class BorderPlugin extends Plugin {
     static id = "border";
     static dependencies = ["measurementSnapshot", "rules", "style"];
-    static shared = ["hasVisibleBorder", "getBorderStyleInfo"];
+    static shared = [
+        "hasVisibleBorder",
+        "getBorderStyleInfo",
+        "getNormalizedSimpleBorderStyleInfo",
+        "neutralizeBorders",
+    ];
     resources = {
         style_rules_processors: [[this.provideStyleRules.bind(this), BorderPlugin.id]],
     };
 
+    setup() {
+        this.neutralizeBorderRules = new Rules({ defaultAllowed: true });
+        this.provideNeutralizeBorderRules();
+        this.borderRules = new Rules();
+        this.provideBorderRules();
+    }
+
+    provideNeutralizeBorderRules() {
+        const borderRules = this.neutralizeBorderRules.forPlugin(BorderPlugin.id);
+        borderRules.block(/^border(-.*)?$/);
+    }
+
+    provideBorderRules() {
+        const borderRules = this.borderRules.forPlugin(BorderPlugin.id);
+        this.provideStyleRules(borderRules);
+    }
+
     provideStyleRules(rules) {
         // TODO EGGMAIL: borders can not be bigger than 8px -> fix all incorrect borders?
+        // TODO EGGMAIL: restrict to radius-width-color-style, potentially convert
+        // some others, and prevent others? (radius needs MSO-specific handling)
         rules.allow(/^border(-.*)?$/, {
             when: ({ propertyName }) =>
                 propertyName !== "border-spacing" && propertyName !== "border-collapse",
@@ -37,7 +62,13 @@ export class BorderPlugin extends Plugin {
         });
     }
 
-    getBorderStyleInfo(referenceNode, layoutDimensions) {
+    // TODO EGGMAIL: this does not modify "in place", however places where it
+    // would be useful need to do this in place => to think about
+    neutralizeBorders(styleInfo, referenceNode) {
+        return this.filterStyleInfo(styleInfo, referenceNode, this.neutralizeBorderRules);
+    }
+
+    getNormalizedSimpleBorderStyleInfo(referenceNode, layoutDimensions) {
         const styleInfo = new StyleInfo();
         const computedStyle = this.getComputedStyle(referenceNode, null, layoutDimensions);
         for (const side of DIRECTION_VARIANTS) {
@@ -50,6 +81,10 @@ export class BorderPlugin extends Plugin {
             }
         }
         return styleInfo;
+    }
+
+    getBorderStyleInfo(styleInfo, referenceNode) {
+        return this.filterStyleInfo(styleInfo, referenceNode, this.borderRules);
     }
 }
 

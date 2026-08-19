@@ -20,7 +20,10 @@ export class MosaicStrategyPlugin extends Plugin {
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: this.processSyntheticEmailNodes.bind(this),
-        on_measure_ancestor_handlers: this.handleOverlappingBorders.bind(this),
+        on_measure_ancestor_handlers: [
+            this.handleOverlappingBorders.bind(this),
+            this.handleOverlappingBackgroundColors.bind(this),
+        ],
     };
 
     acceptTableStrategyReport(emailNode) {
@@ -254,7 +257,7 @@ export class MosaicStrategyPlugin extends Plugin {
         // Remove all unnecessary heights on spacers (a spacer that does not
         // define the height of a rowspan should not have a set height)
         for (const cell of spacerCells) {
-            delete cell.height;
+            cell.hasImplicitHeight = true;
         }
         return this.processCellAncestors({
             xs,
@@ -351,7 +354,7 @@ export class MosaicStrategyPlugin extends Plugin {
         if (!this.hasVisibleBorder(ancestorNode)) {
             return;
         }
-        const borderStyleInfo = this.getBorderStyleInfo(ancestorNode);
+        const borderStyleInfo = this.getNormalizedSimpleBorderStyleInfo(ancestorNode);
         const boundingClientRect = this.getBoundingClientRect(ancestorNode);
         // TODO EGGMAIL: check if this needs defensive programming
         // against forcing a border on a non-spacer cell
@@ -362,6 +365,8 @@ export class MosaicStrategyPlugin extends Plugin {
             tableMeasures,
         });
     }
+
+    handleOverlappingBackgroundColors({ ancestorNode, cell, tableMeasures }) {}
 
     processCellAncestors(tableMeasures) {
         const { cells, emailNode } = tableMeasures;
@@ -421,16 +426,16 @@ export class MosaicStrategyPlugin extends Plugin {
      *
      * need strategy for:
      * overlapping borders:
-     * - (both) draw them mirrored in the spacers around the cell | do not support rounded corners
+     * DONE - (both) draw them mirrored in the spacers around the cell | do not support rounded corners
      *   - overlapping borders providers => give border info and which emailNode should be wrapped
      *   - detect spacers around the cell from that info and apply the rule => no constraint
      *   - WHEN: between extract and fillMosaic (before building emailNodes)
      *
      * borders:
-     * - DONE (masonry) bottom-up constraint to the cell (like table strategy)
+     * DONE -  (masonry) bottom-up constraint to the cell (like table strategy)
      *   OR: direct extraction from the child => no constraint
      *   WHEN: building a cell
-     * - (comparison) => no change
+     * DONE - (comparison) => no change
      *
      * overlapping background color:
      * - (both) identify every discarded background color
@@ -439,7 +444,7 @@ export class MosaicStrategyPlugin extends Plugin {
      *   between extract and fillMosaic (before building emailnodes) => assign a color to each cell
      *
      * background color:
-     * - DONE (masonry) bottom-up constraint to the cell (like table strategy)
+     * DONE - (masonry) bottom-up constraint to the cell (like table strategy)
      *   OR: direct extraction from the child => no constraint
      *   WHEN: building a cell
      * - (comparison)
@@ -448,8 +453,8 @@ export class MosaicStrategyPlugin extends Plugin {
      *   WHEN between extract and fillMosaic (need provider of combo body/bottom, to apply on background color)
      *
      * vertical align:
-     * - DONE (masonry) => middle for every cell, forced -> direct
-     * - DONE (comparison) => top for card body, bottom for card footer
+     * DONE - (masonry) => middle for every cell, forced -> direct
+     * DONE - (comparison) => top for card body, bottom for card footer
      *   Need provider for bottom and body, or they should have it as a fact
      *
      */
@@ -505,23 +510,12 @@ export class MosaicStrategyPlugin extends Plugin {
     }
 
     buildEmptyCell(cellMeasure) {
-        const { width, widthRatio, height, rowspan, colspan, styleInfo } = cellMeasure;
+        const { width, widthRatio, hasImplicitHeight, height, rowspan, colspan, styleInfo } =
+            cellMeasure;
         const refs = { root: {} };
-        const style = {};
-        const attributes = { rowspan, colspan };
-        const bordersWidths = {};
-        for (const side of DIRECTION_VARIANTS) {
-            bordersWidths[side] = parseCssValue(styleInfo.getPropertyValue(`border-${side}-width`));
-        }
-        const hbWidth = (bordersWidths.left.number ?? 0) + (bordersWidths.right.number ?? 0);
-        if (!this.isZero((width ?? 0) - hbWidth)) {
-            // TODO EGGMAIL: evaluate if the width should be enforced anyway for
-            // MSO
-            attributes.width = `${widthRatio}%`;
-            style.width = `${widthRatio}%`;
-        }
-        const vbWidth = (bordersWidths.top.number ?? 0) + (bordersWidths.bottom.number ?? 0);
-        if (!this.isZero((height ?? 0) - vbWidth)) {
+        const style = { width: `${widthRatio}%` };
+        const attributes = { width: `${widthRatio}%`, rowspan, colspan };
+        if (!hasImplicitHeight) {
             const formattedHeight = this.formatValue(height, {
                 inputUnit: height,
                 outputUnit: height,
@@ -530,6 +524,38 @@ export class MosaicStrategyPlugin extends Plugin {
             style.height = `${formattedHeight}px`;
             attributes.height = `${formattedHeight}`;
         }
+        const borderWidths = {};
+        for (const side of DIRECTION_VARIANTS) {
+            borderWidths[side] = parseCssValue(styleInfo.getPropertyValue(`border-${side}-width`));
+        }
+        const handleBorderCell = (variants, dimension) => {
+            let value, side;
+            let consumed = 0;
+            for (const variant of variants) {
+                const borderWidth = borderWidths[variant].number;
+                if (borderWidth) {
+                    value = borderWidth;
+                    side = variant;
+                    consumed++;
+                }
+            }
+            if (consumed !== 1) {
+                return;
+            }
+            if (this.isZero((dimension ?? 0) - value)) {
+                for (const feature of CONTOUR_VARIANTS) {
+                    const propertyName = `border-${side}-${feature}`;
+                    const oppositeName = `border-${OPPOSITE_DIRECTION[side]}-${feature}`;
+                    const propertyValue = styleInfo.getPropertyValue(propertyName);
+                    styleInfo.removeProperty(propertyName);
+                    if (propertyValue) {
+                        styleInfo.setProperty(oppositeName, propertyValue);
+                    }
+                }
+            }
+        };
+        handleBorderCell(["top", "bottom"], height);
+        handleBorderCell(["left", "right"], width);
         Object.assign(refs.root, { style: StyleInfo.from(style).merge(styleInfo), attributes });
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
         analysis.facts.isEmptyCell = true;
