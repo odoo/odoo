@@ -3,6 +3,7 @@ import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
+
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
@@ -89,6 +90,14 @@ export class AttachmentList extends Component {
         return url(attachment.urlRoute, {
             ...attachment.urlQueryParams,
         });
+    }
+
+    /**
+     * @param {import("models").Attachment} attachment
+     * @returns {Object.<string, boolean>}
+     */
+    getPreviewAttClass(attachment) {
+        return { o_image: true };
     }
 
     /**

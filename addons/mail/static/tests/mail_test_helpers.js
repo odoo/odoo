@@ -8,6 +8,7 @@ import {
     before,
     expect,
     getFixture,
+    globals,
     hover as hootHover,
     mockPermission,
     queryFirst,
@@ -34,6 +35,8 @@ import {
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
+import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
+
 import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
@@ -1110,7 +1113,29 @@ class MockMediaStreamAudioSourceNode {
 /** @type {MockAudioWorkletNode | null} */
 let currentAudioProcessor = null;
 
+/**
+ * Voice players fetch their audio from the attachment route, which the mock server does not
+ * serve. Patch them to fetch a static file instead, so that decoding, duration and waveform
+ * drawing run on real audio data.
+ *
+ * @param {string} src url of the audio file served to every voice player.
+ */
+export function patchVoicePlayerFile(src) {
+    patch(VoicePlayer.prototype, {
+        async fetchFile() {
+            const response = await globals.fetch(src);
+            return response.blob();
+        },
+    });
+}
+
 export function patchVoiceMessageAudio() {
+    patch(HTMLMediaElement.prototype, {
+        play() {
+            return Promise.resolve();
+        },
+        pause() {},
+    });
     patch(browser, {
         AnalyserNode: MockAnalyserNode,
         AudioBufferSourceNode: MockAudioBufferSourceNode,
