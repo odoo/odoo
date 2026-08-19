@@ -25,6 +25,7 @@
         'wizard/mail_activity_schedule_views.xml',
         'wizard/hr_bank_account_allocation_wizard.xml',
         'wizard/hr_bank_account_allocation_wizard_line.xml',
+        'wizard/hr_employee_create_version_wizard.xml',
         'views/mail_activity_plan_views.xml',
         'views/hr_version_views.xml',
         'views/hr_contract_template_views.xml',

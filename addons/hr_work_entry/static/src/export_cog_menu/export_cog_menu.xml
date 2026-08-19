@@ -2,16 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="hr_work_entry.ExportWorkEntriesCogMenu">
-        <div t-if="is_actionmenu">
-            <button type="button" class="btn btn-secondary" t-on-click="this.exportWorkEntries">
+        <t t-if="!is_actionmenu">
+            <DropdownItem onSelected.bind="this.exportWorkEntries">
                 <i class="oi oi-filled me-1" data-icon="group"/>
                 Export Time Entries
-            </button>
-        </div>
-        <DropdownItem t-else="" onSelected.bind="this.exportWorkEntries">
-            <i class="oi oi-filled me-1" data-icon="group"/>
-            Export Time Entries
-        </DropdownItem>
+            </DropdownItem>
+        </t>
     </t>
 
 </templates>
