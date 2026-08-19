@@ -1162,10 +1162,18 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             self.env.user.group_ids -= self.env.ref('purchase.group_purchase_user')
         copy_invoice = self.invoice.copy()
 
+        banks = self.env['res.partner.bank'].create([{
+            'acc_number': f'ACCOUNT{i}',
+            'partner_id': copy_invoice.partner_id.id,
+            'allow_out_payment': True,
+        } for i in range(2)])
+
         move_form = Form(self.invoice)
         move_form.invoice_line_ids.remove(0)
         move_form.invoice_line_ids.remove(0)
+        move_form.partner_bank_id = banks[1]
         move_form.invoice_vendor_bill_id = copy_invoice
+        self.assertEqual(move_form.partner_bank_id, banks[1], "The currency didn't change, so the bank shouldn't be recomputed")
         move_form.save()
 
         self.assertInvoiceValues(self.invoice, [
