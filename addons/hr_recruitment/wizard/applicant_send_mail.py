@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.tools.misc import clean_context
 
 
 class ApplicantSendMail(models.TransientModel):
@@ -39,7 +40,7 @@ class ApplicantSendMail(models.TransientModel):
 
         for applicant in self.applicant_ids:
             if not applicant.partner_id:
-                applicant.partner_id = self.env['res.partner'].create({
+                applicant.partner_id = self.env['res.partner'].with_context(clean_context(self.env.context)).create({
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,
