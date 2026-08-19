@@ -358,6 +358,7 @@ const chatterPatch = {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
+        await thread.fetchThreadData(requestList);
         this.updateRecipients(this.webChatterProps.record);
     },
 
