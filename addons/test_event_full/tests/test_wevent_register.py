@@ -45,7 +45,7 @@ class TestWEventRegister(TestWEventCommon):
             name='User Internal',
             login='user_internal',
             email='user_internal@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
         )
         with freeze_time(self.reference_now, tick=True):
             self.start_tour('/event', 'wevent_register', login='user_internal')

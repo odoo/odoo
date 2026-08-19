@@ -14,7 +14,7 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
         'website.group_website_designer',  # product.feed / product.image / website / product.public.category
     )

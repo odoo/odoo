@@ -2031,7 +2031,7 @@ class MailCommon(MailCase):
         # employee specific to second company
         cls.user_employee_c2 = mail_new_test_user(
             cls.env, login='employee_c2',
-            groups='base.group_user,base.group_partner_manager',
+            groups='base.group_user_regular,base.group_partner_manager',
             company_id=cls.company_2.id,
             company_ids=[(4, cls.company_2.id)],
             email='enguerrand@example.com',
@@ -2044,7 +2044,7 @@ class MailCommon(MailCase):
             company_id=cls.company_3.id,
             company_ids=[(4, cls.company_3.id)],
             email='freudenbergerg@example.com',
-            groups='base.group_user,base.group_partner_manager',
+            groups='base.group_user_regular,base.group_partner_manager',
             name='Freudenbergerg Employee C3',
             notification_type='inbox'
         )
@@ -2057,7 +2057,7 @@ class MailCommon(MailCase):
             company_id=cls.company_2.id,
             company_ids=[(6, 0, (cls.company_admin + cls.company_2).ids)],
             email='etchenne@example.com',
-            groups='base.group_user,base.group_erp_manager,mail.group_mail_template_editor,base.group_partner_manager',
+            groups='base.group_user_regular,base.group_erp_manager,mail.group_mail_template_editor,base.group_partner_manager',
             login='erp_manager',
             name='Etchenne Tchagada',
             notification_type='inbox',

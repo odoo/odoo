@@ -438,7 +438,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
 
     def test_livechat_operator_can_see_all_livechat_conversations_and_members(self):
         bob_user = new_test_user(
-            self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_user"
+            self.env, "bob_user", groups="base.group_user_regular,im_livechat.im_livechat_group_user"
         )
         livechat_session = self.env["discuss.channel"].create(
             {

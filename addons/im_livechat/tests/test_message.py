@@ -24,7 +24,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
-                'group_ids': [Command.link(self.env.ref('base.group_user').id)],
+                'group_ids': [Command.link(self.env.ref('base.group_user_regular').id)],
                 'login': 'emp',
                 'password': self.password,
                 'name': 'Ernest Employee',

@@ -32,7 +32,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'group_ids': [Command.set([self.ref('base.group_user')])],
+            'group_ids': [Command.set([self.ref('base.group_user_regular')])],
         })
         cs = (c1 + c2).with_user(user)
         self.assertEqual([{'id': c2.id, 'name': 'Y'}], cs.read(['name']), "read() should skip deleted records")
@@ -68,7 +68,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'group_ids': [Command.set([self.ref('base.group_user')])],
+            'group_ids': [Command.set([self.ref('base.group_user_regular')])],
         })
 
         self.env['ir.access'].create({

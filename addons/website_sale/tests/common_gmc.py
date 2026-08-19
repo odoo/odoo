@@ -9,7 +9,7 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
     )
 

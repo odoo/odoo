@@ -22,7 +22,7 @@ class TestEquipmentMulticompany(TransactionCase):
         MaintenanceTeam = self.env['maintenance.team']
 
         # Use full reference.
-        group_user = self.env.ref('base.group_user')
+        group_user = self.env.ref('base.group_user_regular')
         group_manager = self.env.ref('maintenance.group_equipment_manager')
 
         # Company A

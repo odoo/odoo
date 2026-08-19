@@ -261,7 +261,7 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         self.user_emp = mail_new_test_user(
             self.env,
             email='employee@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             login='user_emp',
             name='Eglantine Employee',
             notification_type='email',

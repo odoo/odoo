@@ -18,12 +18,12 @@ class TestRecruitmentInterviewer(MailCase):
         super().setUpClass()
 
         cls.simple_user = new_test_user(cls.env, 'smp',
-            groups='base.group_user', name='Simple User', email='smp@example.com')
+            groups='base.group_user_regular', name='Simple User', email='smp@example.com')
         cls.interviewer_user = new_test_user(cls.env, 'itw',
-            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            groups='base.group_user_regular,hr_recruitment.group_hr_recruitment_interviewer',
             name='Recruitment Interviewer', email='itw@example.com')
         cls.manager_user = new_test_user(cls.env, 'mng',
-            groups='base.group_user,hr_recruitment.group_hr_recruitment_manager',
+            groups='base.group_user_regular,hr_recruitment.group_hr_recruitment_manager',
             name='Recruitment Manager', email='mng@example.com')
 
         cls.simple_employee = cls.simple_user.employee_id
@@ -111,15 +111,15 @@ class TestRecruitmentInterviewer(MailCase):
             Test that assigning interviewer to multiple applicants.
         """
         interviewer_user_1 = new_test_user(self.env, 'sma',
-            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            groups='base.group_user_regular,hr_recruitment.group_hr_recruitment_interviewer',
             name='Recruitment Interviewer1', email='sma@example.com')
 
         interviewer_user_2 = new_test_user(self.env, 'jab',
-            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            groups='base.group_user_regular,hr_recruitment.group_hr_recruitment_interviewer',
             name='Recruitment Interviewer2', email='jab@example.com')
 
         interviewer_user_3 = new_test_user(self.env, 'aad',
-            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            groups='base.group_user_regular,hr_recruitment.group_hr_recruitment_interviewer',
             name='Recruitment Interviewer3', email='aad@example.com')
 
         applicant = self.env['hr.applicant'].create({
@@ -144,7 +144,7 @@ class TestRecruitmentInterviewer(MailCase):
     def test_update_recruiter_for_ongoing_application(self):
         Application = self.env['hr.applicant']
         new_manager_user = new_test_user(self.env, 'thala',
-            groups='base.group_user,hr_recruitment.group_hr_recruitment_manager',
+            groups='base.group_user_regular,hr_recruitment.group_hr_recruitment_manager',
             name='New Recruitment Manager', email='thala@example.com')
         new_manager_employee = new_manager_user.employee_id
 

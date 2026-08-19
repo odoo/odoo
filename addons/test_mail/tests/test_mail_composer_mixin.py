@@ -34,7 +34,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         cls.user_rendering_restricted = mail_new_test_user(
             cls.env,
             company_id=cls.company_admin.id,
-            groups='base.group_user',
+            groups='base.group_user_regular',
             login='user_rendering_restricted',
             name='Code Template Restricted User',
             notification_type='inbox',

@@ -23,7 +23,7 @@ project_public_members_rule,Project: employees: following required for follower-
                                         ('privacy_visibility', 'in', ['employees', 'portal']),
                                         ('message_partner_ids', 'in', [user.partner_id.id])
                                     ]"
-timesheet_analysis_report_department_manager,Timesheets Analysis Report user,timesheets.analysis.report,base.group_user,r,"[
+timesheet_analysis_report_department_manager,Timesheets Analysis Report user,timesheets.analysis.report,base.group_user_regular,r,"[
                 ('has_department_manager_access', '=', True),
             ]"
 timesheet_analysis_report_user,Timesheets Analysis Report user,timesheets.analysis.report,hr_timesheet.group_hr_timesheet_user,r,"[

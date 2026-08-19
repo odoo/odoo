@@ -8,7 +8,7 @@ class TestPrivateReadGroup(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.base_user = new_test_user(cls.env, login='Base User', groups='base.group_user')
+        cls.base_user = new_test_user(cls.env, login='Base User', groups='base.group_user_regular')
 
     def test_simple_private_read_group(self):
         Model = self.env['test_read_group.aggregate']

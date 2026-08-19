@@ -17,7 +17,7 @@ class TestProduct(AccountTestInvoicingCommon):
         cls.internal_user = new_test_user(
             cls.env,
             login="internal_user",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         cls.account_manager_user = new_test_user(
             cls.env,

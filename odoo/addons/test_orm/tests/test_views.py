@@ -41,7 +41,7 @@ class TestViewGroups(ViewCase):
             'name': 'A User',
             'login': 'a_user',
             'email': 'a@user.com',
-            'group_ids': [(4, self.env.ref('base.group_user').id)],
+            'group_ids': [(4, self.env.ref('base.group_user_regular').id)],
         })
         view = self.env.ref('test_orm.view_model_all_access').with_user(user)
         arch = self.env['test_orm.model.all_access']._get_view_cache(view_id=view.id)['arch']

@@ -238,9 +238,9 @@ class TestAccessRights(TransactionCase):
             ('location', 'loc_2'),
             ('description', '<div>pub<br>'
                 '<strong>Organized by</strong><br>'
-                'john (base.group_user)<br><a href="mailto:j.j@example.com">j.j@example.com</a><br><br>'
+                'john (base.group_user_regular)<br><a href="mailto:j.j@example.com">j.j@example.com</a><br><br>'
                 '<strong>Contact Details</strong><br>'
-                'george (base.group_user)<br><a href="mailto:g.g@example.com">g.g@example.com</a></div>',
+                'george (base.group_user_regular)<br><a href="mailto:g.g@example.com">g.g@example.com</a></div>',
             ),
         ]:
             field_information = self.read_event(self.admin_user, john_public_evt, field)

@@ -25,7 +25,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
         cls.user_employee_2 = mail_new_test_user(
             cls.env,
             email='eglantine@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             login='employee2',
             notification_type='email',
             name='Eglantine Employee',

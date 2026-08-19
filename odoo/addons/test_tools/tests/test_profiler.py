@@ -27,7 +27,7 @@ class TestProfileAccess(TransactionCase):
         self.test_profile.read(['name'])
 
     def test_user_no_access(self):
-        user = new_test_user(self.env, login='noProfile', groups='base.group_user')
+        user = new_test_user(self.env, login='noProfile', groups='base.group_user_regular')
         with self.with_user('noProfile'), self.assertRaises(AccessError):
             self.env['ir.profile'].search([])
         with self.assertRaises(AccessError):

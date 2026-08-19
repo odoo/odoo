@@ -41,7 +41,7 @@ class CalendarMailCommon(MailCase, CronMixinCase):
         cls.user_employee_2 = new_test_user(
             cls.env,
             email='employee.2@test.mycompany.com',
-            groups='base.group_user,base.group_partner_manager',
+            groups='base.group_user_regular,base.group_partner_manager',
             login='employee.2@test.mycompany.com',
             notification_type='email',
         )

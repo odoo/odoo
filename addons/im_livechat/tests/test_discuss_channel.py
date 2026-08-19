@@ -15,7 +15,7 @@ from odoo.addons.mail.tools.discuss import Store
 class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
     def test_unfollow_from_non_member_does_not_close_livechat(self):
         bob_user = new_test_user(
-            self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_manager"
+            self.env, "bob_user", groups="base.group_user_regular,im_livechat.im_livechat_group_manager"
         )
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
@@ -142,7 +142,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         operator = new_test_user(
             self.env,
             "operator_non_member",
-            groups="base.group_user,im_livechat.im_livechat_group_user",
+            groups="base.group_user_regular,im_livechat.im_livechat_group_user",
         )
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",

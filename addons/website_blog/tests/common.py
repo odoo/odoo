@@ -11,7 +11,7 @@ class TestWebsiteBlogCommon(common.TransactionCase):
         Users = self.env['res.users']
 
         group_website_blog_manager_id = self.ref('website_blog.group_website_blog_manager')
-        group_employee_id = self.ref('base.group_user')
+        group_employee_id = self.ref('base.group_user_regular')
         group_public_id = self.ref('base.group_public')
 
         self.user_employee = Users.with_context({'no_reset_password': True}).create({

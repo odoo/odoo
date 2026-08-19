@@ -145,7 +145,7 @@ class TestProjectSharingUi(HttpCase):
             'password': 'john1234',
             'email': 'john@example.com',
             'group_ids': [Command.set([
-                self.env.ref('base.group_user').id,
+                self.env.ref('base.group_user_regular').id,
                 self.env.ref('project.group_project_user').id
             ])]
         })

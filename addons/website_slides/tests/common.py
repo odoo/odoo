@@ -17,7 +17,7 @@ class SlidesCase(MailCase):
         cls.user_officer = mail_new_test_user(
             cls.env,
             email='officer@example.com',
-            groups='base.group_user,website_slides.group_website_slides_officer',
+            groups='base.group_user_regular,website_slides.group_website_slides_officer',
             login='user_officer',
             name='Ophélie Officer',
             notification_type='email',
@@ -27,7 +27,7 @@ class SlidesCase(MailCase):
             cls.env,
             email='manager@example.com',
             login='user_manager',
-            groups='base.group_user,website_slides.group_website_slides_manager',
+            groups='base.group_user_regular,website_slides.group_website_slides_manager',
             name='Manuel Manager',
             notification_type='email',
         )
@@ -35,7 +35,7 @@ class SlidesCase(MailCase):
         cls.user_emp = mail_new_test_user(
             cls.env,
             email='employee@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             login='user_emp',
             name='Eglantine Employee',
             notification_type='email',

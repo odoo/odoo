@@ -18,7 +18,7 @@ class TestMailListCommon(MailCommon):
             cls.env, login='employee_2',
             company_id=cls.company_admin.id,
             email='employee_2@test.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             name='Albertine Another Employee',
         )
 

@@ -31,7 +31,7 @@ class TestMailComposer(MailCommon, TestRecipients):
         cls.reference_now = FieldDatetime.from_string('2022-12-24 12:00:00')
 
         cls.user_employee_2 = mail_new_test_user(
-            cls.env, login='employee2', groups='base.group_user',
+            cls.env, login='employee2', groups='base.group_user_regular',
             notification_type='email', email='eglantine@example.com',
             name='Eglantine Employee', signature='--\nEglantine')
         cls.partner_employee_2 = cls.user_employee_2.partner_id
@@ -39,7 +39,7 @@ class TestMailComposer(MailCommon, TestRecipients):
         # User without the group "mail.group_mail_template_editor"
         cls.user_rendering_restricted = mail_new_test_user(
             cls.env, login='user_rendering_restricted',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             company_id=cls.company_admin.id,
             name='Code Template Restricted User',
             notification_type='inbox',

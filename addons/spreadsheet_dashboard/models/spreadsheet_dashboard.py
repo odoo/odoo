@@ -16,7 +16,7 @@ class SpreadsheetDashboard(models.Model):
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
     is_published = fields.Boolean(default=True, string="Published")
     company_ids = fields.Many2many('res.company', string="Companies")
-    group_ids = fields.Many2many('res.groups', string="Access Groups", default=lambda self: self.env.ref('base.group_user'))
+    group_ids = fields.Many2many('res.groups', string="Access Groups", default=lambda self: self.env.ref('base.group_user_regular'))
     favorite_user_ids = fields.Many2many(
         'res.users',
         domain=lambda self: [('id', '=', self.env.uid)],

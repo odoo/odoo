@@ -15,8 +15,8 @@ class TestSmsTemplateAccessRights(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_admin = mail_new_test_user(cls.env, login='user_system', groups='base.group_user,base.group_system')
-        cls.basic_user = mail_new_test_user(cls.env, login='user_employee', groups='base.group_user')
+        cls.user_admin = mail_new_test_user(cls.env, login='user_system', groups='base.group_user_regular,base.group_system')
+        cls.basic_user = mail_new_test_user(cls.env, login='user_employee', groups='base.group_user_regular')
         sms_enabled_models = cls.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
         vals = []
         for model in sms_enabled_models:

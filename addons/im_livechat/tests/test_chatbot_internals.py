@@ -385,7 +385,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_multiple_rules_on_same_url(self):
         bob_user = new_test_user(
-            self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,base.group_user"
+            self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,base.group_user_regular"
         )
         chatbot_no_operator = self.env["chatbot.script"].create(
             {
@@ -465,7 +465,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 operator_user = new_test_user(
                     self.env,
                     login=f"operator_user_{condition}_{operator_available}_{expected_result}",
-                    groups="im_livechat.im_livechat_group_user,base.group_user",
+                    groups="im_livechat.im_livechat_group_user,base.group_user_regular",
                 )
                 self.env["mail.presence"]._update_presence(operator_user)
                 self.livechat_channel.user_ids = operator_user

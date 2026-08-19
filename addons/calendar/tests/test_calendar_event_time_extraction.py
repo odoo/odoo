@@ -12,21 +12,21 @@ class TestCalendarEventTimeExtraction(TransactionCase):
             cls.env,
             login='user_utc_tz',
             name='Humphrey Appleby',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             tz='UTC',
         )
         cls.user_brussels_tz = new_test_user(
             cls.env,
             login='user_brussels_tz',
             name='Hercule Poirot',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             tz='Europe/Brussels',
         )
         cls.user_japan_tz = new_test_user(
             cls.env,
             login='user_japan_tz',
             name='Gojo Satoru',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             tz='Asia/Tokyo',
         )
 

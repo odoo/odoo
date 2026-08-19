@@ -16,7 +16,7 @@ class Feedback(TransactionCase):
         cls.user = cls.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'group_ids': [Command.set([cls.group2.id, cls.env.ref('base.group_user').id])],
+            'group_ids': [Command.set([cls.group2.id, cls.env.ref('base.group_user_regular').id])],
         })
 
 
@@ -33,7 +33,7 @@ class TestSudo(Feedback):
             'login': 'demo2',
             'password': 'demo2',
             'partner_id': partner_demo.id,
-            'group_ids': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+            'group_ids': [Command.set([self.env.ref('base.group_user_regular').id, self.env.ref('base.group_partner_manager').id])],
         })
 
         # with_user(user)
@@ -165,7 +165,7 @@ class TestIRRuleFeedback(Feedback):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.ref('base.group_user').write({'user_ids': [Command.link(cls.user.id)]})
+        cls.env.ref('base.group_user_regular').write({'user_ids': [Command.link(cls.user.id)]})
         cls.model = cls.env['ir.model']._get('test_access_right.some_obj')
         cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
@@ -471,7 +471,7 @@ class TestFieldGroupFeedback(Feedback):
     @mute_logger('odoo.models')
     def test_read(self):
         self.user.write({
-            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
+            'group_ids': [Command.set([self.env.ref('base.group_user_regular').id])],
         })
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             _ = self.record.forbidden
@@ -500,7 +500,7 @@ Groups: always forbidden""",
     @mute_logger('odoo.models')
     def test_write(self):
         self.user.write({
-            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
+            'group_ids': [Command.set([self.env.ref('base.group_user_regular').id])],
         })
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'forbidden': 1, 'forbidden2': 2})

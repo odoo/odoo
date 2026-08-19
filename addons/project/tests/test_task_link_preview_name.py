@@ -9,7 +9,7 @@ class TestTaskLinkPreviewName(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.admin = new_test_user(cls.env, login='admin_user', groups='base.group_user,base.group_system')
+        cls.admin = new_test_user(cls.env, login='admin_user', groups='base.group_user_regular,base.group_system')
 
         cls.project_internal_link_display = cls.env['project.project'].create({
             'name': 'project',

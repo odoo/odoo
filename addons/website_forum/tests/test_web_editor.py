@@ -13,7 +13,7 @@ class TestAttachmentController(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.portal_user = new_test_user(cls.env, login='portal_user', groups='base.group_portal')
-        cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_user,base.group_system')
+        cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_user_regular,base.group_system')
         cls.headers = {"Content-Type": "application/json"}
         cls.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
 

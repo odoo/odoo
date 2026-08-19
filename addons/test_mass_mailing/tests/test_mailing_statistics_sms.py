@@ -18,7 +18,7 @@ class TestMailingStatistics(TestMassSMSCommon):
 
         cls.user_marketing_2 = mail_new_test_user(
             cls.env,
-            groups='base.group_user,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
+            groups='base.group_user_regular,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
             login='user_marketing_2',
             name='Marie Marketing',
             signature='--\nMarie'

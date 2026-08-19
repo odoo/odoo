@@ -15,7 +15,7 @@ from odoo.addons.http_routing.tests.common import MockRequest
 @tagged("post_install", "-at_install")
 class TestWebsiteSequence(BaseCommon):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',  # product.template sequencing/publishing is the subject
     )
 

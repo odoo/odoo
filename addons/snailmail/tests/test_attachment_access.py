@@ -14,7 +14,7 @@ class testAttachmentAccess(TransactionCase):
             'login': "foo",
             'email': "foo@bar.com",
             'group_ids': [(6, 0, [
-                cls.env.ref('base.group_user').id,
+                cls.env.ref('base.group_user_regular').id,
                 cls.env.ref('base.group_partner_manager').id,
             ])]
         })

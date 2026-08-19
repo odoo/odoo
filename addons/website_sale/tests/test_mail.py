@@ -108,7 +108,7 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
 @tagged("post_install", "-at_install", "mail_thread")
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
         'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
         'website.group_website_designer',  # website config (salesperson_id, confirmation_email_template_id)

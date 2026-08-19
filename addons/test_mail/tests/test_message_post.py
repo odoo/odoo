@@ -37,7 +37,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         # users (and not admin / user)
         cls.user_employee_2 = mail_new_test_user(
             cls.env, login='employee2',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             company_id=cls.company_admin.id,
             email='eglantine@example.com',  # check: use a formatted email
             name='Eglantine Employee2',

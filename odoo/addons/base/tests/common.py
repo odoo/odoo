@@ -15,7 +15,7 @@ DISABLED_MAIL_CREATE_CONTEXT = {
 
 
 class BaseCommon(TransactionCase):
-    _test_user_groups = ('base.group_user',)
+    _test_user_groups = ('base.group_user_regular',)
 
     _test_user_name = 'Test User'
 

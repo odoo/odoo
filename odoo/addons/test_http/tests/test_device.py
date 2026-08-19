@@ -44,7 +44,7 @@ class TestDevice(TestHttpBase):
             'password': 'internal',
             'name': 'Internal',
             'email': 'internal@example.com',
-            'group_ids': [Command.set([cls.env.ref('base.group_user').id])],
+            'group_ids': [Command.set([cls.env.ref('base.group_user_regular').id])],
         })
 
     def setUp(self):

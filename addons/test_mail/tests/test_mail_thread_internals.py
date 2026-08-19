@@ -35,7 +35,7 @@ class ThreadRecipients(MailCommon, TestRecipients):
         cls.user_employee_2 = mail_new_test_user(
             cls.env,
             email='eglantine@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             login='employee2',
             name='Eglantine Employee',
             notification_type='email',
@@ -45,7 +45,7 @@ class ThreadRecipients(MailCommon, TestRecipients):
         cls.user_employee_archived = mail_new_test_user(
             cls.env,
             email='albert@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             login='albert',
             name='Albert Alemployee',
             notification_type='email',
@@ -275,7 +275,7 @@ class TestAPI(ThreadRecipients):
             }, {
                 'company_id': self.env.user.company_id.id,
                 'email': 'test.ordering@test.example.com',
-                'group_ids': [(4, self.env.ref('base.group_user').id)],
+                'group_ids': [(4, self.env.ref('base.group_user_regular').id)],
                 'login': 'order_internal',
                 'name': 'Zuper Internal Test User for ordering',  # name based: after portal
             }

@@ -1,9 +1,9 @@
 id,name,model_id,group_id/id,operation,domain
 website_blog_public,Blog: active only,blog.blog,base.group_everyone,r,"[('active', '=', True)]"
-blog_blog_employee,blog.blog,blog.blog,base.group_user,r,
+blog_blog_employee,blog.blog,blog.blog,base.group_user_regular,r,
 blog_blog_manager,blog.blog,blog.blog,website_blog.group_website_blog_manager,crud,
 website_blog_post_public,Blog Post: public: published only,blog.post,base.group_everyone,r,"[('website_published', '=', True)]"
-blog_post_employee,blog.post,blog.post,base.group_user,r,
+blog_post_employee,blog.post,blog.post,base.group_user_regular,r,
 blog_post_manager,blog.post,blog.post,website_blog.group_website_blog_manager,crud,
 blog_tag_public,blog.tag,blog.tag,base.group_everyone,r,
 blog_tag_manager,blog.tag,blog.tag,website_blog.group_website_blog_manager,crud,

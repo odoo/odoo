@@ -368,7 +368,7 @@ class TestPersonalStages(TestProjectCommon):
         internal_user = new_test_user(
             self.env,
             login="internal_user",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         self.assertEqual(7, ProjectTaskType.search_count([("user_id", "=", internal_user.id)]), "Personal stages seems to have a wrong count")
 

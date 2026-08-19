@@ -30,7 +30,7 @@ class TestStockQuant(TestStockCommon):
             login='demo_user',
             email='demo_user@example.com',
             notification_type='inbox',
-            groups='base.group_user',
+            groups='base.group_user_regular',
         )
 
         cls.product_lot = cls.env['product.product'].create({
