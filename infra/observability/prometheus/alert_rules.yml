@@ -224,3 +224,40 @@ groups:
             The invoice extraction queue has {{ $value }} pending
             messages, indicating the pipeline is falling behind.
             Check worker health, Claude API latency, or scale workers.
+
+      # -----------------------------------------------------------------------
+      # Security: JWT 401 spike — potential brute-force or secret drift
+      # -----------------------------------------------------------------------
+      - alert: AuthFailuresSpike
+        expr: >
+          sum by (job) (rate(http_requests_total{status="401"}[5m])) > 0.16
+        for: 5m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "High rate of 401 Unauthorized responses"
+          description: >-
+            The service is returning 401 at
+            {{ $value | humanize }}/s for the last 5 minutes.
+            This may indicate JWT secret drift, a brute-force attempt,
+            or a misconfigured client. Check the JWT secret sync
+            between Odoo and invoice-ai.
+
+      # -----------------------------------------------------------------------
+      # Security: Unusual extraction volume — potential abuse
+      # -----------------------------------------------------------------------
+      - alert: ExtractionAbuse
+        expr: >
+          sum by (job) (rate(invoice_worker_jobs_total[5m])) > 0.83
+        for: 10m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "Unusually high extraction rate"
+          description: >-
+            The extraction pipeline is processing
+            {{ $value | humanize }}/s for 10 minutes, which is
+            above the normal baseline. This may indicate abuse of the
+            extraction endpoint. Verify with the rate-limit logs.

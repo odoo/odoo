@@ -173,3 +173,85 @@ jobs:
         with:
           name: odoo-test-log
           path: odoo-test.log
+
+  # ==========================================================================
+  # Security: Bandit SAST + Trivy container scan
+  # ==========================================================================
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Bandit: Python SAST on Odoo addon + invoice-ai ---
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Bandit
+        run: pip install bandit[toml]
+
+      - name: Run Bandit (Odoo addon)
+        run: |
+          bandit -r custom_addons/invoice_agent/ \
+            -ll --severity-level medium \
+            -f json -o bandit-addon.json || true
+          bandit -r custom_addons/invoice_agent/ \
+            -ll --severity-level medium \
+            -f screen
+
+      - name: Run Bandit (invoice-ai)
+        run: |
+          bandit -r invoice-ai/app/ \
+            -ll --severity-level medium \
+            -f json -o bandit-ai.json || true
+          bandit -r invoice-ai/app/ \
+            -ll --severity-level medium \
+            -f screen
+
+      - name: Upload Bandit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-reports
+          path: bandit-*.json
+
+      # --- Trivy: container image scan (invoice-ai) ---
+      - name: Build invoice-ai image for scanning
+        run: docker build -t invoice-ai:security-scan ./invoice-ai
+
+      - name: Trivy scan (invoice-ai image)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: invoice-ai:security-scan
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      # --- Trivy: filesystem scan (Odoo addon + Dockerfile) ---
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          skip-dirs: addons,doc,setup,.git
+
+      # --- DR runbook freshness check ---
+      - name: Verify DR runbook exists and is current
+        run: |
+          if [ ! -f docs/runbooks/disaster-recovery.md ]; then
+            echo "ERROR: docs/runbooks/disaster-recovery.md is missing!"
+            exit 1
+          fi
+          MODIFIED=$(stat -c %Y docs/runbooks/disaster-recovery.md)
+          NOW=$(date +%s)
+          DAYS_OLD=$(( (NOW - MODIFIED) / 86400 ))
+          echo "DR runbook is $DAYS_OLD days old"
+          if [ $DAYS_OLD -gt 90 ]; then
+            echo "WARNING: DR runbook is older than 90 days — please re-run the quarterly restore drill and update it."
+            exit 1
+          fi

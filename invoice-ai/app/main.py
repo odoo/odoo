@@ -17,6 +17,9 @@ from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from .auth import require_token
 from .claude import ClaudeService
@@ -63,6 +66,11 @@ app = FastAPI(
     description="Standalone vendor invoice extraction service (ADR-003). "
     "Owns OCR + the Claude call so Odoo HTTP workers are never blocked.",
 )
+
+# --- Rate limiting (OWASP A04 — Insecure Design) ---
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
 # ---------------------------------------------------------------------------
@@ -158,6 +166,7 @@ async def healthz() -> dict[str, str]:
 
 
 @app.post("/v1/extract", response_model=ExtractionResponse)
+@limiter.limit("10/minute")
 async def extract_invoice(
     claude: Annotated[ClaudeService, Depends(get_claude_service)],
     _auth: Annotated[dict, Depends(require_token)],
@@ -234,6 +243,7 @@ async def _voyage_error_handler(_: Request, exc: VoyageEmbeddingError) -> JSONRe
 
 
 @app.post("/v1/embed", response_model=EmbedResponse)
+@limiter.limit("30/minute")
 async def embed_texts(
     embedder: Annotated[VoyageEmbedder, Depends(get_embedder)],
     _auth: Annotated[dict, Depends(require_token)],
@@ -263,6 +273,7 @@ async def embed_texts(
 
 
 @app.post("/rag/vendor-context", response_model=VendorContextResponse)
+@limiter.limit("20/minute")
 async def vendor_context(
     embedder: Annotated[VoyageEmbedder, Depends(get_embedder)],
     _auth: Annotated[dict, Depends(require_token)],

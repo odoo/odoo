@@ -21,6 +21,63 @@
         <field name="perm_unlink" eval="True"/>
     </record>
 
+    <!-- ============================================================ -->
+    <!-- Record Rule: Multi-company restriction on vendor docs         -->
+    <!-- Prevents Company A from reading Company B's RAG embeddings    -->
+    <!-- ============================================================ -->
+    <record id="invoice_agent_vendor_doc_comp_rule" model="ir.rule">
+        <field name="name">Invoice Agent: vendor doc multi-company</field>
+        <field name="model_id" ref="model_invoice_agent_vendor_doc"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rule: Multi-company restriction on AMQP jobs          -->
+    <!-- ============================================================ -->
+    <record id="invoice_agent_job_comp_rule" model="ir.rule">
+        <field name="name">Invoice Agent: job multi-company</field>
+        <field name="model_id" ref="model_invoice_agent_job"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rule: Multi-company restriction on usage tracking     -->
+    <!-- ============================================================ -->
+    <record id="invoice_agent_usage_comp_rule" model="ir.rule">
+        <field name="name">Invoice Agent: usage multi-company</field>
+        <field name="model_id" ref="model_invoice_agent_usage"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rule: Multi-company restriction on validation flags   -->
+    <!-- ============================================================ -->
+    <record id="invoice_agent_validation_flag_comp_rule" model="ir.rule">
+        <field name="name">Invoice Agent: validation flag multi-company</field>
+        <field name="model_id" ref="model_invoice_agent_validation_flag"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
     <!-- Note: account.move records are already protected by account_move_comp_rule
          from the account module. We don't need an additional rule for account.move
          since our groups imply account.group_account_invoice which already has
