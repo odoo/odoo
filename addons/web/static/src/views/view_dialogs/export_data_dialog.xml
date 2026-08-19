@@ -48,7 +48,7 @@
                                         field="field"
                                         filterSubfields.bind="this.filterSubfields"
                                         isFieldExpandable.bind="this.isFieldExpandable"
-                                        isDebug="this.isDebug"
+                                        isDebug="this.debugMode.isActive()"
                                         isExpanded="this.state.search.length > 0"
                                         loadFields.bind="this.loadFields"
                                         onAdd.bind="this.onAddItemExportList"
@@ -108,7 +108,7 @@
                             <t t-foreach="this.state.exportList" t-as="field" t-key="field.id">
                                 <li t-attf-class="o_export_field d-inline-block w-100 {{ this.state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
                                     <span t-if="!this.state.isSmall" class="oi o_sort_field mx-1" data-icon="swap_vert" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
-                                    <span t-out="this.isDebug and field.id ? `${field.string} (${field.id})` : field.string" />
+                                    <span t-out="this.debugMode.isActive() and field.id ? `${field.string} (${field.id})` : field.string" />
                                     <span class="oi oi-filled m-1 pe-2 float-end o_remove_field cursor-pointer" data-icon="delete" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
                                 </li>
                             </t>

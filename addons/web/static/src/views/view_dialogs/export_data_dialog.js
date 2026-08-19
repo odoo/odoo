@@ -1,14 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dialog } from "@web/core/dialog/dialog";
-import { rpc } from "@web/core/network/rpc";
-import { unique } from "@web/core/utils/arrays";
-import { useService } from "@web/core/utils/hooks";
-import { fuzzyLookup } from "@web/core/utils/search";
-import { useSortable } from "@web/core/utils/sortable_owl";
-import { useDebounced } from "@web/core/utils/timing";
-
 import {
     Component,
     onMounted,
@@ -17,8 +6,20 @@ import {
     proxy,
     signal,
     t,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { unique } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { useSortable } from "@web/core/utils/sortable_owl";
+import { useDebounced } from "@web/core/utils/timing";
 
 class DeleteExportListDialog extends Component {
     static components = { Dialog };
@@ -106,6 +107,8 @@ export class ExportDataDialog extends Component {
     exportListRef = signal.ref();
     searchRef = signal.ref();
 
+    debugMode = usePlugin(DebugModePlugin);
+
     setup() {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
@@ -184,10 +187,6 @@ export class ExportDataDialog extends Component {
             return this.state.search.length && Object.values(this.state.search);
         }
         return Object.values(this.knownFields);
-    }
-
-    get isDebug() {
-        return Boolean(odoo.debug);
     }
 
     get rootFields() {
@@ -397,7 +396,7 @@ export class ExportDataDialog extends Component {
             // reversing the string makes the search more reliable in this context
             (field) => field.string.split("/").reverse().join("/")
         );
-        if (this.isDebug) {
+        if (this.debugMode.isActive()) {
             lookupResult = unique([
                 ...lookupResult,
                 ...Object.values(this.knownFields).filter((f) => f.id.includes(value)),

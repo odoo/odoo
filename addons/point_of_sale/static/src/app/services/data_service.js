@@ -1,7 +1,7 @@
 import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw, proxy } from "@odoo/owl";
+import { markRaw, proxy, usePlugin } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
@@ -13,6 +13,7 @@ import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registerPythonTemplate } from "../utils/convert_python_template";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
@@ -20,6 +21,8 @@ const CONSOLE_COLOR = "#28ffeb";
 export class PosData {
     static modelToLoad = []; // When empty all models are loaded
     static serviceDependencies = ["orm", "bus_service"];
+
+    debugMode = usePlugin(DebugModePlugin);
 
     async setup(env, { orm, bus_service }) {
         this.orm = orm;
@@ -560,7 +563,7 @@ export class PosData {
         await this.getLocalDataFromIndexedDB();
         this.initListeners();
 
-        if (odoo.debug === "assets") {
+        if (this.debugMode.isActive("assets")) {
             window.performance.mark("pos_data_service_init_end");
             this.debugInfos();
         }

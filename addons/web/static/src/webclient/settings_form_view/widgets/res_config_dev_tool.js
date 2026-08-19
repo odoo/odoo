@@ -1,11 +1,11 @@
+import { Component, proxy, usePlugin, useProps } from "@odoo/owl";
+import { router } from "@web/core/browser/router";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { SettingsBlock } from "../settings/settings_block";
-import { Setting } from "../../../views/form/setting/setting";
-
-import { Component, proxy, useProps } from "@odoo/owl";
+import { Setting } from "@web/views/form/setting/setting";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { router } from "@web/core/browser/router";
+import { SettingsBlock } from "@web/webclient/settings_form_view/settings/settings_block";
 
 /**
  * Widget in the settings that handles the "Developer Tools" section.
@@ -22,11 +22,9 @@ export class ResConfigDevTool extends Component {
         ...standardWidgetProps,
     });
 
-    setup() {
-        this.isDebug = Boolean(odoo.debug);
-        this.isAssets = odoo.debug.includes("assets");
-        this.isTests = odoo.debug.includes("tests");
+    debugMode = usePlugin(DebugModePlugin);
 
+    setup() {
         this.action = useService("action");
         this.isDemoDataActive = proxy({ value: true });
         useService("lazy_session").getValue("is_demo", (v) => (this.isDemoDataActive.value = !!v));

@@ -1,16 +1,22 @@
-import { RPCError, RequestEntityTooLargeError } from "../network/rpc";
-import { registry } from "../registry";
-import { session } from "@web/session";
-import { user } from "@web/core/user";
+import { usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import {
     ClientErrorDialog,
     ErrorDialog,
     NetworkErrorDialog,
     RequestEntityTooLargeErrorDialog,
     RPCErrorDialog,
-} from "./error_dialogs";
-import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_service";
+} from "@web/core/errors/error_dialogs";
+import {
+    ThirdPartyScriptError,
+    UncaughtClientError,
+    UncaughtPromiseError,
+} from "@web/core/errors/error_service";
+import { RequestEntityTooLargeError, RPCError } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { session } from "@web/session";
 
 /**
  * @typedef {import("../../env").OdooEnv} OdooEnv
@@ -151,7 +157,8 @@ errorHandlerRegistry.add("defaultHandler", defaultHandler, { sequence: 100 });
  * all errors if we're not an internal user (except in debug or test mode).
  */
 export function swallowAllVisitorErrors(env, error, originalError) {
-    if (!user.isInternalUser && !odoo.debug && !session.test_mode) {
+    const debugMode = usePlugin(DebugModePlugin);
+    if (!user.isInternalUser && !debugMode.isActive() && !session.test_mode) {
         return true;
     }
 }

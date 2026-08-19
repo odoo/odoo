@@ -1,16 +1,25 @@
-import { markRaw, onWillDestroy, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
+import {
+    computed,
+    markRaw,
+    onWillDestroy,
+    Plugin,
+    signal,
+    useListener,
+    usePlugin,
+} from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { Crypto, CRYPTO_ALGO } from "@web/core/crypto";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { NonSecureContextError } from "@web/core/errors/non_secure_context_error";
+import { _t } from "@web/core/l10n/translation";
+import { normalize } from "@web/core/l10n/utils";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
-import { ORM } from "@web/core/orm_plugin";
 import { IndexedDB } from "@web/core/utils/indexed_db";
+import { hashCode } from "@web/core/utils/strings";
 import { session } from "@web/session";
-import { hashCode } from "../utils/strings";
-import { Crypto, CRYPTO_ALGO } from "../crypto";
-import { normalize } from "../l10n/utils";
-import { NonSecureContextError } from "../errors/non_secure_context_error";
-import { _t } from "../l10n/translation";
 
 const IS_READY = Symbol("ready");
 
@@ -38,6 +47,7 @@ export class OfflinePlugin extends Plugin {
 
     static SELECTORS_TO_DISABLE = ["button:not([data-available-offline]):not([disabled])"];
 
+    debugMode = usePlugin(DebugModePlugin);
     orm = usePlugin(ORM);
 
     _idb = window.isSecureContext
@@ -47,9 +57,11 @@ export class OfflinePlugin extends Plugin {
         window.isSecureContext &&
         session.browser_cache_secret &&
         new Crypto(session.browser_cache_secret);
-    _visitedUITable = odoo.debug
-        ? OfflinePlugin.VISITED_UI_TABLE_NAME_DEBUG
-        : OfflinePlugin.VISITED_UI_TABLE_NAME;
+    _visitedUITable = computed(() =>
+        this.debugMode.isActive()
+            ? OfflinePlugin.VISITED_UI_TABLE_NAME_DEBUG
+            : OfflinePlugin.VISITED_UI_TABLE_NAME
+    );
     _timeout = null; // used to repeatedly ping the server when offline
     _observer = null; // used to detect DOM mutations and disable the UI when offline
 
@@ -193,7 +205,7 @@ export class OfflinePlugin extends Plugin {
         } else if (this._visited()[actionId]?.views[viewType] === true) {
             // Searches for that action/view type haven't been retrieve from idb yet
             this._visited()[actionId].views[viewType] = this._idb
-                .read(this._visitedUITable, this._generateKey(actionId, viewType))
+                .read(this._visitedUITable(), this._generateKey(actionId, viewType))
                 .then((r) =>
                     Object.values(r || {})
                         .reverse() // last visited first
@@ -242,13 +254,13 @@ export class OfflinePlugin extends Plugin {
             if (["form", "kanban_quick_create", "list_quick_create"].includes(viewType)) {
                 value = true;
             } else {
-                value = (await this._idb.read(this._visitedUITable, key)) || {};
+                value = (await this._idb.read(this._visitedUITable(), key)) || {};
                 let count = value[search.key]?.count || 0;
                 search = value[search.key]?.search || search; // keep original search (no "Custom Filter")
                 delete value[search.key]; // delete and re-add to mark it as "last visited"
                 value[search.key] = { count: ++count, search };
             }
-            return this._idb.write(this._visitedUITable, key, value);
+            return this._idb.write(this._visitedUITable(), key, value);
         }
     }
 
@@ -371,7 +383,7 @@ export class OfflinePlugin extends Plugin {
      * @private
      */
     async _populateVisited() {
-        return this._idb.getAllKeys(this._visitedUITable).then((keys) => {
+        return this._idb.getAllKeys(this._visitedUITable()).then((keys) => {
             if (!this.isOffline()) {
                 return; // status changed again meanwhile
             }

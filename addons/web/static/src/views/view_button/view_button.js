@@ -1,6 +1,7 @@
-import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { Component, t, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
+import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";
@@ -52,6 +53,7 @@ export class ViewButton extends Component {
     static template = "web.views.ViewButton";
     props = useProps(viewButtonProps);
 
+    debugMode = usePlugin(DebugModePlugin);
     handleViewButton = useViewButtonHandler();
 
     setup() {
@@ -63,7 +65,7 @@ export class ViewButton extends Component {
             this.onClick = debounceFn(this.onClick.bind(this), debounce, true);
         }
         this.tooltip = JSON.stringify({
-            debug: Boolean(odoo.debug),
+            debug: this.debugMode.isActive(),
             button: {
                 string: this.buttonLabel,
                 help: this.clickParams.help,
@@ -95,7 +97,7 @@ export class ViewButton extends Component {
     }
 
     get hasBigTooltip() {
-        return Boolean(odoo.debug) || this.clickParams.help;
+        return this.debugMode.isActive() || this.clickParams.help;
     }
 
     get hasSmallToolTip() {

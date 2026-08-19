@@ -1,4 +1,7 @@
+import { Component, t, usePlugin, useProps, xml } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain } from "@web/core/domain";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_utils";
@@ -6,9 +9,6 @@ import { exprToBoolean } from "@web/core/utils/strings";
 import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
-
-import { Component, usePlugin, t, useProps, xml } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const isSmall = utils.isSmall;
 
@@ -352,6 +352,8 @@ export class Field extends Component {
         return fieldInfo;
     };
 
+    debugMode = usePlugin(DebugModePlugin);
+
     setup() {
         this.offlinePlugin = usePlugin(OfflinePlugin);
         if (this.props.fieldInfo) {
@@ -480,7 +482,7 @@ export class Field extends Component {
                 field: this.props.record.fields[this.props.name],
                 fieldInfo: this.props.fieldInfo || {},
             });
-            if (Boolean(odoo.debug) || (tooltip && JSON.parse(tooltip).field.help)) {
+            if (this.debugMode.isActive() || (tooltip && JSON.parse(tooltip).field.help)) {
                 return tooltip;
             }
         }

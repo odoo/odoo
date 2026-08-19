@@ -1,12 +1,11 @@
+import { Component, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { BooleanField } from "@web/views/fields/boolean/boolean_field";
 import { SelectionField } from "@web/views/fields/selection/selection_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-import { ResUserGroupIdsPopover } from "./res_user_group_ids_popover";
-
-import { Component, useProps } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { ResUserGroupIdsPopover } from "@web/webclient/res_user_group_ids_field/res_user_group_ids_popover";
 
 /**
  * /!\ This widget is not meant to be used anywhere else than inside form view
@@ -20,8 +19,9 @@ class ResUserGroupIdsPrivilegeField extends Component {
         ...standardFieldProps,
     });
 
+    debugMode = usePlugin(DebugModePlugin);
+
     setup() {
-        this.isDebug = odoo.debug;
         this.popover = usePopover(ResUserGroupIdsPopover);
         this.groups = this.env.resUserGroupsInfo.groups;
     }
