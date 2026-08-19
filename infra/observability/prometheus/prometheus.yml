@@ -1,0 +1,107 @@
+# =============================================================================
+# prometheus.yml — Scrape configuration for the Invoice Agent observability stack
+#
+# Targets:
+#   - node_exporter:   host metrics (CPU, RAM, disk, network)
+#   - postgres_exporter: PostgreSQL / RDS metrics
+#   - redis_exporter:  Redis / ElastiCache metrics
+#   - invoice-ai:      application metrics (OCR latency, Claude latency, tokens)
+#
+# All targets are on the `monitoring` Docker network (or reachable via host
+# networking in production). Prometheus uses the PULL model: it scrapes each
+# target's /metrics HTTP endpoint on the configured interval.
+# =============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Alertmanager endpoint — Prometheus sends fired alerts here
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - "alertmanager:9093"
+
+# Load alert rules from the rules file
+rule_files:
+  - "alert_rules.yml"
+
+scrape_configs:
+  # ---------------------------------------------------------------------------
+  # Prometheus self-monitoring
+  # ---------------------------------------------------------------------------
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # ---------------------------------------------------------------------------
+  # Host metrics — node_exporter (USE method: Utilization, Saturation, Errors)
+  #
+  # Key metrics:
+  #   CPU:       node_cpu_seconds_total → rate → % idle/system/user/etc
+  #   Memory:    node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes
+  #   Disk:      node_filesystem_avail_bytes, node_disk_io_time_seconds_total
+  #   Network:   node_network_receive_bytes_total, node_network_transmit_bytes_total
+  #   Load:      node_load1, node_load5, node_load15
+  #   Swap:      node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes
+  # ---------------------------------------------------------------------------
+  - job_name: "node"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+        labels:
+          instance: "odoo-ec2"
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL metrics — postgres_exporter
+  #
+  # Key metrics:
+  #   Connections:     pg_stat_database_numbackends
+  #   Transactions:    pg_stat_database_xact_commit, pg_stat_database_xact_rollback
+  #   Cache hit ratio: pg_stat_database_blks_hit / (hit + read)
+  #   Database size:   pg_database_size_bytes
+  #   Locks:           pg_locks_count
+  #   Slow queries:    pg_stat_statements (if loaded)
+  # ---------------------------------------------------------------------------
+  - job_name: "postgres"
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+        labels:
+          instance: "rds-primary"
+
+  # ---------------------------------------------------------------------------
+  # Redis metrics — redis_exporter
+  #
+  # Key metrics:
+  #   Hit ratio:     redis_keyspace_hits_total / (hits + misses)
+  #   Memory:        redis_memory_used_bytes / redis_memory_max_bytes
+  #   Connections:   redis_connected_clients
+  #   Evictions:     redis_evicted_keys_total (should be 0 with volatile-ttl)
+  #   Commands:      redis_commands_processed_total
+  #   Keys:          redis_db_keys{db="0"}
+  # ---------------------------------------------------------------------------
+  - job_name: "redis"
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+        labels:
+          instance: "elasticache-primary"
+
+  # ---------------------------------------------------------------------------
+  # Invoice AI application metrics — RED method (Rate, Errors, Duration)
+  #
+  # Key metrics (instrumented with prometheus_client):
+  #   HTTP:     http_requests_total{method,endpoint,status}
+  #             http_request_duration_seconds_bucket{method,endpoint}
+  #   OCR:      invoice_ocr_duration_seconds_bucket
+  #   Claude:   invoice_claude_api_duration_seconds_bucket
+  #   Tokens:   invoice_claude_tokens_total{model}
+  #   Queue:    invoice_rabbitmq_queue_depth
+  #   Worker:   invoice_worker_jobs_total{status}
+  #             invoice_worker_job_duration_seconds_bucket
+  # ---------------------------------------------------------------------------
+  - job_name: "invoice-ai"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["invoice-ai:8100"]
+        labels:
+          service: "invoice-ai"

@@ -23,6 +23,10 @@ dependencies = [
     "aio-pika>=9.4.0",
     "voyageai>=0.2.0",
     "asyncpg>=0.29.0",
+    "redis>=5.0.0",
+    "prometheus_client>=0.20.0",
+    "prometheus_fastapi_instrumentator>=7.0.0",
+    "slowapi>=0.1.9",
 ]
 
 [project.optional-dependencies]
@@ -33,6 +37,7 @@ dev = [
     "ruff>=0.6.0",
     "mypy>=1.10.0",
     "pyyaml>=6.0.0",
+    "locust>=2.32.0",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -62,5 +67,11 @@ no_implicit_optional = true
 # ship broad vendor stubs; their interfaces are exercised indirectly through
 # the isolated app/claude.py + app/ocr.py seams.
 [[tool.mypy.overrides]]
-module = ["anthropic.*", "pdf2image.*", "pytesseract.*"]
+module = [
+    "anthropic.*",
+    "pdf2image.*",
+    "pytesseract.*",
+    "prometheus_client.*",
+    "prometheus_fastapi_instrumentator.*",
+]
 ignore_missing_imports = true

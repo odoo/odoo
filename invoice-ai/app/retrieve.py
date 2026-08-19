@@ -323,18 +323,31 @@ async def retrieve_vendor_context(
     partner_id: int,
     ocr_text: str,
     embedder: VoyageEmbedder | None = None,
+    reranker: VoyageReranker | None = None,
     extracted_ref: str = "",
     extracted_vat: str = "",
     extracted_vendor_name: str = "",
 ) -> dict[str, Any]:
-    """Full RAG retrieval: embed → vector search → hybrid enrich → GL freqs.
+    """Full RAG retrieval: embed → hybrid recall (top-30) → rerank (top-5) → GL freqs.
+
+    Two-stage retrieval pipeline:
+
+    1.  **Recall** — embed the query, retrieve top-30 candidates via hybrid
+        vector + ref + VAT/name search (wide net, fast).
+    2.  **Rerank** — Voyage ``rerank-2.5`` cross-encoder re-scores the 30
+        candidates against the query and returns the top-5 most relevant
+        (precise, slightly slower).  On reranker failure the original cosine
+        ordering degrades gracefully.
 
     Returns::
 
         {
-            "candidates": [...],          # ranked historical bills
+            "candidates": [...],          # reranked (top-5) historical bills
+            "candidates_before_rerank": N, # how many were recalled
+            "reranked": true/false,       # whether reranking was applied
             "gl_account_frequencies": {},  # {account_code: count}
             "query_embedding_model": "...",
+            "rerank_model": "...",
         }
     """
     if embedder is None:
@@ -343,7 +356,7 @@ async def retrieve_vendor_context(
     # 1. Embed query (input_type="query" asymmetry)
     query_vector = embedder.embed_query(ocr_text)
 
-    # 2. Hybrid retrieval (vector + ref + VAT/name, deduped)
+    # 2. Hybrid retrieval — wide recall (top-30 by default)
     candidates = await hybrid_retrieve(
         partner_id=partner_id,
         query_vector=query_vector,
@@ -353,11 +366,55 @@ async def retrieve_vendor_context(
         extracted_vendor_name=extracted_vendor_name,
     )
 
-    # 3. GL account frequency distribution
+    # 3. Rerank: cross-encoder precision ordering (top-30 → top-5)
+    reranked = False
+    candidates_before_rerank = len(candidates)
+    rerank_model_name = ""
+    if reranker is None:
+        reranker = VoyageReranker()
+    if len(candidates) > 1:
+        try:
+            documents = [c["content"] for c in candidates]
+            reranked_results = reranker.rerank(
+                query=ocr_text,
+                documents=documents,
+            )
+            # Reorder candidates by the reranker's relevance_score
+            reranked_candidates = []
+            for result in reranked_results:
+                orig_index = result["index"]
+                if 0 <= orig_index < len(candidates):
+                    enriched = dict(candidates[orig_index])
+                    enriched["rerank_score"] = result["relevance_score"]
+                    reranked_candidates.append(enriched)
+            candidates = reranked_candidates
+            reranked = True
+            rerank_model_name = "rerank-2.5"
+            _logger.info(
+                "retrieve rerank: %d candidates → top-%d (reranked=%s)",
+                candidates_before_rerank,
+                len(candidates),
+                reranked,
+            )
+        except VoyageRerankError:
+            # Degraded: keep original cosine ordering
+            _logger.warning(
+                "retrieve rerank: reranker failed, keeping cosine ordering "
+                "(%d candidates)",
+                len(candidates),
+            )
+    elif candidates:
+        reranked = True  # trivial case: 1 candidate
+        candidates[0]["rerank_score"] = 1.0
+
+    # 4. GL account frequency distribution
     frequencies = await gl_account_frequencies(partner_id)
 
     return {
         "candidates": candidates,
+        "candidates_before_rerank": candidates_before_rerank,
+        "reranked": reranked,
         "gl_account_frequencies": frequencies,
         "query_embedding_model": "voyage-3",
+        "rerank_model": rerank_model_name,
     }

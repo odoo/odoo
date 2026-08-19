@@ -18,6 +18,9 @@ __pycache__/
 # emacs backup files
 *~
 # hg stuff
+*.zip
+*.json
+*.log
 *.orig
 status
 # odoo filestore
@@ -61,3 +64,15 @@ custom_addons/hotel
 custom_addons/account_pos_settle_due
 custom_addons/base_industry_data
 custom_addons/booking_engine
+
+# docs/ — keep ignored by default, but force-add specific infrastructure docs:
+#   git add -f docs/architecture.md docs/runbooks/db-migration.md
+docs/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!infra/
+!infra/**

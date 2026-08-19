@@ -1,0 +1,263 @@
+# =============================================================================
+# alert_rules.yml — Prometheus alerting rules for the Invoice Agent
+#
+# Rules:
+#   1. PipelineErrorRateHigh    — invoice-ai error rate > 2% for 5 minutes
+#   2. RDSConnectionsNearCap    — PostgreSQL connections > 85% of max_connections
+#   3. PipelineLatencyHigh      — p95 extraction latency > 60s for 5 minutes
+#   4. RedisMemoryHigh          — Redis memory usage > 80%
+#   5. NodeCPUHigh              — host CPU > 85% for 10 minutes
+#   6. NodeDiskSpaceLow         — host disk free < 10%
+#   7. WorkerQueueBacklog       — RabbitMQ queue depth > 50 for 5 minutes
+#
+# Recording rules pre-compute expensive expressions so dashboard panels load
+# fast and alert evaluations don't re-scan raw metrics.
+# =============================================================================
+
+groups:
+  # ---------------------------------------------------------------------------
+  # Recording rules — pre-computed aggregates for dashboards
+  # ---------------------------------------------------------------------------
+  - name: recording_rules
+    interval: 30s
+    rules:
+      # RED method: request rate (requests/second) by endpoint
+      - record: job:http_requests:rate5m
+        expr: rate(http_requests_total[5m])
+
+      # RED method: error ratio by endpoint
+      - record: job:http_errors:ratio5m
+        expr: >
+          sum by (job) (rate(http_requests_total{status=~"5.."}[5m]))
+          /
+          sum by (job) (rate(http_requests_total[5m]))
+
+      # RED method: p95 request duration
+      - record: job:http_duration:p95_5m
+        expr: >
+          histogram_quantile(0.95,
+            sum by (job, le) (rate(http_request_duration_seconds_bucket[5m]))
+          )
+
+      # Invoice-specific: p95 OCR duration
+      - record: job:ocr_duration:p95_5m
+        expr: >
+          histogram_quantile(0.95,
+            sum by (job, le) (rate(invoice_ocr_duration_seconds_bucket[5m]))
+          )
+
+      # Invoice-specific: p95 Claude API latency
+      - record: job:claude_duration:p95_5m
+        expr: >
+          histogram_quantile(0.95,
+            sum by (job, le) (rate(invoice_claude_api_duration_seconds_bucket[5m]))
+          )
+
+      # Invoices processed per hour
+      - record: job:invoices:per_hour
+        expr: sum(increase(invoice_worker_jobs_total[1h])) * 3600
+
+      # Daily token cost estimate (assumes $3/1M input tokens, $15/1M output for opus)
+      - record: job:claude_tokens:daily_total
+        expr: sum(increase(invoice_claude_tokens_total[24h]))
+
+      # USE method: host CPU utilization (1 - idle)
+      - record: instance:node_cpu:utilization5m
+        expr: >
+          1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))
+
+      # USE method: host memory utilization
+      - record: instance:node_memory:utilization5m
+        expr: >
+          1 - (
+            avg by (instance) (node_memory_MemAvailable_bytes)
+            /
+            avg by (instance) (node_memory_MemTotal_bytes)
+          )
+
+      # USE method: disk space utilization
+      - record: instance:node_disk:utilization
+        expr: >
+          1 - (
+            avg by (instance) (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"})
+            /
+            avg by (instance) (node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})
+          )
+
+  # ---------------------------------------------------------------------------
+  # Alerting rules — fire when thresholds are breached
+  # ---------------------------------------------------------------------------
+  - name: alerting_rules
+    rules:
+      # -----------------------------------------------------------------------
+      # Pipeline error rate > 2% for 5 minutes
+      # Runbook: docs/runbooks/pipeline-error-rate.md
+      # -----------------------------------------------------------------------
+      - alert: PipelineErrorRateHigh
+        expr: >
+          (
+            sum by (job) (rate(http_requests_total{status=~"5.."}[5m]))
+            /
+            sum by (job) (rate(http_requests_total[5m]))
+          ) > 0.02
+        for: 5m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Pipeline error rate above 2%"
+          description: >-
+            The invoice-ai service error rate is
+            {{ $value | humanizePercentage }} for the last 5 minutes,
+            exceeding the 2% SLO threshold.
+          runbook_url: "https://github.com/7ananSaif/odoo/blob/main/docs/runbooks/pipeline-error-rate.md"
+
+      # -----------------------------------------------------------------------
+      # RDS connections nearing the cap (> 85% of max_connections=200)
+      # Runbook: docs/runbooks/rds-connections.md
+      # -----------------------------------------------------------------------
+      - alert: RDSConnectionsNearCap
+        expr: >
+          (
+            pg_stat_database_numbackends
+            / pg_settings_max_connections
+          ) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "RDS connections above 85% of max"
+          description: >-
+            PostgreSQL has {{ $value | humanizePercentage }} of
+            max_connections in use. Current connections are approaching
+            the 200-connection limit. Investigate connection pool leaks
+            or scale up.
+          runbook_url: "https://github.com/7ananSaif/odoo/blob/main/docs/runbooks/rds-connections.md"
+
+      # -----------------------------------------------------------------------
+      # p95 extraction latency > 60 seconds for 5 minutes
+      # -----------------------------------------------------------------------
+      - alert: PipelineLatencyHigh
+        expr: >
+          histogram_quantile(0.95,
+            sum by (job, le) (rate(invoice_worker_job_duration_seconds_bucket[5m]))
+          ) > 60
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Invoice extraction p95 latency above 60s"
+          description: >-
+            The 95th percentile extraction time is {{ $value | humanizeDuration }},
+            exceeding the 60-second target. Check Claude API latency
+            or OCR processing time.
+
+      # -----------------------------------------------------------------------
+      # Redis memory usage > 80%
+      # -----------------------------------------------------------------------
+      - alert: RedisMemoryHigh
+        expr: >
+          redis_memory_used_bytes / redis_memory_max_bytes > 0.80
+        for: 10m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Redis memory usage above 80%"
+          description: >-
+            Redis memory usage is {{ $value | humanizePercentage }}.
+            The volatile-ttl eviction policy may start evicting
+            session and cache keys. Review TTL settings or scale up.
+
+      # -----------------------------------------------------------------------
+      # Host CPU > 85% for 10 minutes
+      # -----------------------------------------------------------------------
+      - alert: NodeCPUHigh
+        expr: >
+          1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: infra
+        annotations:
+          summary: "EC2 host CPU above 85%"
+          description: >-
+            Instance {{ $labels.instance }} CPU utilization is
+            {{ $value | humanizePercentage }} for 10 minutes.
+            Consider scaling or investigating runaway processes.
+
+      # -----------------------------------------------------------------------
+      # Host disk free < 10%
+      # -----------------------------------------------------------------------
+      - alert: NodeDiskSpaceLow
+        expr: >
+          (
+            node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"}
+            /
+            node_filesystem_size_bytes{fstype!~"tmpfs|overlay"}
+          ) < 0.10
+        for: 5m
+        labels:
+          severity: critical
+          team: infra
+        annotations:
+          summary: "Disk space below 10%"
+          description: >-
+            Instance {{ $labels.instance }} filesystem
+            {{ $labels.mountpoint }} has less than 10% free space.
+            Clean up logs, Docker images, or expand the volume.
+
+      # -----------------------------------------------------------------------
+      # RabbitMQ queue backlog > 50 messages for 5 minutes
+      # -----------------------------------------------------------------------
+      - alert: WorkerQueueBacklog
+        expr: invoice_rabbitmq_queue_depth > 50
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Invoice processing queue backlog"
+          description: >-
+            The invoice extraction queue has {{ $value }} pending
+            messages, indicating the pipeline is falling behind.
+            Check worker health, Claude API latency, or scale workers.
+
+      # -----------------------------------------------------------------------
+      # Security: JWT 401 spike — potential brute-force or secret drift
+      # -----------------------------------------------------------------------
+      - alert: AuthFailuresSpike
+        expr: >
+          sum by (job) (rate(http_requests_total{status="401"}[5m])) > 0.16
+        for: 5m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "High rate of 401 Unauthorized responses"
+          description: >-
+            The service is returning 401 at
+            {{ $value | humanize }}/s for the last 5 minutes.
+            This may indicate JWT secret drift, a brute-force attempt,
+            or a misconfigured client. Check the JWT secret sync
+            between Odoo and invoice-ai.
+
+      # -----------------------------------------------------------------------
+      # Security: Unusual extraction volume — potential abuse
+      # -----------------------------------------------------------------------
+      - alert: ExtractionAbuse
+        expr: >
+          sum by (job) (rate(invoice_worker_jobs_total[5m])) > 0.83
+        for: 10m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "Unusually high extraction rate"
+          description: >-
+            The extraction pipeline is processing
+            {{ $value | humanize }}/s for 10 minutes, which is
+            above the normal baseline. This may indicate abuse of the
+            extraction endpoint. Verify with the rate-limit logs.

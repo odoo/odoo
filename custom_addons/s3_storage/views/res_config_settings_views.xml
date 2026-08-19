@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_s3_storage" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.s3.storage</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="S3 Storage"
+                     string="S3 Storage" data-key="s3_storage"
+                     groups="base.group_system">
+                    <h2>AWS S3 Attachment Storage</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="s3_bucket_name"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="s3_bucket_name"/>
+                                <div class="text-muted">
+                                    AWS S3 bucket for attachment storage.
+                                    Leave empty to use the local filestore
+                                    (default for development).
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="s3_bucket_name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="s3_prefix"/>
+                                <div class="text-muted">
+                                    Optional prefix for S3 object keys
+                                    (e.g. 'prod/filestore'). All attachments
+                                    will be stored under this prefix.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="s3_prefix"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="s3_region"/>
+                                <div class="text-muted">
+                                    AWS region of the S3 bucket.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="s3_region"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

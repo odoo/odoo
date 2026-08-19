@@ -226,6 +226,7 @@ class QueuePublisher(models.AbstractModel):
         via the ``_cron_ocr_pending_bills`` cron; the worker never touches
         PDFs).
         """
+        rag_enabled = self.env["invoice.llm.service"].rag_enabled()
         return self.publish(
             ROUTING_KEY_REQUEST,
             {
@@ -234,6 +235,7 @@ class QueuePublisher(models.AbstractModel):
                 "attempt": int(attempt),
                 "job_uuid": job_uuid or "",
                 "ocr_text": ocr_text or "",
+                "rag_enabled": rag_enabled,
             },
         )
 

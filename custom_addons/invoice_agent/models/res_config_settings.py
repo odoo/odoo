@@ -18,10 +18,16 @@ never committed to source.
 from odoo import fields, models
 
 from .llm_service import (
+    AUTO_FILL_THRESHOLD_PARAM,
     CONFIDENCE_THRESHOLD_PARAM,
+    DEFAULT_AUTO_FILL_THRESHOLD,
     DEFAULT_CONFIDENCE_THRESHOLD,
+    DEFAULT_REVIEW_THRESHOLD,
+    DEFAULT_RAG_ENABLED,
     JWT_SECRET_PARAM,
     LLM_SERVICE_URL_PARAM,
+    RAG_ENABLED_PARAM,
+    REVIEW_THRESHOLD_PARAM,
 )
 
 
@@ -53,14 +59,43 @@ class ResConfigSettings(models.TransientModel):
         "lower value immediately moves pending low-confidence bills to "
         "review and vice-versa (the rollback path for a bad threshold).",
     )
+    invoice_agent_auto_fill_threshold = fields.Float(
+        string="Auto-Fill Threshold",
+        config_parameter=AUTO_FILL_THRESHOLD_PARAM,
+        default=DEFAULT_AUTO_FILL_THRESHOLD,
+        digits=(3, 2),
+        help="Confidence above this value (0..1) auto-fills the GL account "
+        "on invoice lines and marks the bill ready for posting. Default 0.90.",
+    )
+    invoice_agent_review_threshold = fields.Float(
+        string="Review Threshold",
+        config_parameter=REVIEW_THRESHOLD_PARAM,
+        default=DEFAULT_REVIEW_THRESHOLD,
+        digits=(3, 2),
+        help="Confidence below this value (0..1) flags the bill as "
+        "'needs_human'. Between this and the Auto-Fill threshold, bills "
+        "land in the review kanban column. Default 0.60.",
+    )
+    invoice_agent_rag_enabled = fields.Boolean(
+        string="RAG Validation Enabled",
+        config_parameter=RAG_ENABLED_PARAM,
+        default=DEFAULT_RAG_ENABLED,
+        help="When enabled, validated invoices go through the two-stage "
+        "RAG retrieval + Claude validation pipeline. Disable (kill switch) "
+        "to fall back to extraction-only mode.",
+    )
 
     def set_values(self):
         res = super().set_values()
         # The routing compute cannot depend on ir.config_parameter inside
-        # @api.depends, so after saving a threshold, re-run the compute on
-        # every AI-processed move to move bills between Auto / Needs
-        # Review immediately.
-        if self.invoice_agent_confidence_threshold:
+        # @api.depends, so after saving thresholds, re-run the compute on
+        # every AI-processed move to move bills between Auto / Needs Review
+        # / Needs Human immediately.
+        if (
+            self.invoice_agent_confidence_threshold
+            or self.invoice_agent_auto_fill_threshold
+            or self.invoice_agent_review_threshold
+        ):
             moves = self.env["account.move"].search(
                 [("ai_extraction_status", "in", ("extracted", "failed"))],
             )

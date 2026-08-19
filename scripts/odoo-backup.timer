@@ -1,0 +1,24 @@
+# =============================================================================
+# odoo-backup.timer — Triggers odoo-backup.service nightly at 02:00 UTC
+#
+# Install:
+#   sudo cp odoo-backup.timer /etc/systemd/system/
+#   sudo cp odoo-backup.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now odoo-backup.timer
+#
+# Verify:
+#   systemctl list-timers | grep odoo
+# =============================================================================
+
+[Unit]
+Description=Odoo nightly backup timer
+Requires=odoo-backup.service
+
+[Timer]
+OnCalendar=*-*-* 02:00:00 UTC
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

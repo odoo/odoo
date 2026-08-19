@@ -69,9 +69,18 @@ from .amqp import (
 )
 from .claude import ClaudeService
 from .errors import BadRequestError, ClaudeRateLimitError, ClaudeUpstreamError
+from .llm_cache import cache_get, cache_set
 from .result_signing import sign_result
 from .retrieve import retrieve_vendor_context
 from .retry import DEAD_ROUTING_KEY, attempt_from_body, classify_failure
+from .metrics import (
+    CLAUDE_API_DURATION,
+    RABBITMQ_QUEUE_DEPTH,
+    WORKER_JOB_DURATION,
+    WORKER_JOBS_TOTAL,
+    Timer,
+    record_claude_tokens,
+)
 from .schemas import InvoiceExtraction
 from .validate import validate_extraction
 
@@ -167,6 +176,9 @@ class InvoiceConsumer:
             move_id = body.get("move_id")
             ocr_text = body.get("ocr_text") or ""
 
+            # Track overall job duration from consume to result publish
+            job_start = __import__("time").monotonic()
+
             if not job_uuid or not move_id:
                 await self._dead_letter(
                     dlx,
@@ -178,7 +190,40 @@ class InvoiceConsumer:
 
             try:
                 await self._publish_started(topic_exchange, job_uuid, move_id)
-                result = await self._claude.extract(text=ocr_text)
+
+                # --- LLM cache lookup ---
+                # Check Redis for a cached extraction before calling Claude.
+                # On hit, skip the API call entirely (saves tokens + latency).
+                cached = cache_get(ocr_text, model=self._claude._cfg.anthropic_model)
+                if cached and "result" in cached:
+                    result = cached["result"]
+                    _logger.info(
+                        "invoice-ai worker: cache hit for move_id=%s",
+                        move_id,
+                    )
+                else:
+                    # Track Claude API latency in the worker
+                    model_name = self._claude._cfg.anthropic_model
+                    with Timer(CLAUDE_API_DURATION, model=model_name):
+                        result = await self._claude.extract(text=ocr_text)
+                    # Record token consumption
+                    record_claude_tokens(
+                        model=result["model"],
+                        usage=result["usage"],
+                    )
+                    # Store in cache for future requests with same OCR text
+                    try:
+                        cache_set(
+                            ocr_text,
+                            result,
+                            model=result.get("model", ""),
+                        )
+                    except Exception:
+                        _logger.exception(
+                            "invoice-ai worker: failed to cache result for "
+                            "move_id=%s",
+                            move_id,
+                        )
             except (ClaudeRateLimitError, ClaudeUpstreamError, BadRequestError) as exc:
                 decision = classify_failure(exc, attempt)
                 await self._route_failure(dlx, message, decision, topic_exchange)
@@ -193,11 +238,17 @@ class InvoiceConsumer:
             # Best-effort: if retrieval or validation fails, the extraction
             # result is still published — the Odoo side can surface it
             # without the validation envelope.
+            #
+            # The ``rag_enabled`` flag is a kill switch stored as
+            # ``ir.config_parameter``. When False, the worker skips
+            # retrieval + validation entirely, reverting to v0.9
+            # extraction-only behaviour.
             validation_verdict = None
             validation_usage = None
+            rag_enabled = body.get("rag_enabled", True)
             try:
                 partner_id = body.get("partner_id")
-                if partner_id:
+                if partner_id and rag_enabled:
                     extraction: InvoiceExtraction = result["parsed"]
                     # Retrieve vendor context (hybrid vector + ref + VAT)
                     vendor_context = await retrieve_vendor_context(
@@ -248,13 +299,19 @@ class InvoiceConsumer:
                 payload["validation"] = validation_verdict
                 payload["validation_usage"] = validation_usage
             await self._publish_result(topic_exchange, payload)
+
+            # Record successful job metrics
+            job_elapsed = __import__("time").monotonic() - job_start
+            WORKER_JOBS_TOTAL.labels(status="done").inc()
+            WORKER_JOB_DURATION.observe(job_elapsed)
             _logger.info(
                 "invoice-ai worker: job %s move_id=%s done model=%s "
-                "validation=%s",
+                "validation=%s duration=%.1fs",
                 job_uuid,
                 move_id,
                 result["model"],
                 "yes" if validation_verdict else "no",
+                job_elapsed,
             )
 
     async def _publish_started(self, topic_exchange, job_uuid: str, move_id: int) -> None:
@@ -315,6 +372,7 @@ class InvoiceConsumer:
         elif decision.is_dead:
             await self._dead_letter(dlx, message, decision.reason, topic_exchange)
         else:
+            WORKER_JOBS_TOTAL.labels(status="failed").inc()
             _logger.warning(
                 "invoice-ai worker: discarding unclassifiable message: %s",
                 decision.reason,
@@ -363,6 +421,7 @@ class InvoiceConsumer:
                     "invoice-ai worker: could not publish failed result for "
                     "dead-lettered job",
                 )
+        WORKER_JOBS_TOTAL.labels(status="dead-lettered").inc()
         _logger.warning("invoice-ai worker: dead-lettered job: %s", reason)
 
     async def _publish_to_dlx(

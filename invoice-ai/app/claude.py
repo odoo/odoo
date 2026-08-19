@@ -163,12 +163,22 @@ class ClaudeService:
         # "_parse_content" normalizes the fallback, so the ambiguity is
         # confined to this method.
         message: Any
+        # Wrap OCR text in delimiters (OWASP LLM01 — prompt injection
+        # mitigation). The system prompt in prompts/v3.md already instructs
+        # Claude to ignore instructions inside scanned content; the
+        # delimiters make the boundary explicit so the model can
+        # distinguish system instructions from adversarial invoice text.
+        isolated_text = (
+            "<<<SCAN_CONTENT>>>\n" + (text or "No OCR text available")
+            + "\n<<<END_SCAN_CONTENT>>>\n\n"
+            "Extract structured invoice data from the scanned content above."
+        )
         try:
             message = await self._client.messages.parse(
                 model=self._cfg.anthropic_model,
                 max_tokens=self._cfg.anthropic_max_tokens,
                 system=_system_blocks(),
-                messages=[{"role": "user", "content": text}],
+                messages=[{"role": "user", "content": isolated_text}],
                 output_format=InvoiceExtraction,
                 output_config=output_config,
             )
@@ -184,7 +194,7 @@ class ClaudeService:
                 model=self._cfg.anthropic_model,
                 max_tokens=self._cfg.anthropic_max_tokens,
                 system=_system_blocks(),
-                messages=[{"role": "user", "content": text}],
+                messages=[{"role": "user", "content": isolated_text}],
                 output_config={
                     "format": {
                         "type": "json_schema",
