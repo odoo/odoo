@@ -312,6 +312,10 @@ const MS_ICONS = {
         has_fill: true,
         tags: "beat cardio cardiology chart clinic data diagram doctor ecg ekg graph health health data health monitor health monitoring healthcare heart heart health hospital line line graph measure medical medicine monitor physician pulse rhythm tracing treatment waveform",
     },
+    center_focus_weak: {
+        has_fill: true,
+        tags: "aim alignment area boundaries camera capture center center focus weak crosshairs focus frame guide image indicator lens limit outline photo photography rectangle region selection shot space square symbol target video viewfinder weak zone zoom",
+    },
     chat_bubble: {
         has_fill: true,
         tags: "bubble chat chat outline chatbox comment communicate communication communication bubble contact conversation dialog dialogue discuss feedback forum help interaction message message outline messaging new message notification social speak speech speech outline support talk text texting thoughts",
@@ -369,7 +373,7 @@ const MS_ICONS = {
         tags: "action arrow arrows arrows inward box button close collapse contract control corners diagonal arrows direction display exit fullscreen full fullscreen interaction interface media minimize mode presentation rectangle reduce restore screen shrink square system toggle video view window",
     },
     close_small: {
-        has_fill: true,
+        has_fill: false,
         tags: "cancel clear close cross decline delete denied dismiss end error exit failure forbidden little mini minus multiplication sign negative no quit reject remove shut down small stop tiny turn off wrong x x mark",
     },
     closed_caption: {
@@ -451,6 +455,10 @@ const MS_ICONS = {
     crop: {
         has_fill: false,
         tags: "adjust adjustments area boundary clip corners crop cropping cut edit editing editor format frame graphic image images media modify outline photo photos picture proportion rectangle reframe resize selection settings shape size square tool transform trim video",
+    },
+    crop_landscape: {
+        has_fill: true,
+        tags: "adjust adjustments area aspect ratio border crop crop landscape dimensions edit edit tool editing frame framing horizontal image image editing images landscape landscape mode media media editing modify orientation outline photo photo editing photos picture picture editing rectangle rectangular reframe resize settings shape size tool visual wide ratio wide screen",
     },
     crop_rotate: {
         has_fill: false,
@@ -748,6 +756,30 @@ const MS_ICONS = {
         has_fill: false,
         tags: "B alphabet b bold character content doc document edit editing editor font format heavy input interface letter letters paragraph rich text sheet spreadsheet style styles symbol symbols text thick type typography weight word writing",
     },
+    format_h1: {
+        has_fill: false,
+        tags: "article article writing bold text content content management doc document document editing edit editing editor fill font format format text h1 header heading large text paragraph paragraph styling publishing style text text editing text style title type typography word processing write writing",
+    },
+    format_h2: {
+        has_fill: false,
+        tags: "big text content doc document document format edit editing editor fill font style format formatting h tag h2 header heading horizontal lines large text layout lines paragraph section semantic tag structure style text text format text style title two lines type typography writing",
+    },
+    format_h3: {
+        has_fill: false,
+        tags: "article bold content doc document document editor edit editing editor fill font format formatting h3 header header level 3 heading letter h numbers numeral 3 paragraph rich text style styles text text formatting title type typography writing",
+    },
+    format_h4: {
+        has_fill: false,
+        tags: "alphabet block content doc document edit editing editor fill font format formatting h4 header heading heading 4 letter markdown paragraph rich text section size style subtitle text title type typeface typography word writing",
+    },
+    format_h5: {
+        has_fill: false,
+        tags: "article blog content design digital doc document edit editing editor fill font format formatting h5 header heading headline hierarchy layout level 5 paragraph publishing section structure style styling text title type typography web writing",
+    },
+    format_h6: {
+        has_fill: false,
+        tags: "6 alphabet doc document edit editing editor fill font format h h6 header heading horizontal letter letter h level number number six paragraph six size small smallest style text title type typography vertical writing",
+    },
     format_image_front: {
         has_fill: true,
         tags: "adjust align alignment border content corners design digital display doc edit editing editor fill format formatting frame front graphic image layout left media modify paragraph perspective photo photograph picture presentation rectangle shape square style styling text type view visual writing",
@@ -755,6 +787,14 @@ const MS_ICONS = {
     format_image_inline_left: {
         has_fill: true,
         tags: "align align left alignment article content doc document edit editing editor embed fill format formatting image inline insert justification justify left landscape layout left media options paragraph photo picture publishing settings style text text wrap type visual word processor writing",
+    },
+    format_image_left: {
+        has_fill: true,
+        tags: "align alignment arrangement article blog column composition content doc document edit editing editor embed fill format format image left frame graphic grid image layout left media page paragraph photo picture publishing section structure style template text type visual website writing",
+    },
+    format_image_right: {
+        has_fill: true,
+        tags: "align alignment arrange article block column composition content design doc document edit editing editor embed fill format frame horizontal image insert layout left lines media page paragraph photo picture position post right sidebar structure style text type web writing",
     },
     format_indent_decrease: {
         has_fill: false,
@@ -1288,6 +1328,10 @@ const MS_ICONS = {
         has_fill: false,
         tags: "blank radio button bullet button choice choose circle control deselect deselected empty radio button form input multiple choice off on option outlined circle point preferences radio radio button record ring select selection settings survey switch toggle ui control unchecked unselected",
     },
+    recenter: {
+        has_fill: false,
+        tags: "adjust aim align arrow arrows center compass crosshair current location destination direction focus geolocate gps in locate location map maps marker middle move my location navigation orientation pinpoint place pointer position realign recenter reset location reset view stop target track view zoom",
+    },
     recycling: {
         has_fill: false,
         tags: "arrows arrows in a loop bio circle conservation cycle eco ecological ecology emblem environment environmental garbage green loop material materials process recyclable recycle recycling reduce remake remanufacture renewable renewal reuse rotate sustainability sustainable symbol three arrows transform trash waste",
@@ -1339,6 +1383,10 @@ const MS_ICONS = {
     rocket_launch: {
         has_fill: true,
         tags: "accelerate ascent astronaut boost cosmic exploration fast flight forward ignition journey launch lift off mission momentum new progress projectile quick rocket science fiction space spaceship speed start startup successful takeoff thrust transport upward vehicle",
+    },
+    rotate_right: {
+        has_fill: false,
+        tags: "action app around arrow button change direction circular circular arrow control counter-clockwise curve direction element history icon inprogress interface load loading refresh loop pointer redo refresh reload renew repeat restart revert right rotate rotate right shape spin right symbol turn turn right ui undo web",
     },
     rss_feed: {
         has_fill: false,
@@ -1403,6 +1451,10 @@ const MS_ICONS = {
     settings_applications: {
         has_fill: true,
         tags: "adjust administration app application applications change circle cog computer configuration configure control customize details device engineering gear gears industrial info information internet machinery manage mechanical mechanism mobile options personal preference service settings setup software system technology tools web wheel",
+    },
+    shadow: {
+        has_fill: false,
+        tags: "3d adjustment background casting depth depth of field design element digital effect dimension drop shadow edit editing effect graphics illusion image layer light lighting overlay perspective photo photography picture render rendering semi-transparent shading shadow translucent transparency visual design visual effect",
     },
     share: {
         has_fill: true,
@@ -1596,6 +1648,10 @@ const MS_ICONS = {
         has_fill: false,
         tags: "alt arrow arrows back and forth change circle circular connecting connection cycle data direction double arrow exchange flow horizontal interaction internet link loop oval process reciprocal refresh relationship round swap switch sync synchronize technology transfer two way up update wifi",
     },
+    table: {
+        has_fill: true,
+        tags: "accounting analytics boxes chart columns data database details display document form grid information items layout lines list organization paper presentation rectangles report rows spreadsheet square squares statistics structure table view",
+    },
     table_chart: {
         has_fill: true,
         tags: "analytics arrange bar bars business chart columns data diagram display document finance graph grid infographic grid information lines matrix measure metrics numbers organize outline plot presentation rectangle report rows shape spreadsheet squares statistics table tracking view",
@@ -1631,6 +1687,10 @@ const MS_ICONS = {
     title: {
         has_fill: false,
         tags: "T action alphabet basic basic minus box button character control decrease box essential font function geometric header less box letters line icon minimal minus minimize box minus square negative box outline remove box shape simple simple minus square subject subtract box symbol text thin line title type ui control",
+    },
+    today: {
+        has_fill: true,
+        tags: "agenda appointment calendar circle circle with dot clock contemporary current date day dot dot in circle event filled circle indicator mark marker month now outline plan point present remember reminder ring round schedule solid circle time today",
     },
     toggle_off: {
         has_fill: true,
@@ -1747,6 +1807,10 @@ const MS_ICONS = {
     view_module: {
         has_fill: true,
         tags: "arrange arrangement blocks collection components content dashboard data design display format gallery grid grouping groups information items layout module organization organize overview pattern presentation rectangle representation sections square squares stacked structure tiles view visual website",
+    },
+    view_timeline: {
+        has_fill: true,
+        tags: "analytics chart chronological data diagram display event flow graph grid history horizontal layout line milestone monitoring overview pattern period presentation progress record report schedule sequence squares time timeline tracking vertical view visualization",
     },
     visibility: {
         has_fill: true,
