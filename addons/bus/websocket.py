@@ -90,21 +90,36 @@ class PollablePriorityQueue(PriorityQueue):
     def __init__(self, maxsize=0):
         super().__init__(maxsize)
         self._putsocket, self._getsocket = socket.socketpair()
+        self._putsocket.setblocking(False)
+        self._getsocket.setblocking(False)
+        self._closed = False
 
     def fileno(self):
         return self._getsocket.fileno()
 
-    def put(self, item, *args, **kwargs):
-        super().put(item, *args, **kwargs)
-        self._putsocket.send(b'.')
+    def _put(self, item, *args, **kwargs):
+        # Protected by self.mutex in threaded mode. Non-yielding in gevent mode.
+        is_empty = self._qsize() == 0
+        super()._put(item, *args, **kwargs)
+        if is_empty and not self._closed:
+            # First item added in the queue: poke the socket to wakeup selectors.
+            self._putsocket.send(b".")
 
-    def get(self, *args, **kwargs):
-        self._getsocket.recv(1)
-        return super().get(*args, **kwargs)
+    def _get(self, *args, **kwargs):
+        # Protected by self.mutex in threaded mode. Non-yielding in gevent mode.
+        result = super()._get(*args, **kwargs)
+        if self._qsize() == 0 and not self._closed:
+            # Last item removed from the queue: drain the socket.
+            self._getsocket.recv(1)
+        return result
 
     def close(self):
-        self._putsocket.close()
-        self._getsocket.close()
+        # Under `self.mutex` so that a concurrent `put` cannot be between reading the
+        # wakeup fd and writing to it while it gets closed.
+        with self.mutex:
+            self._closed = True
+            self._putsocket.close()
+            self._getsocket.close()
 
 
 # ------------------------------------------------------
