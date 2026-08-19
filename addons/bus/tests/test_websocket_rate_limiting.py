@@ -1,17 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import time
 
 try:
-    from websocket._exceptions import WebSocketProtocolException
     from websocket._abnf import VALID_CLOSE_STATUS
+    from websocket._exceptions import WebSocketProtocolException
 except ImportError:
     pass
 
 from odoo.tests import common
-from .common import WebsocketCase
+
 from ..websocket import CloseCode, Websocket
+from .common import WebsocketCase
+
 
 @common.tagged('post_install', '-at_install')
 class TestWebsocketRateLimiting(WebsocketCase):
@@ -19,11 +20,11 @@ class TestWebsocketRateLimiting(WebsocketCase):
         ws = self.websocket_connect()
 
         # slepeing after initial ping frame
-        time.sleep(Websocket.RL_DELAY)
+        self.sleep(Websocket.RL_DELAY)
 
         for _ in range(Websocket.RL_BURST + 1):
             ws.send(json.dumps({"event_name": "test_rate_limiting"}))
-            time.sleep(Websocket.RL_DELAY * 1.25)
+            self.sleep(Websocket.RL_DELAY * 1.25)
 
         self.assertTrue(ws.connected)
 
@@ -50,7 +51,7 @@ class TestWebsocketRateLimiting(WebsocketCase):
         ws = self.websocket_connect()
 
         # slepeing after initial ping frame
-        time.sleep(Websocket.RL_DELAY)
+        self.sleep(Websocket.RL_DELAY)
 
         # burst is allowed
         for _ in range(Websocket.RL_BURST // 2):
@@ -58,7 +59,7 @@ class TestWebsocketRateLimiting(WebsocketCase):
 
         # as long as the rate is respected afterwards
         for _ in range(Websocket.RL_BURST):
-            time.sleep(Websocket.RL_DELAY * 2)
+            self.sleep(Websocket.RL_DELAY * 2)
             ws.send(json.dumps({"event_name": "test_rate_limiting"}))
 
     def test_rate_limiting_start_ok_end_ko(self):
@@ -73,7 +74,7 @@ class TestWebsocketRateLimiting(WebsocketCase):
         # first requests are legit and should be accepted
         for _ in range(Websocket.RL_BURST + 1):
             ws.send(json.dumps({'event_name': 'test_rate_limiting'}))
-            time.sleep(Websocket.RL_DELAY)
+            self.sleep(Websocket.RL_DELAY)
 
         if 1013 not in VALID_CLOSE_STATUS:
             # Websocket client's close codes are not up to date. Indeed, the

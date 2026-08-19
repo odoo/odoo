@@ -4,6 +4,7 @@ import contextlib
 import inspect
 import json
 import struct
+import time
 import unittest
 from itertools import chain, zip_longest
 from threading import Event
@@ -24,12 +25,62 @@ from odoo.tests.common import (
     BaseCase,
     Like,
     _registry_test_lock,
-    release_test_lock,
 )
 
 from odoo.addons.bus.bus_dispatcher import BusDispatcher
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
+
+
+@contextlib.contextmanager
+def _released_registry_lock():
+    """Give the registry lock back while the test thread waits on a server thread.
+
+    Reentrant: a blocking call nested in another one (websocket-client sends a close
+    frame from inside ``recv``) finds nothing left to release and keeps the balance.
+    """
+    held = _registry_test_lock.count if _registry_test_lock._is_owned() else 0
+    for _ in range(held):
+        _registry_test_lock.release()
+    try:
+        yield
+    finally:
+        for _ in range(held):
+            _registry_test_lock.acquire()
+
+
+if websocket:
+
+    class _TestWebsocket(websocket.WebSocket):
+        """Websocket releasing the registry lock while it blocks on the socket.
+
+        The test thread holds that lock while it runs, so that no cursor is opened in its
+        back. Answering it needs one, hence this release around every blocking call.
+        """
+
+        def recv(self, *args, **kwargs):
+            with _released_registry_lock():
+                return super().recv(*args, **kwargs)
+
+        def recv_data(self, *args, **kwargs):
+            with _released_registry_lock():
+                return super().recv_data(*args, **kwargs)
+
+        def recv_data_frame(self, *args, **kwargs):
+            with _released_registry_lock():
+                return super().recv_data_frame(*args, **kwargs)
+
+        def send(self, *args, **kwargs):
+            with _released_registry_lock():
+                return super().send(*args, **kwargs)
+
+        def ping(self, *args, **kwargs):
+            with _released_registry_lock():
+                return super().ping(*args, **kwargs)
+
+        def close(self, *args, **kwargs):
+            with _released_registry_lock():
+                return super().close(*args, **kwargs)
 
 
 class BusResult:
@@ -260,7 +311,6 @@ class WebsocketCase(HttpCase, BusCase):
             wraps=_mocked_serve_forever
         )
         self.startPatcher(self._serve_forever_patch)
-        self.enterContext(release_test_lock())  # Release the lock during websocket tests
         self.http_request_key = 'websocket'
 
     def tearDown(self):
@@ -276,13 +326,6 @@ class WebsocketCase(HttpCase, BusCase):
             if ws.connected:
                 ws.close(CloseCode.CLEAN)
         self.wait_remaining_websocket_connections()
-
-    @contextlib.contextmanager
-    def allow_requests(self, *args, **kwargs):
-        # As the lock is always unlocked, we reacquire it before allowing request
-        # to avoid exceptions.
-        with _registry_test_lock, super().allow_requests(*args, **kwargs):
-            yield
 
     def assertCanOpenTestCursor(self):
         # As the lock is always unlocked during WebsocketCases we have a whitelist of
@@ -308,11 +351,11 @@ class WebsocketCase(HttpCase, BusCase):
             self.session = self.authenticate(None, None)
             kwargs['cookie'] = f'session_id={self.session.sid}'
         kwargs['timeout'] = 10  # keep a large timeout to avoid aving a websocket request escaping the test
-        # The cursor lock is already released, we just need to pass the right cookie.
         kwargs['cookie'] += f';{TEST_CURSOR_COOKIE_NAME}={self.http_request_key}'
-        ws = websocket.create_connection(
-            self._WEBSOCKET_URL, *args, **kwargs
-        )
+        with _released_registry_lock():
+            ws = websocket.create_connection(
+                self._WEBSOCKET_URL, *args, class_=_TestWebsocket, **kwargs
+            )
         if ping_after_connect:
             ws.ping()
             ws.recv_data_frame(control_frame=True)  # pong
@@ -367,16 +410,27 @@ class WebsocketCase(HttpCase, BusCase):
                 sub['data']['last'] = last
             websocket.send(json.dumps(sub))
             if wait_for_dispatch:
-                dispatch_bus_notification_done.wait(timeout=5)
+                self.wait_for_event(dispatch_bus_notification_done)
 
     def trigger_notification_dispatching(self):
         self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
         self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
 
+    def wait_for_event(self, event, timeout=5):
+        """Wait for a server thread to set ``event``, giving it the registry lock back."""
+        with _released_registry_lock():
+            return event.wait(timeout)
+
+    def sleep(self, seconds):
+        """Sleep while the server threads keep working, they need the registry lock."""
+        with _released_registry_lock():
+            time.sleep(seconds)
+
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
-        for event in self._websocket_events:
-            event.wait(5)
+        with _released_registry_lock():
+            for event in self._websocket_events:
+                event.wait(5)
 
     def assert_close_with_code(self, websocket, expected_code, expected_reason=None):
         """

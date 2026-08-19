@@ -175,5 +175,5 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
                 ws.getheaders().get('set-cookie').startswith(f'session_id={user_session.sid}'),
                 "The set-cookie response header must be the origin request session rather than the websocket session",
             )
-            serve_forever_called_event.wait(timeout=5)
+            self.wait_for_event(serve_forever_called_event)
             self.assertTrue(mock.called)

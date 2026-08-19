@@ -3,10 +3,11 @@
 import gc
 import json
 from collections import defaultdict
-from psycopg2.pool import PoolError
 from threading import Event
 from unittest.mock import MagicMock, patch
 from weakref import WeakSet
+
+from psycopg2.pool import PoolError
 
 try:
     import websocket as ws
@@ -170,7 +171,7 @@ class TestWebsocketCaryall(WebsocketCase):
                         },
                     ),
                 )
-                dispatch_done.wait(timeout=5)
+                self.wait_for_event(dispatch_done)
             self.assertEqual(mock.call_args[0][2], self.env["bus.bus"]._bus_last_id())
 
     def test_subscribe_lower_last_notification_id(self):
