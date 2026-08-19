@@ -93,6 +93,14 @@ export class AttachmentList extends Component {
 
     /**
      * @param {import("models").Attachment} attachment
+     * @returns {Object.<string, boolean>}
+     */
+    getPreviewAttClass(attachment) {
+        return { o_image: true };
+    }
+
+    /**
+     * @param {import("models").Attachment} attachment
      */
     canDownload(attachment) {
         return !attachment.uploading && !this.ancestors.inComposer;

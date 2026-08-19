@@ -3,6 +3,10 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Attachment} */
 const attachmentPatch = {
+    setup() {
+        super.setup();
+        this.voiceMetadata = this.computed(() => this.voice_ids[0]);
+    },
     get isViewable() {
         return !this.voice && super.isViewable;
     },

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.VoicePlaybackRate">
+        <button class="o-mail-VoicePlaybackRate btn btn-sm btn-light rounded position-absolute top-0 start-0 z-3 m-1 px-1 py-0 fw-semibold" aria-label="Playback speed" title="Playback speed"
+            t-on-click="this.cyclePlaybackRate"><t t-out="this.props.attachment.voiceMetadata.playbackRate"/>x</button>
+    </t>
+</templates>
