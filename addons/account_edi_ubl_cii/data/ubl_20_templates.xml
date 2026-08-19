@@ -332,6 +332,13 @@
             <cbc:LineExtensionAmount
                 t-att-currencyID="vals['currency'].name"
                 t-out="format_float(vals.get('line_extension_amount'), vals.get('currency_dp'))"/>
+            <cac:OrderLineReference t-if="vals.get('order_line_reference_vals')">
+                <cbc:LineID t-out="vals['order_line_reference_vals']['line_id']"/>
+                <cac:OrderReference>
+                    <cbc:ID t-out="vals['order_line_reference_vals']['sales_order_name']"/>
+                    <cbc:SalesOrderID t-out="vals['order_line_reference_vals']['sales_order_name']"/>
+                </cac:OrderReference>
+            </cac:OrderLineReference>
             <cac:PricingReference>
                 <t t-set="pr_vals" t-value="vals.get('pricing_reference_vals', {})"/>
                 <cac:AlternativeConditionPrice t-foreach="pr_vals.get('alternative_condition_price_vals', [])" t-as="foreach_vals">

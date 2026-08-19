@@ -1718,6 +1718,7 @@ class AccountEdiUBL(models.AbstractModel):
         vals['document_node']['cbc:BuyerReference'] = {'_text': None}
 
     def _ubl_add_order_reference_node(self, vals):
+        """Add header-level OrderReference node."""
         order_ref_node = vals['document_node']['cac:OrderReference'] = {
             'cbc:ID': {'_text': None},
             'cbc:SalesOrderID': {
@@ -1727,6 +1728,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             invoice = vals['invoice']
+            header_vals = self._get_header_order_reference_vals(invoice)
 
             # Purchase order reference
             # An identifier of a referenced purchase order, issued by the Buyer.
@@ -1738,14 +1740,11 @@ class AccountEdiUBL(models.AbstractModel):
             # Instead, the user can encode this information on 'Customer Reference' a.k.a the 'ref' field.
             # Since ID is required, the fallback is also fine and avoid to force the encoding of this
             # manual information.
-            order_ref_node['cbc:ID']['_text'] = invoice.ref or invoice.name
+            order_ref_node['cbc:ID']['_text'] = header_vals['order_reference']
 
             # Sales order reference
             # An identifier of a referenced sales order issued by the Seller.
-            if self.module_installed('sale'):
-                so_names = set(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
-                if so_names:
-                    order_ref_node['cbc:SalesOrderID']['_text'] = ",".join(so_names)
+            order_ref_node['cbc:SalesOrderID']['_text'] = header_vals['sales_order_id']
 
     def _ubl_add_billing_reference_nodes(self, vals):
         vals['document_node']['cac:BillingReference'] = []

@@ -568,6 +568,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
+            'order_line_reference_vals': self._get_line_order_reference_vals(line),
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
@@ -700,11 +701,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.partner_id
 
+        header_vals = self._get_header_order_reference_vals(invoice)
         # OrderReference/SalesOrderID (sales_order_id) is optional
-        sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
-                         and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+        sales_order_id = header_vals.get('sales_order_id')
         # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
-        order_reference = invoice.ref or invoice.name
+        order_reference = header_vals.get('order_reference')
 
         vals = {
             'builder': self,
@@ -1246,8 +1247,31 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _add_invoice_monetary_totals_vals(self, vals):
         self._add_document_monetary_total_vals(vals)
 
+    def _get_order_reference_info_vals(self, invoice):
+        level = None
+        so_names = set()
+        if self.module_installed('sale'):
+            so_names = set(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+            level = 'line' if len(so_names) > 1 else 'header'
+        return {
+            'level': level,
+            'so_names': so_names,
+        }
+
+    def _get_header_order_reference_vals(self, invoice):
+        info_vals = self._get_order_reference_info_vals(invoice)
+        level = info_vals['level']
+        so_names = info_vals['so_names']
+        order_reference = invoice.ref or invoice.name if level != 'line' else None
+        sales_order_id = next(iter(so_names)) if level == 'header' and so_names else None
+        return {
+            'order_reference': order_reference,
+            'sales_order_id': sales_order_id,
+        }
+
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']
+        header_vals = self._get_header_order_reference_vals(invoice)
         document_node.update({
             'cbc:UBLVersionID': {'_text': '2.0'},
             'cbc:ID': {'_text': invoice.name},
@@ -1257,13 +1281,38 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
             'cac:OrderReference': {
                 # OrderReference/ID (order_reference) is mandatory inside the OrderReference node
-                'cbc:ID': {'_text': invoice.ref or invoice.name},
+                'cbc:ID': {'_text': header_vals['order_reference']},
                 # OrderReference/SalesOrderID (sales_order_id) is optional
-                'cbc:SalesOrderID': {
-                    '_text': ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
-                } if 'sale_line_ids' in invoice.invoice_line_ids._fields else None,
+                'cbc:SalesOrderID': {'_text': header_vals['sales_order_id']},
             }
         })
+
+    def _get_line_order_reference_vals(self, line):
+        info_vals = self._get_order_reference_info_vals(line.move_id)
+        line_id = None
+        sales_order_name = None
+        if info_vals['level'] == 'line':
+            sale_line = line.sale_line_ids
+            order_lines = sale_line.order_id.order_line.filtered(lambda l: not l.display_type)
+            line_id = str(order_lines.ids.index(sale_line.id) + 1)
+            sales_order_name = sale_line.order_id.name
+        return {
+            'line_id': line_id,
+            'sales_order_name': sales_order_name,
+        }
+
+    def _add_invoice_line_order_reference_node(self, line_node, vals):
+        """Add line-level OrderLineReference when multiple SOs are linked to the invoice."""
+        move_line = self.env['account.move.line'].browse(vals['base_line']['id'])
+        line_vals = self._get_line_order_reference_vals(move_line)
+        if line_vals.get('line_id'):
+            line_node['cac:OrderLineReference'] = {
+                'cbc:LineID': {'_text': line_vals['line_id']},
+                'cac:OrderReference': {
+                    'cbc:ID': {'_text': line_vals['sales_order_name']},
+                    'cbc:SalesOrderID': {'_text': line_vals['sales_order_name']},
+                }
+            }
 
     def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
         document_node['cac:AccountingSupplierParty'] = {
@@ -1384,6 +1433,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_line_id_nodes(line_node, vals)
         self._add_invoice_line_note_nodes(line_node, vals)
         self._add_invoice_line_period_nodes(line_node, vals)
+        self._add_invoice_line_order_reference_node(line_node, vals)
         self._add_invoice_line_allowance_charge_nodes(line_node, vals)
         self._add_invoice_line_amount_nodes(line_node, vals)
         self._add_invoice_line_tax_total_nodes(line_node, vals)

@@ -567,6 +567,64 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_with_global_discount_line_sale_order')
 
+    def test_order_reference_header_level_single_so(self):
+        """Single SO invoice: order reference at header level"""
+        self.ensure_installed('sale')
+
+        tax_21 = self.percent_tax(21.0)
+        product_a = self._create_product(name='product_a', lst_price=100, taxes_id=tax_21)
+        product_b = self._create_product(name='product_b', lst_price=200, taxes_id=tax_21)
+        sale_order = self._create_sale_order(
+            partner_id=self.partner_be.id,
+            order_line=[
+                self._prepare_order_line(product_id=product_a),
+                self._prepare_order_line(product_id=product_b),
+            ],
+        )
+        invoice = self._create_final_invoice(sale_order, post=True)
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_order_reference_header_level_single_so')
+
+    def test_order_reference_line_level_multiple_so(self):
+        """Multi-SO invoice: order reference at line level"""
+        self.ensure_installed('sale')
+
+        tax_21 = self.percent_tax(21.0)
+        product_a = self._create_product(name='product_a', lst_price=100, taxes_id=tax_21)
+        product_b = self._create_product(name='product_b', lst_price=200, taxes_id=tax_21)
+        product_c = self._create_product(name='product_c', lst_price=300, taxes_id=tax_21)
+
+        so1 = self._create_sale_order(
+            partner_id=self.partner_be.id,
+            order_line=[
+                self._prepare_order_line(product_id=product_a),
+                self._prepare_order_line(product_id=product_b),
+            ],
+        )
+        so2 = self._create_sale_order(
+            partner_id=self.partner_be.id,
+            order_line=[
+                self._prepare_order_line(product_id=product_c),
+            ],
+        )
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_be.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': line.product_id.id,
+                    'quantity': line.product_uom_qty,
+                    'price_unit': line.price_unit,
+                    'sale_line_ids': [Command.set([line.id])],
+                })
+                for line in (so1 | so2).order_line
+            ],
+        })
+        invoice.action_post()
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_order_reference_line_level_multiple_so')
+
     def test_invoice_cash_rounding_add_invoice_line(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)
