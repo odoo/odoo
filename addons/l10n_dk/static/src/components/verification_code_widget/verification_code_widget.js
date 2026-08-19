@@ -1,13 +1,12 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, Resource } from "@odoo/owl";
+import { Component, Resource, useProps } from "@odoo/owl";
 
 class VerificationCodeWidget extends Component {
-    static props = {
-        ...standardFieldProps,
-    };
     static template = "l10n_dk.VerificationCodeWidget";
+
+    props = useProps(standardFieldProps);
 
     inputsRef = new Resource({ name: "inputs" });
 

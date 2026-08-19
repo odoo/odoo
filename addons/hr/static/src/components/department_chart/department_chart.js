@@ -2,13 +2,12 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component, asyncComputed } from "@odoo/owl";
+import { Component, asyncComputed, useProps } from "@odoo/owl";
 
 export class DepartmentChart extends Component {
     static template = "hr.DepartmentChart";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     setup() {
         super.setup();
