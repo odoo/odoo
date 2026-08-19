@@ -972,19 +972,24 @@ class SaleOrder(models.Model):
 
         return 0, 0
 
-    @api.depends("order_line.qty_delivered", "order_line.product_uom_qty", "state")
+    @api.depends(
+        "order_line.qty_delivered", "order_line.product_uom_qty", "state", "order_line.product_id"
+    )
     def _compute_delivery_status(self):
         for order in self:
-            if order.state != "sale" or not order.order_line:
+            lines_to_deliver = order.order_line.filtered(
+                lambda line: line.product_id.type == "consu"
+            )
+            if order.state != "sale" or not lines_to_deliver:
                 order.delivery_status = False
             elif all(
                 line.qty_delivered >= line.product_uom_qty
                 if line.product_uom_qty > 0
                 else line.qty_delivered <= line.product_uom_qty
-                for line in order.order_line
+                for line in lines_to_deliver
             ):
                 order.delivery_status = "full"
-            elif any(line.qty_delivered for line in order.order_line):
+            elif any(line.qty_delivered for line in lines_to_deliver):
                 order.delivery_status = "partial"
             else:
                 order.delivery_status = "pending"

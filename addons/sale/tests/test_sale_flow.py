@@ -72,3 +72,28 @@ class TestSaleFlow(TestSaleCommon):
         self.assertRecordValues(
             sale_order.order_line, [{"qty_delivered": 1.0}, {"qty_delivered": 1.0}]
         )
+
+    def test_so_is_delivered_when_consumable_lines_are_delivered(self):
+        """Test 'delivery_status' at-install to avoid the change when 'sale_stock' is installed."""
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "partner_invoice_id": self.partner_a.id,
+            "partner_shipping_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_cost"].id,
+                    "product_uom_qty": 2,
+                }),
+                Command.create({
+                    "product_id": self.company_data["product_service_order"].id,
+                    "product_uom_qty": 1,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+
+        sale_order.order_line.filtered(
+            lambda line: line.product_id == self.company_data["product_order_cost"]
+        ).qty_delivered = 2
+
+        self.assertEqual(sale_order.delivery_status, "full")
