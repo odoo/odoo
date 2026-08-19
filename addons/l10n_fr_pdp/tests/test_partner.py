@@ -2,6 +2,7 @@ import requests
 from unittest import mock
 from urllib.parse import parse_qs
 
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.mail.tests.common import MailCase
@@ -287,3 +288,20 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
         }])
         self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
+
+    def test_enable_pilot_phase_with_branch(self):
+        proxy_client = self.env['account_edi_proxy_client.user'].search([('proxy_type', '=', 'pdp')], limit=1)
+        branch = self.env['res.company'].create([{
+            'name': "Branch",
+            'parent_id': self.company_data['company'].id,
+            'l10n_fr_pdp_pilot_phase': False,
+            'account_fiscal_country_id': self.company_data['company'].account_fiscal_country_id.id,
+            'account_edi_proxy_client_ids': [(6, 0, proxy_client.ids)],
+            'currency_id': self.env.ref('base.EUR').id,
+            'l10n_fr_pdp_annuaire_start_date': fields.Date.today(),
+        }])
+
+        branch.write({
+            'l10n_fr_pdp_pilot_phase': True,
+        })
+        branch.env.flush_all()
