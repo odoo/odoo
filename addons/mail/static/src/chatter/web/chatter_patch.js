@@ -103,7 +103,7 @@ const chatterPatch = {
                 extraClass: "o-mail-Chatter-dropzone",
                 /** @param {Event} ev */
                 onDrop: async (ev) => {
-                    if (this.state.composerType()) {
+                    if (this.state.composerType() !== "closed") {
                         return;
                     }
                     if (isDragSourceExternalFile(ev.dataTransfer)) {
@@ -282,7 +282,7 @@ const chatterPatch = {
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
         if (threadId === false) {
-            this.state.composerType.set(false);
+            this.state.composerType.set("closed");
         } else {
             this.onThreadCreated?.(this.state.thread());
             this.onThreadCreated = null;
@@ -358,7 +358,7 @@ const chatterPatch = {
                 ? CHATTER_PANEL.NONE
                 : CHATTER_PANEL.SEARCH
         );
-        this.state.composerType.set(false);
+        this.state.composerType.set("closed");
     },
 
     onCloseFullComposerCallback(isDiscard) {
@@ -452,16 +452,19 @@ const chatterPatch = {
         this.state.showActivities.set(!this.state.showActivities());
     },
 
-    toggleComposer(mode = false, { force = false } = {}) {
+    /**
+     * @param {"message"|"note"|"closed"} composerType
+     */
+    toggleComposer(composerType = "closed", { force = false } = {}) {
         this.closeSearch();
         const toggle = async () => {
-            if (!force && this.state.composerType() === mode) {
-                this.state.composerType.set(false);
+            if (!force && this.state.composerType() === composerType) {
+                this.state.composerType.set("closed");
             } else {
-                if (mode === "message") {
-                    await this.updateRecipients(this.webChatterProps.record, mode);
+                if (composerType === "message") {
+                    await this.updateRecipients(this.webChatterProps.record, composerType);
                 }
-                this.state.composerType.set(mode);
+                this.state.composerType.set(composerType);
             }
         };
         if (this.state.thread().id) {

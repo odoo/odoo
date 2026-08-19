@@ -57,7 +57,7 @@
                     </Dropdown>
                 </div>
             </div>
-            <t t-if="this.state.composerType()">
+            <t t-if="this.state.composerType() !== 'closed'">
                 <Composer composer="this.state.thread().composer"
                     autofocus="true" className="this.state.composerType() === 'message' ? '' : 'pt-4'" mode="'extended'"
                     onPostCallback.bind="this.onPostCallback" onCloseFullComposerCallback.bind="this.onCloseFullComposerCallback"

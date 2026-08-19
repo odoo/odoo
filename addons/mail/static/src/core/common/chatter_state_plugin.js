@@ -18,8 +18,8 @@ export class ChatterStatePlugin extends Plugin {
             CHATTER_PANEL.SEARCH,
         ]),
     });
-    composerType = signal(false, {
-        type: t.or([t.selection(["message", "note"]), t.literal(false)]),
+    composerType = signal("closed", {
+        type: t.selection(["message", "note", "closed"]),
     });
     isTopStickyPinned = signal(false);
     jumpThreadPresent = signal(0);
