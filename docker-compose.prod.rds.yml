@@ -1,0 +1,64 @@
+# =============================================================================
+# docker-compose.prod.rds.yml — Production overlay for RDS-backed deployment
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.rds.yml up -d
+#
+# This overlay:
+#   1. Removes the local `db` service entirely
+#   2. Points Odoo at RDS via environment variables
+#   3. Removes the `depends_on: db` constraint
+#
+# Required environment (set in .env):
+#   ODOO_DB_HOST     — RDS endpoint from terraform output
+#   ODOO_DB_PORT     — 5432
+#   ODOO_DB_USER     — odoo_user (created by db-migrate.sh)
+#   ODOO_DB_PASSWORD — from Secrets Manager
+# =============================================================================
+
+services:
+  # Remove local PostgreSQL — RDS replaces it
+  db:
+    profiles:
+      - disabled # effectively removes this service
+
+  odoo:
+    depends_on: {} # Remove db dependency
+    environment:
+      HOST: ${ODOO_DB_HOST}
+      PORT: ${ODOO_DB_PORT:-5432}
+      USER: ${ODOO_DB_USER:-odoo_user}
+      PASSWORD: ${ODOO_DB_PASSWORD:-}
+      # Keep existing env vars
+      PROXY_MODE: "True"
+      URL: ${URL:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER:-invoice_agent}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
+
+  worker:
+    environment:
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER:-invoice_agent}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
+      INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
+      INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+
+  # ---------------------------------------------------------------------------
+  # Production monitoring — exposed via the `monitoring` network
+  # ---------------------------------------------------------------------------
+
+  invoice-ai:
+    networks:
+      - monitoring
+
+  rabbitmq:
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true

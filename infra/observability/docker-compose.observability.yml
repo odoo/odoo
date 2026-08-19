@@ -1,0 +1,192 @@
+# =============================================================================
+# docker-compose.observability.yml — Prometheus / Grafana / Exporters stack
+#
+# Usage:
+#   docker compose -f docker-compose.observability.yml up -d
+#
+# All services run on a private `monitoring` network.
+# Prometheus scrapes exporters over this internal network.
+# Grafana is exposed on port 3000 (restrict in production).
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Prometheus — metrics collection engine (pull-based)
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+    ports:
+      - "127.0.0.1:9090:9090"
+    networks:
+      - monitoring
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  # ---------------------------------------------------------------------------
+  # Grafana — dashboard & visualization layer
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:11.1.0
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/agent-slo.json
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - monitoring
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  # ---------------------------------------------------------------------------
+  # Node Exporter — host metrics (CPU, RAM, disk, network)
+  # ---------------------------------------------------------------------------
+  node-exporter:
+    image: prom/node-exporter:v1.8.1
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    ports:
+      - "127.0.0.1:9100:9100"
+    networks:
+      - monitoring
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Exporter — RDS / local Postgres metrics
+  # ---------------------------------------------------------------------------
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-odoo}:${POSTGRES_PASSWORD:-odoo}@${POSTGRES_HOST:-db}:5432/${POSTGRES_DB:-postgres}?sslmode=disable"
+    ports:
+      - "127.0.0.1:9187:9187"
+    networks:
+      - monitoring
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
+  # ---------------------------------------------------------------------------
+  # Redis Exporter — ElastiCache / local Redis metrics
+  # ---------------------------------------------------------------------------
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.61.0
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: "redis://${REDIS_HOST:-redis}:${REDIS_PORT:-6379}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+    ports:
+      - "127.0.0.1:9121:9121"
+    networks:
+      - monitoring
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
+  # ---------------------------------------------------------------------------
+  # Alertmanager — routes Prometheus alerts to Slack / email
+  # ---------------------------------------------------------------------------
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    restart: unless-stopped
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    ports:
+      - "127.0.0.1:9093:9093"
+    networks:
+      - monitoring
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+
+networks:
+  monitoring:
+    driver: bridge
+    name: monitoring
+
+volumes:
+  prometheus-data:
+    name: prometheus-data
+  grafana-data:
+    name: grafana-data

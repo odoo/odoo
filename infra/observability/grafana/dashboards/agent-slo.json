@@ -1,0 +1,923 @@
+{
+    "annotations": {
+        "list": []
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 1,
+    "id": null,
+    "links": [],
+    "panels": [
+        {
+            "type": "row",
+            "title": "SLO Overview",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "collapsed": false
+        },
+        {
+            "type": "stat",
+            "title": "Pipeline Error Rate",
+            "description": "Percentage of 5xx responses over the last 5 minutes. SLO target: < 2%.",
+            "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 0,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percentunit",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 0.01
+                            },
+                            {
+                                "color": "red",
+                                "value": 0.02
+                            }
+                        ]
+                    },
+                    "min": 0,
+                    "max": 0.1
+                },
+                "overrides": []
+            },
+            "options": {
+                "reduceOptions": {
+                    "values": false,
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": ""
+                },
+                "textMode": "auto",
+                "colorMode": "background"
+            },
+            "targets": [
+                {
+                    "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))",
+                    "legendFormat": "Error Rate",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "stat",
+            "title": "Invoices / Hour",
+            "description": "Invoices processed per hour across all workers.",
+            "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 6,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "short",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 5
+                            },
+                            {
+                                "color": "green",
+                                "value": 20
+                            }
+                        ]
+                    },
+                    "min": 0
+                },
+                "overrides": []
+            },
+            "options": {
+                "reduceOptions": {
+                    "values": false,
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": ""
+                },
+                "textMode": "auto",
+                "colorMode": "background"
+            },
+            "targets": [
+                {
+                    "expr": "sum(increase(invoice_worker_jobs_total{status=\"done\"}[1h]))",
+                    "legendFormat": "Invoices/hr",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "stat",
+            "title": "p95 Extraction Latency",
+            "description": "95th percentile end-to-end extraction time. SLO target: < 60s.",
+            "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 12,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 30
+                            },
+                            {
+                                "color": "red",
+                                "value": 60
+                            }
+                        ]
+                    },
+                    "min": 0
+                },
+                "overrides": []
+            },
+            "options": {
+                "reduceOptions": {
+                    "values": false,
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": ""
+                },
+                "textMode": "auto",
+                "colorMode": "background"
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.95, sum by (le) (rate(invoice_worker_job_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p95 Latency",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "stat",
+            "title": "Daily Token Cost (est.)",
+            "description": "Estimated Claude API tokens consumed in the last 24 hours. Input: $3/1M, Output: $15/1M, Cache read: $0.30/1M.",
+            "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 18,
+                "y": 1
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "currencyUSD",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 10
+                            },
+                            {
+                                "color": "red",
+                                "value": 50
+                            }
+                        ]
+                    },
+                    "min": 0
+                },
+                "overrides": []
+            },
+            "options": {
+                "reduceOptions": {
+                    "values": false,
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": ""
+                },
+                "textMode": "auto",
+                "colorMode": "background"
+            },
+            "targets": [
+                {
+                    "expr": "(sum(increase(invoice_claude_tokens_total{type=\"input\"}[24h])) * 3 + sum(increase(invoice_claude_tokens_total{type=\"output\"}[24h])) * 15 + sum(increase(invoice_claude_tokens_total{type=\"cache_read\"}[24h])) * 0.3) / 1000000",
+                    "legendFormat": "Daily Cost",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "title": "Pipeline — RED Method",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 5
+            },
+            "collapsed": false
+        },
+        {
+            "type": "timeseries",
+            "title": "Request Rate (req/s)",
+            "description": "Requests per second by endpoint — the R in RED.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 6
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "reqps",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "sum by (endpoint) (rate(http_requests_total[5m]))",
+                    "legendFormat": "{{endpoint}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Error Rate (%)",
+            "description": "Percentage of 5xx responses by endpoint — the E in RED.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 8,
+                "y": 6
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percentunit",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    },
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 0.02
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "sum by (endpoint) (rate(http_requests_total{status=~\"5..\"}[5m])) / sum by (endpoint) (rate(http_requests_total[5m]))",
+                    "legendFormat": "{{endpoint}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "p95 Request Duration",
+            "description": "95th percentile HTTP response time — the D in RED.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 6
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.95, sum by (endpoint, le) (rate(http_request_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p95 {{endpoint}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "title": "Invoice Pipeline — Breakdown",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 14
+            },
+            "collapsed": false
+        },
+        {
+            "type": "timeseries",
+            "title": "OCR Duration (p50 / p95 / p99)",
+            "description": "OCR extraction time distribution.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 15
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.50, sum by (le) (rate(invoice_ocr_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p50",
+                    "refId": "A"
+                },
+                {
+                    "expr": "histogram_quantile(0.95, sum by (le) (rate(invoice_ocr_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p95",
+                    "refId": "B"
+                },
+                {
+                    "expr": "histogram_quantile(0.99, sum by (le) (rate(invoice_ocr_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p99",
+                    "refId": "C"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Claude API Latency (p50 / p95 / p99)",
+            "description": "Round-trip latency of Claude API calls labeled by model.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 8,
+                "y": 15
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.50, sum by (le) (rate(invoice_claude_api_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p50",
+                    "refId": "A"
+                },
+                {
+                    "expr": "histogram_quantile(0.95, sum by (le) (rate(invoice_claude_api_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p95",
+                    "refId": "B"
+                },
+                {
+                    "expr": "histogram_quantile(0.99, sum by (le) (rate(invoice_claude_api_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p99",
+                    "refId": "C"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Token Consumption",
+            "description": "Claude API tokens consumed over time, split by input/output/cache_read.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 15
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "short",
+                    "custom": {
+                        "drawStyle": "bars",
+                        "lineWidth": 0,
+                        "fillOpacity": 80,
+                        "stacking": {
+                            "mode": "normal"
+                        }
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "increase(invoice_claude_tokens_total{type=\"input\"}[1h])",
+                    "legendFormat": "Input ({{model}})",
+                    "refId": "A"
+                },
+                {
+                    "expr": "increase(invoice_claude_tokens_total{type=\"output\"}[1h])",
+                    "legendFormat": "Output ({{model}})",
+                    "refId": "B"
+                },
+                {
+                    "expr": "increase(invoice_claude_tokens_total{type=\"cache_read\"}[1h])",
+                    "legendFormat": "Cache Read ({{model}})",
+                    "refId": "C"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "title": "Worker & Queue",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 23
+            },
+            "collapsed": false
+        },
+        {
+            "type": "timeseries",
+            "title": "Worker Jobs (by status)",
+            "description": "Jobs processed per minute, split by done / failed / dead-lettered.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 24
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "ops",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 20
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "sum by (status) (rate(invoice_worker_jobs_total[5m]))",
+                    "legendFormat": "{{status}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Worker Job Duration (p95)",
+            "description": "End-to-end worker job duration from consume to result publish.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 8,
+                "y": 24
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "s",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.95, sum by (le) (rate(invoice_worker_job_duration_seconds_bucket[5m])))",
+                    "legendFormat": "p95 Job Duration",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "RabbitMQ Queue Depth",
+            "description": "Number of pending messages in the extraction queue. Alert fires at > 50.",
+            "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 24
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "short",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 20
+                    },
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 50
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "invoice_rabbitmq_queue_depth",
+                    "legendFormat": "Queue Depth",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "title": "Infrastructure — USE Method",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 32
+            },
+            "collapsed": false
+        },
+        {
+            "type": "timeseries",
+            "title": "Host CPU Utilization",
+            "description": "EC2 host CPU usage — USE Utilization.",
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 0,
+                "y": 33
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percentunit",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    },
+                    "min": 0,
+                    "max": 1
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]))",
+                    "legendFormat": "CPU {{instance}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Host Memory Utilization",
+            "description": "EC2 host memory usage — USE Utilization.",
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 8,
+                "y": 33
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percentunit",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    },
+                    "min": 0,
+                    "max": 1
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+                    "legendFormat": "Memory {{instance}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Host Disk Space Free",
+            "description": "EC2 host disk space — USE Utilization. Alert fires at < 10%.",
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 16,
+                "y": 33
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "bytes",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"}",
+                    "legendFormat": "{{mountpoint}} {{instance}}",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "row",
+            "title": "Database & Redis",
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 39
+            },
+            "collapsed": false
+        },
+        {
+            "type": "timeseries",
+            "title": "PostgreSQL Connections",
+            "description": "Active database connections vs max_connections (200). Alert fires at 85%.",
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 0,
+                "y": 40
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "short",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "pg_stat_database_numbackends",
+                    "legendFormat": "Active Connections",
+                    "refId": "A"
+                },
+                {
+                    "expr": "pg_settings_max_connections",
+                    "legendFormat": "Max Connections",
+                    "refId": "B"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "PostgreSQL Cache Hit Ratio",
+            "description": "Target: > 99%. Lower values indicate I/O bottleneck.",
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 8,
+                "y": 40
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percentunit",
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    },
+                    "min": 0.9,
+                    "max": 1
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "pg_stat_database_blks_hit / (pg_stat_database_blks_hit + pg_stat_database_blks_read)",
+                    "legendFormat": "Cache Hit Ratio",
+                    "refId": "A"
+                }
+            ]
+        },
+        {
+            "type": "timeseries",
+            "title": "Redis Memory & Hit Ratio",
+            "description": "Redis memory usage and cache hit ratio. Hit ratio should be > 80%.",
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 16,
+                "y": 40
+            },
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "drawStyle": "line",
+                        "lineWidth": 2,
+                        "fillOpacity": 10
+                    }
+                },
+                "overrides": []
+            },
+            "targets": [
+                {
+                    "expr": "redis_memory_used_bytes / redis_memory_max_bytes",
+                    "legendFormat": "Memory Usage",
+                    "refId": "A"
+                },
+                {
+                    "expr": "redis_keyspace_hits_total / (redis_keyspace_hits_total + redis_keyspace_misses_total)",
+                    "legendFormat": "Hit Ratio",
+                    "refId": "B"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {},
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Memory Usage"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "percentunit"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Hit Ratio"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "percentunit"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "schemaVersion": 39,
+    "tags": [
+        "invoice-agent",
+        "slo",
+        "prometheus"
+    ],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-6h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "utc",
+    "title": "Invoice Agent — SLO Dashboard",
+    "uid": "invoice-agent-slo",
+    "version": 1
+}

@@ -18,6 +18,9 @@ services:
       INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
       INVOICE_AI_JWT_AUDIENCE: invoice-ai
       INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # Redis — LLM extraction result cache (avoids redundant Claude calls)
+      REDIS_URL: ${REDIS_URL:-redis://localhost:6379/0}
+      LLM_CACHE_TTL_HOURS: "168"
     healthcheck:
       test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8100/healthz', timeout=5)\"" ]
       interval: 30s
@@ -52,7 +55,7 @@ services:
     #   - pg_stat_statements: per-query execution stats (total_exec_time,
     #     calls, shared hit/read buffers) — rank real offenders.
     #   - track_io_timing=on: buffers + actual I/O timings in EXPLAIN.
-    #   - log_min_duration_statement=200: log slow statements for follow-up.
+    #   - log_min_duration_statement=200: log slow queries for follow-up.
     # v0.10 adds `vector` to shared_preload_libraries (pgvector image).
     #
     # Loopback-only port 5432: lets a host-side client reach the db without
@@ -147,6 +150,9 @@ services:
       RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
       INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
       INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # Redis — LLM extraction result cache (avoids redundant Claude calls)
+      REDIS_URL: ${REDIS_URL:-redis://localhost:6379/0}
+      LLM_CACHE_TTL_HOURS: "168"
     logging:
       driver: json-file
       options:
@@ -189,6 +195,10 @@ services:
       # web.base.url system parameter from this on every install/upgrade.
       # Value comes exclusively from the environment (see .env / env_file).
       URL: ${URL:-}
+      # Redis — used by session_redis addon for HTTP session storage
+      REDIS_URL: ${REDIS_URL:-redis://localhost:6379/0}
+      ODOO_SESSION_REDIS_PREFIX: "odoo-session:"
+      ODOO_SESSION_REDIS_TTL_DAYS: "7"
     ports:
       # Production: comment these out! Nginx is the only entry point.
       # Ports 8069 and 8072 are exposed only for local dev / debugging.

@@ -1,0 +1,36 @@
+# =============================================================================
+# odoo-backup.service — Nightly Odoo backup (pg_dump + S3 upload)
+#
+# Installed on the EC2 instance. Triggered by odoo-backup.timer.
+# Requires: awscli, docker compose, S3 bucket from terraform output.
+# =============================================================================
+
+[Unit]
+Description=Odoo nightly backup (pg_dump + filestore) to S3
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+
+# The script reads DB connection from docker-compose env and uses
+# the EC2 instance profile for S3 access (no access keys needed).
+ExecStart=/opt/odoo/scripts/odoo-backup-s3.sh
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/backups /tmp
+PrivateTmp=yes
+
+# Timeout — large databases can take a while
+TimeoutStartSec=1800
+
+# Environment
+Environment=BACKUP_DIR=/opt/backups
+Environment=S3_BACKUP_BUCKET={{BACKUP_BUCKET}}
+Environment=RETENTION_DAYS=30

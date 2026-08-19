@@ -8,14 +8,57 @@ on:
   workflow_call:
 
 permissions:
-  # contents: read is all this workflow needs (checkout + tests).
-  # NOTE: do NOT request pull-requests/:id-token here. When this workflow is
-  # called from deploy.yml (workflow_call), GitHub only allows permissions
-  # that the caller grants — deploy.yml grants contents: read only, so any
-  # extra scope here would make the reusable-workflow call invalid.
   contents: read
 
 jobs:
+  # ==========================================================================
+  # Terraform: format + validate on infra/ changes
+  # ==========================================================================
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9"
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive infra/terraform/
+
+      - name: Terraform Init (no backend)
+        run: terraform init -backend=false infra/terraform/
+
+      - name: Terraform Validate
+        run: terraform validate -chdir=infra/terraform/
+
+  # ==========================================================================
+  # Observability: validate Prometheus + Alertmanager + Grafana configs
+  # ==========================================================================
+  observability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Prometheus config
+        run: |
+          docker run --rm -v "${{ github.workspace }}/infra/observability/prometheus:/etc/prometheus" \
+            prom/prometheus:v2.53.0 \
+            checkconfig /etc/prometheus/prometheus.yml
+
+      - name: Validate Alertmanager config
+        run: |
+          docker run --rm -v "${{ github.workspace }}/infra/observability/alertmanager:/etc/alertmanager" \
+            prom/alertmanager:v0.27.0 \
+            checkconfig /etc/alertmanager/alertmanager.yml
+
+      - name: Validate Grafana dashboard JSON
+        run: |
+          python3 -c "import json, sys; json.load(open('infra/observability/grafana/dashboards/agent-slo.json')); print('Dashboard JSON is valid')"
+
+  # ==========================================================================
+  # Python: lint + test
+  # ==========================================================================
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -27,45 +70,16 @@ jobs:
         with:
           python-version: "3.12"
 
-      # NOTE: pip cache is intentionally NOT enabled here. This job installs
-      # no pip packages (ruff steps are commented out), so `cache: pip` would
-      # only write a nearly-empty cache entry and force a pre-create hack to
-      # stop setup-python's post-job cache-save from failing on a missing
-      # folder. If ruff gets re-enabled, add `cache: pip` back together with
-      # the ruff install step.
-
-      # --- ruff is disabled for now ---
-      # To re-enable, uncomment the three steps below. The linter and formatter
-      # are deliberately scoped to custom_addons/invoice_agent only: `ruff check .`
-      # would also lint Odoo's core addons/, whose upstream style does not match
-      # these ruff settings (utf8-encoding-declaration, blank-lines-after-function-or-class)
-      # and would fail the build.
-      #
-      # - name: Install ruff
-      #   # Pin to the version ruff.toml was generated for (0.15.0+)
-      #   run: pip install ruff==0.15.0
-      #
-      # - name: Run ruff linter
-      #   run: ruff check custom_addons/invoice_agent
-      #
-      # - name: Run ruff format check
-      #   run: ruff format --check custom_addons/invoice_agent
-
   test:
     needs: lint
     runs-on: ubuntu-latest
     services:
       postgres:
-        # pgvector image: same Postgres 16 base, vector extension preloaded —
-        # matches docker-compose.yml (v0.10 vendor-doc HNSW index).
         image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: odoo
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
-        # `--health-cmd pg_isready -U odoo` would be split by the runner and
-        # Docker would parse the bare `-U` as an unknown flag on the container
-        # create. Quote `pg_isready -U odoo` as a single command string.
         options: >-
           --health-cmd "pg_isready -U odoo"
           --health-interval 10s
@@ -79,8 +93,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      # setup-python caches pip with a key derived from the dependency files
-      # listed in `cache-dependency-path` (repo + module requirements).
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -89,8 +101,6 @@ jobs:
             requirements.txt
             custom_addons/invoice_agent/requirements.txt
 
-      # Guard against setup-python's post-job cache save:
-      # "Cache folder path is retrieved for pip but doesn't exist on disk".
       - name: Pre-create pip cache directory
         run: mkdir -p ~/.cache/pip
 
@@ -112,8 +122,6 @@ jobs:
       - name: Run Odoo tests for invoice_agent under coverage
         run: |
           set -o pipefail
-
-          # Execute Odoo under coverage tracking
           coverage run --concurrency=thread --source=custom_addons/invoice_agent \
             ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons \
             --load=base,web,invoice_agent \
@@ -121,7 +129,6 @@ jobs:
             --log-level=test --db_host=localhost --db_port=5432 \
             --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
 
-          # Filter out benign docutils warnings before evaluating genuine test errors
           if grep -E 'FAIL|ERROR|CRITICAL' odoo-test.log | grep -vE '\([A-Z]+/[0-9]+\)' | grep -q . ; then
             echo "Real failure or error detected in Odoo test logs."
             exit 1
@@ -131,7 +138,6 @@ jobs:
         env:
           COVERAGE_MIN: "60"
         run: |
-          # Verify .coverage exists before attempting analysis
           if [ ! -f .coverage ]; then
             echo "Error: No .coverage file found on disk!"
             exit 1

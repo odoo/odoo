@@ -12,6 +12,7 @@ docs/adr-003-ai-service.md: 33.5× login degradation with workers=2).
 import asyncio
 import logging
 import os
+import time
 from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
@@ -20,6 +21,15 @@ from fastapi.responses import JSONResponse
 from .auth import require_token
 from .claude import ClaudeService
 from .config import settings
+from .metrics import (
+    CLAUDE_API_DURATION,
+    CLAUDE_TOKENS_TOTAL,
+    HTTP_REQUEST_DURATION,
+    HTTP_REQUESTS_TOTAL,
+    OCR_DURATION,
+    Timer,
+    record_claude_tokens,
+)
 from .dependencies import get_claude_service, get_embedder
 from .embeddings import VoyageEmbedder, VoyageEmbeddingError
 from .errors import (
@@ -56,11 +66,46 @@ app = FastAPI(
 
 
 # ---------------------------------------------------------------------------
+# Prometheus /metrics endpoint — scraped by Prometheus every 15s
+# ---------------------------------------------------------------------------
+from prometheus_client import make_asgi_app  # noqa: E402
+
+metrics_app = make_asgi_app()
+app.mount("/metrics", metrics_app)
+
+
+# ---------------------------------------------------------------------------
 # Lifecycle — shut down the asyncpg pool on shutdown
 # ---------------------------------------------------------------------------
 @app.on_event("shutdown")
 async def _shutdown() -> None:
     await close_pool()
+
+
+# ---------------------------------------------------------------------------
+# Prometheus HTTP middleware — records every request as a Counter + Histogram
+# ---------------------------------------------------------------------------
+@app.middleware("http")
+async def _prometheus_middleware(request: Request, call_next: Any) -> Any:
+    """Track HTTP request rate, errors, and duration for the RED method.
+
+    Skips the /metrics endpoint itself to avoid self-referential inflation.
+    """
+    if request.url.path == "/metrics":
+        return await call_next(request)
+
+    method = request.method
+    path = request.url.path
+    start = time.monotonic()
+    response = await call_next(request)
+    elapsed = time.monotonic() - start
+
+    status = str(response.status_code)
+    HTTP_REQUESTS_TOTAL.labels(method=method, endpoint=path, status=status).inc()
+    HTTP_REQUEST_DURATION.labels(method=method, endpoint=path, status=status).observe(
+        elapsed,
+    )
+    return response
 
 
 # ---------------------------------------------------------------------------
@@ -147,12 +192,21 @@ async def extract_invoice(
                 f"Unsupported mimetype '{mimetype or 'unknown'}'. Only PDF and "
                 "image/* uploads are accepted.",
             )
-        ocr_result = await asyncio.to_thread(
-            extract_bytes, raw, mimetype, file.filename or "",
-        )
+        # Track OCR duration — histogram for the RED method
+        with Timer(OCR_DURATION):
+            ocr_result = await asyncio.to_thread(
+                extract_bytes, raw, mimetype, file.filename or "",
+            )
         text = ocr_result["text"]
 
-    result = await claude.extract(text=text or "", effort=effort)
+    # Track Claude API latency — histogram labeled by model
+    model_name = settings.anthropic_model
+    with Timer(CLAUDE_API_DURATION, model=model_name):
+        result = await claude.extract(text=text or "", effort=effort)
+
+    # Record token consumption — counter for daily cost tracking
+    record_claude_tokens(model=result["model"], usage=result["usage"])
+
     return {
         "extraction": result["parsed"].model_dump(mode="json"),
         "usage": result["usage"],

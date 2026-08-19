@@ -101,6 +101,7 @@ class AccountMove(models.Model):
         selection=[
             ("auto", "Auto"),
             ("needs_review", "Needs Review"),
+            ("needs_human", "Needs Human"),
             ("approved", "Approved"),
         ],
         string="Extraction State",
@@ -108,9 +109,10 @@ class AccountMove(models.Model):
         store=True,
         readonly=True,
         index=True,
-        help="Kanban routing state: 'auto' when confidence cleared the "
-        "journal threshold, 'needs_review' when it did not (or the pipeline "
-        "failed), 'approved' when a human validated the bill.",
+        help="Kanban routing state (three-tier): 'auto' when confidence "
+        "exceeds the auto-fill threshold, 'needs_review' when it falls "
+        "between review and auto-fill, 'needs_human' when below the review "
+        "threshold (or pipeline failed), 'approved' when a human validated.",
     )
     ai_extracted_json = fields.Json(
         string="AI Extracted Raw Payload",
@@ -458,14 +460,19 @@ class AccountMove(models.Model):
         self.ai_confidence_details = details
         self.ai_confidence_notes = notes
 
-        threshold = self._get_ai_min_confidence()
+        # --- Three-tier routing ---
+        auto_fill, review = self._get_tiered_thresholds()
         if self.ai_extraction_status == "failed":
             self.ai_extraction_state = "needs_review"
-        elif score >= threshold:
+            self.ai_review_required = True
+        elif score >= auto_fill:
             self.ai_extraction_state = "auto"
             self.ai_review_required = False
-        else:
+        elif score >= review:
             self.ai_extraction_state = "needs_review"
+            self.ai_review_required = True
+        else:
+            self.ai_extraction_state = "needs_human"
             self.ai_review_required = True
 
     def _flag_needs_review(self, reason="low confidence"):
@@ -530,6 +537,26 @@ class AccountMove(models.Model):
         if self.journal_id.ai_agent_enabled:
             return self.journal_id.ai_min_confidence
         return 0.70
+
+    def _get_tiered_thresholds(self):
+        """Resolve the three-tier routing thresholds for this move.
+
+        Returns ``(auto_fill_threshold, review_threshold)``:
+
+        * ``score >= auto_fill`` → auto-fill GL, mark ready
+        * ``score >= review`` → review kanban column
+        * ``score < review`` → needs_human flag
+        """
+        self.ensure_one()
+        svc = self.env["invoice.llm.service"]
+        auto_fill = svc.auto_fill_threshold()
+        review = svc.review_threshold()
+        # Legacy single-threshold compatibility: when the legacy param is set
+        # and the new ones are defaults, honour the legacy value as auto_fill.
+        legacy = svc.confidence_threshold()
+        if legacy is not None and auto_fill == 0.90:
+            auto_fill = legacy
+        return auto_fill, review
 
     # -------------------------------------------------------------------------
     # SUGGEST WITH AI (Structured Outputs)
@@ -1212,17 +1239,79 @@ class AccountMove(models.Model):
                     self.display_name,
                 )
 
+        # --- Post RAG evidence to chatter (cited historical bills) ---
+        self._post_rag_evidence(verdict)
+
         _logger.info(
             "invoice_agent validation applied: move_id=%d account=%s "
-            "confidence=%.2f plausible=%s flags=%s dup=%s",
+            "confidence=%.2f plausible=%s flags=%s dup=%s citations=%d",
             self.id,
             account_id,
             confidence,
             amount_plausible,
             flags,
             dup_move_id,
+            len(verdict.get("evidence") or []),
         )
         return True
+
+    # -------------------------------------------------------------------------
+    # PHASE 2: RAG EVIDENCE — post cited historical bills to chatter
+    # -------------------------------------------------------------------------
+
+    def _post_rag_evidence(self, verdict):
+        """Post cited historical bills as clickable links on the invoice chatter.
+
+        ``verdict`` is a plain dict matching
+        ``invoice-ai/app/schemas.py::ValidationVerdict``.  The ``evidence``
+        list contains citations with ``move_id``, ``quoted_line``, and
+        ``reasoning`` — each citation is rendered as a clickable link to the
+        historical bill so the accountant can verify the AI's reasoning.
+        """
+        self.ensure_one()
+        evidence = verdict.get("evidence") or []
+        if not evidence:
+            return
+
+        lines = ["<b>\U0001f4ca RAG Validation Evidence:</b><br/>"]
+        for i, citation in enumerate(evidence, 1):
+            move_id = citation.get("move_id") or 0
+            quoted = citation.get("quoted_line", "")
+            reasoning = citation.get("reasoning", "")
+            if move_id:
+                move = self.env["account.move"].browse(move_id)
+                if move.exists():
+                    link = (
+                        '<a href="/web#id=%d&model=account.move">'
+                        "%s</a>"
+                    ) % (move.id, move.display_name)
+                    lines.append(
+                        "%d. %s<br/>"
+                        "   <i>%s</i><br/>"
+                        "   <code>%s</code><br/>"
+                        % (i, link, reasoning, quoted)
+                    )
+                else:
+                    lines.append(
+                        "%d. <i>move_id=%d (not found)</i><br/>"
+                        "   %s<br/>" % (i, move_id, reasoning)
+                    )
+            else:
+                lines.append(
+                    "%d. <i>No historical bills available</i><br/>"
+                    "   %s<br/>" % (i, reasoning)
+                )
+
+        try:
+            self.message_post(
+                body="".join(lines),
+                subject="RAG Evidence: %s" % self.display_name,
+            )
+        except Exception:
+            _logger.exception(
+                "invoice_agent failed to post RAG evidence on %s",
+                self.display_name,
+            )
 
     def _auto_fill_gl_account(self, account_code):
         """Set account_id on invoice lines whose product is not set.

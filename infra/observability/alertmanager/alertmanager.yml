@@ -1,0 +1,85 @@
+# =============================================================================
+# alertmanager.yml — Alert routing for the Invoice Agent
+#
+# Routes:
+#   - Critical alerts → Slack webhook (immediate)
+#   - Warning alerts  → Slack webhook (throttled to 1 per 15 min)
+#   - All alerts      → email fallback
+#
+# Inhibit rules suppress lower-severity alerts when a critical one fires
+# for the same component, reducing noise during outages.
+# =============================================================================
+
+global:
+  resolve_timeout: 5m
+
+# Route tree — first match wins
+route:
+  receiver: "slack-default"
+  group_by: ["alertname", "severity", "job"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  routes:
+    # Critical alerts: fast notification, short repeat
+    - match:
+        severity: critical
+      receiver: "slack-critical"
+      group_wait: 10s
+      repeat_interval: 1h
+      continue: true # Also send to email
+
+    # Warning alerts: throttled to avoid fatigue
+    - match:
+        severity: warning
+      receiver: "slack-warning"
+      group_interval: 15m
+      repeat_interval: 6h
+
+# Receivers — replace webhook URLs and email addresses with real values
+receivers:
+  - name: "slack-default"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/ME/PLEASE}"
+        channel: "#alerts"
+        title: '{{ template "slack.default.title" . }}'
+        text: '{{ template "slack.default.text" . }}'
+        send_resolved: true
+
+  - name: "slack-critical"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/ME/PLEASE}"
+        channel: "#alerts-critical"
+        title: '🔥 CRITICAL: {{ template "slack.default.title" . }}'
+        text: '{{ template "slack.default.text" . }}'
+        send_resolved: true
+
+  - name: "slack-warning"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/ME/PLEASE}"
+        channel: "#alerts"
+        title: '⚠️ {{ template "slack.default.title" . }}'
+        text: '{{ template "slack.default.text" . }}'
+        send_resolved: true
+
+  - name: "email-fallback"
+    email_configs:
+      - to: "${ALERT_EMAIL:-ops@example.com}"
+        from: "alertmanager@invoice-agent.local"
+        smarthost: "localhost:587"
+        subject: "[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}"
+        text: '{{ template "email.default.text" . }}'
+        send_resolved: true
+
+# Inhibit: suppress warnings when critical fires for same alertname
+inhibit_rules:
+  - source_match:
+      severity: critical
+    target_match:
+      severity: warning
+    equal: ["alertname", "job"]
+
+# Templates for Slack messages
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"

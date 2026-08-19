@@ -38,6 +38,7 @@ from anthropic.types import CacheControlEphemeralParam, TextBlockParam
 
 from .config import settings
 from .schemas import (
+    Citation,
     InvoiceExtraction,
     ValidationVerdict,
 )
@@ -82,13 +83,25 @@ def _build_validation_system_blocks(
         "items.\n"
         "3. amount_plausible: whether the invoice amounts are consistent "
         "with the vendor's historical amounts (True/False).\n"
-        "4. duplicate_of_move_id: if the extraction's ref or amounts "
+        "4. evidence: a NON-EMPTY list of citations linking your verdict to "
+        "specific retrieved historical bills.  Each citation must include:\n"
+        "   - move_id: the move_id of the historical bill (must be one of "
+        "the bill IDs shown in VENDOR HISTORY above — never invent an ID).\n"
+        "   - quoted_line: a short excerpt from that bill's content that "
+        "supports your verdict (copy verbatim from the history).\n"
+        "   - reasoning: why this historical bill supports your account "
+        "assignment or plausibility judgment.\n"
+        "   You MUST provide at least one citation.  If the vendor has no "
+        "history, cite the absence explicitly with move_id=0.\n"
+        "5. duplicate_of_move_id: if the extraction's ref or amounts "
         "match a historical bill exactly, return that bill's move_id. "
         "Otherwise null.\n"
-        "5. flags: any warnings — 'unusual_amount' (amount > 2× the "
+        "6. flags: any warnings — 'unusual_amount' (amount > 2× the "
         "vendor's average), 'no_history' (vendor has < 3 historical "
         "bills), 'low_account_confidence' (account_confidence < 0.5).\n"
-        "6. reasoning: a short explanation of your verdict.\n\n"
+        "7. reasoning: a short explanation of your verdict.\n\n"
+        "CRITICAL: Every citation's move_id MUST appear in the VENDOR "
+        "HISTORY section above.  The system rejects hallucinated IDs.\n\n"
         "Return ONLY a valid JSON object matching the provided schema; no "
         "markdown, no commentary."
     )
@@ -106,7 +119,13 @@ def _build_validation_system_blocks(
 
 
 def _format_vendor_history(candidates: list[dict[str, Any]]) -> str:
-    """Format candidate bills into a readable history block."""
+    """Format candidate bills into a readable history block.
+
+    Includes ``rerank_score`` when present (two-stage retrieval).
+    The move_id is prominently displayed so the model can reference it
+    in its citations — the code guard later verifies every cited ID
+    actually appears here.
+    """
     if not candidates:
         return "(no historical bills found)"
     parts = []
@@ -114,10 +133,62 @@ def _format_vendor_history(candidates: list[dict[str, Any]]) -> str:
         content = bill.get("content", "")
         distance = bill.get("distance", 0.0)
         move_id = bill.get("move_id", 0)
-        parts.append(
-            f"[Bill {i}] move_id={move_id} similarity={1.0 - distance:.3f}\n{content}"
+        rerank = bill.get("rerank_score")
+        similarity = 1.0 - distance
+        header = (
+            f"[Bill {i}] move_id={move_id} "
+            f"similarity={similarity:.3f}"
         )
+        if rerank is not None:
+            header += f" rerank_score={rerank:.3f}"
+        parts.append(f"{header}\n{content}")
     return "\n\n".join(parts)
+
+
+def _validate_citations(
+    verdict: ValidationVerdict,
+    retrieved_ids: set[int],
+) -> ValidationVerdict:
+    """Reject any verdict whose cited move_id is not in the retrieved set.
+
+    This is the anti-hallucination code guard: if Claude invents a bill
+    ID that wasn't in the retrieved candidate list, the citation is
+    stripped and the verdict is flagged.  A verdict with *no* valid
+    citations and no explicit ``move_id=0`` absence marker gets a
+    ``no_history`` flag added.
+
+    Returns the (possibly sanitized) verdict.
+    """
+    valid_citations: list[Citation] = []
+    hallucinated: list[int] = []
+    for citation in verdict.evidence:
+        # move_id=0 is the explicit "no history" marker per the prompt
+        if citation.move_id == 0:
+            valid_citations.append(citation)
+            continue
+        if citation.move_id in retrieved_ids:
+            valid_citations.append(citation)
+        else:
+            hallucinated.append(citation.move_id)
+            _logger.warning(
+                "validate citation guard: hallucinated move_id=%d "
+                "not in retrieved set %s — stripping",
+                citation.move_id,
+                sorted(retrieved_ids),
+            )
+    verdict.evidence = valid_citations
+    if hallucinated:
+        hallucinated_flag = f"hallucinated_citation:{','.join(str(m) for m in hallucinated)}"
+        if hallucinated_flag not in verdict.flags:
+            verdict.flags = list(verdict.flags) + [hallucinated_flag]
+    if not verdict.evidence:
+        _logger.warning(
+            "validate citation guard: no valid citations in verdict — "
+            "adding no_history flag"
+        )
+        if "no_history" not in verdict.flags:
+            verdict.flags = list(verdict.flags) + ["no_history"]
+    return verdict
 
 
 def _format_gl_frequencies(frequencies: dict[str, int]) -> str:
@@ -255,13 +326,19 @@ async def validate_extraction(
         "output_tokens": getattr(message.usage, "output_tokens", None),
     }
 
+    # --- Citation guard: reject hallucinated move_ids ---
+    retrieved_ids = {c["move_id"] for c in candidates if c.get("move_id")}
+    verdict = _validate_citations(verdict, retrieved_ids)
+
     _logger.info(
-        "validate: account=%s confidence=%.2f plausible=%s dup=%s flags=%s cache_read=%s",
+        "validate: account=%s confidence=%.2f plausible=%s dup=%s "
+        "flags=%s citations=%d cache_read=%s",
         verdict.account_id,
         verdict.account_confidence,
         verdict.amount_plausible,
         verdict.duplicate_of_move_id,
         verdict.flags,
+        len(verdict.evidence),
         usage.get("cache_read_input_tokens"),
     )
 
@@ -269,4 +346,6 @@ async def validate_extraction(
         "verdict": verdict,
         "usage": usage,
         "model": getattr(message, "model", settings.anthropic_model),
+        "reranked": vendor_context.get("reranked", False),
+        "rerank_model": vendor_context.get("rerank_model", ""),
     }

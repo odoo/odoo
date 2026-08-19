@@ -112,6 +112,16 @@ _circuit = {
 CONFIDENCE_THRESHOLD_PARAM = "invoice_agent.confidence_threshold"
 DEFAULT_CONFIDENCE_THRESHOLD = 0.80
 
+# --- Tiered confidence routing (v0.11 — two thresholds, three bins) ------
+AUTO_FILL_THRESHOLD_PARAM = "invoice_agent.auto_fill_threshold"
+DEFAULT_AUTO_FILL_THRESHOLD = 0.90
+REVIEW_THRESHOLD_PARAM = "invoice_agent.review_threshold"
+DEFAULT_REVIEW_THRESHOLD = 0.60
+
+# --- RAG kill switch -------------------------------------------------------
+RAG_ENABLED_PARAM = "invoice_agent.rag_enabled"
+DEFAULT_RAG_ENABLED = True
+
 
 def _circuit_open() -> bool:
     """True when the breaker is tripped and the reset window hasn't elapsed."""
@@ -249,6 +259,69 @@ class InvoiceLlmService(models.AbstractModel):
             )
             return None
         return max(0.0, min(1.0, value))
+
+    # ------------------------------------------------------------------
+    # Tiered confidence routing (v0.11 — three bins)
+    # ------------------------------------------------------------------
+    @api.model
+    def auto_fill_threshold(self):
+        """Resolve the auto-fill threshold (above this: pre-fill + ready).
+
+        ``ir.config_parameter`` → 0.90 default.
+        """
+        raw = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(AUTO_FILL_THRESHOLD_PARAM)
+        )
+        if not raw:
+            return DEFAULT_AUTO_FILL_THRESHOLD
+        try:
+            value = float(raw)
+        except (TypeError, ValueError):
+            return DEFAULT_AUTO_FILL_THRESHOLD
+        return max(0.0, min(1.0, value))
+
+    @api.model
+    def review_threshold(self):
+        """Resolve the review threshold (below this: needs_human).
+
+        Between review_threshold and auto_fill_threshold → needs_review
+        kanban column.  Below review_threshold → needs_human flag.
+
+        ``ir.config_parameter`` → 0.60 default.
+        """
+        raw = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(REVIEW_THRESHOLD_PARAM)
+        )
+        if not raw:
+            return DEFAULT_REVIEW_THRESHOLD
+        try:
+            value = float(raw)
+        except (TypeError, ValueError):
+            return DEFAULT_REVIEW_THRESHOLD
+        return max(0.0, min(1.0, value))
+
+    @api.model
+    def rag_enabled(self):
+        """Check whether RAG validation is enabled (kill switch).
+
+        When False, the consumer skips retrieve + validate and publishes
+        extraction results without the validation envelope — reverting to
+        v0.9 extraction-only behaviour.
+
+        ``ir.config_parameter`` → True (RAG enabled) by default.
+        """
+        raw = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(RAG_ENABLED_PARAM)
+        )
+        if raw is None:
+            return DEFAULT_RAG_ENABLED
+        return raw.lower() in ("true", "1", "yes")
 
     # ------------------------------------------------------------------
     # HTTP call to invoice-ai

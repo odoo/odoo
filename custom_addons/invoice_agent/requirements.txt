@@ -33,3 +33,7 @@ PyJWT>=2.8.0
 # (queue.publisher AbstractModel + invoice_queue/topology.py at the repo root).
 # Pinned to a 1.x release series: 1.3.x is the current stable line.
 pika>=1.3.2
+
+# Redis — used by session_redis addon (Odoo HTTP sessions in Redis)
+# and by the invoice-ai worker for LLM extraction result caching.
+redis>=5.0.0
