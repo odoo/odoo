@@ -309,7 +309,6 @@ class PosOrder(models.Model):
     mobile = fields.Char(string='Mobile', compute="_compute_contact_details", readonly=False, store=True)
     is_edited = fields.Boolean(string='Edited', compute='_compute_is_edited')
     has_deleted_line = fields.Boolean(string='Has Deleted Line')
-    order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
     invoice_status = fields.Selection([
         ('invoiced', 'Fully Invoiced'),

@@ -306,7 +306,6 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue(self.coca_cola_test.id == self.pos_config.current_session_id.order_ids.prep_order_ids.prep_line_ids.product_id.id, "The last order preparation change should contain 'Coca'")
 
     def test_12_order_tracking(self):
-        self.pos_config.write({'order_edit_tracking': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OrderTrackingTour')
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000001')], limit=1, order='id desc')

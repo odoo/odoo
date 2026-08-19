@@ -23,7 +23,6 @@ class TestUi(TestPosHrHttpCommon, TestFrontendCommon):
         the message in the chatter created with the track order setting
         will reflect this change and not keep the old employee
         """
-        self.main_pos_config.order_edit_tracking = True
         self.main_pos_config.open_ui()
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
