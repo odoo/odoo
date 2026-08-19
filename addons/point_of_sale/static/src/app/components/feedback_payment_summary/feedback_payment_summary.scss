@@ -1,6 +1,16 @@
 .feedback-summary {
+    .checkmark-wrapper {
+        width: clamp(80px, 15vmin, 150px);
+        height: clamp(80px, 15vmin, 150px);
+
+        .o_validation_animation {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
     .amount-paid {
-        font-size: clamp(2rem, 4vw, 5rem);
+        font-size: clamp(2rem, 7.5vmin, 5rem);
     }
 
     .amount-container {
@@ -10,7 +20,7 @@
     }
 
     .amount {
-        font-size: clamp(8rem, 25vw, 25rem);
+        font-size: clamp(10rem, 45vmin, 40rem);
     }
 
     .foreign-amounts {

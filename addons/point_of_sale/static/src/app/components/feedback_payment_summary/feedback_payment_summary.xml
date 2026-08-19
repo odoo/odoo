@@ -6,7 +6,7 @@
             t-att-class="this.props.class"
             class="feedback-summary bg-100 w-100 d-flex flex-column align-items-center justify-content-center"
         >
-            <div style="width: 115px; height: 115px;">
+            <div class="checkmark-wrapper">
                 <t t-if="!this.props.loading">
                     <t t-call="point_of_sale.ValidationAnimation"/>
                 </t>
