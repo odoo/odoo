@@ -51,6 +51,7 @@ test("component rendering: less than 3 records on field", async () => {
         resModel: "account.move",
         resId: 1,
         type: "form",
+        noMainContainer: true,
     });
     expect(".o_field_x2many_buttons").toHaveCount(1);
     expect(".o_field_x2many_buttons button").toHaveCount(2);
@@ -63,6 +64,7 @@ test("component rendering: exactly 3 records on field", async () => {
         resModel: "account.move",
         resId: 4,
         type: "form",
+        noMainContainer: true,
     });
     expect(".o_field_x2many_buttons").toHaveCount(1);
     expect(".o_field_x2many_buttons button").toHaveCount(3);
@@ -75,6 +77,7 @@ test("component rendering: more than 3 records on field", async () => {
         resModel: "account.move",
         resId: 6,
         type: "form",
+        noMainContainer: true,
     });
     expect(".o_field_x2many_buttons").toHaveCount(1);
     expect(".o_field_x2many_buttons button").toHaveCount(4);
@@ -97,6 +100,7 @@ test("edit record and check if edits get discarded when click on one of the butt
         resModel: "account.move",
         resId: 1,
         type: "form",
+        noMainContainer: true,
     });
 
     await contains("[name='ref'] input").edit("new ref");
@@ -130,6 +134,7 @@ test("redirect to list view and discards edits when clicking on last button with
         resModel: "account.move",
         resId: 6,
         type: "form",
+        noMainContainer: true,
     });
     await contains("[name='ref'] input").edit("new ref");
     expect("[name='ref'] input").toHaveValue("new ref");

@@ -14,6 +14,11 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         super().setUpClass()
         cls.user_portal = cls._create_new_portal_user()
         cls.portal_partner = cls.user_portal.partner_id
+        cls.portal_invoice = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': cls.portal_partner.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})]
+        })
 
     def test_portal_my_invoice_detail_not_his_invoice(self):
         not_his_invoice = self.env['account.move'].create({
@@ -28,11 +33,7 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         self.assertEqual(res.status_code, 200)
 
     def test_portal_my_invoice_detail_download_pdf(self):
-        invoice_with_pdf = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.portal_partner.id,
-            'invoice_line_ids': [Command.create({'price_unit': 100})]
-        })
+        invoice_with_pdf = self.portal_invoice
         invoice_with_pdf.action_post()
         invoice_with_pdf._generate_and_send()
         self.assertTrue(invoice_with_pdf.invoice_pdf_report_id)
@@ -48,11 +49,7 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         is linked via matched_payment_ids. Reading reconciled_payment_ids (which
         internally reads matched_payment_ids -> account.payment) was done without
         sudo, causing a 403 for portal users who have no read access on account.payment."""
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.portal_partner.id,
-            'invoice_line_ids': [Command.create({'price_unit': 100})],
-        })
+        invoice = self.portal_invoice
         invoice.action_post()
         self.env['account.payment.register'].with_context(
             active_model='account.move', active_ids=invoice.ids,
@@ -62,11 +59,7 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         self.assertEqual(res.status_code, 200)
 
     def test_portal_my_invoice_detail_download_proforma(self):
-        invoice_no_pdf = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.portal_partner.id,
-            'invoice_line_ids': [Command.create({'price_unit': 100})]
-        })
+        invoice_no_pdf = self.portal_invoice
         invoice_no_pdf.action_post()
         self.assertFalse(invoice_no_pdf.invoice_pdf_report_id)
 

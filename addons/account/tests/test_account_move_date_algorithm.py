@@ -17,6 +17,18 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
+        cls.tax_waiting_account = cls.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+        })
+        cls.caba_tax = cls.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': cls.tax_waiting_account.id,
+        })
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -183,18 +195,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     def test_caba_with_lock_date(self):
         self.env.company.tax_exigibility = True
 
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax = self.env['account.tax'].create({
-            'name': 'cash basis 10%',
-            'type_tax_use': 'sale',
-            'amount': 10,
-            'tax_exigibility': 'on_payment',
-            'cash_basis_transition_account_id': tax_waiting_account.id,
-        })
+        tax = self.caba_tax
 
         invoice = self._create_invoice_with_date(
             'out_invoice', '2016-01-01',
@@ -239,18 +240,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         """
         self.env.company.tax_exigibility = True
 
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax = self.env['account.tax'].create({
-            'name': 'cash basis 10%',
-            'type_tax_use': 'sale',
-            'amount': 10,
-            'tax_exigibility': 'on_payment',
-            'cash_basis_transition_account_id': tax_waiting_account.id,
-        })
+        tax = self.caba_tax
 
         # User groups do not matter
         for group in (

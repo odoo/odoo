@@ -4,6 +4,7 @@
 from odoo.tests import tagged, common
 from odoo.exceptions import ValidationError
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -16,6 +17,7 @@ class TestFiscalPosition(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestFiscalPosition, cls).setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.fp = cls.env['account.fiscal.position']
 
         # reset any existing FP
@@ -63,6 +65,9 @@ class TestFiscalPosition(common.TransactionCase):
                                          auto_apply=True,
                                          country_id=fr.id,
                                          sequence=50))
+        cls.test_tax_group = cls.env['account.tax.group'].create(
+            {'name': 'Test Tax Group', 'company_id': cls.env.company.id}
+        )
 
     def test_10_fp_country(self):
         def assert_fp(partner, expected_pos, message):
@@ -93,12 +98,8 @@ class TestFiscalPosition(common.TransactionCase):
         self.george.property_account_position_id = self.be_nat
         assert_fp(self.george, self.be_nat, "Forced position has max precedence")
 
-
     def test_20_fp_one_tax_2m(self):
         self.env.company.country_id = self.env.ref('base.us')
-        self.env['account.tax.group'].create(
-            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
-        )
 
         self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
 
@@ -223,9 +224,6 @@ class TestFiscalPosition(common.TransactionCase):
 
     def test_domestic_fp_map_self(self):
         self.env.company.country_id = self.us
-        self.env['account.tax.group'].create(
-            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
-        )
         fp = self.env['account.fiscal.position'].create({
             'name': 'FP Self',
         })

@@ -365,6 +365,15 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
                     'folder_id': folder_test.id,
                     'journal_id': cls.company_data['default_journal_sale'].id,
                 })
+        cls.audit_invoice = cls.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': cls.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'product',
+                'quantity': 1,
+                'price_unit': 100,
+            })],
+        }])
 
     def _send_and_print(self, invoice):
         return self.env['account.move.send'].with_context(
@@ -372,15 +381,7 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
         )._generate_and_send_invoices(invoice)
 
     def test_audit_trail_attachment(self):
-        invoice = self.env['account.move'].create([{
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'name': 'product',
-                'quantity': 1,
-                'price_unit': 100,
-            })],
-        }])
+        invoice = self.audit_invoice
         invoice.action_post()
         self.assertFalse(invoice.message_main_attachment_id)
 
@@ -420,15 +421,7 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
             _logger.runbot("Documents module is not installed, skipping part of the test")
 
     def test_audit_trail_write_attachment(self):
-        invoice = self.env['account.move'].create([{
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'name': 'product',
-                'quantity': 1,
-                'price_unit': 100,
-            })],
-        }])
+        invoice = self.audit_invoice
         invoice.action_post()
         self.assertFalse(invoice.message_main_attachment_id)
 

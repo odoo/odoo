@@ -1,5 +1,6 @@
 from odoo import Command
 from odoo.tests import tagged, TransactionCase
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 
 @tagged('post_install', '-at_install')
@@ -8,6 +9,7 @@ class TestKpiProvider(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
 
         cls.partner_id = cls.env['res.partner'].create({'name': 'Someone'})
 

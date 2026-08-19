@@ -185,6 +185,19 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             'parent_id': cls.commercial_partner.id,
         })
 
+        cls.foreign_invoice = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'partner_id': cls.partner_a.id,
+            'currency_id': cls.other_currency.id,
+            'invoice_line_ids': [Command.create(
+                {'product_id': cls.product_a.id,
+                'price_unit': 1200.0,
+                'tax_ids': [],
+            })],
+        })
+
     @classmethod
     def get_wizard_available_journals(cls, wizard):
         return wizard.available_journal_ids.filtered_domain([
@@ -1394,18 +1407,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
 
     def test_register_payment_invoice_foreign_curr_payment_comp_curr(self):
         # Invoice 1200 Gol = 400 USD
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'date': '2016-01-01',
-            'invoice_date': '2016-01-01',
-            'partner_id': self.partner_a.id,
-            'currency_id': self.other_currency.id,
-            'invoice_line_ids': [Command.create(
-                {'product_id': self.product_a.id,
-                'price_unit': 1200.0,
-                'tax_ids': [],
-            })],
-        })
+        invoice = self.foreign_invoice
         invoice.action_post()
 
         # Payment of 600 USD (equivalent to 1200 Gol in 2017).
@@ -1431,18 +1433,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
 
     def test_register_partial_payment_with_exchange_account_as_writeoff(self):
         # Invoice 1200 Gol = 400 USD
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'date': '2016-01-01',
-            'invoice_date': '2016-01-01',
-            'partner_id': self.partner_a.id,
-            'currency_id': self.other_currency.id,
-            'invoice_line_ids': [Command.create(
-                {'product_id': self.product_a.id,
-                'price_unit': 1200.0,
-                'tax_ids': [],
-            })],
-        })
+        invoice = self.foreign_invoice
         invoice.action_post()
 
         # Payment of 200 USD (equivalent to 400 Gol in 2017).

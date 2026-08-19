@@ -6,6 +6,7 @@ from odoo import fields, Command
 
 from collections import defaultdict
 
+
 @tagged('post_install', '-at_install')
 class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
 
@@ -126,6 +127,16 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 210.0,
             'amount_total': 1410.0,
         }
+        cls.caba_tax_waiting_account = cls.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+        })
+        cls.caba_tax_final_account = cls.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'account_type': 'asset_current',
+        })
 
     def setUp(self):
         super(TestAccountMoveOutRefundOnchanges, self).setUp()
@@ -964,16 +975,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
          })
 
     def test_out_refund_reverse_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
@@ -982,12 +985,14 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -1086,16 +1091,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
 
     def test_out_refund_with_down_payment_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         default_income_account = self.company_data['default_account_revenue']
         not_default_income_account = self.env['account.account'].create({
             'name': 'NOT_DEFAULT_INCOME',
@@ -1104,12 +1101,14 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',

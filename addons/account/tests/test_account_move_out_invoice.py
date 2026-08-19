@@ -11,7 +11,6 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 
-
 @tagged('post_install', '-at_install')
 class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
@@ -24,7 +23,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         cls.other_currency = cls.setup_other_currency('HRK', rounding=0.001)
         cls.company_data_2 = cls.setup_other_company()
 
-        cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)
+        cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a + cls.product_b)
 
         cls.product_line_vals_1 = {
             'name': 'product_a',
@@ -134,6 +133,83 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1410.0,
         }
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.fiscal_pos_mapping = cls.env['account.fiscal.position'].create({'name': 'fiscal_pos_mapping'})
+        cls.tax_10_incl_sale = cls.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+            'include_base_amount': True,
+        })
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        cls.bebat_tax = cls.env['account.tax'].create({
+            'name': 'BEBAT 0.05',
+            'type_tax_use': 'sale',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+            'price_include_override': 'tax_included',
+            'include_base_amount': True,
+        })
+        cls.accrual_period_move = cls.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'partner_id': cls.partner_a.id,
+            'invoice_date': fields.Date.from_string('2017-01-01'),
+            'currency_id': cls.other_currency.id,
+            'invoice_payment_term_id': cls.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': cls.product_line_vals_1['name'],
+                    'product_id': cls.product_line_vals_1['product_id'],
+                    'product_uom_id': cls.product_line_vals_1['product_uom_id'],
+                    'quantity': cls.product_line_vals_1['quantity'],
+                    'price_unit': cls.product_line_vals_1['price_unit'],
+                    'tax_ids': cls.product_line_vals_1['tax_ids'],
+                }),
+                (0, None, {
+                    'name': cls.product_line_vals_2['name'],
+                    'product_id': cls.product_line_vals_2['product_id'],
+                    'product_uom_id': cls.product_line_vals_2['product_uom_id'],
+                    'quantity': cls.product_line_vals_2['quantity'],
+                    'price_unit': cls.product_line_vals_2['price_unit'],
+                    'tax_ids': cls.product_line_vals_2['tax_ids'],
+                }),
+            ]
+        })
+        cls.accrual_expense_account = cls.env['account.account'].create({
+            'name': 'Accrual Expense Account',
+            'code': '234567',
+            'account_type': 'expense',
+        })
+        cls.accrual_revenue_account = cls.env['account.account'].create({
+            'name': 'Accrual Revenue Account',
+            'code': '765432',
+            'account_type': 'expense',
+        })
+        cls.caba_tax_waiting_account = cls.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+        })
+        cls.caba_tax_final_account = cls.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'account_type': 'asset_current',
+        })
+        cls.tax_21_pct = cls.env['account.tax'].create({
+            'name': '21%',
+            'amount': 21,
+            'type_tax_use': 'sale',
+        })
+        cls.installments_payment_term = cls.env['account.payment.term'].create({
+            'name': "3 installments",
+            'line_ids': [
+                Command.create({'value_amount': 40, 'value': 'percent', 'nb_days': 0}),
+                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 30}),
+                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 60}),
+            ],
+        })
 
     def setUp(self):
         super(TestAccountMoveOutInvoiceOnchanges, self).setUp()
@@ -224,17 +300,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
         The price_unit should be 100.0 after applying the fiscal position.
         '''
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-        })
-        tax_price_include = self.env['account.tax'].create({
-            'name': '10% incl',
-            'type_tax_use': 'sale',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-        })
+        fiscal_position = self.fiscal_pos_mapping
+        tax_price_include = self.tax_10_incl_sale
         tax_price_exclude = self.env['account.tax'].create({
             'name': '15% excl',
             'type_tax_use': 'sale',
@@ -384,17 +451,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
         The price_unit should be 120.0 after applying the fiscal position.
         '''
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-        })
-        tax_price_include_1 = self.env['account.tax'].create({
-            'name': '10% incl',
-            'type_tax_use': 'sale',
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-        })
+        fiscal_position = self.fiscal_pos_mapping
+        tax_price_include_1 = self.tax_10_incl_sale
         tax_price_include_2 = self.env['account.tax'].create({
             'name': '20% incl',
             'type_tax_use': 'sale',
@@ -405,7 +463,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'fiscal_position_ids': [Command.link(fiscal_position.id)],
             'original_tax_ids': [Command.link(tax_price_include_1.id)],
         })
-
 
         product = self.env['product.product'].create({
             'name': 'product',
@@ -1226,11 +1283,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
             'partner_id': self.invoice.partner_id.id,
-            'plan_id': analytic_plan.id,
+            'plan_id': self.analytic_plan.id,
             'code': 'TEST'
         })
 
@@ -1345,10 +1401,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_line_onchange_analytic_2(self):
         self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account1',
-            'plan_id': analytic_plan.id,
+            'plan_id': self.analytic_plan.id,
             'code': 'TEST1'
         })
 
@@ -1724,14 +1779,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_line_tax_fixed_price_include_free_product(self):
         ''' Check that fixed tax include are correctly computed while the price_unit is 0
         '''
-        fixed_tax_price_include = self.env['account.tax'].create({
-            'name': 'BEBAT 0.05',
-            'type_tax_use': 'sale',
-            'amount_type': 'fixed',
-            'amount': 0.05,
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-        })
+        fixed_tax_price_include = self.bebat_tax
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-03',
@@ -1771,14 +1819,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         '''
         # please ensure this test remains consistent with
         # test_free_product_and_price_include_fixed_tax in the sale module
-        fixed_tax_price_include_1 = self.env['account.tax'].create({
-            'name': 'BEBAT 0.05',
-            'type_tax_use': 'sale',
-            'amount_type': 'fixed',
-            'amount': 0.05,
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-        })
+        fixed_tax_price_include_1 = self.bebat_tax
         fixed_tax_price_include_2 = self.env['account.tax'].create({
             'name': 'Recupel 0.25',
             'type_tax_use': 'sale',
@@ -2590,9 +2631,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'currency_id': self.other_currency.id,
-            'amount_tax' : -self.move_vals['amount_tax'],
-            'amount_total' : -self.move_vals['amount_total'],
-            'amount_untaxed' : -self.move_vals['amount_untaxed'],
+            'amount_tax': -self.move_vals['amount_tax'],
+            'amount_total': -self.move_vals['amount_total'],
+            'amount_untaxed': -self.move_vals['amount_untaxed'],
         })
 
         move.action_switch_move_type()
@@ -2637,9 +2678,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], {
             **self.move_vals,
             'currency_id': self.other_currency.id,
-            'amount_tax' : self.move_vals['amount_tax'],
-            'amount_total' : self.move_vals['amount_total'],
-            'amount_untaxed' : self.move_vals['amount_untaxed'],
+            'amount_tax': self.move_vals['amount_tax'],
+            'amount_total': self.move_vals['amount_total'],
+            'amount_untaxed': self.move_vals['amount_untaxed'],
         })
 
     def test_out_invoice_switch_out_refund_3(self):
@@ -2740,32 +2781,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
 
     def test_out_invoice_change_period_accrual_1(self):
-        move = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'date': '2017-01-01',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2017-01-01'),
-            'currency_id': self.other_currency.id,
-            'invoice_payment_term_id': self.pay_terms_a.id,
-            'invoice_line_ids': [
-                (0, None, {
-                    'name': self.product_line_vals_1['name'],
-                    'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
-                    'quantity': self.product_line_vals_1['quantity'],
-                    'price_unit': self.product_line_vals_1['price_unit'],
-                    'tax_ids': self.product_line_vals_1['tax_ids'],
-                }),
-                (0, None, {
-                    'name': self.product_line_vals_2['name'],
-                    'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
-                    'quantity': self.product_line_vals_2['quantity'],
-                    'price_unit': self.product_line_vals_2['price_unit'],
-                    'tax_ids': self.product_line_vals_2['tax_ids'],
-                }),
-            ]
-        })
+        move = self.accrual_period_move
         move.action_post()
 
         wizard = self.env['account.automatic.entry.wizard']\
@@ -2774,16 +2790,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': '2018-01-01',
             'percentage': 60,
             'journal_id': self.company_data['default_journal_misc'].id,
-            'expense_accrual_account': self.env['account.account'].create({
-                'name': 'Accrual Expense Account',
-                'code': '234567',
-                'account_type': 'expense',
-            }).id,
-            'revenue_accrual_account': self.env['account.account'].create({
-                'name': 'Accrual Revenue Account',
-                'code': '765432',
-                'account_type': 'expense',
-            }).id,
+            'expense_accrual_account': self.accrual_expense_account.id,
+            'revenue_accrual_account': self.accrual_revenue_account.id,
         })
         wizard_res = wizard.do_action()
 
@@ -2876,32 +2884,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     @freeze_time("2017-01-01")
     def test_out_invoice_change_to_future_period_accrual_1(self):
-        move = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'date': '2017-01-01',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2017-01-01'),
-            'currency_id': self.other_currency.id,
-            'invoice_payment_term_id': self.pay_terms_a.id,
-            'invoice_line_ids': [
-                (0, None, {
-                    'name': self.product_line_vals_1['name'],
-                    'product_id': self.product_line_vals_1['product_id'],
-                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
-                    'quantity': self.product_line_vals_1['quantity'],
-                    'price_unit': self.product_line_vals_1['price_unit'],
-                    'tax_ids': self.product_line_vals_1['tax_ids'],
-                }),
-                (0, None, {
-                    'name': self.product_line_vals_2['name'],
-                    'product_id': self.product_line_vals_2['product_id'],
-                    'product_uom_id': self.product_line_vals_2['product_uom_id'],
-                    'quantity': self.product_line_vals_2['quantity'],
-                    'price_unit': self.product_line_vals_2['price_unit'],
-                    'tax_ids': self.product_line_vals_2['tax_ids'],
-                }),
-            ]
-        })
+        move = self.accrual_period_move
         move.action_post()
 
         wizard = self.env['account.automatic.entry.wizard']\
@@ -2910,16 +2893,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': '2018-01-01',
             'percentage': 60,
             'journal_id': self.company_data['default_journal_misc'].id,
-            'expense_accrual_account': self.env['account.account'].create({
-                'name': 'Accrual Expense Account',
-                'code': '234567',
-                'account_type': 'expense',
-            }).id,
-            'revenue_accrual_account': self.env['account.account'].create({
-                'name': 'Accrual Revenue Account',
-                'code': '765432',
-                'account_type': 'expense',
-            }).id,
+            'expense_accrual_account': self.accrual_expense_account.id,
+            'revenue_accrual_account': self.accrual_revenue_account.id,
         })
         wizard_res = wizard.do_action()
 
@@ -3070,16 +3045,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date': '2018-01-01',
             'percentage': 60,
             'journal_id': self.company_data['default_journal_misc'].id,
-            'expense_accrual_account': self.env['account.account'].create({
-                'name': 'Accrual Expense Account',
-                'code': '234567',
-                'account_type': 'expense',
-            }).id,
-            'revenue_accrual_account': self.env['account.account'].create({
-                'name': 'Accrual Revenue Account',
-                'code': '765432',
-                'account_type': 'expense',
-            }).id,
+            'expense_accrual_account': self.accrual_expense_account.id,
+            'revenue_accrual_account': self.accrual_revenue_account.id,
         })
         wizard_res = wizard.do_action()
 
@@ -3433,16 +3400,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(tax_line.partner_id.id, self.partner_a.id)
 
     def test_out_invoice_reverse_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         tax_base_amount_account = self.env['account.account'].create({
             'name': 'TAX_BASE',
             'code': 'TBASE',
@@ -3451,12 +3410,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -3555,16 +3516,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
 
     def test_out_invoice_with_down_payment_caba(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
-        tax_final_account = self.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
+        tax_final_account = self.caba_tax_final_account
         default_income_account = self.company_data['default_account_revenue']
         not_default_income_account = self.env['account.account'].create({
             'name': 'NOT_DEFAULT_INCOME',
@@ -3573,12 +3526,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -3696,11 +3651,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_caba_on_payment(self):
         self.env.company.tax_exigibility = True
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-        })
+        tax_waiting_account = self.caba_tax_waiting_account
         caba_tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -3731,7 +3682,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice_tax_matching, refund_tax_matching = tax_lines.mapped('matching_number')
         self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
         self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
-
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a
@@ -3781,11 +3731,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Quick edit total amount activated
         self.env.company.quick_edit_mode_enabled = True
-        self.env.company.account_sale_tax_id = self.env['account.tax'].create({
-            'name': '21%',
-            'amount': 21,
-            'type_tax_use': 'sale',
-        })  # 21% tax of a total amount may create a rounding error (99.99 or 100.01)
+        self.env.company.account_sale_tax_id = self.tax_21_pct  # 21% tax of a total amount may create a rounding error (99.99 or 100.01)
 
         # Let's make sure it does not (the rounding cent should be on the tax)
         with Form(invoice) as move_form:
@@ -3814,17 +3760,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(len(invoice.invoice_line_ids), 2)
 
     def test_quick_edit_total_amount_with_mixed_epd(self):
-        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
-        move_form.invoice_date = fields.Date.from_string('2022-01-01')
-
         # Quick edit total amount activated
         self.env.company.quick_edit_mode_enabled = True
         # 21% sale tax
-        self.env.company.account_sale_tax_id = self.env['account.tax'].create({
-            'name': '21%',
-            'amount': 21,
-            'type_tax_use': 'sale',
-        })
+        self.env.company.account_sale_tax_id = self.tax_21_pct
         # Create a payment term with early payment discount of 2%  and computation set to mixed (Always (upon invoice))
         epd_payment_term = self.env['account.payment.term'].create({
             'name': "2/7 Term",
@@ -3833,10 +3772,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'early_discount': True,
             'early_pay_discount_computation': 'mixed',
         })
-        # Set the payment term to the one we just created
-        move_form.invoice_payment_term_id = epd_payment_term
-
-        invoice = move_form.save()
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2022-01-01'),
+            'invoice_payment_term_id': epd_payment_term.id,
+        })
 
         # Invoice of one item of price 100, discount 2% and tax 21%:
         # 21% tax = 100 * (1 - 0.2) * 0.21 = 20.58
@@ -4421,8 +4361,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total_signed': 500.00,
         }])
 
-
-
     def test_on_quick_encoding_non_accounting_lines(self):
         """ Ensure that quick encoding values are only applied to accounting lines) """
 
@@ -4861,14 +4799,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_invoice_no_followup(self):
         """Make sure that excluding an invoice from follow-up excludes all its receivable lines."""
-        installments_payment_term = self.env['account.payment.term'].create({
-            'name': "3 installments",
-            'line_ids': [
-                Command.create({'value_amount': 40, 'value': 'percent', 'nb_days': 0}),
-                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 30}),
-                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 60}),
-            ],
-        })
+        installments_payment_term = self.installments_payment_term
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': fields.Date.from_string('2024-08-01'),
@@ -4890,14 +4821,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_invoice_line_no_followup(self):
         """Make sure that excluding one receivable line from an invoice excludes all the others."""
-        installments_payment_term = self.env['account.payment.term'].create({
-            'name': "3 installments",
-            'line_ids': [
-                Command.create({'value_amount': 40, 'value': 'percent', 'nb_days': 0}),
-                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 30}),
-                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 60}),
-            ],
-        })
+        installments_payment_term = self.installments_payment_term
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': fields.Date.from_string('2024-08-01'),

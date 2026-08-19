@@ -3,6 +3,7 @@ from unittest import SkipTest
 
 from odoo.fields import Domain
 from odoo.tests import TransactionCase
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 _logger = logging.getLogger(__name__)
 
@@ -11,6 +12,7 @@ class TestL10n(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         all_chart_templates = cls.env['account.chart.template']._get_chart_template_mapping()
         installed_modules = set(cls.env['ir.module.module']._installed())
         matching_country_templates = [

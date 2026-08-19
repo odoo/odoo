@@ -15,6 +15,15 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.in_invoice_1 = cls.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+        })
+
     def setUp(self):
         super().setUp()
         self.file = BinaryBytes(PDF_RAW)
@@ -29,11 +38,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         """
         attach_name = 'original_vendor_bill.pdf'
 
-        in_invoice_1 = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'date': '2017-01-01',
-            'invoice_date': '2017-01-01'
-        })
+        in_invoice_1 = self.in_invoice_1
 
         in_invoice_1.message_main_attachment_id = self.env['ir.attachment'].create({
             'raw': self.file,
@@ -74,11 +79,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         )
         self.assertEqual(n, 1, "should have updated the /Encrypt entry")
 
-        in_invoice_1 = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'date': '2017-01-01',
-            'invoice_date': '2017-01-01'
-        })
+        in_invoice_1 = self.in_invoice_1
 
         in_invoice_1.message_main_attachment_id = self.env['ir.attachment'].create({
             'raw': encrypted_file,

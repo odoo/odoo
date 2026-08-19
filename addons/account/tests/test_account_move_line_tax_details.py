@@ -15,6 +15,42 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.other_currency = cls.setup_other_currency('EUR', rounding=0.001)
+        cls.tax_20_affect = cls.env['account.tax'].create({
+            'name': "tax_20_affect",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'include_base_amount': True,
+        })
+        cls.tax_10_pct = cls.env['account.tax'].create({
+            'name': "tax_10",
+            'amount_type': 'percent',
+            'amount': 10.0,
+        })
+        cls.affecting_tax = cls.env['account.tax'].create({
+            'name': 'Affecting',
+            'amount': 42,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'include_base_amount': True,
+            'sequence': 0,
+        })
+        cls.affected_tax = cls.env['account.tax'].create({
+            'name': 'Affected',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'sequence': 1,
+        })
+        cls.fixed_tax = cls.env['account.tax'].create({
+            'name': "fixed_tax",
+            'amount_type': 'fixed',
+            'amount': 10.0,
+        })
+        cls.percent_tax = cls.env['account.tax'].create({
+            'name': "percent_tax",
+            'amount_type': 'percent',
+            'amount': 10.0,
+        })
 
     def _dispatch_move_lines(self, moves):
         base_lines = moves.line_ids\
@@ -53,17 +89,8 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             self.assertAlmostEqual(tax_amount, tax_details_amount)
 
     def test_affect_base_amount_1(self):
-        tax_20_affect = self.env['account.tax'].create({
-            'name': "tax_20_affect",
-            'amount_type': 'percent',
-            'amount': 20.0,
-            'include_base_amount': True,
-        })
-        tax_10 = self.env['account.tax'].create({
-            'name': "tax_10",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        tax_20_affect = self.tax_20_affect
+        tax_10 = self.tax_10_pct
         tax_5 = self.env['account.tax'].create({
             'name': "tax_5",
             'amount_type': 'percent',
@@ -460,22 +487,8 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_affect_base_amount_5(self):
-        affecting_tax = self.env['account.tax'].create({
-            'name': 'Affecting',
-            'amount': 42,
-            'amount_type': 'percent',
-            'type_tax_use': 'sale',
-            'include_base_amount': True,
-            'sequence': 0,
-        })
-
-        affected_tax = self.env['account.tax'].create({
-            'name': 'Affected',
-            'amount': 10,
-            'amount_type': 'percent',
-            'type_tax_use': 'sale',
-            'sequence': 1
-        })
+        affecting_tax = self.affecting_tax
+        affected_tax = self.affected_tax
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -549,22 +562,8 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_affect_base_amount_6(self):
-        affecting_tax = self.env['account.tax'].create({
-            'name': 'Affecting',
-            'amount': 42,
-            'amount_type': 'percent',
-            'type_tax_use': 'sale',
-            'include_base_amount': True,
-            'sequence': 0,
-        })
-
-        affected_tax = self.env['account.tax'].create({
-            'name': 'Affected',
-            'amount': 10,
-            'amount_type': 'percent',
-            'type_tax_use': 'sale',
-            'sequence': 1
-        })
+        affecting_tax = self.affecting_tax
+        affected_tax = self.affected_tax
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -704,17 +703,8 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_partitioning_lines_by_moves(self):
-        tax_20_affect = self.env['account.tax'].create({
-            'name': "tax_20_affect",
-            'amount_type': 'percent',
-            'amount': 20.0,
-            'include_base_amount': True,
-        })
-        tax_10 = self.env['account.tax'].create({
-            'name': "tax_10",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        tax_20_affect = self.tax_20_affect
+        tax_10 = self.tax_10_pct
 
         invoices = self.env['account.move']
         expected_values_list = []
@@ -760,11 +750,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoices, tax_details)
 
     def test_fixed_tax_with_negative_quantity(self):
-        fixed_tax = self.env['account.tax'].create({
-            'name': "fixed_tax",
-            'amount_type': 'fixed',
-            'amount': 10.0,
-        })
+        fixed_tax = self.fixed_tax
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -823,11 +809,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_percent_tax_with_negative_balance(self):
-        percent_tax = self.env['account.tax'].create({
-            'name': "percent_tax",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        percent_tax = self.percent_tax
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -883,11 +865,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_fixed_tax_with_negative_balance(self):
-        fixed_tax = self.env['account.tax'].create({
-            'name': "fixed_tax",
-            'amount_type': 'fixed',
-            'amount': 10.0,
-        })
+        fixed_tax = self.fixed_tax
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -945,11 +923,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
     def test_multiple_same_tax_lines(self):
         """ In expense, the same tax line could be generated multiple times. """
-        percent_tax = self.env['account.tax'].create({
-            'name': "percent_tax",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        percent_tax = self.percent_tax
         tax_rep = percent_tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
 
         move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -1029,11 +1003,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(move, tax_details)
 
     def test_multiple_same_tax_lines_multi_currencies_manual_edition(self):
-        percent_tax = self.env['account.tax'].create({
-            'name': "percent_tax",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        percent_tax = self.percent_tax
         tax_rep = percent_tax.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
 
         move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -1129,11 +1099,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(move, tax_details)
 
     def test_mixing_tax_inside_and_outside_a_group_of_taxes(self):
-        percent_tax = self.env['account.tax'].create({
-            'name': "percent_tax",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        percent_tax = self.percent_tax
         tax_group = self.env['account.tax'].create({
             'name': "tax_group",
             'amount_type': 'group',
@@ -1182,11 +1148,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         self.assertTotalAmounts(invoice, tax_details)
 
     def test_broken_configuration(self):
-        percent_tax = self.env['account.tax'].create({
-            'name': "percent_tax",
-            'amount_type': 'percent',
-            'amount': 10.0,
-        })
+        percent_tax = self.percent_tax
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

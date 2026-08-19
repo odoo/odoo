@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import contextlib
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged, new_test_user
+from odoo.tests import Form, tagged
 from odoo import Command, fields
 from odoo.exceptions import UserError, RedirectWarning
 
@@ -10,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from collections import defaultdict
 from itertools import zip_longest
+
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
@@ -69,6 +69,21 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 500.0,
         }
+        cls.awesome_journal = cls.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        cls.entry_move = cls.env['account.move'].create({
+            'move_type': 'entry',
+            'partner_id': cls.partner_a.id,
+            'date': fields.Date.from_string('2019-01-01'),
+            'currency_id': cls.other_currency.id,
+            'line_ids': [
+                Command.create(cls.entry_line_vals_1),
+                Command.create(cls.entry_line_vals_2),
+            ],
+        })
 
     @classmethod
     def default_env_context(cls):
@@ -181,7 +196,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[1] = 'tax line'
         # lines[2] = 'revenue line 1'
         # lines[3] = 'revenue line 2'
-        lines = self.test_move.line_ids.sorted('debit')
+        self.test_move.line_ids.sorted('debit')
 
         # Editing the reference should be allowed.
         self.test_move.ref = 'whatever'
@@ -254,7 +269,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[1] = 'tax line'
         # lines[2] = 'revenue line 1'
         # lines[3] = 'revenue line 2'
-        lines = self.test_move.line_ids.sorted('debit')
+        self.test_move.line_ids.sorted('debit')
 
         # Try to edit the account of a line.
         self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
@@ -669,12 +684,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
         self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
-        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
-            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
-                'name': '%s %s tag' % (line_type, repartition_type),
-                'applicability': 'taxes',
-                'country_id': self.env.ref('base.us').id,
-            })
+        tag_combos = [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]
+        all_tags = self.env['account.account.tag'].create([{
+            'name': '%s %s tag' % (l, r),
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        } for l, r in tag_combos])
+        for (line_type, repartition_type), tag in zip(tag_combos, all_tags):
+            tax_tags[line_type][repartition_type] = tag
         tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
             'type_tax_use': 'sale',
@@ -1036,11 +1053,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     @freeze_time('2021-10-01 00:00:00')
     def test_change_journal_account_move(self):
         """Changing the journal should change the name of the move"""
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         move = self.env['account.move'].with_context(default_move_type='entry')
         with Form(move) as move_form:
             self.assertEqual(move_form.name_placeholder, 'MISC/2021/10/0001')
@@ -1054,11 +1067,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
     def test_change_journal_posted_before(self):
         """ Changes to a move posted before can only de done if move name is '/' or empty (False) """
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         self.test_move.action_post()
         self.test_move.button_draft()  # move has posted_before == True
         self.assertEqual(self.test_move.journal_id, self.company_data['default_journal_misc'])
@@ -1076,11 +1085,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         """ Changes to an account move with a sequence number assigned can only de done
         if the move name is '/' or empty (False)
         """
-        journal = self.env['account.journal'].create({
-            'name': 'awesome journal',
-            'type': 'general',
-            'code': 'AJ',
-        })
+        journal = self.awesome_journal
         # Post move with sequence number 1 and create new move with sequence number 2
         self.test_move.action_post()
         test_move_2 = self.test_move.copy({'name': 'TEST/2016/01/0002', 'date': '2016-01-01'})
@@ -1346,16 +1351,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
     def test_no_partner_id_on_duplication(self):
         """ Test that when a account_move is duplicated the partner_id is not included in the duplicated_move """
-        move = self.env['account.move'].create({
-            'move_type': 'entry',
-            'partner_id': self.partner_a.id,
-            'date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.other_currency.id,
-            'line_ids': [
-                Command.create(self.entry_line_vals_1),
-                Command.create(self.entry_line_vals_2),
-            ],
-        })
+        move = self.entry_move
         move_duplicate = move.copy()
         self.assertTrue(move_duplicate)
         self.assertFalse(move_duplicate.partner_id)
@@ -1381,16 +1377,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             original_recompute[self._name](field, ids)
 
         # Setup data
-        invoice = self.env['account.move'].create({
-            'move_type': 'entry',
-            'partner_id': self.partner_a.id,
-            'date': fields.Date.from_string('2019-01-01'),
-            'currency_id': self.other_currency.id,
-            'line_ids': [
-                Command.create(self.entry_line_vals_1),
-                Command.create(self.entry_line_vals_2),
-            ],
-        })
+        invoice = self.entry_move
         self.env.flush_all()
 
         # Check

@@ -44,6 +44,7 @@ test("List: placeholder_field shows as text/placeholder", async () => {
     await mountView({
         type: "list",
         resModel: "account.account",
+        noMainContainer: true,
     });
 
     const firstCellSelector = "tbody td:not(.o_list_record_selector):first";
