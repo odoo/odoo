@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     advanceTime,
     click,
@@ -35,7 +35,7 @@ describe("insertTable", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -43,7 +43,7 @@ describe("insertTable", () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p>hello</p>
             `)
         );
@@ -55,7 +55,7 @@ describe("insertTable", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p>he</p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -63,7 +63,7 @@ describe("insertTable", () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p>llo</p>
             `)
         );
@@ -75,7 +75,7 @@ describe("insertTable", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p>hello</p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -83,7 +83,7 @@ describe("insertTable", () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -197,7 +197,7 @@ describe("selected cell color in toolbar", () => {
     });
     test("cell's selected color should be shown in toolbar (3)", async () => {
         await setupEditor(`
-        <table>
+           <table>
             <tbody>
                 <tr>
                     <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">[ab</div></td>
@@ -325,14 +325,14 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table" style="width: 500px;">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 500px;">
                     <caption>c</caption>
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -345,15 +345,15 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table style="width: 500px;">
+                <div class="o_table_wrapper"><table style="width: 500px;">
                     <tbody>
                         <tr>
                             <th class="o_table_header">1</th>
                             <th class="o_table_header">2</th>
                         </tr>
                     </tbody>
-                </table>
-                <p data-selection-placeholder=""><br></p>
+                </table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
     });
@@ -370,7 +370,7 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table style="width: 500px;">
+                <div class="o_table_wrapper"><table style="width: 500px;">
                     <tbody>
                         <tr>
                             <th class="o_table_header">1</th>
@@ -381,10 +381,124 @@ describe("normalize table structure", () => {
                             <td>4</td>
                         </tr>
                     </tbody>
-                </table>
-                <p data-selection-placeholder=""><br></p>
+                </table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
+    });
+
+    test("should wrap the table into o_table_wrapper div while editing", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                        <tr><td>ab</td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr><td>ab</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+            contentAfter: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                        <tr><td>ab</td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+        });
+    });
+
+    test("should keep the table wrapper on save when 'saveScrollableTables' is enabled", async () => {
+        await testEditor({
+            config: { saveScrollableTables: true },
+            contentBefore: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+            contentAfter: unformat(`
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `),
+        });
+    });
+
+    test("should not wrap the table into o_table_wrapper div if it already has one", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr><td>ab</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr><td>ab</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+        });
+    });
+
+    test("should not wrap the inner table into o_table_wrapper div", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                        <tr><td><table class="o_table"></table></td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr>
+                                <td>
+                                    <p data-selection-placeholder=""><br></p>
+                                    <table class="o_table"><tbody><tr><td><p><br></p></td></tr></tbody></table>
+                                    <p data-selection-placeholder=""><br></p>
+                                    </td>
+                                <td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+        });
     });
 });
 
@@ -392,7 +506,7 @@ describe("Table merge/unmerge button visibility", () => {
     test("shouldn't show merge button in toolbar when selection spans multiple rows and columns", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>[<br></p></td>
@@ -405,12 +519,12 @@ describe("Table merge/unmerge button visibility", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
@@ -423,7 +537,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expandToolbar();
@@ -450,7 +564,7 @@ describe("Table merge/unmerge button visibility", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -462,7 +576,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td class="o_selected_td"><p><br></p>]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -488,7 +602,7 @@ describe("Table merge/unmerge button visibility", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
@@ -499,7 +613,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td colspan="3" class="o_selected_td"><p>]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -510,7 +624,7 @@ describe("Table merge/unmerge button visibility", () => {
     test("should show inactive merge button in toolbar when selection includes cells in a single row including a merged cell", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a" rowspan="2"><p>[<br></p></td>
@@ -527,12 +641,12 @@ describe("Table merge/unmerge button visibility", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" rowspan="2"><p>[<br></p></td>
@@ -549,7 +663,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -560,7 +674,7 @@ describe("Table merge/unmerge button visibility", () => {
     test("should show inactive merge button in toolbar when selection includes cells in a single column including a merged cell", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -572,12 +686,12 @@ describe("Table merge/unmerge button visibility", () => {
                             <td><p><br>]</p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -589,7 +703,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td class="o_selected_td"><p><br>]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -617,7 +731,7 @@ describe("Table merge/unmerge button visibility", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" rowspan="2"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
@@ -629,7 +743,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -656,7 +770,7 @@ describe("Table merge/unmerge button visibility", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -667,7 +781,7 @@ describe("Table merge/unmerge button visibility", () => {
                             <td class="a o_selected_td" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -698,7 +812,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -711,7 +825,7 @@ describe("Merge column cells", () => {
                             <td class="o_selected_td"><p><br></p>]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -722,7 +836,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -733,7 +847,7 @@ describe("Merge column cells", () => {
                             <td class="a o_selected_td" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -759,7 +873,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -772,7 +886,7 @@ describe("Merge column cells", () => {
                             <td class="o_selected_td"><p>c</p>]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -783,7 +897,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -794,7 +908,7 @@ describe("Merge column cells", () => {
                             <td class="a o_selected_td" colspan="3"><p>[a</p><p>b</p><p>c]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -832,13 +946,13 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -848,7 +962,7 @@ describe("Merge row cells", () => {
     test("merges selected cells vertically in a column by applying rowspan", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>[<br></p></td>
@@ -861,12 +975,12 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
@@ -879,7 +993,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -890,7 +1004,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" rowspan="2"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
@@ -902,7 +1016,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -928,7 +1042,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[a</p></td>
@@ -941,7 +1055,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -952,7 +1066,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" rowspan="2"><p>[a</p><p>b]</p></td>
@@ -964,7 +1078,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -973,39 +1087,39 @@ describe("Merge row cells", () => {
         const { el } = await setupEditor(
             unformat(`
                 <p><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>[<br></p></td>
                         </tr>
                     </tbody>
-                </table>
-                <table class="table table-bordered o_table">
+                </table></div>
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br>]</p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="o_selected_td"><p><br>]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expandToolbar();
@@ -1052,7 +1166,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -1065,7 +1179,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -1097,7 +1211,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
@@ -1110,7 +1224,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -1138,7 +1252,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -1151,7 +1265,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -1180,7 +1294,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>a[]</p><p>b</p></td>
@@ -1193,7 +1307,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -1221,7 +1335,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -1234,7 +1348,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
