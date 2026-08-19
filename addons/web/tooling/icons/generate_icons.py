@@ -223,6 +223,9 @@ def detect_filled_variants(font_outline: TTFont, font_fill: TTFont, glyphs_map: 
         if pen0.value != pen1.value:
             has_fill.add(name)
 
+    # `close_small` is wrongly detected as having a filled variant
+    has_fill.discard("close_small")
+
     return has_fill
 
 
