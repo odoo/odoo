@@ -222,7 +222,7 @@ class TransactionCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user_regular').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 

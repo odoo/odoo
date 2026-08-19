@@ -9,7 +9,7 @@ class DashboardTestCommon(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.group = cls.env["res.groups"].create({"name": "test group"})
-        cls.user = new_test_user(cls.env, login="Raoul")
+        cls.user = new_test_user(cls.env, login="Raoul", groups="base.group_user_regular")
         cls.dashboard_manager = new_test_user(
             cls.env,
             login="Mitchell",

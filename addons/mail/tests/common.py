@@ -1953,7 +1953,7 @@ class MailCommon(MailCase):
             cls.env,
             company_id=cls.company_admin.id,
             country_id=cls.env.ref('base.be').id,
-            groups='base.group_user,base.group_partner_manager',
+            groups='base.group_user_regular,base.group_partner_manager',
             login='employee',
             name='Ernest Employee',
             notification_type='inbox',
