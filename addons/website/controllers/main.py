@@ -766,46 +766,50 @@ class Website(Home):
             final_html,
             palette_map,
         )
-        dark_mode_overrides = ''
+        content_overrides = ''
         if is_dark:
             root_variables += (
                 '--body-bg:var(--o-color-4);'
                 '--body-color:var(--o-color-5);'
             )
-            dark_mode_overrides = (
+            content_overrides = (
                 '#wrapwrap>main,#wrapwrap.o_footer_effect_enable>main{'
                 'background-color:var(--o-color-4);'
                 'color:var(--o-color-5);'
                 '}'
             )
-            for area_name, area_selector in (
-                ('menu', '#wrapwrap header .navbar'),
-                ('footer', '#wrapwrap footer'),
-            ):
-                background_match = re.search(
-                    rf'--{area_name}\s*:\s*'
-                    r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
-                    final_html,
-                )
-                if not background_match:
-                    continue
-                color_name, color_value = background_match.groups()
-                background_color = palette_map.get(color_name) if color_name else color_value
-                if not background_color:
-                    continue
-                text_color = self._get_configurator_preview_contrast_color(background_color)
-                dark_mode_overrides += (
-                    f'{area_selector},'
-                    f'{area_selector} :is('
-                    'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
-                    f'){{color:{text_color}!important;}}'
-                )
+        # The menu and footer text colors are compiled against the palette the
+        # preview was generated with. They are recomputed for the selected one
+        # whether it is dark or light, otherwise a preview generated on a dark
+        # menu keeps white links on the light menu it is shown with.
+        for area_name, area_selector in (
+            ('menu', '#wrapwrap header .navbar'),
+            ('footer', '#wrapwrap footer'),
+        ):
+            background_match = re.search(
+                rf'--{area_name}\s*:\s*'
+                r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
+                final_html,
+            )
+            if not background_match:
+                continue
+            color_name, color_value = background_match.groups()
+            background_color = palette_map.get(color_name) if color_name else color_value
+            if not background_color:
+                continue
+            text_color = self._get_configurator_preview_contrast_color(background_color)
+            content_overrides += (
+                f'{area_selector},'
+                f'{area_selector} :is('
+                'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
+                f'){{color:{text_color}!important;}}'
+            )
         # Chrome may show thin gaps between sections in scaled iframes. The
         # `.o_we_shape` and `section` rules overlap them to hide those gaps.
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
-            f'{dark_mode_overrides}'
+            f'{content_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
             '</style>'
