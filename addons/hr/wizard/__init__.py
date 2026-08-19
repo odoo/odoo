@@ -3,3 +3,4 @@
 from . import mail_activity_schedule
 from . import hr_bank_account_allocation_wizard_line
 from . import hr_bank_account_wizard
+from . import hr_employee_create_version_wizard

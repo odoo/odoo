@@ -883,5 +883,17 @@
             <field name="binding_model_id" ref="hr.model_hr_employee"/>
             <field name="binding_view_types">list,kanban</field>
         </record>
+
+        <record id="action_hr_employee_create_versions" model="ir.actions.server">
+            <field name="name">New Employee Records</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+action = env.ref('hr.action_open_hr_employee_create_version_wizard').read()[0]
+            </field>
+        </record>
+
     </data>
 </odoo>

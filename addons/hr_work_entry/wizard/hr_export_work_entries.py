@@ -135,7 +135,9 @@ class HrExportWorkEntries(models.TransientModel):
         )
         lines = [(5, 0, 0)]
         for employee_id, contract_dict in contracts_by_employee.items():
-            contracts = self.env['hr.version'].browse([c.id for c in contract_dict.values()])
+            contracts = self.env['hr.version']
+            for contract_list in contract_dict.values():
+                contracts |= contract_list
             work_entries_vals = contracts.generate_work_entries(period_start, period_stop)
             if work_entries_vals:
                 lines.append((0, 0, {
