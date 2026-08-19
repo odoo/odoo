@@ -2585,11 +2585,6 @@ class Request:
     def _update_served_exception(self, exc):
         if isinstance(exc, HTTPException) and exc.code is None:
             return exc  # bubble up to _serve_db
-        if (
-            'werkzeug' in config['dev_mode']
-            and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
-        ):
-            return exc  # bubble up to werkzeug.debug.DebuggedApplication
         if not hasattr(exc, 'error_response'):
             if isinstance(exc, AccessDenied):
                 exc.suppress_traceback()
