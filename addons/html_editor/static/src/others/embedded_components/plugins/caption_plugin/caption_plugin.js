@@ -106,6 +106,7 @@ export class CaptionPlugin extends Plugin {
                     figcaption.setAttribute("placeholder", captionSpan.textContent);
                 }
             });
+            return root;
         },
         split_element_block_overrides: (params) => {
             if (closestElement(params.targetNode, CAPTION_SPAN_SELECTOR)) {
