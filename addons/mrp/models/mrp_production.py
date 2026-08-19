@@ -3186,9 +3186,8 @@ class MrpProduction(models.Model):
     # CATALOG
     # -------------------------------------------------------------------------
 
-    def _get_product_price_type(self) -> str:
-        """Specify the price type that should be computed as product 'price' in the catalog."""
-        return 'standard_price'
+    def _show_prices(self) -> bool:
+        return False
 
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')

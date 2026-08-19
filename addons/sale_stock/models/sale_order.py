@@ -322,12 +322,6 @@ class SaleOrder(models.Model):
             "display_stock": True,
         }
 
-    def _get_product_catalog_product_data(self, product, **kwargs) -> dict:
-        return {
-            **super()._get_product_catalog_product_data(product, **kwargs),
-            "deliveredQty": 0,  # TODO add defaultProps and remove the default here
-        }
-
     def _add_reference(self, references):
         """ link the given references to the list of references. """
         self.ensure_one()

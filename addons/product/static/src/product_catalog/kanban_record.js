@@ -59,25 +59,26 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     //--------------------------------------------------------------------------
 
     async _onQuantityChange() {
-        const result = await this._updateQuantityAndGetPrice();
-        this._updateProductCatalogData(result);
+        const update_values = await this._updateCatalogQuantity();
+
+        if (update_values.price) {
+            this.productCatalogData.price = parseFloat(update_values.price);
+        }
+
+        return update_values;
     }
 
-    _updateProductCatalogData(result) {
-        this.productCatalogData.price = parseFloat(result.price);
-    }
-
-    _updateQuantityAndGetPrice() {
+    _updateCatalogQuantity() {
         // Chain RPC calls to ensure that each request is completed before starting the next one.
         // This prevents race conditions and ensures the server processes updates sequentially.
         this._pendingUpdate = this._pendingUpdate.then(() => rpc(
             "/product/catalog/update_order_line_info",
-            this._getUpdateQuantityAndGetPriceParams(),
+            this._getUpdateCatalogQuantityParams(),
         ));
         return this._pendingUpdate;
     }
 
-    _getUpdateQuantityAndGetPriceParams() {
+    _getUpdateCatalogQuantityParams() {
         return {
             res_model: this.env.orderResModel,
             order_id: this.env.orderId,
@@ -96,17 +97,14 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         if (this.productCatalogData.readOnly) {
             return;
         }
+
         const data = this.productCatalogData;
         const newUom = data.availableUoms.find(u => u.id === uomId);
         const oldUom = data.availableUoms.find(u => u.id === data.uomId);
         if (newUom && oldUom) {
             data.uomId = newUom.id;
-            data.uomDisplayName = newUom.name;
-            if (data.productUomFactor !== undefined) {
-                data.productUomFactor = data.productUomFactor * oldUom.factor / newUom.factor;
-            }
-            const price = await this._updateQuantityAndGetPrice();
-            data.price = parseFloat(price);
+            const update_values = await this._updateCatalogQuantity();
+            data.price = parseFloat(update_values.price);
         }
     }
 
@@ -114,14 +112,33 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         if (this.productCatalogData.readOnly) {
             return;
         }
-        this.productCatalogData.quantity = quantity || 0;
+
+        if (
+            this.productCatalogData.quantity === this.productCatalogData.minimumLineQuantity
+            && quantity < this.productCatalogData.quantity
+        ) {
+            // This condition is only triggered when the product was already at the minimum quantity
+            // possible, as stated in the sale_stock module, then the user inputs a quantity lower
+            // than this limit, in this case we need the record to forcefully update the record.
+            this.props.record.load();
+            this.props.record.model.notify();
+            return;
+        }
+
+        this.productCatalogData.quantity = Math.max(
+            quantity || 0, this.props.minimumLineQuantity || 0
+        );
+
         this.debouncedUpdateQuantity();
     }
 
     /**
      * Add the product to the order
      */
-    addProduct(qty=1) {
+    addProduct(qty = 1) {
+        if (this.productCatalogData.quantity === 0 && qty < this.productCatalogData.minimumProductQuantity) {
+            qty = this.productCatalogData.minimumProductQuantity; // Take minimum quantity when trying to add less.
+        }
         this.updateQuantity(qty);
     }
 

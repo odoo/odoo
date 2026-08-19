@@ -1834,14 +1834,7 @@ class SaleOrderLine(models.Model):
         if len(self) == 1:
             return self._get_discounted_price()
 
-        return parent_record.pricelist_id._get_product_price(
-            product=self.product_id,
-            quantity=1.0,
-            uom=self._get_product_uom(),
-            currency=parent_record.currency_id,
-            date=parent_record.date_order,
-            **kwargs,
-        )
+        return super()._get_catalog_unit_price(parent_record, **kwargs)
 
     def _can_be_unlinked_from_catalog(self):
         return super()._can_be_unlinked_from_catalog() and self.state in {"draft", "sent"}

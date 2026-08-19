@@ -261,6 +261,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
         }
 
         if (sectionId === false) {
+            // TODO VFE if there was no section, add a "No Section" section before the newly created section
             // unsaved section
             const section_data = await this.orm.call(
                 this.orderModel,
