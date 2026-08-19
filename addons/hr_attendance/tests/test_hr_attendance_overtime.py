@@ -1774,6 +1774,37 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         self.assertEqual(attendance2.overtime_hours, 4.0, "The whole attendance should be in overtime.")
 
+    def test_overtime_recomputation_attendance_ending_at_midnight(self):
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 17, 0),
+        })
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 21, 0),
+            'check_out': datetime(2021, 1, 5, 0, 0),
+        })
+
+        self.assertEqual(
+            attendance.overtime_hours,
+            3.0,
+            "There should be 3 hours of overtime on the 4th.",
+        )
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 5, 8, 0),
+            'check_out': datetime(2021, 1, 5, 17, 0),
+        })
+
+        self.assertEqual(
+            attendance.overtime_hours,
+            3.0,
+            "An attendance ending at midnight should not be recomputed "
+            "when updating overtime for the following day.",
+        )
+
     def test_weekly_overtime_flexible_resource_public_holiday(self):
         self.ruleset.rule_ids.write({
             'expected_hours_from_contract': True,
