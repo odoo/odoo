@@ -1,5 +1,5 @@
 import { validate } from "@web/owl2/utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -110,9 +110,9 @@ export class Toolbar extends Component {
 }
 
 export const toolbarButtonProps = {
-    title: [String, Function],
-    getSelection: Function,
-    isDisabled: Boolean,
+    title: t.or([t.string(), t.function()]),
+    getSelection: t.function(),
+    isDisabled: t.boolean(),
 };
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */
