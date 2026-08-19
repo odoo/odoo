@@ -338,3 +338,47 @@ class TestUiFeedback(HttpCaseWithUserDemo):
 
         access_token = survey_with_mandatory_questions.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_roaming_mandatory_questions')
+
+    def test_08_survey_conditional_question_submit_button(self):
+        """ Check that on a potentially last question, the navigation button switches
+        between "Submit" and "Continue" depending on the selected answer, and that the
+        roaming auto-submit follows it (`_get_survey_last_triggering_answers`). """
+        survey_conditional_submit = self.env['survey.survey'].create({
+            'title': 'Survey With a Potentially Last Question',
+            'access_token': '7d5cf2b0-b9fb-4e0e-a6e2-8a2b4c1d9e30',
+            'access_mode': 'public',
+            'users_can_go_back': True,
+            'questions_layout': 'page_per_question',
+            'description': "<p>Test survey with a conditional question on the last page</p>",
+            'question_and_page_ids': [
+                Command.create({
+                    'title': 'Q1',
+                    'sequence': 1,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                }), Command.create({
+                    'title': 'Q2',
+                    'sequence': 2,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                }), Command.create({
+                    'title': 'Q3',
+                    'sequence': 3,
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                }),
+            ]
+        })
+        __, q2, q3 = survey_conditional_submit.question_ids
+        q3.triggering_answer_ids = q2.suggested_answer_ids[0]
+        access_token = survey_conditional_submit.access_token
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey_conditional_questions_submit_button')
