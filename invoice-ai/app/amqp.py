@@ -106,7 +106,13 @@ async def declare_topology(channel: aio_pika.abc.AbstractChannel) -> None:
     for queue_name, routing_key in TOPOLOGY_BINDINGS:
         arguments: Any = None
         if queue_name == QUEUE_EXTRACT:
+            # Quorum queue: x-delivery-limit is only valid on quorum
+            # queues (RabbitMQ 3.13 rejects it on classic queues). The
+            # worker consumes this queue, so the crash-redelivery safety
+            # net (at most 3 redeliveries, then broker dead-letters)
+            # belongs here.
             arguments = {
+                "x-queue-type": "quorum",
                 "x-dead-letter-exchange": DLX_EXCHANGE,
                 "x-dead-letter-routing-key": ROUTING_KEY_DEAD,
                 "x-delivery-limit": DELIVERY_LIMIT,
@@ -123,11 +129,15 @@ async def declare_topology(channel: aio_pika.abc.AbstractChannel) -> None:
     for queue_name, routing_key in DLX_BINDINGS:
         retry_arguments: Any = None
         if queue_name in ttl_by_queue:
+            # Classic queue: the retry ladder needs x-message-ttl, which
+            # quorum queues do not support. No x-delivery-limit here — each
+            # retry message is a fresh single hop published by the worker
+            # (which acks the original first), so redelivery-limit logic
+            # does not apply.
             retry_arguments = {
                 "x-message-ttl": ttl_by_queue[queue_name],
                 "x-dead-letter-exchange": EXCHANGE_NAME,
                 "x-dead-letter-routing-key": ROUTING_KEY_REQUEST,
-                "x-delivery-limit": DELIVERY_LIMIT,
             }
         queue = await channel.declare_queue(
             queue_name, durable=True, arguments=retry_arguments,

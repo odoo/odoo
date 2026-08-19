@@ -93,6 +93,21 @@ def cache_get(ocr_text: str, model: str) -> dict | None:
         return None
 
 
+def _to_jsonable(value: object) -> object:
+    """Convert pydantic models (and nested structures) to JSON-safe data.
+
+    ``result["parsed"]`` is an ``InvoiceExtraction`` pydantic model; naive
+    ``default=str`` would store its repr string and break cache reads.
+    """
+    if hasattr(value, "model_dump"):
+        return value.model_dump(mode="json")
+    if isinstance(value, dict):
+        return {k: _to_jsonable(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_to_jsonable(v) for v in value]
+    return value
+
+
 def cache_set(ocr_text: str, result: dict, model: str) -> None:
     """Store an extraction result with TTL."""
     client = _get_client()
@@ -100,12 +115,12 @@ def cache_set(ocr_text: str, result: dict, model: str) -> None:
         return
 
     key = build_cache_key(ocr_text, model)
-    payload = {"result": result}
+    payload = {"result": _to_jsonable(result)}
     try:
         client.setex(
             key,
             CACHE_TTL_SECONDS,
-            json.dumps(payload, default=str),
+            json.dumps(payload),
         )
         _logger.info(
             "llm_cache: stored %s (TTL %ds)",
