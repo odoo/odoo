@@ -2,7 +2,7 @@
     "name": "Invoice Agent",
     "version": "19.0.0.7.0",
     "category": "Accounting/Accounting",
-    "summary": "AI Extraction for account.move — AMQP queue, outbox, wizard, security, automations, cron",
+    "summary": "AI-powered vendor invoice extraction and validation — OCR, Claude structured output, RAG validation, confidence-based kanban routing",
     "depends": ["account", "sale", "base_automation"],
     "post_init_hook": "post_init_hook",
     "data": [
