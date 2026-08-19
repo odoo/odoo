@@ -255,7 +255,10 @@ class MailGroup(models.Model):
 
         # Error Case: Selected group of users, but no user found for that email
         email = email_normalize(message_dict.get('email_from', ''))
-        email_has_access = self.search_count([('id', '=', self.id), ('access_group_id.user_ids.email_normalized', '=', email)])
+        # check implied users too: being in the access group through group
+        # inheritance (e.g. regular users implying the light user group) counts
+        email_has_access = email and self.env['res.users'].search_count(
+            [('email_normalized', '=', email), ('all_group_ids', 'in', self.access_group_id.ids)])
         if self.access_mode == 'groups' and not email_has_access:
             return AliasError('error_mail_group_members_restricted',
                                   _('Only selected groups of users can send email to the mailing list.'))

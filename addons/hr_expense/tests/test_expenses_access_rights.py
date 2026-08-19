@@ -49,6 +49,27 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         expense.with_user(self.expense_user_employee).action_reset()
         self.assertEqual(expense.state, 'draft')
 
+    def test_expense_split_light_employee(self):
+        """ Employees without any extra role (light users) can split their own draft expenses. """
+        expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
+            'name': 'Expense to split',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'price_unit': 100.0,
+        })
+
+        wizard_action = expense.with_user(self.expense_user_employee).action_split_wizard()
+        wizard = self.env['hr.expense.split.wizard'].with_user(self.expense_user_employee).browse(wizard_action['res_id'])
+        self.assertEqual(len(wizard.expense_split_line_ids), 2)
+
+        wizard.action_split_expense()
+        self.assertEqual(
+            self.env['hr.expense'].with_user(self.expense_user_employee).search_count(
+                [('split_expense_origin_id', '=', expense.id)]
+            ),
+            2,
+        )
+
     def test_expense_access_rights_user(self):
         # The expense base user (without other rights) is able to create and read sheet
 
