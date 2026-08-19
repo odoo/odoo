@@ -9,6 +9,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
@@ -47,6 +48,24 @@ test("basic layout", async () => {
             [".o-mail-NotificationItem-text:text('An error occurred when sending an email')"],
         ],
     });
+});
+
+test("notification date follows the day change", async () => {
+    mockDate("2023-01-03 23:59:00", 0);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        date: "2023-01-03 12:00:00",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-NotificationItem-date:text('12:00 PM')");
+    await advanceTime(2 * 60 * 1000); // past midnight
+    await contains(".o-mail-NotificationItem-date:text('Jan 3')");
 });
 
 test("mark as read", async () => {

@@ -276,7 +276,7 @@ export class Message extends Record {
     }
 
     get dateDay() {
-        if (this.datetime.hasSame(DateTime.now(), "day")) {
+        if (this.datetime.hasSame(this.store.startOfToday, "day")) {
             return _t("Today");
         }
         return this.datetime.toLocaleString(DateTime.DATE_MED);
@@ -292,16 +292,16 @@ export class Message extends Record {
 
     get dateSimpleWithDay() {
         const userLocale = { locale: user.lang };
-        const now = DateTime.now();
-        if (this.datetime.hasSame(now, "day")) {
+        const startOfToday = this.store.startOfToday;
+        if (this.datetime.hasSame(startOfToday, "day")) {
             return this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale);
         }
-        if (this.datetime.hasSame(now.minus({ day: 1 }), "day")) {
+        if (this.datetime.hasSame(startOfToday.minus({ day: 1 }), "day")) {
             return _t("Yesterday at %(time)s", {
                 time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
-        if (this.datetime.hasSame(now, "year")) {
+        if (this.datetime.hasSame(startOfToday, "year")) {
             return this.datetime.toLocaleString(
                 { ...DateTime.DATETIME_MED, year: undefined },
                 userLocale

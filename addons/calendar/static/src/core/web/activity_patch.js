@@ -12,7 +12,7 @@ patch(Activity.prototype, {
             if (!datetime) {
                 return false;
             }
-            return datetime?.hasSame(luxon.DateTime.now(), "day");
+            return datetime.hasSame(this.store.startOfToday, "day");
         };
     },
     get attendeeNames() {

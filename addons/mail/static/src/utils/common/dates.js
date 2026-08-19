@@ -8,17 +8,6 @@ function resolveTimeZoneName(tz) {
 }
 
 /**
- * @param {luxon.DateTime} datetime
- */
-export function computeDelay(datetime) {
-    if (!datetime) {
-        return 0;
-    }
-    const today = DateTime.now().startOf("day");
-    return datetime.diff(today, "days").days;
-}
-
-/**
  * @param {string} partnerTz
  * @param {string} currentUserTz
  */
@@ -41,17 +30,4 @@ export function formatLocalDateTime(partnerTz, currentUserTz) {
         : localization.dateTimeFormat.replace(":ss", "");
     const datetime = partnerDateTime.toFormat(format);
     return _t("%(datetime)s local time", { datetime });
-}
-
-export function getMsToTomorrow() {
-    const now = new Date();
-    const night = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate() + 1, // the next day
-        0,
-        0,
-        0 // at 00:00:00 hours
-    );
-    return night.getTime() - now.getTime();
 }
