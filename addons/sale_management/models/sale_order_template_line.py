@@ -8,6 +8,7 @@ from odoo.fields import Command
 class SaleOrderTemplateLine(models.Model):
     _name = "sale.order.template.line"
     _description = "Quotation Template Line"
+    _inherit = ["product.catalog.line.mixin"]
     _order = "sale_order_template_id, sequence, id"
 
     _accountable_product_id_required = models.Constraint(
@@ -238,3 +239,19 @@ class SaleOrderTemplateLine(models.Model):
             })
 
         return vals
+
+    # === CATALOG ===#
+
+    def action_add_from_catalog(self):
+        sale_order_template = self.env["sale.order.template"].browse(
+            self.env.context.get("order_id")
+        )
+        return sale_order_template.with_context(
+            child_field="sale_order_template_line_ids"
+        ).action_add_from_catalog()
+
+    def _get_quantity_field(self) -> str:
+        return "product_uom_qty"
+
+    def _get_product_uom_field(self) -> str:
+        return "product_uom_id"
