@@ -5376,4 +5376,150 @@
         <field name="country_id" ref="base.ph"/>
         <field name="amount_rate">0.0</field>
     </record>
+
+    <!-- UZ : Uzbekistan -->
+    <!-- Generic Redefinitions -->
+    <record id="uz_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work</field>
+        <field name="color">0</field>
+        <field name="display_code">A</field>
+        <field name="code">002.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="uz_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime hours non recoverable - 150%</field>
+        <field name="color">4</field>
+        <field name="display_code">OT</field>
+        <field name="code">040.00</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="uz_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out Of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">000.00</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="uz_work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+            <field name="display_code">GTO</field>
+        <field name="code">LEAVE100</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="uz_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Compensatory Time Off</field>
+        <field name="display_code">CTO</field>
+        <field name="code">LEAVE105</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="uz_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Work from home</field>
+        <field name="display_code">HW</field>
+        <field name="code">002.08</field>
+        <field name="color">2</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="uz_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Leave without pay</field>
+        <field name="color">5</field>
+        <field name="display_code">UN</field>
+        <field name="code">158.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="uz_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Guaranted monthly wage illness</field>
+        <field name="display_code">STO</field>
+        <field name="code">013.00</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="uz_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="code">006.00</field>
+        <field name="display_code">PH</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.uz"/>
+    </record>
+
+    <record id="l10n_uz_work_entry_type_annual_labor_leave" model="hr.work.entry.type">
+        <field name="name">Annual Labor Leave</field>
+        <field name="sequence">1</field>
+        <field name="display_code">LL</field>
+        <field name="code">016.00</field>
+        <field name="color">2</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">1.0</field>
+    </record>
+
+    <!-- Uzbekistan Specific Leaves -->
+    <record id="l10n_uz_work_entry_type_annual_labor_leave_sunday" model="hr.work.entry.type">
+        <field name="name">Annual Labor Leave (Sunday)</field>
+        <field name="display_code">LLS</field>
+        <field name="code">016.00SUN</field>
+        <field name="color">2</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_uz_work_entry_type_social_leave" model="hr.work.entry.type">
+        <field name="name">Social Leave</field>
+        <field name="display_code">SOC</field>
+        <field name="code">UZSOCIAL</field>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">1.0</field>
+    </record>
+
+    <record id="l10n_uz_work_entry_type_partially_paid_leave" model="hr.work.entry.type">
+        <field name="name">Partially Paid Leave</field>
+        <field name="display_code">PPL</field>
+        <field name="code">UZPARTIALLYPAID</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_uz_work_entry_type_study_leave" model="hr.work.entry.type">
+        <field name="name">Study Leave</field>
+        <field name="display_code">STL</field>
+        <field name="code">UZSTUDY</field>
+        <field name="color">6</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_uz_work_entry_type_child_support_leave" model="hr.work.entry.type">
+        <field name="name">Child Support Leave</field>
+        <field name="display_code">CSL</field>
+        <field name="code">UZCHILDSUPPORT</field>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.uz"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">1.0</field>
+    </record>
+
 </data></odoo>
