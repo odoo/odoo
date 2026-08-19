@@ -84,12 +84,12 @@ class TestWebsocketTimeouts(WebsocketCase):
             ws = self.websocket_connect(ping_after_connect=False)
             ws.send(b'\x00')  # Wake up the WebSocket loop.
             self.assertTrue(
-                disconnect_done_event.wait(timeout=5),
+                self.wait_for_event(disconnect_done_event),
                 'Server should have initiated the closing handshake as the keep alive timeout is exceeded.',
             )
             frozen_time.tick(delta=timedelta(seconds=TimeoutManager.TIMEOUT + 1))
             ws.send(b'\x00')  # Wake up the WebSocket loop.
             self.assertTrue(
-                terminate_done_event.wait(timeout=5),
+                self.wait_for_event(terminate_done_event),
                 'Server should have terminated the connection as it didn\'t receive any response.',
             )

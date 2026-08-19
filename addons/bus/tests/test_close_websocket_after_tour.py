@@ -44,7 +44,7 @@ class TestCloseWebsocketAfterTour(WebsocketCase):
         ):
             self.browser_js("/odoo", "")
             self.assertTrue(websocket_created)
-            disconnect_called_ev.wait()
+            self.wait_for_event(disconnect_called_ev, timeout=None)
             # serve_forever_patch prevent websocket instances from being collected. Stop it now.
             self._serve_forever_patch.stop()
             gc.collect()
