@@ -18,6 +18,12 @@ class HrEmployeeDeparture(models.Model):
     def _get_domain_employee_id(self):
         return [('active', '=', True), ('company_id', 'in', self.env.companies.ids)]
 
+    def _get_departure_reason_domain(self):
+        return []
+
+    def _get_default_departure_reason(self):
+        return self.env['hr.departure.reason'].search(self._get_departure_reason_domain(), limit=1)
+
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', required=True,
         default=_get_default_employee_id,
@@ -29,7 +35,8 @@ class HrEmployeeDeparture(models.Model):
     departure_reason_id = fields.Many2one(
         "hr.departure.reason",
         string="End Reason",
-        default=lambda self: self.env['hr.departure.reason'].search([], limit=1),
+        domain=lambda self: self._get_departure_reason_domain(),
+        default=lambda self: self._get_default_departure_reason(),
         required=True, index=True, ondelete='restrict')
     departure_description = fields.Html(string="Additional Information")
     dismissal_date = fields.Date(string="Dismissal Date", default=fields.Date.today, required=True,
