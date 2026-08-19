@@ -42,6 +42,7 @@ export class HybridFluidCell extends LayoutModel {
         this.setAttributes({
             classNames: "o-ci-hybrid-fluid-cell",
             style: {
+                // TODO EGGMAIL: NEED MSO FALLBACK
                 display: "inline-block",
                 width: "100%",
             },

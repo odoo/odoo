@@ -7,6 +7,7 @@ import { StyleInfo } from "../core/style_models";
 export class MosaicStrategyPlugin extends Plugin {
     static id = "mosaicStrategy";
     static dependencies = [
+        "border",
         "contextStyle",
         "math",
         "measurementSnapshot",
@@ -17,6 +18,7 @@ export class MosaicStrategyPlugin extends Plugin {
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: this.processSyntheticEmailNodes.bind(this),
+        on_measure_ancestor_handlers: this.handleOverlappingBorders.bind(this),
     };
 
     acceptTableStrategyReport(emailNode) {
@@ -152,15 +154,16 @@ export class MosaicStrategyPlugin extends Plugin {
             const nextRow = ys.findIndex((y) => this.isZero(rect.bottom - y));
             const colspan = nextCol - col;
             const rowspan = nextRow - row;
-            const emailNode = rectToEmailNode.get(rect);
+            const cellEmailNode = rectToEmailNode.get(rect);
             return {
                 col,
                 row,
                 colspan,
                 rowspan,
-                emailNode,
-                referenceNode: emailNode.firstReferenceNode,
+                emailNode: cellEmailNode,
+                referenceNode: cellEmailNode.firstReferenceNode,
                 ...getWidth(col, colspan),
+                styleInfo: new StyleInfo(),
             };
         });
         // 4) Build the occupancy matrix, and compute spacer cells that will
@@ -189,7 +192,14 @@ export class MosaicStrategyPlugin extends Plugin {
                         occupied[row][col] = cell;
                         cell.height += heights[row].height;
                     } else {
-                        cell = { col, row, colspan: 1, rowspan: 1, ...getWidth(col, 1) };
+                        cell = {
+                            col,
+                            row,
+                            colspan: 1,
+                            rowspan: 1,
+                            ...getWidth(col, 1),
+                            styleInfo: new StyleInfo(),
+                        };
                         cell.height = heights[row].height;
                         occupied[row][col] = cell;
                         spacerCells.add(cell);
@@ -240,22 +250,74 @@ export class MosaicStrategyPlugin extends Plugin {
         for (const cell of spacerCells) {
             delete cell.height;
         }
-        return {
+        return this.processCellAncestors({
+            cells: new Set(cells),
             columnCount,
+            emailNode,
             rowCount,
             matrix: occupied,
-        };
+        });
+    }
+
+    assignBorderStyleInfo(borderStyleInfo, boundingClientRect, matrix) {
+        // TODO EGGMAIL
+        // need to detect the appropriate cells in matrix depending on
+        // edges of boundingClientRect, and apply the mirror of
+        // borderStyleInfo in these cells
+    }
+
+    handleOverlappingBorders({ ancestorNode, cell, tableMeasures }) {
+        const { matrix } = tableMeasures;
+        const rawStyleInfo = this.getRawStyleInfo(ancestorNode);
+        const borderStyleInfo = this.getBorderStyleInfo(rawStyleInfo, ancestorNode);
+        if (!this.hasBorderWidth(borderStyleInfo)) {
+            return;
+        }
+        const boundingClientRect = this.getBoundingClientRect(ancestorNode);
+        // TODO EGGMAIL: check if this needs defensive programming
+        // against forcing a border on a non-spacer cell
+        this.assignBorderStyleInfo(borderStyleInfo, boundingClientRect, matrix);
+    }
+
+    processCellAncestors(tableMeasures) {
+        const { contentCells, emailNode } = tableMeasures;
+        const containerNode = emailNode.lastReferenceNode;
+        const handledNodes = new Set([
+            containerNode,
+            ...contentCells.map((cell) => cell.emailNode.lastReferenceNode),
+        ]);
+        for (const cell of contentCells) {
+            const { referenceNode } = cell;
+            for (
+                let ancestorNode = referenceNode.parentElement;
+                !handledNodes.has(ancestorNode);
+                ancestorNode = ancestorNode.parentElement
+            ) {
+                handledNodes.add(ancestorNode);
+                this.trigger("on_measure_ancestor_handlers", {
+                    ancestorNode,
+                    cell,
+                    tableMeasures,
+                });
+            }
+        }
+
+        // go up each cell referenceNode until emailNode lastReferenceNode
+        // identify elements with border
+        // detect their rectangle
+        // detect where each rectangle edge with a border is in the table matrix
+        // find the corresponding spacing cell
+        // if there is one, mirror the border instruction
+
+        // same-ish strategy for discarded background colors
+        return tableMeasures;
     }
 
     processSyntheticEmailNodes(emailNode) {
         if (!emailNode.analysis.facts.isMosaicContainer) {
             return emailNode;
         }
-        const tableMeasures = this.processThrough(
-            "table_measures_processors",
-            this.extractTableInfo(emailNode),
-            emailNode
-        );
+        const tableMeasures = this.extractTableInfo(emailNode);
         return this.fillMosaicContainer(emailNode, tableMeasures);
     }
     // TODO EGGMAIL:
@@ -385,7 +447,7 @@ export class MosaicStrategyPlugin extends Plugin {
         // deduce empty cell by the presence/absence of emailNode
         // // need to appendchild said emailNode
         // needs verticalAlign
-        const { widthRatio, emailNode, rowspan, colspan } = cellMeasure;
+        const { widthRatio, emailNode, rowspan, colspan, styleInfo } = cellMeasure;
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
         const attributes = { width: `${widthRatio}%`, rowspan, colspan };
@@ -394,7 +456,7 @@ export class MosaicStrategyPlugin extends Plugin {
             attributes.valign = verticalAlign;
         }
         const defaultOptions = {
-            style: StyleInfo.from(style).merge(contextStyleInfo),
+            style: StyleInfo.from(style).merge(contextStyleInfo).merge(styleInfo),
             attributes,
         };
         const options = this.processThrough(

@@ -140,6 +140,7 @@ export class SpacingPlugin extends Plugin {
                 styleInfo.getPropertyValue("margin-right") === "auto")
         ) {
             const styleInfo = emailNode.layout.getRef().styleInfo;
+            // TODO EGGMAIL: need MSO fallback?s
             styleInfo.setProperty("display", "inline-block");
             this.ensureResponsiveElementWidth(styleInfo, referenceNode);
         }
