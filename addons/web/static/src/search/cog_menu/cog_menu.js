@@ -1,4 +1,4 @@
-import { onWillStart, onWillUpdateProps, t } from "@odoo/owl";
+import { asyncComputed, onWillStart, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -43,12 +43,8 @@ export class CogMenu extends ActionMenus {
     setup() {
         super.setup();
         this.uiService = useService("ui");
-        onWillStart(async () => {
-            this.registryItems = await this._registryItems();
-        });
-        onWillUpdateProps(async () => {
-            this.registryItems = await this._registryItems();
-        });
+        this.registryItems = asyncComputed(async () => this._registryItems(), { initial: [] });
+        onWillStart(() => this.registryItems.currentPromise());
     }
 
     get hasItems() {
@@ -75,7 +71,7 @@ export class CogMenu extends ActionMenus {
     }
 
     get cogItems() {
-        return [...this.registryItems, ...this.actionItems].sort(
+        return [...this.registryItems(), ...this.actionItems].sort(
             (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0)
         );
     }
