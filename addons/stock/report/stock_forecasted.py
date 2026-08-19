@@ -129,7 +129,26 @@ class StockForecasted(models.AbstractModel):
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 
+    def _prepare_forecast_availability_line(self, quantity, move_out, move_in, replenishment_filled, product=False):
+        """Report line holding only the values needed to compute an availability.
+
+        Everything a full line adds for display purposes (source documents, display
+        names, formatted dates, reservation data) is left out.
+        """
+        product = product or move_out.product_id
+        return {
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+            'replenishment_filled': replenishment_filled,
+            'move_out': move_out,
+            'move_in': move_in,
+        }
+
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+        wanted_out_ids = self.env.context.get('forecast_availability_move_ids')
+        if wanted_out_ids is not None:
+            if move_out and move_out.id in wanted_out_ids:
+                return self._prepare_forecast_availability_line(quantity, move_out, move_in, replenishment_filled, product)
+            return {}
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
 
@@ -421,6 +440,8 @@ class StockForecasted(models.AbstractModel):
                 if float_is_zero(in_data['qty'], precision_rounding=product_rounding):
                     continue
                 lines.append(self._prepare_report_line(in_data['qty'], move_in=in_data['move'], read=read))
+        if self.env.context.get('forecast_availability_move_ids') is not None:
+            lines = [line for line in lines if line]
         return lines
 
     @api.model
