@@ -52,7 +52,7 @@ class PrinterDriver(PrinterDriverBase):
                 win32print.WritePrinter(self.printer_handle, data)
                 win32print.EndPagePrinter(self.printer_handle)
                 win32print.EndDocPrinter(self.printer_handle)
-                self.job_ids.append(job_id)
+                self.job_ids.add(job_id)
                 self.job_session_ids[job_id] = session_id
                 if action_unique_id:
                     self.job_action_ids[job_id] = action_unique_id
@@ -65,7 +65,7 @@ class PrinterDriver(PrinterDriverBase):
                             win32print.EndPagePrinter(self.printer_handle)
                         if job_id:
                             win32print.EndDocPrinter(self.printer_handle)
-                            self.job_ids.append(job_id)
+                            self.job_ids.add(job_id)
                             self.job_session_ids[job_id] = session_id
                             if action_unique_id:
                                 self.job_action_ids[job_id] = action_unique_id
@@ -132,11 +132,7 @@ class PrinterDriver(PrinterDriverBase):
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)
         win32print.SetJob(self.printer_handle, job_id, 0, None, win32print.JOB_CONTROL_DELETE)
-        self.send_status(
-            status="error", message=error_message,
-            action_unique_id=self.job_action_ids.pop(job_id, None),
-            session_id=self.job_session_ids.pop(job_id, None),
-        )
+        self.send_status(status="error", message=error_message, job_id=job_id)
 
     def _check_job_status(self, job_id):
         try:
@@ -145,8 +141,7 @@ class PrinterDriver(PrinterDriverBase):
             _logger.debug('job details for job id #%d: %s', job_id, job)
             if job['Status'] & win32print.JOB_STATUS_PRINTED:
                 self.job_ids.remove(job_id)
-                self.job_action_ids.pop(job_id, None)
-                self.send_status(status="success", session_id=self.job_session_ids.pop(job_id, None))
+                self.send_status(status="success", job_id=job_id)
             # Print timeout, e.g. network printer is disconnected
             if elapsed_time.seconds > self.job_timeout_seconds:
                 self._cancel_job_with_error(job_id, 'ERROR_TIMEOUT')
@@ -157,10 +152,9 @@ class PrinterDriver(PrinterDriverBase):
             # GetJob returns error 87 (incorrect parameter) if the print job doesn't exist.
             # Windows deletes print jobs on completion, so this actually means the print
             # was succcessful.
-            session_id = self.job_session_ids.pop(job_id, None)
             if error.winerror == 87:
-                self.send_status(status="success", session_id=session_id)
+                self.send_status(status="success", job_id=job_id)
             else:
                 _logger.exception('Win32 error occurred while querying print job')
-            self.job_ids.remove(job_id)
-            self._recent_action_ids.pop(self.job_action_ids.pop(job_id, None), None)
+                self.send_status(status="error", job_id=job_id)
+            self.job_ids.discard(job_id)

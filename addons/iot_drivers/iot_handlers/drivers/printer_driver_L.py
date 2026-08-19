@@ -2,7 +2,7 @@
 
 from base64 import b64decode
 from threading import Lock
-from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO, Connection
+from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, IPP_JOB_CANCELED, CUPS_FORMAT_AUTO, Connection
 import logging
 import netifaces as ni
 import time
@@ -66,7 +66,7 @@ class PrinterDriver(PrinterDriverBase):
                 self.conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
                 self.conn.writeRequestData(data, len(data))
                 self.conn.finishDocument(self.device_identifier)
-            self.job_ids.append(job_id)
+            self.job_ids.add(job_id)
             self.job_session_ids[job_id] = session_id
             if action_unique_id:
                 self.job_action_ids[job_id] = action_unique_id
@@ -226,11 +226,7 @@ class PrinterDriver(PrinterDriverBase):
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)
         self.conn.cancelJob(job_id)
-        self.send_status(
-            status='error', message=error_message,
-            action_unique_id=self.job_action_ids.pop(job_id, None),
-            session_id=self.job_session_ids.pop(job_id, None),
-        )
+        self.send_status(status='error', message=error_message, job_id=job_id)
 
     def _check_job_status(self, job_id):
         try:
@@ -240,19 +236,21 @@ class PrinterDriver(PrinterDriverBase):
                 job_state = job['job-state']
                 if job_state == IPP_JOB_COMPLETED:
                     self.job_ids.remove(job_id)
-                    self.job_action_ids.pop(job_id, None)
-                    self.send_status(status="success", session_id=self.job_session_ids.pop(job_id, None))
+                    self.send_status(status="success", job_id=job_id)
                 # Generic timeout, e.g. USB printer has been unplugged
                 elif job['time-at-creation'] + self.job_timeout_seconds < time.time():
                     self._cancel_job_with_error(job_id, 'ERROR_TIMEOUT')
                 # Cannot reach network printer
                 elif job_state == IPP_JOB_PROCESSING and 'printer is unreachable' in job.get('job-printer-state-message', ''):
                     self._cancel_job_with_error(job_id, 'ERROR_UNREACHABLE')
+                # Already cancelled
+                elif job_state == IPP_JOB_CANCELED:
+                    self.job_ids.remove(job_id)
+                    self.send_status(status='error', message='ERROR_UNKNOWN', job_id=job_id)
                 # Any other failure state
                 elif job_state not in [IPP_JOB_PROCESSING, IPP_JOB_PENDING]:
                     self._cancel_job_with_error(job_id, 'ERROR_UNKNOWN')
         except IPPError:
             _logger.exception('IPP error occurred while fetching CUPS jobs')
-            self.job_ids.remove(job_id)
-            self.job_session_ids.pop(job_id, None)
-            self._recent_action_ids.pop(self.job_action_ids.pop(job_id, None), None)
+            self.job_ids.discard(job_id)
+            self.send_status(status='error', message='ERROR_UNKNOWN', job_id=job_id)
