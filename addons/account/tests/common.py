@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, Command
+from odoo import api, fields, Command
 from odoo.models import BaseModel
 from odoo.tests import HttpCase, new_test_user, tagged, save_test_file
 from odoo.tools import BinaryValue, config, file_path, file_open
@@ -1676,6 +1676,7 @@ class AccountTestMockOnlineSyncCommon(HttpCase):
     @classmethod
     @contextmanager
     def mock_online_sync_favorite_institutions(cls):
+        @api.model
         def get_institutions(*args, **kwargs):
             return [
                 {
