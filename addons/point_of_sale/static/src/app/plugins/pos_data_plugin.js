@@ -45,6 +45,7 @@ export class PosDataPlugin extends Plugin {
         this.mutex = markRaw(new Mutex());
         this.indexedDBMutex = markRaw(new Mutex());
         this.opts = new DataServiceOptions();
+        this.executionCtxCallbacks = [];
         this.debouncedSynchronizeLocalDataInIndexedDB = debounce(
             this.synchronizeLocalDataInIndexedDB.bind(this),
             300
@@ -633,6 +634,20 @@ export class PosDataPlugin extends Plugin {
         }
     }
 
+    /**
+     * Register a callback returning extra context sent with every server call
+     * made through `execute`. Used by modules to add their own information,
+     * e.g. pos_hr adds `current_cashier_id`.
+     * @param {() => Object} callback
+     */
+    registerExecutionContext(callback) {
+        this.executionCtxCallbacks.push(callback);
+    }
+
+    getExecutionContext(context = {}) {
+        return Object.assign({}, ...this.executionCtxCallbacks.map((cb) => cb()), context);
+    }
+
     async execute({
         type,
         model,
@@ -653,6 +668,10 @@ export class PosDataPlugin extends Plugin {
                 throw new ConnectionLostError();
             }
 
+            const context = this.getExecutionContext({ ...options.context, ...kwargs.context });
+
+            const writeContext = { device_identifier: this.device.identifier, ...context };
+
             let result = true;
             let limitedFields = false;
             if (fields.length === 0) {
@@ -668,22 +687,19 @@ export class PosDataPlugin extends Plugin {
 
             switch (type) {
                 case "write":
-                    result = await this.orm.write(model, ids, values, {
-                        context: { device_identifier: this.device.identifier },
-                    });
+                    result = await this.orm.write(model, ids, values, { context: writeContext });
                     break;
                 case "delete":
-                    result = await this.orm.unlink(model, ids, {
-                        context: { device_identifier: this.device.identifier },
-                    });
+                    result = await this.orm.unlink(model, ids, { context: writeContext });
                     break;
                 case "call":
-                    result = await this.orm.call(model, method, args, kwargs);
+                    result = await this.orm.call(model, method, args, { ...kwargs, context });
                     break;
                 case "read":
                     queue = false;
                     result = await this.orm.read(model, ids, fields, {
                         ...options,
+                        context,
                         load: false,
                     });
                     break;
@@ -691,14 +707,13 @@ export class PosDataPlugin extends Plugin {
                     queue = false;
                     result = await this.orm.searchRead(model, args, fields, {
                         ...options,
+                        context,
                         load: false,
                     });
             }
 
             if (type === "create") {
-                const response = await this.orm.create(model, values, {
-                    context: { device_identifier: this.device.identifier },
-                });
+                const response = await this.orm.create(model, values, { context: writeContext });
                 values[0].id = response[0];
                 result = values;
             }
