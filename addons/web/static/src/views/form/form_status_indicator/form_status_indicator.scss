@@ -1,0 +1,12 @@
+// Fades in, holds, then fades out. The span is unmounted at the end of the very
+// same delay, so the exit needs no mechanism of its own — keep this duration in
+// step with `FEEDBACK_DURATION`.
+@keyframes o-form-feedbackFade {
+    from { opacity: 0; }
+    8%, 80% { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.o_form_status_indicator_feedback {
+    animation: o-form-feedbackFade 2s ease-out;
+}

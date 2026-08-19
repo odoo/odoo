@@ -1,5 +1,10 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, status, t, useProps } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { useBus } from "@web/core/utils/hooks";
+
+/** Kept in step with the fade timed by `form_status_indicator.scss`. */
+const FEEDBACK_DURATION = 2000;
 
 export function useStatusIndicator(model, actions = {}) {
     const _fieldIsDirty = proxy({ value: false });
@@ -31,6 +36,24 @@ export class FormStatusIndicator extends Component {
         discard: t.function(),
     });
 
+    setup() {
+        this.state = proxy({ feedback: undefined });
+        onWillUnmount(() => browser.clearTimeout(this.feedbackTimeout));
+    }
+
+    showFeedback(text, icon, className) {
+        // Discarding a new record navigates back, which destroys this one.
+        if (status(this) !== "mounted") {
+            return;
+        }
+        browser.clearTimeout(this.feedbackTimeout);
+        this.state.feedback = { text, icon, className };
+        this.feedbackTimeout = browser.setTimeout(
+            () => (this.state.feedback = undefined),
+            FEEDBACK_DURATION
+        );
+    }
+
     get displayButtons() {
         return this.indicatorMode !== "saved";
     }
@@ -45,8 +68,14 @@ export class FormStatusIndicator extends Component {
 
     async discard() {
         await this.props.discard();
+        this.showFeedback(_t("Discarded"), "close", "text-muted");
     }
     async save() {
-        await this.props.save();
+        // Only once it really went through: a failed or aborted save must not
+        // claim otherwise. Discarding has no such outcome to check.
+        if (!(await this.props.save())) {
+            return;
+        }
+        this.showFeedback(_t("Saved"), "check", "text-success");
     }
 }
