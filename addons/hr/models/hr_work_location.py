@@ -19,7 +19,13 @@ class HrWorkLocation(models.Model):
         ('office', 'Office'),
         ('other', 'Other')], string='Location Type', default='office', required=True)
     icon = fields.Char(compute='_compute_icon')
-    address_id = fields.Many2one('res.partner', string="Work Address", check_company=True)
+    address_id = fields.Many2one(
+        "res.partner",
+        string="Work Address",
+        check_company=True,
+        default=lambda self: self.env.company.partner_id,
+        index="btree_not_null",
+    )
     location_number = fields.Char()
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     country_code = fields.Char(related='company_id.country_id.code', depends=['company_id'])
