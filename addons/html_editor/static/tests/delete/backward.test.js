@@ -2212,11 +2212,11 @@ describe("Selection not collapsed", () => {
             ),
             contentBeforeEdit: unformat(
                 `[<p data-selection-placeholder=""><br></p>
-                <table class="o_selected_table"><tbody>
+                <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
-                </tbody></table>
-                <p data-selection-placeholder=""><br></p>`
+                </tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             ),
             stepFunction: deleteBackward,
             contentAfter: unformat("<p>[]<br></p>"),
@@ -2588,26 +2588,26 @@ describe("Selection not collapsed", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr><td><br></td><td>[]<br></td><td><br></td></tr>
                             <tr><td>a</td><td>b</td><td>c</td></tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             await swiftkeyBackspace(editor);
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr><td><br></td><td>[]<br></td><td><br></td></tr>
                             <tr><td>a</td><td>b</td><td>c</td></tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             await tick(); // Wait for the release of the Android Chrome selection change hack, see "onAndroidChromeSelectionChange".
@@ -2622,26 +2622,26 @@ describe("Selection not collapsed", () => {
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table class="o_selected_table">
+                    <div class="o_table_wrapper"><table class="o_selected_table">
                         <tbody>
                             <tr><td><br></td><td><br></td><td><br></td></tr>
                             <tr><td>a</td><td class="o_selected_td">[b</td><td class="o_selected_td">c]</td></tr>
                         </tbody>
-                    </table>
-                    <p data-selection-placeholder=""><br></p>
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
             await swiftkeyBackspace(editor);
             expect(getContent(el)).toBe(
                 unformat(`
                     <p data-selection-placeholder=""><br></p>
-                    <table>
+                    <div class="o_table_wrapper"><table>
                         <tbody>
                             <tr><td><br></td><td><br></td><td><br></td></tr>
                             <tr><td>a</td><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr>
-                            </tbody>
-                        </table>
-                    <p data-selection-placeholder=""><br></p>
+                        </tbody>
+                    </table></div>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `)
             );
         });
