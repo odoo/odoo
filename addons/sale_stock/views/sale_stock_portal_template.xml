@@ -94,48 +94,4 @@
         </div>
     </template>
 
-    <template
-        id="sale_stock.portal_my_orders"
-        name="Portal Orders Shipping Status Column"
-        inherit_id="sale.portal_my_orders"
-    >
-        <th name="order_total" position="before">
-            <th class="text-end" name="order_delivery">Shipping Status</th>
-        </th>
-        <td name="order_amount_total" position="before">
-            <td class="text-end" name="order_delivery_status">
-                <span
-                    t-if="order.delivery_status == 'pending'"
-                    class="badge rounded-pill text-bg-warning"
-                >
-                    Not Delivered
-                </span>
-                <span
-                    t-elif="order.delivery_status == 'started'"
-                    class="badge rounded-pill text-bg-primary"
-                >
-                    Started
-                </span>
-                <span
-                    t-elif="order.delivery_status == 'partial'"
-                    class="badge rounded-pill text-bg-info"
-                >
-                    Partially Delivered
-                </span>
-                <span
-                    t-elif="order.delivery_status == 'full'"
-                    class="badge rounded-pill text-bg-success"
-                >
-                    Delivered
-                </span>
-                <span
-                    t-else=""
-                    class="badge rounded-pill text-bg-danger"
-                >
-                    Not Available
-                </span>
-            </td>
-        </td>
-    </template>
-
 </odoo>
