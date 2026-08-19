@@ -769,6 +769,12 @@ class AccountMove(models.Model):
             for line in self.invoice_line_ids
         )
 
+    def _l10n_tr_nilvera_einvoice_check_lines_missing_taxes(self):
+        return any(
+            line.display_type == 'product' and not line.tax_ids
+            for line in self.invoice_line_ids
+        )
+
     def _get_partner_l10n_tr_nilvera_customer_alias_name(self):
         # Allows overriding the default customer alias with a custom one.
         self.ensure_one()
