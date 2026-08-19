@@ -135,7 +135,7 @@ class IrProfile(models.Model):
             if (params['frames_profile'] or params['combined_profile'] or params['memory_profile']) and profile.traces_async:
                 sp.add(f'frames {profile.id}', json.loads(profile.traces_async))
             if params['profile_aggregation_mode'] == 'tabs':
-                profile._add_outputs(sp, f'{profile.id} {profile.name}' if len(self) > 1 else '', params)
+                profile._add_outputs(sp, f'{profile.id} {profile.name}', params)
 
         if params['profile_aggregation_mode'] == 'temporal':
             self._add_outputs(sp, 'all', params)
