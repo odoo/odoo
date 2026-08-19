@@ -4,7 +4,6 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons";
-import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -429,11 +428,14 @@ export class ToggleControllersAction extends BuilderAction {
 }
 export class ToggleCardImgAction extends BuilderAction {
     static id = "toggleCardImg";
+    static dependencies = ["websiteBridge"];
     apply({ editingElement }) {
         const carouselEl = editingElement.closest(".carousel");
         const cardEls = carouselEl.querySelectorAll(".card");
         for (const cardEl of cardEls) {
-            const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
+            const imageWrapperEl = this.dependencies.websiteBridge.renderToElement(
+                "website.s_carousel_cards.imageWrapper"
+            );
             cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
         }
     }
