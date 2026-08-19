@@ -3937,3 +3937,66 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         svl2 = receipt02.move_ids.stock_valuation_layer_ids
         self.assertEqual(
             svl1.unit_cost, svl2.unit_cost)
+
+    def test_currency_exchange_rate_with_purchase_receipt_return(self):
+        """Test the currency exchange rate with a purchase receipt return.
+
+        The return account move should use the same currency rate as the origin move to prevent the creation
+        of an unexpected 'Currency exchange rate difference' account move.
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env.ref('base.EUR').active = True
+        euro_id = self.env.ref('base.EUR').id
+
+        today = fields.Date.today()
+        receipt_date = today - timedelta(days=15)
+        return_date = today - timedelta(days=10)
+
+        self.env['res.currency.rate'].create([
+            {'currency_id': euro_id, 'rate': 0.99, 'name': receipt_date, 'company_id': self.env.company.id},
+            {'currency_id': euro_id, 'rate': 0.98, 'name': return_date, 'company_id': self.env.company.id},
+        ])
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': euro_id,
+            'order_line': [Command.create({
+                'product_id': self.product1.id,
+                'product_qty': 10,
+                'price_unit': 10000.0,
+                'taxes_id': False,
+            })],
+        })
+        purchase_order.button_confirm()
+
+        receipt = purchase_order.picking_ids
+        receipt.move_ids.quantity = 10
+        with freeze_time(receipt_date):
+            receipt.button_validate()
+
+        with freeze_time(return_date):
+            self._return(receipt, 10)
+
+        # Check currency rate exchange & accounts balances / amount currency
+        stock_amls = self.env['account.move.line'].search(
+            [('account_id', '=', self.stock_valuation_account.id)], order='id'
+        )
+        self.assertRecordValues(stock_amls, [
+            # Receipt line
+            {'balance': 101010.1, 'amount_currency': 100000.0, 'product_id': self.product1.id},
+            # Return line
+            {'balance': -101010.1, 'amount_currency': -100000.0, 'product_id': self.product1.id},
+        ])
+
+        input_amls = self.env['account.move.line'].search(
+            [('account_id', '=', self.stock_input_account.id)], order='id'
+        )
+        self.assertRecordValues(input_amls, [
+            # Receipt line, is correct
+            {'balance': -101010.1, 'amount_currency': -100000.0, 'product_id': self.product1.id},
+            # Return line, should be correct?
+            {'balance': 101010.1, 'amount_currency': 100000.0, 'product_id': self.product1.id},
+        ])
