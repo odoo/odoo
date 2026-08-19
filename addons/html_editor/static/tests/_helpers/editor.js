@@ -18,6 +18,7 @@ export const Direction = {
 const defaultTestConfig = {
     debouncePowerbuttons: false,
     debounceHints: false,
+    allowTableWrapper: false,
 };
 
 // A generic base64 image for testing

@@ -244,6 +244,7 @@ export class TableResizePlugin extends Plugin {
                 break;
             }
         }
+        this.dependencies.table.updateTableWrapper(table);
     }
 
     /**

@@ -114,3 +114,62 @@ export function getSelectedCellsMergeInfo(editableDocument, tableGrid, targetCel
 
     return { canMerge: false, canUnmerge: containsMergedCell, cells: selectedTds, spanType: "" };
 }
+
+// Class of the scroll container wrapping tables too wide for their parent.
+export const TABLE_WRAPPER_CLASS = "o_table_wrapper";
+export const TABLE_WRAPPER_SELECTOR = `.${TABLE_WRAPPER_CLASS}`;
+
+/**
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isTableWrapper(node) {
+    return !!node?.classList?.contains(TABLE_WRAPPER_CLASS);
+}
+
+/**
+ * Get the wrapper of the table the given node belongs to, if it has one.
+ *
+ * @param {Node} node A wrapper, a table, or any node inside a table.
+ * @returns {HTMLDivElement|null}
+ */
+export function getTableWrapper(node) {
+    if (isTableWrapper(node)) {
+        return node;
+    }
+    // A wrapper only ever wraps its direct child: looking further up would
+    // return the wrapper of an ancestor table for a nested one.
+    const table = closestElement(node, "table");
+    return isTableWrapper(table?.parentElement) ? table.parentElement : null;
+}
+
+/**
+ * Get the element standing for the given table in the block flow, its wrapper
+ * if it has one, the table itself otherwise. Use it over the table to reach
+ * its siblings, or to insert/remove content around it.
+ *
+ * @param {Node} node A wrapper, a table, or any node inside a table.
+ * @returns {HTMLElement|null}
+ */
+export function getTableRoot(node) {
+    return getTableWrapper(node) ?? closestElement(node, "table");
+}
+
+/**
+ * Whether the given table is wider than the space left to it by its container,
+ * i.e. whether it needs a wrapper to be scrolled into view.
+ *
+ * @param {HTMLTableElement} table
+ * @returns {boolean}
+ */
+export function isTableOverflowing(table) {
+    const container = getTableRoot(table)?.parentElement;
+    if (!container) {
+        return false;
+    }
+    const { paddingLeft, paddingRight } =
+        container.ownerDocument.defaultView.getComputedStyle(container);
+    const availableWidth =
+        container.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight);
+    return table.offsetWidth > availableWidth;
+}

@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { removeClass, removeStyle } from "@html_editor/utils/dom";
+import { removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -23,7 +23,17 @@ import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
-import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/table";
+import {
+    TABLE_WRAPPER_CLASS,
+    TABLE_WRAPPER_SELECTOR,
+    getColumnIndex,
+    getRowIndex,
+    getTableCells,
+    getTableRoot,
+    getTableWrapper,
+    isTableOverflowing,
+    isTableWrapper,
+} from "@html_editor/utils/table";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -84,6 +94,9 @@ export class TablePlugin extends Plugin {
         "split",
         "color",
     ];
+    static defaultConfig = {
+        allowTableWrapper: true,
+    };
     static shared = [
         "insertTable",
         "addColumn",
@@ -103,6 +116,7 @@ export class TablePlugin extends Plugin {
         "mergeSelectedCells",
         "unmergeSelectedCell",
         "buildTableGrid",
+        "updateTableWrapper",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -132,6 +146,14 @@ export class TablePlugin extends Plugin {
         ),
 
         /** Handlers */
+        on_layout_geometry_change_handlers: () => {
+            // Layout changes coming from outside of the editor (a chatter
+            // loading, a window resize, ...) are not reported by any
+            // content mutation, nothing else would notice them.
+            for (const table of this.editable.querySelectorAll(".o_table")) {
+                this.updateTableWrapper(table);
+            }
+        },
         on_selectionchange_handlers: withSequence(5, this.updateSelectionTable.bind(this)),
         on_will_break_line_handlers: this.resetTableSelection.bind(this),
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
@@ -176,12 +198,12 @@ export class TablePlugin extends Plugin {
             }
         },
         is_selection_blocker_predicates: (node) => {
-            if (node.nodeName === "TABLE") {
+            if (node.nodeName === "TABLE" || isTableWrapper(node)) {
                 return true;
             }
         },
         can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "TABLE") {
+            if (container.nodeName === "TABLE" || isTableWrapper(container)) {
                 return false;
             } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
                 return true;
@@ -189,7 +211,7 @@ export class TablePlugin extends Plugin {
         },
 
         /** Selectors */
-        move_node_whitelist_selectors: "table",
+        move_node_whitelist_selectors: `${TABLE_WRAPPER_SELECTOR}, :not(${TABLE_WRAPPER_SELECTOR}) > table`,
     };
 
     setup() {
@@ -219,6 +241,45 @@ export class TablePlugin extends Plugin {
         this.onMousemove = this.onMousemove.bind(this);
 
         this.normalizeTableStructure(this.editable);
+    }
+
+    /**
+     * Keeps the wrapper of the given table in sync with its width: a table
+     * overflowing the space available to it gets wrapped in a scroll
+     * container, a table fitting in it gets unwrapped.
+     *
+     * The wrapper is a rendering helper: it is derived from the width available
+     * at that moment, and keeping it out of the history altogether is what
+     * allows it to follow the layout at any time, without ending up in the
+     * middle of a step or being replayed against a DOM it no longer matches.
+     *
+     * @param {HTMLTableElement} table
+     */
+    updateTableWrapper(table) {
+        if (
+            !this.config.allowTableWrapper ||
+            !table?.classList.contains("o_table") ||
+            closestElement(table, isTableCell)
+        ) {
+            return;
+        }
+        const wrapper = getTableWrapper(table);
+        const needsWrapper = isTableOverflowing(table);
+        if (needsWrapper === !!wrapper) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        this.dependencies.history.ignoreDOMMutations(() => {
+            if (needsWrapper) {
+                const tableWrapper = this.document.createElement("div");
+                tableWrapper.className = TABLE_WRAPPER_CLASS;
+                table.before(tableWrapper);
+                tableWrapper.append(table);
+            } else {
+                unwrapContents(wrapper);
+            }
+        });
+        cursors.restore();
     }
 
     handlePasteTableIntoExistingTable(selection, clipboardRoot) {
@@ -356,6 +417,7 @@ export class TablePlugin extends Plugin {
     normalizeTable(root) {
         const tables = root.querySelectorAll("table");
         for (const table of tables) {
+            this.updateTableWrapper(table);
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
@@ -925,8 +987,10 @@ export class TablePlugin extends Plugin {
             return;
         }
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        table.before(baseContainer);
-        table.remove();
+        // Remove the wrapper along with the table, if it has one.
+        const tableRoot = getTableRoot(table);
+        tableRoot.before(baseContainer);
+        tableRoot.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
     }
 
@@ -1086,11 +1150,11 @@ export class TablePlugin extends Plugin {
         // Expand range to fully include tables.
         const firstTable = fullySelectedTables[0];
         if (firstTable.contains(startContainer)) {
-            [startContainer, startOffset] = leftPos(firstTable);
+            [startContainer, startOffset] = leftPos(getTableRoot(firstTable));
         }
         const lastTable = fullySelectedTables.at(-1);
         if (lastTable.contains(endContainer)) {
-            [endContainer, endOffset] = rightPos(lastTable);
+            [endContainer, endOffset] = rightPos(getTableRoot(lastTable));
         }
         range = { startContainer, startOffset, endContainer, endOffset };
 
@@ -1251,9 +1315,9 @@ export class TablePlugin extends Plugin {
                     ["ArrowRight", "ArrowDown"].includes(ev.key) && direction === DIRECTIONS.LEFT;
                 let targetNode;
                 if (deselectingBackward) {
-                    targetNode = endTable.previousElementSibling;
+                    targetNode = getTableRoot(endTable).previousElementSibling;
                 } else if (deselectingForward) {
-                    targetNode = endTable.nextElementSibling;
+                    targetNode = getTableRoot(endTable).nextElementSibling;
                 }
                 if (targetNode) {
                     ev.preventDefault();
@@ -1654,8 +1718,8 @@ export class TablePlugin extends Plugin {
         const rowOffset = currentRowIndex + (isArrowUp ? -1 : currentCell.rowSpan);
         let targetNode = tableGrid[rowOffset]?.[currentColIndex];
         const siblingElement = isArrowUp
-            ? currentTable.previousElementSibling
-            : currentTable.nextElementSibling;
+            ? getTableRoot(currentTable).previousElementSibling
+            : getTableRoot(currentTable).nextElementSibling;
         if (!targetNode && siblingElement) {
             // If no target cell is available, navigate to sibling element
             targetNode = siblingElement;

@@ -3,6 +3,14 @@ th.o_table_header {
     font-weight: 900;
 }
 
+.o_table_wrapper {
+    overflow-x: auto;
+    margin-bottom: $spacer;
+    .o_table {
+        margin-bottom: 0;
+    }
+}
+
 .o_table {
     th, td {
         > *:last-child {

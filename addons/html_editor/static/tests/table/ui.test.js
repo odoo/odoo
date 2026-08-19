@@ -251,6 +251,121 @@ test("should stop resize after table removal", async () => {
     expect(el).not.toHaveClass("o_col_resize");
 });
 
+test("should wrap the table in a scroll container when resized beyond the available width", async () => {
+    const content = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td>
+                        <p>[]<br></p>
+                    </td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td class="lastCell"><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    const { el } = await setupEditor(content, {
+        config: { allowTableWrapper: true },
+    });
+
+    await expectElementCount(".o_table_wrapper", 0);
+
+    // Resize the last column so that the table ends up wider than the space
+    // available to it, whatever that space is on the current device.
+    const table = el.querySelector("table");
+    const { paddingLeft, paddingRight } = getComputedStyle(el);
+    const availableWidth = el.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight);
+    const delta = availableWidth - table.getBoundingClientRect().width + 50;
+
+    const lastCell = el.querySelector(".lastCell");
+    const cellRect = lastCell.getBoundingClientRect();
+    const clientX = cellRect.right;
+    const clientY = cellRect.top + cellRect.height / 2;
+
+    // Simulate mousedown at the right border of last cell.
+    await manuallyDispatchProgrammaticEvent(lastCell, "mousedown", {
+        button: 0,
+        clientX,
+        clientY,
+    });
+
+    // Simulate mousemove.
+    manuallyDispatchProgrammaticEvent(lastCell, "mousemove", {
+        clientX: clientX + delta,
+        clientY,
+    });
+    manuallyDispatchProgrammaticEvent(lastCell, "mouseup", {
+        button: 0,
+        clientX: clientX + delta,
+        clientY,
+    });
+
+    expect(table.getBoundingClientRect().width).toBeGreaterThan(availableWidth);
+    await expectElementCount(".o_table_wrapper", 1);
+});
+
+test("should unwrap the table when resized back within the available width", async () => {
+    // 120%: wide enough to need a wrapper
+    const content = unformat(`
+        <table class="table table-bordered o_table" style="width: 120%">
+            <tbody>
+                <tr>
+                    <td>
+                        <p>[]<br></p>
+                    </td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td class="lastCell"><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    const { el } = await setupEditor(content, {
+        config: { allowTableWrapper: true },
+    });
+
+    await expectElementCount(".o_table_wrapper", 1);
+
+    // Resize the last column so that the table ends up narrower than the space
+    // available to it, whatever that space is on the current device.
+    const table = el.querySelector("table");
+    const { paddingLeft, paddingRight } = getComputedStyle(el);
+    const availableWidth = el.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight);
+    const delta = availableWidth - table.getBoundingClientRect().width - 10;
+
+    const lastTd = el.querySelector(".lastCell");
+    const cellRect = lastTd.getBoundingClientRect();
+    const clientX = cellRect.right;
+    const clientY = cellRect.top + cellRect.height / 2;
+
+    // Simulate mousedown at the right border of last cell.
+    await manuallyDispatchProgrammaticEvent(lastTd, "mousedown", {
+        button: 0,
+        clientX,
+        clientY,
+    });
+
+    // Simulate mousemove.
+    manuallyDispatchProgrammaticEvent(lastTd, "mousemove", {
+        clientX: clientX + delta,
+        clientY,
+    });
+    manuallyDispatchProgrammaticEvent(lastTd, "mouseup", {
+        button: 0,
+        clientX: clientX + delta,
+        clientY,
+    });
+
+    expect(table.getBoundingClientRect().width).toBeLessThan(availableWidth);
+    await expectElementCount(".o_table_wrapper", 0);
+});
+
 test("should show the table UI menus when hovering a list inside a table cell", async () => {
     const { el } = await setupEditor(`
         <table>
