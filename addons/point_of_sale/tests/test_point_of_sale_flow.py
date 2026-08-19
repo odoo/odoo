@@ -1395,3 +1395,18 @@ class TestPointOfSaleFlow(CommonPosTest):
             f"Order name should contain 'POS-{current_year}', got: {order.name}")
         self.assertIn(f'-{current_month}', order.name,
             f"Order name should contain '-{current_month}', got: {order.name}")
+
+    def test_order_edit_logs(self):
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id, 'qty': 2, 'full_product_name': self.ten_dollars_no_tax.name},
+                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id, 'full_product_name': self.twenty_dollars_no_tax.name}
+            ],
+        })
+        order.lines[0].qty = 1
+        order.lines[1].unlink()
+        logged_messages = order.message_ids.mapped('body')
+        self.assertTrue(order.is_edited)
+        self.assertEqual(len(logged_messages), 2)
+        self.assertIn('Twenty dollars no tax: Deleted line (quantity: 1.0)', logged_messages[0])
+        self.assertIn('Ten dollars no tax: Ordered quantity: 2.0 → 1', logged_messages[1])

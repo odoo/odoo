@@ -423,17 +423,15 @@ class PosSession(models.Model):
         if statement:
             statement._compute_balance_end_real()
 
-        if self.config_id.order_edit_tracking:
-            edited_orders = self.get_session_orders().filtered(lambda o: o.is_edited)
-            if len(edited_orders) > 0:
-                order_links = Markup().join(
-                    Markup("<li>%s</li>") % order._get_html_link() for order in edited_orders
-                )
-                body = _(
-                    "Edited order(s) during the session:%s",
-                    Markup("<br/><ul>%s</ul>") % order_links,
-                )
-                self.message_post(body=body)
+        if edited_orders := self.get_session_orders().filtered(lambda o: o.is_edited):
+            order_links = Markup().join(
+                Markup("<li>%s</li>") % order._get_html_link() for order in edited_orders
+            )
+            body = _(
+                "Edited order(s) during the session:%s",
+                Markup("<br/><ul>%s</ul>") % order_links,
+            )
+            self.message_post(body=body)
 
         if self.env.user.email:
             self.post_close_register_message()

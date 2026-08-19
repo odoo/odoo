@@ -128,7 +128,6 @@ export class PosConfig extends models.ServerModel {
             note_ids: [],
             module_pos_sms: false,
             use_closing_entry_by_product: false,
-            order_edit_tracking: false,
             last_data_change: "2025-07-03 14:35:55",
             fallback_nomenclature_id: false,
             create_date: "2025-07-03 12:40:00",

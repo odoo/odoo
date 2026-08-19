@@ -122,10 +122,10 @@ class PosOrderLine(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if self.order_id.config_id.order_edit_tracking and vals.get('qty') is not None and vals.get('qty') < self.qty:
-            self.is_edited = True
+        if vals.get('qty') is not None and vals.get('qty') < self.qty:
+            vals['is_edited'] = True
             body = _("%(product_name)s: Ordered quantity: %(old_qty)s", product_name=self.full_product_name, old_qty=self.qty)
-            body += Markup("&rarr;") + str(vals.get('qty'))
+            body += Markup(" &rarr; ") + str(vals.get('qty'))
             for line in self:
                 line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
         return super().write(vals)
@@ -134,7 +134,7 @@ class PosOrderLine(models.Model):
     def _unlink_except_order_state(self):
         if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
             raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
-        for line in self.filtered(lambda line: line.order_id.config_id.order_edit_tracking):
+        for line in self:
             line.order_id.has_deleted_line = True
             body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
             line.order_id.message_post(body=line.order_id._prepare_pos_log(body))
