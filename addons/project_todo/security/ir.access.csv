@@ -1,8 +1,8 @@
 id,name,model_id,group_id/id,operation,domain
-access_project_task_type_user,project.task.type.user,project.task.type,base.group_user,r,
+access_project_task_type_user,project.task.type.user,project.task.type,base.group_user_regular,r,
 task_type_manager_rule,Project/Task Type: manager sees all,project.task.type,project.group_project_manager,crud,
-task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,base.group_user,cud,"[('user_id', '=', user.id)]"
-task_visibility_rule,Project/Task: employees: follow required for follower-only projects,project.task,base.group_user,r,"[
+task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,base.group_user_regular,cud,"[('user_id', '=', user.id)]"
+task_visibility_rule,Project/Task: employees: follow required for follower-only projects,project.task,base.group_user_regular,r,"[
             '|',
                 ('project_id', 'access', 'read'),
                 '|',
@@ -32,8 +32,8 @@ project_user_read_on_tasks_templates_without_project_rule,Project/Task: project 
 ir_rule_private_task,Project: See private tasks,project.task,project.group_project_user,r,"[
             ('project_id', 'access', 'read'),
         ]"
-task_edition_rule_internal,Project/Task: employees: Full access to own private task only,project.task,base.group_user,crud,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]"
-tags_user_rule,Project/tags employees: can see all,project.tags,base.group_user,r,
+task_edition_rule_internal,Project/Task: employees: Full access to own private task only,project.task,base.group_user_regular,crud,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]"
+tags_user_rule,Project/tags employees: can see all,project.tags,base.group_user_regular,r,
 tags_manager_rule,Project/tags: manager sees all,project.tags,project.group_project_manager,crud,
-tags_own_write_rule,Project/tags employees: Full access to own tags only,project.tags,base.group_user,cud,"[('create_uid', '=', user.id),('project_ids', '=', False)]"
-access_mail_activity_todo_create,mail.activity.todo.create,mail.activity.todo.create,base.group_user,cru,
+tags_own_write_rule,Project/tags employees: Full access to own tags only,project.tags,base.group_user_regular,cud,"[('create_uid', '=', user.id),('project_ids', '=', False)]"
+access_mail_activity_todo_create,mail.activity.todo.create,mail.activity.todo.create,base.group_user_regular,cru,
