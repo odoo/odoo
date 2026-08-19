@@ -286,6 +286,7 @@ MonetaryTotal = {
 
 OrderLineReference = {
     'cbc:LineID': {},
+    'cac:OrderReference': OrderReference,
 }
 
 PricingReference = {

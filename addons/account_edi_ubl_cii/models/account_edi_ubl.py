@@ -1177,6 +1177,7 @@ class AccountEdiUBL(models.AbstractModel):
         vals['document_node']['cac:InvoicePeriod'] = {}
 
     def _ubl_add_order_reference_node(self, vals):
+        """Add header-level OrderReference node."""
         order_ref_node = vals['document_node']['cac:OrderReference'] = {
             'cbc:ID': {'_text': None},
             'cbc:SalesOrderID': {
@@ -1186,25 +1187,62 @@ class AccountEdiUBL(models.AbstractModel):
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             invoice = vals['invoice']
+            level = self._get_order_reference_level(vals)
+            if level in ('default', 'header'):
+                # Purchase order reference
+                # An identifier of a referenced purchase order, issued by the Buyer.
+                # Suppose the following case:
+                # - Buyer does a RFQ to the Seller.
+                # - Seller confirms with a SO.
+                # - Buyer converts the RFQ to a PO.
+                # => There is no automatic tracking of this information.
+                # Instead, the user can encode this information on 'Customer Reference' a.k.a the 'ref' field.
+                # Since ID is required, the fallback is also fine and avoid to force the encoding of this
+                # manual information.
+                order_ref_node['cbc:ID']['_text'] = invoice.ref or invoice.name
+                if level == 'header':
+                    so_names = self._get_linked_sale_order_names(invoice)
+                    order_ref_node['cbc:SalesOrderID']['_text'] = next(iter(so_names))
 
-            # Purchase order reference
-            # An identifier of a referenced purchase order, issued by the Buyer.
-            # Suppose the following case:
-            # - Buyer does a RFQ to the Seller.
-            # - Seller confirms with a SO.
-            # - Buyer converts the RFQ to a PO.
-            # => There is no automatic tracking of this information.
-            # Instead, the user can encode this information on 'Customer Reference' a.k.a the 'ref' field.
-            # Since ID is required, the fallback is also fine and avoid to force the encoding of this
-            # manual information.
-            order_ref_node['cbc:ID']['_text'] = invoice.ref or invoice.name
+    def _get_linked_sale_order_names(self, invoice):
+        """Return the set of linked sales order names, or empty set if sale module is not installed."""
+        if not self.module_installed('sale') or not invoice:
+            return set()
+        return set(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
 
-            # Sales order reference
-            # An identifier of a referenced sales order issued by the Seller.
-            if self.module_installed('sale'):
-                so_names = set(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
-                if so_names:
-                    order_ref_node['cbc:SalesOrderID']['_text'] = ",".join(so_names)
+    def _get_order_reference_level(self, vals):
+        invoice = vals.get('invoice')
+        so_names = self._get_linked_sale_order_names(invoice)
+        if len(so_names) == 1:
+            return 'header'
+        if len(so_names) > 1:
+            return 'line'
+        return 'default'
+
+    def _ubl_add_line_order_reference_node(self, vals):
+        """Add line-level OrderLineReference when multiple SOs are linked to the invoice."""
+        level = self._get_order_reference_level(vals)
+        if level != 'line':
+            return
+
+        base_line = vals.get('base_line') or vals.get('line_vals', {}).get('base_line')
+        move_line = base_line.get('record')
+        if move_line and 'sale_line_ids' in move_line._fields and move_line.sale_line_ids:
+            sale_line = next(iter(move_line.sale_line_ids))
+            line_id = None
+            if 'x_studio_peppol_order_line_reference_id' in move_line._fields:
+                line_id = move_line.x_studio_peppol_order_line_reference_id
+            if not line_id:
+                line_id = str(sale_line.id)
+
+            sales_order_name = sale_line.order_id.name
+            vals['line_node']['cac:OrderLineReference'] = {
+                'cbc:LineID': {'_text': line_id},
+                'cac:OrderReference': {
+                    'cbc:ID': {'_text': sales_order_name},
+                    'cbc:SalesOrderID': {'_text': sales_order_name},
+                }
+            }
 
     def _ubl_add_billing_reference_nodes(self, vals):
         vals['document_node']['cac:BillingReference'] = []

@@ -276,6 +276,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']
+        so_names = self._get_linked_sale_order_names(invoice)
         document_node.update({
             'cbc:UBLVersionID': {'_text': '2.0'},
             'cbc:ID': {'_text': invoice.name},
@@ -288,8 +289,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'cbc:ID': {'_text': invoice.ref or invoice.name},
                 # OrderReference/SalesOrderID (sales_order_id) is optional
                 'cbc:SalesOrderID': {
-                    '_text': ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
-                } if 'sale_line_ids' in invoice.invoice_line_ids._fields else None,
+                    '_text': next(iter(so_names))
+                } if len(so_names) == 1 else None,
             }
         })
 
@@ -488,6 +489,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             self.add_invoice_line_optional_nodes(line_node, vals, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS)
         elif (vals['document_type'] == 'credit_note'):
             self.add_invoice_line_optional_nodes(line_node, vals, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS)
+        self._ubl_add_line_order_reference_node({**vals, 'line_node': line_node})
 
     def add_invoice_line_optional_nodes(self, line_node, vals, optional_line_fields):
         base_line = vals['base_line']
