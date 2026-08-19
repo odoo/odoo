@@ -11,14 +11,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, is_html_empty
-from odoo.tools.misc import clean_context, get_lang, groupby
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.misc import clean_context, format_date, groupby
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
 from .mail_message import MAX_COMODELS_FOR_DOMAIN, MAX_SEARCH_LIMIT, _find_allowed_doc_ids, exists_in_cache
-
-_logger = logging.getLogger(__name__)
-_lt = LazyTranslate(__name__)
 
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'user_id')
@@ -501,44 +497,60 @@ class MailActivity(models.Model):
         classified = self._classify_by_model()
         for model, activity_data in classified.items():
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
-            activity_data['record_ids'] = records_sudo.exists().ids  # in case record was cascade-deleted in DB, skipping unlink override
+            activity_data['record_ids'] = set(records_sudo.exists().ids)  # in case record was cascade-deleted in DB, skipping unlink override
 
-        for activity in self.filtered('res_model'):
-            if activity.res_id not in classified[activity.res_model]['record_ids']:
-                continue
-
-            if activity.user_id.lang:
+        to_notify = self.filtered(
+            lambda act: act.res_model and act.user_id and act.res_id in classified[act.res_model]['record_ids'])
+        prefetch_per_model = {res_model: activities.mapped('res_id')
+                              for res_model, activities in to_notify.grouped('res_model').items()}
+        act_per_notif = to_notify.grouped(lambda act: (act.user_id, act.res_model, act.res_id, act.create_uid))
+        for (user, res_model, res_id, user_author_id), activities in act_per_notif.items():
+            if user.lang:
                 # Send the notification in the assigned user's language
-                activity = activity.with_context(lang=activity.user_id.lang)
+                activities = activities.with_context(lang=user.lang)
 
-            model_description = activity.env['ir.model']._get(activity.res_model).display_name
-            body = activity.env['ir.qweb']._render(
+            model_description = activities.env['ir.model']._get(res_model).display_name
+            tpl_base_values = {'model_description': model_description, 'is_html_empty': is_html_empty,
+                               'author': user_author_id.partner_id}
+            subtitles = []
+            if len(activities) == 1:
+                subject = activities.env._('"%(activity_name)s: %(summary)s" assigned to you',
+                                           activity_name=activities.res_name,
+                                           summary=activities.summary or activities.activity_type_id.name or '')
+                if activities.activity_type_id.name:
+                    subtitles.append(activities.env._('Activity: %s', activities.activity_type_id.name))
+                else:
+                    subtitles.append(activities.env._('Activity: Todo'))
+            else:
+                activities = activities.sorted('date_deadline')
+                first_activity = activities[0]
+                subject = activities.env._(
+                    '%(count)s activities on "%(res_name)s" (%(model_description)s) assigned to you',
+                    count=len(activities), res_name=first_activity.res_name, model_description=model_description)
+                if first_activity.activity_type_id.name:
+                    subtitles.append(activities.env._('First Activity: %s', first_activity.activity_type_id.name))
+                else:
+                    subtitles.append(activities.env._('Activity: Todo'))
+            subtitles.append(
+                activities.env._('Deadline: %s', format_date(activities.env, activities[0].date_deadline)))
+            body = activities.env['ir.qweb']._render(
                 'mail.message_activity_assigned',
-                {
-                    'activity': activity,
-                    'model_description': model_description,
-                    'is_html_empty': is_html_empty,
-                },
-                minimal_qcontext=True
+                {'activities': activities, **tpl_base_values},
+                minimal_qcontext=True,
             )
-            record = activity.env[activity.res_model].browse(activity.res_id)
-            if activity.user_id:
-                record.with_context(
-                    email_notification_force_header=True,
-                    email_notification_force_footer=True,
-                ).message_notify(
-                    partner_ids=activity.user_id.partner_id.ids,
-                    body=body,
-                    model_description=model_description,
-                    email_layout_xmlid='mail.mail_notification_layout',
-                    subject=_('"%(activity_name)s: %(summary)s" assigned to you',
-                              activity_name=activity.res_name,
-                              summary=activity.summary or activity.activity_type_id.name or ''),
-                    subtitles=[
-                        _lt('Activity: %s', activity.activity_type_id.name) if activity.activity_type_id.name
-                        else _lt('Activity: Todo'),
-                        _lt('Deadline: %s', activity.date_deadline.strftime(get_lang(activity.env).date_format))],
-                )
+            record = self.env[res_model].browse(res_id).with_prefetch(prefetch_per_model[res_model])
+            record.with_context(
+                email_notification_force_header=True,
+                email_notification_force_footer=True,
+            ).message_notify(
+                # author_id not passed to let _message_compute_author resolve it
+                partner_ids=user.partner_id.ids,
+                body=body,
+                model_description=model_description,
+                email_layout_xmlid='mail.mail_notification_layout',
+                subject=subject,
+                subtitles=subtitles,
+            )
 
     def action_done(self):
         """ Wrapper without feedback because web button add context as

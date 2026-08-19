@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import html2plaintext
-from odoo.tools.misc import format_date
+from odoo.tools.misc import clean_context, format_date
 _logger = logging.getLogger(__name__)
 
 
@@ -335,6 +335,7 @@ class MailActivitySchedule(models.TransientModel):
         if not self.res_model:
             raise ValueError(_('Plan-based scheduling are available only on documents.'))
         applied_on = self._get_applied_on_records()
+        activities_vals_list = []
         for record in applied_on:
             body = _('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
             activity_descriptions = []
@@ -350,7 +351,7 @@ class MailActivitySchedule(models.TransientModel):
                 else:
                     role = self.env['res.role']
                 date_deadline = template._get_date_deadline(self.plan_date)
-                record.activity_schedule(
+                activities_vals_list.extend(record._activity_schedule_create_vals(
                     activity_type_id=template.activity_type_id.id,
                     activity_plan_id=template.plan_id.id,
                     automated=False,
@@ -360,7 +361,7 @@ class MailActivitySchedule(models.TransientModel):
                     user_id=responsible.id,
                     role_id=role.id,
                     activity_template_id=template.id,
-                )
+                ))
                 activity_descriptions.append(
                     _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
                       activity=template.summary or template.activity_type_id.name,
@@ -371,6 +372,7 @@ class MailActivitySchedule(models.TransientModel):
                     Markup().join(Markup('<li>%s</li>') % description for description in activity_descriptions)
                 )
             record.message_post(body=body)
+        self.env['mail.activity'].with_context(clean_context(self.env.context)).create(activities_vals_list)
 
         if len(applied_on) == 1:
             return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
