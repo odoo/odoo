@@ -20,10 +20,8 @@ export class MosaicStrategyPlugin extends Plugin {
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: this.processSyntheticEmailNodes.bind(this),
-        on_measure_ancestor_handlers: [
-            this.handleOverlappingBorders.bind(this),
-            this.handleOverlappingBackgroundColors.bind(this),
-        ],
+        on_measure_ancestor_handlers: this.handleOverlappingBorders.bind(this),
+        on_measure_cell_with_ancestors: this.handleOverlappingBackgroundColors.bind(this),
     };
 
     acceptTableStrategyReport(emailNode) {
@@ -270,7 +268,7 @@ export class MosaicStrategyPlugin extends Plugin {
         });
     }
 
-    assignBorderStyleInfo({ cell, borderStyleInfo, boundingClientRect, tableMeasures }) {
+    assignBorderStyleInfo({ borderStyleInfo, boundingClientRect, tableMeasures }) {
         const { matrix, xs, ys } = tableMeasures;
         const findInterval = (values, coordinate, isStart) => {
             let upper = 0;
@@ -350,7 +348,7 @@ export class MosaicStrategyPlugin extends Plugin {
         }
     }
 
-    handleOverlappingBorders({ ancestorNode, cell, tableMeasures }) {
+    handleOverlappingBorders({ ancestorNode, tableMeasures }) {
         if (!this.hasVisibleBorder(ancestorNode)) {
             return;
         }
@@ -359,46 +357,52 @@ export class MosaicStrategyPlugin extends Plugin {
         // TODO EGGMAIL: check if this needs defensive programming
         // against forcing a border on a non-spacer cell
         this.assignBorderStyleInfo({
-            cell,
             borderStyleInfo,
             boundingClientRect,
             tableMeasures,
         });
     }
 
-    handleOverlappingBackgroundColors({ ancestorNode, cell, tableMeasures }) {}
+    // WORKING HERE
+    // TODO EGGMAIL: this function actually seems finished, but
+    // we now have to compute the color composite for the final
+    // background color of the cell
+    handleOverlappingBackgroundColors({ cell, ancestorStack }) {
+        for (const ancestorNode of ancestorStack) {
+            const bgColor = this.getStylePropertyValue(ancestorNode, "background-color");
+            if (!bgColor) {
+                continue;
+            }
+            cell.backgroundColors ??= [];
+            cell.backgroundColors.push(bgColor);
+        }
+    }
 
     processCellAncestors(tableMeasures) {
         const { cells, emailNode } = tableMeasures;
         const containerNode = emailNode.lastReferenceNode;
-        const handledNodes = new Set([
-            containerNode,
-            [...cells].map((cell) => cell.emailNode.lastReferenceNode),
-        ]);
+        const ancestors = new Set();
         for (const cell of cells) {
             const { referenceNode } = cell;
-            for (
-                let ancestorNode = referenceNode.parentElement;
-                !handledNodes.has(ancestorNode);
-                ancestorNode = ancestorNode.parentElement
-            ) {
-                handledNodes.add(ancestorNode);
-                this.trigger("on_measure_ancestor_handlers", {
-                    ancestorNode,
-                    cell,
-                    tableMeasures,
-                });
+            const ancestorStack = [];
+            let ancestorNode = referenceNode.parentElement;
+            while (ancestorNode !== containerNode) {
+                ancestors.add(ancestorNode);
+                ancestorStack.push(ancestorNode);
+                ancestorNode = ancestorNode.parentElement;
             }
+            this.trigger("on_measure_cell_with_ancestors", {
+                cell,
+                ancestorStack,
+                tableMeasures,
+            });
         }
-
-        // go up each cell referenceNode until emailNode lastReferenceNode
-        // identify elements with border
-        // detect their rectangle
-        // detect where each rectangle edge with a border is in the table matrix
-        // find the corresponding spacing cell
-        // if there is one, mirror the border instruction
-
-        // same-ish strategy for discarded background colors
+        for (const ancestorNode of ancestors) {
+            this.trigger("on_measure_ancestor_handlers", {
+                ancestorNode,
+                tableMeasures,
+            });
+        }
         return tableMeasures;
     }
 
