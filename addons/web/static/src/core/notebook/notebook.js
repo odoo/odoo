@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -70,7 +70,7 @@ export class Notebook extends Component {
     activePane = signal.ref();
 
     setup() {
-        this.pages = this.computePages(this.props);
+        this.pages = computed(() => this.computePages(this.props));
         this.state = proxy({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast();
@@ -81,20 +81,33 @@ export class Notebook extends Component {
             },
             () => [this.state.currentPage]
         );
-        onWillUpdateProps((nextProps) => {
-            const activateDefault =
-                this.props.defaultPage !== nextProps.defaultPage || !this.defaultVisible;
-            this.pages = this.computePages(nextProps);
-            this.state.currentPage = this.computeActivePage(nextProps.defaultPage, activateDefault);
-        });
+        // the default page changed: always activate it
+        useOnChange(
+            () => [this.props.defaultPage],
+            (defaultPage) => {
+                this.state.currentPage = this.computeActivePage(defaultPage, true);
+            },
+            { initialRun: false }
+        );
+        // the pages changed: only fall back on the default page if it wasn't visible
+        useOnChange(
+            () => [this.pages()],
+            () => {
+                this.state.currentPage = this.computeActivePage(
+                    this.props.defaultPage,
+                    !this.defaultVisible
+                );
+            },
+            { initialRun: false }
+        );
     }
 
     get navItems() {
-        return this.pages.filter((e) => e[1].isVisible);
+        return this.pages().filter((e) => e[1].isVisible);
     }
 
     get page() {
-        const page = this.pages.find((e) => e[0] === this.state.currentPage)[1];
+        const page = this.pages().find((e) => e[0] === this.state.currentPage)[1];
         return page.Component && page;
     }
 
@@ -139,10 +152,12 @@ export class Notebook extends Component {
     }
 
     computeActivePage(defaultPage, activateDefault) {
-        if (!this.pages.length) {
+        if (!this.pages().length) {
             return null;
         }
-        const pages = this.pages.filter((e) => e[1].isVisible).map((e) => e[0]);
+        const pages = this.pages()
+            .filter((e) => e[1].isVisible)
+            .map((e) => e[0]);
 
         if (defaultPage) {
             if (!pages.includes(defaultPage)) {
