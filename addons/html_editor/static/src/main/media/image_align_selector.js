@@ -3,7 +3,7 @@ import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -11,13 +11,13 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 export class ImageAlignSelector extends Component {
     static template = "html_editor.ImageAlignSelector";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        items: Array,
-        getDisplay: Function,
-        focusEditable: Function,
-        onSelected: Function,
+    props = useProps({
         ...toolbarButtonProps,
-    };
+        items: t.array(),
+        getDisplay: t.function(),
+        focusEditable: t.function(),
+        onSelected: t.function(),
+    });
 
     imageAlignSelector = signal.ref();
 
