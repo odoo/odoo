@@ -49,6 +49,8 @@ patch(PosSession.prototype, {
             "pos.prep.order",
             "pos.prep.line",
             "pos.snooze",
+            "pos.course",
+            "restaurant.order.course",
         ];
     },
     getModelsToLoad(opts) {
