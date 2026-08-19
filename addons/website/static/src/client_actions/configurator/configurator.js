@@ -170,18 +170,24 @@ async function getRecommendedThemes(
     });
 }
 
-async function getIndustryImages(orm, industryId, theme = "") {
+async function getIndustryResources(orm, industryId, theme = "") {
     if (!industryId || industryId <= 0) {
         return {};
     }
     try {
-        return await orm.call("website", "configurator_get_images", [], {
+        return await orm.call("website", "configurator_get_custom_resources", [], {
             industry_id: industryId,
             theme,
         });
     } catch {
         return {};
     }
+}
+
+// Only whether the industry has catalog data matters: the labels themselves
+// are substituted server-side when the preview is rendered.
+function hasCatalogData(catalog) {
+    return !!Object.keys(catalog || {}).length;
 }
 
 function updateRecommendedThemes(state, themes) {
@@ -304,7 +310,7 @@ export class DescriptionScreen extends Component {
         );
 
         this.safariHackFocusedOutDropdown = null;
-        this.fetchImagesRequestId = 0;
+        this.fetchResourcesRequestId = 0;
     }
 
     onMounted() {
@@ -314,6 +320,7 @@ export class DescriptionScreen extends Component {
     async _setSelectedIndustry(label, id) {
         this.state.selectIndustry(label, id);
         this.setImages({});
+        this.setHasCatalog();
         this.fetchPositionings(label);
         if (id === -1) {
             id = await this.findClosestIndustryId(label);
@@ -322,24 +329,29 @@ export class DescriptionScreen extends Component {
             }
             this.state.setIndustryId(id);
         }
-        this.fetchIndustryImages(id);
+        this.fetchIndustryResources(id);
     }
 
     setImages(images) {
         this.state.images = images || {};
     }
 
-    async fetchIndustryImages(industryId) {
-        const requestId = ++this.fetchImagesRequestId;
+    setHasCatalog(catalog) {
+        this.state.hasCatalog = hasCatalogData(catalog);
+    }
+
+    async fetchIndustryResources(industryId) {
+        const requestId = ++this.fetchResourcesRequestId;
         if (!industryId || industryId <= 0) {
             return;
         }
-        const images = await getIndustryImages(this.orm, industryId);
+        const resources = await getIndustryResources(this.orm, industryId);
         if (
-            requestId === this.fetchImagesRequestId &&
+            requestId === this.fetchResourcesRequestId &&
             this.state.selectedIndustry?.id === industryId
         ) {
-            this.setImages(images);
+            this.setImages(resources.images);
+            this.setHasCatalog(resources.catalog);
         }
     }
 
@@ -467,6 +479,7 @@ Return ONLY a JSON object with:
             this.state.selectIndustry();
         }
         this.setImages({});
+        this.setHasCatalog();
         const termsSet = this._splitToSet(term);
         const rawTerms = Array.from(termsSet);
 
@@ -657,6 +670,7 @@ Return ONLY a JSON object with:
         if (!inputValue) {
             this.state.selectIndustry(); // reset
             this.setImages({});
+            this.setHasCatalog();
         }
     }
 }
@@ -1511,12 +1525,12 @@ export class Configurator extends Component {
             delete storedState.selectedPurpose;
             delete storedState.formerSelectedPurpose;
             let themes = [];
-            let images = {};
+            let resources = {};
             if (storedState.selectedIndustry && storedState.selectedPalette) {
                 themes = await getRecommendedThemes(this.orm, storedState);
             }
             if (storedState.selectedIndustry?.id > 0) {
-                images = await getIndustryImages(
+                resources = await getIndustryResources(
                     this.orm,
                     storedState.selectedIndustry.id,
                     themes[0]?.name || ""
@@ -1524,7 +1538,8 @@ export class Configurator extends Component {
             }
             return Object.assign(r, {
                 ...storedState,
-                images,
+                images: resources.images || {},
+                hasCatalog: hasCatalogData(resources.catalog),
                 palettes,
                 themes,
                 previewHeaders: [],
@@ -1551,6 +1566,7 @@ export class Configurator extends Component {
             formerSelectedPositioning: undefined,
             selectedIndustry: undefined,
             images: {},
+            hasCatalog: false,
             selectedPalette: undefined,
             recommendedPalette: undefined,
             styleRecommendation: undefined,
