@@ -4,11 +4,13 @@
 <t t-name="website.base_popup_options">
     <!-- For the cookies popup, only display this for popup mode. -->
     <BuilderRow label.translate="Position" t-if="!isCookiesOption or this.isActiveItem('layout_popup_opt')">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="'s_popup_top'">Top</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_popup_middle'">Middle</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_popup_bottom'">Bottom</BuilderSelectItem>
-        </BuilderSelect>
+        <BuilderButtonGroup>
+            <BuilderButton classAction="'s_popup_middle'" icon="'fullscreen_exit'"/>
+            <BuilderButton ltrRtlMapping="topLR" classAction="'s_popup_top_left'" icon="'north_west'"/>
+            <BuilderButton ltrRtlMapping="topLR" classAction="'s_popup_top'" icon="'north_east'"/>
+            <BuilderButton ltrRtlMapping="bottomLR" classAction="'s_popup_bottom_left'" icon="'south_west'"/>
+            <BuilderButton ltrRtlMapping="bottomLR" classAction="'s_popup_bottom'" icon="'south_east'"/>
+        </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Size">
         <BuilderSelect applyTo="'.modal-dialog'">
