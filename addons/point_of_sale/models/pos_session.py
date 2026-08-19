@@ -552,7 +552,7 @@ class PosSession(models.Model):
         if opening_notes and self.opening_notes != opening_notes:
             message += _('Opening notes: %s\n', opening_notes)
             self.opening_notes = opening_notes
-        self.message_post(body=plaintext2html(message), author_id=self._get_message_author().id)
+        self.message_post(body=plaintext2html(message))
 
     def _get_message_author(self):
         return self.env.user.partner_id
@@ -705,7 +705,7 @@ class PosSession(models.Model):
         if notes:
             self.opening_notes = notes
             message += _('\nOpening Notes: %s', notes)
-        self.message_post(body=plaintext2html(message), author_id=self._get_message_author().id)
+        self.message_post(body=plaintext2html(message))
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         """
