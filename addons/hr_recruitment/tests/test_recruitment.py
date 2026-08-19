@@ -598,3 +598,35 @@ class TestRecruitment(MailCase, TransactionCase):
         })
 
         self.assertFalse(wizard.template_id)
+
+    def test_send_mail_create_new_partner_id(self):
+        """
+        Ensure that the contact created when sending an email to
+        multiple applicants where one applicant has no partner_id is
+        only assigned to that specific applicant
+        """
+        applicant_1, applicant_2 = self.env['hr.applicant'].create([
+            {
+                'partner_name': 'Test Applicant 1',
+                'email_from': 'test1@example.com',
+                'partner_phone': '123456789',
+            },
+            {
+                'partner_name': 'Test Applicant 2',
+                'email_from': 'test2@example.com',
+                'partner_phone': '123456789',
+            }
+        ])
+        applicant_1.partner_id.unlink()
+        applicant_2_partner = applicant_2.partner_id
+
+        action = (applicant_1 + applicant_2).action_send_email()
+        composer = self.env['applicant.send.mail'].with_context(**action['context']).create({})
+        composer.body = '<p>Test</p>'
+        composer.subject = 'Test'
+        composer.action_send()
+
+        # Verify that a new contact was created as applicant_1's partner_id
+        self.assertTrue(applicant_1.partner_id.exists())
+        # Verify that applicant_2's partner_id has not changed
+        self.assertEqual(applicant_2_partner, applicant_2.partner_id)
