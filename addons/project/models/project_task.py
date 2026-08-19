@@ -12,7 +12,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.fields import Command, Date, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.html_editor.tools import handle_history_divergence
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_list, SQL, LazyTranslate, html_sanitize
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
@@ -36,7 +36,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'portal_user_names',
     'user_ids',
     'display_parent_task_button',
-    'current_user_same_company_partner',
     'allow_recurring_tasks',
     'allow_milestones',
     'milestone_id',
@@ -62,21 +61,24 @@ PROJECT_TASK_READABLE_FIELDS = {
     'has_project_template',
     'access_token',
     'access_url',
+    'date_deadline',
+    'partner_id',
+    'parent_id',
+    'portal_can_edit',
+    'portal_can_advanced_edit',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'description',
-    'partner_id',
-    'date_deadline',
     'date_last_stage_update',
     'tag_ids',
     'sequence',
-    'stage_id',
+    'stage_id',  # only advanced edit
     'child_ids',
     'color',
     'parent_id',
-    'priority',
+    'priority',  # only advanced edit
     'state',
     'is_closed',
 }
@@ -288,7 +290,6 @@ class ProjectTask(models.Model):
 
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True, export_string_translation=False)
-    current_user_same_company_partner = fields.Boolean(compute='_compute_current_user_same_company_partner', compute_sudo=True, export_string_translation=False)
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
@@ -747,23 +748,17 @@ class ProjectTask(models.Model):
         for task in self:
             task.display_parent_task_button = task.parent_id in accessible_parent_tasks
 
-    def _compute_current_user_same_company_partner(self):
-        commercial_partner_id = self.env.user.partner_id.commercial_partner_id
-        for task in self:
-            task.current_user_same_company_partner = task.partner_id and commercial_partner_id == task.partner_id.commercial_partner_id
-
     def _compute_display_follow_button(self):
         if not self.env.user.share:
             self.display_follow_button = False
             return
-        project_collaborator_read_group = self.env['project.collaborator']._read_group(
-            [('project_id', 'in', self.project_id.ids), ('partner_id', '=', self.env.user.partner_id.id)],
-            ['project_id'],
-            ['limited_access:bool_and'],
-        )
-        limited_access_per_project_id = dict(project_collaborator_read_group)
+        collaborator_projects = self.env['project.collaborator'].sudo().search([
+            ('project_id', 'in', self.project_id.ids),
+            ('partner_id', '=', self.env.user.partner_id.id)
+        ])
+        collaborator_project_ids = collaborator_projects.mapped('project_id')
         for task in self:
-            task.display_follow_button = not limited_access_per_project_id.get(task.project_id, True)
+            task.display_follow_button = task.project_id in collaborator_project_ids
 
     def _get_group_pattern(self):
         return {
@@ -1266,6 +1261,15 @@ class ProjectTask(models.Model):
         additional_vals = {}
         if self.env.user._is_portal() and not self.env.su:
             self._ensure_fields_write(vals, defaults=False)
+            if {'stage_id', 'priority'}.intersection(vals.keys()):
+                if self.project_id.ids:
+                    advanced_collabs_count = self.env['project.collaborator'].sudo().search_count([
+                        ('project_id', 'in', self.project_id.ids),
+                        ('partner_id', '=', self.env.user.partner_id.id),
+                        ('limited_access', '=', False),
+                    ])
+                    if advanced_collabs_count != len(self.project_id.ids):
+                        raise AccessError(self.env._("You need Advanced Edit access to change the stage or priority of a task."))
 
         if 'milestone_id' in vals:
             # WARNING: has to be done after 'project_id' vals is written on subtasks

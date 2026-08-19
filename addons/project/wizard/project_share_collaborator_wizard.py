@@ -17,12 +17,13 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
         required=True,
     )
     access_mode = fields.Selection(
-        [('read', 'Read'), ('edit_limited', 'Edit with limited access'), ('edit', 'Edit')],
-        default='read',
+        [('view', 'View'), ('edit', 'Edit'), ('advanced_edit', 'Advanced Edit')],
+        default='view',
+        string="Access",
         required=True,
-        help="Read: collaborators can view tasks but cannot edit them.\n"
-            "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
-            "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
+        help="View: can access tasks and send messages.\n"
+            "Edit: can create and update tasks.\n"
+            "Advanced Edit: can create and update tasks, change task priority, and update task stages."
     )
     send_invitation = fields.Boolean(
         string='Send Invitation',
@@ -38,6 +39,6 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
         for collaborator in self:
             if (
                 collaborator.partner_id not in project.message_partner_ids
-                or (collaborator.access_mode != 'read' and collaborator.partner_id not in project.collaborator_ids.partner_id)
+                or (collaborator.access_mode != 'view' and collaborator.partner_id not in project.collaborator_ids.partner_id)
             ):
                 collaborator.send_invitation = True
