@@ -782,6 +782,15 @@ class Website(models.CachedModel):
             r['industries'] = []
         return r
 
+    def _get_configurator_preview_urls(self):
+        """Return the preview files the configurator may render, besides the
+        theme previews it resolves from a theme name.
+
+        :return: static paths published by the modules shipping a preview
+        :rtype: set
+        """
+        return set()
+
     def _get_configurator_theme_preview_url(self, theme_name):
         preview_path = f"{theme_name}/static/description/preview.html"
         try:
@@ -895,25 +904,29 @@ class Website(models.CachedModel):
         )
 
     @api.model
-    def configurator_get_images(self, industry_id, theme=''):
+    def configurator_get_custom_resources(self, industry_id, theme=''):
         self._check_configurator_access()
         if not industry_id or industry_id <= 0:
             return {}
         try:
             custom_resources = self._website_api_rpc(
                 '/api/website/2/configurator/custom_resources/%s' % industry_id,
-                {'theme': theme or ''},
+                {'theme': theme or '', 'lang': self.env.context.get('lang')},
             )
         except (AccessError, RequestException) as e:
             logger.warning(
-                "Failed to fetch configurator images for industry %s: %s",
+                "Failed to fetch configurator resources for industry %s: %s",
                 industry_id,
                 e,
             )
             return {}
         if not isinstance(custom_resources, dict):
             return {}
-        return custom_resources.get('images', {})
+        return custom_resources
+
+    @api.model
+    def configurator_get_images(self, industry_id, theme=''):
+        return self.configurator_get_custom_resources(industry_id, theme).get('images', {})
 
     @api.model
     def configurator_apply(self, **kwargs):
