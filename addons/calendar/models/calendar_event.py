@@ -1963,5 +1963,5 @@ class CalendarEvent(models.Model):
     # ------------------------------------------------------------
 
     def _store_calendar_event_fields(self, res: Store.FieldList):
-        res.extend(["name", "start", "stop", "location"])
+        res.extend(["name", "start", "stop", "location", "videocall_location"])
         res.many("partner_ids", ["name"])

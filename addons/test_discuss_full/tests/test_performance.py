@@ -482,6 +482,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
+                "emailActivityTypeId": xmlid_to_res_id("mail.mail_activity_data_email"),
                 "hasCannedResponses": True,
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,

@@ -30,12 +30,15 @@
             </div>
         </xpath>
         <xpath expr="//button[hasclass('o-mail-Activity-edit')]" position="attributes">
-            <attribute name="t-if">!this.activity().calendar_event_id</attribute>
+            <attribute name="t-if">!this.meeting</attribute>
         </xpath>
         <xpath expr="//button[hasclass('o-mail-Activity-edit')]" position="after">
-            <button t-if="this.activity().calendar_event_id" class="btn btn-link p-0 me-3" t-on-click="this.onClickReschedule">
+            <button t-if="this.meeting" class="btn btn-link p-0 me-3" t-on-click="this.onClickReschedule">
                 <i class="oi oi-filled" data-icon="calendar_today"/> View
             </button>
+            <a t-if="this.meeting?.videocall_location" class="btn btn-link p-0 me-3" type="button" t-att-href="this.meeting.videocall_location">
+                <i class="oi" data-icon="videocam"/> Join Meeting
+            </a>
         </xpath>
     </t>
 
