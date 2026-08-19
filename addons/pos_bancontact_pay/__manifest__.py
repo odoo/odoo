@@ -17,9 +17,6 @@
             'pos_bancontact_pay/static/src/app/pos_payment_method.js',
             'pos_bancontact_pay/static/src/app/pos_payment.js',
         ],
-        "web.assets_tests": [
-            "pos_bancontact_pay/static/tests/tours/**/*",
-        ],
         "web.assets_unit_tests": [
             "pos_bancontact_pay/static/tests/unit/**/*",
         ],

@@ -158,7 +158,7 @@ export class SelfOrder extends Reactive {
 
             this.data.connectWebSocket(
                 "FINALIZE_KIOSK_PAYMENT",
-                this._onFinalizeKiokPayment.bind(this)
+                this._onFinalizeKioskPayment.bind(this)
             );
         }
         this.data.connectWebSocket("REMOVE_ORDERS", (data) => {
@@ -196,7 +196,7 @@ export class SelfOrder extends Reactive {
         });
     }
 
-    _onFinalizeKiokPayment(args) {
+    _onFinalizeKioskPayment(args) {
         const payment = this.currentOrder?.payment_ids.at(-1);
         const order_id = args.order_id || payment?.pos_order_id?.id;
         if (

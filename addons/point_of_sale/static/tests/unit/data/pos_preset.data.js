@@ -18,6 +18,11 @@ export class PosPreset extends models.ServerModel {
             "slots_per_interval",
             "interval_time",
             "attendance_ids",
+            "service_fee",
+            "service_fee_product_id",
+            "service_fee_type",
+            "service_fee_amount",
+            "service_fee_based_on",
         ];
     }
 
