@@ -3077,8 +3077,7 @@ class MrpProduction(models.Model):
             if order.picking_type_id.auto_print_mrp_reception_report_labels:
                 print_label_move_ids.update(order.move_finished_ids.move_dest_ids.ids)
         if orders_for_reception_report:
-            action = self.env.ref('stock.stock_reception_report_action').report_action(orders_for_reception_report, config=False)
-            action['context'] = dict(default_production_ids=orders_for_reception_report.ids, **self.env.context)
+            action = self.env.ref('mrp.action_report_production_order').report_action(orders_for_reception_report, config=False)
             clean_action(action, self.env)
             report_actions.append(action)
         if print_label_move_ids:
