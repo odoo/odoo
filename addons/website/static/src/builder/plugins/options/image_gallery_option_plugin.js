@@ -7,8 +7,6 @@ import { hasMediaOnly, isMediaElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
 import { uuid } from "@web/core/utils/strings";
 
 /**
@@ -30,6 +28,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
         "selection",
         "builderOptions",
         "imagePostProcess",
+        "websiteBridge",
     ];
     static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
     /** @type {import("plugins").WebsiteResources} */
@@ -283,18 +282,24 @@ export class ImageGalleryOptionPlugin extends Plugin {
         });
 
         const images = imagesData.map((data) => data.imgEl);
-        const slideshowEl = renderToElement("website.s_image_gallery_slideshow", {
-            images: images,
-            index: 0,
-            interval: currentInterval || 0,
-            ride: !currentInterval ? "false" : "carousel",
-            id: "slideshow_" + new Date().getTime(),
-            colorContrast,
-            copyAttributes: true,
-            getIndicatorLabel: (itemPosition, total) =>
-                _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
-            hasPauseBtn: carouselEl.classList.contains("o_carousel_pause_btn_hidden"),
-        });
+        const slideshowEl = this.dependencies.websiteBridge.renderToElement(
+            "website.s_image_gallery_slideshow",
+            {
+                images: images,
+                index: 0,
+                interval: currentInterval || 0,
+                ride: !currentInterval ? "false" : "carousel",
+                id: "slideshow_" + new Date().getTime(),
+                colorContrast,
+                copyAttributes: true,
+                getIndicatorLabel: (itemPosition, total) =>
+                    this.dependencies.websiteBridge._t("Slide %(itemPosition)s of %(total)s", {
+                        itemPosition,
+                        total,
+                    }),
+                hasPauseBtn: carouselEl.classList.contains("o_carousel_pause_btn_hidden"),
+            }
+        );
         if (carouselEl) {
             carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
         }
