@@ -1,4 +1,4 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -11,12 +11,13 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class ListSelector extends Component {
     static template = "html_editor.ListSelector";
-    static props = {
-        ...toolbarButtonProps,
-        getButtons: Function,
-        getListMode: Function,
-    };
     static components = { Dropdown, DropdownItem };
+
+    props = useProps({
+        ...toolbarButtonProps,
+        getButtons: t.function(),
+        getListMode: t.function(),
+    });
 
     listSelector = signal.ref();
 
