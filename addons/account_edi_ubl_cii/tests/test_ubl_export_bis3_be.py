@@ -567,6 +567,43 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_with_global_discount_line_sale_order')
 
+    def test_invoice_with_order_reference_sales_order(self):
+        self.ensure_installed('sale')
+
+        tax_21 = self.percent_tax(21.0)
+        product_a = self._create_product(name='product_a', lst_price=100, taxes_id=tax_21)
+        sale_order = self._create_sale_order_one_line(
+            partner_id=self.partner_be.id,
+            product_id=product_a,
+        )
+        invoice = self._create_final_invoice(sale_order, post=True)
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_with_order_reference_sales_order')
+
+    def test_invoice_with_order_line_reference_sales_order(self):
+        self.ensure_installed('sale')
+
+        tax_21 = self.percent_tax(21.0)
+        product_a = self._create_product(name='product_a', lst_price=100, taxes_id=tax_21)
+        product_b = self._create_product(name='product_b', lst_price=200, taxes_id=tax_21)
+        product_c = self._create_product(name='product_c', lst_price=300, taxes_id=tax_21)
+
+        so1 = self._create_sale_order(
+            partner_id=self.partner_be.id,
+            order_line=[
+                self._prepare_order_line(product_id=product_a),
+                self._prepare_order_line(product_id=product_b),
+            ],
+        )
+        so2 = self._create_sale_order_one_line(
+            partner_id=self.partner_be.id,
+            product_id=product_c,
+        )
+
+        invoice = self._create_final_invoice(so1 | so2, post=True)
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_with_order_line_reference_sales_order')
+
     def test_invoice_cash_rounding_add_invoice_line(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)
