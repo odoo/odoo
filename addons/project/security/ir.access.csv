@@ -48,16 +48,13 @@ task_visibility_rule,Project/Task: employees: follow required for follower-only 
                     # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]"
-project_task_rule_portal,Project/Task: portal users: can only see a task if he's a collaborator of the project and a follower of the task,project.task,base.group_portal,r,"[
+project_task_rule_portal,Project/Task: portal users: can see a task if they are a project collaborator OR a task follower,project.task,base.group_portal,r,"[
             ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
             ('has_template_ancestor', '=', False),
             ('active', '=', True),
             '|',
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                ('project_id.collaborator_ids', 'any', [
-                    ('partner_id', '=', user.partner_id.id),
-                    ('limited_access', '=', False),
-                ]),
+                ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
         ]"
 task_comp_rule,Project/Task: multi-company,project.task,,crud,"[('company_id', 'in', company_ids + [False])]"
 report_project_task_manager_rule,Tasks Analysis: project visibility Manager,report.project.task.user,project.group_project_manager,r,

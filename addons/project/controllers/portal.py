@@ -160,9 +160,15 @@ class ProjectCustomerPortal(CustomerPortal):
             # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
             currencies=request.env['res.currency'].get_all_currencies(),
         )
+        collaborator = request.env['project.collaborator'].sudo().search([
+            ('project_id', '=', project.id),
+            ('partner_id', '=', request.env.user.partner_id.id),
+        ], limit=1)
+
         session_info['user_context'].update({
             'allow_milestones': project.allow_milestones,
             'allow_task_dependencies': project.allow_task_dependencies,
+            'portal_can_advanced_edit': not collaborator.limited_access if collaborator else False,
         })
         return session_info
 
