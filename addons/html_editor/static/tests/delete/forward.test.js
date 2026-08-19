@@ -1565,6 +1565,31 @@ describe("Selection not collapsed", () => {
         });
     });
 
+    test("should remove a fully selected table with wrapper", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>ab</p>
+                <table class="o_table"><tbody>
+                    <tr><td>[cd</td><td>ef</td></tr>
+                    <tr><td>gh</td><td>ij]</td></tr>
+                </tbody></table>
+                <p>kl</p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p>ab</p>
+                <div class="o_table_wrapper">
+                    <table class="o_table o_selected_table"><tbody>
+                        <tr><td class="o_selected_td">[cd</td><td class="o_selected_td">ef</td></tr>
+                        <tr><td class="o_selected_td">gh</td><td class="o_selected_td">ij]</td></tr>
+                    </tbody></table>
+                </div>
+                <p>kl</p>
+            `),
+            stepFunction: deleteForward,
+            contentAfter: "<p>ab</p><p>[]kl</p>",
+        });
+    });
+
     test("should only remove the text content of cells in a partly selected table", async () => {
         await testEditor({
             contentBefore: unformat(

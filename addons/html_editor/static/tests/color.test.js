@@ -1100,28 +1100,28 @@ test("should not apply color to selection placeholder nodes", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder="">[<br></p>
-            <table class="o_selected_table">
+            <div class="o_table_wrapper"><table class="o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td">1</td>
                     </tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="">]<br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;">]<br></p>
         `)
     );
     setColor("#FF0000", "color")(editor);
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder="">[<br></p>
-            <table class="o_selected_table">
+            <div class="o_table_wrapper"><table class="o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><font style="color: rgb(255, 0, 0);">1</font></td>
                     </tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="">]<br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;">]<br></p>
         `)
     );
 });
