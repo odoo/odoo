@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import tagged
 from .test_xml_ubl_tr_common import TestUBLTRCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
@@ -52,6 +53,23 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
 
             wizard = self.create_send_and_print(invoice)
             self.assertIn('tr_moves_with_invalid_name', wizard.alerts)
+
+    def test_invoice_lines_missing_taxes_for_nilvera(self):
+        invoice = self.init_invoice('out_invoice', invoice_date='2025-11-28', amounts=[1000], taxes=[], post=True)
+
+        wizard = self.create_send_and_print(invoice)
+        self.assertIn('tr_lines_missing_taxes', wizard.alerts)
+
+    def test_invoice_lines_with_taxes_valid_for_nilvera(self):
+        invoice = self.init_invoice('out_invoice', invoice_date='2025-11-28', amounts=[1000], taxes=self.tax_sale_a)
+        invoice.write({'invoice_line_ids': [
+            Command.create({'display_type': 'line_note', 'name': 'A note'}),
+            Command.create({'display_type': 'line_section', 'name': 'A section'}),
+        ]})
+        invoice.action_post()
+
+        wizard = self.create_send_and_print(invoice)
+        self.assertNotIn('tr_lines_missing_taxes', wizard.alerts)
 
     def test_no_attachment_on_ubl_xml_for_ubl_tr(self):
         # Setup invoice
