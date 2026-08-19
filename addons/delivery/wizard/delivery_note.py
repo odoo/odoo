@@ -46,10 +46,6 @@ class DeliveryNoteWizard(models.TransientModel):
             note._send_shipping_confirmation_email()
             lines_to_ship._update_sol_qty_delivered()
 
-            # Set the delivery line as delivered
-            for line in note.so_id.order_line.filtered("is_delivery"):
-                line.qty_delivered = line.product_uom_qty
-
     def _send_shipping_confirmation_email(self):
         """Send an email to the customer confirming the shipment."""
         self.ensure_one()
