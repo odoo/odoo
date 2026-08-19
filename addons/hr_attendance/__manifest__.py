@@ -21,6 +21,7 @@ actions(Check in/Check out) performed by them.
         'security/hr_attendance_security.xml',
         'data/hr_attendance_overtime_ruleset_data.xml',
         'data/hr_attendance_overtime_rule_data.xml',
+        'report/hr_attendance_report_views.xml',
         'views/hr_attendance_view.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',

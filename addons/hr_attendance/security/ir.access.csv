@@ -32,3 +32,4 @@ hr_attendance_overtime_line_rule_officer,Overtime Line Officer: Restrict to mana
 hr_attendance_overtime_line_rule_own_reader,Overtime Line base user: Read his own overtime lines,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]"
 hr_attendance_overtime_line_rule_own,Overtime Line self edit: Read and modify his own overtime lines,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_own,crud,"[('employee_id.user_id', '=', user.id)]"
 hr_attendance_overtime_line_rule_employee_company,Overtime Line multi company rule,hr.attendance.overtime.line,,crud,"[('employee_id.company_id', 'in', company_ids)]"
+access_hr_attendance_report_officer,hr.attendance.report.officer,hr.attendance.report,hr_attendance.group_hr_attendance_officer,crud,"[('employee_id.attendance_manager_id', '=', user.id)]"

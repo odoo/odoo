@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_attendance_report_view_list" model="ir.ui.view">
+        <field name="name">hr.attendance.report.list</field>
+        <field name="model">hr.attendance.report</field>
+        <field name="arch" type="xml">
+            <list string="Attendance Analysis" create="0" edit="0" delete="0">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours" string="Worked Hours" widget="float_time"/>
+                <field name="expected_hours" string="Expected Hours" widget="float_time"/>
+                <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Extra Hours" widget="float_time"/>
+                <field name="manager_id" optional="hidden"/>
+                <field name="department_id" optional="hidden"/>
+                <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
+                <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_report_view_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.report.graph</field>
+        <field name="model">hr.attendance.report</field>
+        <field name="arch" type="xml">
+            <graph string="Worked Hours" type="line" stacked="0" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" interval="week" type="col"/>
+                <field name="overtime_hours" widget="float_time"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_attendance_report_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.report.pivot</field>
+        <field name="model">hr.attendance.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Worked Hours">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" type="col" interval="month"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+                <field name="expected_hours" type="measure" widget="float_time"/>
+                <field name="overtime_hours" string="Difference" type="measure" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Balance" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_report_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_report_view_filter</field>
+        <field name="model">hr.attendance.report</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Report Search">
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <field name="check_in"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
+                <filter string="Errors" name="errors"
+                        domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=', '-1d')]"/>
+                <filter string="Automatically Checked-Out" name="auto_check"
+                        domain="[('out_mode', '=', 'auto_check_out')]"/>
+                <separator/>
+                <filter string="Date" name="check_in_filter" date="check_in"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <separator invisible="1"/>
+                <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[('check_in','&gt;=', '-3m')]"/>
+                <group>
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
+                    <filter string="Method" name="groupby_mode_in" context="{'group_by': 'in_mode'}"/>
+                    <filter string="Date" name="groupby_name" context="{'group_by': 'check_in:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="hr_attendance_reporting" model="ir.actions.act_window">
+        <field name="name">Attendances Report</field>
+        <field name="res_model">hr.attendance.report</field>
+        <field name="path">attendance-report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="hr_attendance_report_view_filter"/>
+        <field name="context">
+            {
+                "search_default_employee": 2,
+                "search_default_activeemployees": 1,
+                "search_default_last_three_months": 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+</odoo>
