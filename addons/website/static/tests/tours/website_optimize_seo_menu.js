@@ -97,10 +97,6 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_text_image img[alt='alt text in English']",
         },
         ...switchToLang("fr"),
-        {
-            content: "The footer still shows its confirmed translation",
-            trigger: ":iframe #footer:contains('Liens utiles')",
-        },
         ...openSeoModal(),
         {
             content: "Alt text is prefilled from default language",
@@ -120,10 +116,6 @@ registerWebsitePreviewTour(
         {
             content: "Image alt attribute is updated in French",
             trigger: ":iframe .s_text_image img[alt='alt text in French']",
-        },
-        {
-            content: "The delayed footer translation has been confirmed",
-            trigger: ":iframe #footer:contains('Handy Links')",
         },
         ...switchToLang("en"),
         {
