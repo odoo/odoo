@@ -18,6 +18,12 @@ class InvoiceAgentJob(models.Model):
         index=True,
         help="The account.move whose extraction this job publishes for.",
     )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
     # v0.10: job kind distinguishes AMQP message types sharing the outbox.
     # "extract" publishes extract.request for the AI worker; "embed"
     # publishes an embed.request job that the worker answers by calling

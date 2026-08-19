@@ -25,6 +25,12 @@ class InvoiceAgentValidationFlag(models.Model):
         ondelete="cascade",
         index=True,
     )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
     flag = fields.Char(
         string="Flag Code",
         required=True,

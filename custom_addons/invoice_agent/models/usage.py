@@ -31,6 +31,12 @@ class InvoiceAgentUsage(models.Model):
         help="The bill this extraction call was for. May be void when the "
         "source bill is later deleted.",
     )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
     model = fields.Char(
         string="Model",
         default="claude-opus-4-8",
