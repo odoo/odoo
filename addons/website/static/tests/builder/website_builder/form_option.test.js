@@ -621,3 +621,33 @@ test("Changing field type removes data-fill-with attribute", async () => {
     await contains(".o_popover [data-action-value='cc']").click();
     expect(":iframe input[name='cc']").not.toHaveAttribute("data-fill-with");
 });
+
+test("Changing field type from date to datetime removes value property (and attribute)", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+
+    await setupWebsiteBuilder(`
+        <form class="s_website_form" data-model_name="mail.mail">
+            <div class="s_website_form_field" data-type="date">
+                <label class="s_website_form_label" for="field">
+                    <span class="s_website_form_label_content">Date</span>
+                </label>
+                <div class="s_website_form_date">
+                    <input id="field" class="datetimepicker-input s_website_form_input" type="text"/>
+                </div>
+            </div>
+        </form>
+    `);
+
+    // Set a default date.
+    await contains(":iframe input#field").click();
+    await contains(".hb-row[data-label='Default Value'] input").fill("08/20/2026");
+
+    expect(":iframe input#field").toHaveAttribute("value", "1787180400");
+    expect(":iframe input#field").toHaveProperty("value", "08/20/2026");
+
+    await contains(".hb-row[data-label='Type'] button.o-hb-select-toggle").click();
+    await contains(".o_popover [data-action-value='datetime']").click();
+
+    expect(":iframe input#field").toHaveAttribute("value", "");
+    expect(":iframe input#field").toHaveProperty("value", "");
+});
