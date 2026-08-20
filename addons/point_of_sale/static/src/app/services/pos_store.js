@@ -2021,8 +2021,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.syncingOrders.add(order.uuid);
             if (this.config.printerCategories.size && !opts.byPassPrint) {
                 try {
-                    let reprint = false;
-                    let orderChange = changesToOrder(
+                    const orderChange = changesToOrder(
                         order,
                         this.config.printerCategories,
                         opts.cancelled
@@ -2034,26 +2033,11 @@ export class PosStore extends WithLazyGetterTrap {
                         orderChange.noteUpdate.length ||
                         orderChange.internal_note ||
                         orderChange.general_customer_note;
-
-                    let shouldPrint = true;
-                    if (!hasChanges) {
-                        if (opts.explicitReprint && order.lastPrints.length) {
-                            orderChange = [order.lastPrints.at(-1)];
-                            reprint = true;
-                        } else {
-                            shouldPrint = false;
-                        }
-                    } else {
+                    if (!order.uiState.isReprinting) {
                         order.pushLastPrints(orderChange);
-                        orderChange = [orderChange];
                     }
-
-                    if (reprint && opts.orderDone) {
-                        shouldPrint = false;
-                    }
-
-                    if (shouldPrint) {
-                        isPrinted = await this.printChanges(order, orderChange, reprint);
+                    if (hasChanges) {
+                        isPrinted = await this.printChanges(order, [orderChange]);
                     }
                 } catch (e) {
                     logPosMessage(
