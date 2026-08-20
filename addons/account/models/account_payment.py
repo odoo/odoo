@@ -1043,6 +1043,9 @@ class AccountPayment(models.Model):
                 continue
             liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
 
+            if len(counterpart_lines) > 1:
+                raise UserError(_("Oopsie! Multiple counterpart lines detected.\nPlease make sure that only one receivable/payable account is used on Journal Items."))
+
             if 'amount' in changed_fields and len(liquidity_lines) > 1:
                 raise UserError(_("You cannot change the amount of a payment with multiple liquidity lines."))
 
