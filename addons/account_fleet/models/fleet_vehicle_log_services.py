@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class FleetVehicleLogServices(models.Model):
@@ -46,6 +46,14 @@ class FleetVehicleLogServices(models.Model):
                 service.account_move_state = service.account_move_line_ids[0].parent_state
             else:
                 service.account_move_state = False
+
+    @api.constrains('account_move_line_ids', 'vehicle_id')
+    def _check_vehicle_consistency(self):
+        for service in self:
+            if service.account_move_line_ids:
+                vehicles = service.account_move_line_ids.vehicle_id
+                if len(vehicles) > 1 or (vehicles and vehicles != service.vehicle_id):
+                    raise ValidationError(self.env._("All invoice lines linked to a fleet service must belong to the same vehicle."))
 
     def action_open_account_move(self):
         self.ensure_one()
