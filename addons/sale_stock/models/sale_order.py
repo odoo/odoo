@@ -171,12 +171,12 @@ class SaleOrder(models.Model):
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
 
         if 'commitment_date' in values:
-            # protagate commitment_date as the deadline of the related stock move.
+            # propagate commitment_date as the deadline of the related stock move.
             # TODO: Log a note on each down document
             deadline_datetime = values.get('commitment_date')
             for order in self:
                 moves = order.order_line.move_ids.filtered(
-                    lambda m: m.state not in ('done', 'cancel') and m.location_dest_id.usage == 'customer'
+                    lambda m: m.state not in ('done', 'cancel') and m.location_final_id.usage == 'customer'
                 )
                 moves.date_deadline = deadline_datetime or order.expected_date
 
