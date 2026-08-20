@@ -47,10 +47,10 @@ class HrEmployeePublic(models.Model):
     def _compute_allocation_display(self):
         self._compute_from_employee('allocation_display')
 
-    def action_time_off_dashboard(self):
+    def action_time_off_dashboard(self, scale=None):
         self.ensure_one()
         if self.is_user:
-            return self.employee_id.action_time_off_dashboard()
+            return self.employee_id.action_time_off_dashboard(scale=scale)
 
     def action_open_time_off_calendar(self):
         """Open the time off calendar filtered on this employee."""

@@ -387,14 +387,20 @@ class HrEmployee(models.Model):
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
 
-    def action_time_off_dashboard(self):
+    def action_time_off_dashboard(self, scale=None):
+        dashboard_view_by_scale = {
+            'week': 'hr_holidays.hr_leave_employee_view_dashboard_week',
+            'month': 'hr_holidays.hr_leave_employee_view_dashboard_month',
+            'year': 'hr_holidays.hr_leave_employee_view_dashboard',
+        }
+        view_xmlid = dashboard_view_by_scale.get(scale, 'hr_holidays.hr_leave_employee_view_dashboard')
         return {
             'name': _('Time Off Dashboard'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave',
             'view_mode': 'calendar,list,form',
             'views': [
-                [self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar'],
+                [self.env.ref(view_xmlid).id, 'calendar'],
                 [False, 'list'],
                 [False, 'form'],
             ],

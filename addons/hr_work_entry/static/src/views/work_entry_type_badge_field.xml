@@ -1,0 +1,9 @@
+<t t-name="hr_work_entry.WorkEntryTypeBadgeField">
+    <span class="d-flex align-items-center gap-2">
+        <span t-attf-class="badge rounded-pill text-truncate flex-shrink-0 o_colorlist_item_color_{{this.props.record.data.color || 0}}"
+              style="max-width: 100px;">
+            <t t-out="this.props.record.data.display_code"/>
+        </span>
+        <span class="text-wrap" t-out="this.props.record.data.name"/>
+    </span>
+</t>
