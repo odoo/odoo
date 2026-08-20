@@ -4,6 +4,7 @@ import functools
 import hashlib
 import logging
 import os
+import queue
 import random
 import selectors
 import socket
@@ -15,7 +16,6 @@ from collections.abc import Buffer
 from contextlib import suppress
 from enum import IntEnum
 from itertools import count
-from queue import PriorityQueue
 from urllib.parse import urlparse
 from weakref import WeakSet
 
@@ -84,7 +84,7 @@ class UpgradeRequired(HTTPException):
 
 # Idea taken from the python cookbook:
 # https://github.com/dabeaz/python-cookbook/blob/6e46b7/src/12/polling_multiple_thread_queues/pqueue.py
-class PollablePriorityQueue(PriorityQueue):
+class PollablePriorityQueue(queue.PriorityQueue):
     """A custom PriorityQueue than can be polled"""
 
     def __init__(self, maxsize=0):
@@ -187,6 +187,9 @@ class Websocket:
     # Maximum size for a message in bytes, whether it is sent as one
     # frame or many fragmented ones.
     MESSAGE_MAX_SIZE = 2 ** 20
+    # Maximum number of outgoing commands allowed for a socket. Past this, the connection
+    # is aborted instead of letting the queue grow indefinitely.
+    CMD_MAX_SIZE = 1024
     # How many requests can be made in excess of the given rate.
     RL_BURST = int(config['websocket_rate_limit_burst'])
     # How many seconds between each request.
@@ -207,7 +210,7 @@ class Websocket:
         self._incoming_frame_timestamps = deque(maxlen=self.RL_BURST)
         # Command queue used to manage the websocket instance externally, such as sending
         # messages or terminating the connection.
-        self.__cmd_queue = PollablePriorityQueue()
+        self.__cmd_queue = PollablePriorityQueue(maxsize=self.CMD_MAX_SIZE)
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -258,8 +261,19 @@ class Websocket:
     def close(self, code, reason=None):
         """Notify the socket to initiate closure. The closing handshake
         will start in the subsequent iteration of the event loop.
+
+        If the queue is already full (slow/stuck socket), fall back to shutting the socket
+        down, which interrupts a blocked send/recv in the event loop and let it go through
+        `_handle_transport_error`.
         """
-        self._enqueue_control_command(ControlCommand.CLOSE, {'code': code, 'reason': reason})
+        if self.state is ConnectionState.CLOSED:
+            return
+        self.state = ConnectionState.CLOSING
+        try:
+            self._enqueue_control_command(ControlCommand.CLOSE, {"code": code, "reason": reason})
+        except queue.Full:
+            with suppress(OSError):
+                self.__socket.shutdown(socket.SHUT_RDWR)
 
     @classmethod
     def onopen(cls, func):
@@ -279,7 +293,10 @@ class Websocket:
             opcode = Opcode.BINARY
             if not isinstance(payload, Buffer):
                 opcode = Opcode.TEXT
-        self._enqueue_control_command(ControlCommand.SEND, Frame(opcode, payload))
+        try:
+            self._enqueue_control_command(ControlCommand.SEND, Frame(opcode, payload))
+        except queue.Full:
+            self.close(CloseCode.TRY_LATER, "OUTGOING_QUEUE_SATURATED")
 
     def send_worker_internal_message(self, type_, payload=None):
         """Send a message to the browser worker linked to this WebSocket. The message
@@ -616,8 +633,9 @@ class Websocket:
 
         :param ControlCommand command: The command to be executed.
         :param dict | None data: An optional dictionary of parameters.
+        :raises Full: If the queue is saturated.
         """
-        self.__cmd_queue.put((command, next(_command_uid), data))
+        self.__cmd_queue.put_nowait((command, next(_command_uid), data))
 
     def _process_control_command(self, command, data):
         """Process a command received in `self.__cmd_queue`.
