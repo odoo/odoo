@@ -382,6 +382,9 @@ class HrJob(models.Model):
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
 
+    def _get_accessible_applicants(self):
+        return self.application_ids
+
     def action_open_attachments(self):
         return {
             'type': 'ir.actions.act_window',
@@ -399,7 +402,7 @@ class HrJob(models.Model):
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
             'domain': ['|',
                 '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids),
-                '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.application_ids.ids),
+                '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self._get_accessible_applicants().ids),
             ],
         }
 
