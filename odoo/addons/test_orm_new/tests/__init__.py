@@ -21,3 +21,4 @@ from . import test_modules_db
 from . import test_one2many
 from . import test_parent_store
 from . import test_performance
+from . import test_prefetch
