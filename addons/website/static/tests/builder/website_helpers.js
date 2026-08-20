@@ -110,7 +110,7 @@ export async function setupWebsiteBuilder(
         openEditor = true,
         loadIframeBundles = false,
         loadAssetsFrontendJS = false,
-        loadIframeMinimalJS = false,
+        loadIframeBuilderTemplates = false,
         hasToCreateWebsite = true,
         styleContent,
         headerContent = "",
@@ -123,7 +123,7 @@ export async function setupWebsiteBuilder(
         delayReload = async () => {},
     } = {}
 ) {
-    loadIframeMinimalJS ||= withIframeRegistry;
+    loadIframeBuilderTemplates ||= withIframeRegistry;
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
     if (hasToCreateWebsite) {
         const pyEnv = await startServer();
@@ -208,7 +208,7 @@ export async function setupWebsiteBuilder(
             if (loadIframeBundles) {
                 await loadBundle("website.assets_inside_builder_iframe", { targetDoc, js: false });
             }
-            if (loadIframeMinimalJS) {
+            if (loadIframeBuilderTemplates) {
                 // Load the builder's *.edit.xml, needed for some options
                 await loadBundle("website.assets_inside_builder_iframe_tests", { targetDoc });
                 // Reuse the translation in the iframe to avoid loading them
@@ -296,7 +296,7 @@ export async function setupWebsiteBuilder(
             return {};
         },
         getRegistry() {
-            return loadIframeMinimalJS || loadAssetsFrontendJS
+            return loadIframeBuilderTemplates || loadAssetsFrontendJS
                 ? super.getRegistry()
                 : new Registry();
         },
