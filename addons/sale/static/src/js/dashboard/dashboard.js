@@ -36,10 +36,10 @@ export class Dashboard extends Component {
     get dashboardCards() {
         return [
             { key: 'to_confirm', label: _t("To Confirm"), title: _t("Orders to Confirm")},
-            { key: 'to_fulfill', label: _t("To Fulfill"), title: _t("Orders to Fulfill")},
+            { key: 'to_fulfill', label: _t("To Deliver"), title: _t("Orders to Deliver")},
             { key: 'to_invoice', label: _t("To Invoice"), title: _t("Orders to Invoice")},
-            { key: 'to_upsell', label: _t("To Upsell"), title: _t("Orders to Upsell")},
-        ];
+            { key: 'to_upsell', label: _t("To Upsell"), title: _t("Orders to Upsell"), hide_if_zero: true},
+        ].filter((card) => Boolean(Object.values(this.env.searchModel.searchItems).find((filter) => filter.name === card.key)));
     }
 
     get dashboardPeriodCards() {
@@ -98,7 +98,7 @@ export class Dashboard extends Component {
     }
 
     isCardVisible(card) {
-        return this.state.dashboardData[card.key] > 0;
+        return this.state.dashboardData[card.key] > 0 || !card.hide_if_zero;
     }
 
     isCardDisabled(cardName) {
