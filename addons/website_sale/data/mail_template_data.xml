@@ -369,5 +369,48 @@
                 </div>
             </field>
         </record>
+
+        <record id="mail_template_sale_withdrawal_request_confirmation" model="mail.template">
+            <field name="name">Ecommerce: Withdrawal Request Confirmation</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">Withdrawal Request Confirmation</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Sent to the customer to confirm their withdrawal request has been received</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
+            <field name="body_html" type="html">
+<t>
+Hello,<br/><br/>
+This email confirms that we have received your request to cancel Order <t t-out="object.name">S00001</t>.<br/><br/>
+Our team is currently reviewing your request. We will notify you once it is processed.<br/><br/>
+Sincerely,<br/>
+<t t-out="(object.company_id or object.user_id.company_id or user.company_id).name">YourCompany</t> Team
+</t>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_withdrawal_request_notification" model="mail.template">
+            <field name="name">Ecommerce: Withdrawal Request Notification</field>
+            <field name="model_id" ref="website_sale.model_withdrawal_request"/>
+            <field name="subject">Withdrawal Request - {{ object.order_reference }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="description">Sent to the internal team when a withdrawal request is submitted</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
+            <field name="body_html" type="html">
+<p>
+A withdrawal request was submitted for order <t t-out="object.order_reference">S00001</t>.
+</p>
+<div style="margin: 16px 0; text-align: center;">
+    <a t-att-href="ctx.get('order_access_link')"
+        target="_blank"
+        style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 14px; display: inline-block;">
+        View Order
+    </a>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
     </data>
 </odoo>

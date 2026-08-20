@@ -33,4 +33,22 @@ translationIsReady.then(() => {
             },
         ],
     });
+
+    registry.category("website.form_editor_actions").add("request_withdrawal", {
+        formFields: [
+            {
+                type: "email",
+                modelRequired: true,
+                fillWith: "email",
+                name: "email",
+                string: _t("Your Email"),
+            },
+            {
+                type: "char",
+                modelRequired: true,
+                name: "order_reference",
+                string: _t("Order Number"),
+            },
+        ],
+    });
 });

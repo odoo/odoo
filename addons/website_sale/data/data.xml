@@ -61,4 +61,14 @@
         ]"/>
     </function>
 
+    <record id="model_withdrawal_request" model="ir.model">
+        <field name="website_form_key">request_withdrawal</field>
+        <field name="website_form_access">True</field>
+        <field name="website_form_label">Request Withdrawal</field>
+    </record>
+    <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>withdrawal.request</value>
+        <value eval="['email', 'order_reference']"/>
+    </function>
+
 </odoo>
