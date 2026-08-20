@@ -5,6 +5,7 @@ from odoo.api import Environment
 import odoo.tests
 from odoo.tools import html2plaintext
 import unittest
+from odoo.tests.common import new_test_user
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruitment
@@ -118,3 +119,27 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             ),
             "One message in the chatter should contain the extra information filled in by the applicant"
         )
+
+    def test_apply_job_does_not_update_existing_user(self):
+        internal_user = new_test_user(
+            self.env,
+            login='internal.user@example.com',
+            name='Internal User',
+        )
+        job = self.env['hr.job'].create({
+            'name': 'Developer',
+            'is_published': True,
+        })
+
+        self.authenticate(None, None)
+        response = self.url_open('/website/form/hr.applicant', data={
+            'partner_name': 'Impersonated User',
+            'email_from': internal_user.email,
+            'partner_phone': '12345678',
+            'job_id': job.id,
+        })
+
+        applicant = self.env['hr.applicant'].browse(response.json().get('id'))
+        self.assertEqual(applicant.partner_id, internal_user.partner_id)
+        self.assertEqual(applicant.partner_name, 'Impersonated User')
+        self.assertEqual(internal_user.name, 'Internal User')
