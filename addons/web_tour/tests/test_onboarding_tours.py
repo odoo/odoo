@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
+
 from odoo.tests import HttpCase, tagged
 
 
@@ -9,6 +11,8 @@ class TestOnboardingTours(HttpCase):
     tour_names = [
         'event_tour', 'discuss_channel_tour',
         'sale_tour', 'purchase_tour', 'mass_mailing_tour',
+        'frontdesk_tour', 'hr_expense_extract_tour', 'appointment_tour',
+        'sale_subscription_tour',
     ]
 
     def setUp(self):
@@ -28,6 +32,6 @@ class TestOnboardingTours(HttpCase):
 
     def test_onboarding_tours(self):
         for tour in self._get_tours():
-            with self.subTest(tour_name=tour.name):
+            with self.subTest(tour_name=tour.name), contextlib.closing(self.env.cr.savepoint()):
                 code = f"odoo.startTour({tour.name!r}, {{'mode': 'manual', 'robot': true}})"
                 self.start_tour(tour.url or '/odoo', tour.name, code=code, login="admin")

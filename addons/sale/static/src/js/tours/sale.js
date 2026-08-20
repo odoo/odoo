@@ -54,6 +54,16 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
+            isActive: [
+                "manual",
+                "desktop",
+                "div.o_popover:has(.o_sale_management_template)",
+            ],
+            trigger: "div.o_popover:has(.o_sale_management_template) > button.o-dropdown-item:not(.o_sale_management_template)",
+            content: _t("Select New Quotation."),
+            run: "click",
+        },
+        {
             isActive: ["mobile"],
             trigger: "button.o-kanban-button-new",
             content: _t("Build your first quotation right here!"),
