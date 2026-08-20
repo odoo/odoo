@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="track_move_template">
+    <template id="track_move_template" technical_usage="mail_post_source">
         <div>
             <t t-call="stock.message_head"/>
             <t t-call="stock.message_body"/>
         </div>
     </template>
 
-    <template id="exception_on_picking">
+    <template id="exception_on_picking" technical_usage="mail_post_source">
         <div> Exception(s) occurred on the picking
             <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-out="origin_picking.name"/></a>.
             Manual actions may be needed.

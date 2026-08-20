@@ -1,5 +1,9 @@
+import logging
+
 from odoo.exceptions import UserError
 from odoo import models, _
+
+_logger = logging.getLogger(__name__)
 
 
 class MailThread(models.AbstractModel):
@@ -32,6 +36,10 @@ class MailThread(models.AbstractModel):
             kwargs['template_id'] = source_template.id
         if source_view:
             kwargs['source_view_id'] = source_view.id
+            if source_view.technical_usage != 'mail_post_source':
+                _logger.warning(
+                    _("Using an untagged view %(source_ref)s for rendering", source_ref=source_ref)
+                )
         return render_values, kwargs
 
     def _check_can_update_message_content(self, messages):
