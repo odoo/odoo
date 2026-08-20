@@ -2375,5 +2375,66 @@ describe("Selection not collapsed", () => {
             await tick(); // Wait for the selection change to be handled
             expect(getContent(el)).toBe("<p>Gif []</p>");
         });
+
+        // This simulates the sequence of events that happens when pressing
+        // the Backspace key on the Microsoft Swiftkey keyboard on Android.
+        const swiftkeyBackspace = async (editor) => {
+            const dispatch = (type, eventInit) =>
+                manuallyDispatchProgrammaticEvent(editor.editable, type, eventInit);
+            await dispatch("keydown", { key: "Unidentified" });
+            const selection = editor.document.getSelection();
+            if (selection.isCollapsed) {
+                selection.modify("extend", "backward", "character");
+            }
+            await dispatch("beforeinput", {
+                inputType: "deleteContentBackward",
+            });
+            // Swiftkey deletes the content even if the beforeinput is default prevented.
+            selection.getRangeAt(0).deleteContents();
+            await dispatch("input", { inputType: "deleteContentBackward" });
+            await dispatch("keyup", { key: "Unidentified" });
+        };
+
+        test.tags("mobile");
+        test("should handle tables correctly on backspace with Unidentified key", async () => {
+            const { editor, el } = await setupEditor(
+                `<table><tbody><tr><td><br></td><td>[]<br></td><td><br></td></tr><tr><td>a</td><td>b</td><td>c</td></tr></tbody></table>`
+            );
+            await swiftkeyBackspace(editor);
+            expect(getContent(el)).toBe(
+                `<table><tbody><tr><td><br></td><td>[]<br></td><td><br></td></tr><tr><td>a</td><td>b</td><td>c</td></tr></tbody></table>`
+            );
+            await tick(); // Wait for the release of the Android Chrome selection change hack, see "onAndroidChromeSelectionChange".
+            const tds = [...editor.editable.querySelectorAll("td")];
+            setSelection({
+                anchorNode: tds[4],
+                anchorOffset: 0,
+                focusNode: tds[5],
+                focusOffset: 1,
+            });
+            await tick(); // Wait for the selectionchange event.
+            expect(getContent(el)).toBe(
+                `<table class="o_selected_table"><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td>a</td><td class="o_selected_td">[b</td><td class="o_selected_td">c]</td></tr></tbody></table>`
+            );
+            await swiftkeyBackspace(editor);
+            expect(getContent(el)).toBe(
+                `<table class="o_selected_table"><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td>a</td><td class="o_selected_td"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table>`
+            );
+        });
+
+        test.tags("mobile");
+        test("should handle lists correctly on backspace with Unidentified key", async () => {
+            const { editor, el } = await setupEditor(
+                `<ul><li>abc</li><li>[def]</li><li>ghi</li></ul>`
+            );
+            await swiftkeyBackspace(editor);
+            expect(getContent(el)).toBe(
+                `<ul><li>abc</li><li placeholder="List" class="o-we-hint">[]<br></li><li>ghi</li></ul>`
+            );
+            await swiftkeyBackspace(editor);
+            expect(getContent(el)).toBe(
+                `<ul><li>abc</li></ul><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><ul><li>ghi</li></ul>`
+            );
+        });
     });
 });

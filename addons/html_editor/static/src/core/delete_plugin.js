@@ -41,10 +41,10 @@ import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
 import {
-    hasTouch,
     isBrowserChrome,
     isBrowserSafari,
     isMacOS,
+    isMobileOS,
 } from "@web/core/browser/feature_detection";
 
 /**
@@ -142,6 +142,15 @@ export class DeletePlugin extends Plugin {
                 }
             });
         }
+        if (isMobileOS) {
+            this.addDomListener(this.editable, "keydown", (ev) => {
+                const selection = this.dependencies.selection.getEditableSelection();
+                this.mobileSelectionWasCollapsedAtEdge =
+                    ev.key === "Unidentified" &&
+                    selection.isCollapsed &&
+                    selection.anchorOffset === 0;
+            });
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -194,6 +203,15 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     delete(direction, granularity) {
+        if (this.mobileSelectionWasCollapsedAtEdge) {
+            // Revert the selection made by the Microsoft Swiftkey keyboard when
+            // pressing backspace on a collapsed selection.
+            const selection = this.document.getSelection();
+            if (!selection.isCollapsed) {
+                selection.collapseToEnd();
+            }
+        }
+
         const selection = this.dependencies.selection.getEditableSelection();
 
         this.dependencies.history.stageSelection();
@@ -1259,7 +1277,7 @@ export class DeletePlugin extends Plugin {
         if (argsForDelete) {
             this.delete(...argsForDelete);
             ev.preventDefault();
-            if (isBrowserChrome() && hasTouch()) {
+            if (isMobileOS() && isBrowserChrome()) {
                 this.preventDefaultDeleteAndroidChrome(ev);
             }
         }

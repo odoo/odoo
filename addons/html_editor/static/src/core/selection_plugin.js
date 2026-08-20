@@ -193,8 +193,6 @@ export class SelectionPlugin extends Plugin {
         // "collapseIfZWS",
         "isSelectionInEditable",
         "isNodeEditable",
-        "getCachedSelection",
-        "setCachedSelection",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
@@ -251,14 +249,6 @@ export class SelectionPlugin extends Plugin {
             this.editable.focus = this.editableOriginalFocus;
         }
         super.destroy();
-    }
-
-    getCachedSelection() {
-        return this._cachedSelection;
-    }
-
-    setCachedSelection(value) {
-        this._cachedSelection = value;
     }
 
     selectAll() {
@@ -324,12 +314,6 @@ export class SelectionPlugin extends Plugin {
      * Update the active selection to the current selection in the editor.
      */
     updateActiveSelection() {
-        if (this.getCachedSelection()) {
-            // `before_input_handler` may change the selection, which would
-            // invalidate the cached selection. Keep it in sync as long as
-            // the cache is active.
-            this.setCachedSelection(this.document.getSelection());
-        }
         this.previousActiveSelection = this.activeSelection;
         const selectionData = this.getSelectionData();
         if (selectionData.documentSelectionIsInEditable) {
@@ -511,7 +495,7 @@ export class SelectionPlugin extends Plugin {
      * @return { SelectionData }
      */
     getSelectionData() {
-        const selection = this.getCachedSelection() || this.document.getSelection();
+        const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
