@@ -139,6 +139,11 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
             "public_page_as_non_member_tour",
             cookies={guest._cookie_name: guest._format_auth_cookie()},
         )
+        self.assertIn(guest, channel_2.channel_member_ids.guest_id)
+
+    def test_public_page_as_anonymous(self):
+        channel = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
+        self.start_tour(f"/discuss/channel/{channel.id}", "public_page_as_anonymous_tour")
 
     def test_invitation_link_redirects_internal_users_to_discuss(self):
         bob = mail_new_test_user(self.env, "bob", groups="base.group_user")

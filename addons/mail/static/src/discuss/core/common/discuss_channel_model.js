@@ -773,6 +773,16 @@ export class DiscussChannel extends Record {
         this.markedAsUnread = false;
     }
 
+    joinRpc() {
+        const params = { channel_id: this.id };
+        if (this.store.self_user) {
+            params.user_ids = [this.store.self_user.id];
+        } else {
+            params.guest_ids = [this.store.self_guest.id];
+        }
+        return this.store.fetchStoreData("/discuss/channel/add_members", params);
+    }
+
     /** @returns {boolean} true if the channel was opened, false otherwise */
     openChannel() {
         if (this.self_member_id && !this.self_member_id.is_pinned && !this.parent_channel_id) {

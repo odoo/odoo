@@ -30,12 +30,6 @@ export class MessagingMenuEmptyChannel extends Component {
             channel.pinRpc();
             return;
         }
-        const params = { channel_id: channel.id };
-        if (this.store.self_user) {
-            params.user_ids = [this.store.self_user.id];
-        } else {
-            params.guest_ids = [this.store.self_guest.id];
-        }
-        this.store.fetchStoreData("/discuss/channel/add_members", params);
+        channel.joinRpc();
     }
 }

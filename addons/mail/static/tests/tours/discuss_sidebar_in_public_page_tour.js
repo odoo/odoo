@@ -61,6 +61,16 @@ registry.category("web_tour.tours").add("public_page_as_non_member_tour", {
             trigger: ".o-mail-MessagingMenu-navbar:not(:has(.o-mail-MessagingMenu-tab.active))",
         },
         {
+            trigger: ".o-mail-DiscussContent button[name='join-channel']",
+            run: "click",
+        },
+        {
+            trigger: ".o-mail-DiscussContent:not(:has(button[name='join-channel']))",
+        },
+        {
+            trigger: ".o-mail-DiscussContent-header [title='Channel 2']",
+        },
+        {
             trigger: ".o-mail-MessagingMenu-tab[data-id='channel']",
             run: "click",
         },
@@ -68,7 +78,18 @@ registry.category("web_tour.tours").add("public_page_as_non_member_tour", {
             trigger: ".o-mail-MessagingMenu-tab.active[data-id='channel']",
         },
         {
-            trigger: ".o-mail-MessagingMenu .o-mail-NotificationItem:has(:text('Channel 1'))",
+            trigger: ".o-mail-MessagingMenu .o-mail-NotificationItem:has(:text('Channel 2'))",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("public_page_as_anonymous_tour", {
+    steps: () => [
+        {
+            trigger: ".o-mail-DiscussContent-header [title='Channel 1']",
+        },
+        {
+            trigger: ".o-mail-DiscussContent-header:not(:has(button[name='join-channel']))",
         },
     ],
 });
