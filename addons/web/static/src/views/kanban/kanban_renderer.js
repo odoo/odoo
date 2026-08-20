@@ -8,6 +8,7 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -30,6 +31,8 @@ import { Widget } from "@web/views/widgets/widget";
 import { ActionHelper } from "@web/views/action_helper";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
+/** Length of the growth an unfolded column appears with. */
+const COLUMN_UNFOLD_DURATION = 200;
 
 function validateColumnQuickCreateExamples(data) {
     const { allowedGroupBys = [], examples = [], foldField = "" } = data;
@@ -262,6 +265,11 @@ export class KanbanRenderer extends Component {
                 const groups = this.getGroupsOrRecords();
                 const lastOpenedGroupIndex = groups.findIndex(
                     (g) => g.group.id === this.lastOpenedGroupId
+                );
+                this.growUnfoldedColumn(
+                    this.rootRef().querySelector(
+                        `.o_kanban_group[data-id="${this.lastOpenedGroupId}"]`
+                    )
                 );
                 let groupIdToFocus = this.lastOpenedGroupId;
                 if (
@@ -525,11 +533,64 @@ export class KanbanRenderer extends Component {
         }
     }
 
+    /**
+     * Grows a column that has just been unfolded. Driven from the patch that
+     * unfolded it rather than from the click, because the click has no layout to
+     * grow into yet: the records only arrive with that patch, and until then the
+     * column is still folded.
+     *
+     * The width is measured and then pinned between both bounds, as the width of
+     * a flex column is not a property one can interpolate — it falls out of the
+     * distribution between the columns. Neither bound suffices on its own:
+     *
+     *  * `min-width` alone is floored by the column's own content, which left it
+     *    sitting at the width of a single record for the first third of the
+     *    duration before it started to move at all.
+     *  * `max-width` alone leaves the column free to collapse to its share of a
+     *    row its siblings already fill. With enough columns to leave no free
+     *    space — seven personal stages rather than three project ones — it sat
+     *    far below the cap for the whole duration, then snapped.
+     *
+     * Closing both on the same value makes the width exactly that value at every
+     * instant, whatever the content and however many columns there are.
+     *
+     * @param {HTMLElement | null} column
+     */
+    growUnfoldedColumn(column) {
+        if (
+            !column ||
+            column.classList.contains("o_column_folded") ||
+            browser.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            return;
+        }
+        // Clipped for the duration only: the header would spill over the
+        // neighbour while the column is narrower than its content.
+        column.classList.add("o-isUnfolding");
+        const { width } = column.getBoundingClientRect();
+        const growth = column.animate(
+            {
+                minWidth: ["0px", `${width}px`],
+                maxWidth: ["0px", `${width}px`],
+            },
+            { duration: COLUMN_UNFOLD_DURATION, easing: "ease-out" }
+        );
+        // Narrowed at once, so the column never paints at full width, but timed
+        // from the next frame: the patch that unfolds it also inserts its records,
+        // and on a heavy view that frame runs long. Left to start inside it, the
+        // growth spent the frame at a standstill while its clock ran, and the
+        // first frame painted already stood a third of the way in.
+        growth.pause();
+        growth.currentTime = 0;
+        browser.requestAnimationFrame(() => growth.play());
+        growth.finished.then(() => column.classList.remove("o-isUnfolding"));
+    }
+
     // ------------------------------------------------------------------------
     // Handlers
     // ------------------------------------------------------------------------
 
-    async onGroupClick(group, ev) {
+    async onGroupClick(group) {
         if (!this.uiService.isSmall && group.isFolded) {
             this.lastOpenedGroupId = group.id;
             await group.toggle();

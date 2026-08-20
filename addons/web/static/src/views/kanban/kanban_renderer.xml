@@ -14,7 +14,7 @@
                         t-att-class="this.getGroupClasses(group, isGroupProcessing)"
                         t-attf-class="{{ !this.uiService.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
                         t-att-data-id="group.id"
-                        t-on-click="(ev) => this.onGroupClick(group, ev)"
+                        t-on-click="() => this.onGroupClick(group)"
                     >
                         <KanbanHeader
                             activeActions="this.props.archInfo.activeActions"

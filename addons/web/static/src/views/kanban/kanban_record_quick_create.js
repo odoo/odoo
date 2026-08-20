@@ -1,4 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -23,6 +24,9 @@ import { useSetupAction } from "@web/search/action_hook";
 import { formView } from "../form/form_view";
 import { getDefaultConfig } from "../view";
 import { FormViewDialog } from "../view_dialogs/form_view_dialog";
+
+/** Length of the growth the card appears with. */
+const QUICK_CREATE_UNFOLD_DURATION = 200;
 
 const DEFAULT_QUICK_CREATE_VIEW = {
     // note: the required modifier is written in the format returned by the server
@@ -84,6 +88,27 @@ export class KanbanQuickCreateController extends Component {
 
     rootRef = signal.ref();
 
+    /**
+     * Grows the card to its height as it appears. The height has to be measured:
+     * `auto` is not an interpolable value. Nothing inside shifts as it grows,
+     * but only because the card carries no padding of its own and so never
+     * becomes a definite containing block for the form — see the note next to
+     * `o_kanban_quick_create_content` in the stylesheet.
+     */
+    unfold() {
+        const el = this.rootRef();
+        if (!el || browser.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
+        // Clipped for the duration only: the form holds inputs, whose focus ring
+        // is painted outside their box.
+        el.classList.add("o-isUnfolding");
+        el.animate(
+            { height: ["0px", getComputedStyle(el).height] },
+            { duration: QUICK_CREATE_UNFOLD_DURATION, easing: "ease-out" }
+        ).finished.then(() => el.classList.remove("o-isUnfolding"));
+    }
+
     setup() {
         super.setup();
 
@@ -127,6 +152,7 @@ export class KanbanQuickCreateController extends Component {
 
         onMounted(() => {
             this.uiActiveElement = this.uiService.activeElement;
+            this.unfold();
         });
         // Close on outside click
         useListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
