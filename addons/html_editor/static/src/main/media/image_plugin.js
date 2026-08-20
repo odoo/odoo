@@ -29,7 +29,7 @@ const IMAGE_SIZE = [
 
 const IMAGE_ALIGNMENT = [
     { icon: "format_image_inline_left", value: "", title: _t("Inline") },
-    { icon: "text_wrap", value: "float-start", title: _t("Wrap text") },
+    { icon: "format_image_left", value: "float-start", title: _t("Wrap text") },
     { icon: "format_image_front", value: "d-block", title: _t("Break text") },
 ];
 

@@ -284,7 +284,7 @@ export class LinkPlugin extends Plugin {
             commandId: "openLinkPopover",
             commandParams: { type: "primary" },
             description: _t("Add a button"),
-            icon: "square",
+            icon: "crop_landscape",
         }),
 
         link_popovers: [

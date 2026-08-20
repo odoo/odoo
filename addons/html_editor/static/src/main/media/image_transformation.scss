@@ -11,3 +11,26 @@
 .transfo-container {
     z-index: $zindex-modal + 1;
 }
+
+.transfo-rotator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    // Anchor the rotator just outside the image's top-right corner.
+    transform: translate(100%, -100%);
+    display: flex;
+    line-height: 1;
+    cursor: crosshair;
+
+    [data-icon="circle"] {
+        color: $gray-900;
+    }
+    [data-icon="rotate_right"] {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $gray-100;
+    }
+}
