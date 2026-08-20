@@ -271,11 +271,12 @@ export class SpacingPlugin extends Plugin {
     }
 
     cacheSpacingStyleInfo() {
-        const treeWalker = this.createReferenceTreeWalker((node) =>
-            node.nodeType === Node.ELEMENT_NODE
-                ? NodeFilter.FILTER_ACCEPT
-                : NodeFilter.FILTER_REJECT
-        );
+        const treeWalker = this.createReferenceTreeWalker({
+            filter: (node) =>
+                node.nodeType === Node.ELEMENT_NODE
+                    ? NodeFilter.FILTER_ACCEPT
+                    : NodeFilter.FILTER_REJECT,
+        });
         let element = treeWalker.root;
         do {
             this.getRawStyleInfo(element);

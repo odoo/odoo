@@ -177,7 +177,7 @@ export class ResponsiveBlockPlugin extends Plugin {
     computeBlocks() {
         const elementToBlocks = this.getLayoutToBlocks();
         const filter = this.getLayoutFilter();
-        const treeWalker = this.createReferenceTreeWalker(filter);
+        const treeWalker = this.createReferenceTreeWalker({ filter });
         let element = treeWalker.root;
         filter(element);
         do {

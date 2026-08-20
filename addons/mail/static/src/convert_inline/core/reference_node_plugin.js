@@ -31,9 +31,12 @@ export class ReferenceNodePlugin extends Plugin {
         return ALLOWED_NODE_TYPES.includes(node.nodeType);
     }
 
-    createReferenceTreeWalker(filter = () => NodeFilter.FILTER_ACCEPT) {
+    createReferenceTreeWalker({
+        filter = () => NodeFilter.FILTER_ACCEPT,
+        root = this.config.reference,
+    } = {}) {
         return this.config.referenceDocument.createTreeWalker(
-            this.config.reference,
+            root,
             NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
             filter
         );

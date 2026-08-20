@@ -61,11 +61,13 @@ export class RenderPlugin extends Plugin {
      */
     discardIrrelevantNodes() {
         const rejectedChildren = new Set();
-        const treeWalker = this.createReferenceTreeWalker((node) => {
-            if (rejectedChildren.has(node)) {
-                return NodeFilter.FILTER_REJECT;
-            }
-            return NodeFilter.FILTER_ACCEPT;
+        const treeWalker = this.createReferenceTreeWalker({
+            filter: (node) => {
+                if (rejectedChildren.has(node)) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+            },
         });
         let node = treeWalker.root;
         do {
@@ -80,7 +82,7 @@ export class RenderPlugin extends Plugin {
         } while ((node = treeWalker.nextNode()));
     }
 
-    createEmailNodes() {
+    createEmailNodes(rootReferenceNode = this.config.reference) {
         const nodeToEmailNode = new Map();
         const contexts = [];
         const createContext = (container, targetsProviders = []) => {
@@ -133,7 +135,7 @@ export class RenderPlugin extends Plugin {
             }
             return NodeFilter.FILTER_ACCEPT;
         };
-        const treeWalker = this.createReferenceTreeWalker(filter);
+        const treeWalker = this.createReferenceTreeWalker({ filter, root: rootReferenceNode });
         let node = treeWalker.root;
         do {
             let parentNode, parentEmailNode, isOnlyChild;
@@ -171,7 +173,7 @@ export class RenderPlugin extends Plugin {
                 contexts.push(createContext(node, providers));
             }
         } while ((node = treeWalker.nextNode()));
-        return nodeToEmailNode.get(this.config.reference);
+        return nodeToEmailNode.get(rootReferenceNode);
     }
 
     // -- multiple objectives:
