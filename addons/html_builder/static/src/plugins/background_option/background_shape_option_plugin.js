@@ -27,6 +27,23 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * @typedef {((shapeGroups: BackgroundShapeGroups) => BackgroundShapeGroups | void)[]} background_shape_groups_providers
  * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
  * @typedef {((el: HTMLElement) => boolean)[]} is_element_in_invisible_panel_predicates
+ * @typedef {((el: HTMLElement) => boolean)[]} should_ignore_background_color_for_shapes_predicates
+ */
+
+/**
+ * @typedef { Object } BackgroundShapeOptionShared
+ * @property { BackgroundShapeOptionPlugin['getShapeStyleUrl'] } getShapeStyleUrl
+ * @property { BackgroundShapeOptionPlugin['getShapeData'] } getShapeData
+ * @property { BackgroundShapeOptionPlugin['getBackgroundShapeGroups'] } getBackgroundShapeGroups
+ * @property { BackgroundShapeOptionPlugin['getBackgroundShapes'] } getBackgroundShapes
+ * @property { BackgroundShapeOptionPlugin['getImplicitColors'] } getImplicitColors
+ * @property { BackgroundShapeOptionPlugin['applyShape'] } applyShape
+ * @property { BackgroundShapeOptionPlugin['createShapeContainer'] } createShapeContainer
+ * @property { BackgroundShapeOptionPlugin['getComputedConnectionsColors'] } getComputedConnectionsColors
+ * @property { BackgroundShapeOptionPlugin['handleBgColorUpdated'] } handleBgColorUpdated
+ * @property { BackgroundShapeOptionPlugin['isShapeEligibleForComputation'] } isShapeEligibleForComputation
+ * @property { BackgroundShapeOptionPlugin['getShapeSrc'] } getShapeSrc
+ * @property { BackgroundShapeOptionPlugin['getShapeStylePosition'] } getShapeStylePosition
  */
 
 export class BackgroundShapeOptionPlugin extends Plugin {
@@ -602,7 +619,11 @@ export class BackgroundShapeOptionPlugin extends Plugin {
 
         return {
             [defaultKey]:
-                curBgHexColor !== computedHexColor
+                curBgHexColor !== computedHexColor ||
+                this.checkPredicates(
+                    "should_ignore_background_color_for_shapes_predicates",
+                    editingElement
+                )
                     ? computedHexColor
                     : this.getContrastingColor(computedHexColor),
         };

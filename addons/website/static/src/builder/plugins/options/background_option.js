@@ -12,6 +12,7 @@ import { useProps, t } from "@odoo/owl";
 
 export class WebsiteBackgroundOption extends BaseOptionComponent {
     static id = "website_background_option";
+    static dependencies = ["websiteParallaxPlugin"];
     static template = "website.WebsiteBackgroundOption";
     static components = {
         ...BackgroundOption.components,
@@ -29,9 +30,7 @@ export class WebsiteBackgroundOption extends BaseOptionComponent {
         super.setup();
         const { showColorFilter } = useBackgroundOption(this.isActiveItem);
         this.showColorFilter = () => showColorFilter() || this.isActiveItem("toggle_bg_video_id");
-        // ":scope > .s_parallax_bg" is kept for compatibility.
-        const parallaxBgSelector =
-            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap > .s_parallax_bg";
+        const parallaxBgSelector = this.dependencies.websiteParallaxPlugin.getParallaxBgSelector();
         this.websiteBgOptionDomState = useDomState((el) => {
             // Only search for .s_parallax_bg that are direct children
             const parallaxBgEl = el.querySelector(parallaxBgSelector);

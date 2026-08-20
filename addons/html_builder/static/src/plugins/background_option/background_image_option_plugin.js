@@ -37,6 +37,8 @@ export class BackgroundImageOptionPlugin extends Plugin {
         content_not_editable_selectors: ".o_we_bg_filter",
         system_node_selectors: ".o_we_bg_filter",
         target_element_providers: withSequence(5, (el) => el),
+        should_ignore_background_color_for_shapes_predicates: (el) =>
+            getBgImageURLFromEl(el) ? true : undefined,
     };
     /**
      * Transfers the background-image and the dataset information relative to
