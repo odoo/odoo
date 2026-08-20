@@ -36,9 +36,15 @@ export class ChannelMember extends Record {
         },
         /** @this {import("models").ChannelMember} */
         onUpdate() {
+<<<<<<< c8aff4142412ac30866e5fd38e848325c2de235c
             // The channel pin state follows self member only: reacting to the other
             // members makes Discuss leave a channel that is still displayed.
             this.channelAsSelf?.onPinStateUpdated();
+||||||| de426207b7e79f54184d796a10e3fa24c4e69cda
+            this.channel_id?.onPinStateUpdated();
+=======
+            this.threadAsSelf?.channel?.onPinStateUpdated();
+>>>>>>> d41588104cde0d424dcc45215fe62280c4778df9
         },
     });
     last_interest_dt = fields.Datetime();
