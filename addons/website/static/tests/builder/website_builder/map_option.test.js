@@ -9,7 +9,7 @@ import {
 defineWebsiteModels();
 
 test("test description option", async () => {
-    await setupWebsiteBuilderWithSnippet("s_map", { loadIframeMinimalJS: true });
+    await setupWebsiteBuilderWithSnippet("s_map", { loadIframeBuilderTemplates: true });
     await contains(":iframe .s_map").click();
 
     // toggle description
