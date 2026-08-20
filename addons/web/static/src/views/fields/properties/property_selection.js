@@ -31,7 +31,7 @@ export class PropertySelectionField extends Component {
     }
 
     onValueChange(value) {
-        this.props.record.update({ [this.props.name]: this.selectedValue() });
+        this.props.record.update({ [this.props.name]: value });
     }
 }
 
