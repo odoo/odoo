@@ -58,7 +58,6 @@ class PurchaseTestTaxTotals(TestTaxTotals):
                 }),
             ],
         })
-        tax_purchase.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_purchase.is_used)
 
     def test_archived_tax_totals(self):

@@ -24,7 +24,6 @@ class TestExpensesTax(TestExpenseCommon):
             'total_amount_currency': 350.00,
             'tax_ids': [Command.set(tax_expense.ids)]
         })
-        tax_expense.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_expense.is_used)
 
     def test_expense_by_company_with_caba_tax(self):

@@ -1307,7 +1307,14 @@ class PosOrderLine(models.Model):
     is_total_cost_computed = fields.Boolean(help="Allows to know if the total cost has already been computed or not")
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True, index=True)
-    tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_tax_pos_order_line_rel',
+        column1='pos_order_line_id',
+        column2='account_tax_id',
+        string='Taxes',
+        readonly=True,
+    )
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')

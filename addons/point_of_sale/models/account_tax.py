@@ -1,12 +1,19 @@
-# -*- coding: utf-8 -*-
-
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import split_every
 
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
+
+    pos_order_line_ids = fields.Many2many(
+        comodel_name='pos.order.line',
+        relation='account_tax_pos_order_line_rel',
+        column1='account_tax_id',
+        column2='pos_order_line_id',
+        copy=False,
+        readonly=True,
+    )
 
     def write(self, vals):
         forbidden_fields = {
@@ -27,25 +34,10 @@ class AccountTax(models.Model):
                 lines_chunk.invalidate_recordset(['tax_ids'])
         return super(AccountTax, self).write(vals)
 
-    def _hook_compute_is_used(self, taxes_to_compute):
-        # OVERRIDE in order to fetch taxes used in pos
-
-        used_taxes = super()._hook_compute_is_used(taxes_to_compute)
-        taxes_to_compute -= used_taxes
-
-        if taxes_to_compute:
-            self.env['pos.order.line'].flush_model(['tax_ids'])
-            self.env.cr.execute("""
-                SELECT id
-                FROM account_tax
-                WHERE EXISTS(
-                    SELECT 1
-                    FROM account_tax_pos_order_line_rel AS pos
-                    WHERE account_tax_id IN %s
-                    AND account_tax.id = pos.account_tax_id
-                )
-            """, [tuple(taxes_to_compute)])
-
-            used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
-
-        return used_taxes
+    @api.depends('pos_order_line_ids')
+    def _compute_is_used(self):
+        super()._compute_is_used()
+        self.sudo().search([
+            ('id', 'in', self.filtered(lambda t: not t.is_used).ids),
+            ('pos_order_line_ids', '!=', False),
+        ]).is_used = True

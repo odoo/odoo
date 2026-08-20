@@ -187,6 +187,22 @@ class AccountTax(models.Model):
     country_code = fields.Char(related='country_id.code', readonly=True)
     is_used = fields.Boolean(string="Tax used", compute='_compute_is_used')
     repartition_lines_str = fields.Char(string="Repartition Lines", tracking=True, compute='_compute_repartition_lines_str')
+    account_move_line_ids = fields.Many2many(
+        comodel_name='account.move.line',
+        relation='account_move_line_account_tax_rel',
+        column1='account_tax_id',
+        column2='account_move_line_id',
+        copy=False,
+        readonly=True,
+    )
+    account_reconcile_model_line_ids = fields.Many2many(
+        comodel_name='account.reconcile.model.line',
+        relation='account_reconcile_model_line_account_tax_rel',
+        column1='account_tax_id',
+        column2='account_reconcile_model_line_id',
+        copy=False,
+        readonly=True,
+    )
 
     @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope', 'country_id')
     def _constrains_name(self):
@@ -244,54 +260,31 @@ class AccountTax(models.Model):
 
     def _hook_compute_is_used(self, tax_to_compute):
         '''
+            -- TO BE REMOVED IN MASTER --
+
             Override to compute the ids of taxes used in other modules. It takes
             as parameter a set of tax ids. It should return a set containing the
             ids of the taxes from that input set that are used in transactions.
         '''
         return set()
 
+    @api.depends('account_move_line_ids', 'account_reconcile_model_line_ids')
     def _compute_is_used(self):
-        used_taxes = set()
-
-        # Fetch for taxes used in account moves
-        self.env['account.move.line'].flush_model(['tax_ids'])
-        self.env.cr.execute("""
-            SELECT id
-            FROM account_tax
-            WHERE EXISTS(
-                SELECT 1
-                FROM account_move_line_account_tax_rel AS line
-                WHERE account_tax_id IN %s
-                AND account_tax.id = line.account_tax_id
-            )
-        """, [tuple(self.ids)])
-        used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
+        used_taxes = set(self.sudo().search([
+            '|',
+            ('account_move_line_ids', '!=', False),
+            ('account_reconcile_model_line_ids', '!=', False),
+        ]).ids)
         taxes_to_compute = set(self.ids) - used_taxes
 
-        # Fetch for taxes used in reconciliation
-        if taxes_to_compute:
-            self.env['account.reconcile.model.line'].flush_model(['tax_ids'])
-            self.env.cr.execute("""
-                SELECT id
-                FROM account_tax
-                WHERE EXISTS(
-                    SELECT 1
-                    FROM account_reconcile_model_line_account_tax_rel AS reco
-                    WHERE account_tax_id IN %s
-                    AND account_tax.id = reco.account_tax_id
-                )
-            """, [tuple(taxes_to_compute)])
-            used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
-            taxes_to_compute -= used_taxes
-
-        # Fetch for tax used in other modules
+        # Fetch for tax used in custom modules. To be removed in master.
         if taxes_to_compute:
             used_taxes.update(self._hook_compute_is_used(taxes_to_compute))
 
         for tax in self:
             tax.is_used = tax.id in used_taxes
 
-    @api.depends('repartition_line_ids.account_id', 'repartition_line_ids.sequence', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
+    @api.depends('is_used', 'repartition_line_ids.account_id', 'repartition_line_ids.sequence', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
     def _compute_repartition_lines_str(self):
         for tax in self:
             repartition_lines_str = tax.repartition_lines_str or ""
