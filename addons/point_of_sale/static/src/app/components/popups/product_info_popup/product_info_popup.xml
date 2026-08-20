@@ -4,13 +4,24 @@
         <t t-set="productInfo" t-value="this.props.info.productInfo"/>
         <Dialog contentClass="'product-info-popup'">
             <t t-set-slot="header">
-                <button t-on-click="this.toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
-                    <i class="oi oi-lg oi-fw" t-att-class="{'oi-filled': this.props.productTemplate.is_favorite}" data-icon="star"
-                        t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
-                        role="img"/>
-                </button>
-                <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.pos.formatCurrency(productInfo.all_prices.price_with_tax)"/>
-                <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
+                <div class="w-100">
+                    <div class="d-flex justify-content-start">
+                        <button t-on-click="this.toggleFavorite" class="border-0 bg-transparent p-0 mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
+                            <i class="oi oi-lg oi-fw" t-att-class="{'oi-filled': this.props.productTemplate.is_favorite}" data-icon="star"
+                                t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
+                                role="img"/>
+                        </button>
+                        <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.pos.formatCurrency(productInfo.all_prices.price_with_tax)"/>
+                        <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
+                    </div>
+                    <div class="d-flex flex-wrap gap-1 mt-1" t-if="this.props.productTemplate.product_tag_ids?.length">
+                        <t t-foreach="this.props.productTemplate.product_tag_ids" t-as="tag" t-key="tag.id">
+                            <span t-if="tag" class="o_tag d-inline-flex align-items-center badge rounded-pill" t-att-data-product-tag-id="tag.id" t-attf-style="background-color: #{tag.color} !important; color: #fff !important;">
+                                <span class="o_tag_badge_text o_badge_text" t-out="tag.name"/>
+                            </span>
+                        </t>
+                    </div>
+                </div>
             </t>
             <div class="section-public-description mb-4 pb-4 border-bottom text-start" t-if="this.props.productTemplate.productDescriptionMarkup">
                 <h3 class="section-title">
