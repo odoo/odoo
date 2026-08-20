@@ -4,7 +4,6 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import json
 import random
-import logging
 
 from odoo import models, api, _, fields, tools
 from odoo.exceptions import AccessError, UserError
@@ -13,8 +12,6 @@ from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL, date_utils
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
 
-
-_logger = logging.getLogger(__name__)
 
 def group_by_journal(vals_list):
     res = defaultdict(list)
@@ -651,14 +648,15 @@ class AccountJournal(models.Model):
             show_banner = False
             coa_name = ''
             if template_code:
-                template_module = f"l10n_{template_code}" if template_code != 'account' else 'account'
+                template_info = self.env['account.chart.template']._get_chart_template_mapping().get(template_code, {})
                 module = self.env['ir.module.module'].search([
-                    ('name', '=', template_module),
+                    ('name', '=', template_info.get('module')),
                     ('state', '=', 'installed'),
                 ], limit=1)
-                if module and module.installed_version != module.latest_version:
+                # due to Odoo's legacy naming, latest_version contains the module version installed in the db
+                if module and company.coa_version != module.latest_version:
                     show_banner = True
-                    coa_name = self.env['account.chart.template']._get_chart_template_mapping().get(template_code, {}).get('name', '')
+                    coa_name = template_info.get('name', '')
             company_banner[company.id] = {
                 'show_banner': show_banner,
                 'coa_name': coa_name,
@@ -1461,12 +1459,4 @@ class AccountJournal(models.Model):
         template_code = company.chart_template
         if not template_code:
             return
-
-        # Load the updated template values into the database
         self.env['account.chart.template'].try_loading(template_code, company=company)
-
-        # Update the module version in the database to match the latest disk version
-        template_module = f"l10n_{template_code}" if template_code != 'account' else 'account'
-        module = self.env['ir.module.module'].sudo().search([('name', '=', template_module)], limit=1)
-        if module and module.state == 'installed':
-            module.write({'latest_version': module.installed_version})

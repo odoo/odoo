@@ -328,6 +328,8 @@ class ResCompany(models.Model):
         compute='_compute_has_ledger',
     )
 
+    coa_version = fields.Char(string="COA Version")
+
     def get_next_batch_payment_communication(self):
         '''
         When in need of a batch payment communication reference (several invoices paid at the same time)
