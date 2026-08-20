@@ -1,6 +1,8 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { clamp } from "@web/core/utils/numbers";
 
 export class RatingOptionPlugin extends Plugin {
     static id = "ratingOption";
@@ -82,6 +84,7 @@ export class ActiveIconsNumberAction extends BuilderAction {
             nbActiveIcons: nbActiveIcons,
             nbTotalIcons: nbTotalIcons,
         });
+        updateAriaLabel({ editingElement, nbActiveIcons, nbTotalIcons });
     }
     getValue({ editingElement }) {
         return getActiveIcons(editingElement).length;
@@ -97,6 +100,7 @@ export class TotalIconsNumberAction extends BuilderAction {
             nbActiveIcons: nbActiveIcons,
             nbTotalIcons: nbTotalIcons,
         });
+        updateAriaLabel({ editingElement, nbActiveIcons, nbTotalIcons });
     }
     getValue({ editingElement }) {
         return getAllIcons(editingElement).length;
@@ -116,6 +120,15 @@ function createIcons({ editingElement, nbActiveIcons, nbTotalIcons }) {
         targetEl.appendChild(document.createTextNode(" "));
     }
     renderIcons(editingElement);
+}
+function updateAriaLabel({ editingElement, nbActiveIcons, nbTotalIcons }) {
+    editingElement.querySelector(".s_rating_icons")?.setAttribute(
+        "aria-label",
+        _t("%(nbActiveIcons)s out of %(nbTotalIcons)s stars", {
+            nbActiveIcons: clamp(parseInt(nbActiveIcons), 0, nbTotalIcons),
+            nbTotalIcons,
+        })
+    );
 }
 function getActiveCustomIcons(editingElement) {
     return editingElement.dataset.activeCustomIcon || "";
