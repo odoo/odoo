@@ -34,7 +34,7 @@ import {
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { rpc } from "@web/core/network/rpc";
-import { runAllTimers } from "@odoo/hoot-dom";
+import { press, runAllTimers } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -2132,7 +2132,7 @@ test("Escape key should close the channel selector and focus the composer", asyn
     await contains(".o-mail-Composer-input:focus");
     await click("[title='Add or join a channel']");
     await contains(".o-discuss-ChannelSelector");
-    await triggerHotkey("escape");
+    await press("escape");
     await contains(".o-discuss-ChannelSelector", { count: 0 });
     await contains(".o-mail-Composer-input:focus");
 });

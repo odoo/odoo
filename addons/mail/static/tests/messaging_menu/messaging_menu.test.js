@@ -19,6 +19,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
@@ -646,7 +647,22 @@ test("'Start a conversation' button should open a thread in mobile", async () =>
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Start a conversation']", "demo");
     await click(".o-discuss-ChannelSelector-suggestion", { text: "Demo" });
-    triggerHotkey("enter");
+    await press("enter");
+    await contains(".o-mail-ChatWindow", { text: "Demo" });
+});
+
+test("'Start a conversation' button should open a thread in mobile with modifier keys active", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click("button", { text: "Start a conversation" });
+    await insertText("input[placeholder='Start a conversation']", "demo");
+    await click(".o-discuss-ChannelSelector-suggestion", { text: "Demo" });
+    // Mobile Safari automatically adds the Shift modifier when selecting the suggestion bubble.
+    await press(["shift", "enter"]);
     await contains(".o-mail-ChatWindow", { text: "Demo" });
 });
 

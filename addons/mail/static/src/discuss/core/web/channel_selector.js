@@ -3,7 +3,6 @@ import { cleanTerm } from "@mail/utils/common/format";
 
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
@@ -194,20 +193,19 @@ export class ChannelSelector extends Component {
     }
 
     onKeydownInput(ev) {
-        const hotkey = getActiveHotkey(ev);
-        switch (hotkey) {
-            case "enter":
+        switch (ev.key) {
+            case "Enter":
                 if (isEventHandled(ev, "NavigableList.select") || !this.state.value === "") {
                     return;
                 }
                 this.onValidate();
                 break;
-            case "backspace":
+            case "Backspace":
                 if (this.state.selectedPartners.length > 0 && this.state.value === "") {
                     this.state.selectedPartners.pop();
                 }
                 return;
-            case "escape":
+            case "Escape":
                 this.props.close?.();
                 return;
             default:
