@@ -1658,10 +1658,7 @@ class ResPartner(models.Model):
         partner = self.commercial_partner_id
         identifiers = partner.additional_identifiers or {}
         if not is_identifier_void(partner.vat):
-            country_code = partner._deduce_country_code()
-            vat_prefix = partner.vat[:2].upper()
-            tin_country = vat_prefix if get_tin_metadata_of_country(vat_prefix) else country_code
-            key = get_tin_metadata_of_country(tin_country).get('key', 'TIN')
+            key = get_tin_metadata_of_country(partner.country_code).get('key', 'TIN')
             identifiers = {key: partner.vat, **identifiers}
         enriched_identifiers = {}
         if enrich:
