@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 from datetime import datetime
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from freezegun import freeze_time
@@ -11,6 +12,12 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tests import tagged
 from odoo.tools import misc
 from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
+
+ZATCA_RESPONSES = {
+        'accepted': {'status_code': 200},
+        'rejected': {'error': "Invalid VAT number", 'rejected': True},
+        'unknown': {'error': "Timeout waiting for ZATCA", 'excepted': True},
+    }
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -767,3 +774,26 @@ class TestEdiZatca(TestSaEdiCommon):
             journal.l10n_sa_csr_errors,
             r"Please make sure the following fields are shorter than 64 bytes.*Company Name",
         )
+
+    def test_post_zatca_edi(self):
+        """Test the ZATCA EDI posting functionality."""
+        for expected_state, response in ZATCA_RESPONSES.items():
+            with self.subTest(expected_state=expected_state):
+                document = self._get_invoice_document()
+                with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(response)):
+                    document._l10n_sa_post_zatca_edi(True)
+                self.assertEqual(document.state, expected_state)
+
+    def test_zatca_retry_after_failed_attempt(self):
+        """Test if a failed ZATCA submission can be retried successfully."""
+        for prior_state in ('rejected', 'unknown'):
+            with self.subTest(prior_state=prior_state):
+                document = self._get_invoice_document()
+
+                with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES[prior_state])):
+                    document._l10n_sa_post_zatca_edi(True)
+                self.assertEqual(document.state, prior_state)
+
+                with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES['accepted'])):
+                    document._l10n_sa_post_zatca_edi(True)
+                self.assertEqual(document.state, 'accepted')
