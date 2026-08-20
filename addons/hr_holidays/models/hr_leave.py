@@ -598,7 +598,7 @@ class HrLeave(models.Model):
             ])
         ])
         versions = self.env['hr.version'].sudo().search(domain)
-        return versions.filtered(lambda v: v._is_overlapping_period(self.date_from.date(), self.date_to.date()))
+        return versions.filtered(lambda v: v._is_overlapping_period(self.request_date_from, self.request_date_to))
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
@@ -690,7 +690,8 @@ class HrLeave(models.Model):
     # so that when we consider allocated work entry types for employees that don't have allocations, it doesn't revert back to a generic one
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_work_entry_type_id(self):
-        for holiday in self:
+        draft_leaves = self.filtered(lambda l: l.state == 'confirm')
+        for holiday in draft_leaves:
             allowed_country_ids = [holiday.employee_id.company_id.country_id.id]
             local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', allowed_country_ids)])
             if holiday.work_entry_type_id and holiday.work_entry_type_id in local_work_entry_types:
