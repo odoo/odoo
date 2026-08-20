@@ -521,48 +521,65 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_pricelist'))]"/>
         </record>
 
-        <record id="list_christmas" model="product.pricelist">
-            <field name="name">Christmas</field>
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="base.default_website" />
-            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
-            <field name="sequence">20</field>
+        <record id="list_default" model="product.pricelist">
+            <field name="name">USD</field>
+            <field name="sequence">5</field>
+            <field name="selectable">True</field>
+            <field name="company_id"/>
+            <field name="website_id" ref="base.default_website"/>
         </record>
-        <record id="item_christmas" model="product.pricelist.item">
-            <field name="pricelist_id" ref="list_christmas"/>
-            <field name="compute_price">formula</field>
-            <field name="base">list_price</field>
-            <field name="price_discount">20</field>
+
+        <record id="list_eur" model="product.pricelist">
+            <field name="name">EUR</field>
+            <field name="sequence">10</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="selectable">True</field>
+            <field name="tax_display">tax_included</field>
+            <field name="company_id"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="item_ids">
+                <record id="rule_eur_based_on_default" model="product.pricelist.item">
+                    <field name="base">pricelist</field>
+                    <field name="base_pricelist_id" ref="list_default"/>
+                    <field name="compute_price">formula</field>
+                </record>
+            </field>
+        </record>
+
+        <record id="list_b2b" model="product.pricelist">
+            <field name="name">Professional Prices</field>
+            <field name="sequence">10</field>
+            <field name="tax_display">tax_excluded</field>
+            <field name="company_id"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="item_ids">
+                <record id="rule_b2b_based_on_default" model="product.pricelist.item">
+                    <field name="base">pricelist</field>
+                    <field name="base_pricelist_id" ref="list_default"/>
+                    <field name="compute_price">formula</field>
+                </record>
+            </field>
         </record>
 
         <record id="list_benelux" model="product.pricelist">
             <field name="name">Benelux</field>
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="base.default_website" />
-            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
-            <field name="sequence">2</field>
-        </record>
-        <record id="item_benelux" model="product.pricelist.item">
-            <field name="pricelist_id" ref="list_benelux"/>
-            <field name="compute_price">percentage</field>
-            <field name="base">list_price</field>
-            <field name="percent_price">10</field>
+            <field name="sequence">10</field>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="country_group_ids" eval="[Command.set([ref('benelux')])]"/>
+            <field name="company_id"/>
+            <field name="website_id" ref="base.default_website"/>
+            <field name="item_ids">
+                <record id="rule_benelux_based_on_eur" model="product.pricelist.item">
+                    <field name="base">pricelist</field>
+                    <field name="base_pricelist_id" ref="list_eur"/>
+                    <field name="compute_price">formula</field>
+                </record>
+            </field>
         </record>
 
-
-        <record id="list_europe" model="product.pricelist">
-            <field name="name">EUR</field>
-            <field name="selectable" eval="True" />
-            <field name="website_id" ref="base.default_website" />
-            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
-            <field name="sequence">3</field>
-            <field name="currency_id" ref="base.EUR"/>
-        </record>
-        <record id="item_europe" model="product.pricelist.item">
-            <field name="pricelist_id" ref="list_europe"/>
-            <field name="compute_price">formula</field>
-            <field name="base">list_price</field>
+        <!-- Enable multi currency after pricelist creation to avoid creating the "Default" pricelist. -->
+        <record id="base.EUR" model="res.currency">
+            <field name="active" eval="True"/>
         </record>
 
         <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
