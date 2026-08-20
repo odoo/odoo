@@ -32,6 +32,7 @@ configuration of their taxes and fiscal positions manually.
         'account',
         'account_edi_ubl_cii',
         'l10n_fr',
+        'partner_autocomplete',
     ],
     'auto_install': ['account'],
     'data': [

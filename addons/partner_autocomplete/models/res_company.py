@@ -2,10 +2,7 @@
 
 import logging
 
-from odoo.addons.iap.tools import iap_tools
 from odoo import api, fields, models, modules, _
-from odoo.tools import config
-from odoo.tools.mail import email_domain_extract, url_domain_extract
 
 _logger = logging.getLogger(__name__)
 
@@ -52,7 +49,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         _logger.info("Starting enrich of company %s (%s)", self.name, self.id)
 
-        company_domain = self._get_company_domain()
+        company_domain = self.partner_id._get_partner_domain()
         if not company_domain:
             return False
 
@@ -77,25 +74,3 @@ class ResCompany(models.Model):
             if relation_data and isinstance(relation_data, dict):
                 extracted_data[m2o_field] = relation_data.get('id', False)
         return extracted_data
-
-    def _get_company_domain(self):
-        """ Extract the company domain to be used by IAP services.
-
-        The domain is extracted from the website or the email information.
-
-        >>> company.email, company._get_company_domain()
-        ("info@proximus.be", "proximus.be")
-        >>> company.website, company._get_company_domain()
-        ("www.info.proximus.be", "proximus.be")
-        """
-        self.ensure_one()
-
-        company_domain = email_domain_extract(self.email) if self.email else False
-        if company_domain and company_domain not in iap_tools._MAIL_PROVIDERS:
-            return company_domain
-
-        company_domain = url_domain_extract(self.website) if self.website else False
-        if not company_domain or company_domain in ['localhost', 'example.com']:
-            return False
-
-        return company_domain
