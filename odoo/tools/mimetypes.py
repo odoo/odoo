@@ -4,6 +4,7 @@ import mimetypes
 import re
 import typing
 import zipfile
+from xml.parsers import expat
 
 try:
     import magic
@@ -268,7 +269,28 @@ def is_xls(bin_data):
 # Match content
 # -------------------------------------------------------------------------------------------------
 def is_svg(bin_data):
-    return b'<svg' in bin_data and b'/svg' in bin_data
+    def on_start_element(name, _attrs):
+        parts = name.split(" ", 1)
+        if len(parts) == 2:
+            uri, local = parts
+        else:
+            # some software treat namespace-less <svg> as valid
+            uri, local = "http://www.w3.org/2000/svg", parts[0]
+
+        # could use a different exception but no real reason to
+        sig = expat.ExpatError()
+        # expat error codes are normally nonzero, so store success (is svg) as 0 / False
+        sig.code = local != "svg" or uri != 'http://www.w3.org/2000/svg'
+        raise sig
+
+    # can't reuse expat parsers, must create one per document
+    parser = expat.ParserCreate(namespace_separator=" ")
+    parser.StartElementHandler = on_start_element
+
+    try:
+        parser.Parse(bin_data, True)
+    except expat.ExpatError as e:
+        return e.code == 0
 
 
 def is_empty(bin_data):
