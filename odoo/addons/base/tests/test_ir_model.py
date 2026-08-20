@@ -234,6 +234,27 @@ class TestXMLID(TransactionCase):
             ])
         assert_xmlid(xmlid, records[5], f'The xmlid {xmlid} should have been updated with record (not an update) {records[1]}')
 
+    def test_reflect_constraint_xmlids(self):
+        xmlid = 'base.constraint_ir_model_data_name_nospaces'
+        constraint = self.env.ref(xmlid)
+        model_data = self.get_data(xmlid)
+
+        other_constraint = self.env['ir.model.constraint'].search([('id', '!=', constraint.id)], limit=1)
+        model_data.res_id = other_constraint.id
+        constraint_count = sum(
+            bool(name and table_object._module)
+            for name, table_object in self.env['ir.model.data']._table_objects.items()
+        )
+        xmlids_update_count = 1
+        with self.assertQueryCount(constraint_count + xmlids_update_count):
+            self.env['ir.model.constraint']._reflect_constraints(['ir.model.data'])
+        self.assertEqual(self.env.ref(xmlid), constraint)
+
+        # Missing xmlid for an existing constraint should be recreated
+        self.get_data(xmlid).unlink()
+        self.env['ir.model.constraint']._reflect_constraints(['ir.model.data'])
+        self.assertEqual(self.env.ref(xmlid), constraint)
+
 
 @tagged('-at_install', 'post_install')
 class TestIrModelEdition(TransactionCase):
