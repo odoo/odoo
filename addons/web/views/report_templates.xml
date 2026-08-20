@@ -351,7 +351,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <h2 t-out="layout_document_title"/>
+            <h2 t-out="layout_document_title or 'Title'"/>
             <t t-out="0"/>
         </div>
 
@@ -411,7 +411,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <h2 t-out="layout_document_title"/>
+            <h2 t-out="layout_document_title or 'Title'"/>
             <t t-out="0"/>
         </div>
 
@@ -475,7 +475,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <h2 t-out="layout_document_title"/>
+            <h2 t-out="layout_document_title or 'Title'"/>
             <t t-out="0"/>
         </div>
 
@@ -539,7 +539,7 @@
              t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <h2 t-out="layout_document_title"/>
+            <h2 t-out="layout_document_title or 'Title'"/>
             <t t-out="0"/>
         </div>
 
@@ -624,7 +624,7 @@
                 <t t-set="custom_layout_address" t-value="true"/>
                 <t t-call="web.address_layout"/>
             </div>
-            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title or ' '" class="opacity-0" t-att-style="'height: 0px'"/>
+            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title or 'Title'" class="opacity-0" t-att-style="'height: 0px'"/>
             <t t-out="0"/>
         </div>
 
@@ -696,7 +696,7 @@
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-set="custom_layout_address" t-value="true"/>
             <t t-call="web.address_layout"/>
-            <h2 t-out="layout_document_title"/>
+            <h2 t-out="layout_document_title or 'Title'"/>
             <t t-out="0"/>
         </div>
 
@@ -771,12 +771,12 @@
                             <t t-set="custom_layout_address" t-value="true"/>
                         </td>
                         <td t-if="not information_block" class="align-bottom p-0 ps-2">
-                            <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                            <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title or 'Title'"/>
                         </td>
                     </tr>
                     <tr t-if="information_block">
                         <td colspan="2" class="align-bottom p-0">
-                            <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                            <h2 class="text-nowrap text-end" t-out="layout_document_title or 'Title'"/>
                         </td>
                     </tr>
                 </tbody>
