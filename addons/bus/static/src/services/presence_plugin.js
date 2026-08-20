@@ -78,7 +78,7 @@ services.add(PresencePlugin);
  * temporary - to remove when all use of the presence service are removed
  * -----------------------------------------------------------------------------
  */
-registry.category("services").add("presence", {
+export const presenceService = {
     start() {
         const presencePlugin = usePlugin(PresencePlugin);
         const presenceService = Object.create(presencePlugin);
@@ -87,4 +87,6 @@ registry.category("services").add("presence", {
         };
         return presenceService;
     },
-});
+};
+
+registry.category("services").add("presence", presenceService);

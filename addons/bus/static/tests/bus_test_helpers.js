@@ -1,10 +1,9 @@
 import { after, expect, registerDebugInfo } from "@odoo/hoot";
 import {
-    MockServer,
     defineModels,
     getMockEnv,
     getService,
-    mockService,
+    MockServer,
     patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
@@ -12,12 +11,13 @@ import { BusBus } from "./mock_server/mock_models/bus_bus";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
 
-import { busService } from "@bus/services/bus_service";
+import { BusPlugin } from "@bus/services/bus_plugin";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
-import { on, runAllTimers, waitUntil } from "@odoo/hoot-dom";
+import { runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
+import { useListener } from "@odoo/owl";
 
 /**
  * @typedef {[
@@ -41,7 +41,7 @@ import { patch } from "@web/core/utils/patch";
 // Setup
 //-----------------------------------------------------------------------------
 
-patch(busService, {
+patch(BusPlugin.prototype, {
     _onMessage(env, id, type, payload) {
         // Generic handlers (namely: debug info)
         if (type in busMessageHandlers) {
@@ -163,12 +163,18 @@ export function addBusMessageHandler(type, handler) {
  * @param  {...[string, (event: CustomEvent) => any]} listeners
  */
 export function addBusServiceListeners(...listeners) {
-    mockService("bus_service", (env, dependencies) => {
-        const busServiceInstance = busService.start(env, dependencies);
-        for (const [type, handler] of listeners) {
-            after(on(busServiceInstance, type, handler));
-        }
-        return busServiceInstance;
+    let bound = false;
+    patchWithCleanup(BusPlugin.prototype, {
+        setup() {
+            super.setup();
+
+            if (!bound) {
+                bound = true;
+                for (const [type, handler] of listeners) {
+                    useListener(this.bus, type, handler);
+                }
+            }
+        },
     });
 }
 
@@ -322,7 +328,7 @@ export function lockWebsocketConnect() {
 }
 
 export async function startBusService() {
-    getService("bus_service").start();
+    getService(BusPlugin).start();
     await runAllTimers();
 }
 

@@ -1,16 +1,16 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { multiTabFallbackService } from "@bus/multi_tab_fallback_service";
+import { describe, expect, test, after } from "@odoo/hoot";
+import { MultiTabFallbackPlugin } from "@bus/multi_tab_fallback_plugin";
 import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 
-registry.category("services").remove("multi_tab");
-registry.category("services").add("multi_tab", multiTabFallbackService);
 describe.current.tags("desktop");
 
 test("main tab service(local storage) elects new main on pagehide", async () => {
+    services.add(MultiTabFallbackPlugin);
+    after(() => services.delete(MultiTabFallbackPlugin));
     await makeTestApp({ forceNew: true });
-    const multiTab1 = getService("multi_tab");
+    const multiTab1 = getService(MultiTabFallbackPlugin);
     expect(await multiTab1.isOnMainTab()).toBe(true);
     // Prevent second tab from receiving pagehide event.
     patchWithCleanup(browser, {
@@ -21,7 +21,7 @@ test("main tab service(local storage) elects new main on pagehide", async () => 
         },
     });
     await makeTestApp({ forceNew: true });
-    const multiTab2 = getService("multi_tab");
+    const multiTab2 = getService(MultiTabFallbackPlugin);
     expect(await multiTab2.isOnMainTab()).toBe(false);
     multiTab1.bus.addEventListener("no_longer_main_tab", () =>
         expect.step("tab1 no_longer_main_tab")

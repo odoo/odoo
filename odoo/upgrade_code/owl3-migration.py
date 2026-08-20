@@ -1109,6 +1109,11 @@ MISC_WHITELIST = {
 }
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
+    "assetsWatchdog": ['AssetsWatchdogPlugin', '@bus/services/assets_watchdog_plugin'],
+    "bus.parameters": ['BusParametersPlugin', '@bus/bus_parameters_plugin'],
+    "bus.monitoring_service": ['BusMonitoringPlugin', '@bus/services/bus_monitoring_plugin'],
+    "bus.logs_service": ['BusLogsPlugin', '@bus/debug/bus_logs_plugin'],
+    "bus_service": ['BusPlugin', '@bus/services/bus_plugin'],
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
@@ -1116,9 +1121,12 @@ SERVICES_MAPPING = {
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
+    "multi_tab": ['MultiTabPlugin', '@bus/multi_tab_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
+    "simple_notification": ['SimpleNotificationPlugin', '@bus/simple_notification_plugin'],
+    "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
 }
 
 

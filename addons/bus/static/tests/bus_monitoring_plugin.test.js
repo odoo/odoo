@@ -3,6 +3,7 @@ import {
     defineBusModels,
     lockWebsocketConnect,
 } from "@bus/../tests/bus_test_helpers";
+import { BusMonitoringPlugin } from "@bus/services/bus_monitoring_plugin";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, runAllTimers } from "@odoo/hoot-dom";
@@ -10,33 +11,34 @@ import {
     getService,
     makeTestApp,
     MockServer,
-    mockService,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { useOnChange } from "@odoo/owl";
 
 defineBusModels();
 describe.current.tags("desktop");
 
 function stepConnectionStateChanges() {
-    mockService("bus.monitoring_service", {
-        get isConnectionLost() {
-            return this._isConnectionLost;
-        },
-        set isConnectionLost(value) {
-            if (value !== this._isConnectionLost) {
-                expect.step(`isConnectionLost - ${value}`);
-            }
-            this._isConnectionLost = value;
+    patchWithCleanup(BusMonitoringPlugin.prototype, {
+        setup() {
+            super.setup();
+
+            useOnChange(
+                () => [this.isConnectionLost()],
+                () => {
+                    expect.step(`isConnectionLost - ${this.isConnectionLost()}`);
+                }
+            );
         },
     });
 }
 
 test("connection considered as lost after failed reconnect attempt", async () => {
-    stepConnectionStateChanges();
     addBusServiceListeners(
         ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
         ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
+    stepConnectionStateChanges();
     await makeTestApp();
     await expect.waitForSteps(["isConnectionLost - false", "BUS:CONNECT"]);
     const unlockWebsocket = lockWebsocketConnect();
@@ -50,12 +52,12 @@ test("connection considered as lost after failed reconnect attempt", async () =>
 });
 
 test("brief disconect not considered lost", async () => {
-    stepConnectionStateChanges();
     addBusServiceListeners(
         ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
         ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
         ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
+    stepConnectionStateChanges();
     await makeTestApp();
     await expect.waitForSteps(["isConnectionLost - false", "BUS:CONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED);
@@ -65,12 +67,12 @@ test("brief disconect not considered lost", async () => {
 });
 
 test("computer sleep doesn't mark connection as lost", async () => {
-    stepConnectionStateChanges();
     addBusServiceListeners(
         ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
         ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
         ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
+    stepConnectionStateChanges();
     await makeTestApp();
     await expect.waitForSteps(["isConnectionLost - false", "BUS:CONNECT"]);
     const unlockWebsocket = lockWebsocketConnect();
@@ -82,5 +84,5 @@ test("computer sleep doesn't mark connection as lost", async () => {
     unlockWebsocket();
     await runAllTimers();
     await expect.waitForSteps(["BUS:CONNECT"]);
-    expect(getService("bus.monitoring_service").isConnectionLost).toBe(false);
+    expect(getService(BusMonitoringPlugin).isConnectionLost()).toBe(false);
 });

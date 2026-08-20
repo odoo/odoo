@@ -324,8 +324,8 @@ For more specific needs, you may also assign custom-defined actions
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/*.js',
             ('remove', 'bus/static/src/workers/bus_worker_script.js'),
-            ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
-            ('remove', 'bus/static/src/simple_notification_service.js'),
+            ('remove', 'bus/static/src/services/assets_watchdog_plugin.js'),
+            ('remove', 'bus/static/src/simple_notification_plugin.js'),
             ('include', 'im_livechat.assets_embed_core'),
         ],
         'im_livechat.assets_embed_cors': [

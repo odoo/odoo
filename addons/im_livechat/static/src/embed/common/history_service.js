@@ -8,7 +8,7 @@ export class HistoryService {
     static HISTORY_LIMIT = 15;
 
     constructor(env, services) {
-        /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
+        /** @type {ReturnType<typeof import("@bus/services/bus_plugin").busService.start>} */
         this.busService = services.bus_service;
         /** @type {import("models").Store} */
         this.store = services["mail.store"];
