@@ -8,7 +8,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
-from .llm_service import AIServiceUnavailable
+from .llm_service import DEFAULT_AUTO_FILL_THRESHOLD, AIServiceUnavailable
 
 _logger = logging.getLogger(__name__)
 
@@ -419,11 +419,14 @@ class AccountMove(models.Model):
 
         if self.ai_extraction_status == "validated":
             # A human confirmed the bill — the state is Approved regardless
-            # of the (already constraint-checked) threshold.
+            # of the (already constraint-checked) threshold. The review flag
+            # is cleared too: state and flag are always set together so they
+            # can never disagree.
             self.confidence_score = self.ai_confidence or 0.0
             self.ai_confidence_details = self.ai_confidence_details or {}
             self.ai_confidence_notes = self.ai_confidence_notes or ""
             self.ai_extraction_state = "approved"
+            self.ai_review_required = False
             return
 
         if not payload:
@@ -435,6 +438,7 @@ class AccountMove(models.Model):
             self.ai_confidence_details = self.ai_confidence_details or {}
             self.ai_confidence_notes = self.ai_confidence_notes or ""
             self.ai_extraction_state = "needs_review"
+            self.ai_review_required = True
             return
 
         checks = []
@@ -545,16 +549,33 @@ class AccountMove(models.Model):
         * ``score >= auto_fill`` → auto-fill GL, mark ready
         * ``score >= review`` → review kanban column
         * ``score < review`` → needs_human flag
+
+        Resolution order for ``auto_fill``:
+        1. Explicit ``invoice_agent.auto_fill_threshold`` (new-style param).
+        2. Legacy ``invoice_agent.confidence_threshold`` (maps onto
+           auto_fill — the v0.9 single threshold).
+        3. The journal's ``ai_min_confidence`` when the journal has the AI
+           agent enabled and NO explicit param is set. This preserves the
+           v0.9 semantics where the journal threshold IS the auto bar: a
+           journal tuned to 0.80 auto-fills at 0.80. Hard-coding the 0.90
+           module default here silently demotes every 0.80-0.90 bill to
+           Needs Review even though the accountant configured 0.80.
+        4. The 0.90 module default as a last resort.
         """
         self.ensure_one()
         svc = self.env["invoice.llm.service"]
         auto_fill = svc.auto_fill_threshold()
         review = svc.review_threshold()
-        # Legacy single-threshold compatibility: when the legacy param is set
-        # and the new ones are defaults, honour the legacy value as auto_fill.
         legacy = svc.confidence_threshold()
-        if legacy is not None and auto_fill == 0.90:
+        if legacy is not None and auto_fill == DEFAULT_AUTO_FILL_THRESHOLD:
             auto_fill = legacy
+        elif (
+            auto_fill == DEFAULT_AUTO_FILL_THRESHOLD
+            and self.journal_id.ai_agent_enabled
+        ):
+            auto_fill = (
+                self.journal_id.ai_min_confidence or DEFAULT_AUTO_FILL_THRESHOLD
+            )
         return auto_fill, review
 
     # -------------------------------------------------------------------------
