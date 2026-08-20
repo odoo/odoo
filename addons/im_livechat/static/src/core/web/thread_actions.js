@@ -3,7 +3,7 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_info_list";
 import { patch } from "@web/core/utils/patch";
-import { joinChannelAction } from "@mail/discuss/core/web/thread_actions";
+import { joinChannelAction } from "@mail/discuss/core/public_web/thread_actions";
 
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
