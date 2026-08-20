@@ -5,7 +5,6 @@
                 <span class="px-1" t-out="this.state.displayName"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
                         <DropdownItem
                             attrs="{ name: item.tagName }"
@@ -13,7 +12,6 @@
                             <t t-out="item.name"/>
                         </DropdownItem>
                     </t>
-                </div>
             </t>
         </Dropdown>
     </t>

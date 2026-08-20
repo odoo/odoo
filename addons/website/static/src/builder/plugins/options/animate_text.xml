@@ -6,7 +6,7 @@
     </t>
 
     <t t-name="website_builder.AnimateTextPopover">
-        <div class="o_animate_text_popover p-2" data-prevent-closing-overlay="true" t-ref="this.contentRef">
+        <div class="o_animate_text_popover p-2" t-ref="this.contentRef">
             <AnimateOption dropdownClass="''" requireAnimation="true">
                 <t t-set-slot="animationRowTrailing">
                     <button class="btn btn-sm btn-light oi oi-filled" data-icon="delete" title="Reset" t-on-click="this.props.onReset"/>
