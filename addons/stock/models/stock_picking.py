@@ -722,7 +722,7 @@ class StockPicking(models.Model):
         if self.env.user.allowed_picking_type_ids:
             for picking in self:
                 if picking.picking_type_id not in self.env.user.allowed_picking_type_ids:
-                    raise AccessError(_( "You are not authorized to perform this operation type « %(warehouse)s: %(operation)s ».", warehouse=picking.picking_type_id.warehouse_id.name, operation=picking.picking_type_id.name))
+                    raise AccessError(_("You are not authorized to perform this operation type « %(warehouse)s: %(operation)s ».", warehouse=picking.picking_type_id.warehouse_id.name, operation=picking.picking_type_id.name))
 
                 if picking.location_id != picking.picking_type_id.default_location_src_id:
                     raise AccessError(_("The source location must be « %s ».", picking.picking_type_id.default_location_src_id.name))
