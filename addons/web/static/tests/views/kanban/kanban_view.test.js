@@ -7511,9 +7511,10 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
         Product._records.push({ id: 8 + i, name: `column ${i}` });
         Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
     }
-    Product._records[2].fold = true;
-    Product._records[8].fold = true;
-    Product._records[9].fold = true;
+    Product._records[2].fold = true; // "column 0"
+    Product._records[8].fold = true; // "column 6"
+    Product._records[9].fold = true; // "column 7"
+    Product._records[13].fold = true; // "column 11", last group
 
     await mountView({
         type: "kanban",
@@ -7528,44 +7529,53 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
             </kanban>`,
     });
     disableAnimations();
+
+    const content = () => queryOne(".o_content");
+    const expectFlushRight = (selector, message) =>
+        // TODO JUM: change digits option
+        expect(queryRect(selector).right).toBeCloseTo(queryRect(".o_content").right, {
+            digits: 0,
+            message,
+        });
+
     expect(".o_content").toHaveProperty("scrollLeft", 0);
+
+    // "column 0" and its neighbours still fit in the viewport once unfolded: no scroll
     await contains(".o_column_folded:eq(0)").click();
     await animationFrame();
-    // Group completely inside the viewport after unfold, no scroll
-    expect(".o_content").toHaveProperty("scrollLeft", 0);
-    await contains(".o_content").scroll({ left: 1500 });
+    expect(".o_content").toHaveProperty("scrollLeft", 0, {
+        message: "Group should be completely inside the viewport after unfold, no scroll"
+    });
+
+    // "column 6" is followed by a folded group ("column 7"), which ends up outside
+    // of the viewport after the unfold: scroll to that group
+    contains(".o_content").scroll({
+        left: content().scrollLeft + queryRect(".o_column_folded:eq(0)").right - queryRect(".o_content").right,
+    });
+    let scrollLeft = content().scrollLeft;
     await contains(".o_column_folded:eq(0)").click();
-    // Group is followed by a folded group which is outside the viewport
-    // after unfold, scroll to that group
-    expect(".o_content").toHaveProperty("scrollLeft", 1862);
-    let { x, width } = queryRect(".o_column_folded:eq(0)");
-    // TODO JUM: change digits option
-    expect(x + width).toBeCloseTo(window.innerWidth, {
-        digits: 0,
-        message:
-            "the next group (which is folded) should stick to the right of the screen after the scroll",
-    });
+    expect(content().scrollLeft).toBeGreaterThan(scrollLeft);
+    expectFlushRight(
+        ".o_column_folded:eq(0)",
+        "the next group (which is folded) should stick to the right of the screen after the scroll"
+    );
     expect(".o_column_folded:eq(0)").toHaveText("column 7 (1)", { inline: true });
-    await contains('.o_kanban_group:contains("column 7 (1)")').click();
-    expect(".o_content").toHaveProperty("scrollLeft", 2154);
-    ({ x, width } = queryRect('.o_kanban_group:contains("column 7 (1)")'));
-    // TODO JUM: change digits option
-    expect(x + width).toBeCloseTo(window.innerWidth, {
-        digits: 0,
-        message:
-            "this group was not followed by a folded group so it will be the one to stick to the right of the screen after the scroll",
-    });
-    // scroll to the end
-    await contains(".o_content").scroll({ left: 5000 });
-    expect(".o_content").toHaveProperty("scrollLeft", 3326);
-    await contains(".o_kanban_group:last").click();
-    expect(".o_content").toHaveProperty("scrollLeft", 3562);
-    ({ x, width } = queryRect('.o_kanban_group:contains("column 11 (1)")'));
-    // TODO JUM: change digits option
-    expect(x + width).toBeCloseTo(window.innerWidth, {
-        digits: 0,
-        message: "same as above",
-    });
+
+    // "column 7" is not followed by a folded group: scroll to the group itself
+    scrollLeft = content().scrollLeft;
+    await contains(".o_column_folded:eq(0)").click();
+    expect(content().scrollLeft).toBeGreaterThan(scrollLeft);
+    expectFlushRight(
+        '.o_kanban_group:contains("column 7 (1)")',
+        "this group was not followed by a folded group so it will be the one to stick to the right of the screen after the scroll"
+    );
+
+    // "column 11" has no next group: scroll to the group itself
+    await contains(".o_content").scroll({ left: content().scrollWidth });
+    scrollLeft = content().scrollLeft;
+    await contains(".o_column_folded:eq(0)").click();
+    expect(content().scrollLeft).toBeGreaterThan(scrollLeft);
+    expectFlushRight('.o_kanban_group:contains("column 11 (1)")', "same as above");
 });
 
 test("hide pager in the kanban view with sample data", async () => {

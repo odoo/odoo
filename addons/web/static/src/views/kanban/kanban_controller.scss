@@ -302,24 +302,22 @@
             }
 
             button.o_column_unfold {
-                padding: 0 .15rem;
+                // Matches .o_column_title font-size
+                width: 1.05rem;
                 height: map-get($font-sizes, 4) * $line-height-lg;
+                gap: .5rem;
 
-                [data-icon="arrow_left"] {
-                    margin-right: 0.2rem;
+                > .oi::before {
+                    position: absolute;
                 }
             }
 
             &:hover button.o_column_unfold {
-                padding: 0;
-
-                [data-icon="arrow_left"] {
-                    margin-right: 0.5rem;
-                }
+                gap: .8rem;
             }
 
             .o_column_title {
-                @include o-position-absolute(map-get($spacers, 3), auto, auto, 11px);
+                @include o-position-absolute(map-get($spacers, 3));
                 transform-origin: left bottom 0;
                 transform: rotate(90deg);
                 overflow: visible;
