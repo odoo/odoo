@@ -3,7 +3,6 @@ from datetime import datetime, time
 
 from odoo import _, fields, models
 from odoo.fields import Domain
-from odoo.addons.base.models.res_company import company_default_for
 
 
 class ResCompany(models.Model):
@@ -11,17 +10,9 @@ class ResCompany(models.Model):
 
     account_production_wip_account_id = fields.Many2one('account.account', string='Production WIP Account', check_company=True)
     account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
-
     cost_method = fields.Selection(
-        string="Cost Method",
-        selection=[
-            ('standard', "Standard Price"),
-            ('fifo', "First In First Out (FIFO)"),
-            ('average', "Average Cost (AVCO)"),
-        ],
-        **company_default_for('cost_method', 'product.category', 'property_cost_method'),
-        default='standard',
-        required=True,
+        selection_add=[('fifo', "First In First Out (FIFO)")],
+        ondelete={'fifo': 'set default'},
     )
 
     def write(self, vals):

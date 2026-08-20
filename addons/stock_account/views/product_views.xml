@@ -12,23 +12,6 @@
             </field>
         </record>
 
-        <record id="view_category_property_form_stock" model="ir.ui.view">
-            <field name="name">product.category.stock.property.form.inherit.stock</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="stock.product_category_form_view_inherit"/>
-            <field name="arch" type="xml">
-                <page name="stock" position="after">
-                    <page name="stock_valuation" string="Inventory Valuation">
-                        <group>
-                            <group>
-                                <field name="property_cost_method" required="True"/>
-                            </group>
-                        </group>
-                    </page>
-                </page>
-            </field>
-        </record>
-
         <!-- Stock Report View -->
         <record model="ir.ui.view" id="product_template_form_view_stock_account">
             <field name="name">view.template.property.form.stock.account</field>
