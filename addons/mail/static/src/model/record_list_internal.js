@@ -40,11 +40,11 @@ export class RecordListInternal {
                 recordList,
                 last,
                 function recordList_AddNoInvOneInsert(record) {
-                    if (record.localId !== recordList.data[0]) {
+                    if (record !== recordList.data[0]) {
                         const old = recordList._proxy.at(-1);
                         recordList._proxy.data.pop();
                         old?._.uses.delete(recordList);
-                        recordList._proxy.data.push(record.localId);
+                        recordList._proxy.data.push(record);
                         self.syncLength(recordList);
                         record._.uses.add(recordList);
                     }
@@ -62,8 +62,8 @@ export class RecordListInternal {
                 recordList,
                 val,
                 function recordList_AddNoInvManyInsert(record) {
-                    if (recordList.data.indexOf(record.localId) === -1) {
-                        recordList._proxy.data.push(record.localId);
+                    if (recordList.data.indexOf(record) === -1) {
+                        recordList._proxy.data.push(record);
                         self.syncLength(recordList);
                         record._.uses.add(recordList);
                     }
@@ -106,7 +106,7 @@ export class RecordListInternal {
                     }
                 }
             }
-            recordList._proxy.data = newRecords.map((newRecord) => newRecord.localId);
+            recordList._proxy.data = newRecords;
             recordList._.syncLength(recordList);
         });
     }
@@ -129,7 +129,7 @@ export class RecordListInternal {
                 recordList,
                 val,
                 function recordList_DeleteNoInv_Insert(record) {
-                    const index = recordList.data.indexOf(record.localId);
+                    const index = recordList.data.indexOf(record);
                     if (index !== -1) {
                         recordList.splice.call(recordList._proxy, index, 1);
                         self.syncLength(recordList);

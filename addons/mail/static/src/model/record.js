@@ -200,16 +200,12 @@ export class Record {
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
             if (record.Model.getName() === "Store") {
-                Object.assign(record, {
-                    env: Model._rawStore.env,
-                    recordByLocalId: Model._rawStore.recordByLocalId,
-                });
+                record.env = Model._rawStore.env;
             }
             // compute inherits fields in priority, as other fields might depend on them
             for (const fieldName of Model._.inheritsFields) {
                 record._.compute?.(record, fieldName);
             }
-            Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const fieldName of record.Model._.fields.keys()) {
                 if (record.Model._.fieldsComputable.get(fieldName)) {
                     // the owl computed() runs on the first read, nothing to request

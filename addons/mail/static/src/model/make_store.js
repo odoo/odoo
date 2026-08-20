@@ -26,7 +26,6 @@ export function makeStore(env, { localRegistry } = {}) {
     store._.app = useApp();
     store._raw = store;
     store._proxy = store;
-    store.recordByLocalId = proxy(new Map());
     Record.store = store;
     /** @type {Object<string, typeof Record>} */
     const Models = {};
@@ -73,7 +72,6 @@ export function makeStore(env, { localRegistry } = {}) {
                     });
                     record._proxy = markRaw(recordProxy);
                     if (record?.[STORE_SYM]) {
-                        record.recordByLocalId = store.recordByLocalId;
                         record._ = store._;
                         store = record;
                         Record.store = store;

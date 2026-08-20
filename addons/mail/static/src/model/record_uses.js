@@ -1,7 +1,7 @@
 export class RecordUses {
     /**
      * Track the uses of a record. Each record contains a single `RecordUses`:
-     * - Key: record that uses current record
+     * - Key: raw record that uses current record
      * - Value: Map where key is relational field name, and value is number
      *          of time current record is present in this relation.
      *
