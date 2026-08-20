@@ -2019,8 +2019,7 @@ class IrModelConstraint(models.Model):
         return [dict(vals, name=constraint.name + '_copy') for constraint, vals in zip(self, vals_list)]
 
     def _reflect_constraint(self, model, conname, type, definition, module, message=None):
-        """ Reflect the given constraint, and return its corresponding record
-            if a record is created or modified; returns ``None`` otherwise.
+        """ Reflect the given constraint, and return its corresponding record.
             The reflection makes it possible to remove a constraint when its
             corresponding module is uninstalled. ``type`` is either 'f', 'i', or 'u'
             depending on the constraint being a foreign key or not.
@@ -2063,15 +2062,16 @@ class IrModelConstraint(models.Model):
                 WHERE id = %s""",
                 self.env.uid, type, definition, Json({'en_US': message}), cons_id
             ))
-            return self.browse(cons_id)
-        return None
+        return self.browse(cons_id)
 
     def _reflect_constraints(self, model_names):
         """ Reflect the table objects of the given models. """
+        data_list = []
         for model_name in model_names:
-            self._reflect_model(self.env[model_name])
+            data_list.extend(self._reflect_table_object(self.env[model_name]))
+        self.env['ir.model.data']._update_xmlids(data_list)
 
-    def _reflect_model(self, model):
+    def _reflect_table_object(self, model):
         """ Reflect the _table_objects of the given model. """
         data_list = []
         for conname, cons in model._table_objects.items():
@@ -2088,10 +2088,7 @@ class IrModelConstraint(models.Model):
             xml_id = '%s.constraint_%s' % (module, conname)
             if record:
                 data_list.append(dict(xml_id=xml_id, record=record))
-            else:
-                self.env['ir.model.data']._load_xmlid(xml_id)
-        if data_list:
-            self.env['ir.model.data']._update_xmlids(data_list)
+        return data_list
 
 
 class IrModelRelation(models.Model):
