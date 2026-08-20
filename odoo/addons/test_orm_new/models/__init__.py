@@ -13,3 +13,4 @@ from . import test_ir_qweb_fields
 from . import test_ir_rules
 from . import test_json_field
 from . import test_many2many
+from . import test_one2many

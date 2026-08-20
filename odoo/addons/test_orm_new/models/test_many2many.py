@@ -74,7 +74,7 @@ class TestOrmMany2manyAttachmentHost(models.Model):
     )
     m2m_attachment_ids = fields.Many2many(
         'test_orm.many2many.attachment',
-        'test_orm_attachment_host_rel',
+        'test_orm_m2m_attachment_host_rel',
         bypass_search_access=True,
     )
 
@@ -85,6 +85,6 @@ class TestOrmMany2manyAttachmentHost(models.Model):
     )
     real_m2m_attachment_ids = fields.Many2many(
         'ir.attachment',
-        'test_orm_real_attachment_host_rel',
+        'test_orm_m2m_real_attachment_host_rel',
         bypass_search_access=True,
     )
