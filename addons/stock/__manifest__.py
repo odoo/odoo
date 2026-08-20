@@ -88,6 +88,7 @@
         'views/stock_reference_views.xml',
         'views/uom_uom_views.xml',
         'views/digest_digest_views.xml',
+        'views/res_users.xml',
         'security/ir.access.csv',
     ],
     'application': True,

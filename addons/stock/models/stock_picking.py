@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, modules
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.fields import Domain, Command
 from odoo.tools import format_datetime, format_date, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -711,6 +711,31 @@ class StockPicking(models.Model):
         'Reference must be unique per company!',
     )
 
+    user_allowed_picking_type_ids = fields.Many2many('stock.picking.type', string="User Allowed Inventory Operations", compute='_compute_user_allowed_picking_type_ids', store=False)
+
+    @api.depends_context('uid')
+    def _compute_user_allowed_picking_type_ids(self):
+        for picking in self:
+            picking.user_allowed_picking_type_ids = self.env.user.allowed_picking_type_ids
+            
+    def _check_allowed_picking_types(self):
+        if self.env.user.allowed_picking_type_ids:
+            for picking in self:
+                if picking.picking_type_id not in self.env.user.allowed_picking_type_ids:
+                    raise AccessError("You are not authorized to perform this operation type « %s: %s »." % (picking.picking_type_id.warehouse_id.name, picking.picking_type_id.name) )
+
+                if picking.location_id != picking.picking_type_id.default_location_src_id:
+                    raise AccessError("The source location must be « %s »." % picking.picking_type_id.default_location_src_id.name )
+
+                if any(mvline.location_id != picking.picking_type_id.default_location_src_id for mvline in picking.move_line_ids):
+                    raise AccessError("All the lines source location must be « %s »." % picking.picking_type_id.default_location_src_id.name )
+
+                if picking.location_dest_id != picking.picking_type_id.default_location_dest_id:
+                    raise AccessError("The destination location must be « %s »." % picking.picking_type_id.default_location_dest_id.name )
+
+                if any(mvline.location_dest_id != picking.picking_type_id.default_location_dest_id for mvline in picking.move_line_ids):
+                    raise AccessError("All the lines destination location must be « %s »." % picking.picking_type_id.default_location_dest_id.name )
+
     @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
         super()._compute_display_name()
@@ -1216,6 +1241,8 @@ class StockPicking(models.Model):
 
     def action_confirm(self):
         self._check_company()
+        self._check_allowed_picking_types()
+
         if not self.env.context.get('skip_zero_demand_check') and not modules.module.current_test:
             # Check for zero demand moves before confirming
             zero_demand_moves = self.move_ids.filtered(lambda m: m.product_uom_qty <= 0)
@@ -1435,6 +1462,7 @@ class StockPicking(models.Model):
         :rtype: bool
         """
         self._check_company()
+        self._check_allowed_picking_types()
 
         todo_moves = self.move_ids.filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         for picking in self:
