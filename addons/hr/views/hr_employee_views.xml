@@ -384,7 +384,7 @@
                                                 domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                     </group>
                                     <group name="schedule" string="Schedule">
-                                        <field name="resource_calendar_id" help="The default working hours are set in configuration." placeholder="Flexible"/>
+                                        <field name="resource_calendar_id" help="The default working hours are set in configuration." placeholder="Flexible" context="{'employee_id': id}"/>
                                         <label for="hours_per_week" string="Hours Per Week" invisible="resource_calendar_id"/>
                                         <div class="o_row" name="flexible_hours_per_week" invisible="resource_calendar_id">
                                             <div invisible="not hours_per_week">

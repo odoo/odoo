@@ -7,6 +7,40 @@
             <form position="attributes">
                 <attribute name="js_class">resource_calendar_form</attribute>
             </form>
+            <xpath expr="//button[@name='%(resource.resource_resource_action_from_calendar)d']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_employees"
+                        type="object"
+                        icon="person"
+                        class="oe_stat_button"
+                        groups="hr.group_hr_user">
+                    <field name="employees_count" widget="statinfo" string="Employees"/>
+                </button>
+                <button name="%(resource.action_resource_material_from_calendar)d"
+                        type="action"
+                        icon="settings_applications"
+                        class="oe_stat_button"
+                        groups="base.group_user">
+                    <field name="material_resources_count" widget="statinfo" string="Materials"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning text-start o_form_header"
+                    role="alert"
+                    invisible="employees_count &lt;= 1 or not context.get('employee_id')">
+                    <span>
+                        This working schedule is shared across
+                        <field name="employees_count" class="fw-bold"/> employees →
+                    </span>
+                    <button name="action_duplicate_and_apply_to_employee"
+                        type="object"
+                        class="btn btn-link p-0 align-baseline fw-bold" 
+                        string="Duplicate &amp; Edit for Current Employee"
+                        confirm="This will create a new schedule copy and automatically reassign it to the employee you navigated from. Continue?"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
