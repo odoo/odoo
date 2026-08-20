@@ -35,3 +35,10 @@ class ResPartner(models.Model):
                 continue
             if partner.l10n_fr_siret and partner.same_vat_partner_id.l10n_fr_siret and partner.l10n_fr_siret != partner.same_vat_partner_id.l10n_fr_siret:
                 partner.same_vat_partner_id = False
+
+    @api.model
+    def _get_identifier_fields(self):
+        # Extend from partner_autocomplete, siret has a higher priority since it's more precise
+        identifier_fields = super()._get_identifier_fields()
+        identifier_fields.extend(['FR_SIRET', 'FR_SIREN'])
+        return identifier_fields
