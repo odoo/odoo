@@ -293,7 +293,7 @@ class SaleOrderLine(models.Model):
         copy=False,
     )
     qty_delivered_percent = fields.Float(
-        string="% Delivered", compute="_compute_qty_delivered_percent", readonly=False
+        string="Delivered (%)", compute="_compute_qty_delivered_percent", readonly=False
     )
     qty_overage = fields.Float(compute="_compute_qty_overage", digits="Product Unit")
 
@@ -1069,14 +1069,14 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_percent(self):
         for line in self:
             if line.product_uom_qty:
-                line.qty_delivered_percent = 100 * (line.qty_delivered / line.product_uom_qty)
+                line.qty_delivered_percent = line.qty_delivered / line.product_uom_qty
             else:
-                line.qty_delivered_percent = 100
+                line.qty_delivered_percent = 1
 
     @api.onchange("qty_delivered_percent")
     def _onchange_qty_delivered_percent(self):
         for line in self:
-            line.qty_delivered = (line.qty_delivered_percent * line.product_uom_qty) / 100
+            line.qty_delivered = line.qty_delivered_percent * line.product_uom_qty
 
     @api.depends("qty_delivered")
     @api.depends_context("accrual_entry_date")
