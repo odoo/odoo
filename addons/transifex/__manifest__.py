@@ -30,7 +30,7 @@ project.
             'transifex/static/src/views/*.xml',
         ],
     },
-    'depends': ['base', 'web'],
+    'depends': ['web'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

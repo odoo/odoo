@@ -15,7 +15,6 @@ and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'depends': [
-        'base',
         'account',
     ],
     'auto_install': ['account'],

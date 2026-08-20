@@ -12,7 +12,6 @@ This is the base module to manage the accounting chart for Morocco.
 This module has been built with the help of Caudigef.
 """,
     'depends': [
-        'base',
         'account',
     ],
     'auto_install': ['account'],

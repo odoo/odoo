@@ -4,7 +4,7 @@
     'category': 'Productivity/Dashboard',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
-    'depends': ['bus', 'web', 'portal'],
+    'depends': ['portal'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'data': [

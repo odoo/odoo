@@ -9,7 +9,6 @@ Mozambican Accounting localization
     'countries': ['mz'],
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
-        'base',
         'account',
     ],
     'auto_install': ['account'],

@@ -8,7 +8,6 @@
     'description': "Integrate Odoo with your mailbox, get information about contacts directly inside your mailbox, log content of emails as internal notes",
     'depends': [
         'digest',
-        'web',
         'contacts',
     ],
     'data': [

@@ -24,7 +24,6 @@ Main Features
 * Analysis graph for costs
 """,
     'depends': [
-        'base',
         'mail',
     ],
     'data': [

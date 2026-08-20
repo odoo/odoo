@@ -12,10 +12,8 @@ This module gives a framework for SMS text messaging
 The service is provided by the In App Purchase Odoo platform.
 """,
     'depends': [
-        'base',
         'iap_mail',
-        'mail',
-        'phone_validation'
+        'phone_validation',
     ],
     'data': [
         'data/iap_service_data.xml',

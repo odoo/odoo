@@ -10,7 +10,7 @@ In case of stockout, you can decide to block further sales or to keep selling.
 A default behavior can be selected in the Website settings.
 Then it can be made specific at the product level.
     """,
-    "depends": ["website_sale", "sale_stock", "stock_delivery"],
+    "depends": ["website_sale", "stock_delivery"],
     "data": [
         "views/checkout_templates.xml",
         "views/delivery_form.xml",

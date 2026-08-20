@@ -25,7 +25,6 @@ records numbers. """,
         'security/ir.access.csv',
     ],
     'depends': [
-        'base',
         'mail',
     ],
     'auto_install': True,

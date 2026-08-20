@@ -8,7 +8,6 @@
     'sequence': 245,
     'website': 'https://www.odoo.com/app/sms-marketing',
     'depends': [
-        'portal',
         'mass_mailing',
         'sms',
     ],

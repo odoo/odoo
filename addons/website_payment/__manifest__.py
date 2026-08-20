@@ -9,7 +9,6 @@ This is a bridge module that adds multi-website support for payment providers.
     'depends': [
         'website',
         'account_payment',
-        'portal',
     ],
     'data': [
         'views/payment_provider.xml',

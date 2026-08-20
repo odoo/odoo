@@ -8,7 +8,6 @@ Send KPI Digests periodically
 """,
     'version': '1.1',
     'depends': [
-        'mail',
         'portal',
         'resource',
     ],

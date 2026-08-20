@@ -6,8 +6,6 @@
     'version': '1.1',
     'category': 'Sales/CRM',
     'depends': [
-        'iap_crm',
-        'iap_mail',
         'crm_iap_mine',
         'website_crm',
     ],

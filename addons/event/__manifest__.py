@@ -16,7 +16,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgments for any event registration
 """,
-    'depends': ['barcodes', 'base_setup', 'digest', 'mail', 'phone_validation', 'portal', 'utm'],
+    'depends': ['barcodes', 'digest', 'phone_validation', 'utm'],
     'data': [
         'security/event_security.xml',
         'views/digest_views.xml',
