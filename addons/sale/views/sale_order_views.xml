@@ -96,6 +96,7 @@
         </field>
     </record>
 
+    <!-- TODO Remove me and merge upload list & dashboard ? -->
     <record id="sale_order_kanban_upload" model="ir.ui.view">
         <field name="name">sale.order.kanban.upload (orders)</field>
         <field name="model">sale.order</field>
@@ -205,6 +206,7 @@
         </field>
     </record>
 
+    <!-- TODO Remove me and merge upload list & dashboard ? -->
     <record id="sale_order_list_upload" model="ir.ui.view">
         <field name="name">sale.order.tree.upload (orders)</field>
         <field name="model">sale.order</field>
@@ -442,7 +444,7 @@
                         <field name="transaction_count" widget="statinfo" string="Payments"/>
                     </button>
                 </div>
-                <div 
+                <div
                     class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
                     invisible="not locked"
                 >
@@ -1067,7 +1069,7 @@
                 <filter string="Sales Orders" name="sales" domain="[('state', '=', 'sale')]"/>
                 <separator/>
                 <filter string="To Confirm" name="to_confirm" domain="[('state', '=', 'sent')]"/>
-                <filter string="To Fulfill" name="to_fulfill" domain="[('is_unfulfilled', '=', True)]"/>
+                <filter string="To Deliver" name="to_fulfill" domain="[('is_unfulfilled', '=', True)]"/>
                 <filter string="To Invoice" name="to_invoice" domain="[('invoice_status', '=', 'to invoice')]"/>
                 <filter string="To Upsell" name="to_upsell" domain="[('invoice_status', '=', 'upselling')]"/>
                 <separator/>
@@ -1087,11 +1089,36 @@
             <filter name="my_sale_orders_filter" position="after">
                 <filter invisible="1" string="Sales Orders" name="sales" domain="[('state', '=', 'sale')]"/>
                 <separator/>
+                <filter string="To Deliver" name="to_fulfill" domain="[('is_unfulfilled', '=', True)]"/>
                 <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
-                <filter string="To Upsell" name="upselling" domain="[('invoice_status','=','upselling')]" />
+                <filter string="To Upsell" name="to_upsell" domain="[('invoice_status','=','upselling')]" />
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
             </filter>
+        </field>
+    </record>
+
+    <record id="sale_order_list_with_dashboard" model="ir.ui.view">
+        <field name="name">sale.order.list.quotation.dashboard</field>
+        <field name="model">sale.order</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">sale_dashboard_list</attribute>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_order_kanban_with_dashboard" model="ir.ui.view">
+        <field name="name">sale.order.kanban.dashboard</field>
+        <field name="model">sale.order</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="js_class">sale_dashboard_kanban</attribute>
+            </kanban>
         </field>
     </record>
 
@@ -1116,14 +1143,14 @@
     <record id="sale_order_action_view_order_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="sale.sale_order_list_upload"/>
+        <field name="view_id" ref="sale.sale_order_list_with_dashboard"/>
         <field name="act_window_id" ref="action_orders"/>
     </record>
 
     <record id="sale_order_action_view_order_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="sale.sale_order_kanban_upload"/>
+        <field name="view_id" ref="sale.sale_order_kanban_with_dashboard"/>
         <field name="act_window_id" ref="action_orders"/>
     </record>
 
@@ -1153,30 +1180,6 @@
         <field name="view_mode">graph</field>
         <field name="view_id" ref="sale.view_sale_order_graph"/>
         <field name="act_window_id" ref="action_orders"/>
-    </record>
-
-    <record id="sale_order_list_with_dashboard" model="ir.ui.view">
-        <field name="name">sale.order.list.quotation.dashboard</field>
-        <field name="model">sale.order</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree"/>
-        <field name="arch" type="xml">
-            <list position="attributes">
-                <attribute name="js_class">sale_dashboard_list</attribute>
-            </list>
-        </field>
-    </record>
-
-    <record id="sale_order_kanban_with_dashboard" model="ir.ui.view">
-        <field name="name">sale.order.kanban.dashboard</field>
-        <field name="model">sale.order</field>
-        <field name="mode">primary</field>
-        <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
-        <field name="arch" type="xml">
-            <kanban position="attributes">
-                <attribute name="js_class">sale_dashboard_kanban</attribute>
-            </kanban>
-        </field>
     </record>
 
     <record id="action_quotations_with_onboarding" model="ir.actions.act_window">

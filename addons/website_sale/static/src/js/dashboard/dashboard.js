@@ -20,8 +20,8 @@ export class WebsiteSaleDashboard extends SaleDashboard {
 
     get dashboardCards() {
         return [
+            { key: 'to_confirm', label: _t("To Confirm"), title: _t("Orders to Confirm"), hide_if_zero: true },
             { key: 'to_fulfill', label: _t("To Fulfill"), title: _t("Orders to Fulfill") },
-            { key: 'to_confirm', label: _t("To Confirm"), title: _t("Orders to Confirm") },
             { key: 'to_invoice', label: _t("To Invoice"), title: _t("Orders to Invoice") },
         ];
     }
@@ -32,10 +32,6 @@ export class WebsiteSaleDashboard extends SaleDashboard {
             { key: 'orders', title: _t("Orders"), monetary: false },
             { key: 'sales', title: _t("Sales"), monetary: true },
         ];
-    }
-
-    isCardVisible() {
-        return true;
     }
 
     isCardDisabled(cardName) {
