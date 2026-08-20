@@ -418,6 +418,7 @@ class BlogPost(models.Model):
         schemas = super()._get_jsonld_dict(is_detail_page)
         if is_detail_page:
             schemas.append(self._prepare_jsonld_vals())
+            schemas.append(self.blog_id._prepare_jsonld_vals())
             return schemas
         current_blog = self.env['blog.blog'].browse(self.env.context.get('blog_id')).exists()
         if current_blog:
