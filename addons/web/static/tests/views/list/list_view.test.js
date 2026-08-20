@@ -218,7 +218,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
         await contains(
-            ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+            ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
         ).click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
@@ -1449,12 +1449,12 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
@@ -1464,7 +1464,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     ]);
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
@@ -1547,7 +1547,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
 
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
@@ -19723,7 +19723,7 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
     expect(".o_list_view").toHaveCount(1);
 
     await selectAllRecords();
-    await contains(`.o_cp_action_menus button:has([data-icon='settings'])`).click();
+    await contains(`.o_cp_action_menus button[data-hotkey='u']`).click();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 

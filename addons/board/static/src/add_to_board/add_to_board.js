@@ -94,7 +94,7 @@ export class AddToBoard extends Component {
 
 export const addToBoardItem = {
     Component: AddToBoard,
-    groupNumber: 20,
+    groupNumber: 10,
     isDisplayed: ({ config }) => {
         const { actionType, actionId, viewType } = config;
         return actionType === "ir.actions.act_window" && actionId && viewType !== "form";

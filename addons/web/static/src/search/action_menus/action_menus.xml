@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ActionMenus">
-        <div class="o_cp_action_menus d-flex pe-2 gap-1">
+        <div class="o_cp_action_menus d-flex gap-1">
             <div t-if="this.props.items.print?.length" class="d-inline-block">
                 <Dropdown beforeOpen.bind="this.loadPrintItems">
                     <button class="btn btn-secondary" data-hotkey="shift+u">

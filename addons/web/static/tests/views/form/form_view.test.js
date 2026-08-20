@@ -3265,7 +3265,7 @@ test(`form with custom cog action that has a confirmation target="new" action`, 
     await getService("action").doAction(1);
     expect(".o_form_view").toHaveCount(1);
 
-    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 
@@ -10022,7 +10022,7 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
         type: "form",
         arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
     });
-    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
     expect(`button.o_attachment_button`).toHaveCount(1);
     expect(`span.o_attach_document`).toHaveText("Attach document");
 });
@@ -13100,23 +13100,23 @@ test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'
             `,
     });
 
-    expect(".o_cp_action_menus button:has([data-icon='settings'])").toHaveCount(1, {
+    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").toHaveCount(1, {
         message: "statusbar should contain a dropdown",
     });
-    expect(".o_cp_action_menus button:has([data-icon='settings'])").not.toHaveClass("show", {
+    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").not.toHaveClass("show", {
         message: "dropdown should be opened",
     });
 
     await contains(".o_field_widget[name=name] input").edit("before onchange");
-    await contains(".o_cp_action_menus button:has([data-icon='settings'])").click();
-    expect(".o_cp_action_menus button:has([data-icon='settings'])").toHaveClass("show", {
+    await contains(".o_cp_action_menus button:has([data-icon='more_vert'])").click();
+    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").toHaveClass("show", {
         message: "dropdown should be opened",
     });
 
     onchangeDef.resolve({ value: { name: "after onchange" } });
     await animationFrame();
     expect(".o_field_widget[name=name] input").toHaveValue("after onchange");
-    expect(".o_cp_action_menus button:has([data-icon='settings'])").toHaveClass("show", {
+    expect(".o_cp_action_menus button:has([data-icon='more_vert'])").toHaveClass("show", {
         message: "dropdown should be opened",
     });
 });

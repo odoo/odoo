@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SearchBarMenu">
-        <SearchBarDropdown menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap w-100 w-md-auto mx-md-auto mt-2 py-3'"
+        <SearchBarDropdown menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap start-50 translate-middle-x w-100 w-md-auto mx-md-auto mt-2 py-3'"
                 position="'bottom-end'"
                 state="this.props.dropdownState"
                 t-if="this.env.searchModel.searchMenuTypes.size"

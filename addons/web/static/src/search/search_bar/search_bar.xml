@@ -3,26 +3,31 @@
 
     <t t-name="web.SearchBar.Facets">
         <t t-foreach="this.env.searchModel.facets" t-as="facet" t-key="facet_index">
-            <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover mw-100"
+            <div class="o_searchview_facet position-relative d-inline-flex rounded-2 bg-100 border border-transparent text-nowrap opacity-trigger-hover mw-100"
                 t-att-class="{o_facet_with_domain: facet.domain }"
                 role="listitem"
                 aria-label="search"
                 tabindex="0"
-                >
+                t-on-click="() => this.onFacetLabelClick(facet)"
+            >
 
                 <!-- Special navigation facets for filters with date="..." and relative dates (eg Last Week) -->
                 <t t-if="facet.type === 'relative'" t-call="web.SearchBar.NavigationFacetIcon"/>
                 <t t-else="" t-call="web.SearchBar.NormalFacetIcon"/>
 
-                <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
+                <div
+                    class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden"
+                    t-att-class="{'cursor-pointer': facet.type != 'groupBy'}"
+                >
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-out="facet.separator"/>
                         <small class="o_facet_value text-truncate" t-out="facetValue" t-att-title="facet.tooltip or facetValue"/>
                     </t>
-                    <button class="o_facet_remove oi btn btn-link py-0 px-2 text-danger d-print-none" data-icon="close_small"
+                    <button class="o_facet_remove oi btn btn-link d-flex align-items-center px-1 py-0 text-danger d-print-none fs-5"
+                        data-icon="close_small"
                         aria-label="Remove"
                         title="Remove"
-                        t-on-click="() => this.onFacetRemove(facet)"
+                        t-on-click.stop="() => this.onFacetRemove(facet)"
                         tabindex="-1"
                     />
                 </div>
@@ -31,27 +36,26 @@
     </t>
 
     <t t-name="web.SearchBar.NormalFacetIcon">
-        <!-- :hover overlay -->
-        <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
-
-        <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0"
-            t-on-click="() => this.onFacetLabelClick(facet)"
+        <div class="o_searchview_facet_label d-flex position-relative rounded-2 p-1 small"
             t-att-role="facet.domain ? 'button' : 'img'"
             t-att-class="{
-                'text-bg-action': facet.type == 'groupBy',
-                'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
-                'btn btn-favourite': facet.type == 'favorite'
+                'o_facet_groupby': facet.type == 'groupBy',
+                'bg-primary-subtle text-primary': facet.type == 'field' || facet.type == 'filter',
+                'o_facet_favorite': facet.type == 'favorite'
             }"
             >
-            <i t-if="facet.icon" class="oi oi-fw oi-filled small" t-att-data-icon="facet.icon" role="image"/>
-            <small t-else="" class="px-1" t-out="facet.title"/>
+            <i t-if="facet.icon" class="oi oi-fw oi-filled align-middle" t-att-data-icon="facet.icon" role="image"/>
+            <small t-else="" class="px-1 lh-1 fw-bold" t-out="facet.title"/>
 
             <!-- Editable facets' overlay -->
             <span t-if="facet.domain"
-                class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
-                t-att-class="{'px-2 transition-base': !facet.icon}"
-                >
-                <i class="oi oi-fw oi-filled" data-icon="edit"/>
+                  class="o_facet_overlay position-absolute start-0 top-0 bottom-0 end-0 d-flex p-1 w-100 justify-content-center opacity-0 opacity-100-hover border border-transparent rounded"
+                  t-att-class="{
+                        'o_facet_no_icon pe-2': !facet.icon,
+                        'text-bg-primary': facet.type == 'field' || facet.type == 'filter',
+                  }"
+            >
+                <i class="oi oi-fw oi-filled align-content-around" data-icon="edit"/>
             </span>
             <span t-if="this.env.searchModel.canOrderByCount and facet.type === 'groupBy' and !this.env.searchModel.orderByCount"
                 class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
@@ -135,7 +139,7 @@
                             role="img"
                         />
                     </button>
-                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100" t-ref="this.facetContainerRef">
+                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 align-items-center mw-100" t-ref="this.facetContainerRef">
                         <t t-call="web.SearchBar.Facets"/>
                         <input type="text"
                             class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"

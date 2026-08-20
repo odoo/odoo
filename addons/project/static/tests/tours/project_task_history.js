@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         ...changeDescriptionContentAndSave("3"),
         {
             content: "Open History Dialog",
-            trigger: ".o_form_view .o_cp_action_menus i[data-icon='settings']",
+            trigger: ".o_form_view .o_cp_action_menus button[aria-label='Actions menu']",
             run: "click",
         },
         {
@@ -189,7 +189,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_cp_action_menus i[data-icon='settings']",
+            trigger: ".o_cp_action_menus button[aria-label='Actions menu']",
             run: "click",
         },
         {
@@ -237,7 +237,7 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         ...stepUtils.saveForm(),
     {
         content: "Open History Dialog",
-        trigger: ".o_cp_action_menus i[data-icon='settings']",
+        trigger: ".o_cp_action_menus button[aria-label='Actions menu']",
         run: "click",
     }, {
         trigger: ".dropdown-menu",
