@@ -30,7 +30,14 @@ class PurchaseOrderLine(models.Model):
         compute='_compute_price_unit_and_date_planned_and_name',
         digits='Discount',
         store=True, readonly=False)
-    tax_ids = fields.Many2many('account.tax', string='Taxes', context={'active_test': False, 'hide_original_tax_ids': True})
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_tax_purchase_order_line_rel',
+        column1='purchase_order_line_id',
+        column2='account_tax_id',
+        string='Taxes',
+        context={'active_test': False, 'hide_original_tax_ids': True},
+    )
     document_tax_mode = fields.Selection(related='order_id.document_tax_mode')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]", ondelete='restrict')
