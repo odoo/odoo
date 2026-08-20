@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
 
@@ -54,17 +55,20 @@ class AccountMove(models.Model):
                         existing_service.description = new_desc
 
                 existing_service.message_post(
-                    body=_('Additional line(s) merged from Vendor Bill: %s', move._get_html_link()),
+                    body=self.env._('Additional line(s) merged from Vendor Bill: %s', move._get_html_link()),
                 )
             else:  # No service => Create a new one
-                val = lines[0]._prepare_fleet_log_service()
-
                 labels = [name for name in lines.mapped('name') if name]
-                val['description'] = ', '.join(labels) if labels else False
-                val['account_move_line_ids'] = [Command.set(lines.ids)]
 
-                val_list.append(val)
-                log_list.append(_('Service Vendor Bill: %s', move._get_html_link()))
+                val_list.append({
+                    'service_type_id': vendor_bill_service.id,
+                    'vehicle_id': vehicle.id,
+                    'vendor_id': lines[0].partner_id.id,
+                    'description': ', '.join(labels) if labels else False,
+                    'account_move_line_ids': [Command.set(lines.ids)],
+                })
+
+                log_list.append(self.env._('Service Vendor Bill: %s', move._get_html_link()))
 
         if val_list:
             log_service_ids = self.env['fleet.vehicle.log.services'].create(val_list)
@@ -115,20 +119,37 @@ class AccountMoveLine(models.Model):
         query = super()._get_extra_query_base_tax_line_mapping()
         return SQL("%s AND (base_line.vehicle_id = account_move_line.vehicle_id OR account_move_line.vehicle_id IS NULL)", query)
 
-    def _prepare_fleet_log_service(self):
-        vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
-        return {
-            'service_type_id': vendor_bill_service.id,
-            'vehicle_id': self.vehicle_id.id,
-            'vendor_id': self.partner_id.id,
-            'description': self.name,
-        }
+    @api.constrains('vehicle_id', 'vehicle_log_service_id')
+    def _check_service_vehicle_match(self):
+        for line in self:
+            if line.vehicle_log_service_id and line.vehicle_id != line.vehicle_log_service_id.vehicle_id:
+                raise ValidationError(self.env._("The vehicle on the invoice line must match the vehicle on the linked fleet service."))
+
+    def _cleanup_empty_fleet_services(self, services_to_check):
+        empty_services = services_to_check.filtered(lambda s: not s.account_move_line_ids)
+        if empty_services:
+            empty_services.sudo().with_context(ignore_linked_bill_constraint=True).unlink()
 
     def write(self, vals):
-        if 'vehicle_id' in vals and not vals['vehicle_id']:
-            self.sudo().vehicle_log_service_id.with_context(ignore_linked_bill_constraint=True).unlink()
-        return super().write(vals)
+        # Check if the vehicle field is being updated (cleared OR changed)
+        vehicle_changed = 'vehicle_id' in vals
+
+        # Unlink the service from the line if the vehicle changes
+        if vehicle_changed:
+            vals['vehicle_log_service_id'] = False
+
+        services_to_check = self.vehicle_log_service_id
+
+        res = super().write(vals)
+
+        # Delete empty services
+        if vehicle_changed:
+            self._cleanup_empty_fleet_services(services_to_check)
+
+        return res
 
     def unlink(self):
-        self.sudo().vehicle_log_service_id.with_context(ignore_linked_bill_constraint=True).unlink()
-        return super().unlink()
+        services_to_check = self.vehicle_log_service_id
+        res = super().unlink()
+        self._cleanup_empty_fleet_services(services_to_check)
+        return res

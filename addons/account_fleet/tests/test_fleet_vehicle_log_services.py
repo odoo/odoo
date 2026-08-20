@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+
 
 @tagged('post_install', '-at_install')
 class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
@@ -190,25 +193,25 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
             'line_ids': [
-                (0, 0, {
+                Command.create({
                     'name': 'Tires Car 1',
                     'price_unit': 200.0,
                     'vehicle_id': self.car_1.id,
                     'account_id': self.company_data['default_account_expense'].id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'Brakes Car 1',
                     'price_unit': 150.0,
                     'vehicle_id': self.car_1.id,
                     'account_id': self.company_data['default_account_expense'].id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'Tires Car 2',
                     'price_unit': 300.0,
                     'vehicle_id': self.car_2.id,
                     'account_id': self.company_data['default_account_expense'].id,
                 }),
-                (0, 0, {
+                Command.create({
                     'name': 'Brakes Car 2',
                     'price_unit': 250.0,
                     'vehicle_id': self.car_2.id,
