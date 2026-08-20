@@ -717,7 +717,7 @@ class StockPicking(models.Model):
     def _compute_user_allowed_picking_type_ids(self):
         for picking in self:
             picking.user_allowed_picking_type_ids = self.env.user.allowed_picking_type_ids
-            
+
     def _check_allowed_picking_types(self):
         if self.env.user.allowed_picking_type_ids:
             for picking in self:
