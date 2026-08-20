@@ -11,12 +11,8 @@ export class ResourceCalendarFormController extends FormController {
         if (!record.resId) {
             return true;
         }
-        const linked_employees_count = await this.orm.call(
-            "resource.calendar",
-            "get_number_of_linked_employees",
-            [record.resId]
-        );
-        if (linked_employees_count > 0) {
+        const linked_employees_count = record.data.employees_count || 0;
+        if (linked_employees_count > 1) {
             return new Promise((resolve) => {
                 this.dialogService.add(ConfirmationDialog, {
                     title: _t("Confirmation Warning"),
