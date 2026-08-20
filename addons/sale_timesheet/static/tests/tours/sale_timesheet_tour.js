@@ -137,23 +137,8 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on this stat button to see the SO linked to the SOL of the task.',
     run: "click",
 }, {
-    trigger: 'div[name="order_line"]',
+    trigger: 'div[name="order_line"] tbody tr:first-child td[name="qty_delivered"]:contains("1.00")',
     content: 'Check if the quantity delivered is equal to 1 hour.',
-    run({ queryFirst }) {
-        const header = this.anchor.querySelectorAll("thead > tr");
-        if (!header || header.length === 0)
-            console.error('No Sales Order Item is found in the Sales Order.');
-        const tr = [...header][0];
-        let index = -1;
-        for (let i = 0; i < tr.children.length; i++) {
-            const th = tr.children.item(i);
-            if (th.dataset && th.dataset.name === 'qty_delivered')
-                index = i;
-        }
-        const qtyDelivered = queryFirst(`tbody > tr:first-child > td.o_data_cell:eq(${index})`, { root: this.anchor });
-        if (qtyDelivered.textContent !== "1.00")
-            console.error('The quantity delivered on this Sales Order Item should be equal to 1.00 hour. qtyDelivered = ' + qtyDelivered);
-    },
 }, {
     trigger: 'button[data-menu-xmlid="project.menu_project_config"]',
     content: 'Click on the Configuration menu.',
