@@ -1252,6 +1252,8 @@ class AccountMoveLine(models.Model):
                 fiscal_position=line.move_id.fiscal_position_id,
                 product_uom=line.product_uom_id,
                 document_tax_mode=line.document_tax_mode,
+                partner=line.move_id.partner_id,
+                qty=line.quantity,
             )
 
     @api.depends('product_id')

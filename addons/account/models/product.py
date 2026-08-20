@@ -224,7 +224,7 @@ class ProductProduct(models.Model):
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
         is_refund_document=False, product_uom=None, product_currency=None,
         product_price_unit=None, product_taxes=None, fiscal_position=None,
-        document_tax_mode=None,
+        document_tax_mode=None, partner=None, qty=None,
     ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
@@ -247,7 +247,17 @@ class ProductProduct(models.Model):
             if document_type == 'sale':
                 product_price_unit = product.with_company(company).lst_price
             elif document_type == 'purchase':
-                product_price_unit = product.with_company(company).standard_price
+                supplier_info_list = product._get_filtered_sellers(
+                    partner_id=partner, quantity=qty, date=fields.Date.context_today(self), uom_id=product_uom
+                ) if partner else False
+                if supplier_info_list:
+                    supplier_info = supplier_info_list[0]
+                    for item in supplier_info_list[1:]:
+                        if item.product_id:
+                            supplier_info = item
+                    product_price_unit = supplier_info[0].currency_id._convert(supplier_info[0].price_discounted, product_currency)
+                else:
+                    product_price_unit = product.with_company(company).standard_price
             else:
                 return 0.0
         if product_taxes is None:
