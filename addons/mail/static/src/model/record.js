@@ -240,7 +240,7 @@ export class Record {
         const Model = this;
         const recordProxy = Model.preinsert(data);
         const record = recordProxy._raw;
-        record.update.call(record._proxy, data);
+        record.update.call(record._proxy, data, { forceApply: false });
         return recordProxy;
     }
     /** @returns {Record} */
@@ -300,12 +300,19 @@ export class Record {
 
     setup() {}
 
-    update(data) {
+    /**
+     * @param {Object|any} data
+     * @param {Object} [options={}]
+     * @param {boolean} [options.forceApply=true] Apply the data even when the
+     * current insert version is out of order. Only versioned server data turns
+     * it off.
+     */
+    update(data, { forceApply = true } = {}) {
         const record = this._raw;
         const store = record._rawStore;
         return store.MAKE_UPDATE(function recordUpdate() {
             if (typeof data === "object" && data !== null) {
-                store._.updateFields(record, data);
+                store._.updateFields(record, data, { forceApply });
             } else {
                 if (Array.isArray(record.Model.id)) {
                     throw new Error(
@@ -313,7 +320,7 @@ export class Record {
                     );
                 }
                 // update on single-id data
-                store._.updateFields(record, { [record.Model.id]: data });
+                store._.updateFields(record, { [record.Model.id]: data }, { forceApply });
             }
         });
     }
