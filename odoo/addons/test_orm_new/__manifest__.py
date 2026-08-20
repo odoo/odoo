@@ -23,6 +23,7 @@
         'security/test_json_field/ir.access.csv',
         'security/test_many2many/ir.access.csv',
         'security/test_one2many/ir.access.csv',
+        'security/test_performance/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
