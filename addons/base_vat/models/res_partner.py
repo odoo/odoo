@@ -140,14 +140,24 @@ class ResPartner(models.Model):
 
         vat_to_return = prefixed_country + vat
 
+        # Avoid validating double prefix like BEBE0477472701
+        double_prefix = prefixed_country and vat_to_return.startswith(prefixed_country + prefixed_country)
+        is_valid = self._check_vat_number(code_to_check, vat) and not double_prefix
+
+        if not is_valid:
+            company_country = self.env.company.country_id
+            if company_country and company_country != country:
+                if self._get_vat_validation_method(company_country.code):
+                    cross_border_vat, cross_border_code = self._run_vat_checks(company_country, vat_prefix + vat_number, partner_name, validation='setnull')
+                    if cross_border_vat:
+                        return cross_border_vat, cross_border_code
+
         # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
         # This is for API pushes from external platforms where you have no control over VAT numbers.
         if not validation or self.env.context.get('no_vat_validation'):
             return vat_to_return, code_to_check
 
-        # Avoid validating double prefix like BEBE0477472701
-        double_prefix = prefixed_country and vat_to_return.startswith(prefixed_country + prefixed_country)
-        if not self._check_vat_number(code_to_check, vat) or double_prefix:
+        if not is_valid:
             partner_label = _("partner%s", f' [{partner_name}]' if partner_name else '')
             if do_eu_check:
                 try:
@@ -189,6 +199,14 @@ class ResPartner(models.Model):
                 and not to_check[:2].upper() == company_code
                 and self.env.company.vat_check_vies
             )
+
+    @api.model
+    def _get_vat_validation_method(self, country_code):
+        country_code = EU_EXTRA_VAT_CODES_INV.get(country_code.upper(), country_code).lower()
+        check_func_name = 'check_vat_' + country_code
+        stdnum_vat_module = stdnum.util.get_cc_module(country_code, 'vat')
+
+        return getattr(self, check_func_name, None) or getattr(stdnum_vat_module, 'is_valid', None)
 
     @api.depends('vat')
     def _compute_vies_valid(self):
