@@ -9,7 +9,7 @@ import { proxy, toRaw } from "@odoo/owl";
 export class RecordList extends Array {
     /** @type {import("models").Store} */
     _store;
-    /** @type {string[]} */
+    /** @type {Record[]} raw */
     data = [];
     /** @type {this} */
     _raw;
@@ -58,9 +58,7 @@ export class RecordList extends Array {
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index]" syntax
                     const index = parseInt(name);
-                    return recordListFullProxy._store.recordByLocalId.get(
-                        recordListFullProxy.data[index]
-                    );
+                    return recordListFullProxy.data[index]?._proxy;
                 }
                 // Attempt an unimplemented array method call
                 const array = [...recordList[Symbol.iterator].call(recordListFullProxy)];
@@ -77,10 +75,8 @@ export class RecordList extends Array {
                             recordList,
                             val,
                             function recordListSet_Insert(newRecord) {
-                                const oldRecord = toRaw(recordList._store.recordByLocalId).get(
-                                    recordList.data[index]
-                                )._raw;
-                                recordListProxy.data[index] = newRecord?.localId;
+                                const oldRecord = recordList.data[index];
+                                recordListProxy.data[index] = newRecord;
                                 if (oldRecord && oldRecord.notEq(newRecord)) {
                                     oldRecord._.uses.delete(recordList);
                                 }
@@ -148,7 +144,7 @@ export class RecordList extends Array {
                     recordList,
                     val,
                     function recordListPushInsert(record) {
-                        recordList._proxy.data.push(record.localId);
+                        recordList._proxy.data.push(record);
                         recordList._.syncLength(recordList);
                         record._.uses.add(recordList);
                     }
@@ -181,21 +177,18 @@ export class RecordList extends Array {
         const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListShift() {
-            const recordProxy = recordListFullProxy._store.recordByLocalId.get(
-                recordListFullProxy.data.shift()
-            );
+            const record = recordListFullProxy.data.shift();
             recordList._.syncLength(recordList);
-            if (!recordProxy) {
+            if (!record) {
                 return;
             }
-            const record = recordProxy._raw;
             record._.uses.delete(recordList);
             store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
             const inverse = recordList._.getInverse();
             if (inverse) {
                 store._.updateFields(record, { [inverse]: [["DELETE", recordList._.owner]] });
             }
-            return recordProxy;
+            return record._proxy;
         });
     }
     /** @param {R[]} records */
@@ -207,7 +200,7 @@ export class RecordList extends Array {
             const inverse = recordList._.getInverse();
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._.insert(recordList, records[i], (record) => {
-                    recordList._proxy.data.unshift(record.localId);
+                    recordList._proxy.data.unshift(record);
                     recordList._.syncLength(recordList);
                     record._.uses.add(recordList);
                 });
@@ -222,7 +215,7 @@ export class RecordList extends Array {
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
         const recordListFullProxy = this;
-        return recordListFullProxy.data.indexOf(recordProxy?._raw.localId);
+        return recordListFullProxy.data.indexOf(recordProxy?._raw);
     }
     /**
      * @param {number} [start]
@@ -234,15 +227,12 @@ export class RecordList extends Array {
         const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListSplice() {
-            const oldRecordLocalIds = recordList.data.slice(start, start + deleteCount);
-            const oldRecords = oldRecordLocalIds.map(
-                (localId) => toRaw(recordList._store.recordByLocalId).get(localId)._raw
-            );
+            const oldRecords = recordList.data.slice(start, start + deleteCount);
             const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
             list.splice(
                 start,
                 deleteCount,
-                ...newRecordsProxy.map((newRecordProxy) => newRecordProxy._raw.localId)
+                ...newRecordsProxy.map((recordProxy) => recordProxy._raw)
             );
             if (recordList._.isOne() && start === 0 && deleteCount === 1) {
                 // avoid replacing whole list, to avoid triggering observers too much
@@ -289,7 +279,7 @@ export class RecordList extends Array {
     concat(...collections) {
         const recordListFullProxy = this;
         return recordListFullProxy.data
-            .map((localId) => recordListFullProxy._store.recordByLocalId.get(localId))
+            .map((record) => record._proxy)
             .concat(...collections.map((c) => [...c]));
     }
     /**
@@ -302,29 +292,29 @@ export class RecordList extends Array {
         return store.MAKE_UPDATE(function recordListAdd() {
             if (recordList._.isOne()) {
                 const last = records.at(-1);
-                if (isRecord(last) && recordList.data.includes(last._raw.localId)) {
+                if (isRecord(last) && recordList.data.includes(last._raw)) {
                     return last;
                 }
                 return recordList._.insert(
                     recordList,
                     last,
                     function recordListAddInsertOne(record) {
-                        if (record.localId !== recordList.data[0]) {
-                            recordList.splice.call(recordList._proxy, 0, 1, record);
+                        if (record !== recordList.data[0]) {
+                            recordList.splice.call(recordList._proxy, 0, 1, record._proxy);
                         }
                     }
                 );
             }
             const res = [];
             for (const val of records) {
-                if (isRecord(val) && recordList.data.includes(val.localId)) {
+                if (isRecord(val) && recordList.data.includes(val._raw)) {
                     continue;
                 }
                 const rec = recordList._.insert(
                     recordList,
                     val,
                     function recordListAddInsertMany(record) {
-                        if (recordList.data.indexOf(record.localId) === -1) {
+                        if (recordList.data.indexOf(record) === -1) {
                             recordList.push.call(recordList._proxy, record);
                         }
                     }
@@ -344,7 +334,7 @@ export class RecordList extends Array {
                     recordList,
                     val,
                     function recordListDelete_Insert(record) {
-                        const index = recordList.data.indexOf(record.localId);
+                        const index = recordList.data.indexOf(record);
                         if (index !== -1) {
                             recordList.splice.call(recordList._proxy, index, 1);
                         }
@@ -366,15 +356,15 @@ export class RecordList extends Array {
     /** @yields {R} */
     *[Symbol.iterator]() {
         const recordListFullProxy = this;
-        for (const localId of recordListFullProxy.data) {
-            yield recordListFullProxy._store.recordByLocalId.get(localId);
+        for (const record of recordListFullProxy.data) {
+            yield record._proxy;
         }
     }
     /** @param {number} index */
     at(index) {
         // this custom implement of "at" is slightly faster than auto-calling unimplement array method
         const recordListFullProxy = this;
-        return recordListFullProxy._store.recordByLocalId.get(recordListFullProxy.data.at(index));
+        return recordListFullProxy.data.at(index)?._proxy;
     }
 }
 

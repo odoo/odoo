@@ -11,16 +11,7 @@ export class Store extends Record {
     /** @type {import("./store_internal").StoreInternal} */
     _;
     [STORE_SYM] = true;
-    /** @type {Map<string, Record>} */
-    recordByLocalId;
     storeReady = false;
-    /**
-     * @param {string} localId
-     * @returns {Record}
-     */
-    get(localId) {
-        return this.recordByLocalId.get(localId);
-    }
 
     handleError(err) {
         this._.ERRORS.push(err);
@@ -133,9 +124,8 @@ export class Store extends Record {
                         ...record.Model._.fieldsMany.keys(),
                     ]) {
                         const recordList = record[name];
-                        for (const localId of recordList.data) {
-                            const usedRecord = toRaw(this.recordByLocalId).get(localId)?._raw;
-                            usedRecord?._.uses.delete(recordList);
+                        for (const usedRecord of recordList.data) {
+                            usedRecord._.uses.delete(recordList);
                         }
                         recordList._proxy.data.length = 0;
                     }
@@ -148,7 +138,6 @@ export class Store extends Record {
                             localStorageKeyToRecordFields.delete(key);
                         }
                     }
-                    this.recordByLocalId.delete(record.localId);
                     record._runDisposeFns();
                 }
             }

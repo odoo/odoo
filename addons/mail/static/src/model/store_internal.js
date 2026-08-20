@@ -188,14 +188,12 @@ export class StoreInternal extends RecordInternal {
     sortRecordList(recordListFullProxy, func) {
         const recordList = toRaw(recordListFullProxy)._raw;
         // sort on copy of list so that reactive observers not triggered while sorting
-        const recordProxies = recordListFullProxy.data.map((localId) =>
-            recordListFullProxy._store.recordByLocalId.get(localId)
-        );
+        const recordProxies = recordListFullProxy.data.map((record) => record._proxy);
         recordProxies.sort(func);
-        const data = recordProxies.map((recordProxy) => recordProxy._raw.localId);
-        const hasChanged = recordList.data.some((localId, i) => localId !== data[i]);
+        const records = recordProxies.map((recordProxy) => recordProxy._raw);
+        const hasChanged = recordList.data.some((record, i) => record !== records[i]);
         if (hasChanged) {
-            recordListFullProxy.data = data;
+            recordListFullProxy.data = records;
         }
     }
     /**
