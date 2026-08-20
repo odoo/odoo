@@ -33,6 +33,7 @@ TAX_TAG_DELIMITER = '||'
 
 SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE',
                   'CD', 'SN', 'TD', 'TG']
+DROM_COM = ['BL', 'GF', 'GP', 'MF', 'MQ', 'NC', 'PF', 'PM', 'RE', 'TF', 'WF', 'YT']
 
 
 def preserve_existing_tags_on_taxes(env, module):
@@ -117,6 +118,7 @@ class AccountChartTemplate(models.AbstractModel):
             (template_code, template['name'])
             for template_code, template in sorted(chart_template_mapping.items(), key=(lambda t: (
                 t[1]['name'] != 'generic_coa' if not country
+                else t[0] != 'fr' if country.code in DROM_COM
                 else t[1]['country_id'] != country.id
             )))
         ]
