@@ -116,6 +116,34 @@ test("change action of form changes available options", async () => {
     expect(".hb-row[data-label='URL'] input").toHaveValue("/contactus-thank-you");
 });
 
+test("remove hidden many2one field from form if value is None", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    onRpc("/web/dataset/call_kw/hr.job/search_read", () => [{ id: 1, display_name: "Some Job" }]);
+    function withIframeRegistry(registry) {
+        registry.category("website.form_editor_actions").add("apply_job", {
+            formFields: [],
+            fields: [{ name: "job_id", type: "many2one", relation: "hr.job", string: "Applied Job" }],
+        });
+    }
+    await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
+
+    await contains(":iframe section").click();
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
+
+    await animationFrame();
+    await contains(".hb-row[data-label='Applied Job'] button").click();
+    await contains("div.o-dropdown-item:contains('Some Job')").click();
+
+    await animationFrame();
+    expect(':iframe input[type="hidden"][name="job_id"][value="1"]').toHaveCount(1);
+    await contains(".hb-row[data-label='Applied Job'] button").click();
+    await contains("div.o-dropdown-item:contains('None')").click();
+
+    await animationFrame();
+    expect(':iframe input[type="hidden"][name="job_id"]').toHaveCount(0);
+});
+
 test("'Author' field's type stays selected when you modify the option list", async () => {
     onRpc("get_authorized_fields", () => ({
         author_id: {
