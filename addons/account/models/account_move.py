@@ -3421,7 +3421,7 @@ class AccountMove(models.Model):
             if partial_values['is_exchange']:
                 partial_values['amount'] = abs(partial_values['aml'].balance)
 
-        return partial_values_list
+        return sorted(partial_values_list, key=lambda vals: (vals['aml'].date, vals['aml'].id))
 
     def _get_reconciled_invoices_partials(self):
         ''' Helper to retrieve the details about reconciled invoices.
