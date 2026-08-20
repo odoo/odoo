@@ -42,12 +42,12 @@
                         </div>
                         <div class="col-3">
                             <strong>Quantity to Produce:</strong><br/>
-                            <span t-field="o.product_qty">100</span>
+                            <span t-field="o.product_qty" t-options="{'widget': 'float', 'min_precision': 0}">100</span>
                             <span t-field="o.uom_id.name" groups="uom.group_uom">Units</span>
                         </div>
                         <div class="col-3" t-if="o.qty_producing">
                             <strong>Quantity Producing:</strong><br/>
-                            <span t-field="o.qty_producing">50</span>
+                            <span t-field="o.qty_producing" t-options="{'widget': 'float', 'min_precision': 0}">50</span>
                             <span t-field="o.uom_id.name" groups="uom.group_uom">Units</span>
                         </div>
                     </div>
@@ -118,11 +118,11 @@
                 </td>
                 <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}" t-if="o.state in ('progress', 'to_close','done')">
                     <div>
-                        <span t-field="raw_line.quantity">2</span>
+                        <span t-field="raw_line.quantity" t-options="{'widget': 'float', 'min_precision': 0}">2</span>
                     </div>
                 </td>
                 <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">
-                    <span t-field="raw_line.product_uom_qty">25</span>
+                    <span t-field="raw_line.product_uom_qty" t-options="{'widget': 'float', 'min_precision': 0}">25</span>
                     <span t-field="raw_line.uom_id" groups="uom.group_uom">Pieces</span>
                 </td>
                 <td t-if="has_product_barcode" width="15%" class="text-center">

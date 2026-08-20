@@ -96,7 +96,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else x"/>
                             <!-- In this step, we loop over every move of the picking and do the following
                                 1. We add the barcode column if any of the products has a barcode or if we have a tracked move
                                 2. We add From/To columns according to the type of the picking
@@ -144,10 +143,10 @@
                                                 </span>
                                             </td>
                                             <td class="o_td_quantity text-end">
-                                                <span t-out="format_number(move.quantity)" class="text-nowrap">3.00</span>
+                                                <span t-out="move.quantity" t-options="{'widget': 'float', 'min_precision': 0}" class="text-nowrap">3</span>
                                                 <span t-field="move.uom_id" groups="uom.group_uom">units</span>
                                                 <span t-if="move.packaging_uom_id and move.packaging_uom_id != move.uom_id">
-                                                    (<span t-field="move.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="move.packaging_uom_id.name"/>)
+                                                    (<span t-field="move.packaging_uom_qty" t-options="{'widget': 'float', 'min_precision': 0}"/> <span t-field="move.packaging_uom_id.name"/>)
                                                 </span>
                                             </td>
                                             <!-- If a move contains only one move line, the move is summarized in the heading only -->
@@ -187,7 +186,7 @@
                                                     <span style="margin-left: 50px;" t-if="line.lot_id or line.lot_name" t-out="line.lot_id.name"></span>
                                                 </td>
                                                 <td class="text-end">
-                                                    <span t-out="format_number(line.quantity)">3.00</span>
+                                                    <span t-out="line.quantity" t-options="{'widget': 'float', 'min_precision': 0}">3</span>
                                                     <span t-field="line.uom_id" groups="uom.group_uom">units</span>
                                                 </td>
                                                 <td class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
