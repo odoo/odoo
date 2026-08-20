@@ -128,10 +128,17 @@
         'views/phase16_program_daypart_views.xml',
         'views/phase17_dataloader_views.xml',
         'views/phase28_post_log_import_views.xml',
+        'views/mv_hide_manage_databases.xml',
         'views/menus_root_action.xml',
         'views/web_noindex.xml',
     ],
     'assets': {
+        'web.assets_frontend': [
+            'marathon_ventures/static/src/scss/mv_hide_manage_databases.scss',
+        ],
+        'web.assets_frontend_minimal': [
+            'marathon_ventures/static/src/scss/mv_hide_manage_databases.scss',
+        ],
         'web.assets_backend': [
             'marathon_ventures/static/src/scss/phase9_deal_layout.scss',
             'marathon_ventures/static/src/scss/phase9_calendar.scss',

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!--
+    Hide the "Manage Databases" link on the login page.
+
+    Cosmetic layer only - the actual hiding is done by the SCSS
+    shipped in web.assets_frontend / web.assets_frontend_minimal
+    (see mv_hide_manage_databases.scss). This template inherit is
+    a belt-and-braces version in case a future Odoo build routes
+    login through a template that ignores the frontend bundle.
+  -->
+  <template id="mv_hide_manage_databases_login"
+            inherit_id="web.login"
+            name="MV: Hide Manage Databases link on login">
+    <xpath expr="//a[contains(@href, '/web/database/manager') or contains(@href, '/web/database/selector')]"
+           position="attributes">
+      <attribute name="t-if">False</attribute>
+    </xpath>
+  </template>
+
+</odoo>
