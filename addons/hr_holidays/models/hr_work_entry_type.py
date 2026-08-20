@@ -36,7 +36,12 @@ class HrWorkEntryType(models.Model):
     def _model_sorting_key(self, work_entry_type):
         return work_entry_type.sequence
 
-    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True, tracking=True)
+    create_calendar_meeting = fields.Boolean(
+        string="Display Time Off in Calendar",
+        default=True,
+        tracking=True,
+        help="If this field is checked, every leave request of this type will have a corresponding entry in the calendar application. There will be no entry if this stays unchecked.",
+    )
     color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time type.")
     hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", tracking=True, help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
 
