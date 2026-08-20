@@ -21,7 +21,7 @@ import h11
 
 from odoo.http.router import root
 from odoo.http.server import SERVER_AGENT, SERVER_SOFTWARE
-from odoo.http.server_log import http_log, run_in_isolated_context, reset_thread_info
+from odoo.http.server_log import http_log, reset_thread_info, run_in_isolated_context
 from odoo.tools import parse_version
 from odoo.tools.misc import find_in_path
 
@@ -37,7 +37,7 @@ SERVE_TIMEOUT = 15 * 60  # 15 minutes
 CHUNK_SIZE = 8192  # 8kiB, buffer size of paper-muncher
 MAX_INCOMPLETE_EVENT_SIZE = 8192  # 8kiB
 MIN_REQUIRED_VERSION = '0.6'  # keep in sync with README.md
-GET_DOCUMENT_RE = re.compile(br"^/paper-muncher/(header|footer|\.|[0-9]+)\.(?:html|xhtml|xml)$")
+GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(header|footer|\.|[0-9]+)\.(?:html|xhtml|xml)$')
 
 
 class PaperMuncherServer:
@@ -46,6 +46,8 @@ class PaperMuncherServer:
         '_conn',
         '_deadline',
         '_documents',
+        '_footer',
+        '_header',
         '_os_env',
         '_pdf',
         '_process',
@@ -93,7 +95,14 @@ class PaperMuncherServer:
                 self._process.kill()
         self._process = None
 
-    def serve(self, documents: Sequence[str], *, timeout: int = SERVE_TIMEOUT):
+    def serve(
+        self,
+        documents: Sequence[str],
+        header: str = '',
+        footer: str = '',
+        *,
+        timeout: int = SERVE_TIMEOUT,
+    ):
         """Serve Paper Muncher requests until the rendered PDF is returned."""
         if not self._process:
             e = "this function cannot be called outside of the context manager"
@@ -107,6 +116,8 @@ class PaperMuncherServer:
         _logger.info("Starting request loop, %d documents available", len(documents))
         self._deadline = time.monotonic() + timeout
         self._documents = documents
+        self._header = header
+        self._footer = footer
         self._selector = selectors.DefaultSelector()
         with self._selector:
             self._selector.register(self._process.stdout, selectors.EVENT_READ, data='stdout')
@@ -165,7 +176,11 @@ class PaperMuncherServer:
 
     def _process_request(self):
         if self._request.method == b'GET' and (match := GET_DOCUMENT_RE.match(self._request.target)):
-            response, bytes_sent = self._handle_get_document(match[1])
+            response, bytes_sent = self._handle_get((
+                     self._header if match[1] == b'header'
+                else self._footer if match[1] == b'footer'
+                else self._documents[int(match[1])]
+            ).encode())
         elif self._request.method == b'PUT' and self._request.target == b'/paper-muncher/output.pdf':
             response, bytes_sent = self._handle_put(self._request_body)
             _logger.info("Got a PDF of %s bytes", len(self._request_body))
@@ -180,11 +195,8 @@ class PaperMuncherServer:
             'http_headers': (),  # already printed at [RES]
         })
 
-    def _handle_get_document(self, document_index: str):
+    def _handle_get(self, content: bytes):
         """Serve one ``GET`` document request from the worker."""
-        index = int(document_index) if document_index != b'.' else 0
-        content = self._documents[index].encode()
-
         response = h11.Response(
             status_code=200,
             headers=[

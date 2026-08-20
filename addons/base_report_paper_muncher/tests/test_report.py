@@ -55,7 +55,7 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
         self_setup = self
         old_serve = PaperMuncherServer.serve
 
-        def patched_serve_paper_muncher(self_server, documents, *, timeout=SERVE_TIMEOUT):
+        def patched_serve_paper_muncher(self_server, documents, header='', footer='', *, timeout=SERVE_TIMEOUT):
             test_cookie = f'{TEST_CURSOR_COOKIE_NAME}=paper-muncher'
             if 'HTTP_COOKIE' in self_server._wsgi_environ:
                 self_server._wsgi_environ['HTTP_COOKIE'] += f', {test_cookie}'
@@ -67,7 +67,7 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
                 release_test_lock(),
                 patch('odoo.tests.common._disable_flushing_cursor', True),
             ):
-                return old_serve(self_server, documents, timeout=timeout)
+                return old_serve(self_server, documents, header, footer, timeout=timeout)
 
         self.startPatcher(patch.object(
             PaperMuncherServer,

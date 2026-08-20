@@ -2,13 +2,10 @@
 
 import logging
 import os
-import re
 from collections.abc import Sequence
 from contextlib import ExitStack
 from typing import Literal
 from urllib.parse import urlsplit
-
-import lxml
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -43,7 +40,6 @@ class IrActionsReport(models.Model):
         footer: str = '',
         landscape: bool = False,
         specific_paperformat_args: dict | None = None,
-        scale: int = 72,
     ) -> bytes:
         """Render a PDF from HTML content using Paper Muncher subprocess.
 
@@ -52,42 +48,50 @@ class IrActionsReport(models.Model):
         :param header: HTML header fragment.
         :param footer: HTML footer fragment.
         :param landscape: Whether to use landscape layout.
-        :param specific_paperformat_args: TODO
-        :param scale: document scale (DPI)
+        :param specific_paperformat_args: A dictionary containing specific paperformat
+            arguments that override the default paperformat settings. Supported keys:
+
+            ``data-report-dpi``
+                DPI used to compute the document scale, overrides ``paperformat.dpi``.
+            ``data-report-margin-top``
+                top margin in mm, mapped to the header size, overrides
+                ``paperformat.margin_top``.
+            ``data-report-margin-bottom``
+                bottom margin in mm, mapped to the footer size, overrides
+                ``paperformat.margin_bottom``.
+            ``data-report-landscape``
+                force landscape orientation; combined with the ``landscape`` parameter,
+                either one being truthy is enough.
+
+            Any other key is ignored.
         :returns: PDF bytes returned by Paper Muncher.
         :raises RuntimeError: If Paper Muncher fails during any phase.
         """
-        if specific_paperformat_args:
-            if not landscape and specific_paperformat_args.get('data-report-landscape'):
-                landscape = specific_paperformat_args['data-report-landscape']
-            if specific_paperformat_args.get('data-report-dpi'):
-                scale = int(specific_paperformat_args['data-report-dpi'])
-
+        specific_paperformat_args = specific_paperformat_args or {}
         paperformat = (
             self._get_report(report_ref).get_paperformat()
             if report_ref else
             self.get_paperformat()
         )
-        header = header or ''
-        footer = footer or ''
 
         if not isinstance(bodies, (list, tuple)):
             bodies = list(bodies)
 
-        if len(bodies) > 1:
-            documents = make_multi_docs_html(bodies, header, footer)
-        else:
-            header = partition_on_body(header)[1]
-            footer = partition_on_body(footer)[1]
-            open_body, body, close_body = partition_on_body(bodies[0])
-            documents = [f'{open_body}{header}{body}{footer}{close_body}\n']
-
-        names = [f'pipe:/paper-muncher/{i}.html' for i in range(len(documents))]
+        names = [f'pipe:/paper-muncher/{i}.html' for i in range(len(bodies))]
         extra_args = [
-            '--scale', f'{scale}dpi',
-            '--margins', 'none',
+            '--scale', f'{76 / float(specific_paperformat_args.get('data-report-dpi', paperformat.dpi))}x',
+            '--margins', f'0mm {paperformat.margin_right}mm 0mm {paperformat.margin_left}mm',
+            '--header-size', f'{specific_paperformat_args.get('data-report-margin-top', paperformat.margin_top)}mm',
+            '--footer-size', f'{specific_paperformat_args.get('data-report-margin-bottom', paperformat.margin_bottom)}mm',
         ]
-        if landscape:
+
+        if header:
+            extra_args += ['--header', 'pipe:/paper-muncher/header.html']
+
+        if footer:
+            extra_args += ['--footer', 'pipe:/paper-muncher/footer.html']
+
+        if landscape or specific_paperformat_args.get('data-report-landscape', False):
             extra_args += ['--orientation', 'landscape']
         elif paperformat and paperformat.orientation:
             extra_args += ['--orientation', paperformat.orientation.lower()]
@@ -129,7 +133,7 @@ class IrActionsReport(models.Model):
                 os_env=os_env,
                 wsgi_environ=wsgi_environ,
             ) as server:
-                return server.serve(documents)  # TODO: ir.config_parameter
+                return server.serve(bodies, header, footer)  # TODO: ir.config_parameter
 
     def _run_pdf_engine_without_processing(
             self,
@@ -141,7 +145,6 @@ class IrActionsReport(models.Model):
             footer=None,
             landscape=False,
             specific_paperformat_args=None,
-            scale: int = 72,
             **kwargs,
     ) -> bytes:
         if engine_name == 'paper-muncher':
@@ -152,13 +155,12 @@ class IrActionsReport(models.Model):
                 footer=footer,
                 landscape=landscape,
                 specific_paperformat_args=specific_paperformat_args,
-                scale=scale,
             )
         return super()._run_pdf_engine_without_processing(
             engine_name, bodies, report_ref,
             header=header, footer=footer, landscape=landscape,
             specific_paperformat_args=specific_paperformat_args,
-            scale=scale, **kwargs)
+            **kwargs)
 
     def _run_pdf_engine(
         self,
@@ -179,68 +181,6 @@ class IrActionsReport(models.Model):
                 footer=footer,
                 landscape=landscape,
                 specific_paperformat_args=specific_paperformat_args,
-                scale=kwargs.get('dpi-resolution', 72),
             )
             return content, html_ids
         return super()._run_pdf_engine(engine_name, html, report_ref, landscape, **kwargs)
-
-
-_BODY_TAG_RE = re.compile(r'<body(?:\s[^>]*)?>', re.IGNORECASE)
-
-
-def partition_on_body(html: str) -> tuple[str, str, str]:
-    """
-    Get what's before the body, the body and what's after the body.
-    When no ``<body>`` was found, it returns ``(html, "", "")``.
-    """
-    html = str(html)
-    m = _BODY_TAG_RE.search(html)
-    if not m:
-        return html, '', ''
-    pre_body = html[:m.end()]
-    rest = html[m.end():]
-    body, sep, post_body = rest.rpartition('</body>')
-    if not sep:
-        return html, '', ''
-    return pre_body, body, sep + post_body
-
-
-def make_multi_docs_html(bodies: Sequence[str], header: str = '', footer: str = '') -> Sequence[str]:
-    """Inject per-page header/footer fragments into each body HTML document."""
-
-    footer_body = partition_on_body(footer)[1]
-    footers = [
-        lxml.etree.tostring(f, encoding='unicode')
-        for f in (lxml.html.fromstring(footer_body).findall('./div') if footer_body else [])
-    ]
-
-    header_body = partition_on_body(header)[1]
-    headers = [
-        lxml.etree.tostring(h, encoding='unicode')
-        for h in (lxml.html.fromstring(header_body).findall('./div') if header_body else [])
-    ]
-
-    is_same_length_header = (len(headers) == len(bodies))
-    if headers and not is_same_length_header:
-        _logger.warning(
-            "Header fragments count (%d) does not match body count (%d); reusing the first header fragment where needed.",
-            len(headers),
-            len(bodies),
-        )
-
-    is_same_length_footer = (len(footers) == len(bodies))
-    if footers and not is_same_length_footer:
-        _logger.warning(
-            "Footer fragments count (%d) does not match body count (%d); reusing the first footer fragment where needed.",
-            len(footers),
-            len(bodies),
-        )
-
-    documents = []
-    for i, body in enumerate(bodies):
-        pre_body, body, post_body = partition_on_body(body)
-        header_fragment = headers[i] if is_same_length_header else (headers[0] if headers else '')
-        footer_fragment = footers[i] if is_same_length_footer else (footers[0] if footers else '')
-        documents.append(f'{pre_body}{header_fragment}{body}{footer_fragment}{post_body}\n')
-
-    return documents
