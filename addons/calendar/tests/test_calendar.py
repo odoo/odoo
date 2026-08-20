@@ -2,6 +2,7 @@
 
 import base64
 import freezegun
+import logging
 
 from datetime import datetime, timedelta
 
@@ -9,6 +10,14 @@ from odoo import fields, Command
 from odoo.exceptions import AccessError
 from odoo.tests import Form, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
 
 
 class TestCalendar(SavepointCaseWithUserDemo):
@@ -265,6 +274,49 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # internal user can read the attachment without errors
         self.assertEqual(msg.with_user(internal_user).attachment_ids.name, 'invitation.ics')
+
+    @freezegun.freeze_time('2024-01-01 08:00:00')
+    def test_ics_file_videocall_location(self):
+        """ The videocall_location should be exported as a URL property in the invitation.ics
+        attachment sent to attendees, without overriding the physical LOCATION when both are set. """
+        if not vobject:
+            self.skipTest("`vobject` Python module is not installed.")
+
+        cases = [
+            ('no videocall_location', {}, False, False),
+            (
+                'videocall_location only',
+                {'videocall_location': 'https://meet.example.com/test-meeting'},
+                'https://meet.example.com/test-meeting',
+                False,
+            ),
+            (
+                'videocall_location and location',
+                {'location': 'Conference Room A', 'videocall_location': 'https://meet.example.com/room-a'},
+                'https://meet.example.com/room-a',
+                'Conference Room A',
+            ),
+        ]
+        for index, (description, values, expected_url, expected_location) in enumerate(cases):
+            with self.subTest(description=description):
+                partner = self.env['res.partner'].create({
+                    'name': 'Attendee %s' % index,
+                    'email': 'attendee-%s@example.com' % index,
+                })
+                self.env['calendar.event'].create({
+                    'name': 'Test Meeting',
+                    'start': datetime(2024, 1, 1, 10, 0),
+                    'stop': datetime(2024, 1, 1, 11, 0),
+                    'partner_ids': [Command.link(partner.id)],
+                    **values,
+                })
+                msg = self.env['mail.message'].sudo().search([('notified_partner_ids', 'in', partner.id)])
+                attachment = msg.attachment_ids.filtered(lambda a: a.name == 'invitation.ics')
+                self.assertTrue(attachment, "The invitation email should have an invitation.ics attachment")
+
+                vevent = vobject.readOne(attachment.raw.decode('utf-8')).vevent
+                self.assertEqual(vevent.getChildValue('url', False), expected_url)
+                self.assertEqual(vevent.getChildValue('location', False), expected_location)
 
     def test_event_creation_sudo_other_company(self):
         """ Check Access right issue when create event with sudo
