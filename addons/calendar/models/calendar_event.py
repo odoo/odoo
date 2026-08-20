@@ -1507,6 +1507,8 @@ class Meeting(models.Model):
                 event.add('description').value = description
             if meeting.location:
                 event.add('location').value = meeting.location
+            if meeting.videocall_location:
+                event.add('url').value = meeting.videocall_location
             if meeting.rrule:
                 # meeting.rrule may be a full dateutil string: "DTSTART:...\nRRULE:FREQ=..."
                 # Take the last line and strip the "RRULE:" prefix if present.
