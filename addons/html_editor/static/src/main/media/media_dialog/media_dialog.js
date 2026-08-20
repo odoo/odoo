@@ -192,6 +192,8 @@ export class MediaDialog extends Component {
         }
     }
 
+    async preProcessSave() {}
+
     async save() {
         if (this.errorMessages[this.state.activeTab]) {
             this.notificationService.add(this.errorMessages[this.state.activeTab], {
@@ -199,6 +201,7 @@ export class MediaDialog extends Component {
             });
             return;
         }
+        await this.preProcessSave();
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         // TODO In master: clean the save method so it performs the specific
         // adaptation before saving from the active media selector and find a

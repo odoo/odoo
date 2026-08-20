@@ -9,7 +9,7 @@ patch(MediaDialog.prototype, {
         this.unsplashService = useService("unsplash");
     },
 
-    async save() {
+    async preProcessSave() {
         const selectedImages = this.selectedMedia[TABS.IMAGES.id];
         if (selectedImages) {
             const unsplashRecords = selectedImages.filter(
@@ -35,6 +35,6 @@ patch(MediaDialog.prototype, {
                 );
             }
         }
-        return super.save(...arguments);
+        return super.preProcessSave(...arguments);
     },
 });

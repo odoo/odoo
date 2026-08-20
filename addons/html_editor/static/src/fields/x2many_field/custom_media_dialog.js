@@ -15,6 +15,7 @@ export class CustomMediaDialog extends MediaDialog {
             });
             return;
         }
+        await this.preProcessSave();
         if (this.state.activeTab == "IMAGES") {
             await this.imageSave(this.selectedMedia[this.state.activeTab]);
         } else {
