@@ -49,6 +49,24 @@ class ProductCategory(models.Model):
         'account.account', string="Stock Variation Account", readonly=False,
         related="property_stock_valuation_account_id.account_stock_variation_id")
     account_stock_variation_active = fields.Boolean(related='account_stock_variation_id.active', string="Stock Variation Account Active")
+    property_cost_method = fields.Selection(
+        string="Costing Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('average', "Average Cost (AVCO)"),
+        ],
+        company_dependent=True, copy=True,
+        default=lambda self: self.env.company.cost_method,
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        """,
+        tracking=True,
+    )
+    property_price_difference_account_id = fields.Many2one(
+        'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
+        check_company=True,
+        help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
+    property_price_difference_account_active = fields.Boolean(related='property_price_difference_account_id.active', string="Price Difference Account Active")
 
 #----------------------------------------------------------
 # Products
@@ -94,6 +112,14 @@ class ProductTemplate(models.Model):
             ('real_time', 'Perpetual (at invoicing)'),
         ],
         compute='_compute_valuation', search='_search_valuation',
+    )
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('average', "Average Cost (AVCO)"),
+        ],
+        compute='_compute_cost_method',
     )
 
     def _get_product_accounts(self):
@@ -165,6 +191,18 @@ class ProductTemplate(models.Model):
             if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
                 company = self.env.company
             product_template.valuation = product_template.categ_id.with_company(company).property_valuation or company.inventory_valuation
+
+    @api.depends_context('company')
+    @api.depends('categ_id.property_cost_method')
+    def _compute_cost_method(self):
+        for product_template in self:
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
+            product_template.cost_method = (
+                product_template.categ_id.with_company(company).sudo().property_cost_method
+                or company.sudo().cost_method
+            )
 
     @api.depends('taxes_id', 'list_price')
     @api.depends_context('company')
@@ -271,7 +309,9 @@ class ProductTemplate(models.Model):
 
     def _get_price_diff_account(self):
         self.ensure_one()
-        return False
+        if self.cost_method == 'standard':
+            return self.categ_id.property_price_difference_account_id
+        return self.env['account.account']
 
 
 class ProductProduct(models.Model):

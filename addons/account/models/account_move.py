@@ -5949,7 +5949,7 @@ class AccountMove(models.Model):
         )
 
     def _create_cogs_lines(self):
-        ''' Create the journal items (account.move.line) corresponding to the Cost of Good Sold
+        """ Create the journal items (account.move.line) corresponding to the Cost of Good Sold
         lines (COGS) for customer invoices.
 
         Example:
@@ -5973,58 +5973,19 @@ class AccountMove(models.Model):
         ---------------------------------------------------------------
 
         Note: COGS are only generated for customer invoices except refund made to cancel an invoice.
-        '''
+        """
         lines_vals_list = []
 
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for move in self:
-
             # Make the loop multi-company safe when accessing models like product.product
             move = move.with_company(move.company_id)
 
-            if not move.is_sale_document(include_receipts=True):
-                continue
+            if move.is_sale_document(include_receipts=True):
+                lines_vals_list += move._get_cogs_lines_vals()
 
+            if move.is_purchase_document(include_receipts=True) and move.company_id.anglo_saxon_accounting:
+                lines_vals_list += move._get_price_difference_lines_vals()
 
-            for line in move.invoice_line_ids:
-                # Filter out lines being not eligible for COGS.
-                if not line._use_inventory_valuation():
-                    continue
-                # Retrieve accounts needed to generate the COGS.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
-                stock_account = accounts['stock_valuation']
-                credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
-                if not stock_account or not credit_expense_account:
-                    continue
-
-                # Compute accounting fields.
-                sign = -1 if move.move_type == 'out_refund' else 1
-                # `_get_cogs_value` always returns a price in the company currency (standard price,
-                # or FIFO/AVCO cost from the stock valuation layers), so the resulting amount below
-                # is a `balance`, not an `amount_currency`: let the ORM convert it using the move's
-                # currency_rate instead of assigning it to amount_currency directly.
-                price_unit = line._get_cogs_value()
-                balance = sign * line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) * price_unit
-
-                if move.company_currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
-                    continue
-
-                common_vals = move._get_cogs_common_vals(line)
-                # Add interim account line.
-                lines_vals_list.append({
-                    **common_vals,
-                    'price_unit': price_unit,
-                    'balance': -balance,
-                    'account_id': stock_account.id,
-                })
-
-                # Add expense account line.
-                lines_vals_list.append({
-                    **common_vals,
-                    'price_unit': -price_unit,
-                    'balance': balance,
-                    'account_id': credit_expense_account.id,
-                })
         return self.env['account.move.line'].create(lines_vals_list)
 
     def _get_cogs_common_vals(self, line):
@@ -6040,6 +6001,80 @@ class AccountMove(models.Model):
             'tax_ids': [],
             'cogs_origin_id': line.id,
         }
+
+    def _get_cogs_lines_vals(self):
+        """Prepare the COGS journal items (account.move.line) for a customer invoice: one line
+        crediting the stock valuation account and one line debiting the expense account, for
+        each invoice line whose product is valued in real time.
+        """
+        self.ensure_one()
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        sign = -1 if self.move_type == 'out_refund' else 1
+
+        lines_vals_list = []
+        for line in self.invoice_line_ids:
+            if not line._use_inventory_valuation():
+                continue
+
+            accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.fiscal_position_id)
+            stock_account = accounts['stock_valuation']
+            expense_account = accounts['expense'] or self.journal_id.default_account_id
+            if not stock_account or not expense_account:
+                continue
+
+            # `_get_cogs_value` always returns a price in the company currency (standard price,
+            # or FIFO/AVCO cost from the stock valuation layers), so the resulting amount below
+            # is a `balance`, not an `amount_currency`: let the ORM convert it using the move's
+            # currency_rate instead of assigning it to amount_currency directly.
+            price_unit = line._get_cogs_value()
+            balance = sign * line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) * price_unit
+            if self.company_currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
+                continue
+
+            common_vals = self._get_cogs_common_vals(line)
+            lines_vals_list.append({
+                **common_vals,
+                'price_unit': price_unit,
+                'balance': -balance,
+                'account_id': stock_account.id,
+            })
+            lines_vals_list.append({
+                **common_vals,
+                'price_unit': -price_unit,
+                'balance': balance,
+                'account_id': expense_account.id,
+            })
+        return lines_vals_list
+
+    def _get_price_difference_lines_vals(self):
+        ''' Prepare the price difference journal items (account.move.line) for a vendor bill:
+        for standard cost products, the stock valuation account is booked at the fixed standard
+        price, so the gap between that and the actual bill price (discount included) is
+        redirected to the price difference account.
+        '''
+        self.ensure_one()
+
+        lines_vals_list = []
+        for line in self.invoice_line_ids:
+            if not line._use_inventory_valuation():
+                continue
+            pdiff_account = self.fiscal_position_id.map_account(line.product_id._get_price_diff_account())
+            if not pdiff_account:
+                continue
+
+            # `price_subtotal` is in the move's currency: convert it to company currency with the
+            # move's own locked-in rate before comparing it to the (company-currency) standard value.
+            standard_value = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line.quantity
+            balance = self.company_currency_id.round(
+                self.direction_sign * (line.price_subtotal / self.invoice_currency_rate - standard_value)
+            )
+            if self.company_currency_id.is_zero(balance):
+                continue
+
+            common_vals = self._get_cogs_common_vals(line)
+            lines_vals_list.append({**common_vals, 'balance': balance, 'account_id': pdiff_account.id})
+            lines_vals_list.append({**common_vals, 'balance': -balance, 'account_id': line.account_id.id})
+        return lines_vals_list
 
     def _update_qty_available(self, reverse=False):
         for move in self:
@@ -6062,7 +6097,7 @@ class AccountMove(models.Model):
             if move.move_type != 'in_invoice':
                 continue
             for line in move.invoice_line_ids:
-                if line.display_type != 'product' or not line.product_id.is_storable:
+                if line.display_type != 'product' or not line.product_id.is_storable or line.product_id.cost_method == 'standard':
                     continue
                 qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
                 line.product_id.sudo().with_company(move.company_id)._update_standard_price(

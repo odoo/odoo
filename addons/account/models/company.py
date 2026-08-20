@@ -354,6 +354,16 @@ class ResCompany(models.Model):
         ],
         default='manual',
         required=True)
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('average', "Average Cost (AVCO)"),
+        ],
+        **company_default_for('cost_method', 'product.category', 'property_cost_method'),
+        default='standard',
+        required=True,
+    )
 
     # If company has Ledgers
     has_ledger = fields.Boolean(
