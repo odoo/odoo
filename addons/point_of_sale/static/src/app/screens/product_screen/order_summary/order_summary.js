@@ -32,7 +32,9 @@ export class OrderSummary extends Component {
     // We update the potential combos when the order changes
     // or the quantity of the items changes.
     potentialCombos = computed(() =>
-        this.pos.comboSuggestion.getApplicableProductCombo(this.currentOrder, "limited")
+        this.currentOrder
+            ? this.pos.comboSuggestion.getApplicableProductCombo(this.currentOrder, "limited")
+            : []
     );
 
     get currentOrder() {

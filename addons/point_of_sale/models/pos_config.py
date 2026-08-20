@@ -35,6 +35,9 @@ class PosConfig(models.Model):
             ('type', '=', 'sale'),
         ], limit=1)
 
+    def _default_closing_journal(self):
+        return False
+
     def _default_payment_methods(self):
         """ Should only default to payment methods that are compatible to this config's company and currency.
         """
@@ -76,10 +79,17 @@ class PosConfig(models.Model):
         compute="_compute_is_installed_account_accountant")
     journal_id = fields.Many2one(
         'account.journal', string='Point of Sale Journal',
-        domain=[('type', '=', 'sale')],
+        domain=[('type', 'in', ('general', 'sale'))],
         check_company=True,
-        help="Accounting journal used to post POS session receipts and invoices.",
-        default=_default_sale_journal,
+        help="Journal used for customer invoices. If no Closing Journal is selected, this journal will also be used for the PoS session closing entries.",
+        default=lambda self: self._default_sale_journal(),
+        ondelete='restrict')
+    closing_journal_id = fields.Many2one(
+        'account.journal', string='Closing Journal',
+        domain=[('type', 'in', ('general', 'sale'))],
+        check_company=True,
+        help="Optional journal used specifically for PoS session closing and reverse entries. If left empty, closing and reverse entries will be posted to the Orders journal.",
+        default=lambda self: self._default_closing_journal(),
         ondelete='restrict')
     default_partner_id = fields.Many2one(
         'res.partner',

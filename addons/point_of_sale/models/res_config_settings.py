@@ -89,6 +89,7 @@ class ResConfigSettings(models.TransientModel):
     pos_use_header_or_footer = fields.Boolean(related='pos_config_id.use_header_or_footer', readonly=False)
     pos_is_margins_costs_accessible_to_every_user = fields.Boolean(related='pos_config_id.is_margins_costs_accessible_to_every_user', readonly=False)
     pos_journal_id = fields.Many2one(related='pos_config_id.journal_id', readonly=False)
+    pos_closing_journal_id = fields.Many2one(related='pos_config_id.closing_journal_id', readonly=False)
     pos_limit_categories = fields.Boolean(related='pos_config_id.limit_categories', readonly=False)
     pos_manual_discount = fields.Boolean(related='pos_config_id.manual_discount', readonly=False)
     pos_only_round_cash_method = fields.Boolean(related='pos_config_id.only_round_cash_method', readonly=False)

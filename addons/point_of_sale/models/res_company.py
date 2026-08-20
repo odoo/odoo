@@ -58,9 +58,11 @@ class ResCompany(models.Model):
                 & Domain.OR((
                     Domain("start_at", "<=", fiscal_lock_date),
                     Domain("start_at", "<=", record.user_tax_lock_date),
-                    # The `config_id.journal_id.type` is either 'sale' or 'misc'
-                    Domain("config_id.journal_id.type", "=", 'sale')
-                        & Domain("start_at", "<=", record.user_sale_lock_date),
+                    Domain.OR((
+                        Domain("config_id.closing_journal_id.type", "=", 'sale'),
+                        Domain("config_id.closing_journal_id", "=", False)
+                            & Domain("config_id.journal_id.type", "=", 'sale'),
+                    )) & Domain("start_at", "<=", record.user_sale_lock_date),
                 ))
             )
             if sessions_in_period:

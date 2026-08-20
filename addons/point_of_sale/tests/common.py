@@ -942,3 +942,20 @@ class TestPoSCommon(AccountTestInvoicingCommon):
             'amount': amount,
             'payment_method_id': payment_method.id,
         }).check()
+
+
+class ClosingJournalDefaultCommon:
+
+    def _assert_default_closing_journal(self):
+        # sudo: several localization test classes run without the PoS manager group.
+        config = self.env['pos.config'].sudo().create({'name': 'Closing Journal Default'})
+        self.assertEqual(
+            config.closing_journal_id,
+            self.env['account.journal'].sudo()._ensure_company_closing_journal(),
+            "the session closing entries should default to the dedicated misc journal",
+        )
+        self.assertEqual(config.closing_journal_id.type, 'general')
+        self.assertEqual(
+            config.journal_id.type, 'sale',
+            "the orders journal is the one used for the customer invoices",
+        )

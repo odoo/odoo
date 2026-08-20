@@ -653,7 +653,8 @@ class PosOrder(models.Model):
                 order.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
             except (UserError, ValidationError) as e:
                 _logger.error("Error processing order %s: %s", order.name, e)
-            order.defer_invoice_pdf = False
+            else:
+                order.defer_invoice_pdf = False
 
     def action_view_invoice(self):
         invoices = self.account_move
@@ -1331,6 +1332,7 @@ class PosOrder(models.Model):
                     },
                     'metadata': {
                         'line': line,
+                        'base_line': base_line,
                     },
                 })
 
@@ -1410,6 +1412,40 @@ class PosOrder(models.Model):
         # 2. Aggregate product lines by (revenue account + VAT rate) grouping
         aggregated_per_line = self._aggregate_base_line_and_prepare_account_move_line_data(base_lines)
         return aggregated_per_line + zero_price_lines
+
+    def _prepare_move_line_data_for_entry(self, move_line_data):
+        with_base_line = [data for data in move_line_data if data['metadata'].get('base_line')]
+        if not with_base_line:
+            return []
+
+        AccountTax = self.env['account.tax']
+        base_lines = [data['metadata']['base_line'] for data in with_base_line]
+
+        AccountTax._add_accounting_data_in_base_lines_tax_details(
+            base_lines,
+            self.company_id,
+            include_caba_tags=True,
+        )
+        tax_results = AccountTax._prepare_tax_lines(base_lines, self.company_id)
+
+        for data, (base_line, amounts) in zip(with_base_line, tax_results['base_lines_to_update']):
+            data['account.move.line'].update({
+                'tax_tag_ids': amounts['tax_tag_ids'],
+                'currency_id': base_line['currency_id'].id,
+                'amount_currency': -amounts['amount_currency'],
+                'balance': -amounts['balance'],
+            })
+
+        return [
+            {
+                **tax_line_vals,
+                'display_type': 'tax',
+                'amount_currency': -tax_line_vals['amount_currency'],
+                'balance': -tax_line_vals['balance'],
+                'tax_base_amount': -tax_line_vals['tax_base_amount'],
+            }
+            for tax_line_vals in tax_results['tax_lines_to_add']
+        ]
 
     def _prepare_account_move_line_data_for_payments(self, partner=None):
         """
@@ -1746,10 +1782,13 @@ class PosOrder(models.Model):
         session = self.session_id
         move = session._create_partial_reversal_move_from_session_closing(self)
         sign = -1 if self.is_refund_or_negative() else 1
+        closing_receivable_line = global_move.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term',
+        )[:1] or global_move.line_ids[:1]
         move.line_ids = [
             Command.create({
                 'name': _("Reversal for %s", self.name),
-                'account_id': global_move.line_ids[0].account_id.id,
+                'account_id': closing_receivable_line.account_id.id,
                 'partner_id': global_move.partner_id.id,
                 'balance': invoice.amount_total * sign,
             }),

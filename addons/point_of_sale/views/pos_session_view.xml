@@ -38,6 +38,16 @@
                             >
                             <field name="account_move_count" widget="statinfo" string="Invoices"/>
                         </button>
+                        <button
+                            name="action_show_closing_moves"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="book"
+                            invisible="closing_move_count == 0"
+                            groups="account.group_account_readonly"
+                            >
+                            <field name="closing_move_count" widget="statinfo" string="Closing Entry"/>
+                        </button>
                     </div>
                     <h1 class="oe_title">
                         <field name="name" invisible="name == '/'" class="oe_inline"/>

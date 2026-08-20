@@ -31,6 +31,9 @@ class AccountJournal(models.Model):
     def _unlink_journal_cascade_pos_payment_methods(self):
         if self.env.context.get(MODULE_UNINSTALL_FLAG):  # only cascade when switching CoA
             self.pos_payment_method_ids.unlink()
+            self.env['pos.config'].search([
+                ('closing_journal_id', 'in', self.ids),
+            ]).closing_journal_id = False
             self.env['pos.config'].search([('journal_id', 'in', self.ids)]).unlink()
 
     def action_archive(self):
@@ -56,5 +59,32 @@ class AccountJournal(models.Model):
                 'code': 'POSS',
                 'type': 'sale',
                 'company_id': self.env.company.id,
+            })
+        return journal
+
+    @api.model
+    def _ensure_company_closing_journal(self):
+        company = self.env.company
+        journal = self.search([
+            ('code', '=', 'POSC'),
+            ('type', '=', 'general'),
+            ('company_id', '=', company.id),
+        ], limit=1)
+        if not journal:
+            journal = self.env['pos.config'].sudo().search([
+                ('company_id', '=', company.id),
+                ('closing_journal_id.type', '=', 'general'),
+            ], limit=1).closing_journal_id.with_env(self.env)
+        if not journal:
+            code_taken = self.with_context(active_test=False).search_count([
+                ('code', '=', 'POSC'),
+                ('company_id', '=', company.id),
+            ], limit=1)
+            journal = self.create({
+                'name': _('Point of Sale'),
+                # 'code' is unique per company, let it be computed when 'POSC' is taken.
+                **({} if code_taken else {'code': 'POSC'}),
+                'type': 'general',
+                'company_id': company.id,
             })
         return journal

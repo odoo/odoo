@@ -2,11 +2,12 @@ from unittest.mock import patch
 
 from odoo.addons.account_edi.tests.common import AccountTestInvoicingCommon
 from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
+from odoo.addons.point_of_sale.tests.common import ClosingJournalDefaultCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', 'post_install_l10n')
-class TestGenericCO(TestGenericLocalization):
+class TestGenericCO(ClosingJournalDefaultCommon, TestGenericLocalization):
 
     _pos_partner_pos_form_fields = ['vat', 'additional_identifiers']
     _test_user_groups = None  # FIXME list needed groups
@@ -25,3 +26,6 @@ class TestGenericCO(TestGenericLocalization):
             order, html_data = super().test_generic_localization()
 
         self.assertTrue(order.name in html_data)
+
+    def test_pos_closing_journal_default(self):
+        self._assert_default_closing_journal()

@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
+
 from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, freeze_time
@@ -2044,3 +2046,159 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertTrue(order_move.reversal_move_ids)
         other_orders = session.order_ids - order
         self.assertFalse(other_orders.account_move.reversal_move_ids)
+
+    def test_pos_closing_journal_empty(self):
+        self.pos_config.closing_journal_id = False
+        session = self.open_pos_session()
+
+        # Invoiced order
+        invoiced_order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+            extra_data={
+                'partner_id': self.partner_1.id,
+                'to_invoice': True,
+            },
+        )
+        self.assertEqual(invoiced_order.account_move.journal_id, self.pos_config.journal_id)
+        self.assertEqual(invoiced_order.account_move.move_type, 'out_invoice')
+
+        # Non-invoiced order
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+
+        self.assertTrue(session.sales_move_id)
+        self.assertEqual(session.sales_move_id.journal_id, self.pos_config.journal_id)
+        self.assertEqual(session.sales_move_id.move_type, 'out_invoice')
+        self.assertEqual(session.sales_move_id.amount_total, 10.6)
+        self.assertEqual(session.account_move_count, 2)
+        self.assertEqual(session.closing_move_count, 0)
+
+        self._closing_journal_misc()
+        self.assertEqual(session.account_move_count, 2)
+        self.assertEqual(session.closing_move_count, 0)
+
+    def _closing_journal_misc(self):
+        misc_journal = self.env['account.journal'].create({
+            'name': 'PoS Miscellaneous Closing',
+            'type': 'general',
+            'code': 'POSMC',
+            'company_id': self.main_company.id,
+        })
+        self.pos_config.closing_journal_id = misc_journal
+        return misc_journal
+
+    def _assert_closing_entry_amounts(self, move, untaxed, tax, payment):
+        lines_per_type = defaultdict(lambda: self.env['account.move.line'])
+        for line in move.line_ids:
+            lines_per_type[line.display_type] |= line
+
+        self.assertEqual(sum(lines_per_type['product'].mapped('balance')), untaxed)
+        self.assertTrue(lines_per_type['tax'], "the closing entry has no tax line")
+        self.assertEqual(sum(lines_per_type['tax'].mapped('balance')), tax)
+        self.assertEqual(sum(lines_per_type['payment_term'].mapped('balance')), payment)
+
+        balancing_account = move._get_automatic_balancing_account()
+        self.assertFalse(move.line_ids.filtered(
+            lambda line: line.account_id.id == balancing_account
+        ))
+        self.assertEqual(
+            move.company_currency_id.round(sum(move.line_ids.mapped('balance'))), 0.0,
+        )
+
+    def test_pos_closing_journal_set_misc(self):
+        misc_journal = self._closing_journal_misc()
+        session = self.open_pos_session()
+
+        # Invoiced order
+        invoiced_order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+            extra_data={
+                'partner_id': self.partner_1.id,
+                'to_invoice': True,
+            },
+        )
+        self.assertEqual(invoiced_order.account_move.journal_id, self.pos_config.journal_id)
+        self.assertEqual(invoiced_order.account_move.move_type, 'out_invoice')
+
+        # Non-invoiced order
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+
+        self.assertTrue(session.sales_move_id)
+        self.assertEqual(session.sales_move_id.journal_id, misc_journal)
+        self.assertEqual(session.sales_move_id.move_type, 'entry')
+        self._assert_closing_entry_amounts(session.sales_move_id, -10.0, -0.6, 10.6)
+        self.assertEqual(session.account_move_count, 1)
+        self.assertEqual(session.closing_move_count, 1)
+        self.assertEqual(session._get_invoice_account_moves(), invoiced_order.account_move)
+        self.assertEqual(session._get_closing_account_moves(), session.sales_move_id)
+
+        self.pos_config.closing_journal_id = False
+        self.assertEqual(session.closing_move_count, 1)
+        self.assertEqual(session._get_closing_account_moves(), session.sales_move_id)
+
+    def test_pos_closing_journal_misc_other_currency(self):
+        eur = self.env.ref('base.EUR')
+        usd = self.env.ref('base.USD')
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': '2010-01-01',
+            'rate': 2.0,
+            'currency_id': usd.id,
+        })
+        self.pos_config.company_id.currency_id = eur
+        self.pos_config.journal_id.currency_id = usd
+        self.pos_config.currency_id = usd
+        self.cash_pm.journal_id.currency_id = usd
+        misc_journal = self._closing_journal_misc()
+
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+
+        move = session.sales_move_id
+        self.assertEqual(move.journal_id, misc_journal)
+        self.assertEqual(move.move_type, 'entry')
+        self.assertEqual(
+            move.line_ids.currency_id, usd,
+            "every line of the closing entry is in the currency of the orders",
+        )
+        # 1 EUR = 2 USD, so the balances are half of the amounts.
+        self._assert_closing_entry_amounts(move, -5.0, -0.3, 5.3)
+
+    def test_pos_closing_journal_helper_reuses_its_journal(self):
+        AccountJournal = self.env['account.journal'].with_company(self.main_company)
+        first = AccountJournal._ensure_company_closing_journal()
+        self.assertEqual(first.type, 'general')
+
+        misc_count = AccountJournal.search_count([('type', '=', 'general')])
+        self.assertEqual(AccountJournal._ensure_company_closing_journal(), first)
+        self.assertEqual(
+            AccountJournal.search_count([('type', '=', 'general')]), misc_count,
+            "the closing journal of the company must be reused, not created again",
+        )
+
+    def test_pos_closing_journal_set_misc_refund(self):
+        misc_journal = self._closing_journal_misc()
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': -10.6}]],
+            products=[[self.product_6, {'qty': -1}]],
+        )
+        self.close_session()
+
+        self.assertTrue(session.refunds_move_id)
+        self.assertEqual(session.refunds_move_id.journal_id, misc_journal)
+        self.assertEqual(session.refunds_move_id.move_type, 'entry')
+        self._assert_closing_entry_amounts(session.refunds_move_id, 10.0, 0.6, -10.6)
