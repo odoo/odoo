@@ -163,3 +163,15 @@ class TestPartnerIdentifiers(TransactionCase):
             duplicates,
             "Each country must have a single TIN_METADATA entry, found duplicates: %s" % duplicates,
         )
+
+    def test_mx_rfc_prefix_collision(self):
+        """Mexican RFC starting with letters matching foreign country codes (e.g. RO)
+        should be identified as MX_RFC, not RO_VAT."""
+        partner = self.env['res.partner'].create({
+            'name': 'Sofia Rodriguez',
+            'country_id': self.env.ref('base.mx').id,
+            'vat': 'ROS010101XYZ',
+        })
+        identifiers = partner._get_all_identifiers()
+        self.assertIn('MX_RFC', identifiers)
+        self.assertNotIn('RO_VAT', identifiers)
