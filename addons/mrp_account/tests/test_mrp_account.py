@@ -620,7 +620,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         """ Test that an MRP user with timesheet access but without accounting rights
         can complete a Manufacturing Order when analytic distribution is applied,
         ensuring timesheet rules do not block the process. """
-        if 'hr_timesheet' not in self.env["ir.module.module"]._installed():
+        if self.env["ir.module.module"]._get('hr_timesheet').state != 'installed':
             self.skipTest('Timesheets is not installed')
 
         mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user, hr_timesheet.group_hr_timesheet_user')

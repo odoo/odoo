@@ -680,14 +680,13 @@ class IrModuleModule(models.Model):
         # ------------------------------------------------------------
 
         configurator_snippets = dict(manifest.get('configurator_snippets', {}))
-        installed_modules = self.env['ir.module.module']._installed()
 
         def add_addons_snippets(addons):
             """ Add installable addon snippets to the configurator snippets. """
             for module_name, pages in addons.items():
                 # A snippet such as `website_sale.x` can only be generated
                 # once `website_sale` exists, or while installing it.
-                if module_name not in installed_modules and module_name != self.name:
+                if self.env['ir.module.module']._get(module_name).state != 'installed' and module_name != self.name:
                     continue
                 for page, snippets_to_insert in pages.items():
                     snippets = configurator_snippets.setdefault(page, [])

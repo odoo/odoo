@@ -32,7 +32,7 @@ class TransifexCodeTranslation(models.Model):
             self.env.cr.execute(f'LOCK TABLE {self._table} IN EXCLUSIVE MODE NOWAIT')
 
             if module_names is None:
-                module_names = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+                module_names = self.env['ir.module.module'].get_all().filtered_domain([('state', '=', 'installed')]).mapped('name')
             if langs is None:
                 langs = [lang for lang, _ in self._get_languages() if lang != 'en_US']
             self.env.cr.execute(f'SELECT DISTINCT module, lang FROM {self._table}')

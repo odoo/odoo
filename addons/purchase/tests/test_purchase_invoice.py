@@ -590,7 +590,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             'Invoicing Switch Threshold' such that the bill date of 'B' is before the new threshold,
             the PO should still take bill 'B' into account.
         """
-        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+        if not self._is_module_installed('account_accountant'):
             self.skipTest("This test requires the installation of the account_account module")
 
         purchase_order = self.env['purchase.order'].create({

@@ -698,10 +698,8 @@ class Website(models.CachedModel):
         if not configurator_snippets_addons:
             return configurator_snippets
 
-        installed_modules = self.env['ir.module.module']._installed()
-
         for module_name, module_addon in configurator_snippets_addons.items():
-            if module_name not in installed_modules:
+            if self.env['ir.module.module']._get(module_name).state != 'installed':
                 continue
             for page, snippets_to_insert in module_addon.items():
                 snippet_list = configurator_snippets.setdefault(page, [])
@@ -848,7 +846,7 @@ class Website(models.CachedModel):
     def configurator_skip(self):
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         website.ensure_one()
-        theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
+        theme = self.env['ir.module.module']._get('theme_default')
         website.configurator_done = True
         return theme.with_context(website_id=website.id).button_choose_theme()
 
@@ -888,7 +886,7 @@ class Website(models.CachedModel):
         self = self.with_context(website_id=website.id)  # noqa: PLW0642
         skip_ai = kwargs.get('skip_ai')  # Used by design-themes tooling
         theme_name = kwargs['theme_name']
-        theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
+        theme = self.env['ir.module.module']._get(theme_name)
         redirect_url = theme.button_choose_theme()
 
         module = self.env['ir.module.module'].search([

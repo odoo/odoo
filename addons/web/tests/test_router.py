@@ -32,7 +32,7 @@ class TestWebRouter(TransactionCase):
                 self.assertEqual(get_action(self.env, action), Actions)
 
     def test_router_get_action_triples_exist(self):
-        base = self.env['ir.module.module'].search([('name', '=', 'base')])
+        base = self.env['ir.module.module']._get('base')
         user = self.env.user
         ir_cron_act = self.env.ref('base.ir_cron_act')
 

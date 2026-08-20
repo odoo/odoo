@@ -1186,7 +1186,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
     def test_invoice_with_already_invoiced_timesheets(self):
         """Checks that when an invoice is created, the hours that have already been invoiced aren't taken into
         account."""
-        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+        if not self._is_module_installed('account_accountant'):
             self.skipTest("This test requires the installation of the account_account module")
 
         self.env['ir.config_parameter'].sudo().set_str('sale.invoiced_timesheet', 'approved')

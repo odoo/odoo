@@ -713,7 +713,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         with mock_lookup_success('0208:0428759497') as (mocked_lookup, _mocked_service_groups):
             # Test that the constraint 'not_sale_document' is removed for self-billed invoices
             wizard = self.create_send_and_print(vendor_bill, default=True)
-            response_module_installed = self.env['ir.module.module']._get('account_peppol_response').state == 'installed'
+            response_module_installed = self._is_module_installed('account_peppol_response')
             if response_module_installed:
                 mocked_lookup.assert_called(n_times=2)
             else:

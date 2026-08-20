@@ -12,7 +12,7 @@ class TestOrderReceiptL10n(TestPosOrderReceipt):
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(self):
         super().setUpClass()
-        if self.env['ir.module.module']._get('l10n_sa_edi').state == 'installed':
+        if self._is_module_installed('l10n_sa_edi'):
             self.skipTest(self, "l10n_sa_edi should not be installed")
         self.main_pos_config.company_id.name = 'Generic SA'
         self.company.write({

@@ -80,7 +80,7 @@ class TestWebsiteSaleMrpAvailability(HttpCase, AccountTestInvoicingCommon, TestP
         """
         Check that the website availability of products is influenced by kits present in the cart.
         """
-        if self.env['ir.module.module']._get('website_sale_collect').state == 'installed':
+        if self._is_module_installed('website_sale_collect'):
             # Disable the Click & Collect as the Availability widget is modified when the option is enabled
             self.website.in_store_dm_id.is_published = False
         self.start_tour("/shop", 'test_website_sale_availability_kit', login="")

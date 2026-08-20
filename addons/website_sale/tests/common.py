@@ -54,7 +54,7 @@ class WebsiteSaleCommon(DeliveryCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        if "payment_stripe" in cls.env["ir.module.module"]._installed():
+        if cls._is_module_installed('payment_stripe'):
             cls.env["payment.provider"].search([
                 ("code", "=", "stripe")
             ]).allow_express_checkout = False

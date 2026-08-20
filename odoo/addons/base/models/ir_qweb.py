@@ -3103,11 +3103,10 @@ class IrQweb(models.AbstractModel):
         return (js_bundles, css_bundles, bin_bundles)
 
     def _get_lazy_bundles_from_js(self):
-        modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
         lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
         bundles = set()
-        for module in modules:
-            manifest = Manifest.for_addon(module, display_warning=False)
+        for module in self.env['ir.module.module'].get_all().filtered_domain([('state', '=', 'installed')]):
+            manifest = Manifest.for_addon(module.name, display_warning=False)
             if not (manifest and manifest.static_path):
                 continue
             for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):

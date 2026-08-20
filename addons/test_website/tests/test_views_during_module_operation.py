@@ -68,7 +68,7 @@ def test_01_cow_views_unlink_on_module_update(env):
     assert bool(env.ref(update_module_base_view.key)), msg % update_module_base_view.key
 
     # Upgrade the module
-    test_website_module = env['ir.module.module'].search([('name', '=', 'test_website')])
+    test_website_module = env['ir.module.module']._get('test_website')
     test_website_module.button_immediate_upgrade()
 
     # Ensure generic views got removed

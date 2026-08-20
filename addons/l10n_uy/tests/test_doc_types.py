@@ -47,7 +47,7 @@ class TestDocTypes(AccountTestInvoicingCommon):
         refund = self.env["account.move"].browse(res["res_id"])
 
         self.assertEqual(refund.l10n_latam_document_type_id.code, "122", "Not Export e-Invoice Credit Note")
-        expected_docs = ["122"] if self.env['ir.module.module']._get('l10n_uy_edi').state == 'installed' else ['122', '222']
+        expected_docs = ["122"] if self._is_module_installed('l10n_uy_edi') else ['122', '222']
         self.assertEqual(refund.l10n_latam_available_document_type_ids.mapped("code"), expected_docs, "Bad Domain")
 
     def test_debit_note(self):
@@ -62,5 +62,5 @@ class TestDocTypes(AccountTestInvoicingCommon):
         debit_note = self.env["account.move"].browse(res["res_id"])
 
         self.assertEqual(debit_note.l10n_latam_document_type_id.code, "123", "Not Export e-Invoice Debit Note")
-        expected_docs = ["123"] if self.env['ir.module.module']._get('l10n_uy_edi').state == 'installed' else ['123', '223']
+        expected_docs = ["123"] if self._is_module_installed('l10n_uy_edi') else ['123', '223']
         self.assertEqual(debit_note.l10n_latam_available_document_type_ids.mapped("code"), expected_docs, "Bad Domain")

@@ -60,7 +60,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     def setUp(self):
         super().setUp()
-        self.is_mail_track_installed = 'mail_tracking' in self.env['ir.module.module']._installed()
+        self.is_mail_track_installed = self._is_module_installed('mail_tracking')
 
     # ------------------------------------------------------------
     # GATEWAY MOCK
@@ -2152,7 +2152,7 @@ class MailCommon(MailCase):
         """ Remove store channel data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
-        ai_livechat_installed = self.env['ir.module.module']._get('ai_livechat').state == 'installed'
+        ai_livechat_installed = self._is_module_installed('ai_livechat')
         for data in channels_data:
             if "ai.agent" not in self.env or data.get("channel_type") == "livechat" and not ai_livechat_installed:
                 data.pop("ai_agent_id", None)

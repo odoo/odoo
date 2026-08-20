@@ -16,7 +16,7 @@ class TestGenericCO(TestGenericLocalization):
         cls.partner_a.vat = '/'  # So that we don't sent actual request as company
 
     def test_generic_localization(self):
-        if self.env['ir.module.module']._get('l10n_co_edi_pos').state == 'installed':
+        if self._is_module_installed('l10n_co_edi_pos'):
             with patch.object(self.registry['account.move'], attribute='_generate_and_send', return_value={}):
                 order, html_data = super().test_generic_localization()
         else:

@@ -405,7 +405,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
     def test_sale_purchase_forecasted_stock_without_stock(self):
         """ Test available and forecasted qty in SO line widget """
-        if self.env['ir.module.module']._get('stock').state == 'installed':
+        if self._is_module_installed('stock'):
             self.skipTest("Stock is installed, can't test stock without stock flow.")  # Will still run in single app build
 
         # Setup: Create a product with qty on hand and SO line with that product

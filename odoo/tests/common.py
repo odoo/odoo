@@ -708,6 +708,10 @@ class BaseCase(case.TestCase):
         assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
         return self.env.ref(xid)
 
+    @classmethod
+    def _is_module_installed(cls, module_name):
+        cls.env["ir.module.module"]._get(module_name).state == 'installed'
+
     def patch(self, obj, key, val):
         """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
         patcher = patch.object(obj, key, val)   # this is unittest.mock.patch

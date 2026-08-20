@@ -128,7 +128,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             {'messages': ({'id': 'baz', 'string': 'qux_nl'},)},
         )
         self.assertEqual(self.env.ref('bar.foo').with_context(lang='nl_NL').name, 'foo')
-        self.env['ir.module.module'].search([('name', '=', 'bar')])._update_translations('nl_NL')
+        self.env['ir.module.module']._get('bar')._update_translations('nl_NL')
         self.assertEqual(self.env.ref('bar.foo').with_context(lang='nl_NL').name, 'dumb_nl')
 
         po_reader = TranslationModuleReader(self.env.cr, ['bar'], 'fr_FR')
@@ -320,12 +320,12 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(asset_data.module, 'test_module')
         self.assertEqual(asset_data.name, f'{bundle}_{path}'.replace(".", "_"))
 
-        module = self.env['ir.module.module'].search([('name', '=', 'test_module')])
+        module = self.env['ir.module.module']._get('test_module')
         self.assertEqual(module.dependencies_id.mapped('name'), ['base'])
         self.assertEqual(module.category_id.name, 'Test Category')
 
         # Uninstall test module
-        self.env['ir.module.module'].search([('name', '=', 'test_module')]).module_uninstall()
+        module.module_uninstall()
 
         attachment = self.env['ir.attachment'].search([('url', '=', path)])
         self.assertEqual(len(attachment), 0)
@@ -377,7 +377,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(asset_data.module, 'test_module')
         self.assertEqual(asset_data.name, f'{bundle}_/{path}'.replace(".", "_"))
 
-        module = self.env['ir.module.module'].search([('name', '=', 'test_module')])
+        module = self.env['ir.module.module']._get('test_module')
         self.assertEqual(module.latest_version, f'{release.series}.1.0')
 
         # Update test module
@@ -445,7 +445,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             ('bar/__manifest__.py', self.manifest_content(depends=['base', 'foo'])),
         ]
         self.import_zipfile(files)
-        module = self.env['ir.module.module'].search([('name', '=', 'baz')])
+        module = self.env['ir.module.module']._get('baz')
         self.assertEqual(set(module.dependencies_id.mapped('name')), {'bar', 'base', 'foo'})
 
     def test_multiple_file_open_temporary_directory(self):

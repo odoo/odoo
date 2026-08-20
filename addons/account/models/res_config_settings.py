@@ -315,7 +315,7 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def action_eu_oss_tax_mapping(self):
-        l10n_eu_oss_module = self.env['ir.module.module'].search([('name', '=', 'l10n_eu_oss')], limit=1)
+        l10n_eu_oss_module = self.env['ir.module.module']._get('l10n_eu_oss')
         if l10n_eu_oss_module:
             if l10n_eu_oss_module.state != 'installed':
                 l10n_eu_oss_module.button_immediate_install()

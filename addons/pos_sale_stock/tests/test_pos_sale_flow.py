@@ -12,7 +12,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
     _test_user_groups = None  # FIXME list needed groups
 
     def test_settle_order_with_kit(self):
-        if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
+        if not self._is_module_installed('mrp'):
             self.skipTest("mrp module is required for this test")
 
         self.env.user.group_ids |= self.env.ref('mrp.group_mrp_user')
@@ -296,7 +296,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
         """
-        if not self.env["ir.module.module"].search([("name", "=", "purchase"), ("state", "=", "installed")]):
+        if not self._is_module_installed('purchase'):
             self.skipTest("purchase module is required for this test")
 
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)

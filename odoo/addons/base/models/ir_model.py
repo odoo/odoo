@@ -264,12 +264,12 @@ class IrModel(models.Model):
 
     @api.depends()
     def _in_modules(self):
-        installed_modules = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        installed_names = set(installed_modules.mapped('name'))
         xml_ids = models.Model._get_external_ids(self)
+        id_by_name = self.env['ir.module.module']._id_by_name()
         for model in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[model.id])
-            model.modules = ", ".join(sorted(installed_names & module_names))
+            model.modules = ", ".join(sorted(self.env['ir.module.module'].browse(filter(None, (
+                id_by_name.get(xml_id.split('.')[0]) for xml_id in xml_ids[model.id]
+            ))).filtered_domain([('state', '=', 'installed')]).mapped('name')))
 
     @api.depends()
     def _view_ids(self):
@@ -685,12 +685,12 @@ class IrModelFields(models.Model):
 
     @api.depends()
     def _in_modules(self):
-        installed_modules = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        installed_names = set(installed_modules.mapped('name'))
         xml_ids = models.Model._get_external_ids(self)
+        id_by_name = self.env['ir.module.module']._id_by_name()
         for field in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[field.id])
-            field.modules = ", ".join(sorted(installed_names & module_names))
+            field.modules = ", ".join(sorted(self.env['ir.module.module'].browse(filter(None, (
+                id_by_name.get(xml_id.split('.')[0]) for xml_id in xml_ids[field.id]
+            ))).filtered_domain([('state', '=', 'installed')]).mapped('name')))
 
     @api.constrains('domain')
     def _check_domain(self):
@@ -2534,7 +2534,7 @@ class IrModelData(models.Model):
         # deletion of some view. This must also happen before cleaning up the
         # database schema, otherwise some dependent fields may no longer exist
         # in database.
-        modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
+        modules = self.env['ir.module.module'].get_all().filtered_domain([('name', 'in', modules_to_remove)])
         modules._remove_copied_views()
 
         # remove constraints

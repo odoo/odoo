@@ -313,7 +313,7 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue(order1.is_edited)
 
     def test_13_crm_team(self):
-        if self.env['ir.module.module']._get('pos_sale').state != 'installed':
+        if not self._is_module_installed('pos_sale'):
             self.skipTest("'pos_sale' module is required")
         sale_team = self.env['crm.team'].search([], limit=1)
         self.pos_config.crm_team_id = sale_team
@@ -549,7 +549,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_combo_synchronisation')
 
     def test_global_discount_split(self):
-        if self.env['ir.module.module']._get('pos_discount').state != 'installed':
+        if not self._is_module_installed('pos_discount'):
             self.skipTest("pos_discount module is required for this test")
 
         self.discount_product = self.env["product.product"].create({

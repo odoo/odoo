@@ -12,12 +12,11 @@ class TestL10n(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         all_chart_templates = cls.env['account.chart.template']._get_chart_template_mapping()
-        installed_modules = set(cls.env['ir.module.module']._installed())
         matching_country_templates = [
             (template_code, template)
             for template_code, template in all_chart_templates.items()
             if template['country_id'] == cls.country_id
-            and template['module'] in installed_modules
+            and cls.env['ir.module.module']._get(template['module']).state == 'installed'
         ]
         if not matching_country_templates:
             raise SkipTest("No template found")

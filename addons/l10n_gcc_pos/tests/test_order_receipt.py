@@ -12,7 +12,7 @@ class TestOrderReceiptL10n(TestPosOrderReceipt):
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
         super().setUpClass()
-        if cls.env['ir.module.module']._get('l10n_sa_edi').state == 'installed':
+        if cls._is_module_installed('l10n_sa_edi'):
             cls.skipTest(cls, "l10n_sa_edi should not be installed")
         cls.main_pos_config.company_id.name = 'Generic GCC'
         cls.company.write({

@@ -202,7 +202,7 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
                 self.assertRecordValues(new_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': 2}])
 
     def test_invoice_line_currency_rate_from_sale(self):
-        if self.env['ir.module.module']._get('sale_stock').state == 'installed':
+        if self._is_module_installed('sale_stock'):
             self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
             currency = self.setup_other_currency('HRK', rates=[
                 ('2015-12-31', 3.0),

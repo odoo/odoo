@@ -40,7 +40,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     assert child_cow_view.inherit_id == parent_view, "Ensure test is setup as expected."
 
     # 3. Upgrade the module
-    portal_module = env['ir.module.module'].search([('name', '=', 'portal')])
+    portal_module = env['ir.module.module']._get('portal')
     portal_module.button_immediate_upgrade()
 
     # 4. Ensure cow view also got its inherit_id updated
@@ -75,7 +75,7 @@ def test_02_cow_views_inherit_on_module_update(env):
     assert view_B != view_Bcow, "Security check to ensure `_get_specific_views` return what it should."
 
     # 3. Upgrade the module
-    portal_module = env['ir.module.module'].search([('name', '=', 'portal')])
+    portal_module = env['ir.module.module']._get('portal')
     portal_module.button_immediate_upgrade()
 
     # 4. Ensure cow view also got its inherit_id updated

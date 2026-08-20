@@ -238,7 +238,7 @@ class ResCompany(models.Model):
         # If that l10n module isn't installed, it means the company doesn't use any tax report for that country
         # and thus hasn't nor need those tax report tag
         coa_module_name = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['module']
-        is_coa_module_installed = coa_module_name in self.env['ir.module.module']._installed()
+        is_coa_module_installed = self.env['ir.module.module']._get(coa_module_name).state == 'installed'
         if not is_coa_module_installed:
             chart_template = None
 
@@ -275,7 +275,7 @@ class ResCompany(models.Model):
         country = self._get_country_from_vat()
         chart_template = self.env['account.chart.template']._guess_chart_template(country)
         coa_module_name = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['module']
-        is_coa_module_installed = coa_module_name in self.env['ir.module.module']._installed()
+        is_coa_module_installed = self.env['ir.module.module']._get(coa_module_name).state == 'installed'
         if not is_coa_module_installed:
             return {}
         return {

@@ -342,9 +342,9 @@ class PosConfig(models.Model):
             config.company_has_template = config.company_id.root_id.sudo()._existing_accounting() or config.company_id.chart_template
 
     def _compute_is_installed_account_accountant(self):
-        account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+        account_accountant = self.env['ir.module.module']._get('account_accountant')
         for pos_config in self:
-            pos_config.is_installed_account_accountant = account_accountant and account_accountant.id
+            pos_config.is_installed_account_accountant = account_accountant.state == 'installed'
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency(self):
@@ -1391,13 +1391,13 @@ class PosConfig(models.Model):
         return {
             "has_pos_config": has_pos_config,
             "has_chart_template": has_chart_template,
-            "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
+            "is_restaurant_installed": self.env['ir.module.module']._get('pos_restaurant').state == 'installed',
             "is_main_company": (main_company and self.env.company.id == main_company.id) or False,
         }
 
     @api.model
     def install_pos_restaurant(self):
-        pos_restaurant_module = self.env['ir.module.module'].search([('name', '=', 'pos_restaurant')])
+        pos_restaurant_module = self.env['ir.module.module']._get('pos_restaurant')
         pos_restaurant_module.button_immediate_install()
         return {'installed_with_demo': pos_restaurant_module.demo}
 

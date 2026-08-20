@@ -72,7 +72,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
     def test_access_forecasted_ministock(self):
         """ Test that a sale user can access a product without purchase rights
         and that a purchase user can access a product without sale rights. """
-        if self.env["ir.module.module"]._get('stock').state == 'installed':
+        if self._is_module_installed('stock'):
             self.skipTest("This test is only for stock without stock")
 
         with Form(self.product_a.with_user(self.user_salesperson)) as form_a_sale:

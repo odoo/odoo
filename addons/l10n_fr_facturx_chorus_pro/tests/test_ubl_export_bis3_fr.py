@@ -15,7 +15,7 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiCommonChorusPro,
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if cls.env['ir.module.module']._get('l10n_fr_pdp').state == 'installed':
+        if cls._is_module_installed('l10n_fr_pdp'):
             # The PDP module sets a 0225 identifier (based on the siret)
             cls.env.company.partner_id.write({
                 'routing_scheme': '0009',

@@ -484,7 +484,7 @@ class BaseModel(metaclass=MetaModel):
     """
     _fold_name: str = 'fold'         #: field to determine folded groups in kanban views
 
-    _clear_cache_name: str = ''      # cache to clear on create/write/update
+    _clear_cache_name: str = ''      # cache to clear on create/write/unlink
     _clear_cache_on_fields: Iterable[str] | None = None
     """the fields that trigger invalidation of cache named ``_clear_cache_name``,
     ``None`` meaning all fields
@@ -4667,12 +4667,11 @@ class BaseModel(metaclass=MetaModel):
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         if self.env.context.get('import_file'):
-            existing_modules = self.env['ir.module.module'].sudo().search([]).mapped('name')
             for data in to_create:
                 xml_id = data.get('xml_id')
                 if xml_id and not data.get('noupdate'):
                     module_name, sep, record_id = xml_id.partition('.')
-                    if sep and module_name in existing_modules:
+                    if sep and self.env['ir.module.module']._get(module_name):
                         raise UserError(
                             _("The record %(xml_id)s has the module prefix %(module_name)s. This is the part before the '.' in the external id. Because the prefix refers to an existing module, the record would be deleted when the module is upgraded. Use either no prefix and no dot or a prefix that isn't an existing module. For example, __import__, resulting in the external id __import__.%(record_id)s.",
                               xml_id=xml_id, module_name=module_name, record_id=record_id))

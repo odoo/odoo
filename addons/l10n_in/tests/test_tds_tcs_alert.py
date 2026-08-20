@@ -12,7 +12,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         ChartTemplate = cls.env['account.chart.template']
-        if cls.env['ir.module.module']._get('l10n_in_pos').state == 'installed':
+        if cls._is_module_installed('l10n_in_pos'):
             cls.env.user.group_ids |= cls.env.ref("point_of_sale.group_pos_user")
 
         # ==== Chart of Accounts ====
