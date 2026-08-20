@@ -10,11 +10,12 @@ const CELL_SELECTOR = `${COL_SELECTOR} > .card > :is(${BODY_CELL_SELECTOR}, ${FO
 
 export class ComparisonsStrategyPlugin extends Plugin {
     static id = "comparisonsStrategy";
-    static dependencies = ["mosaicStrategy"];
+    static dependencies = ["measurementSnapshot", "mosaicStrategy"];
     resources = {
         mosaic_cells_providers_processors: this.provideMosaicCells.bind(this),
         mosaic_cells_element_options_providers_processors:
             this.provideCellElementOptions.bind(this),
+        mosaic_cells_background_color_processors: this.provideFooterBackgroundColor.bind(this),
     };
 
     // TODO EGGMAIL: on_measure_reference_content_handlers
@@ -49,6 +50,25 @@ export class ComparisonsStrategyPlugin extends Plugin {
             );
         }
         return options;
+    }
+
+    provideFooterBackgroundColor(backgroundColors, { cellMeasure }) {
+        const { referenceNode } = cellMeasure;
+        if (!referenceNode || !referenceNode.matches(FOOTER_CELL_SELECTOR)) {
+            return backgroundColors;
+        }
+        const sibling = referenceNode.previousElementSibling;
+        if (!sibling || !sibling.matches(BODY_CELL_SELECTOR)) {
+            return backgroundColors;
+        }
+        const bgColor = this.getStylePropertyValue(sibling, "background-color");
+        if (bgColor) {
+            // the footer is aligned to the bottom of its cell, so the
+            // cell background color should match the card-body
+            // background color as if it was the same element
+            backgroundColors.push(bgColor);
+        }
+        return backgroundColors;
     }
 }
 

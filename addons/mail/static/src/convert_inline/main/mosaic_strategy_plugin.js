@@ -5,6 +5,7 @@ import { Analysis, assignDefaultElementOptions, EmailNode } from "../core/render
 import { StyleInfo } from "../core/style_models";
 import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, OPPOSITE_DIRECTION } from "../core/utils";
 import { parseCssValue } from "../css_parsers";
+import { convertCSSColorToRgba, convertRgbaToCSSColor } from "@web/core/utils/colors";
 
 export class MosaicStrategyPlugin extends Plugin {
     static id = "mosaicStrategy";
@@ -348,6 +349,14 @@ export class MosaicStrategyPlugin extends Plugin {
         }
     }
 
+    /**
+     * // TODO EGGMAIL: refactor docstring
+     * overlapping borders:
+     * DONE - (both) draw them mirrored in the spacers around the cell | do not support rounded corners
+     *   - overlapping borders providers => give border info and which emailNode should be wrapped
+     *   - detect spacers around the cell from that info and apply the rule => no constraint
+     *   - WHEN: between extract and fillMosaic (before building emailNodes)
+     */
     handleOverlappingBorders({ ancestorNode, tableMeasures }) {
         if (!this.hasVisibleBorder(ancestorNode)) {
             return;
@@ -363,19 +372,54 @@ export class MosaicStrategyPlugin extends Plugin {
         });
     }
 
-    // WORKING HERE
-    // TODO EGGMAIL: this function actually seems finished, but
-    // we now have to compute the color composite for the final
-    // background color of the cell
+    /**
+     * overlapping background color:
+     * - DONE (both) identify every discarded background color
+     * - (both) define a colspan/rowspan range, apply on every cell inside in multiple passes (with respect to opacity)
+     *   WHEN: background-color provider => give background color and concerned cells, sorted by depth (for alpha compositing)
+     *   between extract and fillMosaic (before building emailnodes) => assign a color to each cell
+     */
     handleOverlappingBackgroundColors({ cell, ancestorStack }) {
+        cell.backgroundColors ??= [];
+        cell.backgroundColors = this.processThrough(
+            "mosaic_cells_background_color_processors",
+            cell.backgroundColors,
+            { cellMeasure: cell }
+        );
         for (const ancestorNode of ancestorStack) {
             const bgColor = this.getStylePropertyValue(ancestorNode, "background-color");
             if (!bgColor) {
                 continue;
             }
-            cell.backgroundColors ??= [];
             cell.backgroundColors.push(bgColor);
         }
+    }
+
+    // TODO EGGMAIL: move into a color plugin to handle alpha colors more
+    // broadly?
+    computeCompositeCellColor(bgColors) {
+        const rgbaColors = bgColors.map((bgColor) => convertCSSColorToRgba(bgColor));
+        const composite = { red: 0, green: 0, blue: 0 };
+        let transmittance = 1;
+        for (const { red, green, blue, opacity } of rgbaColors) {
+            const alpha = Math.max(0, Math.min(100, opacity)) / 100;
+            composite.red += transmittance * alpha * red;
+            composite.green += transmittance * alpha * green;
+            composite.blue += transmittance * alpha * blue;
+            transmittance *= 1 - alpha;
+            if (alpha === 1) {
+                break;
+            }
+        }
+        const alpha = 1 - Math.max(0, Math.min(1, transmittance));
+        if (alpha > 0) {
+            composite.red = Math.max(0, Math.min(255, composite.red / alpha));
+            composite.green = Math.max(0, Math.min(255, composite.green / alpha));
+            composite.blue = Math.max(0, Math.min(255, composite.blue / alpha));
+        }
+        composite.opacity = Math.max(0, Math.min(100, 100 * alpha));
+        const { red, green, blue, opacity } = composite;
+        return convertRgbaToCSSColor(red, green, blue, opacity);
     }
 
     processCellAncestors(tableMeasures) {
@@ -413,55 +457,7 @@ export class MosaicStrategyPlugin extends Plugin {
         const tableMeasures = this.extractTableInfo(emailNode);
         return this.fillMosaicContainer(emailNode, tableMeasures);
     }
-    // TODO EGGMAIL:
-    // spacer cells contains cells for borders and spacing that are not part
-    // of the declared cells => the challenge will be mapping the border color
-    // to a background color of that cell.
-    // The issue is that a border consideration can be merged with a spacing
-    // consideration, or not, depending on the configuration, so maybe not
-    // the best idea to keep the current logic as is
-    // keep all cells for now, determine later how we want to handle
-    // borders, so consider them as spacing for now => maybe these spacing
-    // cells can have the border of their sibling?
 
-    /**
-     * WORKING HERE
-     * LIMITATIONS: border overlapping multiple cells is discarded in general
-     *
-     * need strategy for:
-     * overlapping borders:
-     * DONE - (both) draw them mirrored in the spacers around the cell | do not support rounded corners
-     *   - overlapping borders providers => give border info and which emailNode should be wrapped
-     *   - detect spacers around the cell from that info and apply the rule => no constraint
-     *   - WHEN: between extract and fillMosaic (before building emailNodes)
-     *
-     * borders:
-     * DONE -  (masonry) bottom-up constraint to the cell (like table strategy)
-     *   OR: direct extraction from the child => no constraint
-     *   WHEN: building a cell
-     * DONE - (comparison) => no change
-     *
-     * overlapping background color:
-     * - (both) identify every discarded background color
-     * - (both) define a colspan/rowspan range, apply on every cell inside in multiple passes (with respect to opacity)
-     *   WHEN: background-color provider => give background color and concerned cells, sorted by depth (for alpha compositing)
-     *   between extract and fillMosaic (before building emailnodes) => assign a color to each cell
-     *
-     * background color:
-     * DONE - (masonry) bottom-up constraint to the cell (like table strategy)
-     *   OR: direct extraction from the child => no constraint
-     *   WHEN: building a cell
-     * - (comparison)
-     *   - card body => up to the cell AND the card-footer
-     *   - card footer => replace by color without alpha channel (computing ancestors)
-     *   WHEN between extract and fillMosaic (need provider of combo body/bottom, to apply on background color)
-     *
-     * vertical align:
-     * DONE - (masonry) => middle for every cell, forced -> direct
-     * DONE - (comparison) => top for card body, bottom for card footer
-     *   Need provider for bottom and body, or they should have it as a fact
-     *
-     */
     fillMosaicContainer(emailNode, tableMeasures) {
         const referenceNode = emailNode.lastReferenceNode;
         const verticalAlign = this.getVerticalAlign(
@@ -570,9 +566,6 @@ export class MosaicStrategyPlugin extends Plugin {
     }
 
     buildCell(cellMeasure, { contextStyleInfo, verticalAlign }) {
-        // deduce empty cell by the presence/absence of emailNode
-        // // need to appendchild said emailNode
-        // needs verticalAlign
         const { widthRatio, emailNode, rowspan, colspan, styleInfo } = cellMeasure;
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
@@ -585,12 +578,22 @@ export class MosaicStrategyPlugin extends Plugin {
             style: StyleInfo.from(style).merge(contextStyleInfo).merge(styleInfo),
             attributes,
         };
+        // TODO EGGMAIL: rewrite comment
+        // borders:
+        // DONE -  (masonry) bottom-up constraint to the cell (like table strategy)
+        //   OR: direct extraction from the child => no constraint
+        //   WHEN: building a cell
+        // DONE - (comparison) => no change
         const options = this.processThrough(
             "mosaic_cells_element_options_providers_processors",
             {},
             cellMeasure
         );
         Object.assign(refs.root, assignDefaultElementOptions(options, defaultOptions));
+        if (cellMeasure.backgroundColors?.length > 0) {
+            const bgColor = this.computeCompositeCellColor(cellMeasure.backgroundColors);
+            refs.root.style.setProperty("background-color", bgColor);
+        }
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
         analysis.facts.isCell = true;
         analysis.facts.useMosaicStrategy = true;
