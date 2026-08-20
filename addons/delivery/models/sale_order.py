@@ -138,6 +138,7 @@ class SaleOrder(models.Model):
             "price_unit": price_unit,
             "product_uom_qty": 1,
             "product_id": carrier.product_id.id,
+            "product_uom_id": carrier.product_id.uom_id.id,
             "tax_ids": [(6, 0, taxes_ids)],
             "is_delivery": True,
         }
