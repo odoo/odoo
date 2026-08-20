@@ -82,7 +82,7 @@ export class RenderPlugin extends Plugin {
         } while ((node = treeWalker.nextNode()));
     }
 
-    createEmailNodes(rootReferenceNode = this.config.reference) {
+    createEmailNodes(rootReferenceNode = this.config.reference, config = {}) {
         const nodeToEmailNode = new Map();
         const contexts = [];
         const createContext = (container, targetsProviders = []) => {
@@ -165,12 +165,24 @@ export class RenderPlugin extends Plugin {
                     this.processChildNodes(parentNode, (node) => !this.discardedNodes.has(node))
                         .length === 1;
             }
-            const emailNode = this.createEmailNode(node, parentEmailNode, isOnlyChild);
+            const emailNode = this.createEmailNode(
+                {
+                    referenceNode: node,
+                    parentEmailNode,
+                    isOnlyChild,
+                },
+                config
+            );
             nodeToEmailNode.set(node, emailNode);
             if (emailNode.analysis.parsingFacts.isSkippingContainer) {
                 const providers =
                     emailNode.analysis.parsingFacts.skippingContainerDescendantProviders;
                 contexts.push(createContext(node, providers));
+            }
+            if (emailNode.analysis.parsingFacts.hasMobileSubtree) {
+                emailNode.analysis.parsingFacts.mobileSubTree = this.createEmailNodes(node, {
+                    parsingFacts: { isMobileSubtree: true },
+                });
             }
         } while ((node = treeWalker.nextNode()));
         return nodeToEmailNode.get(rootReferenceNode);
@@ -180,17 +192,20 @@ export class RenderPlugin extends Plugin {
     // -- -- deny absorption by parent (if parent allows it)
     // -- -- deny future children absorption (without considering children identities)
     // -- -- provide useful layout info (styleInfo selection, attributes, etc)
-    createEmailNode(referenceNode, parentEmailNode, isOnlyChild) {
+    createEmailNode({ referenceNode, parentEmailNode, isOnlyChild }, config = {}) {
         let emailNode;
         if (referenceNode.nodeType === Node.TEXT_NODE) {
             const layout = new TextNodeLayout({ content: referenceNode.nodeValue });
             emailNode = new EmailNode({
                 layout,
-                referenceNode: referenceNode,
+                referenceNode,
                 parent: parentEmailNode,
             });
         } else {
-            const { layout, analysis } = this.getEmailNodeArguments(referenceNode, parentEmailNode);
+            const { layout, analysis } = this.getEmailNodeArguments(
+                { referenceNode, parentEmailNode },
+                config
+            );
             emailNode = new EmailNode({
                 layout,
                 referenceNode: referenceNode,
@@ -338,10 +353,10 @@ export class RenderPlugin extends Plugin {
         }
     }
 
-    getEmailNodeArguments(referenceNode, parentEmailNode) {
+    getEmailNodeArguments({ referenceNode, parentEmailNode }, { parsingFacts } = {}) {
         const { layout, analysis } = this.processThrough(
             "element_layout_analysis_processors",
-            this.getDefaultEmailNodeArguments(referenceNode),
+            this.getDefaultEmailNodeArguments(referenceNode, { parsingFacts }),
             { referenceNode, parentEmailNode }
         );
         // TODO EGGMAIL: all layouts don't provide pluginIds
@@ -355,7 +370,7 @@ export class RenderPlugin extends Plugin {
         return { layout, analysis };
     }
 
-    getDefaultEmailNodeArguments(referenceNode) {
+    getDefaultEmailNodeArguments(referenceNode, { parsingFacts = {} } = {}) {
         const layout = new ElementLayout({
             refs: {
                 root: {
@@ -367,7 +382,7 @@ export class RenderPlugin extends Plugin {
         });
         const analysis = new Analysis({
             facts: this.getReferenceNodeFacts(referenceNode),
-            parsingFacts: { canParentMerge: true, canMerge: true },
+            parsingFacts: { canParentMerge: true, canMerge: true, ...parsingFacts },
         });
         return { layout, analysis };
     }
