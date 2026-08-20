@@ -91,7 +91,7 @@ class HrWorkEntryType(models.Model):
         ('hour', 'Custom Hours')], default='day', string='Duration Type', required=True,
         tracking=True,
         help="""Define the minimum time off duration in which an employee can take when requesting a leave""")
-    unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of Measure", required=True,
+    unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit", required=True,
                                        tracking=True,
                                        help="Define if the time type will be allocated/accrued in hours or days")
     unpaid = fields.Boolean('Is Unpaid', default=False, tracking=True)
@@ -390,9 +390,9 @@ been taken for this time off type. Changing it now would affect existing employe
                 is_popover = self.env.context.get("is_popover", False)
                 is_hour = record.unit_of_measure == "hour"
                 if is_popover and is_hour:
-                    name = self.env._("%(name)s (%(time)g/%(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
+                    name = self.env._("%(name)s (%(time)g hours left)", name=record.name, time=remaining_time)
                 elif is_popover:
-                    name = self.env._("%(name)s (%(time)g/%(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
+                    name = self.env._("%(name)s (%(time)g days left)", name=record.name, time=remaining_time)
                 elif is_hour:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
                 else:
