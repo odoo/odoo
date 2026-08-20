@@ -41,21 +41,21 @@ describe("pos.order - loyalty", () => {
         await addProductLineToOrder(store, order);
 
         // Prevent the auto-apply path so the reward line can only be rebuilt from
-        // _active_rewards: that's the state a page reload must restore.
-        order._disabled_program_ids = [8];
-        order._active_rewards = [{ reward_id: 4, qty: 2 }];
-        order._active_payment_programs = [{ reward_id: 5, card_id: 3 }];
+        // active_rewards: that's the state a page reload must restore.
+        order.disabled_program_ids = [8];
+        order.active_rewards = [{ reward_id: 4, qty: 2 }];
+        order.active_payment_programs = [{ reward_id: 5, card_id: 3 }];
 
         // indexed_db.js stores JSON.parse(JSON.stringify(serializeForIndexedDB(record))).
         const restored = JSON.parse(JSON.stringify(order.serializeForIndexedDB()));
 
         // The entries must round-trip as plain id-based data (no live records).
-        expect(restored._active_rewards).toEqual([{ reward_id: 4, qty: 2 }]);
-        expect(restored._active_payment_programs).toEqual([{ reward_id: 5, card_id: 3 }]);
+        expect(restored.active_rewards).toEqual([{ reward_id: 4, qty: 2 }]);
+        expect(restored.active_payment_programs).toEqual([{ reward_id: 5, card_id: 3 }]);
 
         // Simulate a reload: the restored state must be directly consumable by
         // recomputeRewards, which deletes and rebuilds all reward lines.
-        order._active_rewards = restored._active_rewards;
+        order.active_rewards = restored.active_rewards;
         order.recomputeRewards();
         const rewardLines = order
             .getOrderlines()
@@ -228,7 +228,7 @@ describe("pos.order - loyalty", () => {
 
         // Claim reward 3 (program 7, nominative free product) for partner1; recompute builds
         // the reward line from the program.
-        order._active_rewards = [{ reward_id: 3 }];
+        order.active_rewards = [{ reward_id: 3 }];
         await store.updateRewards();
         await tick();
         expect(order.getOrderlines().filter((line) => line.is_reward_line).length).toBeGreaterThan(
@@ -238,7 +238,7 @@ describe("pos.order - loyalty", () => {
         // Switching partner triggers removeNominativeRewards, dropping partner1's rewards
         // and its balance.
         store.setPartnerToCurrentOrder(partner2);
-        expect(order._active_rewards).toHaveLength(0);
+        expect(order.active_rewards).toHaveLength(0);
         expect(order.getOrderlines().filter((line) => line.is_reward_line)).toHaveLength(0);
         expect(program.getAvailablePoints(order)).toBe(0); // partner2 has no program-7 card
     });
@@ -331,7 +331,7 @@ describe("pos.order - loyalty", () => {
         });
 
         // Claim program 1's capped discount, then enter program 9's code.
-        order._active_rewards = [{ reward_id: loyalty_reward.id }];
+        order.active_rewards = [{ reward_id: loyalty_reward.id }];
         await store.loadCode("EXPIRED");
         order.applyCode("EXPIRED");
         order.recomputeRewards();

@@ -286,7 +286,7 @@ patch(PosStore.prototype, {
                 }
                 rewardEntry.reward_product_id = reward_product_id;
             }
-            order._active_rewards.push(rewardEntry);
+            order.active_rewards.push(rewardEntry);
         }
     },
 });

@@ -768,24 +768,10 @@ registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one
                             (p) => p.name === "Desk Pad"
                         );
                         const pm = posmodel.models["pos.payment.method"].getFirst();
-                        const program = posmodel.models["loyalty.program"].find(
-                            (p) => p.program_type === "gift_card"
-                        );
-
                         await posmodel.addLineToOrder({ product_tmpl_id: product }, order);
                         posmodel.addPendingOrder([order.id]);
                         order.addPaymentline(pm);
                         order.state = "paid";
-
-                        // Create fake coupon point changes to simulate coupons to be confirmed
-                        order.uiState.couponPointChanges = [
-                            {
-                                points: 124.2,
-                                program_id: program.id,
-                                coupon_id: -(i + 1),
-                                barcode: "",
-                            },
-                        ];
                     }
                 },
             },

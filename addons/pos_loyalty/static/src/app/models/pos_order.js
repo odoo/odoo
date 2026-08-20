@@ -3,42 +3,13 @@ import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
-patch(PosOrder, {
-    extraFields: {
-        ...(PosOrder.extraFields || {}),
-        // List of { reward_id, qty, reward_product_id } entries for rewards the user has
-        // explicitly claimed or whose quantity they have overridden. qty is undefined when
-        // the full reward quantity applies. Ids only: this state is persisted to IndexedDB.
-        _active_rewards: {
-            model: "pos.order",
-            name: "_active_rewards",
-            type: "",
-            local: true,
-        },
-        _disabled_program_ids: {
-            model: "pos.order",
-            name: "_disabled_program_ids",
-            type: "char[]",
-            local: true,
-        },
-        // List of { reward_id, card_id, amount } entries for active payment programs and the
-        // overridden amount they want to use. If amount is undefined the minimum between order
-        // total or program points is used. Ids only: this state is persisted to IndexedDB.
-        _active_payment_programs: {
-            model: "pos.order",
-            name: "_active_payment_programs",
-            local: true,
-        },
-    },
-});
-
 patch(PosOrder.prototype, {
     setup(vals) {
         super.setup(vals);
         this.applied_codes = this.applied_codes || [];
-        this._disabled_program_ids = this._disabled_program_ids || [];
-        this._active_rewards = this._active_rewards || [];
-        this._active_payment_programs = this._active_payment_programs || [];
+        this.disabled_program_ids = this.disabled_program_ids || [];
+        this.active_rewards = this.active_rewards || [];
+        this.active_payment_programs = this.active_payment_programs || [];
         this._line_discountable_price = this._line_discountable_price || {};
     },
     /**
@@ -104,7 +75,7 @@ patch(PosOrder.prototype, {
                 (program.applies_on === "future" && !codeActivated) ||
                 program.is_nominative ||
                 program.is_payment_program ||
-                this._disabled_program_ids.includes(program.id) ||
+                this.disabled_program_ids.includes(program.id) ||
                 this.isProgramUsageExceeded(program) ||
                 !this.isProgramPricelistValid(program) ||
                 program.reward_ids.length !== 1
@@ -124,13 +95,13 @@ patch(PosOrder.prototype, {
      */
     get availableRewards() {
         // A reward is no longer available once it's been claimed: either it produced
-        // a reward line, or it was explicitly claimed (in _active_rewards) even if it
+        // a reward line, or it was explicitly claimed (in active_rewards) even if it
         // matched no product and so created no line.
         const appliedRewardIds = new Set([
             ...this.getOrderlines()
                 .filter((line) => line.is_reward_line)
                 .map((line) => line.reward_id?.id),
-            ...this._active_rewards.map((entry) => entry.reward_id),
+            ...this.active_rewards.map((entry) => entry.reward_id),
         ]);
         const rewards = [];
         const programs = this.models["loyalty.program"].filter(
@@ -255,8 +226,8 @@ patch(PosOrder.prototype, {
         }
 
         if (card?.program_id?.is_payment_program) {
-            this._active_payment_programs = [
-                ...this._active_payment_programs,
+            this.active_payment_programs = [
+                ...this.active_payment_programs,
                 { reward_id: card.program_id.reward_ids[0].id, card_id: card.id },
             ];
         }
@@ -283,7 +254,7 @@ patch(PosOrder.prototype, {
         ) {
             return;
         }
-        this._active_rewards.push({ reward_id: reward.id });
+        this.active_rewards.push({ reward_id: reward.id });
     },
     /**
      * Funding an eWallet or selling/topping-up a gift card from a refund adds a positive
@@ -385,7 +356,7 @@ patch(PosOrder.prototype, {
             for (const line of this.getOrderlines().filter((line) => line.is_reward_line)) {
                 line.delete();
             }
-            const activeRewardIds = new Set(this._active_rewards.map((entry) => entry.reward_id));
+            const activeRewardIds = new Set(this.active_rewards.map((entry) => entry.reward_id));
 
             // Within the auto programs, apply the discounts in the order sale_loyalty stacks
             // 'specific': cheapest, then order/global, then specific.
@@ -403,7 +374,7 @@ patch(PosOrder.prototype, {
 
             // Sort by qty so rewards with a user set qty are computed first before unset
             // qty rewards consume all the points
-            const activeRewards = [...this._active_rewards].sort(
+            const activeRewards = [...this.active_rewards].sort(
                 (a, b) => (Number(a.qty) || Infinity) - (Number(b.qty) || Infinity)
             );
             for (const { reward_id, qty, reward_product_id } of activeRewards) {
@@ -413,12 +384,12 @@ patch(PosOrder.prototype, {
                 }
             }
 
-            const paymentPrograms = this._active_payment_programs.filter(
+            const paymentPrograms = this.active_payment_programs.filter(
                 (entry) =>
                     this.models["loyalty.reward"].get(entry.reward_id)?.discount_line_product_id
             );
-            if (paymentPrograms.length !== this._active_payment_programs.length) {
-                this._active_payment_programs = paymentPrograms;
+            if (paymentPrograms.length !== this.active_payment_programs.length) {
+                this.active_payment_programs = paymentPrograms;
             }
             for (const { reward_id, card_id, amount } of paymentPrograms) {
                 this.applyPaymentProgram(
@@ -469,11 +440,11 @@ patch(PosOrder.prototype, {
         )) {
             line.delete();
         }
-        this._active_rewards = this._active_rewards.filter(
+        this.active_rewards = this.active_rewards.filter(
             (entry) =>
                 !this.models["loyalty.reward"].get(entry.reward_id)?.program_id?.is_nominative
         );
-        this._active_payment_programs = this._active_payment_programs.filter(
+        this.active_payment_programs = this.active_payment_programs.filter(
             (entry) =>
                 !this.models["loyalty.reward"].get(entry.reward_id)?.program_id?.is_nominative
         );
@@ -507,15 +478,15 @@ patch(PosOrder.prototype, {
             }
 
             this.applied_codes = this.applied_codes.filter((code) => !removedCodes.has(code));
-            this._active_rewards = this._active_rewards.filter(
+            this.active_rewards = this.active_rewards.filter(
                 (entry) => entry.reward_id !== reward?.id
             );
-            this._active_payment_programs = this._active_payment_programs.filter(
+            this.active_payment_programs = this.active_payment_programs.filter(
                 (entry) => entry.reward_id !== reward?.id || (card && entry.card_id !== card.id)
             );
             const programId = reward?.program_id?.id;
-            if (programId && !this._disabled_program_ids.includes(programId)) {
-                this._disabled_program_ids = [...this._disabled_program_ids, programId];
+            if (programId && !this.disabled_program_ids.includes(programId)) {
+                this.disabled_program_ids = [...this.disabled_program_ids, programId];
             }
             this.recomputeRewards();
 
