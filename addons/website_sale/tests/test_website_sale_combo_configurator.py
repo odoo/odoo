@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, JsonRpcException, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
@@ -53,6 +54,36 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         )
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         self.start_tour('/', 'website_sale_combo_configurator')
+
+    @mute_logger('odoo.http')
+    def test_website_sale_combo_configurator_incomplete_selection(self):
+        """ Test that a combo can't be added to the cart with missing combo choices. """
+        combos = self.env['product.combo'].create([{
+            'name': f"Combo {suffix}",
+            'combo_item_ids': [Command.create({'product_id': self._create_product().id})],
+        } for suffix in ('A', 'B')])
+        combo_product = self._create_product(type='combo', combo_ids=[Command.set(combos.ids)])
+        item_a, item_b = combos.combo_item_ids
+
+        def update_cart(combo_items):
+            return self.make_jsonrpc_request('/website_sale/combo_configurator/update_cart', {
+                'combo_product_id': combo_product.id,
+                'quantity': 1,
+                'selected_combo_items': [{
+                    'product_id': item.product_id.id,
+                    'combo_item_id': item.id,
+                    'no_variant_attribute_value_ids': [],
+                    'product_custom_attribute_values': [],
+                } for item in combo_items],
+            })
+
+        with self.assertRaises(JsonRpcException):  # A combo choice is unanswered.
+            update_cart(item_a)
+        with self.assertRaises(JsonRpcException):  # The same combo choice is answered twice.
+            update_cart(item_a + item_a)
+        with self.assertRaises(JsonRpcException):  # Every choice is answered, but one twice.
+            update_cart(item_a + item_a + item_b)
+        self.assertTrue(update_cart(item_a + item_b)['line_id'])
 
     def test_website_sale_combo_configurator_single_configuration(self):
         """ Test that the combo configurator isn't shown if there's a single configuration. """
