@@ -213,9 +213,11 @@ class PurchaseOrderLine(models.Model):
         return float_round(price_unit, precision_digits=price_unit_prec)
 
     def _get_move_dests_initial_demand(self, move_dests):
+        # product_qty is always in product.uom_id; convert to POL UoM without
+        # rounding so tiny dest demand (e.g. 0.143 rolls) is not treated as 0.
         return self.product_id.uom_id._compute_quantity(
             sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
-            self.product_uom, rounding_method='HALF-UP')
+            self.product_uom, round=False, rounding_method='HALF-UP')
 
     def _prepare_stock_moves(self, picking):
         """ Prepare the stock moves data for one order line. This function returns a list of
@@ -240,14 +242,19 @@ class PurchaseOrderLine(models.Model):
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
+        attached = False
         if not float_is_zero(qty_to_attach, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
+            attached = True
         if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
-            # Experiment: keep move_dest_ids on extra receipt moves so dest links survive
-            # when attach qty rounds to zero under POL UoM rounding (runbot fallout TBD).
+            # Surplus (dest asked 5, PO bought 8) must not chain onto dests.
+            # If attach was skipped only because POL rounding swallowed dest
+            # demand, this extra move is the receipt for that dest: keep links.
+            if attached:
+                extra_move_vals['move_dest_ids'] = False
             res.append(extra_move_vals)
         return res
 
