@@ -121,7 +121,7 @@ export class DebuggingToolsDialog extends Component {
                 </div>
 
                 <h6 class="mt-3">System password</h6>
-                <div class="d-flex flex-row gap-2 mb-4">
+                <div class="d-flex flex-row gap-2 mb-4" t-if="!this.store.base().server_status">
                     <input placeholder="Password" t-att-value="this.password()" class="form-control" readonly="readonly" />
                     <button class="btn btn-secondary btn-sm" t-on-click="this.generatePassword">
                         <div t-if="this.loading()" class="spinner-border spinner-border-sm" role="status">
@@ -129,6 +129,11 @@ export class DebuggingToolsDialog extends Component {
                         </div>
                         <t t-else="">Generate</t>
                     </button>
+                </div>
+                <div class="alert alert-info" t-else="">
+                    For security reasons, the password generation is disabled when the IoT Box
+                    is connected to a DB. You can still reset it from the IoT Box record in 
+                    <a class="alert-link" t-att-href="this.store.base().server_status + '/odoo/iot?debug=1'" target="_blank">your database</a>.
                 </div>
             </t>
             <t t-set-slot="footer">
