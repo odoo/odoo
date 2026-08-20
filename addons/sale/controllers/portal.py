@@ -353,7 +353,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 else request.env.user.partner_id.id
             ),
             body=_('Order signed by %s', name),
-            message_type='comment',
+            message_type='auto_comment',
             subtype_xmlid='mail.mt_comment',
         )
 
