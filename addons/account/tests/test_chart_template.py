@@ -1211,3 +1211,25 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         ):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])
+
+    def test_coa_version_update(self):
+        module = self.env['ir.module.module'].search([('name', '=', 'account')], limit=1)
+        self.assertTrue(module)
+
+        self.company.coa_version = '19.5.1.0'
+        installed_version = module.installed_version
+
+        journal = self.env['account.journal'].search([('company_id', '=', self.company.id)], limit=1)
+        self.assertTrue(journal)
+
+        # Now the db version becoms the installed version
+        module.latest_version = installed_version
+        dashboard_data_updated = journal._get_journal_dashboard_data_batched()
+        self.assertTrue(dashboard_data_updated[journal.id]['show_coa_banner'])
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            journal.action_reload_coa()
+        self.assertEqual(self.company.coa_version, installed_version)
+
+        # After reload, the banner should be gone
+        dashboard_data_final = journal._get_journal_dashboard_data_batched()
+        self.assertFalse(dashboard_data_final[journal.id]['show_coa_banner'])
