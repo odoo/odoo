@@ -1,3 +1,4 @@
+import { providePlugins, useEnv, useScope } from "@odoo/owl";
 import { MAIN_PLUGINS, TOUCH_EXCLUDED_PLUGINS } from "./plugin_sets";
 import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
 import { removeClass } from "./utils/dom";
@@ -173,7 +174,8 @@ export class Editor {
     /**
      * @param { EditorConfig } config
      */
-    constructor(config, services) {
+    constructor(scope, config, services) {
+        this.scope = scope;
         this.isReady = false;
         this.isDestroyed = false;
         this.config = config;
@@ -251,7 +253,7 @@ export class Editor {
                 throw new Error(`Duplicate plugin id: ${P.id}`);
             }
             this.pluginsMap.set(P.id, P);
-            const plugin = new P(this.getEditorContext(P.dependencies));
+            const plugin = this.scope.run(() => new P(this.getEditorContext(P.dependencies)));
             plugin.__editor = this;
             this.plugins.push(plugin);
             const exports = {};
@@ -272,7 +274,7 @@ export class Editor {
 
     startPlugins() {
         for (const plugin of this.plugins) {
-            plugin.setup();
+            this.scope.run(() => plugin.setup());
         }
         this.trigger("on_editor_started_handlers");
     }
@@ -532,4 +534,19 @@ export class Editor {
         }
         this.isDestroyed = true;
     }
+}
+
+/**
+ * Creates an Editor scoped to the calling component: its plugins are
+ * constructed and set up inside that scope, so they can use scope-aware
+ * hooks (e.g. `usePlugin`) during their own `setup()`.
+ *
+ * @param { EditorConfig } config
+ * @returns { Editor }
+ */
+export function useEditor(config) {
+    const env = useEnv();
+    providePlugins([]);
+    const scope = useScope();
+    return new Editor(scope, config, env.services);
 }

@@ -1,6 +1,6 @@
 import { render, useSubEnv } from "@web/owl2/utils";
 import { Component, onMounted, onWillDestroy, useProps, signal, t } from "@odoo/owl";
-import { Editor } from "./editor";
+import { useEditor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 import { useSpellCheck } from "@web/core/utils/hooks";
 import { LocalOverlayContainer } from "./local_overlay_container";
@@ -47,9 +47,8 @@ export class Wysiwyg extends Component {
         useSubEnv({
             localOverlayContainerKey: uniqueId("wysiwyg"),
         });
-        this.editor = this.props.editor;
         const config = this.getEditorConfig();
-        this.editor = new Editor(config, this.env.services);
+        this.editor = useEditor(config);
         this.props.onLoad(this.editor);
         useSpellCheck({
             ref: this.contentRef,
