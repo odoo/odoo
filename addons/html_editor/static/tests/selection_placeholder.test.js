@@ -141,6 +141,39 @@ test("a selection placeholder is inserted inside a <th> before and after a conte
     });
 });
 
+test("selection placeholders are inserted around a contenteditable=false element in a <blockquote>", async () => {
+    await testEditor({
+        contentBefore: `<blockquote><div contenteditable="false">X</div></blockquote>`,
+        contentBeforeEdit: unformat(
+            `<blockquote>
+                <p data-selection-placeholder=""><br></p>
+                <div contenteditable="false">X</div>
+                <p data-selection-placeholder=""><br></p>
+            </blockquote>`
+        ),
+        contentAfter: `<blockquote><div contenteditable="false">X</div></blockquote>`,
+    });
+});
+
+test("selection placeholders are inserted around a wrapped table in a <blockquote>", async () => {
+    await testEditor({
+        config: {
+            allowScrollableTables: true,
+        },
+        contentBefore: `<blockquote><table><tbody><tr><td></td></tr></tbody></table></blockquote>`,
+        contentBeforeEdit: unformat(
+            `<blockquote>
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table><tbody><tr><td></td></tr></tbody></table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            </blockquote>`
+        ),
+        contentAfter: `<blockquote><table><tbody><tr><td></td></tr></tbody></table></blockquote>`,
+    });
+});
+
 test.tags("focus required");
 test("can navigate in and out of selection placeholders", async () => {
     await testEditor({
