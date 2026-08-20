@@ -10,6 +10,7 @@ import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ActionHelper } from "@web/views/action_helper";
+import { usePager } from "@web/search/pager_hook";
 
 export class HierarchyController extends Component {
     static components = {
@@ -49,6 +50,7 @@ export class HierarchyController extends Component {
             fields,
             parentFieldName,
             childFieldName,
+            limit: this.props.archInfo.limit,
         });
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
@@ -62,6 +64,12 @@ export class HierarchyController extends Component {
             }),
         });
         this.searchBarToggler = useSearchBarToggler();
+        usePager(() => ({
+            offset: this.model.config.offset,
+            limit: this.model.config.limit,
+            total: this.model.config.totalRecords,
+            onUpdate: ({ offset, limit }) => this.model.load({ offset, limit }),
+        }));
     }
     get displayNoContent() {
         return this.model.resIds.length === 0;
