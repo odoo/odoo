@@ -210,6 +210,28 @@ export class ElementLayout extends LayoutModel {
     }
 }
 
+export class DesktopOnlyLayout extends ElementLayout {
+    constructor(options = {}) {
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-desktop-only",
+        });
+    }
+}
+
+export class MobileOnlyLayout extends ElementLayout {
+    constructor(options = {}) {
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-mobile-only",
+            style: {
+                "mso-hide": "all",
+                display: "none",
+            },
+        });
+    }
+}
+
 // TODO EGGMAIL: remove?
 export class TextNodeLayout {
     content = "";

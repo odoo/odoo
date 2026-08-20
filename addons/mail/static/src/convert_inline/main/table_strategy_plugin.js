@@ -382,7 +382,6 @@ export class TableStrategyPlugin extends Plugin {
         // i.e. we find the emailNode which has referenceNode in its referenceNodes,
         // then we remove all propertyInfo by key /!\ in case of merge, we may not
         // remove all that is necessary but oh well for now.
-        const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
         const referenceRect = this.getBoundingClientRect(referenceNode);
         const spacingCleanup = [];
         let marginRect = { ...referenceRect };
@@ -390,7 +389,7 @@ export class TableStrategyPlugin extends Plugin {
         // marginRect, as the one just below the row element is already taken into
         // account by the table computation
         let storedMarginRect = { ...marginRect };
-        if (marginStyleInfo.size > 0) {
+        if (this.hasMarginSpacing(analysis)) {
             // TODO EGGMAIL: cleanup this code, as it will probably be reused
             // we probably need to check that the margin is really in px in
             // the style
@@ -484,9 +483,8 @@ export class TableStrategyPlugin extends Plugin {
             } else if (!referenceNode || analysis.facts.tableStrategyReport) {
                 return { shouldPropagate: false };
             }
-            const paddingStyleInfo = analysis.facts.desktopPaddingStyleInfo;
             const referenceRect = this.getBoundingClientRect(referenceNode);
-            if (paddingStyleInfo.size > 0) {
+            if (this.hasPaddingSpacing(analysis)) {
                 const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("padding-top"));
                 const right = parseCssValue(computedStyle.getPropertyValue("padding-right"));
@@ -507,8 +505,7 @@ export class TableStrategyPlugin extends Plugin {
             marginRect = referenceRect;
             storedMarginRect = { ...marginRect };
             tableStrategyReport.spacing.cleanup.push(cleanupSpacing.bind(undefined, referenceNode));
-            const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
-            if (marginStyleInfo.size > 0) {
+            if (this.hasMarginSpacing(analysis)) {
                 const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
                 const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));

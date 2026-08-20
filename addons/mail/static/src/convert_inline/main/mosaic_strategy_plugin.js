@@ -15,6 +15,7 @@ export class MosaicStrategyPlugin extends Plugin {
         "math",
         "measurementSnapshot",
         "hybridFluidStrategy",
+        "render",
         "tableStrategy",
     ];
     resources = {
@@ -32,7 +33,7 @@ export class MosaicStrategyPlugin extends Plugin {
     analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         if (
-            analysis.parsingFacts.hasMobileSubtree ||
+            analysis.parsingFacts.isMobileSubtree ||
             (!analysis.facts.isTableContainer &&
                 (!analysis.facts.isHybridFluidContainer || analysis.facts.isResponsiveElement))
         ) {
@@ -51,6 +52,7 @@ export class MosaicStrategyPlugin extends Plugin {
         delete analysis.facts.isTableContainer;
         Object.assign(analysis.parsingFacts, {
             canMerge: false,
+            needMobileSubtree: true,
             needSyntheticEmailNode: true,
             isSkippingContainer: true,
             skippingContainerDescendantProviders: cellsProviders,
@@ -454,6 +456,14 @@ export class MosaicStrategyPlugin extends Plugin {
     processSyntheticEmailNodes(emailNode) {
         if (!emailNode.analysis.facts.isMosaicContainer) {
             return emailNode;
+        }
+        if (emailNode.analysis.parsingFacts.mobileSubtree && emailNode.parent) {
+            const index = emailNode.parent.children.indexOf(emailNode);
+            const desktopNode = this.buildDesktopOnlyNode();
+            const mobileNode = this.buildMobileOnlyNode();
+            emailNode.parent.spliceChildren(index, 1, desktopNode, mobileNode);
+            desktopNode.appendChild(emailNode);
+            mobileNode.appendChild(emailNode.analysis.parsingFacts.mobileSubtree);
         }
         const tableMeasures = this.extractTableInfo(emailNode);
         return this.fillMosaicContainer(emailNode, tableMeasures);

@@ -113,16 +113,22 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     applyFluidCellNewWidth(layout, { emailNode }) {
+        // WORKING HERE
         this.applyCellNewWidth(layout, { emailNode });
-        layout.setAttributes({
-            classNames: "o-ci-m-horizontal-margin-16",
-        });
+        // TODO EGGMAIL: identify which case need a horizontal margin, not
+        // all of them do.
+
+        // layout.setAttributes({
+        //     classNames: "o-ci-m-horizontal-margin-16",
+        // });
     }
 
     applyCellMobileMarginBottom(layout, { emailNode }) {
+        // WORKING HERE
         // TODO EGGMAIL: can be improved by hardcoding multiple values and
         // defining a heuristic to choose the closest one
-        layout.setAttributes({ classNames: "o-ci-m-margin-bottom-16" });
+        // some cases need margin-bottom 0, so we need to do something here
+        // layout.setAttributes({ classNames: "o-ci-m-margin-bottom-16" });
     }
 
     analyzeElementLayout(defaultEmailNodeArguments, { referenceNode }) {

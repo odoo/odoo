@@ -1,6 +1,14 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { Analysis, ElementLayout, EmailNode, LayoutModel, TextNodeLayout } from "./render_models";
+import {
+    Analysis,
+    DesktopOnlyLayout,
+    ElementLayout,
+    EmailNode,
+    LayoutModel,
+    MobileOnlyLayout,
+    TextNodeLayout,
+} from "./render_models";
 import { isSelfClosingElement } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
@@ -22,7 +30,7 @@ import { withSequence } from "@html_editor/utils/resource";
 export class RenderPlugin extends Plugin {
     static id = "render";
     static dependencies = ["math", "measurementSnapshot", "referenceNode", "rules"];
-    static shared = ["attemptMerge", "isDiscarded"];
+    static shared = ["attemptMerge", "buildDesktopOnlyNode", "buildMobileOnlyNode", "isDiscarded"];
     resources = {
         build_render_tree_processors: withSequence(1, this.buildRenderTree.bind(this)),
         render_email_template_processors: this.renderEmailHtml.bind(this),
@@ -71,6 +79,20 @@ export class RenderPlugin extends Plugin {
             this.treeContexts.pop();
         }
         return emailTree;
+    }
+
+    buildDesktopOnlyNode() {
+        return new EmailNode({
+            layout: new DesktopOnlyLayout(),
+            analysis: new Analysis({ parsingFacts: { canMerge: false, canParentMerge: false } }),
+        });
+    }
+
+    buildMobileOnlyNode() {
+        return new EmailNode({
+            layout: new MobileOnlyLayout(),
+            analysis: new Analysis({ parsingFacts: { canMerge: false, canParentMerge: false } }),
+        });
     }
 
     /**
@@ -197,10 +219,16 @@ export class RenderPlugin extends Plugin {
                     emailNode.analysis.parsingFacts.skippingContainerDescendantProviders;
                 contexts.push(createContext(node, providers));
             }
-            if (emailNode.analysis.parsingFacts.hasMobileSubtree) {
-                emailNode.analysis.parsingFacts.mobileSubTree = this.buildEmailTree(node, {
+            if (
+                emailNode.analysis.parsingFacts.needMobileSubtree &&
+                !emailNode.analysis.parsingFacts.isMobileSubtree
+            ) {
+                // IMPORTANT: a layout strategy which "needMobileSubtree" should
+                // not be spawned in a mobile subtree ("isMobileSubtree")
+                emailNode.analysis.parsingFacts.mobileSubtree = this.buildEmailTree(node, {
                     parsingFacts: { isMobileSubtree: true },
                 });
+                console.log(emailNode.analysis.parsingFacts.mobileSubtree);
             }
         } while ((node = treeWalker.nextNode()));
         return nodeToEmailNode.get(rootReferenceNode);
