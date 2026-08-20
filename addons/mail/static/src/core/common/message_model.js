@@ -29,7 +29,7 @@ export class Message extends Record {
 
     /** @param {Object} data */
     update(data) {
-        super.update(data);
+        super.update(...arguments);
         if (this.isNotification && !this.notificationType) {
             const htmlBody = createDocumentFragmentFromContent(this.body);
             this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
@@ -502,9 +502,9 @@ export class Message extends Record {
     get canToggleBookmark() {
         return Boolean(
             !this.is_transient &&
-            !this.isPending &&
-            this.store.self_user?.share === false &&
-            this.persistent
+                !this.isPending &&
+                this.store.self_user?.share === false &&
+                this.persistent
         );
     }
 
@@ -587,10 +587,10 @@ export class Message extends Record {
     canAddReaction(thread) {
         return Boolean(
             !this.is_transient &&
-            !this.isPending &&
-            this.thread?.can_react &&
-            !this.thread.isTransient &&
-            this.thread.has_mail_thread
+                !this.isPending &&
+                this.thread?.can_react &&
+                !this.thread.isTransient &&
+                this.thread.has_mail_thread
         );
     }
 

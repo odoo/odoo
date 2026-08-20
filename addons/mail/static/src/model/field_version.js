@@ -164,15 +164,18 @@ export class SingleFieldVersion {
      * @template T
      * @param {T} value
      * @param {FieldRevision} incomingRevision
+     * @param {Object} [options={}]
+     * @param {boolean} [options.forceApply=true] Apply the value even when its
+     * revision is outdated. Only versioned server data turns it off.
      * @returns {typeof SKIP_REVISION|T} The skip symbol, or the value to update the
      * field.
      */
-    resolveApply(value, incomingRevision) {
+    resolveApply(value, incomingRevision, { forceApply = true } = {}) {
         if (shouldReplace(incomingRevision, this.lastRevision)) {
             this.lastRevision = incomingRevision;
             return value;
         }
-        return SKIP_REVISION;
+        return forceApply ? value : SKIP_REVISION;
     }
 }
 
@@ -208,12 +211,15 @@ export class ManyFieldVersion {
      *
      * @param {Array[]} commands
      * @param {FieldRevision} incomingRevision
+     * @param {Object} [options={}]
+     * @param {boolean} [options.forceApply=true] Apply the commands as-is even
+     * when their revision is out of order. Only versioned server data turns it off.
      * @returns {Array[]|typeof SKIP_REVISION} The skip symbol, or the commands to apply
      * to update the field.
      */
-    resolveApply(commands, incomingRevision) {
+    resolveApply(commands, incomingRevision, { forceApply = true } = {}) {
         if (!shouldReplace(incomingRevision, this.history[0].revision)) {
-            return SKIP_REVISION;
+            return forceApply ? commands : SKIP_REVISION;
         }
         const insertionIndex = this._findInsertionIndex(incomingRevision);
         const insertAtTheEnd = insertionIndex === this.history.length;
@@ -226,7 +232,7 @@ export class ManyFieldVersion {
         if (lastReplaceIndex >= insertionIndex) {
             this.history = this.history.slice(lastReplaceIndex);
         }
-        if (insertAtTheEnd) {
+        if (insertAtTheEnd || forceApply) {
             return commands;
         }
         return this._generateReplaceFromHistory();
