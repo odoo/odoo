@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Yunus Emre Albayrak YunsEmreAlbayrak@gmail.com https://github.com/AlbayEmre
+Yunus Emre Albayrak yunsemrealbayrak@gmail.com https://github.com/AlbayEmre
