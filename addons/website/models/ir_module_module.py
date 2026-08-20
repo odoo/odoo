@@ -50,6 +50,13 @@ class IrModuleModule(models.Model):
         for module in self:
             module.is_installed_on_current_website = module == self.env['website'].get_current_website().theme_id
 
+    def _button_immediate_function(self, func):
+        website = request.env['website'].get_current_website() if request else self.env['website']
+        self.env['ir.config_parameter'].sudo().set_param('website.apply_new_theme', website.id if request else False)
+        res = super()._button_immediate_function(func)
+        self.env['ir.config_parameter'].sudo().set_param('website.apply_new_theme', False)
+        return res
+
     def write(self, vals):
         """
             Override to correctly upgrade themes after upgrade/installation of modules.
@@ -77,20 +84,17 @@ class IrModuleModule(models.Model):
 
                     -> We want to upgrade every website using this theme.
         """
-        if request and request.db and request.env and request.context.get('apply_new_theme'):
-            self = self.with_context(apply_new_theme=True)
-
         for module in self:
             if module.name.startswith('theme_') and vals.get('state') == 'installed':
                 _logger.info('Module %s has been loaded as theme template (%s)' % (module.name, module.state))
 
                 if module.state in ['to install', 'to upgrade']:
                     websites_to_update = module._theme_get_stream_website_ids()
-
-                    if module.state == 'to upgrade' and request:
-                        Website = self.env['website']
-                        current_website = Website.get_current_website()
-                        websites_to_update = current_website if current_website in websites_to_update else Website
+                    if module.state == 'to upgrade' and (website_restriction := int(self.env['ir.config_parameter'].sudo().get_param('website.apply_new_theme', 0))):
+                        if website_restriction in websites_to_update.ids:
+                            websites_to_update = websites_to_update.browse(website_restriction)
+                        else:
+                            websites_to_update = websites_to_update.browse()
 
                     for website in websites_to_update:
                         module._theme_load(website)
@@ -244,14 +248,9 @@ class IrModuleModule(models.Model):
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
-            if self._context.get('apply_new_theme'):
-                # Both the theme install and upgrade flow ends up here.
-                # The _post_copy() is supposed to be called only when the theme
-                # is installed for the first time on a website.
-                # It will basically select some header and footer template.
-                # We don't want the system to select again the theme footer or
-                # header template when that theme is updated later. It could
-                # erase the change the user made after the theme install.
+            if self.env.context.get('apply_new_theme'):
+                # TODO Kept for backward compatibility with design-themes tests
+                # and web_studio. This could become a parameter in master.
                 self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
 
     def _theme_unload(self, website):
@@ -412,9 +411,8 @@ class IrModuleModule(models.Model):
         website.theme_id = self
 
         # this will install 'self' if it is not installed yet
-        if request:
-            request.update_context(apply_new_theme=True)
         self._theme_upgrade_upstream()
+        self.env['theme.utils'].with_context(website_id=website.id)._post_copy(self)
 
         result = website.button_go_website()
         return result
