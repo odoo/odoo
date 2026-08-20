@@ -39,7 +39,7 @@ export class ChannelMember extends Record {
         },
         /** @this {import("models").ChannelMember} */
         onUpdate() {
-            this.channel_id?.onPinStateUpdated();
+            this.threadAsSelf?.channel?.onPinStateUpdated();
         },
     });
     last_interest_dt = fields.Datetime();

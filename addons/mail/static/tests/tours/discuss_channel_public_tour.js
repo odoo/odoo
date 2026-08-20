@@ -5,6 +5,12 @@ import { getOrigin } from "@web/core/utils/urls";
 // The tour is ran twice, ensure the correct message is always targetted.
 const messageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains('cheese'))";
 const editedMessageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains('vegetables'))";
+// Conversation displayed when the tour starts, to check the message is sent in it.
+let openedConversation;
+
+function getConversationName() {
+    return document.querySelector(".o-mail-DiscussContent-threadName")?.value;
+}
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     steps: () => [
@@ -14,6 +20,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             trigger: ".o-mail-Thread",
             run() {
+                openedConversation = getConversationName();
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
                     console.error("Channel secret token is still present in URL.");
                 }
@@ -22,17 +29,9 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                     console.error("Couldn't load all JS modules.", errors);
                 }
                 document.body.classList.add("o_discuss_channel_public_modules_loaded");
-                if (
-                    !document.title.includes(
-                        document.querySelector(".o-mail-DiscussContent-threadName")?.value
-                    )
-                ) {
+                if (!document.title.includes(openedConversation)) {
                     console.error(
-                        `Tab title should match conversation name. Got "${
-                            document.title
-                        }" instead of "${
-                            document.querySelector(".o-mail-DiscussContent-threadName")?.value
-                        }".`
+                        `Tab title should match conversation name. Got "${document.title}" instead of "${openedConversation}".`
                     );
                 }
             },
@@ -121,6 +120,18 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         // Send while the menu is still dismissing.
         { trigger: ".o-mail-Composer-input", run: "click" },
         { trigger: "body:not(:has(.o-discuss-dropdownMenu))" },
+        {
+            // Check the conversation is unchanged, as the text and the attachments
+            // stay on the composer of the conversation they were added to.
+            trigger: ".o-mail-Composer",
+            run() {
+                if (getConversationName() !== openedConversation) {
+                    console.error(
+                        `Conversation changed during the tour, from "${openedConversation}" to "${getConversationName()}".`
+                    );
+                }
+            },
+        },
         { trigger: ".o-mail-Composer button[title='Send']:enabled", run: "click" },
         {
             trigger: `${messageSelector}[data-persistent]`,
