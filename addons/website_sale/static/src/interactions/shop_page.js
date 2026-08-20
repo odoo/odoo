@@ -13,6 +13,7 @@ export class ShopPage extends Interaction {
             't-on-change.prevent': this.onChangeAttribute,
         },
         '.o_wsale_products_searchbar_form': { 't-on-submit': this.onSearch },
+        '.o_wsale_ribbon_filter': { 't-on-click.prevent': this.onRibbonFilter },
         '.o_wsale_filmstrip_wrapper': {
             't-on-mousedown': this.onMouseDown,
             't-on-mouseleave': this.onMouseLeave,
@@ -108,6 +109,19 @@ export class ShopPage extends Interaction {
             searchParams.set(input.name, input.value);
             redirect(`${url.pathname}?${searchParams.toString()}`);
         }
+    }
+
+    /**
+     * Apply an on-sale / in-stock ribbon filter without a full page reload.
+     *
+     * @param {Event} ev
+     */
+    async onRibbonFilter(ev) {
+        const url = new URL(ev.currentTarget.href);
+        await wSaleUtils.updateShopContent(this, {
+            url,
+            searchParams: url.searchParams,
+        });
     }
 
     onMouseDown(ev) {
