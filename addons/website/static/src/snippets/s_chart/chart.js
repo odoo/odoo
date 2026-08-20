@@ -13,6 +13,12 @@ export class Chart extends Interaction {
         this.noAnimation = false;
         this.style = window.getComputedStyle(document.documentElement);
         this.chartBlockStyle = window.getComputedStyle(this.el);
+        this.type = this.el.dataset.type;
+        this.fontSize = parseInt(this.el.dataset.fontSize) || 12;
+        this.borderWidth = parseInt(this.el.dataset.borderWidth) || 2;
+        this.isInterpolated = this.type === "line" && this.el.dataset.interpolate === "true";
+        this.isPieStyle = ["pie", "doughnut"].includes(this.type);
+        this.isPointStyle = ["line", "radar"].includes(this.type);
     }
 
     async willStart() {
@@ -21,32 +27,64 @@ export class Chart extends Interaction {
 
     start() {
         const data = JSON.parse(this.el.dataset.data);
-        data.datasets.forEach((el) => {
-            el.backgroundColor = this.convertToCSS(el.backgroundColor);
-            el.borderColor = this.convertToCSS(el.borderColor);
-            el.borderWidth = this.el.dataset.borderWidth;
-            el.color = this.convertToCSS(el.color);
-        });
+
+        for (const dataset of data.datasets) {
+            dataset.backgroundColor = this.convertToCSS(dataset.backgroundColor);
+            dataset.borderColor = this.convertToCSS(dataset.borderColor);
+            dataset.borderWidth = this.borderWidth;
+            dataset.color = this.convertToCSS(dataset.color);
+
+            if (this.isPointStyle) {
+                dataset.radius = this.borderWidth;
+                dataset.hitRadius = Math.max(this.borderWidth, 6);
+                dataset.hoverRadius = this.borderWidth * 1.25;
+                dataset.hoverBorderWidth = this.borderWidth * 1.25;
+                dataset.cubicInterpolationMode = this.isInterpolated ? "monotone" : "default";
+            }
+        }
 
         const colorRgba = convertCSSColorToRgba(this.chartBlockStyle.color);
         const textColor = `rgba(${colorRgba.red}, ${colorRgba.green}, ${colorRgba.blue}, ${colorRgba.opacity})`;
+        const luminance =
+            colorRgba.red * 0.2126 + colorRgba.green * 0.7152 + colorRgba.blue * 0.0722;
+        const isLightText = luminance > 255 / 2;
+        const tooltipColor = isLightText ? "#000000cc" : "#ffffffcc";
         const cartesianColor = `rgba(${colorRgba.red}, ${colorRgba.green}, ${colorRgba.blue}, 0.25)`;
+
+        // Only use the fallback value when no value is defined to accept 0,
+        // which would otherwise be falsy.
+        function parseChartFloat(value, fallback) {
+            const parsedValue = parseInt(value);
+            return isNaN(parsedValue) ? fallback : parsedValue;
+        }
+
+        const ticksMin = parseChartFloat(this.el.dataset.ticksMin);
+        const ticksMax = parseChartFloat(this.el.dataset.ticksMax);
 
         const radialAxis = {
             beginAtZero: true,
+            max: ticksMax,
+            pointLabels: { color: textColor, font: { size: this.fontSize } },
+            grid: {
+                color: cartesianColor,
+            },
+            ticks: {
+                font: { size: this.fontSize },
+            },
         };
 
         const linearAxis = {
             type: "linear",
             stacked: this.el.dataset.stacked === "true",
             beginAtZero: true,
-            min: parseInt(this.el.dataset.ticksMin),
-            max: parseInt(this.el.dataset.ticksMax),
+            min: ticksMin,
+            max: ticksMax,
             grid: {
                 color: cartesianColor,
             },
             ticks: {
                 color: textColor,
+                font: { size: this.fontSize },
             },
         };
 
@@ -58,11 +96,12 @@ export class Chart extends Interaction {
             },
             ticks: {
                 color: textColor,
+                font: { size: this.fontSize },
             },
         };
 
         const chartData = {
-            type: this.el.dataset.type,
+            type: this.type,
             data: data,
             options: {
                 plugins: {
@@ -71,11 +110,24 @@ export class Chart extends Interaction {
                         position: this.el.dataset.legendPosition,
                         labels: {
                             color: textColor,
+                            font: { size: this.fontSize },
+                            boxWidth: this.fontSize * 2.5,
+                            boxHeight: this.fontSize,
+                            usePointStyle: this.isPointStyle,
                         },
                     },
                     tooltip: {
                         enabled: this.el.dataset.tooltipDisplay === "true",
                         position: "custom",
+                        titleColor: tooltipColor,
+                        titleFont: { size: this.fontSize },
+                        bodyColor: tooltipColor,
+                        bodyFont: { size: this.fontSize },
+                        boxWidth: this.fontSize,
+                        boxHeight: this.fontSize,
+                        boxPadding: 2,
+                        usePointStyle: this.isPointStyle,
+                        backgroundColor: isLightText ? "white" : "black",
                     },
                     title: {
                         display: !!this.el.dataset.title,
@@ -91,18 +143,18 @@ export class Chart extends Interaction {
             },
         };
 
-        if (this.el.dataset.type === "radar") {
+        if (this.type === "radar") {
             chartData.options.scales = {
                 r: radialAxis,
             };
-        } else if (this.el.dataset.type === "horizontalBar") {
+        } else if (this.type === "horizontalBar") {
             chartData.type = "bar";
             chartData.options.scales = {
                 x: linearAxis,
                 y: categoryAxis,
             };
             chartData.options.indexAxis = "y";
-        } else if (["pie", "doughnut"].includes(this.el.dataset.type)) {
+        } else if (this.isPieStyle) {
             chartData.options.scales = {};
             chartData.options.plugins.tooltip.callbacks = {
                 label: (tooltipItem) => {
