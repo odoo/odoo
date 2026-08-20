@@ -10,6 +10,7 @@ test_mail. """,
     'depends': [
         'mass_mailing',
         'mass_mailing_sms',
+        'mass_mailing_tracking',
         'sms_twilio',
         'test_mail',
         'test_mail_sms',

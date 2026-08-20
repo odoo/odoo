@@ -1071,8 +1071,6 @@ class MailComposeMessage(models.TransientModel):
             STA - 'notify_skip_followers',   # notify parameter
             DYN - 'record_alias_domain_id',
             DYN - 'record_company_id',
-            STA - 'source_template_id',      # - mail_tracking
-            STA - 'source_view_id',          # - mail_tracking
 
         BOTH
             DYN - 'attachment_ids',          # also check 'attachments' for message
@@ -1088,6 +1086,9 @@ class MailComposeMessage(models.TransientModel):
             DYN - 'scheduled_date',
             DYN - 'subject',
             STA - 'subtype_id',
+            STA - 'source_mailing_id',       # - mass_mailing_tracking
+            STA - 'source_template_id',      # - mail_tracking
+            STA - 'source_view_id',          # - mail_tracking
 
         :param list res_ids: list of record IDs on which composer runs;
 
