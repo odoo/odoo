@@ -193,6 +193,9 @@ class AccountMoveLine(models.Model):
     # === Tax fields === #
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
+        relation='account_move_line_account_tax_rel',
+        column1='account_move_line_id',
+        column2='account_tax_id',
         string="Taxes",
         compute='_compute_tax_ids', store=True, readonly=False, precompute=True,
         context={'active_test': False, 'hide_original_tax_ids': True},
