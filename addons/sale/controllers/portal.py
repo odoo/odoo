@@ -401,9 +401,19 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 if request.env.user._is_public()
                 else request.env.user.partner_id.id
             ),
+<<<<<<< 3a20d313badf766b47d090f387c192cfbbf2ccf1
             body=_("Order signed by %s", name),
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
+||||||| 9b97b5cbda241a9e4c19d9174be0db51f88dca03
+            body=_('Order signed by %s', name),
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+=======
+            body=_('Order signed by %s', name),
+            message_type='auto_comment',
+            subtype_xmlid='mail.mt_comment',
+>>>>>>> 269939b45d931a5979221df60f62b5dff0fdf86b
         )
 
         query_string = "&message=sign_ok"
