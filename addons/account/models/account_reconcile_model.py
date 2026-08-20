@@ -51,6 +51,9 @@ class AccountReconcileModelLine(models.Model):
     """)
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
+        relation='account_reconcile_model_line_account_tax_rel',
+        column1='account_reconcile_model_line_id',
+        column2='account_tax_id',
         string="Taxes",
         ondelete='restrict',
         check_company=True,
