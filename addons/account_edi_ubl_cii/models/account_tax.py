@@ -1,9 +1,228 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.fields import Domain
+from odoo.tools import SQL
+
+# Countries where allowance/charge feature is not supported
+NO_ALLOWANCE_CHARGE_COUNTRIES = ['CO', 'PE']
+
+ALLOWANCE_REASON_CODES = [
+    ('41', "41 - Bonus for works ahead of schedule"),
+    ('42', "42 - Other bonus"),
+    ('60', "60 - Manufacturer’s consumer discount"),
+    ('62', "62 - Due to military status"),
+    ('63', "63 - Due to work accident"),
+    ('64', "64 - Special agreement"),
+    ('65', "65 - Production error discount"),
+    ('66', "66 - New outlet discount"),
+    ('67', "67 - Sample discount"),
+    ('68', "68 - End-of-range discount"),
+    ('70', "70 - Incoterm discount"),
+    ('71', "71 - Point of sales threshold allowance"),
+    ('88', "88 - Material surcharge/deduction"),
+    ('95', "95 - Discount"),
+    ('100', "100 - Special rebate"),
+    ('102', "102 - Fixed long term"),
+    ('103', "103 - Temporary"),
+    ('104', "104 - Standard"),
+    ('105', "105 - Yearly turnover"),
+]
+
+CHARGE_REASON_CODES = [
+    ('AA', "AA - Advertising"),
+    ('AAA', "AAA - Telecommunication"),
+    ('AAC', "AAC - Technical modification"),
+    ('AAD', "AAD - Job-order production"),
+    ('AAE', "AAE - Outlays"),
+    ('AAF', "AAF - Off-premises"),
+    ('AAH', "AAH - Additional processing"),
+    ('AAI', "AAI - Attesting"),
+    ('AAS', "AAS - Acceptance"),
+    ('AAT', "AAT - Rush delivery"),
+    ('AAV', "AAV - Special construction"),
+    ('AAY', "AAY - Airport facilities"),
+    ('AAZ', "AAZ - Concession"),
+    ('ABA', "ABA - Compulsory storage"),
+    ('ABB', "ABB - Fuel removal"),
+    ('ABC', "ABC - Into plane"),
+    ('ABD', "ABD - Overtime"),
+    ('ABF', "ABF - Tooling"),
+    ('ABK', "ABK - Miscellaneous"),
+    ('ABL', "ABL - Additional packaging"),
+    ('ABN', "ABN - Dunnage"),
+    ('ABR', "ABR - Containerisation"),
+    ('ABS', "ABS - Carton packing"),
+    ('ABT', "ABT - Hessian wrapped"),
+    ('ABU', "ABU - Polyethylene wrap packing"),
+    ('ACF', "ACF - Miscellaneous treatment"),
+    ('ACG', "ACG - Enamelling treatment"),
+    ('ACH', "ACH - Heat treatment"),
+    ('ACI', "ACI - Plating treatment"),
+    ('ACJ', "ACJ - Painting"),
+    ('ACK', "ACK - Polishing"),
+    ('ACL', "ACL - Priming"),
+    ('ACM', "ACM - Preservation treatment"),
+    ('ACS', "ACS - Fitting"),
+    ('ADC', "ADC - Consolidation"),
+    ('ADE', "ADE - Bill of lading"),
+    ('ADJ', "ADJ - Airbag"),
+    ('ADK', "ADK - Transfer"),
+    ('ADL', "ADL - Slipsheet"),
+    ('ADM', "ADM - Binding"),
+    ('ADN', "ADN - Repair or replacement of broken returnable package"),
+    ('ADO', "ADO - Efficient logistics"),
+    ('ADP', "ADP - Merchandising"),
+    ('ADQ', "ADQ - Product mix"),
+    ('ADR', "ADR - Other services"),
+    ('ADT', "ADT - Pick-up"),
+    ('ADW', "ADW - Chronic illness"),
+    ('ADY', "ADY - New product introduction"),
+    ('ADZ', "ADZ - Direct delivery"),
+    ('AEA', "AEA - Diversion"),
+    ('AEB', "AEB - Disconnect"),
+    ('AEC', "AEC - Distribution"),
+    ('AED', "AED - Handling of hazardous cargo"),
+    ('AEF', "AEF - Rents and leases"),
+    ('AEH', "AEH - Location differential"),
+    ('AEI', "AEI - Aircraft refueling"),
+    ('AEJ', "AEJ - Fuel shipped into storage"),
+    ('AEK', "AEK - Cash on delivery"),
+    ('AEL', "AEL - Small order processing service"),
+    ('AEM', "AEM - Clerical or administrative services"),
+    ('AEN', "AEN - Guarantee"),
+    ('AEO', "AEO - Collection and recycling"),
+    ('AEP', "AEP - Copyright fee collection"),
+    ('AES', "AES - Veterinary inspection service"),
+    ('AET', "AET - Pensioner service"),
+    ('AEU', "AEU - Medicine free pass holder"),
+    ('AEV', "AEV - Environmental protection service"),
+    ('AEW', "AEW - Environmental clean-up service"),
+    ('AEX', "AEX - National cheque processing service outside account area"),
+    ('AEY', "AEY - National payment service outside account area"),
+    ('AEZ', "AEZ - National payment service within account area"),
+    ('AJ', "AJ - Adjustments"),
+    ('AU', "AU - Authentication"),
+    ('CA', "CA - Cataloguing"),
+    ('CAB', "CAB - Cartage"),
+    ('CAD', "CAD - Certification"),
+    ('CAE', "CAE - Certificate of conformance"),
+    ('CAF', "CAF - Certificate of origin"),
+    ('CAI', "CAI - Cutting"),
+    ('CAJ', "CAJ - Consular service"),
+    ('CAK', "CAK - Customer collection"),
+    ('CAL', "CAL - Payroll payment service"),
+    ('CAM', "CAM - Cash transportation"),
+    ('CAN', "CAN - Home banking service"),
+    ('CAO', "CAO - Bilateral agreement service"),
+    ('CAP', "CAP - Insurance brokerage service"),
+    ('CAQ', "CAQ - Cheque generation"),
+    ('CAR', "CAR - Preferential merchandising location"),
+    ('CAS', "CAS - Crane"),
+    ('CAT', "CAT - Special colour service"),
+    ('CAU', "CAU - Sorting"),
+    ('CAV', "CAV - Battery collection and recycling"),
+    ('CAW', "CAW - Product take back fee"),
+    ('CAX', "CAX - Quality control released"),
+    ('CAY', "CAY - Quality control held"),
+    ('CAZ', "CAZ - Quality control embargo"),
+    ('CD', "CD - Car loading"),
+    ('CG', "CG - Cleaning"),
+    ('CS', "CS - Cigarette stamping"),
+    ('CT', "CT - Count and recount"),
+    ('DAB', "DAB - Layout/design"),
+    ('DAC', "DAC - Assortment allowance"),
+    ('DAD', "DAD - Driver assigned unloading"),
+    ('DAF', "DAF - Debtor bound"),
+    ('DAG', "DAG - Dealer allowance"),
+    ('DAH', "DAH - Allowance transferable to the consumer"),
+    ('DAI', "DAI - Growth of business"),
+    ('DAJ', "DAJ - Introduction allowance"),
+    ('DAK', "DAK - Multi-buy promotion"),
+    ('DAL', "DAL - Partnership"),
+    ('DAM', "DAM - Return handling"),
+    ('DAN', "DAN - Minimum order not fulfilled charge"),
+    ('DAO', "DAO - Point of sales threshold allowance"),
+    ('DAP', "DAP - Wholesaling discount"),
+    ('DAQ', "DAQ - Documentary credits transfer commission"),
+    ('DL', "DL - Delivery"),
+    ('EG', "EG - Engraving"),
+    ('EP', "EP - Expediting"),
+    ('ER', "ER - Exchange rate guarantee"),
+    ('FAA', "FAA - Fabrication"),
+    ('FAB', "FAB - Freight equalization"),
+    ('FAC', "FAC - Freight extraordinary handling"),
+    ('FC', "FC - Freight service"),
+    ('FH', "FH - Filling/handling"),
+    ('FI', "FI - Financing"),
+    ('GAA', "GAA - Grinding"),
+    ('HAA', "HAA - Hose"),
+    ('HD', "HD - Handling"),
+    ('HH', "HH - Hoisting and hauling"),
+    ('IAA', "IAA - Installation"),
+    ('IAB', "IAB - Installation and warranty"),
+    ('ID', "ID - Inside delivery"),
+    ('IF', "IF - Inspection"),
+    ('IR', "IR - Installation and training"),
+    ('IS', "IS - Invoicing"),
+    ('KO', "KO - Koshering"),
+    ('L1', "L1 - Carrier count"),
+    ('LA', "LA - Labelling"),
+    ('LAA', "LAA - Labour"),
+    ('LAB', "LAB - Repair and return"),
+    ('LF', "LF - Legalisation"),
+    ('MAE', "MAE - Mounting"),
+    ('MI', "MI - Mail invoice"),
+    ('ML', "ML - Mail invoice to each location"),
+    ('NAA', "NAA - Non-returnable containers"),
+    ('OA', "OA - Outside cable connectors"),
+    ('PA', "PA - Invoice with shipment"),
+    ('PAA', "PAA - Phosphatizing (steel treatment)"),
+    ('PC', "PC - Packing"),
+    ('PL', "PL - Palletizing"),
+    ('PRV', "PRV - Price variation"),
+    ('RAB', "RAB - Repacking"),
+    ('RAC', "RAC - Repair"),
+    ('RAD', "RAD - Returnable container"),
+    ('RAF', "RAF - Restocking"),
+    ('RE', "RE - Re-delivery"),
+    ('RF', "RF - Refurbishing"),
+    ('RH', "RH - Rail wagon hire"),
+    ('RV', "RV - Loading"),
+    ('SA', "SA - Salvaging"),
+    ('SAA', "SAA - Shipping and handling"),
+    ('SAD', "SAD - Special packaging"),
+    ('SAE', "SAE - Stamping"),
+    ('SAI', "SAI - Consignee unload"),
+    ('SG', "SG - Shrink-wrap"),
+    ('SH', "SH - Special handling"),
+    ('SM', "SM - Special finish"),
+    ('SU', "SU - Set-up"),
+    ('TAB', "TAB - Tank renting"),
+    ('TAC', "TAC - Testing"),
+    ('TT', "TT - Transportation - third party billing"),
+    ('TV', "TV - Transportation by vendor"),
+    ('V1', "V1 - Drop yard"),
+    ('V2', "V2 - Drop dock"),
+    ('WH', "WH - Warehousing"),
+    ('XAA', "XAA - Combine all same day shipment"),
+    ('YY', "YY - Split pick-up"),
+    ('ZZZ', "ZZZ - Mutually defined"),
+]
 
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
+    ubl_cii_type = fields.Selection(
+        selection=[
+            ('tax', "Tax"),
+            ('allowance', "Allowance"),
+            ('charge', "Charge")
+        ],
+        default='tax',
+        inverse='_inverse_ubl_cii_type',
+        required=True,
+    )
     ubl_cii_tax_category_code = fields.Selection(
         help="The VAT category code used for electronic invoicing purposes.",
         string="Tax Category Code",
@@ -119,11 +338,63 @@ class AccountTax(models.Model):
         ]
     )
     ubl_cii_requires_exemption_reason = fields.Boolean(compute='_compute_ubl_cii_requires_exemption_reason')
+    ubl_cii_allowance_reason_code = fields.Selection(
+        string="Allowance Reason Code",
+        selection=ALLOWANCE_REASON_CODES,
+    )
+    ubl_cii_charge_reason_code = fields.Selection(
+        string="Charge Reason Code",
+        selection=CHARGE_REASON_CODES,
+    )
+    ubl_cii_allowance_reason = fields.Char(string="Allowance Reason")
+    ubl_cii_charge_reason = fields.Char(string="Charge Reason")
+    ubl_cii_is_allowance_charge_supported = fields.Boolean(compute='_compute_ubl_cii_is_allowance_charge_supported')
+
+    @api.constrains('ubl_cii_type', 'ubl_cii_allowance_reason_code', 'ubl_cii_charge_reason_code')
+    def _check_allowance_charge_reason_code(self):
+        for tax in self:
+            if tax.ubl_cii_type == 'allowance' and not tax.ubl_cii_allowance_reason_code:
+                raise ValidationError(
+                    self.env._("An Allowance Reason must be set when the Type is 'Allowance'.")
+                )
+            elif tax.ubl_cii_type == 'charge' and not tax.ubl_cii_charge_reason_code:
+                raise ValidationError(
+                    self.env._("A Charge Reason must be set when the Type is 'Charge'.")
+                )
+
+    @api.depends('company_id.country_code')
+    def _compute_ubl_cii_is_allowance_charge_supported(self):
+        for tax in self:
+            tax.ubl_cii_is_allowance_charge_supported = (
+                tax.company_id.country_code not in NO_ALLOWANCE_CHARGE_COUNTRIES
+            )
 
     @api.depends('ubl_cii_tax_category_code')
     def _compute_ubl_cii_requires_exemption_reason(self):
         for tax in self:
             tax.ubl_cii_requires_exemption_reason = tax.ubl_cii_tax_category_code in ['AE', 'E', 'G', 'O', 'K']
+
+    def _inverse_ubl_cii_type(self):
+        for tax in self:
+            if tax.ubl_cii_type == 'tax':
+                tax.write({
+                    'ubl_cii_allowance_reason_code': False,
+                    'ubl_cii_allowance_reason': False,
+                    'ubl_cii_charge_reason_code': False,
+                    'ubl_cii_charge_reason': False,
+                })
+            else:
+                inverse_ubl_cii_type = {
+                    'allowance': 'charge',
+                    'charge': 'allowance'
+                }.get(tax.ubl_cii_type)
+                tax.write({
+                    'ubl_cii_tax_category_code': False,
+                    'ubl_cii_tax_exemption_reason': False,
+                    'ubl_cii_tax_exemption_reason_code': False,
+                    f'ubl_cii_{inverse_ubl_cii_type}_reason_code': False,
+                    f'ubl_cii_{inverse_ubl_cii_type}_reason': False,
+                })
 
     @api.onchange('ubl_cii_requires_exemption_reason')
     def _onchange_ubl_cii_tax_category_code(self):
@@ -131,3 +402,60 @@ class AccountTax(models.Model):
             if not tax.ubl_cii_requires_exemption_reason:
                 tax.ubl_cii_tax_exemption_reason = False
                 tax.ubl_cii_tax_exemption_reason_code = False
+
+    @api.model
+    def _get_domain_from_tax_vals(self, tax_vals):
+        # Extends `account`
+        tax_domain = super()._get_domain_from_tax_vals(tax_vals)
+        if ubl_cii_type := tax_vals.get('ubl_cii_type'):
+            tax_domain &= Domain('ubl_cii_type', '=', ubl_cii_type)
+        if ubl_cii_type in ('allowance', 'charge'):
+            return self._ubl_cii_allowance_charge_tax_domain(tax_vals, ubl_cii_type, tax_domain)
+        return tax_domain
+
+    @api.model
+    def _get_orders_from_tax_vals(self, tax_values):
+        # Extends `account`
+        orders = super()._get_orders_from_tax_vals(tax_values)
+        if tax_values.get('ubl_cii_tax_category_code'):
+            orders.insert(0, 'ubl_cii_tax_category_code')
+        return orders
+
+    @api.model
+    def _ubl_cii_allowance_charge_tax_domain(self, tax_values, ubl_cii_type, tax_domain):
+        """Extend `tax_domain` with UBL/CII allowance or charge tax conditions.
+
+        The matching precedence is:
+            1, 1: both `reason_code` and `reason` are available; match both.
+            1, 0: only `reason_code` is available; match by reason code.
+            0, 1: only `reason` is available; match by reason.
+            0, 0: not expected; at least one value is validated beforehand.
+
+        When both values are available, matches are ordered to prioritize the most
+        specific tax, and only the best matching tax is selected.
+        """
+        reason_code_field = f'ubl_cii_{ubl_cii_type}_reason_code'
+        reason_field = f'ubl_cii_{ubl_cii_type}_reason'
+        reason_code = tax_values.get('reason_code')
+        reason = tax_values.get('reason')
+
+        # Taxes corresponding to allowance/charge nodes would always have `include_base_amount` True
+        tax_domain &= Domain('include_base_amount', '=', True)
+        ubl_conditions = []
+        order_clauses = []
+        if reason_code:
+            ubl_conditions.append(Domain(reason_code_field, '=', reason_code))
+            order_clauses.append(SQL("(%s = %s) IS TRUE DESC", SQL.identifier(reason_code_field), reason_code))
+        if reason:
+            ubl_conditions.append(Domain(reason_field, '=', reason))
+            order_clauses.append(SQL("(%s = %s) IS TRUE DESC", SQL.identifier(reason_field), reason))
+        tax_domain &= Domain.OR(ubl_conditions)
+
+        tax_query = self.env['account.tax']._search(tax_domain, bypass_access=True)
+        tax_query.order = SQL(", ").join(order_clauses)
+        tax_query.limit = 1
+        return [('id', 'in', tax_query)]
+
+    def _ubl_cii_is_allowance_charge_tax(self):
+        self.ensure_one()
+        return self.ubl_cii_type in ('allowance', 'charge') and self.include_base_amount

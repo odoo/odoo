@@ -7,7 +7,7 @@ from markupsafe import Markup
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
+from odoo.tools import float_compare, formatLang, frozendict, html2plaintext, html_escape, unique
 from odoo.tools.partner_identifiers import get_tin_metadata_of_country
 
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
@@ -34,29 +34,17 @@ class AccountEdiUBL(models.AbstractModel):
     # BASE LINES HELPERS
     # -------------------------------------------------------------------------
 
-    def _ubl_is_recycling_contribution_tax(self, tax_data):
-        """ Indicate if the 'tax_data' passed as parameter is a recycling contribution tax.
+    def _ubl_is_allowance_charge_tax(self, tax_data):
+        """ Indicate if the 'tax_data' passed as parameter is an allowance/charge tax.
 
         :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
-        :return:            True if tax_data['tax'] is a recycling contribution tax, False otherwise.
+        :return:            True if tax_data['tax'] is an allowance/charge tax, False otherwise.
         """
         if not tax_data:
             return False
 
         tax = tax_data['tax']
-        return tax.amount_type == 'fixed' and tax.include_base_amount
-
-    def _ubl_is_excise_tax(self, tax_data):
-        """ Indicate if the 'tax_data' passed as parameter is an excise tax.
-
-        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
-        :return:            True if tax_data['tax'] is an excise tax, False otherwise.
-        """
-        if not tax_data:
-            return False
-
-        tax = tax_data['tax']
-        return tax.amount_type == 'code' and tax.include_base_amount
+        return tax and tax._ubl_cii_is_allowance_charge_tax()
 
     def _ubl_is_reverse_charge_tax(self, tax_data):
         """ Indicate if the 'tax_data' passed as parameter is an intracommunity reverse charge purchase tax.
@@ -107,8 +95,7 @@ class AccountEdiUBL(models.AbstractModel):
         supplier = vals['supplier']
         if tax_data and (
             tax_data['tax'].amount_type != 'percent'
-            or self._ubl_is_recycling_contribution_tax(tax_data)
-            or self._ubl_is_excise_tax(tax_data)
+            or self._ubl_is_allowance_charge_tax(tax_data)
         ):
             return
         else:
@@ -275,8 +262,10 @@ class AccountEdiUBL(models.AbstractModel):
                 base_line['price_unit'] *= -1
 
     def _ubl_turn_emptying_taxes_as_new_base_lines(self, base_lines, company, vals):
-        """ Extract emptying taxes such as "Vidanges" on bottles from the current base lines and turn them into
-        additional base lines.
+        """ Allowance/Charges that have `include_base_amount == False`
+        generate additional (virtual) base lines in the XML.
+        i.e. if you buy milk, you pay a small fixed deposit that will be returned
+        to you when you bring back the empty bottle (called "Vidange", Emptying tax)
 
         :param base_lines:  The original 'base_lines' of the document.
         :param company:     The company owning the 'base_lines'.
@@ -289,7 +278,7 @@ class AccountEdiUBL(models.AbstractModel):
                 return
 
             tax = tax_data['tax']
-            return tax.amount_type in ('fixed', 'code') and not tax.include_base_amount
+            return tax.ubl_cii_type in ('allowance', 'charge') and not tax.include_base_amount
 
         new_base_lines = AccountTax._dispatch_taxes_into_new_base_lines(base_lines, company, exclude_function)
 
@@ -587,41 +576,6 @@ class AccountEdiUBL(models.AbstractModel):
             },
         }
 
-    def _ubl_get_line_allowance_charge_recycling_contribution_node(self, vals, recycling_contribution_values):
-        currency = recycling_contribution_values['currency']
-        amount = recycling_contribution_values['amount']
-        tax = recycling_contribution_values['tax']
-        if 'bebat' in tax.name.lower():
-            charge_reason_code = 'CAV'
-        else:
-            charge_reason_code = 'AEO'
-        is_charge = recycling_contribution_values['is_charge']
-        return {
-            '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code if is_charge else '100'},
-            'cbc:AllowanceChargeReason': {'_text': tax.name},
-            'cbc:Amount': {
-                '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
-                'currencyID': currency.name,
-            },
-        }
-
-    def _ubl_get_line_allowance_charge_excise_node(self, vals, excise_values):
-        currency = excise_values['currency']
-        amount = excise_values['amount']
-        tax = excise_values['tax']
-        is_charge = excise_values['is_charge']
-        return {
-            '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReason': {'_text': tax.name},
-            'cbc:Amount': {
-                '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
-                'currencyID': currency.name,
-            },
-        }
-
     def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
         currency = discount_values['currency']
         amount = discount_values['amount']
@@ -640,6 +594,36 @@ class AccountEdiUBL(models.AbstractModel):
             },
             'cbc:BaseAmount': {
                 '_text': FloatFmt(abs(base_amount), max_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            },
+        }
+
+    def _ubl_create_line_allowance_charge_node_vals(self, vals):
+        currency = vals['currency']
+        tax = vals['tax']
+        is_charge = vals['is_charge']
+        return {
+            '_currency': currency,
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
+            'cbc:AllowanceChargeReasonCode': {
+                '_text': tax.ubl_cii_charge_reason_code if is_charge else tax.ubl_cii_allowance_reason_code,
+            },
+            'cbc:AllowanceChargeReason': {
+                '_text': tax.ubl_cii_charge_reason if is_charge else tax.ubl_cii_allowance_reason,
+            },
+            # cbc:MultiplierFactorNumeric is required to predict tax during import
+            'cbc:MultiplierFactorNumeric': (
+                {'_text': abs(tax.amount)}
+                if tax.amount_type == 'percent'
+                else None
+            ),
+            # Only keep cbc:BaseAmount in conjunction with cbc:MultiplierFactorNumeric
+            'cbc:BaseAmount': {
+                '_text': FloatFmt(abs(vals['base_amount']), max_dp=currency.decimal_places),
+                'currencyID': currency.name,
+            } if tax.amount_type == 'percent' else None,
+            'cbc:Amount': {
+                '_text': FloatFmt(abs(vals['tax_amount']), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
             },
         }
@@ -664,44 +648,23 @@ class AccountEdiUBL(models.AbstractModel):
             'base_amount': tax_details[f'gross_total_excluded{suffix}'],
         }))
 
-    def _ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(self, vals, in_foreign_currency=True):
-        line_node = vals['line_node']
+    def _ubl_add_line_allowance_charge_nodes(self, vals, in_foreign_currency=True):
+        """Fetch Allowance/Charge node from taxes having `ubl_cii_type` as `allowance/charge`"""
+        allowance_charges_nodes = []
         base_line = vals['line_vals']['base_line']
         currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
         suffix = '_currency' if in_foreign_currency else ''
-
-        allowance_charges_nodes = line_node['cac:AllowanceCharge']
-        for tax_data in base_line['tax_details']['taxes_data']:
-            if not self._ubl_is_recycling_contribution_tax(tax_data):
-                continue
-
-            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_recycling_contribution_node(vals, {
-                'tax': tax_data['tax'],
-                'is_charge': tax_data['tax_amount'] > 0.0,
-                'amount': tax_data[f'tax_amount{suffix}'],
+        taxes_data = base_line['tax_details']['taxes_data']
+        for tax_data in (t for t in taxes_data if self._ubl_is_allowance_charge_tax(t)):
+            allowance_charges_nodes.append(self._ubl_create_line_allowance_charge_node_vals({
                 'currency': currency,
+                'tax': tax_data['tax'],
+                'tax_amount': tax_data[f'tax_amount{suffix}'],
+                'base_amount': tax_data[f'base_amount{suffix}'],
+                'is_charge': tax_data['tax'].ubl_cii_type == 'charge',
             }))
 
-    def _ubl_add_line_allowance_charge_nodes_for_excise_taxes(self, vals, in_foreign_currency=True):
-        line_node = vals['line_node']
-        base_line = vals['line_vals']['base_line']
-        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
-        suffix = '_currency' if in_foreign_currency else ''
-
-        allowance_charges_nodes = line_node['cac:AllowanceCharge']
-        for tax_data in base_line['tax_details']['taxes_data']:
-            if not self._ubl_is_excise_tax(tax_data):
-                continue
-
-            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_excise_node(vals, {
-                'tax': tax_data['tax'],
-                'is_charge': tax_data['tax_amount'] > 0.0,
-                'amount': tax_data[f'tax_amount{suffix}'],
-                'currency': currency,
-            }))
-
-    def _ubl_add_line_allowance_charge_nodes(self, vals):
-        vals['line_node']['cac:AllowanceCharge'] = []
+        vals['line_node']['cac:AllowanceCharge'] = allowance_charges_nodes
 
     def _ubl_add_line_extension_amount_node(self, vals, in_foreign_currency=True):
         line_node = vals['line_node']
@@ -2460,30 +2423,30 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_line_add_allowance_charges_values(self, collected_values):
         line_tree = collected_values['line_tree']
-        allowances = collected_values['allowances'] = []
-        charges = collected_values['charges'] = []
+        allowance_charge_vals = collected_values['allowance_charge_vals'] = []
+        discount_vals = []
+
         for allowance_charge_elem in line_tree.iterfind('./{*}AllowanceCharge'):
-            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator')
-            amount_str = allowance_charge_elem.findtext('.//{*}Amount')
-            base_amount_str = allowance_charge_elem.findtext('.//{*}BaseAmount')
+            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator', default='').lower()
+            amount = allowance_charge_elem.findtext('.//{*}Amount')
+            base_amount = allowance_charge_elem.findtext('.//{*}BaseAmount')
             reason = allowance_charge_elem.findtext('.//{*}AllowanceChargeReason')
             reason_code = allowance_charge_elem.findtext('.//{*}AllowanceChargeReasonCode')
+            multiplier_factor_numeric = allowance_charge_elem.findtext('.//{*}MultiplierFactorNumeric')
 
-            if amount_str:
-                amount = float(amount_str)
-            else:
-                continue
-
-            allowance_charge_values = {
-                'amount': amount,
-                'base_amount': float(base_amount_str) if base_amount_str else None,
-                'reason': reason,
-                'reason_code': reason_code,
-            }
-            if charge_indicator.lower() == 'true':
-                charges.append(allowance_charge_values)
-            else:
-                allowances.append(allowance_charge_values)
+            if self._is_allowance_charge_node_valid(charge_indicator, reason_code, reason, amount):
+                vals = {
+                    'amount': float(amount),
+                    'base_amount': float(base_amount) if base_amount else None,
+                    'reason': reason,
+                    'reason_code': reason_code,
+                    'charge_indicator': charge_indicator,
+                    'multiplier_factor_numeric': float(multiplier_factor_numeric) if multiplier_factor_numeric else None,
+                }
+                if reason_code in ('95', 'ADK') or reason == 'Discount':
+                    discount_vals.append(vals)
+                else:
+                    allowance_charge_vals.append(vals)
 
         allowance_elem = line_tree.find('./{*}Price/{*}AllowanceCharge')
         collected_values['price_allowance_values'] = {}
@@ -2506,8 +2469,9 @@ class AccountEdiUBL(models.AbstractModel):
                 'reason': reason,
                 'reason_code': reason_code,
             }
+        return discount_vals
 
-    def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
+    def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values, discount_vals):
         file_document_sign = collected_values['file_document_sign']
         line_tree = collected_values['line_tree']
         currency = collected_values['currency_values']['currency']
@@ -2524,14 +2488,14 @@ class AccountEdiUBL(models.AbstractModel):
         invoiced_quantity = invoiced_quantity_str and float(invoiced_quantity_str) * file_document_sign
         base_quantity = base_quantity_str and float(base_quantity_str)
 
-        total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
-        total_charges = sum(charge['amount'] for charge in collected_values['charges'])
+        total_discount_vals = sum(dval['amount'] * (-1 if dval['reason_code'] == 'ADK' else 1) for dval in discount_vals)
+        total_allowances_charges = self._get_allowance_charge_sum(collected_values['allowance_charge_vals'])
         price_allowance_values = collected_values['price_allowance_values']
         price_allowance_base_amount = price_allowance_values.get('base_amount')
         price_allowance_amount = price_allowance_values.get('amount')
         if price_allowance_amount and (price_allowance_charge_indicator_sign := price_allowance_values.get('charge_indicator_sign')):
             price_allowance_amount *= price_allowance_charge_indicator_sign
-        subtotal = (line_extension_amount or 0.0) + total_allowances - total_charges
+        subtotal = (line_extension_amount or 0.0) + total_discount_vals - total_allowances_charges
 
         # Price level.
         # Define at the product level the price for which quantity and how many discount you get
@@ -2563,7 +2527,7 @@ class AccountEdiUBL(models.AbstractModel):
         ):
             price_unit = subtotal
             quantity = 1.0
-            discount_amount = total_allowances
+            discount_amount = 0.0
 
             # Combine with the price level. Suppose:
             # line_extension_amount = 1000.0
@@ -2588,7 +2552,7 @@ class AccountEdiUBL(models.AbstractModel):
         ):
             quantity = invoiced_quantity
             price_unit = subtotal / quantity
-            discount_amount = total_allowances
+            discount_amount = 0.0
 
             # Combine with the price level. Suppose:
             # line_extension_amount = 1200.0
@@ -2606,7 +2570,7 @@ class AccountEdiUBL(models.AbstractModel):
         else:
             quantity = 0.0
             price_unit = 0.0
-            discount_amount = total_allowances
+            discount_amount = 0.0
 
             # Combine with the price level.
             if not currency.is_zero(price_subtotal):
@@ -2615,15 +2579,39 @@ class AccountEdiUBL(models.AbstractModel):
                 discount_amount += price_discount_amount
 
         # Extra charges.
-        price_unit += total_charges / (quantity or 1.0)
-
-        # Turn discount_amount to a percentage
-        gross_subtotal = price_unit * quantity
-        discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
+        price_unit += total_allowances_charges / (quantity or 1.0)
 
         to_write = collected_values['to_write']
         to_write['quantity'] = quantity
         to_write['price_unit'] = price_unit
+
+        discount_tax_vals = self._import_ubl_invoice_line_prepare_allowance_charge_tax_values(collected_values, discount_vals)
+        company = collected_values['company']
+        self.env['account.tax']._import_retrieve_tax(
+            search_plan=self._import_ubl_retrieve_taxes_search_plan(collected_values),
+            company=company,
+            tax_values_list=discount_tax_vals,
+        )
+        discount_allowance_charge_vals = []
+        wo_tax_discount_amt = 0.0
+        for vals in discount_vals:
+            if vals.get('attempt_tax_values').get('tax'):
+                discount_allowance_charge_vals.append(vals)
+            else:
+                wo_tax_discount_amt += vals.get('amount', 0.0) * (-1 if vals['charge_indicator'] == 'true' else 1)
+
+        # Adjust price unit for discount vals
+        to_write['price_unit'] += self._get_allowance_charge_sum(discount_allowance_charge_vals) / (to_write['quantity'] or 1.0)
+
+        # Add discount_allowance_charge_vals with tax to allowance_charge_vals
+        # and discount_vals w/o tax to discount_amount
+        collected_values['allowance_charge_vals'].extend(discount_allowance_charge_vals)
+        discount_amount += wo_tax_discount_amt
+
+        # Turn discount_amount to a percentage
+        gross_subtotal = to_write['price_unit'] * to_write['quantity']
+        discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
+
         to_write['discount'] = discount
 
     def _import_ubl_invoice_line_add_vehicle_values(self, collected_values):
@@ -2792,21 +2780,36 @@ class AccountEdiUBL(models.AbstractModel):
             '_tax_key': tax_key,
         }
 
-    def _import_ubl_invoice_line_prepare_charge_tax_values(self, collected_values, charge):
-        if charge['reason_code'] != 'AEO':
-            return
+    def _import_ubl_invoice_line_prepare_allowance_charge_tax_values(self, collected_values, allowance_charge_vals):
+        allowance_charge_taxes_vals = []
+        for allowance_charge in allowance_charge_vals:
+            qty = collected_values['to_write']['quantity']
+            price_unit = collected_values['to_write']['price_unit']
 
-        odoo_document_type = collected_values['odoo_document_type']
-        fixed_tax_amount = charge['amount'] / collected_values['to_write']['quantity']
-        charge['attempt_tax_values'] = tax_values = {
-            'name': charge['reason'],
-            'amount_type': 'fixed',
-            'type_tax_use': odoo_document_type,
-            'amount': fixed_tax_amount,
-            'tax_amount_currency': fixed_tax_amount,
-        }
-
-        return tax_values
+            # if quantity is negative or net_price_unit is negative,
+            # the tax amount would be negative for charges and positive for allowances
+            # see - `test_invoice_with_fixed_tax_on_negative_line` for reference
+            rounding = self.env['decimal.precision'].precision_get('Product Unit')
+            is_qty_negative = float_compare(qty, 0.0, precision_digits=rounding) < 0
+            is_price_unit_negative = float_compare(price_unit, 0.0, precision_digits=self._get_currency_decimal_places(self.env.company.currency_id)) < 0
+            line_sign = (is_qty_negative ^ is_price_unit_negative) == 0 and 1 or -1
+            is_charge = allowance_charge['charge_indicator'] == 'true'
+            charge_sign = 1 if is_charge else -1
+            amount = (
+                allowance_charge['multiplier_factor_numeric']
+                if allowance_charge.get('multiplier_factor_numeric')
+                else (allowance_charge['amount'] / abs(qty))
+            )
+            allowance_charge['attempt_tax_values'] = tax_values = {
+                'ubl_cii_type': 'charge' if is_charge else 'allowance',
+                'reason_code': allowance_charge.get('reason_code'),
+                'reason': allowance_charge.get('reason'),
+                'amount_type': 'percent' if allowance_charge.get('multiplier_factor_numeric') else 'fixed',
+                'type_tax_use': collected_values['odoo_document_type'],
+                'amount': amount * line_sign * charge_sign,
+            }
+            allowance_charge_taxes_vals.append(tax_values)
+        return allowance_charge_taxes_vals
 
     def _import_ubl_invoice_line_add_taxes_values(self, collected_values):
         line_tree = collected_values['line_tree']
@@ -2821,11 +2824,12 @@ class AccountEdiUBL(models.AbstractModel):
                 global_tax_values = tax_total_values.get(tax_values['_tax_key'])
                 global_tax_values['related_taxes_values'].append(tax_values)
 
-        # Fixed taxes.
-        for charge in collected_values['charges']:
-            tax_values = self._import_ubl_invoice_line_prepare_charge_tax_values(collected_values, charge)
-            if tax_values:
-                taxes_values.append(tax_values)
+        # Allowance/Charge taxes.
+        if allowance_charge_taxes_vals := self._import_ubl_invoice_line_prepare_allowance_charge_tax_values(
+            collected_values,
+            collected_values['allowance_charge_vals'],
+        ):
+            taxes_values.extend(allowance_charge_taxes_vals)
 
     def _import_ubl_invoice_line_add_optional_fields(self, collected_values):
         line_tree = collected_values['line_tree']
@@ -2865,11 +2869,11 @@ class AccountEdiUBL(models.AbstractModel):
                 }
 
                 # Extract information about allowance / charges.
-                self._import_ubl_invoice_line_add_allowance_charges_values(line_collected_values)
+                discount_vals = self._import_ubl_invoice_line_add_allowance_charges_values(line_collected_values)
 
                 # name / quantity / price_unit / discount / deferred_start_date / deferred_end_date
                 self._import_ubl_invoice_line_add_name(line_collected_values)
-                self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values)
+                self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values, discount_vals)
                 self._import_ubl_invoice_line_add_deferred_dates(line_collected_values)
 
                 # vehicle
@@ -2895,14 +2899,7 @@ class AccountEdiUBL(models.AbstractModel):
         lines_collected_values = collected_values['lines_collected_values']
         tax_values_list = list(collected_values['taxes_values'])
         for line_collected_values in lines_collected_values:
-            line_tax_values_list = line_collected_values['taxes_values']
-            for charge in line_collected_values['charges']:
-                if tax_values := charge.get('attempt_tax_values'):
-                    line_tax_values_list.append(tax_values)
-            if 'tax_ids' in line_collected_values.get('predicted_vals', {}):
-                for line_tax_values in line_tax_values_list:
-                    line_tax_values['tax'] = line_collected_values['predicted_vals']['tax_ids']
-            tax_values_list.extend(line_tax_values_list)
+            tax_values_list.extend(line_collected_values['taxes_values'])
 
         if customer := collected_values.get('customer_values', {}).get('customer'):
             fiscal_position = self.env['account.move'].new({
@@ -2934,7 +2931,7 @@ class AccountEdiUBL(models.AbstractModel):
                     ))
                 else:
                     logs.append(_(
-                        "Could not retrieve the tax: %s for the document level allowance/charge.",
+                        "Could not retrieve the tax: %s for the document line level allowance/charge.",
                         tax_values['amount'],
                     ))
 
@@ -3047,6 +3044,7 @@ class AccountEdiUBL(models.AbstractModel):
         return base_line_kwargs
 
     def _import_ubl_invoice_predict_values(self, collected_values):
+        get_domain_from_tax_vals = self.env['account.tax']._get_domain_from_tax_vals
         if (
             self.module_installed('account_accountant')
             and (partner := collected_values.get('customer_values', {}).get('customer'))
@@ -3054,12 +3052,8 @@ class AccountEdiUBL(models.AbstractModel):
             for line_collected_values in collected_values['lines_collected_values']:
                 taxes_values = line_collected_values['taxes_values']
                 line_domain = []
-                if len(taxes_values) == 1:
-                    line_domain = [('tax_ids', 'any', [
-                        ('amount', '=', taxes_values[0]['amount']),
-                        ('amount_type', '=', taxes_values[0]['amount_type']),
-                        ('type_tax_use', '=', taxes_values[0]['type_tax_use']),
-                    ])]
+                for tax_values in taxes_values:
+                    line_domain.extend([('tax_ids', 'any', get_domain_from_tax_vals(tax_values))])
 
                 line_collected_values['predicted_vals'] = self.env['account.move.line']._get_predicted_values(
                     name=line_collected_values['name'],
@@ -3070,6 +3064,12 @@ class AccountEdiUBL(models.AbstractModel):
                     }),
                     line_domain=line_domain,
                 )
+
+                # Set the tax field in the tax_values dict to the predicted tax record, if any.
+                if tax_ids := line_collected_values['predicted_vals'].get('tax_ids', []):
+                    for tax_values in taxes_values:
+                        if tax := tax_ids.filtered_domain(get_domain_from_tax_vals(tax_values)):
+                            tax_values['tax'] = tax
 
     def _import_ubl_retrieve_products_search_plan(self, collected_values):
         ProductProduct = self.env['product.product']
@@ -3189,29 +3189,35 @@ class AccountEdiUBL(models.AbstractModel):
         for line_collected_values in lines_collected_values:
             to_write = line_collected_values['to_write']
 
-            # Extract charges matched with a fixed tax.
-            for charge in line_collected_values['charges']:
-                attempt_tax_values = charge.get('attempt_tax_values')
-                if not attempt_tax_values or not attempt_tax_values.get('tax'):
-                    continue
-
-                # Suppose price_unit = 19, quantity = 10, discount = 10%
-                # for a total of 190 (before discount) and 171 (after discount).
-                # A charge of 25 is already accounted in 190 and we retrieve a fixed tax of 50 / 10 = 5.
-                # We need now to extract 25 from 190 as:
-                # price_subtotal_before = 171
-                # price_subtotal_after = 171 - 50 = 121
-                # price_unit = 19 - 5 = 14
-                # new_price_subtotal_before_discount = 140
-                # discount = (1 - (121 / 140)) * 100 = 13.5714286%
-                # That way, 14 * 10 * (1 - 0.135714286) = 121.
-                # The fix tax is giving an amount of 50.
-                # 121 + 50 = the original 171 we had at the beginning!
-                price_subtotal_before = to_write['price_unit'] * to_write['quantity'] * (1.0 - to_write['discount'] / 100.0)
-                price_subtotal_after = price_subtotal_before - charge['amount']
-                to_write['price_unit'] -= charge['amount'] / to_write['quantity']
-                new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
-                to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+            # Extract allowance/charges matched with a tax.
+            # We have already added allowance/charge to price_unit beforehand.
+            # We will remove them from price_unit only if we find all allowance_charge tax.
+            # This is because we can get wrong effect if we find partial taxes due to include_base_amount.
+            allowance_charge_vals = line_collected_values['allowance_charge_vals']
+            attempt_tax_values = [allowance_charge.get('attempt_tax_values') for allowance_charge in allowance_charge_vals]
+            if all(val.get('tax') for val in attempt_tax_values):
+                for allowance_charge in allowance_charge_vals:
+                    # Suppose price_unit = 19, quantity = 10, discount = 10%
+                    # for a total of 190 (before discount) and 171 (after discount).
+                    # A charge of 25 is already accounted in 190 and we retrieve a fixed tax of 50 / 10 = 5.
+                    # We need now to extract 25 from 190 as:
+                    # price_subtotal_before = 171
+                    # price_subtotal_after = 171 - 50 = 121
+                    # price_unit = 19 - 5 = 14
+                    # new_price_subtotal_before_discount = 140
+                    # discount = (1 - (121 / 140)) * 100 = 13.5714286%
+                    # That way, 14 * 10 * (1 - 0.135714286) = 121.
+                    # The fix tax is giving an amount of 50.
+                    # 121 + 50 = the original 171 we had at the beginning!
+                    charge_sign = 1 if allowance_charge['charge_indicator'] == 'true' else -1
+                    price_subtotal_before = to_write['price_unit'] * to_write['quantity'] * (1.0 - to_write['discount'] / 100.0)
+                    price_subtotal_after = price_subtotal_before - (allowance_charge['amount'] * charge_sign)
+                    to_write['price_unit'] -= ((allowance_charge['amount'] / to_write['quantity']) * charge_sign)
+                    new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
+                    to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+            else:
+                for val in attempt_tax_values:
+                    val.pop('tax', None)
 
             # Product line.
             base_line_kwargs = self._import_ubl_invoice_line_get_product_base_line_kwargs(line_collected_values)
@@ -3391,10 +3397,12 @@ class AccountEdiUBL(models.AbstractModel):
         invoice = collected_values['invoice']
         difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed)
         for line_collected_values in collected_values['lines_collected_values']:
-            for charge in line_collected_values['charges']:
-                attempt_tax_values = charge.get('attempt_tax_values')
+            for allowance_charge in line_collected_values['allowance_charge_vals']:
+                attempt_tax_values = allowance_charge.get('attempt_tax_values')
                 if attempt_tax_values and attempt_tax_values.get('tax'):
-                    difference -= charge['amount']
+                    charge_sign = 1 if allowance_charge['charge_indicator'] == 'true' else -1
+                    difference -= (allowance_charge['amount'] * charge_sign)
+
         if currency.is_zero(difference):
             return
 
