@@ -2612,7 +2612,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                     ),
                 ),
             ),
-            'readOnly': False,
+            'readOnly': len(self) > 1,
         }
 
     def _is_incoming(self):
