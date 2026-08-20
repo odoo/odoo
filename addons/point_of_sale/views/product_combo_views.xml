@@ -30,13 +30,16 @@
 
             <xpath expr="//field[@name='included_qty']" position="after">
                 <field name="is_upsell" widget="boolean_toggle" invisible="not context.get('is_from_pos')"/>
-                <field
-                    name="upsell_warning"
-                    readonly="1"
-                    nolabel="1"
+            </xpath>
+
+            <xpath expr="//group[@name='combo_groups']" position="before">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
                     invisible="not is_upsell or context.get('is_from_pos')"
-                    class="oe_edit_only"
-                />
+                >
+                    <field name="upsell_warning"/>
+                </div>
             </xpath>
         </field>
     </record>

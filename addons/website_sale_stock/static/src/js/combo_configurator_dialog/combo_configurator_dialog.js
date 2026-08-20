@@ -15,10 +15,8 @@ patch(ComboConfiguratorDialog.prototype, {
         if (!this.isComboQuantityAllowed(quantity)) {
             quantity = Math.min(
                 ...this._selectedComboItems
-                    .map(comboItem => comboItem.product.free_qty !== undefined
-                        ? Math.floor(comboItem.product.free_qty / comboItem.selected_qty)
-                        : undefined)
-                    .filter(maxQty => maxQty !== undefined)
+                    .filter(comboItem => comboItem.product.free_qty !== undefined)
+                    .map(comboItem => Math.floor(comboItem.product.free_qty / comboItem.selected_qty))
             );
         }
         return super.setQuantity(quantity);
@@ -28,7 +26,7 @@ patch(ComboConfiguratorDialog.prototype, {
         const freeQty = comboItem.product.free_qty;
 
         if (quantity > 0 && freeQty !== undefined) {
-            quantity = Math.min(quantity, freeQty);
+            quantity = Math.min(quantity, Math.floor(freeQty / this.state.quantity));
         }
 
         return super.setItemQuantity(comboId, comboItem, quantity, configuredItem);

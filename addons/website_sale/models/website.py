@@ -660,12 +660,7 @@ class Website(models.Model):
         return Domain.AND([website._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):  # noqa: PLR6301
-        return [
-            ("sale_ok", "=", True),
-            "|",
-            ("type", "!=", "combo"),
-            ("has_sellable_combo", "=", True),
-        ]
+        return [("sale_ok", "=", True)]
 
     def _create_cart(self):
         self.ensure_one()

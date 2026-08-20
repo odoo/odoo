@@ -73,14 +73,6 @@ class ProductTemplate(models.Model):
             if product.pos_categ_ids:
                 product.color = product.pos_categ_ids[0].color
 
-    @api.depends('combo_ids.is_upsell')
-    def _compute_sellable_combo_ids(self):
-        super()._compute_sellable_combo_ids()
-        for template in self:
-            template.sellable_combo_ids = template.sellable_combo_ids.filtered(
-                lambda c: not c.is_upsell
-            )
-
     def create_product_variant_from_pos(self, attribute_value_ids, config_id):
         """ Create a product variant from the POS interface. """
         self.ensure_one()

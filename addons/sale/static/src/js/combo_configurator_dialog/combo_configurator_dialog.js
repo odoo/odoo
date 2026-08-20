@@ -64,8 +64,9 @@ export class ComboConfiguratorDialog extends Component {
     }
 
     /**
-     * Fills selectedItemsList and the quantity object in case of Edit Configuration
-     *
+     * Populate `state.selectedItems` from the combos' already-selected (or preselected)
+     * combo items, e.g. when editing an existing configuration or opening a combo with
+     * a single, auto-preselected choice.
      */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
@@ -96,8 +97,8 @@ export class ComboConfiguratorDialog extends Component {
      * @param {ProductComboItem} comboItem The combo item to select.
      */
     async selectComboItem(combo, comboItem) {
-        const currentQuantity = this.state.selectedItems.get(comboItem.id)?.selected_qty ?? 0;
-        const targetQuantity = combo.included_qty === 1 ? 1 : currentQuantity + 1;
+        const currentQuantity = this.getItemQuantity(comboItem.id);
+        const targetQuantity = currentQuantity + 1;
         await this.setItemQuantity(combo.id, comboItem, targetQuantity);
     }
 
@@ -131,6 +132,10 @@ export class ComboConfiguratorDialog extends Component {
     async setItemQuantity(comboId, comboItem, quantity, configuredItem = null) {
         const combo = this.props.combos.find(c => c.id === comboId);
 
+        // Preserve any existing configuration for this item before it's cleared below, so
+        // that reopening the configurator for it doesn't start from a blank state.
+        const previousItem = this.state.selectedItems.get(comboItem.id)?.item;
+
         if (combo.included_qty === 1 && quantity > 0) {
             // Only one item can be selected at a time for this combo: selecting a
             // new one clears whatever was previously selected.
@@ -139,7 +144,7 @@ export class ComboConfiguratorDialog extends Component {
             }
         }
 
-        const currentItemQuantity = this.state.selectedItems.get(comboItem.id)?.selected_qty ?? 0;
+        const currentItemQuantity = this.getItemQuantity(comboItem.id);
         const otherItemsQuantity = this.totalQuantityForCombo(comboId) - currentItemQuantity;
         const maxAvailable = combo.included_qty - otherItemsQuantity;
         const newQuantity = Math.max(0, Math.min(quantity, maxAvailable));
@@ -150,9 +155,10 @@ export class ComboConfiguratorDialog extends Component {
         }
 
         // An item that isn't in the map yet hasn't been configured: open the configurator
-        // for it, unless a configuration was already provided by the caller.
+        // for it, unless a configuration was already provided by the caller. Reopen it with
+        // its previous configuration, if any, instead of starting from a blank state.
         if (comboItem.is_configurable && !this.state.selectedItems.has(comboItem.id) && !configuredItem) {
-            configuredItem = await this.handleConfigurableItem(comboItem);
+            configuredItem = await this.handleConfigurableItem(previousItem ?? comboItem);
             if (!configuredItem) {
                 return;  // The user closed the configurator without confirming.
             }
@@ -167,7 +173,8 @@ export class ComboConfiguratorDialog extends Component {
     /**
      * Opens the configurator for a combo item and returns the configured item.
      *
-     * @param {ProductComboItem} comboItem The combo item to configure.
+     * @param {ProductComboItem} comboItem The combo item to configure. May already carry a
+     *     previous configuration (e.g. selected PTAVs), used to prefill the dialog.
      * @return {Promise<ProductComboItem|null>} The configured combo item, or `null` if the
      *     user closed the configurator without confirming a configuration.
      */
