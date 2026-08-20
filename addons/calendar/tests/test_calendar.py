@@ -14,6 +14,7 @@ import freezegun
 import pytz
 import re
 import base64
+import vobject
 
 
 class TestCalendar(SavepointCaseWithUserDemo):
@@ -715,6 +716,51 @@ class TestCalendar(SavepointCaseWithUserDemo):
             attendee_model.with_context(default_event_id=self.event_tech_presentation.id).create([{
                 'partner_id': self.partner_demo.id,
             }])
+
+    def test_ics_file_with_videocall_location(self):
+        """ The videocall_location should be exported as a clickable URL in the ICS file. """
+        event = self.env['calendar.event'].create({
+            'name': 'Test Meeting with URL',
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'partner_ids': [Command.link(self.partner_demo.id)],
+            'videocall_location': 'https://meet.example.com/test-meeting',
+        })
+        ics_files = event._get_ics_file()
+        self.assertIn(event.id, ics_files)
+        cal = vobject.readOne(ics_files[event.id].decode('utf-8'))
+        self.assertTrue(hasattr(cal.vevent, 'url'))
+        self.assertEqual(cal.vevent.url.value, 'https://meet.example.com/test-meeting')
+
+    def test_ics_file_without_videocall_location(self):
+        """ The URL property should not be present when videocall_location is not set. """
+        event = self.env['calendar.event'].create({
+            'name': 'Test Meeting without URL',
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'partner_ids': [Command.link(self.partner_demo.id)],
+        })
+        ics_files = event._get_ics_file()
+        self.assertIn(event.id, ics_files)
+        cal = vobject.readOne(ics_files[event.id].decode('utf-8'))
+        self.assertFalse(hasattr(cal.vevent, 'url'))
+
+    def test_ics_file_videocall_location_preserves_location(self):
+        """ Exporting the videocall URL should not clobber the physical LOCATION field. """
+        event = self.env['calendar.event'].create({
+            'name': 'Test Meeting with Location and URL',
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'partner_ids': [Command.link(self.partner_demo.id)],
+            'location': 'Conference Room A',
+            'videocall_location': 'https://meet.example.com/room-a',
+        })
+        ics_files = event._get_ics_file()
+        cal = vobject.readOne(ics_files[event.id].decode('utf-8'))
+        self.assertTrue(hasattr(cal.vevent, 'location'))
+        self.assertEqual(cal.vevent.location.value, 'Conference Room A')
+        self.assertTrue(hasattr(cal.vevent, 'url'))
+        self.assertEqual(cal.vevent.url.value, 'https://meet.example.com/room-a')
 
 @tagged('post_install', '-at_install')
 class TestCalendarTours(HttpCaseWithUserDemo):
