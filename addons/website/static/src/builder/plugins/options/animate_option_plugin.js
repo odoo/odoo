@@ -355,6 +355,10 @@ export class AnimateOptionPlugin extends Plugin {
                   }
         );
         this.dependencies.history.commit();
+        // "On Appearance" animations are kept in their initial state in edit
+        // mode, so the default animation has to be played explicitly for the
+        // user to see the effect they just applied on their text.
+        this.forceAnimation(span);
 
         return { element: span, didRemoveOtherTextAnimation };
     }
