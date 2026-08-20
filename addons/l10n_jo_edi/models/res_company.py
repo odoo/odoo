@@ -18,20 +18,24 @@ class ResCompany(models.Model):
     ], default='sales')
     l10n_jo_edi_demo_mode = fields.Boolean(string="JoFotara Demo Mode")
 
-    def _l10n_jo_validate_config(self):
+    def _l10n_jo_edi_get_config_errors(self):
+        """ :returns: the whole missing configuration as one message, so that a batch submission
+                      collapses the invoices sharing it into a single alert.
+        """
         self.ensure_one()
         error_msgs = []
         if not self.sudo().l10n_jo_edi_client_identifier:
-            error_msgs.append(self.env._("Client ID is missing."))
+            error_msgs.append(self.env._('"Client ID" is missing.'))
         if not self.sudo().l10n_jo_edi_secret_key:
-            error_msgs.append(self.env._("Secret key is missing."))
+            error_msgs.append(self.env._('"Secret Key" is missing.'))
         if not self.l10n_jo_edi_taxpayer_type:
-            error_msgs.append(self.env._("Taxpayer type is missing."))
+            error_msgs.append(self.env._('"Taxpayer Type" is missing.'))
         if not self.l10n_jo_edi_sequence_income_source:
-            error_msgs.append(self.env._("Activity number (Sequence of income source) is missing."))
+            error_msgs.append(self.env._('"Sequence of Income Source" is missing.'))
 
-        if error_msgs:
-            return self.env._("%s \nTo set: Configuration > Settings > Electronic Invoicing (Jordan)", "\n".join(error_msgs))
+        if not error_msgs:
+            return []
+        return [self.env._("%s \nTo set: Configuration > Settings > Electronic Invoicing (Jordan)", "\n".join(error_msgs))]
 
     def _l10n_jo_build_jofotara_headers(self):
         self.ensure_one()

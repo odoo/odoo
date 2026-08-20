@@ -88,7 +88,8 @@ class PosOrder(models.Model):
     def _l10n_jo_edi_pos_get_xml_attachment_name(self):
         return f"{self.name.replace('/', '_')}_edi.xml"
 
-    def _l10n_jo_validate_fields(self):
+    def _l10n_jo_edi_get_field_errors(self):
+        self.ensure_one()
         error_msgs = []
         if self.refunded_order_id:
             if self.refunded_order_id.l10n_jo_edi_pos_state not in ['sent', 'demo']:
@@ -114,11 +115,15 @@ class PosOrder(models.Model):
             elif self.company_id.l10n_jo_edi_taxpayer_type == 'special' and len(line.tax_ids) != 2:
                 error_msgs.append(self.env._("One special and one general tax per order line are expected for taxpayers registered in the special tax"))
 
-        return "\n".join(error_msgs)
+        return error_msgs
+
+    def _l10n_jo_edi_get_validation_errors(self):
+        self.ensure_one()
+        return self.company_id._l10n_jo_edi_get_config_errors() + self._l10n_jo_edi_get_field_errors()
 
     def _l10n_jo_edi_send(self):
         for order in self:
-            if error_messages := order.company_id._l10n_jo_validate_config() or order._l10n_jo_validate_fields() or order._submit_to_jofotara():
+            if error_messages := "\n".join(order._l10n_jo_edi_get_validation_errors()) or order._submit_to_jofotara():
                 order.l10n_jo_edi_pos_state = 'to_send'
                 order.l10n_jo_edi_pos_error = error_messages
                 # avoid creating an invoice in case of JoFotara sync failure
@@ -167,8 +172,8 @@ class PosOrder(models.Model):
                 order.l10n_jo_edi_pos_computed_xml = False
 
     def download_l10n_jo_edi_pos_computed_xml(self):
-        if error_message := self.company_id._l10n_jo_validate_config() or self._l10n_jo_validate_fields():
-            raise ValidationError(self.env._("The following errors have to be fixed in order to create an XML:\n") + error_message)
+        if error_msgs := self._l10n_jo_edi_get_validation_errors():
+            raise ValidationError(self.env._("The following errors have to be fixed in order to create an XML:\n") + "\n".join(error_msgs))
         params = urlencode({
             'model': self._name,
             'id': self.id,
@@ -177,7 +182,7 @@ class PosOrder(models.Model):
             'mimetype': 'application/xml',
             'download': 'true',
         })
-        return {'type': 'ir.actions.act_url', 'url': '/web/content/?' + params, 'target': 'new'}
+        return {'type': 'ir.actions.act_url', 'url': f'/web/content/?{params}', 'target': 'self'}
 
     def _is_single_jo_order(self):
         return len(self) == 1 and self.country_code == 'JO'

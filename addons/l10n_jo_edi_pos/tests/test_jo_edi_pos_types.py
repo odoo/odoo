@@ -375,7 +375,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
 
     def test_different_payment_methods(self):
         def get_xml_order_type(order):
-            if order._l10n_jo_validate_fields():  # conflicting payment methods
+            if order._l10n_jo_edi_get_field_errors():  # conflicting payment methods
                 return False
 
             generated_file = self.env['pos.edi.xml.ubl_21.jo']._export_pos_order(order)[0]
@@ -510,4 +510,4 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
                 ],
             }
             order = self._l10n_jo_create_order(order_vals, payments=[(payment_method, amount_total)], default_payment=False)
-            self.assertEqual(bool(order._l10n_jo_validate_fields()), not is_valid)
+            self.assertEqual(bool(order._l10n_jo_edi_get_field_errors()), not is_valid)
