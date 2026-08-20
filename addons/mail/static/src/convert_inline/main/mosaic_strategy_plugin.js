@@ -32,8 +32,9 @@ export class MosaicStrategyPlugin extends Plugin {
     analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         if (
-            !analysis.facts.isTableContainer &&
-            (!analysis.facts.isHybridFluidContainer || analysis.facts.isResponsiveElement)
+            analysis.parsingFacts.hasMobileSubtree ||
+            (!analysis.facts.isTableContainer &&
+                (!analysis.facts.isHybridFluidContainer || analysis.facts.isResponsiveElement))
         ) {
             return defaultEmailNodeArguments;
         }

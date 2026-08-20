@@ -30,8 +30,11 @@ export class RenderPlugin extends Plugin {
 
     setup() {
         this.discardedNodes = new WeakSet();
-        this.syntheticEmailNodeContainers = new Set();
-        this.syntheticEmailNodeContainersPile = [];
+        this.treeContexts = [];
+    }
+
+    get treeContext() {
+        return this.treeContexts.at(-1);
     }
 
     isDiscarded(referenceNode) {
@@ -48,11 +51,26 @@ export class RenderPlugin extends Plugin {
         if (!this.isAllowedReferenceNode(reference) || this.isDiscarded(reference)) {
             return;
         }
-        this.renderTree = this.createEmailNodes();
-        this.addSyntheticEmailNodes();
-        this.addBottomUpConstraints(this.renderTree);
-        this.addTopDownConstraints(this.renderTree);
-        this.enforceConstraints(this.renderTree);
+        this.renderTree = this.buildEmailTree();
+    }
+
+    buildEmailTree(rootReferenceNode = this.config.reference, config = {}) {
+        const context = {
+            syntheticEmailNodeContainers: new Set(),
+            syntheticEmailNodeContainersPile: [],
+        };
+        this.treeContexts.push(context);
+        let emailTree;
+        try {
+            emailTree = this.createEmailNodes(rootReferenceNode, config);
+            this.addSyntheticEmailNodes();
+            this.addBottomUpConstraints(emailTree);
+            this.addTopDownConstraints(emailTree);
+            this.enforceConstraints(emailTree);
+        } finally {
+            this.treeContexts.pop();
+        }
+        return emailTree;
     }
 
     /**
@@ -180,7 +198,7 @@ export class RenderPlugin extends Plugin {
                 contexts.push(createContext(node, providers));
             }
             if (emailNode.analysis.parsingFacts.hasMobileSubtree) {
-                emailNode.analysis.parsingFacts.mobileSubTree = this.createEmailNodes(node, {
+                emailNode.analysis.parsingFacts.mobileSubTree = this.buildEmailTree(node, {
                     parsingFacts: { isMobileSubtree: true },
                 });
             }
@@ -217,7 +235,7 @@ export class RenderPlugin extends Plugin {
             }
         }
         if (emailNode.analysis.parsingFacts.needSyntheticEmailNode) {
-            this.syntheticEmailNodeContainers.add(emailNode);
+            this.treeContext.syntheticEmailNodeContainers.add(emailNode);
         }
         return emailNode;
     }
@@ -268,13 +286,13 @@ export class RenderPlugin extends Plugin {
         }
         if (mergeSuccess) {
             if (
-                this.syntheticEmailNodeContainers.has(emailNode) &&
-                this.syntheticEmailNodeContainersPile.length !== 0
+                this.treeContext.syntheticEmailNodeContainers.has(emailNode) &&
+                this.treeContext.syntheticEmailNodeContainersPile.length !== 0
             ) {
                 // if a node needing synthetic handling is merged into its parent
                 // during synthetic handling, replace it by its parent in the queue
-                const index = this.syntheticEmailNodeContainersPile.indexOf(emailNode);
-                this.syntheticEmailNodeContainersPile[index] = parentEmailNode;
+                const index = this.treeContext.syntheticEmailNodeContainersPile.indexOf(emailNode);
+                this.treeContext.syntheticEmailNodeContainersPile[index] = parentEmailNode;
             }
             parentEmailNode.pushReferenceNodes(...emailNode.referenceNodes);
             parentEmailNode.removeChild(emailNode);
@@ -342,10 +360,12 @@ export class RenderPlugin extends Plugin {
      * natural treeWalking order
      */
     addSyntheticEmailNodes() {
-        this.syntheticEmailNodeContainersPile = [...this.syntheticEmailNodeContainers].reverse();
+        this.treeContext.syntheticEmailNodeContainersPile = [
+            ...this.treeContext.syntheticEmailNodeContainers,
+        ].reverse();
         let emailNode;
-        while ((emailNode = this.syntheticEmailNodeContainersPile.pop())) {
-            this.syntheticEmailNodeContainers.delete(emailNode);
+        while ((emailNode = this.treeContext.syntheticEmailNodeContainersPile.pop())) {
+            this.treeContext.syntheticEmailNodeContainers.delete(emailNode);
             // IMPORTANT: if emailNode is replaced/removed, all of its children
             // should be given a new parent, this is not a phase where nodes
             // can be discarded lightly.
