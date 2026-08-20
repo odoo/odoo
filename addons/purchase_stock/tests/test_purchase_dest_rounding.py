@@ -18,7 +18,10 @@ class TestPurchaseDestRounding(PurchaseTestCommon):
             'uom_type': 'bigger',
             'rounding': 1.0,
         })
-        cls.stock_location = cls.warehouse_1.lot_stock_id
+        # Dest source must sit in the same warehouse as the PO receipt type
+        # (stock.warehouse0). warehouse_1 stock would fail _check_orderpoint_picking_type.
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.picking_type_in = cls.env.ref('stock.picking_type_in')
         cls.production_location = cls.env['stock.location'].create({
             'name': 'Test Production',
             'usage': 'production',
@@ -48,6 +51,7 @@ class TestPurchaseDestRounding(PurchaseTestCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_1.id,
+            'picking_type_id': self.picking_type_in.id,
             'order_line': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
