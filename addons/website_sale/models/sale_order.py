@@ -560,7 +560,7 @@ class SaleOrder(models.Model):
             self._verify_cart_after_update()
 
         return {
-            "added_qty": quantity * kwargs.get('selected_combo_item_qty', 1),
+            "added_qty": quantity * kwargs.get("selected_combo_item_qty", 1),
             "line_id": order_line.id,
             "quantity": quantity,
             "warning": warning,
@@ -862,7 +862,7 @@ class SaleOrder(models.Model):
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
         combo_item_id=None,
-        selected_combo_item_qty=1.0,
+        selected_combo_item_qty=None,
         donation_amount=None,
         **_kwargs,
     ):
@@ -896,13 +896,18 @@ class SaleOrder(models.Model):
 
         values = {
             "product_id": product.id,
-            "product_uom_qty": quantity * selected_combo_item_qty,
             "product_uom_id": uom_id or product.uom_id.id,
             "order_id": self.id,
             "linked_line_id": linked_line_id,
             "combo_item_id": combo_item_id,
-            "selected_combo_item_qty": selected_combo_item_qty,
         }
+        # `selected_combo_item_qty` is only meaningful for combo items: ignore it otherwise, so a
+        # stray value can't inflate the quantity of an unrelated product line.
+        if combo_item_id:
+            values["selected_combo_item_qty"] = selected_combo_item_qty
+            values["product_uom_qty"] = quantity * selected_combo_item_qty
+        else:
+            values["product_uom_qty"] = quantity
         # Set price_unit with the user-selected donation amount
         if product._is_donation() and donation_amount is not None:
             values["price_unit"] = max(float(donation_amount), 1)

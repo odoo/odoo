@@ -534,7 +534,8 @@ class Website(models.Model):
             pricelists |= (
                 self
                 .env["res.country.group"]
-                .search([("country_ids.code", "=", country_code)]).sudo()
+                .search([("country_ids.code", "=", country_code)])
+                .sudo()
                 .pricelist_ids.filtered(
                     lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
                 )
@@ -643,12 +644,7 @@ class Website(models.Model):
         return Domain.AND([website._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):  # noqa: PLR6301
-        return [
-            ("sale_ok", "=", True),
-            "|",
-            ("type", "!=", "combo"),
-            ("has_sellable_combo", "=", True),
-        ]
+        return [("sale_ok", "=", True)]
 
     def _create_cart(self):
         self.ensure_one()

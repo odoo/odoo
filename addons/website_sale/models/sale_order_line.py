@@ -66,6 +66,7 @@ class SaleOrderLine(models.Model):
             return [
                 {
                     "id": linked_line.combo_item_id.id,
+                    "quantity": linked_line.selected_combo_item_qty,
                     "no_variant_ptav_ids": linked_line.product_no_variant_attribute_value_ids.ids,
                     "custom_ptavs": [
                         {

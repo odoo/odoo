@@ -458,12 +458,7 @@ class SaleOrderLine(models.Model):
             so_line.display_name = name
 
     def _domain_product_id(self):
-        return [
-            ("sale_ok", "=", True),
-            "|",
-            ("type", "!=", "combo"),
-            ("has_sellable_combo", "=", True),
-        ]
+        return [("sale_ok", "=", True)]
 
     @api.depends("product_id")
     def _compute_product_template_id(self):
@@ -916,8 +911,9 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
-            * combo_id.included_qty
-            for combo_id in combo_line.product_template_id.sudo().sellable_combo_ids
+            # `included_qty` is 0 for POS upsell combos; weigh them as 1 item in Sales.
+            * (combo_id.included_qty or 1)
+            for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
         # Compute the prorated combo prices. When all combos have a zero base price, prorating by
@@ -939,9 +935,7 @@ class SaleOrderLine(models.Model):
         # the combo prices to make the delta 0.
         combo_price_delta = combo_product_price - sum(combo_prices.values())
         if combo_price_delta:
-            combo_prices[combo_line.product_template_id.sudo().sellable_combo_ids[-1]] += (
-                combo_price_delta
-            )
+            combo_prices[combo_line.product_template_id.sudo().combo_ids[-1]] += combo_price_delta
         # Add the extra price of this combo item, as well as the extra prices of any `no_variant`
         # attributes to the combo price.
         extra_price = self.combo_item_id.currency_id._convert(
@@ -1629,9 +1623,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             linked_line = line._get_linked_line()
-            allowed_combo_items = (
-                linked_line.product_template_id.sudo().sellable_combo_ids.combo_item_ids
-            )
+            allowed_combo_items = linked_line.product_template_id.sudo().combo_ids.combo_item_ids
             if line.combo_item_id and line.combo_item_id not in allowed_combo_items:
                 raise ValidationError(
                     line.env._(
@@ -1642,19 +1634,6 @@ class SaleOrderLine(models.Model):
             if line.combo_item_id and line.combo_item_id.product_id != line.product_id:
                 raise ValidationError(
                     line.env._("A sale order line's product must match its combo item's product.")
-                )
-
-    @api.constrains("product_id")
-    def _check_sellable_combo(self):
-        for line in self:
-            template = line.product_template_id
-            if template.type == "combo" and not template.has_sellable_combo:
-                raise ValidationError(
-                    line.env._(
-                        "%(product)s cannot be sold: none of its combo choices are available "
-                        "outside Point of Sale.",
-                        product=template.display_name,
-                    )
                 )
 
     # === ONCHANGE METHODS ===#

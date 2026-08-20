@@ -30,8 +30,7 @@ class ProductCombo(models.Model):
     def _compute_upsell_warning(self):
         for record in self:
             record.upsell_warning = _(
-                "⚠️ This item is configured as Upsell. "
-                "Go to Point of Sale to disable Upsell if you want to modify 'Included'."
+                "⚠️ In Sales, the included quantity of this upsell combo is set to 1."
             ) if record.is_upsell else False
 
     @api.onchange('is_upsell')

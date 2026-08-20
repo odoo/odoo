@@ -2,7 +2,6 @@
 
 from datetime import datetime
 
-from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
 from odoo.tools import groupby
 
@@ -46,8 +45,6 @@ class SaleComboConfiguratorController(Controller):
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
         product_template = self.env["product.template"].browse(product_tmpl_id)
-        if product_template.type == "combo" and not product_template.has_sellable_combo:
-            raise ValidationError(self.env._("This combo product is not available."))
         currency = self.env["res.currency"].browse(currency_id)
         pricelist = self.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
@@ -64,7 +61,8 @@ class SaleComboConfiguratorController(Controller):
                 {
                     "id": combo.id,
                     "name": combo.name,
-                    "included_qty": combo.included_qty,
+                    # `included_qty` is 0 for POS upsell combos; treat them as regular combos.
+                    "included_qty": combo.included_qty or 1,
                     "combo_items": [
                         self._get_combo_item_data(
                             combo,
@@ -80,7 +78,7 @@ class SaleComboConfiguratorController(Controller):
                         if combo_item.product_id.active
                     ],
                 }
-                for combo in product_template.sudo().sellable_combo_ids
+                for combo in product_template.sudo().combo_ids
             ],
             "currency_id": currency_id,
             **product_template._get_additional_configurator_data(
@@ -162,7 +160,8 @@ class SaleComboConfiguratorController(Controller):
             "is_preselected": is_preselected,
             "is_selected": bool(selected_combo_item) or is_preselected,
             "is_configurable": is_configurable,
-            "quantity": selected_combo_item.get("quantity", combo.included_qty),
+            # Default quantity for a pre-selected item; fall back to 1 for upsell combos.
+            "quantity": selected_combo_item.get("quantity", combo.included_qty or 1),
             "product": {
                 "id": combo_item.product_id.id,
                 "product_tmpl_id": combo_item.product_id.product_tmpl_id.id,
