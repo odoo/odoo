@@ -12,8 +12,7 @@ UBL_NS = {
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3NO(TestUblBis3Common, TestUblCiiNOCommon):
 
-    def _export_invoice_xml(self, vat):
-        self.env.company.partner_id.vat = vat
+    def _export_invoice_xml(self):
         tax_25 = self.percent_tax(25.0)
         product = self._create_product(lst_price=100.0, taxes_id=tax_25)
         invoice = self._create_invoice_one_line(
@@ -49,7 +48,9 @@ class TestUblExportBis3NO(TestUblBis3Common, TestUblCiiNOCommon):
         # Supplier VAT already in full NO...MVA format.
         # PartyTaxScheme/CompanyID and PartyLegalEntity/CompanyID must be NO179728982MVA.
         # NO-R-001 constraint must not raise an error.
-        root = self._export_invoice_xml('NO179728982MVA')
+        self.env.company.partner_id.vat = 'NO179728982MVA'
+        self.env.company.partner_id.peppol_endpoint = '179728982'
+        root = self._export_invoice_xml()
         self._assert_supplier_vat_nodes(root, 'NO179728982MVA')
 
     def test_invoice_supplier_vat_bare_number(self):
@@ -57,5 +58,7 @@ class TestUblExportBis3NO(TestUblBis3Common, TestUblCiiNOCommon):
         # The export must auto-complete it to NO179728982MVA.
         # PartyTaxScheme/CompanyID and PartyLegalEntity/CompanyID must be NO179728982MVA.
         # NO-R-001 constraint must not raise an error.
-        root = self._export_invoice_xml('179728982')
+        self.env.company.partner_id.vat = '179728982'
+        self.env.company.partner_id.peppol_endpoint = '179728982'
+        root = self._export_invoice_xml()
         self._assert_supplier_vat_nodes(root, 'NO179728982MVA')
