@@ -12,7 +12,10 @@ lib_name = 'odoo'
 
 setup(
     name='odoo',
-    version=version,
+    # `saas~x.y` is not a PEP 440 version and setuptools refuses to build
+    # the package on those series, use the same normalization as
+    # `setup/package.py`.
+    version=version.split('-')[0].replace('saas~', ''),
     description=description,
     long_description=long_desc,
     url=url,
