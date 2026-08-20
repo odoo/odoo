@@ -1171,10 +1171,9 @@ class DiscussChannel(models.Model):
             :param users : the users to notify
         """
         for user in users:
-            Store(bus_channel=user).add(
-                self.with_user(user).with_context(allowed_company_ids=[]),
-                "_store_channel_fields",
-            )
+            channel = self.with_user(user).with_context(allowed_company_ids=[])
+            if channel.has_access("read"):
+                Store(bus_channel=user).add(channel, "_store_channel_fields")
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
@@ -1371,6 +1370,7 @@ class DiscussChannel(models.Model):
             self.env["res.partner"]
             .with_context(active_test=False)
             .search([("id", "in", partners_to)])
+            .with_env(self.env)
         ) | self.env.user.partner_id
         if len(partners) > 2:
             raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
@@ -1429,7 +1429,7 @@ class DiscussChannel(models.Model):
                     "name": ", ".join(partners.mapped("name")),
                 }
             )
-            channel._broadcast(partners.user_ids)
+            channel._broadcast(partners.with_context(active_test=True).user_ids)
         return channel
 
     def _allow_invite_by_email(self):
