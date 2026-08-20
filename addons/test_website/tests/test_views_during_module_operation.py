@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import standalone
 
 
@@ -211,8 +209,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     view_website_1, view_website_2, theme_child_view = _simulate_xml_view()
 
     # Upgrade the module
-    with MockRequest(env, website=website_1):
-        theme_default.button_immediate_upgrade()
+    theme_default.with_context(website_id=website_1.id).button_immediate_upgrade()
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)
