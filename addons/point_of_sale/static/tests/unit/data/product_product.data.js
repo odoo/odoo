@@ -301,5 +301,17 @@ export class ProductProduct extends models.ServerModel {
             product_template_attribute_value_ids: [9, 10],
             product_template_variant_value_ids: [9],
         },
+        {
+            id: 153,
+            product_tmpl_id: 60,
+            lst_price: 20,
+            standard_price: 0,
+            display_name: "Single attribute (Male)",
+            product_tag_ids: [],
+            barcode: "SINGLE_ATT_MALE",
+            default_code: false,
+            product_template_attribute_value_ids: [12],
+            product_template_variant_value_ids: [],
+        },
     ];
 }
