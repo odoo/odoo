@@ -7,12 +7,20 @@ import { registry } from "@web/core/registry";
  * @property { WebsiteBridgePlugin['getWebsiteContextLang'] } getWebsiteContextLang
  * @property { WebsiteBridgePlugin['getSession'] } getSession
  * @property { WebsiteBridgePlugin['renderToElement'] } renderToElement
+ * @property { WebsiteBridgePlugin['renderToFragment'] } renderToFragment
  * @property { WebsiteBridgePlugin['_t'] } _t
  */
 export class WebsiteBridgePlugin extends Plugin {
     static id = "websiteBridge";
     static dependencies = [];
-    static shared = ["getRegistry", "getWebsiteContextLang", "_t", "getSession", "renderToElement"];
+    static shared = [
+        "getRegistry",
+        "getWebsiteContextLang",
+        "_t",
+        "getSession",
+        "renderToElement",
+        "renderToFragment",
+    ];
     ensureModuleLoader() {
         if (!this.moduleLoader) {
             this.moduleLoader = this.window.odoo.loader;
@@ -37,8 +45,14 @@ export class WebsiteBridgePlugin extends Plugin {
     getSession() {
         return this.getModule("@web/session").session;
     }
+    // For tests with website builder, use `loadIframeBuilderTemplates: true`
     renderToElement(template, context) {
         return this.getModule("@web/core/utils/render").renderToElement(template, context);
     }
+    // For tests with website builder, use `loadIframeBuilderTemplates: true`
+    renderToFragment(template, context) {
+        return this.getModule("@web/core/utils/render").renderToFragment(template, context);
+    }
 }
 registry.category("website-plugins").add(WebsiteBridgePlugin.id, WebsiteBridgePlugin);
+registry.category("translation-plugins").add(WebsiteBridgePlugin.id, WebsiteBridgePlugin);
