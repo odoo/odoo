@@ -114,7 +114,7 @@ class TestCancelOriginRestore(TransactionCase):
         })
         (receipt_move | downstream_move)._action_confirm()
 
-        receipt_move.with_context(cancel_backorder=True)._action_done()
+        receipt_move.with_context(cancel_backorder=True)._action_done(cancel_backorder=True)
 
         self.assertEqual(receipt_move.state, 'cancel')
         self.assertEqual(downstream_move.state, 'cancel')
@@ -146,7 +146,7 @@ class TestCancelOriginRestore(TransactionCase):
         })
         (receipt_move | downstream_move)._action_confirm()
 
-        receipt_move.with_context(cancel_backorder=True)._action_done()
+        receipt_move.with_context(cancel_backorder=True)._action_done(cancel_backorder=True)
 
         self.assertEqual(receipt_move.state, 'cancel')
         self.assertEqual(downstream_move.procure_method, 'make_to_stock')
@@ -178,7 +178,8 @@ class TestCancelOriginRestore(TransactionCase):
         })
         (receipt_move | downstream_move)._action_confirm()
 
-        receipt_move._action_done(cancel_backorder=True)
+        # Param cancels the move; context enables origin restore (same as picking No Backorder).
+        receipt_move.with_context(cancel_backorder=True)._action_done(cancel_backorder=True)
 
         self.assertEqual(receipt_move.state, 'cancel')
         self.assertEqual(downstream_move.state, 'cancel')

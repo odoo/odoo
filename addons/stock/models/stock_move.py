@@ -1813,10 +1813,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         """Return the scoped origin-restore mode for _action_cancel()."""
         if self.env.context.get('cancel_from_mo'):
             return 'keep_non_cancelled'
-        if self.env.context.get('cancel_backorder') or (
-            self.filtered(lambda m: m.picking_type_id.code == 'incoming')
-            or self.move_orig_ids.filtered(lambda m: m.picking_type_id.code == 'incoming')
-        ):
+        if self.env.context.get('cancel_backorder'):
             # No-backorder validation cancels the upstream receipt move itself.
             # Keep the cancelled origin link so downstream moves remain traceable.
             return 'keep_all'
