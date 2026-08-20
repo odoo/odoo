@@ -322,7 +322,7 @@ class HighlightToolbarButton extends Component {
         this.props.onClick();
         this.configuratorPopover.open(this.root(), {
             stackState: this.componentStack,
-            style: "max-height: 300px; width: 262px",
+            style: "max-height: 320px; width: 250px",
             class: "d-flex flex-column p-2",
         });
     }

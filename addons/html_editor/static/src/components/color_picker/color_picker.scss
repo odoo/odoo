@@ -1,14 +1,12 @@
 $o-we-toolbar-bg: #FFF !default;
 $o-we-toolbar-color-text: #2b2b33 !default; // Same as $o-we-bg-light
-$o-we-item-spacing: 8px !default;
-$o-we-color-success: #00ff9e !default;
 
 .o_font_color_selector {
     @include o-input-number-no-arrows();
     --bg: #{$o-we-toolbar-bg};
     --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
     --border-rgb: var(--text-rgb);
-    width: 208px;
+    width: 235px;
     max-height: inherit;
     overflow-y: auto;
     border-radius: inherit;
@@ -20,25 +18,47 @@ $o-we-color-success: #00ff9e !default;
 }
 
 .o_color_button {
-    width: 23px;
-    height: 22px;
-    box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
-    margin: 0.5px;
-
-    &:focus,
-    &:hover {
-        transform: scale(1.1);
-    }
+    width: 27px;
+    height: 27px;
+    border: 2px solid var(--bg);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), 0.3);
 }
 
 .o_color_picker_button {
     @extend %o-preview-alpha-background;
 
-    &:not(.selected):focus,
-    &:not(.selected):hover {
-        outline: solid $o-enterprise-action-color;
+    &::before, &::after {
+        border-radius: 1px;
+    }
+
+    &:focus, &:hover, &.selected {
+        outline: 2px solid var(--o-color-picker-active-color, $o-enterprise-action-color);
+        outline-offset: -2px;
+    }
+
+    // Display a check icon on the selected color.
+    &:not(.o_gradient_color_button, .o_custom_gradient_button).selected::after {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFF;
+        content: "check";
+        font-size: 1rem;
+        font-family: 'Material Symbols Outlined';
+        text-shadow:
+            -1px 0 rgba(#000, .6),
+            0 1px rgba(#000, .6),
+            1px 0 rgba(#000, .6),
+            0 -1px rgba(#000, .6);
+    }
+
+    &.o_custom_gradient_button {
+        border-radius: 3px;
+    }
+
+    &:focus-visible {
         z-index: 1;
-        transition: transform 0.1s ease-out;
     }
 }
 
@@ -50,12 +70,8 @@ $o-we-color-success: #00ff9e !default;
 
         &:focus-visible {
             z-index: 1;
-            box-shadow: var(--btn-focus-box-shadow) !important;
+            outline: 1px solid var(--o-color-picker-active-color, $o-enterprise-action-color);
         }
-    }
-
-    .o_color_picker_button.selected {
-        border: 3px solid $o-enterprise-action-color !important;
     }
 }
 
@@ -85,15 +101,5 @@ $o-we-color-success: #00ff9e !default;
 :root {
     @each $color, $value in $grays {
         @include print-variable($color, $value);
-    }
-}
-
-.color-combination-button.selected h1 {
-    &::before {
-        content: "check";
-        margin-right: $o-we-item-spacing;
-        font-size: 0.8em;
-        font-family: 'Material Symbols Outlined';
-        color: $o-we-color-success;
     }
 }
