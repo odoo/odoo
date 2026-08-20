@@ -26,13 +26,12 @@ import json
 import types
 from unittest.mock import patch
 
-from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase, tagged
-from odoo.tools import file_path
-
 from odoo.addons.invoice_agent.models.account_move import (
     AccountMove as AccountMoveModel,
 )
+from odoo.exceptions import ValidationError
+from odoo.tests import TransactionCase, tagged
+from odoo.tools import file_path
 
 
 def ensure_chart_of_accounts(env):
@@ -111,7 +110,6 @@ class InvoiceAgentTestCommon(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestExtractionFlow(InvoiceAgentTestCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

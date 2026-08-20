@@ -53,7 +53,7 @@ def post_init_hook(env):
     _backfill_job_uuids(env)
 
     base_url = os.environ.get("URL", "").strip()
-    if not (base_url.startswith("http://") or base_url.startswith("https://")):
+    if not (base_url.startswith(("http://", "https://"))):
         _logger.warning(
             "invoice_agent: URL env is missing or not a valid base URL ('%s') — "
             "leaving web.base.url untouched. Set the URL variable in .env.",

@@ -15,20 +15,17 @@ client code against a stubbed ``requests.post``:
   hammering the dead service.
 """
 
-import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 
 import jwt
 
-from odoo.exceptions import UserError
-from odoo.tests import TransactionCase, tagged
-
 from odoo.addons.invoice_agent.models import llm_service as svc
-
 from odoo.addons.invoice_agent.models.invoice_extraction import (
     _PYDANTIC_AVAILABLE,
 )
+from odoo.exceptions import UserError
+from odoo.tests import TransactionCase, tagged
 
 
 def _fake_response(status_code=200, body=None):
@@ -71,7 +68,6 @@ def _happy_body():
 
 @tagged("post_install", "-at_install")
 class TestLlmServiceHttp(TransactionCase):
-
     def setUp(self):
         super().setUp()
         icp = self.env["ir.config_parameter"].sudo()
@@ -101,8 +97,8 @@ class TestLlmServiceHttp(TransactionCase):
         self.assertEqual(claims["sub"], "invoice.llm.service")
         self.assertEqual(claims["aud"], "invoice-ai")
         # 60-second expiry: iat → exp is exactly JWT_TTL_SECONDS.
-        issued = datetime.fromtimestamp(claims["iat"], tz=timezone.utc)
-        expires = datetime.fromtimestamp(claims["exp"], tz=timezone.utc)
+        issued = datetime.fromtimestamp(claims["iat"], tz=UTC)
+        expires = datetime.fromtimestamp(claims["exp"], tz=UTC)
         self.assertAlmostEqual(
             (expires - issued).total_seconds(),
             svc.JWT_TTL_SECONDS,
@@ -121,7 +117,7 @@ class TestLlmServiceHttp(TransactionCase):
             audience="invoice-ai",
             options={"verify_exp": False},
         )
-        past = datetime.now(timezone.utc) - timedelta(seconds=120)
+        past = datetime.now(UTC) - timedelta(seconds=120)
         claims["iat"] = past
         claims["exp"] = past + timedelta(seconds=10)
         expired = jwt.encode(claims, "test-shared-secret", algorithm="HS256")
@@ -164,7 +160,7 @@ class TestLlmServiceHttp(TransactionCase):
         bearer = captured["headers"]["Authorization"]
         self.assertTrue(bearer.startswith("Bearer "))
         claims = jwt.decode(
-            bearer[len("Bearer "):],
+            bearer[len("Bearer ") :],
             "test-shared-secret",
             algorithms=["HS256"],
             audience="invoice-ai",

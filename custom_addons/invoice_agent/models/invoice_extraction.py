@@ -60,9 +60,12 @@ class InvoiceLine:
     """Placeholder used when pydantic is unavailable (stale image only)."""
 
     def __init__(self, *args, **kwargs):
-        raise RuntimeError(
+        msg = (
             "InvoiceLine is unavailable: pydantic is not installed. "
-            "Rebuild the odoo image with `docker compose build odoo`.",
+            "Rebuild the odoo image with `docker compose build odoo`."
+        )
+        raise RuntimeError(
+            msg,
         )
 
 
@@ -70,9 +73,12 @@ class ExtractionFieldConfidence:
     """Placeholder used when pydantic is unavailable (stale image only)."""
 
     def __init__(self, *args, **kwargs):
-        raise RuntimeError(
+        msg = (
             "ExtractionFieldConfidence is unavailable: pydantic is not "
-            "installed. Rebuild the odoo image with `docker compose build odoo`.",
+            "installed. Rebuild the odoo image with `docker compose build odoo`."
+        )
+        raise RuntimeError(
+            msg,
         )
 
 
@@ -80,9 +86,12 @@ class InvoiceExtraction:
     """Placeholder used when pydantic is unavailable (stale image only)."""
 
     def __init__(self, *args, **kwargs):
-        raise RuntimeError(
+        msg = (
             "InvoiceExtraction is unavailable: pydantic is not installed. "
-            "Rebuild the odoo image with `docker compose build odoo`.",
+            "Rebuild the odoo image with `docker compose build odoo`."
+        )
+        raise RuntimeError(
+            msg,
         )
 
 
@@ -177,7 +186,10 @@ if _PYDANTIC_AVAILABLE:
 def _require_pydantic():
     """Raise a clean error instead of a NameError when pydantic is absent."""
     if not _PYDANTIC_AVAILABLE:
-        raise RuntimeError(
+        msg = (
             "InvoiceExtraction is unavailable: pydantic is not installed. "
-            "Rebuild the odoo image with `docker compose build odoo`.",
+            "Rebuild the odoo image with `docker compose build odoo`."
+        )
+        raise RuntimeError(
+            msg,
         )

@@ -37,11 +37,14 @@ route:
       group_interval: 15m
       repeat_interval: 6h
 
-# Receivers — replace webhook URLs and email addresses with real values
+# Receivers — replace webhook URLs and email addresses with real values.
+# NOTE: Alertmanager does NOT perform shell/env expansion — keep these
+# literal. The alertmanager config file is mounted read-only (see
+# docker-compose.observability.yml), so no envsubst happens either.
 receivers:
   - name: "slack-default"
     slack_configs:
-      - api_url: "${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/ME/PLEASE}"
+      - api_url: "https://hooks.slack.com/services/REPLACE/ME/PLEASE"
         channel: "#alerts"
         title: '{{ template "slack.default.title" . }}'
         text: '{{ template "slack.default.text" . }}'
@@ -49,7 +52,7 @@ receivers:
 
   - name: "slack-critical"
     slack_configs:
-      - api_url: "${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/ME/PLEASE}"
+      - api_url: "https://hooks.slack.com/services/REPLACE/ME/PLEASE"
         channel: "#alerts-critical"
         title: '🔥 CRITICAL: {{ template "slack.default.title" . }}'
         text: '{{ template "slack.default.text" . }}'
@@ -57,7 +60,7 @@ receivers:
 
   - name: "slack-warning"
     slack_configs:
-      - api_url: "${SLACK_WEBHOOK_URL:-https://hooks.slack.com/services/REPLACE/ME/PLEASE}"
+      - api_url: "https://hooks.slack.com/services/REPLACE/ME/PLEASE"
         channel: "#alerts"
         title: '⚠️ {{ template "slack.default.title" . }}'
         text: '{{ template "slack.default.text" . }}'
@@ -65,10 +68,11 @@ receivers:
 
   - name: "email-fallback"
     email_configs:
-      - to: "${ALERT_EMAIL:-ops@example.com}"
+      - to: "ops@example.com"
         from: "alertmanager@invoice-agent.local"
         smarthost: "localhost:587"
-        subject: "[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}"
+        headers:
+          Subject: "[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}"
         text: '{{ template "email.default.text" . }}'
         send_resolved: true
 
@@ -79,7 +83,3 @@ inhibit_rules:
     target_match:
       severity: warning
     equal: ["alertname", "job"]
-
-# Templates for Slack messages
-templates:
-  - "/etc/alertmanager/templates/*.tmpl"

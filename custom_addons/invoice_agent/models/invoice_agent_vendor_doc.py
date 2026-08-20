@@ -71,6 +71,13 @@ class InvoiceAgentVendorDoc(models.Model):
         readonly=True,
         help="When the embedding was written (backfill or live post).",
     )
+
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
     # The vector(1024) column lives OUTSIDE the ORM (raw SQL init): Odoo has
     # no vector field type, and exposing it as a Json/Char would break the
     # pgvector operators. Searches go through raw SQL, never the ORM.

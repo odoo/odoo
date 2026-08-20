@@ -10,7 +10,6 @@ REVIEWER_GROUP = "invoice_agent.group_invoice_agent_user"
 
 @tagged("post_install", "-at_install")
 class TestInvoiceAgentUsage(InvoiceAgentTestCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

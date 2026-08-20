@@ -131,10 +131,14 @@ class InvoiceConsumer:
         await channel.set_qos(prefetch_count=PREFETCH_COUNT)
 
         # (Re)declare the full topology on every connect — see amqp.py.
+        # declare_topology declares invoice.extract WITH its DLX arguments
+        # and binds it on extract.request. Do NOT re-declare it here with a
+        # bare (argument-less) declare — RabbitMQ treats an empty argument
+        # table as inequivalent to the queue's existing DLX args and closes
+        # the channel with 406 PRECONDITION_FAILED.
         await declare_topology(channel)
 
-        queue = await channel.declare_queue(QUEUE_EXTRACT, durable=True)
-        await queue.bind(EXCHANGE_NAME, routing_key=ROUTING_KEY_REQUEST)
+        queue = await channel.get_queue(QUEUE_EXTRACT)
 
         topic_exchange = await channel.get_exchange(EXCHANGE_NAME)
         dlx = await channel.get_exchange(DLX_EXCHANGE)
@@ -233,6 +237,17 @@ class InvoiceConsumer:
                 decision = classify_failure(exc, attempt)
                 await self._route_failure(dlx, message, decision, topic_exchange)
                 return
+
+            # Cache writes store `parsed` as JSON (pydantic models are
+            # serialized in app/llm_cache.py). Re-validate it back to the
+            # model so the publish + validation paths below can call
+            # `model_dump()` / attribute access unchanged. Only dict input
+            # (the JSON form from cache) is re-validated — model instances
+            # and test doubles are left untouched.
+            parsed = result["parsed"]
+            if isinstance(parsed, dict):
+                parsed = InvoiceExtraction.model_validate(parsed)
+            result["parsed"] = parsed
 
             # --- Phase 2: RAG validation (retrieve + validate) ---
             # Best-effort: if retrieval or validation fails, the extraction

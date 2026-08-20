@@ -31,6 +31,12 @@ class InvoiceAgentUsage(models.Model):
         help="The bill this extraction call was for. May be void when the "
         "source bill is later deleted.",
     )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
     model = fields.Char(
         string="Model",
         default="claude-opus-4-8",
@@ -82,8 +88,7 @@ class InvoiceAgentUsage(models.Model):
                 (usage.input_tokens or 0) * OPUS_PRICE_PER_MT_INPUT
                 + (usage.cache_creation_input_tokens or 0)
                 * OPUS_PRICE_PER_MT_CACHE_WRITE
-                + (usage.cache_read_input_tokens or 0)
-                * OPUS_PRICE_PER_MT_CACHE_READ
+                + (usage.cache_read_input_tokens or 0) * OPUS_PRICE_PER_MT_CACHE_READ
                 + (usage.output_tokens or 0) * OPUS_PRICE_PER_MT_OUTPUT
             ) / 1_000_000
 
@@ -120,8 +125,10 @@ class InvoiceAgentUsage(models.Model):
     _sql_constraints = [
         (
             "check_usage_tokens_non_negative",
-            "CHECK(input_tokens >= 0 AND output_tokens >= 0 AND "
-            "cache_creation_input_tokens >= 0 AND cache_read_input_tokens >= 0)",  # noqa: E501
+            (
+                "CHECK(input_tokens >= 0 AND output_tokens >= 0 AND "
+                "cache_creation_input_tokens >= 0 AND cache_read_input_tokens >= 0)"
+            ),  # noqa: E501
             "Token counts must not be negative.",
         ),
     ]

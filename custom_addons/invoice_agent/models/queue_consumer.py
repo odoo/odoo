@@ -17,6 +17,7 @@ cursor per result: the thread outlives any request transaction, so each
 write goes through ``registry.cursor()`` and commits immediately.
 """
 
+import contextlib
 import json
 import logging
 import os
@@ -72,7 +73,8 @@ def _apply_queue_result(move, result):
     """
     payload = result.get("parsed_output") or {}
     if not isinstance(payload, dict):
-        raise ValueError("parsed_output must be a JSON object")
+        msg = "parsed_output must be a JSON object"
+        raise ValueError(msg)
     move.ensure_one()
 
     # Score through the calibrated blend (self-report + arithmetic +
@@ -129,12 +131,16 @@ def _apply_queue_result(move, result):
             price_unit = 0.0
             quantity = 1.0
         line_vals.append(
-            (0, 0, {
-                "name": line.get("name") or "Imported line",
-                "price_unit": price_unit,
-                "quantity": quantity,
-                "ai_confidence": line.get("confidence"),
-            }),
+            (
+                0,
+                0,
+                {
+                    "name": line.get("name") or "Imported line",
+                    "price_unit": price_unit,
+                    "quantity": quantity,
+                    "ai_confidence": line.get("confidence"),
+                },
+            ),
         )
     if line_vals:
         vals["invoice_line_ids"] = line_vals
@@ -151,8 +157,8 @@ def _apply_queue_result(move, result):
     if move.ai_review_required or score < threshold:
         move._flag_needs_review(
             reason=(
-                "worker extraction confidence %.0f%% is below the %.0f%% "
-                "routing threshold" % (score * 100, threshold * 100)
+                f"worker extraction confidence {score * 100:.0f}% is below the {threshold * 100:.0f}% "
+                "routing threshold"
             ),
         )
 
@@ -245,8 +251,7 @@ class _InvoiceAgentResultConsumer:
                 connection.ioloop.start()
             except (pika.exceptions.AMQPError, OSError) as exc:
                 _logger.warning(
-                    "invoice_agent: result consumer broker error — retrying "
-                    "in 5s: %s",
+                    "invoice_agent: result consumer broker error — retrying in 5s: %s",
                     exc,
                 )
             time.sleep(5)
@@ -344,10 +349,8 @@ class _InvoiceAgentResultConsumer:
             cursor.commit()
         except Exception as exc:
             _logger.warning("invoice_agent: extract.done failed: %s", exc)
-            try:
+            with contextlib.suppress(Exception):
                 cursor.rollback()
-            except Exception:
-                pass
         finally:
             cursor.close()
 
@@ -397,7 +400,7 @@ class _InvoiceAgentResultConsumer:
             )
             try:
                 move._flag_needs_review(
-                    reason="extraction was dead-lettered by the worker: %s" % error,
+                    reason=f"extraction was dead-lettered by the worker: {error}",
                 )
             except Exception:
                 _logger.exception(
