@@ -390,7 +390,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 'price_include_override': 'tax_included',
             })
 
-        tax_pos.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_pos.is_used)
 
     def test_classic_order(self):
