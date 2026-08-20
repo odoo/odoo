@@ -20,9 +20,9 @@ from . import (
     product_pricelist,
     product_pricelist_item,
     product_product,
-    product_stock_notification,
     product_public_category,
     product_ribbon,
+    product_stock_notification,
     product_tag,
     product_template,
     product_template_attribute_line,
@@ -43,4 +43,5 @@ from . import (
     website_snippet_filter,
     website_track,
     website_visitor,
+    withdrawal_request,
 )
