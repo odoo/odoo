@@ -129,6 +129,17 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
         channel_2._add_members(guests=guest)
         self.start_tour(f"/discuss/channel/{channel_1.id}", "sidebar_in_public_page_tour", cookies={guest._cookie_name: guest._format_auth_cookie()})
 
+    def test_public_page_as_non_member(self):
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        channel_1 = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
+        channel_2 = self.env["discuss.channel"]._create_channel(name="Channel 2", group_id=None)
+        channel_1._add_members(guests=guest)
+        self.start_tour(
+            f"/discuss/channel/{channel_2.id}",
+            "public_page_as_non_member_tour",
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
+        )
+
     def test_invitation_link_redirects_internal_users_to_discuss(self):
         bob = mail_new_test_user(self.env, "bob", groups="base.group_user")
         self.authenticate(bob.login, bob.login)

@@ -12,6 +12,9 @@ const messagingMenuPatch = {
         super.setup(...arguments);
         this.filteredChannels = computed(() => {
             const { activeTab, selectedFilter } = this.state();
+            if (!activeTab) {
+                return [];
+            }
             const channels = selectedFilter?.includesChannel
                 ? activeTab.channels.filter((c) => selectedFilter.includesChannel(c))
                 : activeTab.channels;
@@ -36,7 +39,7 @@ const messagingMenuPatch = {
             deps: () => [this.filteredChannels()],
         });
         useEffect(() => {
-            if (this.state().activeTab.recordType === "discuss.channel") {
+            if (this.state().activeTab?.recordType === "discuss.channel") {
                 this.channelSearch.searchTerm = this.searchTerm();
             }
         });

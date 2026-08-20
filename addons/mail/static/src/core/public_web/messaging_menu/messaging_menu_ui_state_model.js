@@ -9,6 +9,10 @@ export class MessagingMenuUIState extends Record {
             if (this.activeTab?.isShown) {
                 return this.activeTab;
             }
+            if (this.store.inPublicPage) {
+                // Select no tab, as the visitor may not have joined the channel they visit.
+                return;
+            }
             return this.store.messagingMenu?.sortedVisibleTabs[0];
         },
         eager: true,
