@@ -16,14 +16,10 @@ _logger = logging.getLogger(__name__)
 def _try_print_pairing_code():
     printers = [
         device for device in iot_devices.values()
-        if (
-            device.device_type == "printer"
-            and device.connected_by_usb
-            and device.device_subtype in ["receipt_printer", "label_printer"]
-        )
+        if device.device_type == "printer"
     ]
     for printer in printers:
-        printer.print_status()
+        printer.status()
 
 
 class ConnectionManager(Thread):
