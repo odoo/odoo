@@ -38,7 +38,7 @@ test("change rating score", async () => {
     expect(":iframe .s_rating .s_rating_inactive_icons i").toHaveCount(3);
     expect(":iframe .s_rating").toHaveInnerHTML(
         `<strong class="s_rating_title">Quality</strong>
-        <div class="s_rating_icons o_not_editable" contenteditable="false">
+        <div class="s_rating_icons o_not_editable" contenteditable="false" aria-label="1 out of 4 stars">
             <span class="s_rating_active_icons">
                 <i class="oi oi-filled" data-icon="star" contenteditable="false">
                     &ZeroWidthSpace;
