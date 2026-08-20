@@ -13,6 +13,7 @@ from odoo.http.session import (
     session_store,
     update_device,
 )
+from odoo.modules import module
 from odoo.tools import SQL
 from odoo.tools._vendor.useragents import UserAgent
 from odoo.tools.translate import _
@@ -88,7 +89,14 @@ class ResDeviceLog(models.Model):
                 insert_device_log(cr)
 
         if self.env.cr.readonly:
-            self.env.cr.postcommit.add(insert_device_log_in_new_cursor)
+            if module.current_test and self.env.cr.readonly:
+                # During testing, we cannot open a new rw cursor from a ro
+                # cursor. Rollbacking the current (readonly) cursor, removes the
+                # savepoint and allows to start a read-write transaction.
+                self.env.cr.rollback()
+                insert_device_log_in_new_cursor()
+            else:
+                self.env.cr.postcommit.add(insert_device_log_in_new_cursor)
         else:
             insert_device_log(self.env.cr)
         self.env.cr.postrollback.add(insert_device_log_in_new_cursor)
