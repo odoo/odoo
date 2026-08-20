@@ -219,11 +219,37 @@ class ResPartner(models.Model):
             # A partner for which they didn't input VAT, and the one not subject to VAT
             if not partner.vat or len(partner.vat) == 1:
                 continue
-            country = partner.commercial_partner_id.country_id
-            if self._run_vat_test(partner.vat, country, partner.is_company) is False:
-                partner_label = _("partner [%s]", partner.name)
-                msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
-                raise ValidationError(msg)
+
+            partner_country = partner.commercial_partner_id.country_id
+            company_country = self.env.company.country_id
+
+            if self._run_vat_test(partner.vat, partner_country, partner.is_company) is not False:
+                continue
+
+            if company_country and company_country != partner_country:
+                if self._country_has_vat_rules(company_country):
+                    if self._run_vat_test(partner.vat, company_country, partner.is_company) is not False:
+                        continue
+
+            partner_label = _("partner [%s]", partner.name)
+            msg = partner._build_vat_error_message(partner_country and partner_country.code.lower() or None, partner.vat, partner_label)
+            raise ValidationError(msg)
+
+    @api.model
+    def _country_has_vat_rules(self, country):
+        """
+        Check if Odoo or the external stdnum library has strict VAT validation
+        math implemented for the given country.
+        """
+        if not country or not country.code:
+            return False
+
+        company_code = _eu_country_vat_inverse.get(country.code, country.code).lower()
+
+        check_func_name = 'check_vat_' + company_code
+        stdnum_vat_module = stdnum.util.get_cc_module(company_code, 'vat')
+
+        return hasattr(self, check_func_name) or hasattr(stdnum_vat_module, 'is_valid')
 
     @api.depends('vies_vat_to_check')
     def _compute_vies_valid(self):
