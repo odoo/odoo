@@ -65,7 +65,7 @@ WITH
         WHERE pt.is_storable = true AND
             (source.w_id IS NOT NULL OR dest.w_id IS NOT NULL) AND
             (source.w_id IS NULL OR dest.w_id IS NULL OR source.w_id <> dest.w_id) AND
-            m.product_qty != 0 AND
+            (m.product_qty != 0 OR m.quantity != 0) AND
             m.state NOT IN ('draft', 'cancel') AND
             (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
@@ -172,7 +172,7 @@ FROM (SELECT
     FROM
         all_sm m
     WHERE
-        m.product_qty != 0) AS forecast_qty
+        m.product_qty != 0 OR (m.state = 'done' AND m.quantity != 0)) AS forecast_qty
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
