@@ -127,9 +127,7 @@ class ResPartner(models.Model):
         if not country_code.encode().isalpha():
             return False
 
-        country_code = _eu_country_vat_inverse.get(country_code.upper(), country_code).lower()
-        check_func_name = 'check_vat_' + country_code
-        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
+        check_func = self._get_vat_validation_method(country_code)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
@@ -219,11 +217,29 @@ class ResPartner(models.Model):
             # A partner for which they didn't input VAT, and the one not subject to VAT
             if not partner.vat or len(partner.vat) == 1:
                 continue
-            country = partner.commercial_partner_id.country_id
-            if self._run_vat_test(partner.vat, country, partner.is_company) is False:
-                partner_label = _("partner [%s]", partner.name)
-                msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
-                raise ValidationError(msg)
+
+            partner_country = partner.commercial_partner_id.country_id
+            company_country = self.env.company.country_id
+
+            if self._run_vat_test(partner.vat, partner_country, partner.is_company) is not False:
+                continue
+
+            if company_country and company_country != partner_country:
+                if self._get_vat_validation_method(company_country.code):
+                    if self._run_vat_test(partner.vat, company_country, partner.is_company) is not False:
+                        continue
+
+            partner_label = _("partner [%s]", partner.name)
+            msg = partner._build_vat_error_message(partner_country and partner_country.code.lower() or None, partner.vat, partner_label)
+            raise ValidationError(msg)
+
+    @api.model
+    def _get_vat_validation_method(self, country_code):
+        country_code = _eu_country_vat_inverse.get(country_code.upper(), country_code).lower()
+        check_func_name = 'check_vat_' + country_code
+        stdnum_vat_module = stdnum.util.get_cc_module(country_code, 'vat')
+
+        return getattr(self, check_func_name, None) or getattr(stdnum_vat_module, 'is_valid', None)
 
     @api.depends('vies_vat_to_check')
     def _compute_vies_valid(self):
