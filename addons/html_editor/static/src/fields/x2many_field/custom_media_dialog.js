@@ -20,6 +20,7 @@ export class CustomMediaDialog extends MediaDialog {
             });
             return;
         }
+        await this.preProcessSave();
         if (this.activeTab() == "IMAGES") {
             await this.imageSave(this.selectedMedia[this.activeTab()]);
         } else {
