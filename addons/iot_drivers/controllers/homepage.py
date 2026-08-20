@@ -10,6 +10,7 @@ from itertools import groupby
 from pathlib import Path
 
 import netifaces
+import werkzeug
 
 from odoo.http import Controller
 from odoo.http.stream import Stream
@@ -305,8 +306,12 @@ class IotBoxOwlHomePage(Controller):
         linux_only=True,
     )
     def generate_password(self):
+        if helpers.get_odoo_server_url():
+            raise werkzeug.exceptions.Forbidden(
+                "Password generation is disabled once linked to an Odoo server"
+            )
         return {
-            'password': system.generate_password(),
+            "password": system.generate_password(),
         }
 
     @route.iot_route('/iot_drivers/enable_remote_debug', type="jsonrpc", methods=['POST'], linux_only=True)
