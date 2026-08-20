@@ -1,5 +1,5 @@
 import json
-from base64 import b64decode
+from base64 import b64decode, b64encode
 
 from odoo import Command
 from odoo.tests import tagged
@@ -361,3 +361,30 @@ class TestSaEdiCommon(AccountTestInvoicingCommon):
         reversal = move_reversal.reverse_moves()
 
         return self.env['account.move'].browse(reversal['res_id'])
+
+    def _get_invoice_document(self):
+        invoice = self._create_test_invoice(
+            invoice_date='2025-01-15',
+            invoice_date_due='2025-01-15',
+            partner_id=self.partner_sa_simplified,
+            invoice_line_ids=[{
+                'product_id': self.product_burger.id,
+                'price_unit': self.product_burger.standard_price,
+                'tax_ids': self.tax_15.ids,
+            }],
+        )
+        invoice.action_post()
+        return invoice.l10n_sa_edi_document_id
+
+    def _mock_submit_response(self, response_data):
+        """
+        Returns a _l10n_sa_submit_einvoice-compatible mock function that always
+        returns response_data, patching in 'clearedInvoice' for standard invoices
+        when the response represents a successful submission.
+        """
+        def _mock_submit(self_doc, signed_xml, PCSID_data):
+            data = dict(response_data)
+            if not data.get('error') and self_doc.resource.l10n_sa_invoice_type != 'simplified':
+                data.setdefault('clearedInvoice', b64encode(signed_xml).decode())
+            return data
+        return _mock_submit
