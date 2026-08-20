@@ -3,6 +3,7 @@
 import gc
 import json
 from collections import defaultdict
+from queue import Full
 from threading import Event
 from unittest.mock import MagicMock, patch
 from weakref import WeakSet
@@ -23,6 +24,7 @@ from odoo.addons.bus.models.ir_websocket import IrWebsocket
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import (
     CloseCode,
+    PollablePriorityQueue,
     Websocket,
     WebsocketConnectionHandler,
     acquire_cursor,
@@ -223,6 +225,22 @@ class TestWebsocketCaryall(WebsocketCase):
             ws.close(CloseCode.CLEAN)
             self.wait_remaining_websocket_connections()
             self.assertTrue(mock.called)
+
+    def test_close_on_saturated_outgoing_queue(self):
+        channel = new_test_user(self.env, "Jane")
+        client_ws = self.websocket_connect()
+        with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[channel]):
+            self.subscribe(client_ws, [], self.env["bus.bus"]._bus_last_id())
+            with (
+                patch.object(PollablePriorityQueue, "put_nowait", side_effect=Full),
+                patch(
+                    "odoo.addons.bus.models.ir_websocket.IrWebsocket._on_websocket_closed",
+                ) as mock,
+            ):
+                channel._bus_send("notif_type", "message")
+                self.trigger_notification_dispatching()
+                self.wait_remaining_websocket_connections()
+        self.assertTrue(mock.called)
 
     def test_disconnect_when_version_outdated(self):
         # Outdated version, connection should be closed immediately
