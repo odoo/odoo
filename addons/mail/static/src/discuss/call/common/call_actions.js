@@ -1,4 +1,4 @@
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -70,16 +70,6 @@ export const muteAction = {
             });
         }
     },
-    tags: ({ action, store }) => {
-        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.DANGER);
-        }
-        if (store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
-        }
-        return tags;
-    },
 };
 registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
@@ -108,10 +98,6 @@ registerCallAction("deafen", {
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
     sequenceGroup: 100,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.DANGER : undefined,
-    ],
 });
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
@@ -134,19 +120,6 @@ export const cameraOnAction = {
         store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
-    tags: ({ action, store, channel }) => {
-        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.SUCCESS);
-        }
-        if (
-            channel?.default_display_mode === "video_full_screen" &&
-            store.rtc.cameraPermission !== "granted"
-        ) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
-        }
-        return tags;
-    },
 };
 registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
@@ -186,10 +159,6 @@ registerCallAction("raise-hand", {
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
 });
 registerCallAction("share-screen", {
     condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
@@ -205,10 +174,6 @@ registerCallAction("share-screen", {
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
 });
 registerCallAction("fullscreen", {
     btnAttrs: { "data-available-offline": true },
@@ -222,7 +187,6 @@ registerCallAction("fullscreen", {
         store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
     },
     sequence: 70,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("wide-view", {
     condition: ({ channel, owner, store }) =>
@@ -237,7 +201,6 @@ registerCallAction("wide-view", {
         store.rtc.enterFullscreen();
     },
     sequence: 72,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("minimize", {
     condition: ({ channel, owner, store }) =>
@@ -246,7 +209,6 @@ registerCallAction("minimize", {
     icon: "minimize",
     onSelected: ({ store }) => store.rtc.minimize(),
     sequence: 80,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("picture-in-picture", {
     condition: ({ owner, channel, store }) =>
@@ -266,7 +228,6 @@ registerCallAction("picture-in-picture", {
         }
     },
     sequence: 90,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("change-layout", {
     condition: ({ channel, owner }) =>
@@ -276,7 +237,6 @@ registerCallAction("change-layout", {
     onSelected: ({ channel, store }) =>
         store.env.services.dialog.add(ChangeLayoutDialog, { channel }),
     sequence: 60,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 /** @type {CallActionDefinition} */
 export const acceptWithCamera = {
@@ -289,7 +249,6 @@ export const acceptWithCamera = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 };
 registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
@@ -308,7 +267,6 @@ registerCallAction("join-back", {
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
@@ -329,7 +287,6 @@ registerCallAction("join-with-camera", {
     },
     sequence: 120,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
 /** @type {CallActionDefinition} */
 export const joinAction = {
@@ -341,7 +298,6 @@ export const joinAction = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 };
 registerCallAction("join", joinAction);
 /** @type {CallActionDefinition} */
@@ -367,7 +323,6 @@ export const rejectAction = {
     },
     sequence: 140,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
 };
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
@@ -379,7 +334,6 @@ registerCallAction("disconnect", {
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
 });
 
 export class CallAction extends Action {

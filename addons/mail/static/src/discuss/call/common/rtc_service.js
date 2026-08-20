@@ -22,7 +22,6 @@ import { htmlJoin, htmlSprintf } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
-import { ACTION_TAGS } from "@mail/core/common/action";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -448,12 +447,6 @@ export class Rtc extends Record {
     /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
 
-    /** @type {Object<string, boolean>} The keys are action names and the values are booleans indicating whether each action is active */
-    lastActions = {};
-    /** @type {Array<string>} Array of action names representing the stack of currently active actions */
-    actionsStack = fields.Attr([], { asProxy: true });
-    /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
-    lastSelfCallAction = undefined;
     /** callbacks to be called when cleaning the state up after a call */
     cleanups = [];
     /** @type {number} */
@@ -512,31 +505,6 @@ export class Rtc extends Record {
                 void action.isActive;
             }
             return transformedActions;
-        },
-        /** @this {import("models").Rtc} */
-        onUpdate() {
-            for (const action of this.callActions) {
-                if (action.isActive === this.lastActions[action.id]) {
-                    continue;
-                }
-                if (!action.tags.includes(ACTION_TAGS.CALL_ACTION_TRACKED)) {
-                    continue;
-                }
-                if (action.isActive) {
-                    if (!this.actionsStack.includes(action.id)) {
-                        this.actionsStack.unshift(action.id);
-                    }
-                } else {
-                    const index = this.actionsStack.indexOf(action.id);
-                    if (index !== -1) {
-                        this.actionsStack.splice(index, 1);
-                    }
-                }
-            }
-            this.lastSelfCallAction = this.actionsStack[0];
-            this.lastActions = Object.fromEntries(
-                this.callActions.map((action) => [action.id, action.isActive])
-            );
         },
     });
 
@@ -2700,10 +2668,7 @@ export class Rtc extends Record {
             if (videoType === session.mainVideoStreamType) {
                 if (videoType === "screen") {
                     session.mainVideoStreamType = "camera";
-                } else if (
-                    this.actionsStack.includes("camera-on") &&
-                    this.actionsStack.includes("share-screen")
-                ) {
+                } else if (session.is_screen_sharing_on) {
                     session.mainVideoStreamType = "screen";
                 }
             }

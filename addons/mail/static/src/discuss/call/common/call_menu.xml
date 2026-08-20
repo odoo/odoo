@@ -13,12 +13,9 @@
                     </div>
                     <Dropdown state="this.dropdownState">
                         <button class="o-discuss-CallMenu-actionsButton btn border-0 text-body rounded-4 rounded-start-0 m-0" t-att-class="{ 'o-dropdown-open': this.dropdownState.isOpen }" title="Select Actions">
-                            <i class="oi o-fs-small" t-att-data-icon="this.icon" t-att-class="this.lastSelfActionAttClass"/>
+                            <i class="oi o-fs-small" t-att-data-icon="this.icon"/>
                             <div class="o-discuss-CallMenu-actionsControl position-relative d-flex align-items-center justify-content-center">
-                                <span t-if="this.lastSelfAction?.tags.includes('WARNING_BADGE')" class="o-discuss-CallMenu-warningBadge o-fw-600 badge p-1 rounded-circle d-inline justify-content-center align-items-center o-discuss-warningBadge bg-warning">
-                                    <i t-if="this.lastSelfAction?.badgeIcon" class="oi" t-att-class="this.lastSelfAction.badgeIconClass" t-att-data-icon="this.lastSelfAction.badgeIcon"/><span t-elif="this.lastSelfAction.badgeText" t-out="this.lastSelfAction.badgeText"/>
-                                </span>
-                                <div t-else="" class="o-discuss-CallMenu-actionsAudioBars">
+                                <div class="o-discuss-CallMenu-actionsAudioBars">
                                     <TalkingAudioBars t-if="this.rtc.selfSession" session="this.rtc.selfSession"/>
                                 </div>
                                 <i class="o-discuss-CallMenu-actionsChevron oi" t-att-data-icon="this.dropdownState.isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"/>

@@ -25,24 +25,8 @@ export class CallMenu extends Component {
         this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }
 
-    get lastSelfAction() {
-        return this.rtc.callActions.find((action) => action.id === this.rtc.lastSelfCallAction);
-    }
-
-    get lastSelfActionAttClass() {
-        const { lastSelfAction } = this;
-        if (!lastSelfAction) {
-            return {};
-        }
-        return {
-            "text-danger": lastSelfAction.isActive && lastSelfAction.tags.includes("DANGER"),
-            "text-success": lastSelfAction.isActive && lastSelfAction.tags.includes("SUCCESS"),
-        };
-    }
-
     get icon() {
-        const res = this.lastSelfAction?.icon;
-        return (typeof res === "function" ? res() : res) ?? "mic";
+        return "mic";
     }
 }
 

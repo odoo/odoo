@@ -1,4 +1,3 @@
-import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
@@ -12,7 +11,6 @@ registerThreadAction("call", {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 10,
     sequenceQuick: 30,
-    tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("camera-call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
@@ -27,7 +25,6 @@ registerThreadAction("camera-call", {
         }),
     sequence: 5,
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
-    tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
@@ -52,5 +49,4 @@ registerThreadAction("disconnect", {
     name: _t("Disconnect"),
     sequence: 30,
     sequenceGroup: 10,
-    tags: [ACTION_TAGS.DANGER, ACTION_TAGS.JOIN_LEAVE_CALL],
 });

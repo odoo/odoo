@@ -7,11 +7,11 @@
             [this.props.groupClass]: true,
             'flex-column w-100 bg-transparent': !this.props.inline,
             'o-inline rounded-3': this.props.inline,
-            'o-rounded-bubble': this.props.inline and !this.hasBtnBg,
+            'o-rounded-bubble': this.props.inline,
         }"/>
         <t t-foreach="this.groups()" t-as="group" t-key="group_index">
             <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
-                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
+                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { index: action_index })"/>
             </span>
             <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>
         </t>
@@ -26,7 +26,7 @@
 <t t-name="mail.Action">
     <t t-if="this.action.dropdown">
         <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this)" position="this.action.dropdownPosition" state="this.action.dropdownState">
-            <t t-component="this.ButtonComponent" t-props="this.props"/>
+            <ActionButton t-props="this.props"/>
             <t t-set-slot="content">
                 <t t-if="this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="this.action.dropdownComponentProps"/>
                 <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}"
@@ -38,7 +38,7 @@
             </t>
         </t>
     </t>
-    <t t-component="this.ButtonComponent" t-props="this.props" t-else=""/>
+    <ActionButton t-props="this.props" t-else=""/>
 </t>
 
 </templates>

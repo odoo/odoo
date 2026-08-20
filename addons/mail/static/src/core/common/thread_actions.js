@@ -3,7 +3,7 @@ import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
@@ -95,13 +95,6 @@ registerThreadAction("meeting-chat", {
     icon: "forum",
     name: _t("Chat"),
     sequence: 30,
-    tags: ({ channel }) => {
-        const tags = [];
-        if (channel.importantCounter) {
-            tags.push(ACTION_TAGS.IMPORTANT_BADGE);
-        }
-        return tags;
-    },
 });
 
 export class ThreadAction extends Action {

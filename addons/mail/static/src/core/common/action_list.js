@@ -4,9 +4,6 @@ import {
     actionButtonProps,
     actionButtonPropsSchema,
 } from "@mail/core/common/action_button";
-import { CallSurfaceActionButton } from "@mail/core/common/call_surface_action_button";
-import { ComposerActionButton } from "@mail/core/common/composer_action_button";
-import { MessageActionButton } from "@mail/core/common/message_action_button";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -16,13 +13,11 @@ const actionListProps = actionButtonProps;
 const actionListPropsSchema = actionButtonPropsSchema;
 
 /**
- * Wraps an action's chrome with its optional own dropdown (e.g. a "more actions"
- * overflow menu), and picks which {@link ActionButton} variant renders that chrome
- * based on the ambient context: the composer toolbar, a message's hover toolbar, a
- * call surface (call view, meeting, call invitation, pip banner, welcome page), or
- * the default/generic case.
+ * Wraps an action's chrome (rendered generically by {@link ActionButton}) with
+ * its optional own dropdown, e.g. a "more actions" overflow menu.
  */
 class Action extends Component {
+    static components = { ActionButton };
     static template = "mail.Action";
 
     get ActionList() {
@@ -33,37 +28,10 @@ class Action extends Component {
         return Dropdown;
     }
 
-    /** Which {@link ActionButton} variant should render this action's chrome. */
-    get ButtonComponent() {
-        if (this.env.inComposer) {
-            return ComposerActionButton;
-        }
-        if (this.env.inMessage) {
-            return MessageActionButton;
-        }
-        if (this.isCallSurface) {
-            return CallSurfaceActionButton;
-        }
-        return ActionButton;
-    }
-
-    /** Whether this action renders on a call surface (see {@link CallSurfaceActionButton}). */
-    get isCallSurface() {
-        return (
-            (this.env?.inDiscussCallView ||
-                this.env?.inCallInvitation ||
-                this.env.isDiscussPipBanner ||
-                this.env?.inWelcomePage) &&
-            !this.env.inDiscussActionPanel
-        );
-    }
-
     setup() {
         super.setup();
         this.props = useProps({
             action: t.instanceOf(ActionModel),
-            isFirstInGroup: t.boolean().optional(),
-            isLastInGroup: t.boolean().optional(),
             style: t.string().optional(),
             ...actionListPropsSchema,
         });
@@ -84,12 +52,10 @@ export class ActionList extends Component {
     static components = { Action };
     static template = "mail.ActionList";
 
-    getActionProps(action, group, { index, isFirstInGroup, isLastInGroup } = {}) {
+    getActionProps(action, group, { index } = {}) {
         return {
             action,
             group,
-            isFirstInGroup,
-            isLastInGroup,
             ...Object.fromEntries(
                 actionListProps.map((propName) => {
                     const actualPropName = propName.endsWith("?")
@@ -127,8 +93,4 @@ export class ActionList extends Component {
         }
         return groups.filter((group) => group.length); // don't show empty groups
     });
-
-    get hasBtnBg() {
-        return this.props.odooControlPanelSwitchStyle || this.props.hasBtnBg;
-    }
 }
