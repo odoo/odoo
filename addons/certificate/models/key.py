@@ -65,66 +65,57 @@ class CertificateKey(models.Model):
 
     @api.depends('content', 'password')
     def _compute_pem_key(self):
+
+        # Handlers taking (content, password) and returning (pkey object, is public key?)
+        handlers = (
+            lambda c, p: (serialization.load_der_private_key(c, p), False),
+            lambda c, p: (serialization.load_pem_private_key(c, p), False),
+            lambda c, _: (serialization.load_der_public_key(c), True),
+            lambda c, _: (serialization.load_pem_public_key(c), True),
+        )
+
         for key in self:
+
+            key.pem_key = None
+            key.public = None
+            key.loading_error = ""
+
             content = key.with_context(bin_size=False).content
             if not content:
-                key.pem_key = None
-                key.public = None
-                key.loading_error = ""
-            else:
-                pkey_content = base64.b64decode(content)
-                pkey_password = key.password.encode('utf-8') if key.password else None
+                continue
 
-                # Try to load the key in different format starting with DER then PEM for private then public keys.
-                # If none succeeded, we report an error.
-                pkey = None
+            content = base64.b64decode(content)
+            pwd = key.password.encode('utf-8') if key.password else None
+            loading_error = self.env._("This key could not be loaded. Either its content or its password is erroneous.")
+
+            for handler in handlers:
                 try:
-                    pkey = serialization.load_der_private_key(pkey_content, pkey_password)
-                    key.public = False
-                except (ValueError, TypeError):
+                    pkey, key.public = handler(content, pwd)
+                    break
+                except TypeError:
+                    # Raises TypeError if a password was given and the private key was not encrypted.
+                    # Or if the key was encrypted but no password was supplied.
+                    # We don't want to show an error if the user hasn't provided a password for an encrypted key yet.
+                    if not pwd:
+                        loading_error = ""
+                except ValueError:
                     pass
+            else:
+                key.loading_error = loading_error
+                continue
 
-                if not pkey:
-                    try:
-                        pkey = serialization.load_pem_private_key(pkey_content, pkey_password)
-                        key.public = False
-                    except (ValueError, TypeError):
-                        pass
-
-                if not pkey:
-                    try:
-                        pkey = serialization.load_der_public_key(pkey_content)
-                        key.public = True
-                    except (ValueError, TypeError):
-                        pass
-
-                if not pkey:
-                    try:
-                        pkey = serialization.load_pem_public_key(pkey_content)
-                        key.public = True
-                    except (ValueError, TypeError):
-                        pass
-
-                if not pkey:
-                    key.pem_key = None
-                    key.public = None
-                    key.loading_error = _("This key could not be loaded. Either its content or its password is erroneous.")
-                    continue
-
-                if key.public:
-                    key.pem_key = base64.b64encode(pkey.public_bytes(
-                        encoding=Encoding.PEM,
-                        format=serialization.PublicFormat.SubjectPublicKeyInfo,
-                    ))
-                else:
-                    encryption = serialization.BestAvailableEncryption(pkey_password) if pkey_password else serialization.NoEncryption()
-                    key.pem_key = base64.b64encode(pkey.private_bytes(
-                        encoding=Encoding.PEM,
-                        format=serialization.PrivateFormat.PKCS8,
-                        encryption_algorithm=encryption,
-                    ))
-
-                key.loading_error = ""
+            if key.public:
+                key.pem_key = base64.b64encode(pkey.public_bytes(
+                    encoding=Encoding.PEM,
+                    format=serialization.PublicFormat.SubjectPublicKeyInfo,
+                ))
+            else:
+                encryption = serialization.BestAvailableEncryption(pwd) if pwd else serialization.NoEncryption()
+                key.pem_key = base64.b64encode(pkey.private_bytes(
+                    encoding=Encoding.PEM,
+                    format=serialization.PrivateFormat.PKCS8,
+                    encryption_algorithm=encryption,
+                ))
 
     # -------------------------------------------------------
     #                   Business Methods                    #
@@ -148,6 +139,10 @@ class CertificateKey(models.Model):
             raise UserError(_("Make sure to use a private key to sign documents."))
 
         pem_key = self.with_context(bin_size=False).pem_key
+
+        if not pem_key:
+            raise UserError(self.env._("The private key could not be loaded."))
+
         if self.loading_error:
             raise UserError(self.name + " - " + self.loading_error)
 
