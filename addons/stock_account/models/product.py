@@ -19,13 +19,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     cost_method = fields.Selection(
-        string="Cost Method",
-        selection=[
-            ('standard', "Standard Price"),
-            ('fifo', "First In First Out (FIFO)"),
-            ('average', "Average Cost (AVCO)"),
-        ],
-        compute='_compute_cost_method',
+        selection_add=[('fifo', "First In First Out (FIFO)")],
     )
     lot_valuated = fields.Boolean(
         string="Valuation by Lot/Serial",
@@ -38,18 +32,6 @@ class ProductTemplate(models.Model):
         for product in self:
             if product.tracking not in ['lot', 'serial']:
                 product.lot_valuated = False
-
-    @api.depends_context('company')
-    @api.depends('categ_id.property_cost_method')
-    def _compute_cost_method(self):
-        for product_template in self:
-            company = product_template.company_id
-            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
-                company = self.env.company
-            product_template.cost_method = (
-                product_template.categ_id.with_company(company).sudo().property_cost_method
-                or company.sudo().cost_method
-            )
 
     def write(self, vals):
         product_ids_to_update = set()
@@ -96,12 +78,6 @@ class ProductTemplate(models.Model):
         if lot_ids_to_update:
             self.env['stock.lot'].browse(lot_ids_to_update).sudo()._update_standard_price()
         return res
-
-    def _get_price_diff_account(self):
-        price_diff_account = super()._get_price_diff_account()
-        if self.cost_method == 'standard':
-            price_diff_account = self.categ_id.property_price_difference_account_id
-        return price_diff_account
 
 
 class ProductProduct(models.Model):
@@ -762,29 +738,13 @@ class ProductProduct(models.Model):
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 
+    property_cost_method = fields.Selection(
+        selection_add=[('fifo', "First In First Out (FIFO)")],
+        ondelete={'fifo': 'set default'},
+    )
     anglo_saxon_accounting = fields.Boolean(
         string="Use Anglo-Saxon Accounting", compute="_compute_anglo_saxon_accounting",
         help="If checked, the product will be valued using the Anglo-Saxon accounting method.")
-    property_cost_method = fields.Selection(
-        string="Costing Method",
-        selection=[
-            ('standard', "Standard Price"),
-            ('fifo', "First In First Out (FIFO)"),
-            ('average', "Average Cost (AVCO)"),
-        ],
-        company_dependent=True, copy=True,
-        default=lambda self: self.env.company.cost_method,
-        help="""Standard Price: The products are valued at their standard cost defined on the product.
-        Average Cost (AVCO): The products are valued at weighted average cost.
-        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
-        """,
-        tracking=True,
-    )
-    property_price_difference_account_id = fields.Many2one(
-        'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
-        check_company=True,
-        help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
-    property_price_difference_account_active = fields.Boolean(related='property_price_difference_account_id.active', string="Price Difference Account Active")
 
     @api.depends_context('company')
     def _compute_anglo_saxon_accounting(self):

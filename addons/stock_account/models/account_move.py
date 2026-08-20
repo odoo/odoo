@@ -69,6 +69,9 @@ class AccountMove(models.Model):
     def _update_standard_price(self, reverse=False):
         return
 
+    def _update_qty_available(self, reverse=False):
+        return
+
     def _get_invoiced_lot_values(self):
         return []
 
