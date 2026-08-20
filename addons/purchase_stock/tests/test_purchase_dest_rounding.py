@@ -19,7 +19,10 @@ class TestPurchaseDestRounding(PurchaseTestCommon):
             'rounding': 1.0,
         })
         cls.stock_location = cls.warehouse_1.lot_stock_id
-        cls.production_location = cls.env.ref('stock.location_production')
+        cls.production_location = cls.env['stock.location'].create({
+            'name': 'Test Production',
+            'usage': 'production',
+        })
 
     def _create_product(self):
         return self.env['product.product'].create({
