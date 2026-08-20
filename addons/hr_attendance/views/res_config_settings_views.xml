@@ -11,18 +11,21 @@
                     <block title="Attendance Rules &amp; Enforcement">
                         <setting string="Automatic Check-Out" company_dependent="1" help="Automatically check out employees based on their working schedule with an additional tolerance, or at a specific time each day. Does not apply to employees with a flexible working schedule.">
                             <field name="auto_check_out"/>
-                            <div invisible="not auto_check_out">
-                                <span class="me-2">Based on</span><field name="auto_check_out_mode" widget="radio" options="{'horizontal': true}"/>
-                            </div>
-                            <div invisible="not auto_check_out or auto_check_out_mode != 'tolerance'">
-                                <span class="me-2">Tolerance</span>
-                                <field name="auto_check_out_tolerance" class="text-center w-25"/>
-                                <span class="ms-2">Hours</span>
-                            </div>
-                            <div invisible="not auto_check_out or auto_check_out_mode != 'specific_time'">
-                                <span class="me-2">Time</span>
-                                <field name="auto_check_out_specific_time" class="text-center w-25" widget="float_time"/>
-                            </div>
+                            <group invisible="not auto_check_out">
+                                <span class="me-2">Based on</span>
+                                <span name="auto_check_out_mode" class="text-nowrap">
+                                    <field name="auto_check_out_mode"
+                                        widget="radio_followed_by_element"
+                                        options="{'links': {'tolerance': 'auto_check_out_mode_tolerance', 'specific_time': 'auto_check_out_mode_specific_time'},'observe': 'auto_check_out_mode'}"/>
+                                    <span id="auto_check_out_mode_tolerance" class="ms-5 o_readonly_color">
+                                        <field name="auto_check_out_tolerance" readonly="auto_check_out_mode != 'tolerance'"/>
+                                        <span class="ms-2">Hours</span>
+                                    </span>
+                                    <span id="auto_check_out_mode_specific_time" class="ms-4 o_readonly_color">
+                                        <field name="auto_check_out_specific_time" widget="float_time_selection" readonly="auto_check_out_mode != 'specific_time'"/>
+                                    </span>
+                                </span>
+                            </group>
                             <div invisible="not auto_check_out or auto_check_out_mode != 'tolerance'" class="mt-3 d-flex">
                                 <field name="single_check_in" class="w-auto"/>
                                 <div>
