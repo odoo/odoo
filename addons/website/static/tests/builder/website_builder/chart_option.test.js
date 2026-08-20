@@ -619,3 +619,13 @@ test("Removing a row with the current cell resets the current cell", async () =>
         backgroundColor: defaultColor,
     });
 });
+
+test("Adding a description updates the aria-label", async () => {
+    const type = "pie";
+    await setupWebsiteBuilder(chartTemplate(type, getData(type)));
+    await contains(":iframe .s_chart").click();
+
+    await contains(".options-container [data-label='Description'] input").fill("Super description");
+    await contains(":iframe .s_chart").click();
+    expect(":iframe .s_chart canvas").toHaveAttribute("aria-label", "Super description");
+});
