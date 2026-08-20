@@ -128,10 +128,18 @@ export const useNestedSortable = makeDraggableHook({
         // we do not need to be on the row to trigger row changes (only the vertical position matters).
         // Nested rows are shorter than "root" rows, and do not start at the same horizontal position.
         // However, every row ends at the same horizontal position. Therefore, we use the end of the
-        // current element - 1 as horizontal position.
+        // current element as horizontal position, moved inwards past its corner radius: rows are
+        // probed near their top edge, and a point inside a rounded corner is not painted by the row,
+        // so it would hit its parent instead and no row change would be detected.
+        const rowStyle = getComputedStyle(ctx.current.element);
+        const cornerRadius = Math.ceil(
+            parseFloat(
+                ctx.isRTL ? rowStyle.borderTopLeftRadius : rowStyle.borderTopRightRadius
+            ) || 0
+        );
         ctx.selectorX = ctx.isRTL
-            ? ctx.current.elementRect.left + 1
-            : ctx.current.elementRect.right - 1;
+            ? ctx.current.elementRect.left + 1 + cornerRadius
+            : ctx.current.elementRect.right - 1 - cornerRadius;
 
         // Placeholder is initially added right after the current element.
         ctx.current.element.after(ctx.current.placeHolder);
