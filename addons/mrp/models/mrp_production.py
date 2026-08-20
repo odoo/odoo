@@ -2939,6 +2939,14 @@ class MrpProduction(models.Model):
         if not self.qty_producing:
             self.qty_producing = self.product_qty - self.qty_produced
             self._set_qty_producing()
+        else:
+            moves_to_consume = self.move_raw_ids.filtered(
+                lambda m: m.state not in ('done', 'cancel') and not m.picked and not m.manual_consumption and m.quantity
+            )
+            for move in moves_to_consume:
+                if move.product_uom.compare(move.should_consume_qty, move.quantity) < 0:
+                    move._set_quantity_done(move.should_consume_qty)
+            moves_to_consume.picked = True
 
         self._mark_byproducts_as_produced()
 

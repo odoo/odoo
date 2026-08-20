@@ -136,6 +136,81 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(pick.location_id, self.warehouse.lot_stock_id)
         self.assertEqual(pick.location_dest_id, pre_2)
 
+    def test_2_steps_consume_tracked_component_with_manual_qty_producing(self):
+        """ Test that entering the produced quantity by hand before validating the
+        components transfer still consumes the tracked components in 2-step
+        manufacturing, whether producing the full ordered quantity or only part of it. """
+        self.warehouse.manufacture_steps = 'pbm'
+        self.raw_product.tracking = 'lot'
+        self.bom.consumption = 'warning'
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT-RAW',
+            'product_id': self.raw_product.id,
+        })
+        self.env['stock.quant']._update_available_quantity(
+            self.raw_product, self.warehouse.lot_stock_id, 30.0, lot_id=lot)
+
+        def produce(product_qty, qty_producing):
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = self.finished_product
+            mo_form.picking_type_id = self.warehouse.manu_type_id
+            mo_form.product_qty = product_qty
+            mo = mo_form.save()
+            mo.action_confirm()
+            # Enter the produced quantity while the components transfer is not validated yet.
+            mo_form = Form(mo)
+            mo_form.qty_producing = qty_producing
+            mo = mo_form.save()
+            mo.picking_ids.action_assign()
+            mo.picking_ids.button_validate()
+            mo.action_assign()
+            mo.button_mark_done()
+            return mo
+
+        # Producing the full ordered quantity consumes the reserved components as is.
+        mo_full = produce(5.0, 5.0)
+        self.assertRecordValues(mo_full.move_raw_ids, [{'picked': True, 'quantity': 10.0}])
+
+        # Producing part of the order reduces the consumption to what that run needs.
+        mo_partial = produce(10.0, 5.0)
+        self.assertRecordValues(mo_partial.move_raw_ids, [{'picked': True, 'quantity': 10.0}])
+
+    def test_2_steps_under_reserved_tracked_component(self):
+        """ Test that when fewer components are available than the produced quantity
+        requires, the reserved units are still consumed (not left unpicked) and the
+        production does not crash on the missing lot for the shortfall. """
+        self.warehouse.manufacture_steps = 'pbm'
+        self.raw_product.tracking = 'lot'
+        self.bom.consumption = 'warning'
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT-RAW',
+            'product_id': self.raw_product.id,
+        })
+        # Producing 5 requires 10 components, but only 6 are in stock.
+        self.env['stock.quant']._update_available_quantity(
+            self.raw_product, self.warehouse.lot_stock_id, 6.0, lot_id=lot)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished_product
+        mo_form.picking_type_id = self.warehouse.manu_type_id
+        mo_form.product_qty = 10.0
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5.0
+        mo = mo_form.save()
+
+        pick = mo.picking_ids
+        pick.action_assign()
+        backorder = pick.button_validate()
+        Form(self.env['stock.backorder.confirmation'].with_context(**backorder['context'])).save().process()
+
+        mo.action_assign()
+        mo.button_mark_done()
+
+        self.assertRecordValues(mo.move_raw_ids, [{'picked': True, 'quantity': 6.0}])
+
     def test_manufacturing_3_steps(self):
         """ Test MO/picking before manufacturing/picking after manufacturing
         components and move_orig/move_dest. Ensure that everything is created
