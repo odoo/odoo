@@ -246,7 +246,8 @@ class PurchaseOrderLine(models.Model):
         if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_push, self.product_id.uom_id)
             extra_move_vals = self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom)
-            extra_move_vals['move_dest_ids'] = False  # don't attach
+            # Experiment: keep move_dest_ids on extra receipt moves so dest links survive
+            # when attach qty rounds to zero under POL UoM rounding (runbot fallout TBD).
             res.append(extra_move_vals)
         return res
 
