@@ -1,4 +1,15 @@
-from odoo import _, api, models
+from collections import defaultdict
+
+from odoo import api, models
+from odoo.exceptions import UserError
+
+
+class JoFotaraRejection(UserError):
+    """ A rejection carrying the computed XML.
+
+    The client keys l10n_jo_edi's error dialog on this class' dotted path, so it must stay
+    importable from here; see static/src/jo_edi_error_dialog/jo_edi_error_dialog.js.
+    """
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -11,7 +22,8 @@ class AccountMoveSend(models.AbstractModel):
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
-        res.update({'jo_edi': {'label': _("JoFotara (Jordan EDI)"), 'is_applicable': self._l10n_jo_is_edi_applicable}})
+        label = self.env._("To JoFotara (Demo)") if self.env.company.l10n_jo_edi_demo_mode else self.env._("To JoFotara")
+        res.update({'jo_edi': {'label': label, 'is_applicable': self._l10n_jo_is_edi_applicable}})
         return res
 
     # -------------------------------------------------------------------------
@@ -21,19 +33,23 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        if self.env.company.l10n_jo_edi_demo_mode:
-            alerts['l10n_jo_edi_demo_mode'] = {
-                'level': 'info',
-                'message': _("Demo mode is enabled."),
+        invalid_moves = defaultdict(lambda: self.env['account.move'])
+        for move in moves.filtered(lambda m: 'jo_edi' in moves_data[m]['extra_edis'] and self._l10n_jo_is_edi_applicable(m)):
+            for message in move._l10n_jo_edi_get_validation_errors():
+                invalid_moves[message] |= move
+        # one alert per defect, listing the affected invoices behind the action, instead of one alert per invoice
+        for index, (message, error_moves) in enumerate(invalid_moves.items()):
+            alerts[f'l10n_jo_edi_validation_error_{index}'] = {
+                'level': 'danger',
+                'message': message,
+                'action_text': self.env._("View Invoices"),
+                'action': error_moves._get_records_action(),
             }
         if non_eligible_jo_moves := moves.filtered(lambda m: 'jo_edi' in moves_data[m]['extra_edis'] and not self._l10n_jo_is_edi_applicable(m)):
             alerts['l10n_jo_edi_non_eligible_moves'] = {
-                'message': _(
-                    "JoFotara e-invoicing was enabled but the following invoices cannot be e-invoiced:\n%(moves)s\n",
-                    moves="\n".join(f"- {move.display_name}" for move in non_eligible_jo_moves),
-                ),
-                'action_text': _("View Invoice(s)"),
-                'action': non_eligible_jo_moves._get_records_action(name=_("Check Invoice(s)")),
+                'message': self.env._("JoFotara e-invoicing was enabled but some of the selected invoices cannot be e-invoiced."),
+                'action_text': self.env._("View Invoices"),
+                'action': non_eligible_jo_moves._get_records_action(),
             }
         return alerts
 
@@ -69,13 +85,36 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
+        error_title = self.env._("Error: Invoice was not sent to JoFotara")
         for invoice, invoice_data in invoices_data.items():
             if 'jo_edi' in invoice_data['extra_edis']:
-                if error_message := invoice.with_company(invoice.company_id)._l10n_jo_edi_send():
+                invoice = invoice.with_company(invoice.company_id)
+                if validation_errors := invoice._l10n_jo_edi_get_validation_errors():
+                    # pre-validation errors are shown by the wizard alert, they must not open the XML pop-up
+                    invoice.l10n_jo_edi_error = "\n".join(validation_errors)
                     invoice_data["error"] = {
-                        "error_title": _("Errors when submitting the JoFotara e-invoice:"),
+                        "error_title": error_title,
+                        "errors": validation_errors,
+                    }
+                elif error_message := invoice._l10n_jo_edi_send():
+                    invoice_data["error"] = {
+                        "error_title": error_title,
                         "errors": [error_message],
+                        "l10n_jo_edi_xml_url": invoice._l10n_jo_edi_get_computed_xml_url(),
                     }
 
                 if self._can_commit():
+                    # keep the JoFotara answer when the interactive error dialog rolls the request back
                     self.env.cr.commit()
+
+    @api.model
+    def _hook_if_errors(self, moves_data, allow_raising=True):
+        # EXTENDS 'account'
+        if allow_raising and len(moves_data) == 1:
+            error = next(iter(moves_data.values()))['error']
+            if xml_url := error.get('l10n_jo_edi_xml_url'):
+                rejection = JoFotaraRejection(self._format_error_text(error))
+                # forwarded as-is by serialize_exception, and read by the dialog
+                rejection.context = {'l10n_jo_edi': {'xml_url': xml_url}}
+                raise rejection
+        return super()._hook_if_errors(moves_data, allow_raising=allow_raising)

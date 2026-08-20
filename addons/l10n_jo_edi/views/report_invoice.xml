@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <template id="report_invoice_document_jo_header" inherit_id="account.report_invoice_document">
+        <t t-call="web.external_layout" position="before">
+            <t t-if="o.country_code == 'JO' and o.is_sale_document()" t-set="custom_header_jo">
+                <div class="fw-bold text-center mt-2">
+                    <h5 t-if="o.l10n_jo_edi_state == 'demo'">THIS IS A DEMO INVOICE</h5>
+                    <h5 t-elif="not o._l10n_jo_edi_is_legal()">THIS IS NOT A LEGAL DOCUMENT</h5>
+                </div>
+            </t>
+        </t>
+    </template>
+
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//div[@id='qrcode']" position="after">
             <div t-if="o.l10n_jo_edi_qr" name="qr_code">

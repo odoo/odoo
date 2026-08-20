@@ -3,7 +3,8 @@
     <data>
         <template id="l10n_jo_edi_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
             <div name="header" position="before">
-                <div class="text-center" t-if="order['l10n_jo_edi_pos_error']">RECEIPT WITHOUT FISCAL VALUE</div>
+                <div class="text-center" t-if="order['l10n_jo_edi_pos_state'] == 'demo'">THIS IS A DEMO RECEIPT</div>
+                <div class="text-center" t-elif="order['l10n_jo_edi_pos_enabled'] and not order['l10n_jo_edi_pos_qr']">RECEIPT WITHOUT FISCAL VALUE</div>
             </div>
         </template>
 

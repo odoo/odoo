@@ -5003,7 +5003,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_it_edi_sale',
             'l10n_it_stock_ddt',
             'l10n_it_xml_export',
-            'l10n_jo_edi',
             'l10n_jo_hr_payroll',
             'l10n_ke_edi_oscu',
             'l10n_ke_edi_oscu_mrp',
