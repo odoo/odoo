@@ -61,6 +61,20 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         if not selected_combo_items:
             raise UserError(_("A combo product can't be empty. Please select at least one option."))
 
+        combo_product_sudo = request.env['product.product'].sudo().browse(combo_product_id)
+        combos_sudo = combo_product_sudo.product_tmpl_id.combo_ids
+        selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
+            combo_item['combo_item_id'] for combo_item in selected_combo_items
+        ]).combo_id
+        if (
+            len(selected_combo_items) != len(combos_sudo)
+            or set(selected_combos_sudo.ids) != set(combos_sudo.ids)
+        ):
+            raise UserError(_(
+                "The number of selected combo items must match the number of available"
+                " combo choices."
+            ))
+
         order_sudo = request.website.sale_get_order(force_create=True)
         if order_sudo.state != 'draft':
             request.session['sale_order_id'] = None
