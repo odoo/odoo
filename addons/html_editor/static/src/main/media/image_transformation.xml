@@ -2,11 +2,9 @@
     <t t-name="html_editor.ImageTransformation">
         <div class="transfo-container" t-ref="this.transfoContainer" t-on-mousedown.prevent="this.mouseDown">
             <div class="transfo-controls" t-ref="this.transfoControls">
-                <div style="cursor: crosshair; position: absolute; margin: -30px; top: 0; right: 0; padding: 1px 0 0 1px;" class="transfo-rotator">
-                    <span class="oi-stack oi-lg">
-                    <i class="oi oi-stack-2x oi-filled" data-icon="circle"></i>
-                    <i class="oi oi-stack-1x" data-icon="redo"></i>
-                    </span>
+                <div class="transfo-rotator oi-lg">
+                    <i class="oi oi-2x oi-filled" data-icon="circle"></i>
+                    <i class="oi" data-icon="rotate_right"></i>
                 </div>
                 <div style="top: 0%; left: 0%; cursor: nw-resize;" class="transfo-scaler transfo-scaler-tl"></div>
                 <div style="top: 0%; left: 100%; cursor: ne-resize;" class="transfo-scaler transfo-scaler-tr"></div>

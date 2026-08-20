@@ -216,7 +216,7 @@ describe("buttons", () => {
 
     test("should open link popover in 'button primary' mode using power buttons", async () => {
         await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button[data-icon='square']");
+        click(".o_we_power_buttons .power_button[data-icon='crop_landscape']");
         await animationFrame();
         await expectElementCount(".o-we-linkpopover", 1);
     });

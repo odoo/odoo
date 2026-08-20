@@ -26,7 +26,7 @@ export class TableUIPlugin extends Plugin {
                 id: "openTablePicker",
                 title: _t("Table"),
                 description: _t("Insert a table"),
-                icon: "table_chart",
+                icon: "table",
                 run: this.openPickerOrInsertTable.bind(this),
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) &&

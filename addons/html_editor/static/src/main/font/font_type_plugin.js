@@ -135,6 +135,7 @@ export class FontTypePlugin extends Plugin {
             {
                 title: _t("Heading 1"),
                 description: _t("Big section heading"),
+                icon: "format_h1",
                 categoryId: "format",
                 commandId: "setTagHeading",
                 commandParams: { level: 1 },
@@ -143,6 +144,7 @@ export class FontTypePlugin extends Plugin {
             {
                 title: _t("Heading 2"),
                 description: _t("Medium section heading"),
+                icon: "format_h2",
                 categoryId: "format",
                 commandId: "setTagHeading",
                 commandParams: { level: 2 },
@@ -151,6 +153,7 @@ export class FontTypePlugin extends Plugin {
             {
                 title: _t("Heading 3"),
                 description: _t("Small section heading"),
+                icon: "format_h3",
                 categoryId: "format",
                 commandId: "setTagHeading",
                 commandParams: { level: 3 },

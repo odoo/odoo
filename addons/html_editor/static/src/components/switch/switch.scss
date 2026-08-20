@@ -1,4 +1,7 @@
-$o-we-switch-size: 1.2em !default;
+$o-we-switch-size: 1.6em !default;
+$o-we-switch-width-ratio: 1.7 !default;
+$o-we-switch-knob-ratio: 0.7 !default;
+$o-we-switch-padding: (1 - $o-we-switch-knob-ratio) * 0.5em;
 $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
 .o_switch {
     display: flex;
@@ -17,19 +20,23 @@ $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
         }
 
         + span {
-            border-radius: $o-we-switch-size;
-            width: $o-we-switch-size * 1.7;
-            padding-left: 3px;
-            padding-right: 3px;
+            box-sizing: border-box;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            font-size: $o-we-switch-size;
+            width: $o-we-switch-width-ratio * 1em;
+            height: 1em;
+            padding: $o-we-switch-padding;
+            border-radius: 1em;
             background-color: $o-we-switch-inactive-color;
-            font-size: $o-we-switch-size * 1.09;
-            line-height: $o-we-switch-size;
-            color: $o-we-switch-inactive-color;
             transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 
-            &:after {
-                content: "cancel_f";
-                font-family: 'Material Symbols Outlined';
+            &::before {
+                content: "cancel";
+                font-size: $o-we-switch-knob-ratio * 1em;
+                width: 1em;
+                text-align: center;
                 color: white;
                 transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
             }
@@ -38,9 +45,11 @@ $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
         &:checked + span {
             background: $o-brand-primary;
 
-            &:after {
-                content: "check_circle_f";
-                margin-left: ($o-we-switch-size * 1.7) - $o-we-switch-size;
+            &::before {
+                content: "check_circle";
+                transform: translateX(
+                    calc(100% * #{$o-we-switch-width-ratio - 1} / #{$o-we-switch-knob-ratio})
+                );
             }
         }
     }
