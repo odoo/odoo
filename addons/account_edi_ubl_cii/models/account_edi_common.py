@@ -386,6 +386,9 @@ class AccountEdiCommon(models.AbstractModel):
                 base_line['quantity'] *= -1
                 base_line['price_unit'] *= -1
 
+    def _get_document_type_code_vals(self, invoice, invoice_data):
+        return {'attrs': {}, 'value': None}
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------

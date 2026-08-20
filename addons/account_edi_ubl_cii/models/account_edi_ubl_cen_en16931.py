@@ -12,18 +12,6 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
-    def _ubl_add_line_allowance_charge_nodes(self, vals):
-        super()._ubl_add_line_allowance_charge_nodes(vals)
-
-        # Discount.
-        self._ubl_add_line_allowance_charge_nodes_for_discount(vals)
-
-        # Recycling contribution taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(vals)
-
-        # Excise taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(vals)
-
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # Early payment discount lines should not appear as lines but as allowances/charges.
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
@@ -38,19 +26,18 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
 
         return super()._line_nodes_filter_base_lines(vals, filter_function=new_filter_function)
 
-    def _ubl_add_party_tax_scheme_nodes(self, vals):
-        super()._ubl_add_party_tax_scheme_nodes(vals)
-
+    def _need_party_tax_scheme_nodes(self, vals):
         # [BR-O-03]/[BR-O-04]/[BR-O-05] no party tax scheme with "Not subject to VAT" VAT Category Code
-        base_lines = vals['base_lines']
-        vals['no_party_tax_scheme'] = (
+        if (
             'ubl_cii_tax_category_code' in self.env['account.tax']._fields
             and any(
                 tax_data['tax'].ubl_cii_tax_category_code == 'O'
-                for base_line in base_lines
+                for base_line in vals['base_lines']
                 for tax_data in base_line['tax_details']['taxes_data']
             )
-        )
+        ):
+            return False
+        return super()._need_party_tax_scheme_nodes(vals)
 
     def _ubl_add_allowance_charge_nodes(self, vals):
         super()._ubl_add_allowance_charge_nodes(vals)
