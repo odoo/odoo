@@ -1,29 +1,28 @@
-import { attClassObjectToString } from "@mail/utils/common/format";
+import { Action as ActionModel } from "@mail/core/common/action";
+import {
+    ActionButton,
+    actionButtonProps,
+    actionButtonPropsSchema,
+} from "@mail/core/common/action_button";
+import { CallSurfaceActionButton } from "@mail/core/common/call_surface_action_button";
+import { ComposerActionButton } from "@mail/core/common/composer_action_button";
+import { MessageActionButton } from "@mail/core/common/message_action_button";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Action as ActionModel } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
-const actionListProps = [
-    "inline?",
-    "dropdown?",
-    "fw?",
-    "hasBtnBg?",
-    "odooControlPanelSwitchStyle?",
-];
+const actionListProps = actionButtonProps;
+const actionListPropsSchema = actionButtonPropsSchema;
 
-const actionListPropsSchema = {
-    dropdown: t.boolean().optional(),
-    fw: t.boolean().optional(true),
-    hasBtnBg: t.boolean().optional(),
-    inline: t.boolean().optional(),
-    odooControlPanelSwitchStyle: t.boolean().optional(),
-};
-
+/**
+ * Wraps an action's chrome with its optional own dropdown (e.g. a "more actions"
+ * overflow menu), and picks which {@link ActionButton} variant renders that chrome
+ * based on the ambient context: the composer toolbar, a message's hover toolbar, a
+ * call surface (call view, meeting, call invitation, pip banner, welcome page), or
+ * the default/generic case.
+ */
 class Action extends Component {
-    static components = { Action, DropdownItem };
     static template = "mail.Action";
 
     get ActionList() {
@@ -32,6 +31,31 @@ class Action extends Component {
 
     get Dropdown() {
         return Dropdown;
+    }
+
+    /** Which {@link ActionButton} variant should render this action's chrome. */
+    get ButtonComponent() {
+        if (this.env.inComposer) {
+            return ComposerActionButton;
+        }
+        if (this.env.inMessage) {
+            return MessageActionButton;
+        }
+        if (this.isCallSurface) {
+            return CallSurfaceActionButton;
+        }
+        return ActionButton;
+    }
+
+    /** Whether this action renders on a call surface (see {@link CallSurfaceActionButton}). */
+    get isCallSurface() {
+        return (
+            (this.env?.inDiscussCallView ||
+                this.env?.inCallInvitation ||
+                this.env.isDiscussPipBanner ||
+                this.env?.inWelcomePage) &&
+            !this.env.inDiscussActionPanel
+        );
     }
 
     setup() {
@@ -44,8 +68,6 @@ class Action extends Component {
             ...actionListPropsSchema,
         });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
-        this.attClassObjectToString = attClassObjectToString;
         if (this.props.action.definition?.isMoreAction) {
             onWillUnmount(() => {
                 this.props.action.dropdownState.close();
@@ -55,33 +77,6 @@ class Action extends Component {
 
     get action() {
         return this.props.action;
-    }
-
-    get hasBtnBg() {
-        return (
-            this.props.odooControlPanelSwitchStyle ||
-            this.props.hasBtnBg ||
-            this.props.action.hasBtnBg
-        );
-    }
-
-    get isInlineCircleButtonValue() {
-        if (!this.props.inline || !this.action.icon) {
-            return false;
-        }
-        if (this.env.inComposer || this.env.inMessage) {
-            return true;
-        }
-        return (
-            this.action.tags.includes("JOIN_LEAVE_CALL") &&
-            this.action.icon &&
-            !this.action.inlineName
-        );
-    }
-
-    onSelected(action, ev) {
-        action.onSelected?.(ev);
-        this.env.inCallDropdown?.close();
     }
 }
 
