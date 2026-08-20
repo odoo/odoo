@@ -520,6 +520,7 @@ export class FormOptionPlugin extends Plugin {
         const activeField = getActiveField(oldFieldEl, { fields });
         if (activeField.type !== field.type) {
             field.value = "";
+            field.propertyValue = "";
         }
         const targetEl = oldFieldEl.querySelector(".s_website_form_input");
         if (targetEl) {
