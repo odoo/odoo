@@ -1186,7 +1186,7 @@ class HrLeave(models.Model):
         for holiday in self:
             if holiday.state in ['validate1', 'validate']:
                 message = _(
-                    "Approved time off cannot be modified (%(employee)s: %(date_from)s to %(date_to)s).",
+                    "To modify an approved Time Off, make sure you unapprove it first (%(employee)s: %(date_from)s to %(date_to)s).",
                     employee=holiday.employee_id.name,
                     date_from=format_date(self.env, holiday.date_from),
                     date_to=format_date(self.env, holiday.date_to),
@@ -1472,14 +1472,6 @@ class HrLeave(models.Model):
     def _prepare_leave_unlink(self):
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        if self.env.context.get('skip_copy_check'):
-            return vals_list
-        if all(leave.state in ['cancel', 'refuse'] for leave in self):  # No overlap constraint in these cases
-            return vals_list
-        raise UserError(_('A time off cannot be duplicated.'))
 
     ####################################################
     # Business methods

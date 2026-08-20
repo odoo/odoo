@@ -36,9 +36,9 @@
         <field name="arch" type="xml">
             <list>
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <field name="display_code" string="Name"/>
                 <field name="code" string="Code"/>
-                <field name="display_code" string="Display"/>
+                <field name="description" class="text-muted"/>
                 <field name="external_code" optional="hide"/>
                 <field string="Considered as" name="count_as"/>
                 <field name="country_id" optional="hide"/>
