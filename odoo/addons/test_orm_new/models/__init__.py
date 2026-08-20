@@ -15,3 +15,4 @@ from . import test_json_field
 from . import test_many2many
 from . import test_one2many
 from . import test_performance
+from . import test_timeit

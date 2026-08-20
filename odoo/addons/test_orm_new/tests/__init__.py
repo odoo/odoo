@@ -24,3 +24,4 @@ from . import test_performance
 from . import test_prefetch
 from . import test_query
 from . import test_registry
+from . import test_timeit
