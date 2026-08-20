@@ -136,14 +136,11 @@ class TestKeysCertificates(TransactionCase):
         correct_password = 'foobar'
         wrong_password = 'barfoo'
         content = file_open('certificate/tests/data/encrypted_private.key', 'rb').read()
-        key = self.env['certificate.key'].create({
-            'content': base64.b64encode(content),
-            'password': wrong_password,
-        })
+        key = self.env['certificate.key'].create({'content': base64.b64encode(content)})
+        self.assertEqual(key.loading_error, '')
+        key.password = wrong_password
         self.assertEqual(key.loading_error, 'This key could not be loaded. Either its content or its password is erroneous.')
-        key.write({
-            'password': correct_password,
-        })
+        key.password = correct_password
         self.assertEqual(key.loading_error, '')
 
     def test_der_certificate(self):
