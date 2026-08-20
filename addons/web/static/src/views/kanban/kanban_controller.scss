@@ -88,15 +88,15 @@
     // Default KanbanView values
 
     --Kanban-background: #{$o-kanban-background};
-    --Kanban-gap: unset;
+    --Kanban-gap: 0;
     --Kanban-padding: 0;
 
     --KanbanGroup-background: var(--Kanban-background);
     --KanbanGroup-padding-h: #{$o-kanban-group-padding};
     --KanbanGroup-padding-bottom: #{$o-kanban-group-padding};
 
-    --KanbanRecord-margin-v: #{$o-kanban-record-margin};
-    --KanbanRecord-margin-h: #{$o-kanban-record-margin};
+    --KanbanRecord-margin-v: 0;
+    --KanbanRecord-margin-h: 0;
     --KanbanRecord-gap-v: #{$o-kanban-inner-hmargin};
     --KanbanRecord-width: #{$o-kanban-default-record-width}; 
     --KanbanRecord--small-width: #{$o-kanban-small-record-width};
@@ -151,13 +151,12 @@
 
     .o_kanban_quick_create {
         border: $border-width solid $border-color;
+        border-radius: $border-radius-lg;
         background-color: $o-view-background-color;
-    }
-
-    .o_kanban_quick_create {
-        margin-bottom: calc(var(--KanbanRecord-margin-h) * 2);
-        margin-top: calc(var(--KanbanRecord-margin-h) * 2);
-        padding: 8px;
+        margin-bottom: map-get($spacers, 3);
+        // TODO: Use variables from card.scss.
+        // We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element.
+        padding: 14px;
 
         .o_form_view .o_inner_group {
             margin: 0;
@@ -323,7 +322,7 @@
             }
 
             .o_column_title {
-                @include o-position-absolute(map-get($spacers, 3));
+                @include o-position-absolute(map-get($spacers, 3), auto, auto, 11px);
                 transform-origin: left bottom 0;
                 transform: rotate(90deg);
                 overflow: visible;
@@ -344,12 +343,13 @@
         min-height: 100%;
 
         @include media-breakpoint-up(md) {
-            --Kanban-padding:  var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
+            --Kanban-padding: 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)};
+            --Kanban-gap: #{$o-kanban-record-margin * 2};
         }
 
         .o_kanban_record {
             width: var(--KanbanRecord-width);
-            margin: calc(var(--KanbanRecord-margin-v) * 0.5) var(--KanbanRecord-margin-h);
+            margin: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
 
             @include media-breakpoint-down(md) {
                 margin: 0 0 #{-$border-width};

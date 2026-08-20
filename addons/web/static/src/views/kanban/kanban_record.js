@@ -145,7 +145,7 @@ export class KanbanRecord extends CardRenderer {
         }
         if (cardColorField) {
             const value = record.data[cardColorField];
-            classes.push(`${this.constructor.HIGHLIGHT_COLOR_PREFIX}${getColorIndex(value)}`);
+            classes.push(`o_kanban_record_colored ${this.constructor.HIGHLIGHT_COLOR_PREFIX}${getColorIndex(value)}`);
         }
         if (!this.props.groupByField) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");

@@ -18,8 +18,8 @@
                 </div>
                 <t t-if="this.uiService.isSmall or !this.group.isFolded">
                     <GroupConfigMenu t-props="this.configMenuProps"/>
-                    <button t-if="this.canQuickCreate()" class="o_kanban_quick_add d-print-none btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
-                        <i class="oi opacity-75 opacity-100-hover" data-icon="add_2" role="img" aria-label="Quick add" title="Quick add"/>
+                    <button t-if="this.canQuickCreate()" class="o_kanban_quick_add o_btn_circle d-print-none btn me-0" t-on-click="() => this.quickCreate()">
+                        <i class="oi" data-icon="add_2" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>
                 </t>
                 <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-between flex-nowrap transition-base">
