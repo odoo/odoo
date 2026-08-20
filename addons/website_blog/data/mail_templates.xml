@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="1">
-    <template id="blog_post_template_new_post">
+    <template id="blog_post_template_new_post" technical_usage="mail_post_source">
         <p>A new post <t t-out="post.name" /> has been published on the <t t-out="object.name" /> blog. Click here to access the blog :</p>
         <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
             <a t-attf-href="#{post.get_base_url()}/blog/#{slug(object)}/#{slug(post)}"
