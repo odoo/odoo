@@ -241,10 +241,11 @@ class InvoiceConsumer:
             # Cache writes store `parsed` as JSON (pydantic models are
             # serialized in app/llm_cache.py). Re-validate it back to the
             # model so the publish + validation paths below can call
-            # `model_dump()` / attribute access unchanged. On the
-            # fresh-extraction path `parsed` is already a model — skip.
+            # `model_dump()` / attribute access unchanged. Only dict input
+            # (the JSON form from cache) is re-validated — model instances
+            # and test doubles are left untouched.
             parsed = result["parsed"]
-            if not isinstance(parsed, InvoiceExtraction):
+            if isinstance(parsed, dict):
                 parsed = InvoiceExtraction.model_validate(parsed)
             result["parsed"] = parsed
 

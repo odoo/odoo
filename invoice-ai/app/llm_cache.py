@@ -28,7 +28,7 @@ STATS_MISSES_KEY = "invoice:llm:stats:misses"
 # when the system prompt changes.
 PROMPT_VERSION = os.environ.get("LLM_CACHE_PROMPT_VERSION", "v1")
 
-_redis_client = None
+_redis_client: redis.Redis | None = None
 
 
 def _get_client() -> redis.Redis | None:
