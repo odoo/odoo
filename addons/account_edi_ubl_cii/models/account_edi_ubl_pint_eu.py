@@ -39,6 +39,18 @@ class AccountEdiUBLPintEU(models.AbstractModel):
 
         return node
 
+    def _ubl_add_line_allowance_charge_nodes(self, vals):
+        super()._ubl_add_line_allowance_charge_nodes(vals)
+
+        # Discount.
+        self._ubl_add_line_allowance_charge_nodes_for_discount(vals)
+
+        # Recycling contribution taxes.
+        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(vals)
+
+        # Excise taxes.
+        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(vals)
+
     def _ubl_add_payment_means_nodes(self, vals):
         super()._ubl_add_payment_means_nodes(vals)
 
