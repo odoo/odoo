@@ -16,3 +16,16 @@ class AccountMove(models.Model):
         super()._compute_show_taxable_supply_date()
         for move in self.filtered(lambda m: m.country_code == 'SK'):
             move.show_taxable_supply_date = True
+
+    def _generate_qr_code(self, silent_errors=False):
+        """ Forward the due date to the QR-code generation.
+
+        The PAY by square data model carries the payment due date, which the
+        generic QR-code generation signature does not provide.
+        """
+        # EXTENDS account
+        self.ensure_one()
+        return super(
+            AccountMove,
+            self.with_context(l10n_sk_qr_due_date=self.invoice_date_due),
+        )._generate_qr_code(silent_errors)
