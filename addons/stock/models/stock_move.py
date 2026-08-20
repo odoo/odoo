@@ -1809,9 +1809,37 @@ Please change the quantity done or the rounding precision of your unit of measur
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
+    def _cancel_origin_restore_mode(self):
+        """Return the scoped origin-restore mode for _action_cancel()."""
+        if self.env.context.get('cancel_from_mo'):
+            return 'keep_non_cancelled'
+        if self.env.context.get('cancel_backorder') or (
+            self.filtered(lambda m: m.picking_type_id.code == 'incoming')
+            or self.move_orig_ids.filtered(lambda m: m.picking_type_id.code == 'incoming')
+        ):
+            # No-backorder validation cancels the upstream receipt move itself.
+            # Keep the cancelled origin link so downstream moves remain traceable.
+            return 'keep_all'
+        return False
+
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
+        restore_mode = self._cancel_origin_restore_mode()
+        preserved = preserved_dests = {}
+        if restore_mode:
+            preserved = {
+                move.id: (
+                    move.move_orig_ids.filtered(lambda m: m.state != 'cancel')
+                    if restore_mode == 'keep_non_cancelled'
+                    else move.move_orig_ids
+                )
+                for move in self
+            }
+            preserved_dests = {
+                move.id: move.move_dest_ids if restore_mode == 'keep_all' else self.env['stock.move']
+                for move in self
+            }
         moves_to_cancel = self.filtered(lambda m: m.state != 'cancel' and not (m.state == 'done' and m.scrapped))
         moves_to_cancel.picked = False
         # self cannot contain moves that are either cancelled or done, therefore we can safely
@@ -1840,6 +1868,20 @@ Please change the quantity done or the rounding precision of your unit of measur
             'move_orig_ids': [(5, 0, 0)],
             'procure_method': 'make_to_stock',
         })
+        if restore_mode:
+            for move_id, origins in preserved.items():
+                keep = (
+                    origins.filtered(lambda m: m.state != 'cancel')
+                    if restore_mode == 'keep_non_cancelled'
+                    else origins
+                )
+                if keep:
+                    self.browse(move_id).move_orig_ids = [Command.set(keep.ids)]
+            if restore_mode == 'keep_all':
+                for move_id, move_dests in preserved_dests.items():
+                    for move_dest in move_dests:
+                        if move_id not in move_dest.move_orig_ids.ids:
+                            move_dest.move_orig_ids = [Command.link(move_id)]
         return True
 
     def _prepare_extra_move_vals(self, qty):
