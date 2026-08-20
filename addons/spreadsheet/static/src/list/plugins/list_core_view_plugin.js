@@ -252,6 +252,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                 domain: definition.domain,
                 context: definition.context,
                 orderBy: definition.orderBy,
+                groupBy: definition.groupBy,
             },
             name: definition.name,
             columns: definition.columns,
