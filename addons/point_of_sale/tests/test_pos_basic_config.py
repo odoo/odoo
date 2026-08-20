@@ -8,7 +8,6 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import ValidationError, UserError
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
-from datetime import datetime, timedelta
 import unittest.mock
 
 
@@ -1085,35 +1084,92 @@ class TestPoSBasicConfig(TestPoSCommon):
             {'account_id': self.receivable_account.id, 'balance': 117.72, 'reconciled': True},
         ])
 
-    def test_limited_products_loading(self):
-        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 3)
+    def _get_loaded_product_ids(self, session):
+        data = session.load_data([])
+        special_product = session.config_id._get_special_products().ids
+        return [p['product_variant_ids'][0] for p in data['product.template']
+                if p['product_variant_ids'][0] not in special_product]
 
-        # Make the service products that are available in the pos inactive.
-        # We don't need them to test the loading of 'consu' products.
-        self.env['product.template'].search([('available_in_pos', '=', True), ('type', '=', 'service')]).write({'available_in_pos': False})
+    def test_limited_products_loading(self):
+        """
+        This test makes sure that the limited products loading feature loads
+        at most `point_of_sale.limited_product_count` product templates,
+        regardless of which specific criteria decides which ones make the
+        cut. That ordering is a separate concern which can be overridden by
+        other modules.
+        """
+        # Restrict the loaded-product domain to our own POS category so any
+        # other available_in_pos product (demo data, combos, setUp fixtures)
+        # never competes for the limited slots.
+        test_categ = self.env['pos.category'].create({'name': 'Limited Loading Test Category'})
+        self.config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, test_categ.ids)],
+        })
+        products = self.env['product.product']
+        for i in range(5):
+            products |= self.create_product(f'Count Product {i}', self.categ_basic, 10)
+        products.product_tmpl_id.write({'pos_categ_ids': [(6, 0, test_categ.ids)]})
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 3)
+        self.env.flush_all()
+        session = self.open_new_session(0)
+
+        self.assertEqual(len(self._get_loaded_product_ids(session)), 3)
+
+    def test_limited_products_loading_priority(self):
+        """
+        This test makes sure that our limited products loading feature
+        prioritizes product templates in this order, with ties being broken
+        by the next trait:
+        1st. "Favorited" products (is_favorite)
+        2nd. "Service" type products (type)
+        3rd. Recently written to products (write_date)
+        """
+        if 'pos_stock' in self.env['ir.module.module']._installed():
+            self.skipTest(
+                "The module pos_stock is installed and defines a conflicting ordering.")
+        # Restrict the loaded-product domain to our own POS category so any
+        # other available_in_pos product (demo data, combos, setUp fixtures)
+        # never competes for the limited spots.
+        test_categ = self.env['pos.category'].create({'name': 'Priority Test Category'})
+        self.config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, test_categ.ids)],
+        })
+        product0 = self.create_product('Priority Product 0', self.categ_basic, 10)
+        product1 = self.create_product('Priority Product 1', self.categ_basic, 10)
+        product2 = self.create_product('Priority Product 2', self.categ_basic, 10)
+        product3 = self.create_product('Priority Product 3', self.categ_basic, 10)
+        product4 = self.create_product('Priority Product 4', self.categ_basic, 10)
+        (product0 | product1 | product2 | product3 | product4).product_tmpl_id.write({
+            'pos_categ_ids': [(6, 0, test_categ.ids)],
+        })
+        product2.product_tmpl_id.write({"is_favorite": True, "type": "consu"})
+        product3.product_tmpl_id.write({"is_favorite": False, "type": "service"})
+        product4.product_tmpl_id.write({"is_favorite": False, "type": "consu"})
+
+        # product0 and product1 are tied on (is_favorite, type); only
+        # write_date should decide between them.
+        now = fields.Datetime.now()
+        self.patch(self.env.cr, 'now', lambda: now - relativedelta(minutes=1))
+        product1.product_tmpl_id.write({"is_favorite": True, "type": "service"})
+        self.env.flush_all()
+        self.patch(self.env.cr, 'now', lambda: now)
+        product0.product_tmpl_id.write({"is_favorite": True, "type": "service"})
+        self.env.flush_all()
 
         session = self.open_new_session(0)
-        self.product1.write({'company_id': False})
-        self.product2.write({'company_id': False})
-        self.product3.write({'company_id': False})
 
-        def get_top_product_ids(count):
-            data = session.load_data([])
-            special_product = session.config_id._get_special_products().ids
-            available_top_product = [product for product in data['product.template'] if product['product_variant_ids'][0] not in special_product]
-            return [p['product_variant_ids'][0] for p in available_top_product[:count]]
+        def loaded_ids(limit):
+            self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', limit)
+            return self._get_loaded_product_ids(session)
 
-        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
-        self.assertEqual(get_top_product_ids(1), [self.product1.id])
-
-        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=2))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
-        self.assertEqual(get_top_product_ids(2), [self.product1.id, self.product2.id])
-
-        self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
-        self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
+        # write_date breaks the tie between product0 and product1.
+        self.assertCountEqual(loaded_ids(1), [product0.id])
+        # is_favorite outranks type: both favorited products beat any non-favorite.
+        self.assertCountEqual(loaded_ids(3), [product0.id, product1.id, product2.id])
+        # type breaks ties among non-favorited products too.
+        self.assertCountEqual(loaded_ids(4), [product0.id, product1.id, product2.id, product3.id])
 
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
