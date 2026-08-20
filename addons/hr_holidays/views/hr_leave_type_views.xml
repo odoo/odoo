@@ -94,14 +94,15 @@
                                     <label for="include_public_holidays_in_duration" class="fw-bold me-4"/>
                                     <label for="hide_on_dashboard" class="fw-bold me-4"/>
                                     <label for="support_document" class="fw-bold me-4" string="Require Supporting Document"/>
+                                    <label for="create_calendar_meeting" class="fw-bold me-4"/>
                                 </div>
                                 <div class="d-flex flex-column gap-1">
                                     <field name="include_public_holidays_in_duration" class="mb-2" nolabel="1"/>
                                     <field name="hide_on_dashboard" class="mb-2" nolabel="1"/>
                                     <field name="support_document" nolabel="1"/>
+                                    <field name="create_calendar_meeting" nolabel="1"/>
                                 </div>
                             </div>
-                            <field name="create_calendar_meeting"/>
                         </group>
                         <group name="negative_cap" id="negative_cap" string="Negative Cap"
                             invisible="not requires_allocation">
