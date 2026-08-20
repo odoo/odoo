@@ -6,8 +6,11 @@
             <field name="name">Gift Card</field>
             <field name="list_price">50</field>
             <field name="type">service</field>
-	        <field name="purchase_ok" eval="False"/>
-	        <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+            <field name="purchase_ok" eval="False"/>
+            <field
+                name="categ_id"
+                eval="ref('product.product_category_services', raise_if_not_found=False)"
+            />
             <field name="image_1920" type="bytes" file="loyalty/static/img/gift_card.png"/>
         </record>
         <!-- Basic product for eWallet programs -->
@@ -15,8 +18,11 @@
             <field name="name">Top-up eWallet</field>
             <field name="list_price">50</field>
             <field name="type">service</field>
-	        <field name="purchase_ok" eval="False"/>
-	        <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+            <field name="purchase_ok" eval="False"/>
+            <field
+                name="categ_id"
+                eval="ref('product.product_category_services', raise_if_not_found=False)"
+            />
         </record>
 
         <record forcecreate="0" id="config_online_sync_proxy_mode" model="ir.config_parameter">

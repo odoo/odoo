@@ -27,7 +27,8 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.us'), ref('base.ca')])]"/>
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.CAD'), ref('base.USD')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.CAD'), ref('base.USD')])]"
         />
     </record>
 
@@ -92,7 +93,8 @@
                         ref('base.it'),
                         ref('base.lu'),
                         ref('base.nl'),
-                ])]"/>
+                ])]"
+        />
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
@@ -239,7 +241,10 @@
         <field name="support_manual_capture">none</field>
         <field name="support_refund">partial</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.my'), ref('base.sg')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD'), ref('base.MYR')])]"/>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.SGD'), ref('base.MYR')])]"
+        />
     </record>
 
     <record id="payment_method_ideal" model="payment.method">
@@ -603,7 +608,8 @@
                         ref('base.SEK'),
                         ref('base.SGD'),
                         ref('base.USD'),
-                ])]"/>
+                ])]"
+        />
     </record>
 
     <record id="payment_method_zip" model="payment.method">
@@ -616,7 +622,8 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.au'), ref('base.us')])]"/>
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.AUD'), ref('base.USD')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AUD'), ref('base.USD')])]"
         />
     </record>
 

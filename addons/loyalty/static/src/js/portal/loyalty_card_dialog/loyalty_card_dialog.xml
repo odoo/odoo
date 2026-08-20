@@ -14,7 +14,7 @@
                     </div>
                     <div class="d-flex flex-column align-items-end">
                         <span class="fs-5" t-out="this.props.card.points_display"/>
-                        <i class="text-secondary fs-6" t-if="this.props.card.expiration_date">
+                        <i t-if="this.props.card.expiration_date" class="text-secondary fs-6">
                             Valid until <t t-out="this.props.card.expiration_date"/>
                         </i>
                     </div>

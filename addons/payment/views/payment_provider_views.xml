@@ -9,8 +9,11 @@
                 <header/>
                 <sheet>
                     <!-- === Stat Buttons === -->
-                    <div class="oe_button_box" name="button_box"
-                         invisible="module_state != 'installed'">
+                    <div
+                        class="oe_button_box"
+                        name="button_box"
+                        invisible="module_state != 'installed'"
+                    >
                         <button
                             type="object"
                             name="action_toggle_is_published"
@@ -201,7 +204,7 @@
                                     <field
                                         name="company_id"
                                         groups="base.group_multi_company"
-                                        options='{"no_open":True}'
+                                        options="{'no_open':True}"
                                     />
                                 </group>
                             </group>
@@ -280,17 +283,23 @@
                 <field name="module_to_buy"/>
                 <templates>
                     <t t-name="card" class="flex-row">
-                        <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
+                        <t
+                            t-set="installed"
+                            t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"
+                        />
                         <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
                         <t t-set="is_published" t-value="record.is_published.raw_value === true"/>
                         <t t-set="is_live" t-value="record.is_live.raw_value === true"/>
                         <t t-set="to_upgrade" t-value="!installed and to_buy"/>
                         <aside>
-                            <field type="open"
-                                 name="image_128" widget="image"
-                                 class="mb-0 o_image_64_max"
-                                 options="{'img_class': 'p-2 border rounded'}"
-                                 alt="provider"/>
+                            <field
+                                type="open"
+                                name="image_128"
+                                widget="image"
+                                class="mb-0 o_image_64_max"
+                                options="{'img_class': 'p-2 border rounded'}"
+                                alt="provider"
+                            />
                         </aside>
                         <main class="ms-2">
                             <field name="name" class="mb-0 fw-bold fs-4"/>
@@ -328,8 +337,18 @@
                                 <span t-if="to_upgrade" class="badge text-bg-primary">Enterprise</span>
                             </div>
                             <footer>
-                                <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary ms-auto" name="button_immediate_install">Install</button>
-                                <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary ms-auto">Upgrade</button>
+                                <button
+                                    t-if="!installed and !selection_mode and !to_buy"
+                                    type="object"
+                                    class="btn btn-sm btn-primary ms-auto"
+                                    name="button_immediate_install"
+                                >Install</button>
+                                <button
+                                    t-if="!installed and to_buy"
+                                    href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module"
+                                    target="_blank"
+                                    class="btn btn-sm btn-primary ms-auto"
+                                >Upgrade</button>
                             </footer>
                         </main>
                     </t>
@@ -355,11 +374,24 @@
                         ('payment_method_ids.brand_ids.code', 'ilike', self),
                    ]"
                 />
-                <filter name="archived_provider" string="Archived" domain="[('active', '=', False)]"/>
-                <filter name="provider_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
+                <filter
+                    name="archived_provider"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <filter
+                    name="provider_installed"
+                    string="Installed"
+                    domain="[('module_state', '=', 'installed')]"
+                />
                 <group>
                     <filter string="Provider" name="code" context="{'group_by': 'code'}"/>
-                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter
+                        string="Company"
+                        name="company"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"
+                    />
                 </group>
             </search>
         </field>

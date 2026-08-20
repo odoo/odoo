@@ -4,14 +4,16 @@
     <!-- Only load the SDK on pages with the payment form. -->
     <template id="payment_adyen.form" inherit_id="payment.form">
         <xpath expr="." position="inside">
-            <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.js"
-                    integrity="sha384-xEeOeJS9noqG6GBdLeyfdybymyC6T4EG+kKvvii2xJkChmwENEgCTpP+XvET9NDG"
-                    crossorigin="anonymous"
+            <script
+                src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.js"
+                integrity="sha384-xEeOeJS9noqG6GBdLeyfdybymyC6T4EG+kKvvii2xJkChmwENEgCTpP+XvET9NDG"
+                crossorigin="anonymous"
             />
-            <link rel="stylesheet"
-                  href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.css"
-                  integrity="sha384-wfFaUCatOjF81fz/vsj2zdQuPWekgx9HbIMfEUjEHzTKX7v/juxeM+zIJA0QKJtO"
-                  crossorigin="anonymous"
+            <link
+                rel="stylesheet"
+                href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.css"
+                integrity="sha384-wfFaUCatOjF81fz/vsj2zdQuPWekgx9HbIMfEUjEHzTKX7v/juxeM+zIJA0QKJtO"
+                crossorigin="anonymous"
             />
         </xpath>
     </template>

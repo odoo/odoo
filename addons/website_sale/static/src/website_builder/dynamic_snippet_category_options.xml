@@ -109,7 +109,7 @@
                     }"
                 />
             </BuilderRow>
-            <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
+            <BuilderRow t-if="!this.isActiveItem('clickable_items_opt')" label.translate="Button">
                 <BuilderTextInput dataAttributeAction="'button'"/>
             </BuilderRow>
         </BuilderRow>

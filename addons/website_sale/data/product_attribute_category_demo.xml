@@ -57,7 +57,10 @@
     </record>
 
     <function model="product.product" name="write">
-        <value model="product.product" search="[('product_tmpl_id', '=', ref('product.product_product_6_product_template'))]"/>
+        <value
+            model="product.product"
+            search="[('product_tmpl_id', '=', ref('product.product_product_6_product_template'))]"
+        />
         <value eval="{'barcode': ''}"/>
     </function>
     <record id="product_6_length_template_attribute_line" model="product.template.attribute.line">
@@ -69,13 +72,17 @@
                 ref('product.pav_height_45'),
                 ref('product.pav_height_85'),
                 ref('product.pav_height_100'),
-        ])]"/>
+        ])]"
+        />
     </record>
     <function model="product.product" name="write">
-        <value model="product.product" search="[
+        <value
+            model="product.product"
+            search="[
         ('product_tmpl_id', '=', ref('product.product_product_6_product_template')),
         ('product_template_attribute_value_ids.product_attribute_value_id', '=', ref('product.pav_height_45'))
-        ]"/>
+        ]"
+        />
         <value eval="{'barcode': '6016478556509'}"/>
     </function>
 

@@ -28,7 +28,8 @@
         <field name="image" type="bytes" file="payment/static/img/atome.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.my'), ref('base.sg')])]"/>
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.MYR'), ref('base.SGD')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.MYR'), ref('base.SGD')])]"
         />
     </record>
 

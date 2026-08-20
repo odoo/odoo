@@ -19,7 +19,11 @@
         -->
         <t t-set="page_title">Payment</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t
+            t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+        >
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -44,19 +48,24 @@
                                     <strong>Warning</strong> Make sure you are logged in as the
                                     correct partner before making this payment.
                                 </div>
-                                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 py-2
+                                <div
+                                    class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 py-2
                                             rounded"
                                 >
-                                    <t t-call="payment.summary_item"
+                                    <t
+                                        t-call="payment.summary_item"
                                         name.f="amount"
                                         label.translate="Amount"
                                         value="amount"
-                                        options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                    <t t-call="payment.summary_item"
+                                        options="{'widget': 'monetary', 'display_currency': currency}"
+                                    />
+                                    <t
+                                        t-call="payment.summary_item"
                                         name.f="reference"
                                         label.translate="Reference"
                                         value="reference_prefix"
-                                        include_separator="True"/>
+                                        include_separator="True"
+                                    />
                                 </div>
                                 <div class="mt-4">
                                     <t t-call="payment.form"/>
@@ -87,7 +96,11 @@
     <template id="payment.payment_methods" name="Payment Methods">
         <t t-set="page_title">Payment Methods</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t
+            t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+        >
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -107,7 +120,11 @@
     <template id="payment.payment_status" name="Payment Status">
         <t t-set="page_title">Payment Status</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t
+            t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+        >
             <div class="wrap">
                 <div class="container">
                     <!-- Payment status page -->
@@ -143,7 +160,8 @@
                                     </p>
                                 </div>
                                 <div class="o_payment_summary d-flex gap-3">
-                                    <t t-call="payment.summary_item"
+                                    <t
+                                        t-call="payment.summary_item"
                                         name.f="amount"
                                         label.translate="Amount"
                                         value="tx.amount"
@@ -152,11 +170,13 @@
                                                     'display_currency': tx.currency_id,
                                                 }"
                                     />
-                                    <t t-call="payment.summary_item"
+                                    <t
+                                        t-call="payment.summary_item"
                                         name.f="reference"
                                         label.translate="Reference"
                                         value="tx.reference"
-                                        include_separator="True"/>
+                                        include_separator="True"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -173,55 +193,72 @@
         -->
         <t t-set="page_title">Payment Confirmation</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t
+            t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+        >
             <t t-set="show_pm" t-value="tx.payment_method_code != 'unknown'"/>
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
                     <t t-call="payment.portal_breadcrumb"/>
                     <div class="row justify-content-center my-3">
-                    <div class="col-12 col-lg-7">
+                        <div class="col-12 col-lg-7">
                         <!-- Confirmation page -->
-                        <div class="row">
-                            <div class="col">
-                                <t t-call="payment.state_header"/>
+                            <div class="row">
+                                <div class="col">
+                                    <t t-call="payment.state_header"/>
+                                </div>
                             </div>
-                        </div>
-                        <div t-att-class="'text-bg-light row row-cols-1 mx-0 mb-3 py-2 rounded'
+                            <div
+                                t-att-class="'text-bg-light row row-cols-1 mx-0 mb-3 py-2 rounded'
                                           + (' row-cols-md-4' if show_pm else ' row-cols-md-3')"
-                        >
-                            <t t-call="payment.summary_item"
-                                name.f="amount"
-                                label.translate="Amount"
-                                value="tx.amount"
-                                options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
-                            <t t-call="payment.summary_item"
-                                name.f="reference"
-                                label.translate="Reference"
-                                value="tx.reference"
-                                include_separator="True"/>
-                            <t t-if="tx.payment_method_code != 'unknown'">
-                               <t t-call="payment.summary_item"
-                                   name.f="method"
-                                   label.translate="Payment Method"
-                                   value="tx.payment_method_id.name"
-                                   include_separator="True"/>
-                            </t>
-                            <t t-call="payment.summary_item"
-                                name.f="provider"
-                                label.translate="Processed by"
-                                value="tx.provider_id.sudo().name"
-                                include_separator="True"/>
-                        </div>
+                            >
+                                <t
+                                    t-call="payment.summary_item"
+                                    name.f="amount"
+                                    label.translate="Amount"
+                                    value="tx.amount"
+                                    options="{'widget': 'monetary', 'display_currency': tx.currency_id}"
+                                />
+                                <t
+                                    t-call="payment.summary_item"
+                                    name.f="reference"
+                                    label.translate="Reference"
+                                    value="tx.reference"
+                                    include_separator="True"
+                                />
+                                <t t-if="tx.payment_method_code != 'unknown'">
+                                    <t
+                                        t-call="payment.summary_item"
+                                        name.f="method"
+                                        label.translate="Payment Method"
+                                        value="tx.payment_method_id.name"
+                                        include_separator="True"
+                                    />
+                                </t>
+                                <t
+                                    t-call="payment.summary_item"
+                                    name.f="provider"
+                                    label.translate="Processed by"
+                                    value="tx.provider_id.sudo().name"
+                                    include_separator="True"
+                                />
+                            </div>
 
-                        <div class="row">
-                            <div class="col offset-md-3 ps-0">
-                                <a role="button" class="btn btn-primary float-end" href="/my/home">
+                            <div class="row">
+                                <div class="col offset-md-3 ps-0">
+                                    <a
+                                        role="button"
+                                        class="btn btn-primary float-end"
+                                        href="/my/home"
+                                    >
                                     Go to my Account <i class="oi ms-2" data-icon="east"/>
-                                </a>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -238,10 +275,13 @@
                 <ol class="breadcrumb px-0 mt16">
                     <li id="o_payment_portal_home" class="breadcrumb-item">
                         <a href="/my/home">
-                            <i class="oi" data-icon="home"
-                               role="img"
-                               title="Home"
-                               aria-label="Home"/>
+                            <i
+                                class="oi"
+                                data-icon="home"
+                                role="img"
+                                title="Home"
+                                aria-label="Home"
+                            />
                         </a>
                     </li>
                     <li class="breadcrumb-item"><t t-out="page_title"/></li>
@@ -259,17 +299,20 @@
             - include_separator: Whether the summary item should be preceded by a separator.
         -->
         <t t-set="options" t-value="options or {'widget': 'string'}"/>
-        <div t-att-class="'col my-3 text-break text-center'
+        <div
+            t-att-class="'col my-3 text-break text-center'
                           + (' o_payment_summary_separator' if include_separator else '')"
         >
-            <label t-attf-for="o_payment_summary_{{name}}"
-                   t-out="label"
-                   class="d-block small opacity-75"
+            <label
+                t-attf-for="o_payment_summary_{{name}}"
+                t-out="label"
+                class="d-block small opacity-75"
             />
-            <span t-attf-id="o_payment_summary_{{name}}"
-                  t-out="value"
-                  t-options="options"
-                  class="fs-5 fw-bold"
+            <span
+                t-attf-id="o_payment_summary_{{name}}"
+                t-out="value"
+                t-options="options"
+                class="fs-5 fw-bold"
             />
         </div>
     </template>

@@ -23,7 +23,10 @@
                                 <div class="o_video_container p-2">
                                     <span>Video Preview</span>
                                     <field name="video_url" class="mt-2" widget="video_preview"/>
-                                    <h4 class="o_invalid_warning text-muted text-center" invisible="video_url">
+                                    <h4
+                                        class="o_invalid_warning text-muted text-center"
+                                        invisible="video_url"
+                                    >
                                         Please enter a valid Video URL.
                                     </h4>
                                 </div>
@@ -47,7 +50,11 @@
                     <t t-name="card" class="p-0 border-0">
                         <div class="card">
                             <div class="o_squared_image">
-                                <field class="card-img-top" name="image_1920" widget="x2_many_image"/>
+                                <field
+                                    class="card-img-top"
+                                    name="image_1920"
+                                    widget="x2_many_image"
+                                />
                             </div>
                             <div class="p-2 m-0 bg-200" t-attf-title="#{record.name.value}">
                                 <field name="name" class="small fs-5 text-truncate d-block"/>
@@ -59,7 +66,7 @@
                             </t>
                             <!-- below 1000 Kb: decent -->
                             <t t-elif="record.image_1920.raw_value.length &lt; 1000*1000">
-                                <t t-set="size_status" t-value="'text-bg-warning'" />
+                                <t t-set="size_status" t-value="'text-bg-warning'"/>
                                 <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
                             </t>
                             <!-- above 1000 Kb: bad -->
@@ -67,7 +74,10 @@
                                 <t t-set="size_status" t-value="'text-bg-danger'"/>
                                 <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
                             </t>
-                            <span t-attf-class="badge #{size_status} o_product_image_size" t-att-title="message"></span>
+                            <span
+                                t-attf-class="badge #{size_status} o_product_image_size"
+                                t-att-title="message"
+                            ></span>
                         </div>
                     </t>
                 </templates>

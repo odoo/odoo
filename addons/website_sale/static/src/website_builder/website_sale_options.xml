@@ -1,110 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//t[@id='image_options']" position="before">
-        <product_image_option
-            template="website_sale.ProductImageOption"
-            t-attf-selector=".o_wsale_product_images :is({{replaceMediaOptionSelector}})"
-            t-att-exclude="replaceMediaOptionExclude"/>
-    </xpath>
-    <xpath expr="//replace_media_option" position="attributes">
-        <attribute name="t-attf-exclude" add=".o_wsale_product_images :is({{replaceMediaOptionSelector}})" separator=", "/>
-    </xpath>
-    <xpath expr="//image_pop_up_option" position="attributes">
-        <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
-    </xpath>
-    <xpath expr="//replace_media_option" position="attributes">
-        <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
-    </xpath>
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='image_options']" position="before">
+            <product_image_option
+                template="website_sale.ProductImageOption"
+                t-attf-selector=".o_wsale_product_images :is({{replaceMediaOptionSelector}})"
+                t-att-exclude="replaceMediaOptionExclude"
+            />
+        </xpath>
+        <xpath expr="//replace_media_option" position="attributes">
+            <attribute
+                name="t-attf-exclude"
+                add=".o_wsale_product_images :is({{replaceMediaOptionSelector}})"
+                separator=", "
+            />
+        </xpath>
+        <xpath expr="//image_pop_up_option" position="attributes">
+            <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
+        </xpath>
+        <xpath expr="//replace_media_option" position="attributes">
+            <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
+        </xpath>
 
-    <xpath expr="//t[@id='page_options_hook']" position="after">
-        <checkout_page_option
-            selector="main:has(.oe_website_sale .o_wizard)"
-            title="Checkout"
-            editableOnly="false"
-            groups='["website.group_website_designer"]'/>
-        <products_list_page_option
-            selector="main:has(#o_wsale_container)"
-            applyTo="#o_wsale_container"
-            title="Products Page"
-            editableOnly="false"
-            groups='["website.group_website_designer"]'/>
-        <product_page_option
-            t-att-selector="this.productPageOptionSelector"
-            title="Product Page"
-            editableOnly="false"
-            groups='["website.group_website_designer"]'/>
-    </xpath>
+        <xpath expr="//t[@id='page_options_hook']" position="after">
+            <checkout_page_option
+                selector="main:has(.oe_website_sale .o_wizard)"
+                title="Checkout"
+                editableOnly="false"
+                groups="['website.group_website_designer']"
+            />
+            <products_list_page_option
+                selector="main:has(#o_wsale_container)"
+                applyTo="#o_wsale_container"
+                title="Products Page"
+                editableOnly="false"
+                groups="['website.group_website_designer']"
+            />
+            <product_page_option
+                t-att-selector="this.productPageOptionSelector"
+                title="Product Page"
+                editableOnly="false"
+                groups="['website.group_website_designer']"
+            />
+        </xpath>
 
-    <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <add_to_cart_option selector=".s_add_to_cart"/>
-        <dynamic_snippet_category_item_options
-            template="website_sale.dynamicSnippetCategoryItemOptions"
-            selector=".s_dynamic_category_item, .all_products"
-            title="Category"
-            editableOnly="false"/>
-        <product_attribute_option
-            template="website_sale.ProductAttributeOption"
-            selector="#product_detail .o_wsale_product_attribute"
-            editableOnly="false"
-            reloadTarget="true"
-            groups='["website.group_website_designer"]'/>
-        <product_header_category_option
-            template="website_sale.ProductHeaderCategoryOption"
-            selector="#products_grid:has(header.o_wsale_products_header_is_category)"
-            title="Category Header"
-            editableOnly="false"
-            reloadTarget="true"
-            groups='["website.group_website_designer"]'/>
-        <product_header_shop_option
-            template="website_sale.ProductHeaderShopOption"
-            selector="#products_grid:has(header.o_wsale_products_header_is_shop)"
-            title="Shop Header"
-            editableOnly="false"
-            reloadTarget="true"
-            groups='["website.group_website_designer"]'/>
-        <products_item_option
-            selector="#products_grid .oe_product"
-            title="Product"
-            editableOnly="false"
-            groups='["website.group_website_designer"]'/>
-        <products_ribbon_option
-            t-attf-selector="#products_grid .oe_product, {{productTemplateOptionSelector}}, {{productVariantOptionSelector}}"
-            editableOnly="false"
-            groups='["website.group_website_designer"]'/>
-        <product_template_option
-            t-att-selector="productTemplateOptionSelector"
-            editableOnly="false"/>
-        <product_variant_option
-            t-att-selector="productVariantOptionSelector"
-            editableOnly="false"/>
-        <product_tag_option
-            template="website_sale.ProductTagOption"
-            t-att-selector="tagSelector"
-            editableOnly="false"
-            title="Tag"
-            groups='["website.group_website_designer"]'/>
-        <product_tag_image_option
-            template="website_sale.ProductTagImageOption"
-            t-att-selector="tagImageSelector"
-            groups='["website.group_website_designer"]'/>
-    </xpath>
+        <xpath expr="//t[@id='snippet_specific_options']" position="after">
+            <add_to_cart_option selector=".s_add_to_cart"/>
+            <dynamic_snippet_category_item_options
+                template="website_sale.dynamicSnippetCategoryItemOptions"
+                selector=".s_dynamic_category_item, .all_products"
+                title="Category"
+                editableOnly="false"
+            />
+            <product_attribute_option
+                template="website_sale.ProductAttributeOption"
+                selector="#product_detail .o_wsale_product_attribute"
+                editableOnly="false"
+                reloadTarget="true"
+                groups="['website.group_website_designer']"
+            />
+            <product_header_category_option
+                template="website_sale.ProductHeaderCategoryOption"
+                selector="#products_grid:has(header.o_wsale_products_header_is_category)"
+                title="Category Header"
+                editableOnly="false"
+                reloadTarget="true"
+                groups="['website.group_website_designer']"
+            />
+            <product_header_shop_option
+                template="website_sale.ProductHeaderShopOption"
+                selector="#products_grid:has(header.o_wsale_products_header_is_shop)"
+                title="Shop Header"
+                editableOnly="false"
+                reloadTarget="true"
+                groups="['website.group_website_designer']"
+            />
+            <products_item_option
+                selector="#products_grid .oe_product"
+                title="Product"
+                editableOnly="false"
+                groups="['website.group_website_designer']"
+            />
+            <products_ribbon_option
+                t-attf-selector="#products_grid .oe_product, {{productTemplateOptionSelector}}, {{productVariantOptionSelector}}"
+                editableOnly="false"
+                groups="['website.group_website_designer']"
+            />
+            <product_template_option
+                t-att-selector="productTemplateOptionSelector"
+                editableOnly="false"
+            />
+            <product_variant_option
+                t-att-selector="productVariantOptionSelector"
+                editableOnly="false"
+            />
+            <product_tag_option
+                template="website_sale.ProductTagOption"
+                t-att-selector="tagSelector"
+                editableOnly="false"
+                title="Tag"
+                groups="['website.group_website_designer']"
+            />
+            <product_tag_image_option
+                template="website_sale.ProductTagImageOption"
+                t-att-selector="tagImageSelector"
+                groups="['website.group_website_designer']"
+            />
+        </xpath>
 
-    <xpath expr="//header_elements_option" position="after">
-        <show_empty_option
-            template="website_sale.ShowEmptyOption"
-            selector="#wrapwrap > header"
-            editableOnly="false"
-            groups='["website.group_website_designer"]'/>
-    </xpath>
+        <xpath expr="//header_elements_option" position="after">
+            <show_empty_option
+                template="website_sale.ShowEmptyOption"
+                selector="#wrapwrap > header"
+                editableOnly="false"
+                groups="['website.group_website_designer']"
+            />
+        </xpath>
 
-    <xpath expr="//device_visibility_option" position="after">
-        <dynamic_snippet_products_option selector=".s_dynamic_snippet_products"/>
-        <dynamic_snippet_category_option
-            selector="section.s_dynamic_snippet_category"
-            groups='["website.group_website_designer"]'/>
-    </xpath>
-</t>
+        <xpath expr="//device_visibility_option" position="after">
+            <dynamic_snippet_products_option selector=".s_dynamic_snippet_products"/>
+            <dynamic_snippet_category_option
+                selector="section.s_dynamic_snippet_category"
+                groups="['website.group_website_designer']"
+            />
+        </xpath>
+    </t>
 
 </templates>

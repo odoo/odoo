@@ -63,7 +63,9 @@
                             class="oe_stat_button"
                         >
                             <field
-                                string="Pending Updates" name="payment_data_count" widget="statinfo"
+                                string="Pending Updates"
+                                name="payment_data_count"
+                                widget="statinfo"
                             />
                         </button>
                         <button
@@ -176,7 +178,9 @@
                         context="{'group_by': 'provider_id'}"
                     />
                     <filter
-                        string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"
+                        string="Partner"
+                        name="partner_id"
+                        context="{'group_by': 'partner_id'}"
                     />
                     <filter string="Status" name="state" context="{'group_by': 'state'}"/>
                     <filter

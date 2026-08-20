@@ -60,7 +60,12 @@
                 <field name="website_sequence" widget="handle"/>
             </field>
             <field name="website_id" position="after">
-                <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
+                <field
+                    name="public_categ_ids"
+                    widget="many2many_tags"
+                    string="Categories"
+                    optional="show"
+                />
                 <field name="is_published" string="Is Published" optional="hide"/>
                 <field name="website_ribbon_id" optional="hide"/>
             </field>
@@ -106,12 +111,26 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <field name="categ_id" position="before">
-                <label for="compare_list_price" groups="website_sale.group_product_price_comparison"/>
+                <label
+                    for="compare_list_price"
+                    groups="website_sale.group_product_price_comparison"
+                />
                 <div class="o_row" groups="website_sale.group_product_price_comparison">
                     <del class="oe_read_only">
-                        <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        <field
+                            name="compare_list_price"
+                            nolabel="1"
+                            widget="monetary"
+                            options="{'currency_field': 'currency_id', 'field_digits': True}"
+                        />
                     </del>
-                    <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" class="oe_edit_only"/>
+                    <field
+                        name="compare_list_price"
+                        nolabel="1"
+                        widget="monetary"
+                        options="{'currency_field': 'currency_id', 'field_digits': True}"
+                        class="oe_edit_only"
+                    />
                 </div>
             </field>
         </field>
@@ -124,22 +143,32 @@
         <field name="arch" type="xml">
             <!-- add state field in header -->
             <span id="button_website" position="before">
-                <field name="is_published" widget="website_redirect_button" invisible="not sale_ok"/>
+                <field
+                    name="is_published"
+                    widget="website_redirect_button"
+                    invisible="not sale_ok"
+                />
             </span>
             <group name="upsell" position="attributes">
                 <attribute name="invisible">0</attribute>
             </group>
             <group name="upsell" position="inside">
-                <field name="accessory_product_ids" widget="many2many_tags"
-                       domain="[('sale_ok', '=', True)]"
-                       invisible="not sale_ok"
-                       placeholder="Suggested accessories in the eCommerce cart"/>
-                <field name="alternative_product_ids" widget="many2many_tags"
-                       domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                       context="{'search_product_product': True}"
-                       invisible="not sale_ok"
-                       placeholder="Displayed in bottom of product pages"/>
-                <field name="description_ecommerce" invisible="1" />         <!-- Adding this field as we needed in product_barcodelookup module to store value in this field -->
+                <field
+                    name="accessory_product_ids"
+                    widget="many2many_tags"
+                    domain="[('sale_ok', '=', True)]"
+                    invisible="not sale_ok"
+                    placeholder="Suggested accessories in the eCommerce cart"
+                />
+                <field
+                    name="alternative_product_ids"
+                    widget="many2many_tags"
+                    domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                    context="{'search_product_product': True}"
+                    invisible="not sale_ok"
+                    placeholder="Displayed in bottom of product pages"
+                />
+                <field name="description_ecommerce" invisible="1"/>         <!-- Adding this field as we needed in product_barcodelookup module to store value in this field -->
             </group>
             <field name="description_sale" position="attributes">
                 <attribute name="placeholder">This note is added to sales orders, invoices, eCommerce listing and SEO descriptions.</attribute>
@@ -149,11 +178,24 @@
                     <group>
                         <group name="shop" string="Shop">
                             <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
-                            <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"/>
-                            <label invisible="website_published" for="publish_on" string="Publish on"/>
+                            <field
+                                string="Published"
+                                name="website_published"
+                                widget="boolean_toggle"
+                                readonly="publish_on"
+                            />
+                            <label
+                                invisible="website_published"
+                                for="publish_on"
+                                string="Publish on"
+                            />
                             <div invisible="website_published" class="o_row">
                                 <field name="publish_on" widget="datetime"/>
-                                <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                                <button
+                                    name="action_unschedule"
+                                    type="object"
+                                    invisible="not publish_on"
+                                >Unschedule</button>
                             </div>
                             <field name="website_sequence" groups="base.group_no_one"/>
                             <field
@@ -162,23 +204,42 @@
                                 groups="website.group_multi_website"
                                 placeholder="All"
                             />
-                            <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
+                            <field
+                                name="public_categ_ids"
+                                widget="many2many_tags"
+                                string="Categories"
+                            />
                             <field
                                 name="website_ribbon_id"
                                 options="{'no_quick_create': True}"
                             />
                         </group>
-                        <group name="ecommerce_inventory" string="Inventory" invisible="not is_storable">
+                        <group
+                            name="ecommerce_inventory"
+                            string="Inventory"
+                            invisible="not is_storable"
+                        >
                             <field name="allow_out_of_stock_order"/>
                             <label for="show_availability" string="Show Available Qty"/>
                             <div>
                                 <field name="show_availability" class="oe_inline"/>
                                 <span invisible="not show_availability">
-                                    <label for="available_threshold" string="Below" class="o_light_label me-1"/>
-                                    <field name="available_threshold" class="oe_inline col-1" digits="[42, 0]"/>
+                                    <label
+                                        for="available_threshold"
+                                        string="Below"
+                                        class="o_light_label me-1"
+                                    />
+                                    <field
+                                        name="available_threshold"
+                                        class="oe_inline col-1"
+                                        digits="[42, 0]"
+                                    />
                                 </span>
                             </div>
-                            <field name="out_of_stock_message" placeholder="e.g. 'Will be back soon'"/>
+                            <field
+                                name="out_of_stock_message"
+                                placeholder="e.g. 'Will be back soon'"
+                            />
                         </group>
                     </group>
                     <group>
@@ -190,7 +251,11 @@
                                 placeholder="A detailed, formatted description to promote your product on your eCommerce."
                             />
                         </group>
-                        <group name="product_template_images" string="Media" invisible="not sale_ok">
+                        <group
+                            name="product_template_images"
+                            string="Media"
+                            invisible="not sale_ok"
+                        >
                             <field
                                 name="product_template_image_ids"
                                 class="o_website_sale_image_list"

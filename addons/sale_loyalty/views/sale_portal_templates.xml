@@ -2,8 +2,10 @@
 <odoo>
 
     <template id="used_gift_card">
-        <div class="d-md-block mb-2 small text-muted"
-            t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
+        <div
+            t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative"
+            class="d-md-block mb-2 small text-muted"
+        >
             <span>
                 Code:
                 <t t-out="line.coupon_id.code[-4:].rjust(14, '⋆')"/>
@@ -19,8 +21,11 @@
     </template>
 
     <template id="sale_purchased_gift_card">
-        <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
-        <div class="card mt-3 " t-if="gift_cards and order.state in ('sale', 'done')">
+        <t
+            t-set="gift_cards"
+            t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"
+        />
+        <div t-if="gift_cards and order.state in ('sale', 'done')" class="card mt-3 ">
             <div class="card-body">
                 <span t-if="not hide_intro">You will find below your gift cards code. An email has been sent with it. You can use it starting right now.</span>
                 <table class="table text-center table-borderless">
@@ -36,7 +41,10 @@
                                 Gift #<t t-out="gift_card_idx + 1"/>
                                 (<span t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
                                 <strong t-out="gift_card.code"/>
-                                <button class="btn btn-sm btn-secondary copy-to-clipboard" t-att-data-clipboard-text="gift_card.code">
+                                <button
+                                    class="btn btn-sm btn-secondary copy-to-clipboard"
+                                    t-att-data-clipboard-text="gift_card.code"
+                                >
                                     <span class="oi" data-icon="assignment"/> Copy
                                 </button>
                             </td>
@@ -86,27 +94,38 @@
         </div>
     </template>
 
-    <template id="sale_order_portal_content_inherit"
-              name="Gift Card Products Portal"
-              inherit_id="sale.sale_order_portal_content">
-        <xpath expr="//section[@id='details']//td[@name='td_product_name']/*[last()]" position="after">
-            <t t-if="line.coupon_id and line.coupon_id.program_id.program_type == 'gift_card'"
-               t-call="sale_loyalty.used_gift_card"/>
+    <template
+        id="sale_order_portal_content_inherit"
+        name="Gift Card Products Portal"
+        inherit_id="sale.sale_order_portal_content"
+    >
+        <xpath
+            expr="//section[@id='details']//td[@name='td_product_name']/*[last()]"
+            position="after"
+        >
+            <t
+                t-if="line.coupon_id and line.coupon_id.program_id.program_type == 'gift_card'"
+                t-call="sale_loyalty.used_gift_card"
+            />
         </xpath>
         <xpath expr="//div[@id='total']" position="after">
             <t t-call="sale_loyalty.sale_purchased_gift_card" order="sale_order" hide_intro="1"/>
         </xpath>
     </template>
 
-    <template id="sale_loyalty.sale_order_portal_template"
-              name="Loyalty Points"
-              inherit_id="sale.sale_order_portal_template">
+    <template
+        id="sale_loyalty.sale_order_portal_template"
+        name="Loyalty Points"
+        inherit_id="sale.sale_order_portal_template"
+    >
         <xpath expr="//div[@id='sidebar_loyalty_anchor']" position="after">
             <t t-if="loyalty_data" t-call="sale_loyalty.sale_order_portal_loyalty_content"/>
         </xpath>
         <xpath expr="//div[@id='provide_feedback']" position="before">
-            <div t-if="loyalty_data and (loyalty_data['issued'] or loyalty_data['cost'])"
-                 class="d-lg-none mt-4 p-3 rounded-3 border d-print-none">
+            <div
+                t-if="loyalty_data and (loyalty_data['issued'] or loyalty_data['cost'])"
+                class="d-lg-none mt-4 p-3 rounded-3 border d-print-none"
+            >
                 <h4>Loyalty Card</h4>
                 <t t-call="sale_loyalty.sale_order_portal_loyalty_content" hide_heading="True"/>
             </div>

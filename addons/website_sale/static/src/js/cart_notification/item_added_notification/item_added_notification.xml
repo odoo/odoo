@@ -45,8 +45,8 @@
                 <span t-out="line.uom_name" class="badge mt-1 bg-light"/>
             </div>
             <div
-                class="col-3 d-flex flex-column align-items-end gap-1"
                 t-if="!line.linked_line_id"
+                class="col-3 d-flex flex-column align-items-end gap-1"
                 t-out="this.getFormattedPrice(line)"
             />
         </div>

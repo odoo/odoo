@@ -8,10 +8,15 @@
             <t t-if="this.linkedRecordsInfo.length > 0">
                 <p>It is currently linked to the following documents:</p>
                 <ul>
-                    <li t-foreach="this.linkedRecordsInfo" t-as="documentInfo" t-key="this.documentInfoIndex">
-                        <a t-att-title="documentInfo.description"
-                           t-att-href="documentInfo.url"
-                           t-out="documentInfo.name"
+                    <li
+                        t-foreach="this.linkedRecordsInfo"
+                        t-as="documentInfo"
+                        t-key="this.documentInfoIndex"
+                    >
+                        <a
+                            t-att-title="documentInfo.description"
+                            t-att-href="documentInfo.url"
+                            t-out="documentInfo.name"
                         />
                     </li>
                 </ul>

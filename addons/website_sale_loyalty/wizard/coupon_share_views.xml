@@ -16,15 +16,25 @@
                 </group>
                 <group invisible="id">
                     <group>
-                        <field name="website_id" groups="website.group_multi_website" widget="selection"
-                            invisible="program_website_id"/>
+                        <field
+                            name="website_id"
+                            groups="website.group_multi_website"
+                            widget="selection"
+                            invisible="program_website_id"
+                        />
                         <field name="redirect"/>
                     </group>
                 </group>
                 <footer>
                     <button string="Done" class="btn-primary" special="cancel" data-hotkey="x"/>
-                    <button string="Generate Short Link" class="btn-secondary" type="object" name="action_generate_short_link"
-                            invisible="not website_id or id" data-hotkey="g"/>
+                    <button
+                        string="Generate Short Link"
+                        class="btn-secondary"
+                        type="object"
+                        name="action_generate_short_link"
+                        invisible="not website_id or id"
+                        data-hotkey="g"
+                    />
                 </footer>
             </form>
         </field>

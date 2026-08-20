@@ -16,9 +16,10 @@
     <template id="custom_state_header" inherit_id="payment.state_header">
         <xpath expr="//t[@t-set='o_payment_status_alert_class']" position="replace">
             <t t-if="tx._requires_payment_instructions()">
-               <t t-set="o_payment_status_alert_class"
-                  t-value="'d-flex flex-column flex-md-row align-items-stretch gap-2 gap-md-3 mb32'"
-               />
+                <t
+                    t-set="o_payment_status_alert_class"
+                    t-value="'d-flex flex-column flex-md-row align-items-stretch gap-2 gap-md-3 mb32'"
+                />
             </t>
             <t t-else="">$0</t>
         </xpath>
@@ -76,11 +77,15 @@
                 </div>
             </div>
             <t t-if="qr_code">
-                <div class="position-relative order-2 d-flex flex-md-column justify-content-center align-items-center align-items-md-stretch w-100 w-md-auto">
+                <div
+                    class="position-relative order-2 d-flex flex-md-column justify-content-center align-items-center align-items-md-stretch w-100 w-md-auto"
+                >
                     <h6 class="my-1 my-md-3 px-3 px-md-0 text-muted">OR</h6>
                 </div>
                 <div class="o_qr_code_card card order-1 order-md-3 flex-shrink-0">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center pb-3">
+                    <div
+                        class="card-body d-flex flex-column align-items-center justify-content-center pb-3"
+                    >
                         <img class="mb-2 border border-dark rounded" t-att-src="qr_code"/>
                         <small class="text-center text-wrap lh-sm">
                             Scan me in your banking app

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website_sale.ProductComparisonBottomBar">
-        <div class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none">
+        <div
+            class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none"
+        >
             <div
                 t-if="this.state.products.size"
                 class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto"
@@ -32,7 +34,9 @@
                         >
                             <i class="oi" data-icon="keyboard_arrow_up" role="presentation"/>
                         </button>
-                        <ul class="list-unstyled d-none d-xl-flex flex-grow-1 flex-shrink-1 gap-3 overflow-hidden me-auto mb-0">
+                        <ul
+                            class="list-unstyled d-none d-xl-flex flex-grow-1 flex-shrink-1 gap-3 overflow-hidden me-auto mb-0"
+                        >
                             <li
                                 t-foreach="this.state.products.values()"
                                 t-as="product"
@@ -44,7 +48,9 @@
                             </li>
                         </ul>
 
-                        <div class="d-flex gap-2 justify-content-end flex-grow-1 flex-xl-grow-0 flex-shrink-0">
+                        <div
+                            class="d-flex gap-2 justify-content-end flex-grow-1 flex-xl-grow-0 flex-shrink-0"
+                        >
                             <t t-call="website_sale.ProductComparisonBottomBar.Actions"/>
                         </div>
                     </div>

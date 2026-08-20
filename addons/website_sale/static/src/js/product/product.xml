@@ -9,7 +9,12 @@
         </QuantityButtons>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if">this.props.can_be_sold</attribute>
-            <attribute name="class" remove="btn-secondary" add="btn-outline-primary text-nowrap" separator=" "/>
+            <attribute
+                name="class"
+                remove="btn-secondary"
+                add="btn-outline-primary text-nowrap"
+                separator=" "
+            />
         </button>
         <span name="add_button" position="replace">
             <span name="add_button" class="ms-2 d-none d-lg-inline">Add to Cart</span>
@@ -50,8 +55,8 @@
 
     <t t-name="website_sale.product_prices">
         <h5
-            class="oe_striked_price text-muted small text-decoration-line-through text-nowrap"
             t-if="this.props.strikethrough_price"
+            class="oe_striked_price text-muted small text-decoration-line-through text-nowrap"
             t-out="this.getFormattedPrice(this.props.strikethrough_price)"
         />
         <div

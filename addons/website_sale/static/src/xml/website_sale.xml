@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
     <t t-name="website_sale.FieldVideoPreview">
-        <div class="ratio ratio-16x9 mt-2" t-if="this.props.record.data[this.props.name]">
+        <div t-if="this.props.record.data[this.props.name]" class="ratio ratio-16x9 mt-2">
             <t t-out="this.props.record.data[this.props.name]"/>
         </div>
     </t>

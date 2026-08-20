@@ -15,8 +15,15 @@
                     alt="Product Image"
                 />
                 <div class="w-75 p-2">
-                    <t t-set="ptalsToShow" t-value="this.props.product.ptals.filter(this.shouldShowPtal)"/>
-                    <h6 name="product_card_title" class="mb-1" t-out="this.props.product.display_name"/>
+                    <t
+                        t-set="ptalsToShow"
+                        t-value="this.props.product.ptals.filter(this.shouldShowPtal)"
+                    />
+                    <h6
+                        name="product_card_title"
+                        class="mb-1"
+                        t-out="this.props.product.display_name"
+                    />
                     <div class="text-muted">
                         <t t-if="ptalsToShow.length">
                             <div

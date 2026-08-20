@@ -26,8 +26,10 @@
                                         />
                                     </h4>
                                     <nav class="nav flex-column">
-                                        <t t-foreach="category.child_id.filtered('has_published_products')"
-                                           t-as="sub_category">
+                                        <t
+                                            t-foreach="category.child_id.filtered('has_published_products')"
+                                            t-as="sub_category"
+                                        >
                                             <a
                                                 t-att-href="sub_category.website_url"
                                                 class="nav-link px-0"
@@ -39,56 +41,68 @@
                             </t>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-4 py-4 d-flex align-items-center justify-content-center s_mega_menu_gray_area">
+                    <div
+                        class="col-12 col-lg-4 py-4 d-flex align-items-center justify-content-center s_mega_menu_gray_area"
+                    >
                         <a href="#" class="nav-link text-center px-0" data-name="Menu Item">
-                            <img src="/web/image/website.s_mega_menu_menus_logos_default_image" class="mb-3 rounded shadow img-fluid" alt=""/>
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_image"
+                                class="mb-3 rounded shadow img-fluid"
+                                alt=""
+                            />
                             <h4>Spring collection has arrived!</h4>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="s_mega_menu_menus_logos_wrapper border-top">
-            <div class="container">
-                <div class="row py-3">
-                    <div class="col-4 col-lg-2">
-                        <img
-                            src="/web/image/website.s_mega_menu_menus_logos_default_logo_1"
-                            class="img-fluid"
-                            alt=""/>
-                    </div>
-                    <div class="col-4 col-lg-2">
-                        <img
-                            src="/web/image/website.s_mega_menu_menus_logos_default_logo_2"
-                            class="img-fluid"
-                            alt=""/>
-                    </div>
-                    <div class="col-4 col-lg-2">
-                        <img
-                            src="/web/image/website.s_mega_menu_menus_logos_default_logo_3"
-                            class="img-fluid"
-                            alt=""/>
-                    </div>
-                    <div class="col-4 col-lg-2">
-                        <img
-                            src="/web/image/website.s_mega_menu_menus_logos_default_logo_4"
-                            class="img-fluid"
-                            alt=""/>
-                    </div>
-                    <div class="col-4 col-lg-2">
-                        <img
-                            src="/web/image/website.s_mega_menu_menus_logos_default_logo_5"
-                            class="img-fluid"
-                            alt=""/>
-                    </div>
-                    <div class="col-4 col-lg-2">
-                        <img
-                            src="/web/image/website.s_mega_menu_menus_logos_default_logo_6"
-                            class="img-fluid"
-                            alt=""/>
+                <div class="container">
+                    <div class="row py-3">
+                        <div class="col-4 col-lg-2">
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_logo_1"
+                                class="img-fluid"
+                                alt=""
+                            />
+                        </div>
+                        <div class="col-4 col-lg-2">
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_logo_2"
+                                class="img-fluid"
+                                alt=""
+                            />
+                        </div>
+                        <div class="col-4 col-lg-2">
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_logo_3"
+                                class="img-fluid"
+                                alt=""
+                            />
+                        </div>
+                        <div class="col-4 col-lg-2">
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_logo_4"
+                                class="img-fluid"
+                                alt=""
+                            />
+                        </div>
+                        <div class="col-4 col-lg-2">
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_logo_5"
+                                class="img-fluid"
+                                alt=""
+                            />
+                        </div>
+                        <div class="col-4 col-lg-2">
+                            <img
+                                src="/web/image/website.s_mega_menu_menus_logos_default_logo_6"
+                                class="img-fluid"
+                                alt=""
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </section>
     </template>
 

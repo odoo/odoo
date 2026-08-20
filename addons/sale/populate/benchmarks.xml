@@ -26,7 +26,10 @@
             -->
             <create model="sale.order.line" count="10000" id="bench_deep_lines" parallel="False">
                 <field name="order_id" ref="bench_deep_order"/>
-                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field
+                    name="product_id"
+                    domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"
+                />
                 <field name="product_uom_qty" start="1" end="100"/>
                 <field name="price_unit" start="1.0" end="1000.0"/>
                 <field name="sequence" start="1" end="10000"/>
@@ -57,7 +60,10 @@
 
             <create model="sale.order.line" count="6000" id="bench_wide_lines">
                 <field name="order_id" ref="bench_wide_orders" partition="True"/>
-                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field
+                    name="product_id"
+                    domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"
+                />
                 <field name="product_uom_qty" start="1" end="20"/>
                 <field name="price_unit" start="5.0" end="500.0"/>
             </create>
@@ -86,7 +92,10 @@
 
             <create model="sale.order.line" count="5000" id="bench_bulk_lines">
                 <field name="order_id" ref="bench_bulk_orders" partition="True"/>
-                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field
+                    name="product_id"
+                    domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"
+                />
                 <field name="product_uom_qty" start="1" end="50"/>
                 <field name="price_unit" start="1.0" end="2000.0"/>
                 <field name="discount" start="0" end="30" null_ratio="0.5"/>
@@ -117,7 +126,10 @@
 
             <create model="sale.order.line" count="4000" id="bench_upd_lines">
                 <field name="order_id" ref="bench_upd_orders" partition="True"/>
-                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field
+                    name="product_id"
+                    domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"
+                />
                 <field name="product_uom_qty" start="1" end="10"/>
                 <field name="price_unit" start="10.0" end="500.0"/>
             </create>
@@ -161,7 +173,10 @@
 
             <create model="sale.order.line" count="10000" id="bench_team_lines">
                 <field name="order_id" ref="bench_team_orders" partition="True"/>
-                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field
+                    name="product_id"
+                    domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"
+                />
                 <field name="product_uom_qty" start="1" end="20"/>
                 <field name="price_unit" start="10.0" end="1000.0"/>
             </create>

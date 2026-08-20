@@ -33,7 +33,10 @@
     <record id="payment_method_amex" model="payment.method">
         <field name="name">American Express</field>
         <field name="code">amex</field>
-        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_authorize.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_authorize"/>
         <field name="image" type="bytes" file="payment/static/img/amex.png"/>
     </record>
@@ -41,7 +44,10 @@
     <record id="payment_method_diners" model="payment.method">
         <field name="name">Diners Club International</field>
         <field name="code">diners</field>
-        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_authorize.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_authorize"/>
         <field name="image" type="bytes" file="payment/static/img/diners.png"/>
     </record>
@@ -49,7 +55,10 @@
     <record id="payment_method_discover" model="payment.method">
         <field name="name">Discover</field>
         <field name="code">discover</field>
-        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_authorize.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_authorize"/>
         <field name="image" type="bytes" file="payment/static/img/discover.png"/>
     </record>
@@ -57,7 +66,10 @@
     <record id="payment_method_jcb" model="payment.method">
         <field name="name">JCB</field>
         <field name="code">jcb</field>
-        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_authorize.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_authorize"/>
         <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
     </record>
@@ -66,7 +78,10 @@
         <field name="name">MasterCard</field>
         <field name="code">mastercard</field>
         <field name="sequence">50</field>
-        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_authorize.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_authorize"/>
         <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
     </record>
@@ -75,7 +90,10 @@
         <field name="name">VISA</field>
         <field name="code">visa</field>
         <field name="sequence">50</field>
-        <field name="primary_payment_method_id" eval="ref('payment_authorize.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_authorize.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_authorize"/>
         <field name="image" type="bytes" file="payment/static/img/visa.png"/>
     </record>

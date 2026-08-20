@@ -33,15 +33,19 @@
                     <div t-else="" class="text-muted">
                         <i class="oi oi-fw oi-filled text-danger" data-icon="circle"/> Not available
                     </div>
-                    <a t-if="this.props.showSelectStoreButton and this.state.inStoreStockData?.in_stock" role="button" href="#">
+                    <a
+                        t-if="this.props.showSelectStoreButton and this.state.inStoreStockData?.in_stock"
+                        role="button"
+                        href="#"
+                    >
                         <t t-if="this.state.selectedLocationData.id">Change store</t>
                         <t t-elif="this.state.inStoreStockData.in_stock">Select store</t>
                     </a>
                 </div>
             </div>
             <div
-                name="delivery_availability"
                 t-if="Object.keys(this.state.deliveryStockData || {}).length !== 0"
+                name="delivery_availability"
                 class="flex-row"
             >
                 <hr/>

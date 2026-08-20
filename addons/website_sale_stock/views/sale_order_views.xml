@@ -9,10 +9,10 @@
             <field name="user_id" position="after">
                 <field name="carrier_id" invisible="1"/> <!-- will be used by pickup_location_field widget-->
             </field>
-            <field name='partner_shipping_id' position="attributes">
+            <field name="partner_shipping_id" position="attributes">
                 <attribute name="invisible" add="is_pickup_required" separator="or"/>
             </field>
-            <field name='partner_shipping_id' position="after">
+            <field name="partner_shipping_id" position="after">
                 <field
                     name="partner_shipping_id"
                     string="Pickup Point"

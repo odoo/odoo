@@ -24,8 +24,10 @@
                                 />
                             </h4>
                             <nav class="nav flex-column">
-                                <t t-foreach="category.child_id.filtered('has_published_products')"
-                                   t-as="sub_category">
+                                <t
+                                    t-foreach="category.child_id.filtered('has_published_products')"
+                                    t-as="sub_category"
+                                >
                                     <a
                                         t-att-href="sub_category.website_url"
                                         class="nav-link"

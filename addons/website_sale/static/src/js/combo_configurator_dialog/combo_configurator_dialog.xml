@@ -18,9 +18,9 @@
         </button>
         <button name="sale_combo_configurator_confirm_button" position="after">
             <button
+                t-if="this.props.isFrontend and !this.props.options.isBuyNow"
                 name="website_sale_combo_configurator_continue_button"
                 class="btn btn-primary w-100 w-lg-auto"
-                t-if="this.props.isFrontend and !this.props.options.isBuyNow"
                 t-on-click="() => this.confirm({goToCart: false})"
                 t-att-disabled="!this.areAllCombosSelected"
             >
@@ -28,9 +28,9 @@
                 Add to Cart
             </button>
             <button
+                t-if="this.props.isFrontend"
                 name="website_sale_combo_configurator_checkout_button"
                 class="btn btn-outline-primary w-100 w-lg-auto"
-                t-if="this.props.isFrontend"
                 t-on-click="() => this.confirm({goToCart: true})"
                 t-att-disabled="!this.areAllCombosSelected"
             >

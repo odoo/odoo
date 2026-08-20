@@ -156,7 +156,8 @@
         <field name="image" type="bytes" file="payment/static/img/p24.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.pl')])]"/>
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.EUR'), ref('base.PLN')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.PLN')])]"
         />
     </record>
 
@@ -359,7 +360,10 @@
     <record id="payment_method_ideal_brand" model="payment.method">
         <field name="name">iDEAL</field>
         <field name="code">ideal_brand</field>
-        <field name="primary_payment_method_id" eval="ref('payment_buckaroo.payment_method_ideal')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_buckaroo.payment_method_ideal')"
+        />
         <field name="provider_id" ref="payment.payment_provider_buckaroo"/>
         <field name="image" type="bytes" file="payment/static/img/ideal.png"/>
     </record>
@@ -391,7 +395,10 @@
     <record id="payment_method_wero_brand" model="payment.method">
         <field name="name">Wero</field>
         <field name="code">wero_brand</field>
-        <field name="primary_payment_method_id" eval="ref('payment_buckaroo.payment_method_ideal')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_buckaroo.payment_method_ideal')"
+        />
         <field name="provider_id" ref="payment.payment_provider_buckaroo"/>
         <field name="image" type="bytes" file="payment/static/img/wero.png"/>
     </record>

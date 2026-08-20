@@ -6,9 +6,12 @@
         <field name="arch" type="xml">
             <list editable="bottom">
                 <field name="trigger"/>
-                <field name="points" string="Limit"
+                <field
+                    name="points"
+                    string="Limit"
                     invisible="trigger != 'points_reach'"
-                    required="trigger == 'points_reach'"/>
+                    required="trigger == 'points_reach'"
+                />
                 <field name="mail_template_id"/>
             </list>
         </field>

@@ -16,9 +16,16 @@
                         <label for="assign"/>
                         <div>
                             <field name="assign" class="oe_inline"/>
-                            <div invisible="assign != 'new'" class="text-muted ms-2 d-inline-flex align-items-center">
+                            <div
+                                invisible="assign != 'new'"
+                                class="text-muted ms-2 d-inline-flex align-items-center"
+                            >
                                 <span>for</span>
-                                <field name="new_period" style="width: 3rem; !important" class="ms-1 mb-0"/>
+                                <field
+                                    name="new_period"
+                                    style="width: 3rem; !important"
+                                    class="ms-1 mb-0"
+                                />
                                 <span>days after publication.</span>
                             </div>
                         </div>
@@ -26,7 +33,11 @@
                     <notebook>
                         <page string="Display">
                             <group>
-                                <field name="position" widget="radio" options="{'horizontal': True}"/>
+                                <field
+                                    name="position"
+                                    widget="radio"
+                                    options="{'horizontal': True}"
+                                />
                                 <field name="style" widget="radio" options="{'horizontal': True}"/>
                                 <field name="text_color" widget="color"/>
                                 <field name="bg_color" widget="color"/>

@@ -478,7 +478,8 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.dk'), ref('base.fi')])]"/>
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.EUR'), ref('base.DKK')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.DKK')])]"
         />
     </record>
 
@@ -579,7 +580,8 @@
             eval="[Command.set([ref('base.de'), ref('base.fi'), ref('base.fr'), ref('base.uk')])]"
         />
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.EUR'), ref('base.GBP')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.GBP')])]"
         />
     </record>
 
@@ -593,7 +595,8 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.pl')])]"/>
         <field
-            name="supported_currency_ids" eval="[Command.set([ref('base.EUR'), ref('base.PLN')])]"
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.PLN')])]"
         />
     </record>
 
@@ -658,7 +661,7 @@
                         ref('base.tr'),
                         ref('base.us'),
                 ])]"
-            />
+        />
         <field
             name="supported_currency_ids"
             eval="[Command.set([
@@ -689,7 +692,7 @@
                         ref('base.MDL'),
                         ref('base.PYG'),
                 ])]"
-            />
+        />
     </record>
 
     <record id="payment_method_paynow" model="payment.method">
@@ -911,7 +914,8 @@
                         ref('base.sk'),
                         ref('base.si'),
                         ref('base.es'),
-                ])]"/>
+                ])]"
+        />
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 

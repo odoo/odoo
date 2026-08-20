@@ -7,19 +7,42 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
-                <a t-if="record.invoiced_amount" href="#" title="Revenues" role="button"
-                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_invoiced"
-                    class="btn-outline-primary rounded-pill me-1 order-1">
+                <a
+                    t-if="record.invoiced_amount"
+                    href="#"
+                    title="Revenues"
+                    role="button"
+                    groups="sales_team.group_sale_salesman"
+                    type="object"
+                    name="action_redirect_to_invoiced"
+                    class="btn-outline-primary rounded-pill me-1 order-1"
+                >
                     <span class="badge">
                         <field name="currency_id" invisible="True"/>
-                        <field name="invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field
+                            name="invoiced_amount"
+                            widget="monetary"
+                            options="{'currency_field': 'currency_id'}"
+                        />
                     </span>
                 </a>
-                <a t-if="record.quotation_count" href="#" title="Quotations" role="button"
-                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_quotations"
-                    class="btn-outline-primary rounded-pill me-1 order-2">
+                <a
+                    t-if="record.quotation_count"
+                    href="#"
+                    title="Quotations"
+                    role="button"
+                    groups="sales_team.group_sale_salesman"
+                    type="object"
+                    name="action_redirect_to_quotations"
+                    class="btn-outline-primary rounded-pill me-1 order-2"
+                >
                     <span class="badge">
-                        <i class="oi oi-fw me-1" data-icon="payments" aria-label="Quotations" role="img"/>
+                        <i
+                            class="oi oi-fw me-1"
+                            data-icon="payments"
+                            aria-label="Quotations"
+                            role="img"
+                        />
                         <field name="quotation_count"/>
                     </span>
                 </a>
@@ -33,12 +56,22 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button name="action_redirect_to_invoiced"
-                    type="object" class="oe_stat_button order-1" icon="attach_money" groups="sales_team.group_sale_salesman">
+                <button
+                    name="action_redirect_to_invoiced"
+                    type="object"
+                    class="oe_stat_button order-1"
+                    icon="attach_money"
+                    groups="sales_team.group_sale_salesman"
+                >
                     <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
                 </button>
-                <button name="action_redirect_to_quotations"
-                    type="object" class="oe_stat_button order-2" icon="payments" groups="sales_team.group_sale_salesman">
+                <button
+                    name="action_redirect_to_quotations"
+                    type="object"
+                    class="oe_stat_button order-2"
+                    icon="payments"
+                    groups="sales_team.group_sale_salesman"
+                >
                     <field name="quotation_count" widget="statinfo" string="Quotations"/>
                 </button>
             </xpath>

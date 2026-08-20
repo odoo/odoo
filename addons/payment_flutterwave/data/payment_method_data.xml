@@ -103,7 +103,8 @@
         <field name="name">American Express</field>
         <field name="code">amex</field>
         <field
-            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+            name="primary_payment_method_id"
+            eval="ref('payment_flutterwave.payment_method_card')"
         />
         <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
         <field name="image" type="bytes" file="payment/static/img/amex.png"/>
@@ -113,7 +114,8 @@
         <field name="name">Credit Payment</field>
         <field name="code">credit</field>
         <field
-            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+            name="primary_payment_method_id"
+            eval="ref('payment_flutterwave.payment_method_card')"
         />
         <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
         <field name="image" type="bytes" file="payment/static/img/card.png"/>
@@ -123,7 +125,8 @@
         <field name="name">Discover</field>
         <field name="code">discover</field>
         <field
-            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+            name="primary_payment_method_id"
+            eval="ref('payment_flutterwave.payment_method_card')"
         />
         <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
         <field name="image" type="bytes" file="payment/static/img/discover.png"/>
@@ -134,7 +137,8 @@
         <field name="code">mastercard</field>
         <field name="sequence">50</field>
         <field
-            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+            name="primary_payment_method_id"
+            eval="ref('payment_flutterwave.payment_method_card')"
         />
         <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
         <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
@@ -145,7 +149,8 @@
         <field name="code">visa</field>
         <field name="sequence">50</field>
         <field
-            name="primary_payment_method_id" eval="ref('payment_flutterwave.payment_method_card')"
+            name="primary_payment_method_id"
+            eval="ref('payment_flutterwave.payment_method_card')"
         />
         <field name="provider_id" ref="payment.payment_provider_flutterwave"/>
         <field name="image" type="bytes" file="payment/static/img/visa.png"/>

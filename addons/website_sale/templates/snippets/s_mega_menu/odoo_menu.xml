@@ -24,17 +24,21 @@
                                 />
                             </h4>
                             <div class="s_hr pt4 pb16" data-snippet="s_hr" data-name="Separator">
-                                <hr class="w-100 mx-auto"
+                                <hr
+                                    class="w-100 mx-auto"
                                     style="border-top-width: 2px; border-top-color: var(--primary);"
                                 />
                             </div>
                             <nav class="nav flex-column">
-                                <t t-foreach="category.child_id.filtered('has_published_products')"
-                                   t-as="sub_category">
+                                <t
+                                    t-foreach="category.child_id.filtered('has_published_products')"
+                                    t-as="sub_category"
+                                >
                                     <a
                                         t-att-href="sub_category.website_url"
                                         class="nav-link px-0"
-                                        t-out="sub_category.name"/>
+                                        t-out="sub_category.name"
+                                    />
                                 </t>
                             </nav>
                         </div>

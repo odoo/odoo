@@ -14,15 +14,24 @@
                     </div>
                     <group>
                         <field name="code" invisible="id"/>
-                        <field name="code" invisible="not id" readonly="id" groups="base.group_no_one"/>
-                        <field name="primary_payment_method_id" invisible="is_primary or context.get('hide_primary_pm')"/>
+                        <field
+                            name="code"
+                            invisible="not id"
+                            readonly="id"
+                            groups="base.group_no_one"
+                        />
+                        <field
+                            name="primary_payment_method_id"
+                            invisible="is_primary or context.get('hide_primary_pm')"
+                        />
                         <field name="active"/>
                         <label for="supported_country_ids"/>
                         <div>
-                            <field name="supported_country_ids"
-                                   class="oe_inline"
-                                   widget="many2many_tags"
-                                   readonly="1"
+                            <field
+                                name="supported_country_ids"
+                                class="oe_inline"
+                                widget="many2many_tags"
+                                readonly="1"
                             />
                             <span class="oe_inline text-muted" invisible="supported_country_ids">
                                 All countries are supported.
@@ -30,10 +39,11 @@
                         </div>
                         <label for="supported_currency_ids"/>
                         <div>
-                            <field name="supported_currency_ids"
-                                   class="oe_inline"
-                                   widget="many2many_tags"
-                                   readonly="1"
+                            <field
+                                name="supported_currency_ids"
+                                class="oe_inline"
+                                widget="many2many_tags"
+                                readonly="1"
                             />
                             <span class="oe_inline text-muted" invisible="supported_currency_ids">
                                 All currencies are supported.
@@ -49,9 +59,10 @@
                                 context="{'default_provider_id': provider_id, 'hide_primary_pm': True}"
                             />
                         </page>
-                        <page string="Configuration"
-                              name="configuration"
-                              groups="base.group_no_one"
+                        <page
+                            string="Configuration"
+                            name="configuration"
+                            groups="base.group_no_one"
                         >
                             <div class="alert alert-warning" role="alert">
                                 <i class="oi" data-icon="warning"/> These properties are set to
@@ -63,14 +74,16 @@
                                 <field name="support_tokenization"/>
                                 <field name="support_manual_capture"/>
                                 <field name="support_express_checkout"/>
-                                <field name="support_refund" />
-                                <field name="supported_country_ids"
-                                       widget="many2many_tags"
-                                       placeholder="Select countries. Leave empty to allow any."
+                                <field name="support_refund"/>
+                                <field
+                                    name="supported_country_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Select countries. Leave empty to allow any."
                                 />
-                                <field name="supported_currency_ids"
-                                       widget="many2many_tags"
-                                       placeholder="Select currencies. Leave empty to allow any."
+                                <field
+                                    name="supported_currency_ids"
+                                    widget="many2many_tags"
+                                    placeholder="Select currencies. Leave empty to allow any."
                                 />
                                 <field
                                     name="provider_id"
@@ -115,15 +128,16 @@
     </record>
 
 
-     <record id="payment_method_search" model="ir.ui.view">
+    <record id="payment_method_search" model="ir.ui.view">
         <field name="name">payment.method.search</field>
         <field name="model">payment.method</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name" string="Name"/>
-                <filter name="available_pms"
-                        string="Available methods"
-                        domain="[('provider_id.module_state', '=', 'installed')]"
+                <filter
+                    name="available_pms"
+                    string="Available methods"
+                    domain="[('provider_id.module_state', '=', 'installed')]"
                 />
             </search>
         </field>

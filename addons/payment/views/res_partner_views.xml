@@ -9,11 +9,14 @@
         <field name="priority" eval="15"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button type="action" class="oe_stat_button"
-                        icon="credit_card"
-                        name="%(payment.action_payment_token)d"
-                        context="{'search_default_partner_id': id, 'create': False, 'edit': False}"
-                        invisible="payment_token_count == 0">
+                <button
+                    type="action"
+                    class="oe_stat_button"
+                    icon="credit_card"
+                    name="%(payment.action_payment_token)d"
+                    context="{'search_default_partner_id': id, 'create': False, 'edit': False}"
+                    invisible="payment_token_count == 0"
+                >
                     <div class="o_form_field o_stat_info">
                         <span class="o_stat_value">
                             <field name="payment_token_count" widget="statinfo" nolabel="1"/>

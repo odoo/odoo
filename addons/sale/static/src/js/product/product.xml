@@ -35,7 +35,10 @@
                     productTmplId="this.props.product_tmpl_id"
                 />
             </t>
-            <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning impossible_combination_alert mt-3">
+            <div
+                t-if="!this.env.isPossibleCombination(this.props)"
+                class="alert alert-warning impossible_combination_alert mt-3"
+            >
                 <span>This option or combination of options is not available</span>
             </div>
             <t t-if="this.props.available_uoms" t-call="sale.uom_selector"/>
@@ -50,7 +53,10 @@
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
-                <t t-set="isComboProduct" t-value="this.isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
+                <t
+                    t-set="isComboProduct"
+                    t-value="this.isMainProduct &amp;&amp; this.props.selectedComboItems.length"
+                />
                 <t t-if="this.env.showQuantity &amp;&amp; !isComboProduct">
                     <QuantityButtons
                         quantity="this.props.quantity"
@@ -64,9 +70,9 @@
                     class="h5"
                 />
                 <a
+                    t-if="!this.isMainProduct"
                     class="d-block mt-2 w-100 text-end"
                     role="button"
-                    t-if="!this.isMainProduct"
                     t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)"
                 >
                     Remove

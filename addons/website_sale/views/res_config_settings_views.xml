@@ -90,20 +90,39 @@
                     info="This setting is common to all websites."
                 >
                     <div class="content-group">
-                        <div class="row mt16"
+                        <div
+                            class="row mt16"
                             id="allow_out_of_stock_order_setting"
-                            title="Default availability mode set on newly created storable products. This can be changed at the product level.">
+                            title="Default availability mode set on newly created storable products. This can be changed at the product level."
+                        >
                             <div class="col-12">
-                                <label for="default_allow_out_of_stock_order" string="Out-of-Stock" class="p-0 col-4 o_light_label"/>
+                                <label
+                                    for="default_allow_out_of_stock_order"
+                                    string="Out-of-Stock"
+                                    class="p-0 col-4 o_light_label"
+                                />
                                 <field name="default_allow_out_of_stock_order" class=" w-auto"/>
-                                <label for="default_allow_out_of_stock_order" class="o_light_label" string="Continue Selling"/>
+                                <label
+                                    for="default_allow_out_of_stock_order"
+                                    class="o_light_label"
+                                    string="Continue Selling"
+                                />
                             </div>
                         </div>
                     </div>
                     <div class="content-group">
-                        <label for="default_show_availability" string="Show Available Quantity" class="p-0 col-4 o_light_label mt-2"/>
+                        <label
+                            for="default_show_availability"
+                            string="Show Available Quantity"
+                            class="p-0 col-4 o_light_label mt-2"
+                        />
                         <field name="default_show_availability" class="w-auto"/>
-                        <label for="default_available_threshold" string="only if below" class="o_light_label" invisible="not default_show_availability"/>
+                        <label
+                            for="default_available_threshold"
+                            string="only if below"
+                            class="o_light_label"
+                            invisible="not default_show_availability"
+                        />
                         <field
                             name="default_available_threshold"
                             style="width: 30px;"
@@ -160,7 +179,7 @@
                     help="Promotions, coupons, loyalty cards, gift cards &amp; eWallet"
                     documentation="/applications/sales/sales/products_prices/loyalty_discount.html"
                 >
-                    <field name="module_loyalty" />
+                    <field name="module_loyalty"/>
                 </setting>
                 <setting
                     id="pricelists_setting"
@@ -249,7 +268,11 @@
                             </div>
                         </div>
                     </div>
-                    <div invisible="not send_abandoned_cart_followup" class="content-group" id="abandoned_cart_templates">
+                    <div
+                        invisible="not send_abandoned_cart_followup"
+                        class="content-group"
+                        id="abandoned_cart_templates"
+                    >
                         <div class="content-group">
                             <div class="row">
                                 <label

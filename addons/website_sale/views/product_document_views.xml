@@ -8,7 +8,11 @@
         <field name="arch" type="xml">
             <search position="inside">
                 <separator/>
-                <filter name="e_commerce" string="Show on Ecommerce" domain="[('attached_on_sale', '=', 'shown_on_product_page')]"/>
+                <filter
+                    name="e_commerce"
+                    string="Show on Ecommerce"
+                    domain="[('attached_on_sale', '=', 'shown_on_product_page')]"
+                />
             </search>
         </field>
     </record>

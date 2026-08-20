@@ -16,9 +16,13 @@
                 class="position-absolute top-0 start-0 h-100 ps-1 bg-primary transition-base"
                 t-attf-class="#{this.props.isSelected ? 'ms-0' : 'ms-n1' }"
             />
-            <span t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ this.props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
-                <t t-call="website_sale_stock.locationSelector.map.pinIndicator"
-                    number="this.props.number"/>
+            <span
+                t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ this.props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}"
+            >
+                <t
+                    t-call="website_sale_stock.locationSelector.map.pinIndicator"
+                    number="this.props.number"
+                />
             </span>
             <span class="d-flex flex-column w-100">
                 <span class="d-flex flex-column mb-1 mb-md-0">
@@ -26,10 +30,16 @@
                     <small class="opacity-75" t-out="this.props.street"/>
                     <small class="opacity-75" t-out="this.getCityAndZipCode()"/>
                 </span>
-                <small name="location_opening_hours" t-attf-class="d-flex align-items-center mb-1 mb-md-0 gap-1 fw-bold {{Object.keys(this.props.openingHours).length > 0 ? 'd-md-none' : 'd-none'}}">
+                <small
+                    name="location_opening_hours"
+                    t-attf-class="d-flex align-items-center mb-1 mb-md-0 gap-1 fw-bold {{Object.keys(this.props.openingHours).length > 0 ? 'd-md-none' : 'd-none'}}"
+                >
                     <i class="oi" data-icon="schedule" role="img"/>
                     <t t-out="this.openingHoursLabel"/>
-                    <i class="oi o_location_selector_hours_caret ms-auto transition-base" data-icon="arrow_drop_up"/>
+                    <i
+                        class="oi o_location_selector_hours_caret ms-auto transition-base"
+                        data-icon="arrow_drop_up"
+                    />
                 </small>
 
                 <!-- Schedule -->
@@ -37,7 +47,7 @@
                     class="collapse d-md-none"
                     t-attf-id="collapseHours_{{this.props.id}}"
                     data-bs-parent="#o_location_selector_list_view"
-                  >
+                >
                     <LocationSchedule openingHours="this.props.openingHours"/>
                 </span>
             </span>

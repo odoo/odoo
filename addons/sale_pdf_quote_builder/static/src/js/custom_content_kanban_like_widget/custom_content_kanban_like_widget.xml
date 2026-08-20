@@ -2,28 +2,34 @@
 <templates>
     <t t-name="sale_pdf_quote_builder.CustomContentKanbanLike">
         <t t-if="this.state.headers.files?.length">
-            <t t-call="sale_pdf_quote_builder.section"
+            <t
+                t-call="sale_pdf_quote_builder.section"
                 section="this.state.headers"
                 save="(lineId, docId, isSelected) => {
                         this.saveQuotationDocument(docId, isSelected);
-                    }">
+                    }"
+            >
             </t>
         </t>
         <t t-if="this.state.lines?.length">
             <t t-foreach="this.state.lines" t-as="section" t-key="section.id">
-                <t t-call="sale_pdf_quote_builder.section"
+                <t
+                    t-call="sale_pdf_quote_builder.section"
                     save="(lineId, docId, isSelected) => {
                             this.saveProductDocument(lineId, docId, isSelected);
-                        }">
+                        }"
+                >
                 </t>
             </t>
         </t>
         <t t-if="this.state.footers.files?.length">
-            <t t-call="sale_pdf_quote_builder.section"
+            <t
+                t-call="sale_pdf_quote_builder.section"
                 section="this.state.footers"
                 save="(lineId, docId, isSelected) => {
                         this.saveQuotationDocument(docId, isSelected);
-                    }">
+                    }"
+            >
             </t>
         </t>
     </t>
@@ -67,7 +73,6 @@
                     <t
                         t-foreach="doc.custom_form_fields"
                         t-as="formField"
-
                         t-key="id+'-'+doc.id+'-custom_form_fields'+formField_index"
                     >
                         <CustomFieldCard

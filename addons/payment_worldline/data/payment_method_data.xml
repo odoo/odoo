@@ -352,7 +352,10 @@
     <record id="payment_method_amex" model="payment.method">
         <field name="name">American Express</field>
         <field name="code">amex</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/amex.png"/>
     </record>
@@ -360,7 +363,10 @@
     <record id="payment_method_cartes_bancaires" model="payment.method">
         <field name="name">Cartes Bancaires</field>
         <field name="code">cartes_bancaires</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/card.png"/>
     </record>
@@ -368,7 +374,10 @@
     <record id="payment_method_cirrus" model="payment.method">
         <field name="name">Cirrus</field>
         <field name="code">cirrus</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/cirrus.png"/>
     </record>
@@ -376,7 +385,10 @@
     <record id="payment_method_dankort" model="payment.method">
         <field name="name">Dankort</field>
         <field name="code">dankort</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/dankort.png"/>
     </record>
@@ -384,7 +396,10 @@
     <record id="payment_method_diners" model="payment.method">
         <field name="name">Diners Club</field>
         <field name="code">diners</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/diners.png"/>
     </record>
@@ -392,7 +407,10 @@
     <record id="payment_method_discover" model="payment.method">
         <field name="name">Discover</field>
         <field name="code">discover</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/discover.png"/>
     </record>
@@ -400,7 +418,10 @@
     <record id="payment_method_ideal_brand" model="payment.method">
         <field name="name">iDEAL</field>
         <field name="code">ideal_brand</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_ideal')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_ideal')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/ideal.png"/>
     </record>
@@ -408,7 +429,10 @@
     <record id="payment_method_jcb" model="payment.method">
         <field name="name">JCB</field>
         <field name="code">jcb</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
     </record>
@@ -416,7 +440,10 @@
     <record id="payment_method_maestro" model="payment.method">
         <field name="name">Maestro</field>
         <field name="code">maestro</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/maestro.png"/>
     </record>
@@ -424,7 +451,10 @@
     <record id="payment_method_mastercard" model="payment.method">
         <field name="name">MasterCard</field>
         <field name="code">mastercard</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
     </record>
@@ -432,7 +462,10 @@
     <record id="payment_method_meeza" model="payment.method">
         <field name="name">Meeza</field>
         <field name="code">meeza</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/meeza.png"/>
     </record>
@@ -440,7 +473,10 @@
     <record id="payment_method_naps" model="payment.method">
         <field name="name">NAPS</field>
         <field name="code">naps</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/naps.png"/>
     </record>
@@ -448,7 +484,10 @@
     <record id="payment_method_omannet" model="payment.method">
         <field name="name">OmanNet</field>
         <field name="code">omannet</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/omannet.png"/>
     </record>
@@ -456,7 +495,10 @@
     <record id="payment_method_rupay" model="payment.method">
         <field name="name">RuPay</field>
         <field name="code">rupay</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/rupay.png"/>
     </record>
@@ -464,7 +506,10 @@
     <record id="payment_method_troy" model="payment.method">
         <field name="name">Troy</field>
         <field name="code">troy</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/troy.png"/>
     </record>
@@ -472,7 +517,10 @@
     <record id="payment_method_unionpay" model="payment.method">
         <field name="name">UnionPay</field>
         <field name="code">unionpay</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
     </record>
@@ -480,7 +528,10 @@
     <record id="payment_method_visa" model="payment.method">
         <field name="name">VISA</field>
         <field name="code">visa</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_card')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_card')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/visa.png"/>
     </record>
@@ -488,7 +539,10 @@
     <record id="payment_method_wero_brand" model="payment.method">
         <field name="name">Wero</field>
         <field name="code">wero_brand</field>
-        <field name="primary_payment_method_id" eval="ref('payment_worldline.payment_method_ideal')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_worldline.payment_method_ideal')"
+        />
         <field name="provider_id" ref="payment.payment_provider_worldline"/>
         <field name="image" type="bytes" file="payment/static/img/wero.png"/>
     </record>

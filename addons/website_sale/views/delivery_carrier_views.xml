@@ -58,10 +58,18 @@
                 </page>
             </page>
             <field name="carrier_description" position="before">
-                <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
+                <field
+                    name="website_description"
+                    placeholder="Description displayed on the eCommerce and on online quotations."
+                />
             </field>
             <button name="toggle_prod_environment" position="before">
-                <button name="website_publish_button" type="object" class="oe_stat_button" icon="public">
+                <button
+                    name="website_publish_button"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="public"
+                >
                     <field name="is_published" widget="website_publish_button"/>
                 </button>
             </button>
@@ -86,7 +94,11 @@
         <field name="inherit_id" ref="delivery.view_delivery_carrier_search"/>
         <field name="arch" type="xml">
             <filter name="inactive" position="after">
-                <filter string="Published" name="is_published" domain="[('is_published', '=', True)]"/>
+                <filter
+                    string="Published"
+                    name="is_published"
+                    domain="[('is_published', '=', True)]"
+                />
             </filter>
         </field>
     </record>

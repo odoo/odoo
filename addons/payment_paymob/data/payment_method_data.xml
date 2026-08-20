@@ -129,7 +129,10 @@
         <field name="provider_id" ref="payment.payment_provider_paymob"/>
         <field name="image" type="bytes" file="payment/static/img/tabby.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.ae'), ref('base.sa')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.AED'), ref('base.SAR')])]"/>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AED'), ref('base.SAR')])]"
+        />
     </record>
 
     <record id="payment_method_tamara" model="payment.method">
@@ -138,7 +141,10 @@
         <field name="provider_id" ref="payment.payment_provider_paymob"/>
         <field name="image" type="bytes" file="payment/static/img/tamara.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.ae'), ref('base.sa')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.AED'), ref('base.SAR')])]"/>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AED'), ref('base.SAR')])]"
+        />
     </record>
 
     <record id="payment_method_valu" model="payment.method">

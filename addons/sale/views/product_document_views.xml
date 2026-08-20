@@ -10,7 +10,11 @@
                 <notebook>
                     <page name="sale" string="Sales">
                         <group>
-                            <field name="attached_on_sale" class="oe_inline ms-2" widget="selection"/>
+                            <field
+                                name="attached_on_sale"
+                                class="oe_inline ms-2"
+                                widget="selection"
+                            />
                         </group>
                     </page>
                 </notebook>
@@ -50,12 +54,16 @@
         <field name="arch" type="xml">
             <search position="inside">
                 <separator/>
-                <filter name="quotation"
+                <filter
+                    name="quotation"
                     string="Quotation"
-                    domain="[('attached_on_sale', '=', 'quotation')]"/>
-                <filter name="sale_order"
+                    domain="[('attached_on_sale', '=', 'quotation')]"
+                />
+                <filter
+                    name="sale_order"
                     string="Sales Order"
-                    domain="[('attached_on_sale', '=', 'sale_order')]"/>
+                    domain="[('attached_on_sale', '=', 'sale_order')]"
+                />
             </search>
         </field>
     </record>

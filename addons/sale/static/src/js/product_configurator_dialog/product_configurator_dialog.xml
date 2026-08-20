@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="sale.ProductConfiguratorDialog">
-        <Dialog size="this.props.size" title="this.title" contentClass="'o_sale_product_configurator_dialog'">
+        <Dialog
+            size="this.props.size"
+            title="this.title"
+            contentClass="'o_sale_product_configurator_dialog'"
+        >
             <ProductList t-if="this.state.products.length" products="this.state.products"/>
             <ProductList
                 t-if="this.state.optionalProducts.length"
                 products="this.state.optionalProducts"
-                areProductsOptional="true"/>
+                areProductsOptional="true"
+            />
             <t t-set-slot="footer">
                 <button
                     name="sale_product_configurator_confirm_button"
                     class="btn btn-primary order-2 order-md-1"
                     t-on-click="this.onConfirm"
-                    t-att-disabled="!this.isPossibleConfiguration()">
+                    t-att-disabled="!this.isPossibleConfiguration()"
+                >
                     Confirm
                 </button>
                 <button

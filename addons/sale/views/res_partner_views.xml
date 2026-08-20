@@ -20,7 +20,7 @@
     <record id="res_partner_view_buttons" model="ir.ui.view">
         <field name="name">res.partner.view.buttons</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="priority" eval="3"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
@@ -29,16 +29,20 @@
                     type="action"
                     name="sale.act_res_partner_2_sale_order"
                     groups="sales_team.group_sale_salesman"
-                    icon="attach_money">
+                    icon="attach_money"
+                >
                     <field string="Sales" name="sale_order_count" widget="statinfo"/>
                 </button>
             </div>
             <group name="warnings" position="inside">
                 <group groups="sale.group_warning_sale" col="2">
                     <separator string="Warning on Sales Orders and Invoices" colspan="2"/>
-                    <field name="sale_warn_msg"
-                           placeholder="e.g. This customer has reported recurring issues with previous orders."
-                           nolabel="1" colspan="2"/>
+                    <field
+                        name="sale_warn_msg"
+                        placeholder="e.g. This customer has reported recurring issues with previous orders."
+                        nolabel="1"
+                        colspan="2"
+                    />
                 </group>
             </group>
         </field>

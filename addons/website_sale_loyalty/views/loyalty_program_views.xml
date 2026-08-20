@@ -19,7 +19,13 @@
                 </span>
             </xpath>
             <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
-                <field name="website_id" invisible="not ecommerce_ok" options="{'no_create': True}" groups="website.group_multi_website" placeholder="All websites"/>
+                <field
+                    name="website_id"
+                    invisible="not ecommerce_ok"
+                    options="{'no_create': True}"
+                    groups="website.group_multi_website"
+                    placeholder="All websites"
+                />
             </xpath>
             <div id="trigger_products" position="inside">
                 <div
@@ -40,10 +46,20 @@
         <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
         <field name="arch" type="xml">
             <field name="coupon_count_display" position="after">
-                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                <field
+                    name="website_id"
+                    options="{'no_create': True}"
+                    groups="website.group_multi_website"
+                />
             </field>
             <field name="company_id" position="after">
-                <button name="action_program_share" string="Share" type="object" icon="family_history" invisible="program_type != 'promo_code'"/>
+                <button
+                    name="action_program_share"
+                    string="Share"
+                    type="object"
+                    icon="family_history"
+                    invisible="program_type != 'promo_code'"
+                />
             </field>
         </field>
     </record>

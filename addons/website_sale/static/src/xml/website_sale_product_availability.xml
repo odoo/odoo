@@ -18,16 +18,24 @@
                     </t>
                     <t t-if="this.has_out_of_stock_message" t-out="this.out_of_stock_message"/>
                 </div>
-                <div id="stock_notification_div" t-if="!this.allow_out_of_stock_order">
-                    <div class="btn btn-link px-0" t-if="!this.has_stock_notification"
-                         id="product_stock_notification_message">
+                <div t-if="!this.allow_out_of_stock_order" id="stock_notification_div">
+                    <div
+                        t-if="!this.has_stock_notification"
+                        class="btn btn-link px-0"
+                        id="product_stock_notification_message"
+                    >
                         <i class="oi me-2" data-icon="mail"/>Get notified when back in stock
                     </div>
                     <div id="stock_notification_form" class="d-none">
                         <div class="input-group">
-                            <input class="form-control"
-                                   id="stock_notification_input" name="email"
-                                   type="text" placeholder="youremail@gmail.com" t-att-value="this.stock_notification_email? this.stock_notification_email: ''"/>
+                            <input
+                                class="form-control"
+                                id="stock_notification_input"
+                                name="email"
+                                type="text"
+                                placeholder="youremail@gmail.com"
+                                t-att-value="this.stock_notification_email? this.stock_notification_email: ''"
+                            />
                             <button
                                 id="product_stock_notification_form_submit_button"
                                 class="btn btn-primary"
@@ -36,10 +44,15 @@
                                 <i class="oi oi-filled" data-icon="send"/>
                             </button>
                         </div>
-                        <div id="stock_notification_input_incorrect" class="d-none form-text text-danger"/>
+                        <div
+                            id="stock_notification_input_incorrect"
+                            class="d-none form-text text-danger"
+                        />
                     </div>
-                    <div id="stock_notification_success_message"
-                         t-att-class="this.has_stock_notification ? '' : 'd-none'">
+                    <div
+                        id="stock_notification_success_message"
+                        t-att-class="this.has_stock_notification ? '' : 'd-none'"
+                    >
                         <div class="py-2 small text-muted">
                             <i class="oi oi-filled me-2" data-icon="notifications"/>We'll notify you once the product is back in stock
                         </div>
@@ -52,17 +65,17 @@
                 t-attf-class="availability_message_#{this.product_template} my-3 badge text-bg-warning"
             >
                 <i class="oi oi-filled text-warning me-2" data-icon="circle" role="presentation"/>
-                <t t-out="this.formatQuantity(this.free_qty)"/> <t t-if="this.uom_name" t-out="this.uom_name" /> in stock
+                <t t-out="this.formatQuantity(this.free_qty)"/> <t t-if="this.uom_name" t-out="this.uom_name"/>in stock
                 <span
-                    id="already_in_cart_message"
                     t-if="!this.allow_out_of_stock_order and this.show_availability and this.cart_qty"
+                    id="already_in_cart_message"
                     t-attf-class="availability_message_#{this.product_template}"
                 >
                     <t t-if="!this.free_qty">
                         You already added all the available product in your cart
                     </t>
                     <t t-else="">
-                        (<t t-out="this.cart_qty" /> in your cart)
+                        (<t t-out="this.cart_qty"/> in your cart)
                     </t>
                 </span>
             </div>
@@ -83,7 +96,10 @@
             >
                 <i class="oi me-2" data-icon="favorite"/>Add to wishlist
             </button>
-            <div id="wsale_added_to_your_wishlist_alert" t-att-class="this.is_in_wishlist ? '' : 'd-none'">
+            <div
+                id="wsale_added_to_your_wishlist_alert"
+                t-att-class="this.is_in_wishlist ? '' : 'd-none'"
+            >
                 <div class="btn btn-outline-primary disabled">
                     <i class="oi oi-filled me-2" data-icon="favorite"/>Added to your wishlist
                 </div>

@@ -5,20 +5,32 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <search>
-                <filter name="my_orders" string="My" domain="[('user_id','=',uid)]" />
+                <filter name="my_orders" string="My" domain="[('user_id','=',uid)]"/>
                 <separator/>
-                <filter name="today" string="Today" domain="[('create_date', '&gt;=', 'today')]" />
+                <filter name="today" string="Today" domain="[('create_date', '&gt;=', 'today')]"/>
                 <separator/>
                 <filter name="month" string="Date" date="date"/>
                 <group>
                     <filter name="group_date" string="Date" context="{'group_by': 'date'}"/>
-                    <filter name="group_order" string="Sale Order" context="{'group_by':'order_id'}"/>
-                    <filter name="group_invoice" string="Invoice" context="{'group_by':'reinvoice_move_id'}"/>
+                    <filter
+                        name="group_order"
+                        string="Sale Order"
+                        context="{'group_by':'order_id'}"
+                    />
+                    <filter
+                        name="group_invoice"
+                        string="Invoice"
+                        context="{'group_by':'reinvoice_move_id'}"
+                    />
                 </group>
                 <separator/>
-                <filter string="Financial Account" name="group_by_financial_account" context="{'group_by':'general_account_id'}"/>
+                <filter
+                    string="Financial Account"
+                    name="group_by_financial_account"
+                    context="{'group_by':'general_account_id'}"
+                />
                 <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
-                <filter string="Category" name='category' context="{'group_by': 'category'}"/>
+                <filter string="Category" name="category" context="{'group_by': 'category'}"/>
                 <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
             </search>
         </field>

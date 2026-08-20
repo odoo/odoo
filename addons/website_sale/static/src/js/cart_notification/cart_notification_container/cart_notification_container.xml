@@ -7,7 +7,11 @@
             name="o_cart_notification_container"
         >
             <div class="d-flex flex-column container align-items-end">
-                <t t-foreach="this.state.notifications" t-as="notification" t-key="notification_index">
+                <t
+                    t-foreach="this.state.notifications"
+                    t-as="notification"
+                    t-key="notification_index"
+                >
                     <div
                         class="position-relative mt-2"
                         t-attf-style="top: {{this.state.topOffset}}px;"

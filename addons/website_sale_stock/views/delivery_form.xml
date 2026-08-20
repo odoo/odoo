@@ -23,7 +23,10 @@
                     t-attf-class="d-flex justify-items-between align-items-center gap-3 w-100 border p-3 rounded {{'' if pickup_location_data else 'd-none'}}"
                 >
                     <span>
-                        <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
+                        <b
+                            name="o_pickup_location_name"
+                            t-out="pickup_location_data.get('name', '')"
+                        />
                         <br/>
                         <span
                             name="o_pickup_location_address"
@@ -37,7 +40,8 @@
                     </span>
                     <span
                         name="o_pickup_location_selector"
-                        class="oi oi-filled btn btn-light ms-auto p-3" data-icon="edit"
+                        class="oi oi-filled btn btn-light ms-auto p-3"
+                        data-icon="edit"
                         title="Change location"
                         aria-label="Change location"
                         t-att-data-location-id="pickup_location_data.get('id')"

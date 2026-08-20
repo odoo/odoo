@@ -8,10 +8,12 @@
         <field name="arch" type="xml">
             <footer position="before">
                 <field name="has_adyen_tx" invisible="1"/>
-                <div id="alert_delayed_capture_tx"
-                     role="alert"
-                     class="alert alert-info mb-2"
-                     invisible="not has_adyen_tx">
+                <div
+                    id="alert_delayed_capture_tx"
+                    role="alert"
+                    class="alert alert-info mb-2"
+                    invisible="not has_adyen_tx"
+                >
                     The capture or void of the transaction might take a few minutes to be
                     processed by Adyen and reflected in Odoo.
                 </div>

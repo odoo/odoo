@@ -37,10 +37,27 @@
                         class="'btn btn-link o-dropdown-item-indent o_sale_management_template d-flex align-items-center pe-0'"
                         onSelected="() => this.createQuotation({ additionalContext: { default_sale_order_template_id: template.id } })"
                     >
-                        <span class="text-truncate" style="max-width: 400px;" t-out="template.name"/>
-                        <div class="btn-group o_template_icon_group ms-auto d-flex ps-1" t-if="this.state.canManageTemplates">
-                            <i role="button" t-on-click.stop="() => this.onEditClick(template.id)" class="oi oi-filled btn btn-link fs-3" data-icon="edit"/>
-                            <i role="button" t-on-click.stop="() => this.onDeleteClick(template.id)" class="oi oi-filled btn text-danger fs-3" data-icon="delete"/>
+                        <span
+                            class="text-truncate"
+                            style="max-width: 400px;"
+                            t-out="template.name"
+                        />
+                        <div
+                            t-if="this.state.canManageTemplates"
+                            class="btn-group o_template_icon_group ms-auto d-flex ps-1"
+                        >
+                            <i
+                                role="button"
+                                t-on-click.stop="() => this.onEditClick(template.id)"
+                                class="oi oi-filled btn btn-link fs-3"
+                                data-icon="edit"
+                            />
+                            <i
+                                role="button"
+                                t-on-click.stop="() => this.onDeleteClick(template.id)"
+                                class="oi oi-filled btn text-danger fs-3"
+                                data-icon="delete"
+                            />
                         </div>
                     </DropdownItem>
                 </t>

@@ -82,7 +82,10 @@
                         </button>
                     </div>
                     <div class="d-flex gap-3 align-items-center">
-                        <div t-if="this.props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">
+                        <div
+                            t-if="this.props.options?.showQuantity ?? true"
+                            class="combo_configurator_quantity ps-lg-3"
+                        >
                             <QuantityButtons
                                 quantity="this.state.quantity"
                                 setQuantity="quantity => this.setQuantity(quantity)"

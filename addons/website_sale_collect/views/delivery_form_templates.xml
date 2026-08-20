@@ -37,7 +37,9 @@
                             t-out="' (' + order_line.product_uom_id.name + ')'"
                         />
                     </div>
-                    <div t-out="order_line._get_shop_warning_stock(order_line.product_uom_qty, available_qty)"/>
+                    <div
+                        t-out="order_line._get_shop_warning_stock(order_line.product_uom_qty, available_qty)"
+                    />
                     <div
                         name="o_wsale_unavailable_line_button_container"
                         class="mt-2 mt-md-1 d-flex align-items-center gap-2"
@@ -47,7 +49,8 @@
                                 t-attf-class="oi oi-fw {{'' if available_qty else ''}}"
                                 role="presentation"
                                 aria-label="Update cart quantities"
-                             t-attf-data-icon="{{'refresh' if available_qty else 'delete'}}"/>
+                                t-attf-data-icon="{{'refresh' if available_qty else 'delete'}}"
+                            />
                             <t t-set="update_cart_button_label">Update cart with available stock</t>
                             <t t-set="remove_from_cart_button_label">Remove</t>
                             <span
@@ -59,7 +62,10 @@
                             />
                         </button>
                         <t t-if="not available_qty">
-                            <t t-set="in_wishlist" t-value="order_line.product_id._is_in_wishlist()"/>
+                            <t
+                                t-set="in_wishlist"
+                                t-value="order_line.product_id._is_in_wishlist()"
+                            />
                             <span class="small">|</span>
                             <button
                                 t-if="not in_wishlist"
@@ -72,7 +78,12 @@
                                     t-att-data-line-id="order_line.id"
                                     t-att-data-product-id="order_line.product_id.id"
                                 >
-                                    <i class="oi oi-fw" data-icon="favorite" role="presentation" aria-label="Add to wishlist"/>
+                                    <i
+                                        class="oi oi-fw"
+                                        data-icon="favorite"
+                                        role="presentation"
+                                        aria-label="Add to wishlist"
+                                    />
                                     Wishlist
                                 </span>
                             </button>

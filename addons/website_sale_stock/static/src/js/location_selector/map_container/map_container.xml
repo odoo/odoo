@@ -16,7 +16,10 @@
             </div>
 
             <!-- Desktop infos -->
-            <div t-if="this.selectedLocation" class="d-none d-md-flex justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4">
+            <div
+                t-if="this.selectedLocation"
+                class="d-none d-md-flex justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4"
+            >
                 <div class="col-lg-5 d-flex flex-column justify-content-between">
                     <div class="d-flex gap-2">
                         <div class="d-flex flex-column flex-grow-1">
@@ -32,7 +35,8 @@
                         class="btn btn-primary d-none d-lg-block mt-3"
                         t-att-disabled="!this.props.selectedLocationId"
                         t-on-click="this.props.validateSelection"
-                        t-out="this.chooseLocationButtonLabel"/>
+                        t-out="this.chooseLocationButtonLabel"
+                    />
                 </div>
 
                 <!-- Schedule -->
@@ -48,7 +52,8 @@
                     class="btn btn-primary d-block d-lg-none align-self-stretch ms-lg-4"
                     t-att-disabled="!this.props.selectedLocationId"
                     t-on-click="this.props.validateSelection"
-                    t-out="this.chooseLocationButtonLabel"/>
+                    t-out="this.chooseLocationButtonLabel"
+                />
             </div>
 
             <!-- Mobile infos -->
@@ -66,13 +71,21 @@
                         <strong class="fw-bold" t-out="this.selectedLocation.name"/>
                         <small class="text-muted">
                             <span t-out="this.selectedLocation.street"/>
-                            <span class="d-block" t-out="this.getCityAndZipCode(this.selectedLocation)"/>
+                            <span
+                                class="d-block"
+                                t-out="this.getCityAndZipCode(this.selectedLocation)"
+                            />
                         </small>
                     </span>
-                    <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{Object.keys(this.selectedLocation.opening_hours).length > 0 ? 'd-md-none' : 'd-none'}}">
+                    <span
+                        t-attf-class="d-flex align-items-center gap-1 small fw-bold {{Object.keys(this.selectedLocation.opening_hours).length > 0 ? 'd-md-none' : 'd-none'}}"
+                    >
                         <i class="oi" data-icon="schedule" role="img"/>
                         <t t-out="this.openingHoursLabel"/>
-                        <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up"/>
+                        <i
+                            class="o_location_selector_hours_caret oi ms-auto transition-base"
+                            data-icon="arrow_drop_up"
+                        />
                     </span>
 
                     <!-- Schedule -->

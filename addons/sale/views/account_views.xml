@@ -10,7 +10,12 @@
                 <field name="team_id"/>
             </field>
             <xpath expr="//group/filter[@name='status']" position="after">
-                <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
+                <filter
+                    string="Sales Team"
+                    name="sales_channel"
+                    domain="[]"
+                    context="{'group_by':'team_id'}"
+                />
             </xpath>
         </field>
     </record>
@@ -21,7 +26,11 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <field name="invoice_user_id" position="after">
-                <field name="team_id" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" optional="hide"/>
+                <field
+                    name="team_id"
+                    column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')"
+                    optional="hide"
+                />
             </field>
         </field>
     </record>
@@ -31,27 +40,42 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
-                <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+            <xpath
+                expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']"
+                position="after"
+            >
+                <field
+                    name="team_id"
+                    context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"
+                />
             </xpath>
             <xpath expr="//group[@id='other_tab_group']" position="inside">
-                <group string="Marketing"
-                        name="utm_link"
-                        groups="base.group_no_one"
-                        invisible="move_type not in ('out_invoice', 'out_refund')">
+                <group
+                    string="Marketing"
+                    name="utm_link"
+                    groups="base.group_no_one"
+                    invisible="move_type not in ('out_invoice', 'out_refund')"
+                >
                     <field name="campaign_id" options="{'create_name_field': 'title'}"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
-                    <field name="utm_reference" string="Reference" options="{'hide_model': True}"
-                        invisible="not utm_reference" readonly="True"/>
+                    <field
+                        name="utm_reference"
+                        string="Reference"
+                        options="{'hide_model': True}"
+                        invisible="not utm_reference"
+                        readonly="True"
+                    />
                 </group>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button"
-                        name="action_view_source_sale_orders"
-                        type="object"
-                        icon="edit_square"
-                        invisible="sale_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
+                <button
+                    class="oe_stat_button"
+                    name="action_view_source_sale_orders"
+                    type="object"
+                    icon="edit_square"
+                    invisible="sale_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                >
                     <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
                 </button>
                 <button
@@ -68,16 +92,27 @@
             <xpath expr="//field[@name='invoice_line_ids']/list" position="inside">
                 <field name="is_downpayment" column_invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_id']" position="attributes">
+            <xpath
+                expr="//field[@name='invoice_line_ids']/list/field[@name='product_id']"
+                position="attributes"
+            >
                 <attribute name="readonly">is_downpayment</attribute>
             </xpath>
             <header position="after">
-                <div class="alert alert-warning" role="alert" invisible="not sale_warning_text or move_type != 'out_invoice'">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not sale_warning_text or move_type != 'out_invoice'"
+                >
                     <field name="sale_warning_text" class="fw-bold"/>
                 </div>
             </header>
             <list name="journal_items" position="attributes">
-                <attribute name="decoration-warning" add="(sale_line_warn_msg and move_type == 'out_invoice')" separator=" or "/>
+                <attribute
+                    name="decoration-warning"
+                    add="(sale_line_warn_msg and move_type == 'out_invoice')"
+                    separator=" or "
+                />
             </list>
         </field>
     </record>

@@ -90,9 +90,17 @@
                         >Download</a>
                     </t>
                     <t t-name="card" class="o_kanban_attachment flex-row">
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <widget
+                            name="web_ribbon"
+                            title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"
+                        />
                         <aside>
-                            <div class="o_image o_kanban_previewer w-100 h-100" t-att-data-mimetype="record.mimetype.value"/>
+                            <div
+                                class="o_image o_kanban_previewer w-100 h-100"
+                                t-att-data-mimetype="record.mimetype.value"
+                            />
                         </aside>
                         <main class="ms-2">
                             <field name="name" class="fw-bolder text-truncate"/>
@@ -106,7 +114,11 @@
                                 class="mt-2"
                             >
                                 <span class="pe-2">Templates:</span>
-                                <field name="quotation_template_ids" class="d-inline-block" widget="many2many_tags"/>
+                                <field
+                                    name="quotation_template_ids"
+                                    class="d-inline-block"
+                                    widget="many2many_tags"
+                                />
                             </div>
                         </main>
                     </t>
@@ -150,7 +162,11 @@
                     />
                     <filter name="all" string="All"/>
                     <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
-                    <filter name="add_by_default" string="Add By Default" domain="[('add_by_default', '=', True)]"/>
+                    <filter
+                        name="add_by_default"
+                        string="Add By Default"
+                        domain="[('add_by_default', '=', True)]"
+                    />
                 </group>
             </search>
         </field>

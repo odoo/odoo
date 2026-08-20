@@ -138,7 +138,10 @@
 
     <record id="advance_product_0" model="product.product">
         <field name="name">Deposit</field>
-        <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+        <field
+            name="categ_id"
+            eval="ref('product.product_category_services', raise_if_not_found=False)"
+        />
         <field name="type">service</field>
         <field name="list_price">150.0</field>
         <field name="invoice_policy">order</field>
@@ -162,21 +165,33 @@
 
     <!-- Assign XMLID to automatically created product variant -->
     <function model="ir.model.data" name="_update_xmlids">
-        <value model="base" eval="[{
+        <value
+            model="base"
+            eval="[{
             'xml_id': 'sale.product_product_1_product_product',
             'record': obj().env.ref('sale.product_product_1_product_template').product_variant_id,
             'noupdate': True,
-        }]"/>
+        }]"
+        />
     </function>
 
     <record id="product.product_product_4_product_template" model="product.template">
-        <field name="optional_product_ids" eval="[Command.set([ref('product.product_product_11_product_template')])]"/>
+        <field
+            name="optional_product_ids"
+            eval="[Command.set([ref('product.product_product_11_product_template')])]"
+        />
     </record>
     <record id="product.product_product_11_product_template" model="product.template">
-        <field name="optional_product_ids" eval="[Command.set([ref('product_product_1_product_template')])]"/>
+        <field
+            name="optional_product_ids"
+            eval="[Command.set([ref('product_product_1_product_template')])]"
+        />
     </record>
     <record id="product.product_product_13_product_template" model="product.template">
-        <field name="optional_product_ids" eval="[Command.set([ref('product.product_product_11_product_template')])]"/>
+        <field
+            name="optional_product_ids"
+            eval="[Command.set([ref('product.product_product_11_product_template')])]"
+        />
     </record>
 
 </odoo>

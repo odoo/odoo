@@ -20,7 +20,10 @@
                         alt="Category Image"
                         class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
                     />
-                    <div t-if="category.get('unpublished')" class="o_ribbon_right small text-bg-light">Unpublished</div>
+                    <div
+                        t-if="category.get('unpublished')"
+                        class="o_ribbon_right small text-bg-light"
+                    >Unpublished</div>
                 </div>
                 <div
                     name="category_overlay"

@@ -31,7 +31,10 @@
         <record model="website" id="base.default_website">
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
             <field name="salesperson_id" ref="base.user_admin"/>
-            <field name="rating_email_template_id" ref="website_sale.mail_template_sale_order_rating"/>
+            <field
+                name="rating_email_template_id"
+                ref="website_sale.mail_template_sale_order_rating"
+            />
         </record>
 
         <record id="delivery.free_delivery_carrier" model="delivery.carrier" forcecreate="False">
@@ -42,9 +45,11 @@
 
     <function model="ir.model.fields" name="formbuilder_whitelist">
         <value>sale.order</value>
-        <value eval="[
+        <value
+            eval="[
             'client_order_ref',
-        ]"/>
+        ]"
+        />
     </function>
 
     <record id="base.model_res_partner" model="ir.model">
@@ -54,11 +59,13 @@
     </record>
     <function model="ir.model.fields" name="formbuilder_whitelist">
         <value>res.partner</value>
-        <value eval="[
+        <value
+            eval="[
             'name', 'phone', 'email',
             'city', 'zip', 'street', 'street2', 'state_id', 'country_id',
             'vat', 'properties'
-        ]"/>
+        ]"
+        />
     </function>
 
 </odoo>

@@ -19,8 +19,17 @@
                     domain="[('template_type', '=', 'section')]"
                 />
                 <group>
-                    <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Type" name="template_type" context="{'group_by': 'template_type'}"/>
+                    <filter
+                        string="Company"
+                        name="company_id"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"
+                    />
+                    <filter
+                        string="Type"
+                        name="template_type"
+                        context="{'group_by': 'template_type'}"
+                    />
                 </group>
             </search>
         </field>
@@ -34,11 +43,20 @@
                 <sheet>
                     <field name="active" invisible="1"/>
                     <div name="button_box" class="oe_button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
                     <div class="oe_title" name="sale_order_template_title">
                         <label for="name" id="sale_order_template_title"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Standard Consultancy Package" class="d-block"/>
+                            <field
+                                name="name"
+                                placeholder="e.g. Standard Consultancy Package"
+                                class="d-block"
+                            />
                         </h1>
                     </div>
                     <group name="sale_info" class="w-50">
@@ -59,91 +77,111 @@
                     </group>
                     <notebook name="main_book">
                         <page string="Lines" name="order_lines">
-                        <field
-                            name="sale_order_template_line_ids"
-                            widget="so_template_line_o2m"
-                            options="{'subsections': True, 'hide_prices': True, 'hide_composition': True}"
-                        >
-                            <form string="Quotation Template Lines">
+                            <field
+                                name="sale_order_template_line_ids"
+                                widget="so_template_line_o2m"
+                                options="{'subsections': True, 'hide_prices': True, 'hide_composition': True}"
+                            >
+                                <form string="Quotation Template Lines">
                                 <!--
                                     We need the sequence field to be here for new lines to be added at the correct position.
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                                 -->
-                                <field name="sequence" invisible="1"/>
-                                <field name="display_type" invisible="1"/>
-                                <group invisible="display_type">
-                                    <group>
-                                        <field name="product_id" required="not display_type"/>
-                                        <label for="product_uom_qty"/>
-                                        <div>
-                                            <field name="product_uom_qty" class="oe_inline"/>
-                                        </div>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="display_type" invisible="1"/>
+                                    <group invisible="display_type">
+                                        <group>
+                                            <field name="product_id" required="not display_type"/>
+                                            <label for="product_uom_qty"/>
+                                            <div>
+                                                <field name="product_uom_qty" class="oe_inline"/>
+                                            </div>
+                                        </group>
                                     </group>
-                                </group>
-                                <notebook colspan="4" name="description">
-                                    <page string="Description" name="order_description" invisible="display_type">
-                                        <field name="name" />
-                                    </page>
-                                    <page string="Section" name="order_section" invisible="display_type != 'line_section'">
-                                        <field name="name" />
-                                    </page>
-                                    <page string="Note" name="order_note" invisible="display_type != 'line_note'">
-                                        <field name="name" />
-                                    </page>
-                                </notebook>
-                            </form>
-                            <list string="Quotation Template Lines" editable="bottom">
-                                <control>
-                                    <create name="add_product_control" string="Add a product"/>
-                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                    <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                                </control>
-                                <field name="display_type" column_invisible="True"/>
-                                <field name="is_optional" column_invisible="True"/>
-                                <field name="collapse_prices" column_invisible="True"/>
-                                <field name="collapse_composition" column_invisible="True"/>
-                                <field name="sequence" widget="handle"/>
-                                <field name="product_id"/>
-                                <field name="name"/>
-                                <field name="product_uom_qty"/>
-                                <field
-                                    name="product_uom_id"
-                                    groups="uom.group_uom"
-                                    required="not display_type"
-                                />
-                                <field
-                                    name="price_unit"
-                                    column_invisible="not parent.has_productless_lines"
-                                    readonly="product_id"
-                                    invisible="product_id"
-                                    optional="hide"
-                                />
-                                <field
-                                    name="tax_ids"
-                                    widget="many2many_tax_tags"
-                                    options="{'no_create': True}"
-                                    context="{'search_view_ref': 'account.account_tax_view_search'}"
-                                    column_invisible="not parent.has_productless_lines"
-                                    readonly="product_id"
-                                    invisible="product_id"
-                                    optional="hide"
-                                />
-                                <field
-                                    name="discount"
-                                    string="Disc %"
-                                    groups="sale.group_discount_per_so_line"
-                                    column_invisible="not parent.has_productless_lines"
-                                    readonly="product_id"
-                                    invisible="product_id"
-                                    optional="hide"
-                                />
-                                <widget
-                                    name="section_state"
-                                    options="{'is_optional': 'radio_button_checked'}"
-                                />
-                            </list>
-                        </field>
-                    </page>
+                                    <notebook colspan="4" name="description">
+                                        <page
+                                            string="Description"
+                                            name="order_description"
+                                            invisible="display_type"
+                                        >
+                                            <field name="name"/>
+                                        </page>
+                                        <page
+                                            string="Section"
+                                            name="order_section"
+                                            invisible="display_type != 'line_section'"
+                                        >
+                                            <field name="name"/>
+                                        </page>
+                                        <page
+                                            string="Note"
+                                            name="order_note"
+                                            invisible="display_type != 'line_note'"
+                                        >
+                                            <field name="name"/>
+                                        </page>
+                                    </notebook>
+                                </form>
+                                <list string="Quotation Template Lines" editable="bottom">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create
+                                            name="add_section_control"
+                                            string="Add a section"
+                                            context="{'default_display_type': 'line_section'}"
+                                        />
+                                        <create
+                                            name="add_note_control"
+                                            string="Add a note"
+                                            context="{'default_display_type': 'line_note'}"
+                                        />
+                                    </control>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="is_optional" column_invisible="True"/>
+                                    <field name="collapse_prices" column_invisible="True"/>
+                                    <field name="collapse_composition" column_invisible="True"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"/>
+                                    <field
+                                        name="product_uom_id"
+                                        groups="uom.group_uom"
+                                        required="not display_type"
+                                    />
+                                    <field
+                                        name="price_unit"
+                                        column_invisible="not parent.has_productless_lines"
+                                        readonly="product_id"
+                                        invisible="product_id"
+                                        optional="hide"
+                                    />
+                                    <field
+                                        name="tax_ids"
+                                        widget="many2many_tax_tags"
+                                        options="{'no_create': True}"
+                                        context="{'search_view_ref': 'account.account_tax_view_search'}"
+                                        column_invisible="not parent.has_productless_lines"
+                                        readonly="product_id"
+                                        invisible="product_id"
+                                        optional="hide"
+                                    />
+                                    <field
+                                        name="discount"
+                                        string="Disc %"
+                                        groups="sale.group_discount_per_so_line"
+                                        column_invisible="not parent.has_productless_lines"
+                                        readonly="product_id"
+                                        invisible="product_id"
+                                        optional="hide"
+                                    />
+                                    <widget
+                                        name="section_state"
+                                        options="{'is_optional': 'radio_button_checked'}"
+                                    />
+                                </list>
+                            </field>
+                        </page>
                         <page
                             string="Terms &amp; Conditions"
                             name="terms_and_conditions"
@@ -152,7 +190,8 @@
                             <field
                                 name="note"
                                 nolabel="1"
-                                placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                                placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
+                            />
                         </page>
                         <page
                             string="Settings"

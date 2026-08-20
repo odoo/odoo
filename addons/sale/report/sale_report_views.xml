@@ -2,51 +2,51 @@
 <odoo>
 
     <record id="view_order_product_pivot" model="ir.ui.view">
-         <field name="name">sale.report.pivot</field>
-         <field name="model">sale.report</field>
-         <field name="arch" type="xml">
-             <pivot string="Sales Analysis" sample="1">
-                 <field name="team_id" type="col"/>
-                 <field name="date" interval="month" type="row"/>
-                 <field name="product_uom_qty" type="measure"/>
-             </pivot>
-         </field>
+        <field name="name">sale.report.pivot</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Analysis" sample="1">
+                <field name="team_id" type="col"/>
+                <field name="date" interval="month" type="row"/>
+                <field name="product_uom_qty" type="measure"/>
+            </pivot>
+        </field>
     </record>
 
     <record id="view_order_product_graph" model="ir.ui.view">
-         <field name="name">sale.report.graph</field>
-         <field name="model">sale.report</field>
-         <field name="arch" type="xml">
-             <graph string="Sales Analysis" type="line" sample="1">
-                 <field name="date" interval="month"/>
-                 <field name="product_uom_qty" type="measure"/>
-             </graph>
-         </field>
+        <field name="name">sale.report.graph</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Analysis" type="line" sample="1">
+                <field name="date" interval="month"/>
+                <field name="product_uom_qty" type="measure"/>
+            </graph>
+        </field>
     </record>
 
     <record id="sale_report_graph_pie" model="ir.ui.view">
-         <field name="name">sale.report.graph.pie</field>
-         <field name="model">sale.report</field>
-         <field name="mode">primary</field>
-         <field name="inherit_id" ref="view_order_product_graph"/>
-         <field name="arch" type="xml">
+        <field name="name">sale.report.graph.pie</field>
+        <field name="model">sale.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_order_product_graph"/>
+        <field name="arch" type="xml">
             <graph position="attributes">
                 <attribute name="type">pie</attribute>
             </graph>
-         </field>
+        </field>
     </record>
 
-     <record id="sale_report_graph_bar" model="ir.ui.view">
-         <field name="name">sale.report.graph.bar</field>
-         <field name="model">sale.report</field>
-         <field name="mode">primary</field>
-         <field name="inherit_id" ref="view_order_product_graph"/>
-         <field name="arch" type="xml">
+    <record id="sale_report_graph_bar" model="ir.ui.view">
+        <field name="name">sale.report.graph.bar</field>
+        <field name="model">sale.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_order_product_graph"/>
+        <field name="arch" type="xml">
             <graph position="attributes">
                 <attribute name="type">bar</attribute>
                 <attribute name="order">DESC</attribute>
             </graph>
-         </field>
+        </field>
     </record>
 
     <record id="sale_report_view_tree" model="ir.ui.view">
@@ -83,19 +83,40 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <filter string="Date" name="year" invisible="1" date="date" default_period="year"/>
-                <filter string="Quotations" name="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
-                <filter string="Sales Orders" name="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
+                <filter
+                    string="Quotations"
+                    name="Quotations"
+                    domain="[('state','in', ('draft', 'sent'))]"
+                />
+                <filter
+                    string="Sales Orders"
+                    name="Sales"
+                    domain="[('state','not in',('draft', 'cancel', 'sent'))]"
+                />
                 <separator/>
                 <filter name="filter_date" date="date" default_period="month"/>
-                <filter name="filter_order_date" invisible="1" string="Order Date: Last 365 Days" domain="[('date', '&gt;=', '-365d')]"/>
+                <filter
+                    name="filter_order_date"
+                    invisible="1"
+                    string="Order Date: Last 365 Days"
+                    domain="[('date', '&gt;=', '-365d')]"
+                />
                 <separator/>
                 <field name="user_id"/>
                 <field name="team_id"/>
                 <field name="product_id"/>
                 <field name="product_tmpl_id"/>
                 <field name="categ_id"/>
-                <filter name="to_invoice" string="To Invoice" domain="[('line_invoice_status', '=', 'to invoice')]"/>
-                <filter name="fully_invoiced" string="Fully Invoiced" domain="[('line_invoice_status', '=', 'invoiced')]"/>
+                <filter
+                    name="to_invoice"
+                    string="To Invoice"
+                    domain="[('line_invoice_status', '=', 'to invoice')]"
+                />
+                <filter
+                    name="fully_invoiced"
+                    string="Fully Invoiced"
+                    domain="[('line_invoice_status', '=', 'invoiced')]"
+                />
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="industry_id"/>
@@ -105,22 +126,63 @@
                 </group>
                 <group>
                     <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
+                    <filter
+                        string="Sales Team"
+                        name="sales_channel"
+                        context="{'group_by':'team_id'}"
+                    />
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
-                    <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
-                    <filter string="Customer Industry" name="industry_id" context="{'group_by':'industry_id'}"/>
-                    <filter string="Customer Tags" name="partner_tag_ids" context="{'group_by': 'partner_tag_ids'}"/>
-                    <filter string="Product" name="product_tmpl_id" context="{'group_by':'product_tmpl_id'}"/>
-                    <filter string="Product Variant" name="product_id" context="{'group_by':'product_id'}"
-                            groups="product.group_product_variant"/>
-                    <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter
+                        string="Customer Country"
+                        name="country_id"
+                        context="{'group_by':'country_id'}"
+                    />
+                    <filter
+                        string="Customer Industry"
+                        name="industry_id"
+                        context="{'group_by':'industry_id'}"
+                    />
+                    <filter
+                        string="Customer Tags"
+                        name="partner_tag_ids"
+                        context="{'group_by': 'partner_tag_ids'}"
+                    />
+                    <filter
+                        string="Product"
+                        name="product_tmpl_id"
+                        context="{'group_by':'product_tmpl_id'}"
+                    />
+                    <filter
+                        string="Product Variant"
+                        name="product_id"
+                        context="{'group_by':'product_id'}"
+                        groups="product.group_product_variant"
+                    />
+                    <filter
+                        string="Product Category"
+                        name="Category"
+                        context="{'group_by':'categ_id'}"
+                    />
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                    <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter
+                        string="Company"
+                        name="company"
+                        groups="base.group_multi_company"
+                        context="{'group_by':'company_id'}"
+                    />
                     <separator/>
-                    <filter string="Order Date" name="group_by_date" context="{'group_by':'date'}"
-                            invisible="context.get('sale_report_view_hide_date')"/>
-                    <filter string="Order Date" name="group_by_date_day" context="{'group_by':'date:day'}"
-                            invisible="not context.get('sale_report_view_hide_date')"/>
+                    <filter
+                        string="Order Date"
+                        name="group_by_date"
+                        context="{'group_by':'date'}"
+                        invisible="context.get('sale_report_view_hide_date')"
+                    />
+                    <filter
+                        string="Order Date"
+                        name="group_by_date_day"
+                        context="{'group_by':'date:day'}"
+                        invisible="not context.get('sale_report_view_hide_date')"
+                    />
                 </group>
             </search>
         </field>

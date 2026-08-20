@@ -17,7 +17,11 @@
             Your tracking reference is
             <strong>
                 <t t-if="object.tracking_url">
-                    <a t-attf-href="{{ object.tracking_url }}" target="_blank" t-out="object.tracking_ref"></a>.
+                    <a
+                        t-attf-href="{{ object.tracking_url }}"
+                        target="_blank"
+                        t-out="object.tracking_ref"
+                    ></a>.
                 </t>
                 <t t-else="">
                     <t t-out="object.tracking_ref"></t>.
@@ -28,13 +32,16 @@
         Please find your delivery order attached for more details.<br/><br/>
         Thank you,
         <t t-if="user.signature">
-            <br />
+            <br/>
             <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
             </field>
-            <field name="report_template_ids" eval="[(4, ref('delivery.action_report_delivery_note'))]"/>
+            <field
+                name="report_template_ids"
+                eval="[(4, ref('delivery.action_report_delivery_note'))]"
+            />
             <field name="auto_delete" eval="False"/>
         </record>
     </data>

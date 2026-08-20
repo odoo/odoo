@@ -14,8 +14,11 @@
                 <t t-foreach="this.state.ribbons" t-as="ribbon" t-key="ribbon.id">
                     <BuilderSelectItem actionValue="ribbon.id" label="ribbon.name">
                         <div>
-                            <t t-out="ribbon.name" />
-                            <span class="oi ms-1" t-attf-data-icon="#{ribbon.position === 'left' ? 'arrow_back' : 'arrow_forward'}"/>
+                            <t t-out="ribbon.name"/>
+                            <span
+                                class="oi ms-1"
+                                t-attf-data-icon="#{ribbon.position === 'left' ? 'arrow_back' : 'arrow_forward'}"
+                            />
                             <span
                                 t-attf-class="o_wsale_color_preview ms-1"
                                 t-attf-style="background-color: #{ribbon.bg_color}; border: {{(ribbon.bg_color == '#FFFFFF' || ribbon.bg_color == '') ? '2px solid #CCCCCC' : ''}};"
@@ -50,14 +53,14 @@
         <t t-if="this.state.ribbonEditMode">
             <BuilderContext action="'modifyRibbon'">
                 <BuilderRow label.translate="Name" level="1">
-                    <BuilderTextInput actionParam="'name'" />
+                    <BuilderTextInput actionParam="'name'"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Style" level="1">
                     <BuilderButtonGroup actionParam="'style'">
                         <BuilderButton actionValue="'ribbon'">Ribbon</BuilderButton>
                         <BuilderButton actionValue="'tag'">Badge</BuilderButton>
                     </BuilderButtonGroup>
-               </BuilderRow>
+                </BuilderRow>
 
                 <BuilderRow label.translate="Background" level="1">
                     <BuilderColorPicker

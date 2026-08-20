@@ -13,11 +13,25 @@
             <div class="o_nocontent_help container mt-5 my-lg-auto">
                 <t t-out="this.props.noContentHelp"/>
                 <div class="row g-2 g-md-3 mx-auto mt-2 justify-content-center">
-                    <div class="col-12 col-md-4 col-xl-3" t-foreach="Object.entries(this.loyaltyTemplateData)" t-as="data" t-key="data[0]">
+                    <div
+                        class="col-12 col-md-4 col-xl-3"
+                        t-foreach="Object.entries(this.loyaltyTemplateData)"
+                        t-as="data"
+                        t-key="data[0]"
+                    >
                         <t t-set="loyalty_el_icon" t-value="data[1].icon"/>
                         <t t-set="loyalty_el_title" t-value="data[1].title"/>
-                        <button type="button" class="loyalty-template card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded" t-on-click.stop.prevent="() => this.onTemplateClick(data[0])" t-attf-aria-label="Select {{loyalty_el_title}} template">
-                            <img class="o_image_64_contain mx-auto" t-attf-src="/loyalty/static/img/{{loyalty_el_icon}}.svg" t-attf-alt="{{loyalty_el_title}}"/>
+                        <button
+                            type="button"
+                            class="loyalty-template card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                            t-on-click.stop.prevent="() => this.onTemplateClick(data[0])"
+                            t-attf-aria-label="Select {{loyalty_el_title}} template"
+                        >
+                            <img
+                                class="o_image_64_contain mx-auto"
+                                t-attf-src="/loyalty/static/img/{{loyalty_el_icon}}.svg"
+                                t-attf-alt="{{loyalty_el_title}}"
+                            />
                             <div class="card-body p-0 text-start text-md-center">
                                 <h3 class="card-title" t-out="loyalty_el_title"/>
                                 <p class="card-text" t-out="data[1].description"/>
@@ -33,9 +47,19 @@
         <t t-if="this.displayControlPanelButtons" position="replace">
             <h4 t-out="this.field.string or ''"/>
             <t t-if="this.displayControlPanelButtons">
-                <div class="o_cp_buttons me-0 ms-auto" role="toolbar" aria-label="Control panel buttons">
+                <div
+                    class="o_cp_buttons me-0 ms-auto"
+                    role="toolbar"
+                    aria-label="Control panel buttons"
+                >
                     <div>
-                        <button type="button" class="btn btn-secondary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">
+                        <button
+                            type="button"
+                            class="btn btn-secondary o-kanban-button-new"
+                            title="Create record"
+                            accesskey="c"
+                            t-on-click="() => this.onAdd()"
+                        >
                             Add
                         </button>
                     </div>
@@ -44,11 +68,20 @@
         </t>
     </t>
 
-    <t t-name="loyalty.LoyaltyCardListView.buttons" t-inherit-mode="primary" t-inherit="web.ListView.Buttons">
+    <t
+        t-name="loyalty.LoyaltyCardListView.buttons"
+        t-inherit-mode="primary"
+        t-inherit="web.ListView.Buttons"
+    >
         <xpath expr="." position="inside">
             <t t-set="supportedProgramTypes" t-value="['coupons', 'gift_card', 'ewallet']"/>
-            <button t-if="supportedProgramTypes.includes(this.props.context.program_type)" type="button" class="btn btn-primary o_loyalty_card_list_button_generate" t-attf-data-tooltip="Generate {{this.props.context.program_item_name}}"
-                t-on-click.stop.prevent="() => this.actionService.doAction('loyalty.loyalty_generate_wizard_action', { additionalContext: this.props.context, onClose: () => {this.model.load()} })">
+            <button
+                t-if="supportedProgramTypes.includes(this.props.context.program_type)"
+                type="button"
+                class="btn btn-primary o_loyalty_card_list_button_generate"
+                t-attf-data-tooltip="Generate {{this.props.context.program_item_name}}"
+                t-on-click.stop.prevent="() => this.actionService.doAction('loyalty.loyalty_generate_wizard_action', { additionalContext: this.props.context, onClose: () => {this.model.load()} })"
+            >
                 Generate <t t-out="this.props.context.program_item_name"/>
             </button>
         </xpath>

@@ -83,7 +83,10 @@
     <record id="payment_method_ipass_money" model="payment.method">
         <field name="name">iPASS Money</field>
         <field name="code">ipass_money</field>
-        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_mobile_wallet')"/>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_ecpay.payment_method_mobile_wallet')"
+        />
         <field name="provider_id" ref="payment.payment_provider_ecpay"/>
         <field name="image" type="bytes" file="payment/static/img/ipass_money.png"/>
     </record>

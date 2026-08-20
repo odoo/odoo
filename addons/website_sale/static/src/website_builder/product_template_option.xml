@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website_sale.ProductTemplateOption">
-    <BuilderRow label.translate="Tags">
-        <ModelMany2Many
-            baseModel="this.domState.model"
-            m2oField="this.domState.field"
-            recordId="this.domState.productId"
-            action="'setTagsAction'"
-            createAction="'createTagAction'"
-        />
-    </BuilderRow>
-</t>
+    <t t-name="website_sale.ProductTemplateOption">
+        <BuilderRow label.translate="Tags">
+            <ModelMany2Many
+                baseModel="this.domState.model"
+                m2oField="this.domState.field"
+                recordId="this.domState.productId"
+                action="'setTagsAction'"
+                createAction="'createTagAction'"
+            />
+        </BuilderRow>
+    </t>
 
 </templates>
