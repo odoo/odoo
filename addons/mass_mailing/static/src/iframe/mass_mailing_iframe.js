@@ -1,4 +1,4 @@
-import { Editor } from "@html_editor/editor";
+import { useEditor } from "@html_editor/editor";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { isVisible } from "@html_editor/utils/dom_info";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
@@ -88,7 +88,7 @@ export class MassMailingIframe extends Component {
             this.setupIframe();
         });
         if (!this.props.readonly && !this.props.withBuilder) {
-            this.editor = new Editor(this.props.config, this.env.services);
+            this.editor = useEditor(this.props.config);
             this.props.onEditorLoad(this.editor);
             onWillDestroy(() => {
                 this.editor.destroy(true);
