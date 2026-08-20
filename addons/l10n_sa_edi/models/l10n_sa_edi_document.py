@@ -276,7 +276,7 @@ class L10nSaEdiDocument(models.Model):
         # Applying with_prefetch() to set the _prefetch_ids = _ids,
         # preventing premature QR code computation for other invoices.
         resource = self.resource.with_prefetch()
-        qr_code = resource.l10n_sa_qr_code_str
+        qr_code = resource._l10n_sa_build_qr()
         qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
         qr_node.text = qr_code
         return etree.tostring(root, with_tail=False)
