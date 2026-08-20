@@ -163,6 +163,9 @@ async function updateShopContent(interaction, {
             }
         );
 
+        updateElementContent(updatedShopPage, "#o_wsale_products_header");
+        updateElementContent(updatedShopPage, "#o_wsale_floating_bar");
+
         const productGridSelector = ".o_wsale_products_grid_table_wrapper";
         const emptyGridSelector = ".o_wsale_empty_products_grid";
         const isEmptyGrid = updatedShopPage.querySelector(emptyGridSelector);
@@ -190,8 +193,6 @@ async function updateShopContent(interaction, {
             ".o_website_offcanvas",
             { postUpdate: (el) => restoreExpandedAccordions(el, expandedTargets) },
         );
-
-        updateElementContent(updatedShopPage, ".o_sortby_dropdown");
 
         const applyBtn = document.querySelector('#o_wsale_offcanvas_product_count');
         if (applyBtn) {

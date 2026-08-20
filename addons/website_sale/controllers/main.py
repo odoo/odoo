@@ -271,6 +271,25 @@ class WebsiteSale(payment_portal.PaymentPortal):
             **request.session.get("attribute_value_params", {}),
         }
 
+    def _get_shop_filter_reset_params(self):
+        """Query-string params that clear the filters, for the `keep()` reset links.
+
+        Returns the attribute-only reset (used by the attribute filter form) and the
+        full reset extending it with the tag, price and ribbon filters.
+        """
+        reset_attribute_value_params = {
+            attr: 0 for attr in request.session.get("attribute_value_params", {})
+        }
+        reset_filters = {
+            **reset_attribute_value_params,
+            "tags": 0,
+            "min_price": 0,
+            "max_price": 0,
+            "on_sale": 0,
+            "in_stock": 0,
+        }
+        return reset_attribute_value_params, reset_filters
+
     def _get_additional_shop_values(self, _values, **_kwargs):
         """Update values used for rendering website_sale.products template."""
         wished_products = self.env["product.wishlist"].current().product_id
@@ -636,6 +655,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
         product_query_params = self._get_product_query_params(**post)
 
+        reset_attribute_value_params, reset_filters = self._get_shop_filter_reset_params()
         values = {
             "auto_assign_ribbons": auto_assign_ribbons,
             "show_on_sale_filter": show_on_sale_filter,
@@ -665,6 +685,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "get_product_prices": lambda product: products_prices[product.id],
             "float_round": float_round,
             "shop_path": SHOP_PATH,
+            "reset_attribute_value_params": reset_attribute_value_params,
+            "reset_filters": reset_filters,
             "product_query_params": product_query_params,
             "grouped_attributes_values": grouped_attributes_values,
             "previewed_attribute_values": lazy(
@@ -1050,6 +1072,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Needed to trigger the recently viewed product rpc
         view_track = website.viewref("website_sale.product").track
+        _, reset_filters = self._get_shop_filter_reset_params()
 
         return {
             "attribute_value_images": attribute_value_images,
@@ -1064,6 +1087,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "view_track": view_track,
             "structured_data": structured_data,
             "shop_path": SHOP_PATH,
+            "reset_filters": reset_filters,
             "user_email": self.env.user.email
             or request.session.get("stock_notification_email", ""),
         }
