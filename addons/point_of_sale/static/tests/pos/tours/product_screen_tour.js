@@ -635,7 +635,7 @@ registry.category("web_tour.tours").add("test_archived_product_removed_and_order
             },
             BackendUtils.openProductForm("A Test Product"),
             {
-                trigger: `[data-icon="settings"]`,
+                trigger: `[data-icon="more_vert"]`,
                 run: "click",
             },
             {

@@ -7729,7 +7729,7 @@ test(`kanban with custom cog action that has a confirmation target="new" action`
     await keyDown("alt");
     await contains(".o_kanban_record:nth-of-type(1)").click();
     expect(".o_selection_box").toHaveCount(1);
-    await contains(`.o_cp_action_menus button:has([data-icon='settings'])`).click();
+    await contains(`.o_cp_action_menus button[data-hotkey='u']`).click();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 
@@ -8933,7 +8933,7 @@ test(`[Offline] keep facets name when coming back online (favorite filter)`, asy
     // Switch back online
     await setOffline(false);
     expect(queryAllTexts(".o_searchview .o_facet_values")).toEqual(["My favorite"]);
-    expect(".o_searchview_facet [data-icon='star'].oi-filled").toHaveCount(1);
+    expect(".o_searchview_facet [data-icon='star']").toHaveCount(1);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("GroupBy Blip");

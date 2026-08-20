@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${baseDescriptionContent} 3)`,
     }, {
         content: "Open History Dialog",
-        trigger: ".o_form_view .o_cp_action_menus i[data-icon='settings']",
+        trigger: ".o_form_view .o_cp_action_menus button[aria-label='Actions menu']",
         run: "click",
     }, {
         trigger: ".dropdown-menu",

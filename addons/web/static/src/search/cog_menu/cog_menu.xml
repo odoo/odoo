@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CogMenu">
-        <div t-if="this.hasItems" class="o_cp_action_menus d-flex align-items-center gap-1" t-att-class="{'pe-2': !this.uiService.isSmall}">
+        <div t-if="this.hasItems" class="o_cp_action_menus d-flex align-items-center gap-1">
             <div class="lh-1">
                 <Dropdown menuClass="'lh-base'" beforeOpen.bind="this.loadPrintItems">
-                    <button class="d-print-none btn" t-att-class="this.uiService.isSmall ? 'btn-secondary' : 'lh-sm p-0 border-0'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu" data-available-offline="">
-                        <i class="oi oi-fw oi-filled" data-icon="settings"/>
+                    <button class="o_btn_circle d-print-none btn btn-light" t-att-class="this.uiService.isSmall ? 'btn-secondary' : 'p-1 m-0 ms-1'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu" data-available-offline="">
+                        <i class="oi" data-icon="more_vert" aria-hidden="true"/>
                     </button>
 
                     <t t-set-slot="content">
