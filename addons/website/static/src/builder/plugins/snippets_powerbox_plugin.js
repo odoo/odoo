@@ -89,6 +89,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
                 title: _t("Blockquote"),
                 description: _t("Insert a blockquote snippet"),
                 icon: "format_quote",
+                iconClass: "oi-filled",
                 run: this.insertSnippet.bind(this, "s_blockquote"),
                 isAvailable: canInsertBlockSnippet,
             },

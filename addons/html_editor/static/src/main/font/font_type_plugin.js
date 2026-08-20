@@ -99,6 +99,7 @@ export class FontTypePlugin extends Plugin {
                 title: _t("Quote"),
                 description: _t("Add a blockquote section"),
                 icon: "format_quote",
+                iconClass: "oi-filled",
                 run: () => this.dependencies.dom.setBlock({ tagName: "blockquote" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },

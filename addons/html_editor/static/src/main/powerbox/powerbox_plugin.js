@@ -164,7 +164,7 @@ export class PowerboxPlugin extends Plugin {
                     commandId === command.id && deepEqual(commandParams, item.commandParams)
             )?.literals[0];
             return {
-                ...pick(command, "title", "description", "icon"),
+                ...pick(command, "title", "description", "icon", "iconClass"),
                 ...omit(item, "commandId", "commandParams"),
                 categoryName: categoryDict[item.categoryId].name,
                 ...(shorthandLiteral && { shorthandLiteral }),
