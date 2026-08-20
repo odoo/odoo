@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, JsonRpcException, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
@@ -106,3 +107,37 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         self.start_tour(
             combo_product.website_url, "website_sale.combo_configurator_single_configurable_item"
         )
+
+    @mute_logger("odoo.http")
+    def test_website_sale_combo_configurator_incomplete_selection(self):
+        """ Test that a combo can't be added to the cart with missing combo choices. """
+        combos = self.env["product.combo"].create([{
+            "name": f"Combo {suffix}",
+            "combo_item_ids": [Command.create({"product_id": self._create_product().id})],
+        } for suffix in ("A", "B")])
+        combo_product = self._create_product(type="combo", combo_ids=[Command.set(combos.ids)])
+        item_a, item_b = combos.combo_item_ids
+
+        def add_to_cart(combo_items):
+            return self.make_jsonrpc_request("/shop/cart/add", {
+                "product_template_id": combo_product.product_tmpl_id.id,
+                "product_id": combo_product.id,
+                "quantity": 1,
+                "linked_products": [{
+                    "product_template_id": item.product_id.product_tmpl_id.id,
+                    "parent_product_template_id": combo_product.product_tmpl_id.id,
+                    "quantity": 1,
+                    "product_id": item.product_id.id,
+                    "combo_item_id": item.id,
+                    "no_variant_attribute_value_ids": [],
+                    "product_custom_attribute_values": [],
+                } for item in combo_items],
+            })
+
+        with self.assertRaises(JsonRpcException):  # A combo choice is unanswered.
+            add_to_cart(item_a)
+        with self.assertRaises(JsonRpcException):  # The same combo choice is answered twice.
+            add_to_cart(item_a + item_a)
+        with self.assertRaises(JsonRpcException):  # Every choice is answered, but one twice.
+            add_to_cart(item_a + item_a + item_b)
+        self.assertEqual(add_to_cart(item_a + item_b)["quantity"], 1)
