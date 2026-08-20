@@ -72,16 +72,11 @@ class TestPurchaseDestRounding(PurchaseTestCommon):
         self.assertIn(dest_move, receipt_moves.move_dest_ids)
 
     def test_real_surplus_extra_move_does_not_attach(self):
-        """Dest 500 units = 5 rolls, buy 8: attach keeps dests, surplus extra does not."""
+        """Dest 500 units = 5 rolls, buy 8: extra is created without dests then merged on confirm."""
         dest_move, receipt_moves = self._confirm_po_with_dest(500.0, 8.0)
-        attached = receipt_moves.filtered(lambda m: dest_move in m.move_dest_ids)
-        extra = receipt_moves - attached
-        self.assertEqual(len(attached), 1)
-        self.assertEqual(len(extra), 1)
-        self.assertFalse(extra.move_dest_ids)
-        # Without propagate_uom, receipt moves are in stock UoM.
-        self.assertAlmostEqual(attached.product_uom_qty, 500.0)
-        self.assertAlmostEqual(extra.product_uom_qty, 300.0)
+        self.assertEqual(len(receipt_moves), 1)
+        self.assertIn(dest_move, receipt_moves.move_dest_ids)
+        self.assertAlmostEqual(sum(receipt_moves.mapped('product_qty')), 800.0)
 
     def test_exact_dest_demand_creates_single_attached_move(self):
         """Dest equals PO qty: only attach move, no surplus extra."""
@@ -91,16 +86,11 @@ class TestPurchaseDestRounding(PurchaseTestCommon):
         self.assertAlmostEqual(receipt_moves.product_uom_qty, 200.0)
 
     def test_fractional_attach_and_push_sum_to_pol_in_stock_uom(self):
-        """Dest 140 units = 1.4 rolls, buy 2: attach 140 + push 60, dest only on attach."""
+        """Dest 140 units = 1.4 rolls, buy 2: attach+push merge on confirm, dests kept."""
         dest_move, receipt_moves = self._confirm_po_with_dest(140.0, 2.0)
-        attached = receipt_moves.filtered(lambda m: dest_move in m.move_dest_ids)
-        extra = receipt_moves - attached
-        self.assertEqual(len(attached), 1)
-        self.assertEqual(len(extra), 1)
-        self.assertFalse(extra.move_dest_ids)
-        self.assertAlmostEqual(attached.product_uom_qty, 140.0)
-        self.assertAlmostEqual(extra.product_uom_qty, 60.0)
-        self.assertAlmostEqual(sum(receipt_moves.mapped('product_uom_qty')), 200.0)
+        self.assertEqual(len(receipt_moves), 1)
+        self.assertIn(dest_move, receipt_moves.move_dest_ids)
+        self.assertAlmostEqual(sum(receipt_moves.mapped('product_qty')), 200.0)
 
     def test_sub_half_dest_demand_skips_attach_keeps_dest_on_push(self):
         """Dest 40 units = 0.4 rolls: float_is_zero(0.4, rounding=1), single push with dest."""
@@ -111,19 +101,13 @@ class TestPurchaseDestRounding(PurchaseTestCommon):
         self.assertAlmostEqual(receipt_moves.product_uom_qty, 160.0)
 
     def test_propagate_uom_fractional_split_rounds_each_leg_to_pol(self):
-        """With stock.propagate_uom, 1.4 + 0.6 rolls become receipt moves of 1 + 1 roll."""
+        """With stock.propagate_uom, 1.4 + 0.6 rolls merge into one 2-roll receipt with dests."""
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
         dest_move, receipt_moves = self._confirm_po_with_dest(140.0, 2.0)
-        attached = receipt_moves.filtered(lambda m: dest_move in m.move_dest_ids)
-        extra = receipt_moves - attached
-        self.assertEqual(len(attached), 1)
-        self.assertEqual(len(extra), 1)
-        self.assertEqual(attached.product_uom, self.uom_roll)
-        self.assertEqual(extra.product_uom, self.uom_roll)
-        self.assertAlmostEqual(attached.product_uom_qty, 1.0)
-        self.assertAlmostEqual(extra.product_uom_qty, 1.0)
-        self.assertAlmostEqual(sum(receipt_moves.mapped('product_uom_qty')), 2.0)
-        self.assertFalse(extra.move_dest_ids)
+        self.assertEqual(len(receipt_moves), 1)
+        self.assertEqual(receipt_moves.product_uom, self.uom_roll)
+        self.assertAlmostEqual(receipt_moves.product_uom_qty, 2.0)
+        self.assertIn(dest_move, receipt_moves.move_dest_ids)
 
     def test_propagate_uom_swallowed_dest_keeps_full_pol_qty(self):
         """With propagate_uom, 0.143 attach skipped; push 1.857 rounds to 2 rolls and keeps dest."""
