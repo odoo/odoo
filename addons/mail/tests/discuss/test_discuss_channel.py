@@ -44,6 +44,37 @@ class TestChannelInternals(MailCommon, HttpCase):
         )
         cls.partner_employee_nomail = cls.user_employee_nomail.partner_id
 
+    def _new_chat_notifications(self, correspondent_user):
+        # the author is notified twice, by discuss.channel.create and by _broadcast
+        return [
+            BusResult(self.user_employee, "mail.record/insert"),
+            BusResult(correspondent_user, "mail.record/insert"),
+            BusResult(self.user_employee, "mail.record/insert"),
+        ]
+
+    def _new_partner_with_an_archived_user(self, suffix, archived_user_group="base.group_portal"):
+        partner = self.env["res.partner"].sudo().create({"name": f"Two Logins {suffix}"})
+        archived_user_group_ids = self.env.ref(archived_user_group).ids if archived_user_group else []
+        archived_user, active_user = (
+            self.env["res.users"]
+            .sudo()
+            .with_context(self._test_context)
+            .create([
+                {
+                    "group_ids": [Command.set(archived_user_group_ids)],
+                    "login": f"two_logins_old_{suffix}",
+                    "partner_id": partner.id,
+                },
+                {
+                    "group_ids": [Command.set([self.env.ref("base.group_user").id])],
+                    "login": f"two_logins_new_{suffix}",
+                    "partner_id": partner.id,
+                },
+            ])
+        )
+        archived_user.active = False
+        return partner, active_user
+
     def test_channel_member_cannot_be_public_user(self):
         """Public users can only join channels as guest."""
         user_public = mail_new_test_user(self.env, login='user_public', groups='base.group_public', name='Bert Tartignole')
@@ -428,6 +459,54 @@ class TestChannelInternals(MailCommon, HttpCase):
         store_3 = Store().add(same_solo_channel, "_store_channel_fields")
         same_solo_channel_info = store_3._build_result()["discuss.channel"][0]
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
+
+    @users("employee")
+    def test_chat_with_partner_having_a_user_without_access(self):
+        """A correspondent user that cannot read the chat does not break its creation."""
+        partner = self.env["res.partner"].sudo().create({"name": "No Access"})
+        no_access_user, active_user = (
+            self.env["res.users"]
+            .sudo()
+            .with_context(self._test_context)
+            .create([
+                {
+                    "group_ids": [Command.set([])],
+                    "login": "chat_no_access",
+                    "partner_id": partner.id,
+                },
+                {
+                    "group_ids": [Command.set([self.env.ref("base.group_user").id])],
+                    "login": "chat_with_access",
+                    "partner_id": partner.id,
+                },
+            ])
+        )
+        self.assertFalse(no_access_user.group_ids)
+        with self.assertBus(self._new_chat_notifications(active_user)):
+            self.env["discuss.channel"]._get_or_create_chat(partners_to=partner.ids)
+
+    @users("employee")
+    def test_chat_with_partner_having_an_archived_user(self):
+        """A new chat is not broadcast to the archived users of the correspondent."""
+        partner, active_user = self._new_partner_with_an_archived_user("chat")
+        with self.assertBus(self._new_chat_notifications(active_user)):
+            self.env["discuss.channel"]._get_or_create_chat(partners_to=partner.ids)
+
+    @users("employee")
+    def test_chat_with_partner_having_an_archived_user_without_access(self):
+        """The chat is created even when an archived user of the correspondent has no access."""
+        partner, active_user = self._new_partner_with_an_archived_user("acl", archived_user_group=None)
+        with self.assertBus(self._new_chat_notifications(active_user)):
+            self.env["discuss.channel"]._get_or_create_chat(partners_to=partner.ids)
+
+    @users("employee")
+    def test_chat_with_partner_having_an_archived_user_without_active_test(self):
+        """The correspondent is resolved to its active users whatever the caller context."""
+        partner, active_user = self._new_partner_with_an_archived_user("no_active_test")
+        with self.assertBus(self._new_chat_notifications(active_user)):
+            self.env["discuss.channel"].with_context(active_test=False)._get_or_create_chat(
+                partners_to=partner.ids,
+            )
 
     # `channel_get` will pin the channel by default and thus last interest will be updated.
     @users('employee')
