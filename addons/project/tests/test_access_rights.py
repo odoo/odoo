@@ -12,7 +12,7 @@ class TestAccessRights(TestProjectCommon):
     def setUp(self):
         super().setUp()
         self.task = self.create_task('Make the world a better place')
-        self.user = mail_new_test_user(self.env, 'Internal user', groups='base.group_user')
+        self.user = mail_new_test_user(self.env, 'Internal user', groups='base.group_user_regular')
         self.portal = mail_new_test_user(self.env, 'Portal user', groups='base.group_portal')
 
     def create_task(self, name, *, with_user=None, **kwargs):

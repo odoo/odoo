@@ -44,7 +44,7 @@ class TestUTMSecurity(TestUTMCommon):
 
     @users('user_employee_utm')
     def test_utm_security_employee(self):
-        """ base.group_user members can do anything on main UTM models BUT unlink. """
+        """ base.group_user_regular members can do anything on main UTM models BUT unlink. """
         UtmCampaign = self.env['utm.campaign']
         UtmMedium = self.env['utm.medium']
         UtmSource = self.env['utm.source']

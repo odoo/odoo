@@ -24,7 +24,7 @@ class TestUi(HttpCase, TestCrmCommon):
             'login': 'temp_crm_user',
             'password': 'temp_crm_user',
             'group_ids': [(6, 0, [
-                    self.ref('base.group_user'),
+                    self.ref('base.group_user_regular'),
                     self.ref('sales_team.group_sale_salesman')
                 ])]
         })

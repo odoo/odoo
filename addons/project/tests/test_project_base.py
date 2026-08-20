@@ -28,7 +28,7 @@ class TestProjectCommon(TransactionCase):
         cls.env.company.resource_calendar_id = cls.calendar_40h
 
         user_group_partner_manager = cls.env.ref('base.group_partner_manager')
-        user_group_employee = cls.env.ref('base.group_user')
+        user_group_employee = cls.env.ref('base.group_user_regular')
         user_group_project_user = cls.env.ref('project.group_project_user')
         user_group_project_manager = cls.env.ref('project.group_project_manager')
 

@@ -265,7 +265,7 @@ def test_xsd(url=None, path=None, skip=False):
     return decorator
 
 
-def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
+def new_test_user(env, login='', groups='base.group_user_regular', context=None, **kwargs):
     """ Helper function to create a new test user. It allows to quickly create
     users given its login and groups (being a comma separated list of xml ids).
     Kwargs are directly propagated to the create to further customize the

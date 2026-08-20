@@ -11,7 +11,7 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
         'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
         'website.group_website_designer',  # website config (currency_id, restricted_uom_ids, ...)

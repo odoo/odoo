@@ -17,7 +17,7 @@ class TestWebsiteEventTrack(TestEventOnlineCommon, HttpCase):
             name='Demo User',
             login='demo_user',
             email='demo_user@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
         )
         cls.event_0.write({'is_published': True})
         cls.track = cls.env['event.track'].create([{

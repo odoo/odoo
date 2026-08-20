@@ -15,7 +15,7 @@ DISABLED_MAIL_CREATE_CONTEXT = {
 
 
 class BaseCommon(TransactionCase):
-    _test_user_groups = ('base.group_user',)
+    _test_user_groups = ('base.group_user_regular',)
 
     _test_user_name = 'Test User'
 
@@ -222,7 +222,7 @@ class TransactionCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user_regular').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -271,7 +271,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user_regular').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
     @classmethod

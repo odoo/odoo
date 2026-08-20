@@ -18,7 +18,7 @@ class TestPhoneFormat(TransactionCase):
             company_ids=[(4, cls.user_admin.company_id.id)],
             email='user.emp.email@test.example.com',
             login='user_emp_email',
-            groups='base.group_user,base.group_partner_manager',
+            groups='base.group_user_regular,base.group_partner_manager',
             name='Ernestine Email',
             notification_type='email',
             signature='Ernestine',

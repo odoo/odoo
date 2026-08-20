@@ -204,7 +204,7 @@ class TestEditableQuant(TransactionCase):
             name='Pauline Poivraisselle',
             login='pauline',
             email='p.p@example.com',
-            groups='base.group_user',
+            groups='base.group_user_regular',
         )
         user_admin = self.env.ref('base.user_admin')
         quant = self.Quant.create({

@@ -13,7 +13,7 @@ class TestProjectRecurrence(TransactionCase):
     def setUpClass(cls):
         super(TestProjectRecurrence, cls).setUpClass()
 
-        user_group_employee = cls.env.ref('base.group_user')
+        user_group_employee = cls.env.ref('base.group_user_regular')
         user_group_project_user = cls.env.ref('project.group_project_user')
         user_group_project_recurring_task = cls.env.ref('project.group_project_recurring_tasks')
         Users = cls.env['res.users'].with_context({'no_reset_password': True})

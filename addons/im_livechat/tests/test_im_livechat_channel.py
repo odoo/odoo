@@ -11,13 +11,13 @@ from odoo.fields import Command, Datetime
 
 class TestImLivechatChannel(TestImLivechatCommon, TestGetOperator):
     def test_user_cant_join_livechat_channel(self):
-        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
+        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user_regular")
         with self.assertRaises(AccessError):
             self.livechat_channel.with_user(bob_user).action_join()
 
     def test_operator_join_leave_livechat_channel(self):
         bob_operator = new_test_user(
-            self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_user"
+            self.env, "bob_user", groups="base.group_user_regular,im_livechat.im_livechat_group_user"
         )
         self.assertNotIn(bob_operator, self.livechat_channel.user_ids)
         self.livechat_channel.with_user(bob_operator).action_join()

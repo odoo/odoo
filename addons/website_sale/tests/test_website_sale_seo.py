@@ -8,7 +8,7 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
         'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
         'website.group_website_designer',  # website config (language_ids)
@@ -24,7 +24,7 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
             "login": "internal_user",
             "group_ids": [
                 Command.link(self.ref("website.group_website_designer")),
-                Command.link(self.ref("base.group_user")),
+                Command.link(self.ref("base.group_user_regular")),
             ],
         })
         self.authenticate(internal_user.login, internal_user.login)

@@ -47,7 +47,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             company_id=cls.company_admin.id,
             company_ids=[(4, cls.company_admin.id)],
             country_id=cls.env.ref('base.be').id,
-            groups='base.group_user,base.group_partner_manager,event.group_event_user',
+            groups='base.group_user_regular,base.group_partner_manager,event.group_event_user',
             email='e.e@example.com',
             login='event_user',
             name='Ernest Employee',

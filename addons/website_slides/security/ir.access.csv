@@ -26,7 +26,7 @@ rule_slide_slide_signed_in_user,"Slide: portal/user: restricted to published and
                         ('channel_id.is_member', '=', True),
                 ]
             "
-rule_slide_slide_signed_in_user_1,"Slide: portal/user: restricted to published and connected user, (invited) attendee or link-based, if course visible to attendees only",slide.slide,base.group_user,r,"[
+rule_slide_slide_signed_in_user_1,"Slide: portal/user: restricted to published and connected user, (invited) attendee or link-based, if course visible to attendees only",slide.slide,base.group_user_regular,r,"[
                 '&',
                     '|',
                         ('user_id', '=', user.id),
@@ -57,7 +57,7 @@ access_slide_answer_officer,slide.answer.officer,slide.answer,website_slides.gro
 access_slide_tag_public,slide.tag.all,slide.tag,base.group_everyone,r,
 access_slide_tag_officer,slide.tag.officer,slide.tag,website_slides.group_website_slides_officer,crud,
 rule_slide_channel_tag_public,Channel Tag: public/portal: color = published,slide.channel.tag,base.group_everyone,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
-access_slide_channel_tag_employee,slide.channel.tag.all,slide.channel.tag,base.group_user,r,
+access_slide_channel_tag_employee,slide.channel.tag.all,slide.channel.tag,base.group_user_regular,r,
 access_slide_channel_tag_user,slide.channel.tag.user,slide.channel.tag,website_slides.group_website_slides_officer,crud,
 access_slide_channel_tag_group_public,slide.channel.tag.group.all,slide.channel.tag.group,base.group_everyone,r,
 access_slide_channel_tag_group_user,slide.channel.tag.group.user,slide.channel.tag.group,website_slides.group_website_slides_officer,crud,
@@ -72,7 +72,7 @@ rule_slide_channel_visibility_signed_in_user,"Channel: portal/user: restricted t
                             ('is_member', '=', True),
                 ]
             "
-rule_slide_channel_visibility_signed_in_user_1,"Channel: portal/user: restricted to published, public or (invited) attendee or link-based, connected user",slide.channel,base.group_user,r,"[
+rule_slide_channel_visibility_signed_in_user_1,"Channel: portal/user: restricted to published, public or (invited) attendee or link-based, connected user",slide.channel,base.group_user_regular,r,"[
                 '&',
                     ('website_published', '=', True),
                     '|',
@@ -90,10 +90,10 @@ access_slide_channel_partners_system,slide.channel.users.system,slide.channel.pa
 rule_slide_channel_partner_officer,Channel Partner: officer: create/write/unlink own only,slide.channel.partner,website_slides.group_website_slides_officer,cud,"[('channel_id.user_id', '=', user.id)]"
 rule_slide_channel_partner_manager,Channel Partner: manager: crud all,slide.channel.partner,website_slides.group_website_slides_manager,crud,
 access_slide_embed_public,slide.embed.all,slide.embed,base.group_everyone,r,
-access_slide_embed_user,slide.embed.user,slide.embed,base.group_user,crud,
+access_slide_embed_user,slide.embed.user,slide.embed,base.group_user_regular,crud,
 rule_slide_slide_resource_downloadable,Resource: read restricted to channel members and channel responsible,slide.slide.resource,base.group_portal,r,"[('slide_id.channel_id.is_member', '=', True)]"
-rule_slide_slide_resource_downloadable_1,Resource: read restricted to channel members and channel responsible,slide.slide.resource,base.group_user,r,"[('slide_id.channel_id.is_member', '=', True)]"
+rule_slide_slide_resource_downloadable_1,Resource: read restricted to channel members and channel responsible,slide.slide.resource,base.group_user_regular,r,"[('slide_id.channel_id.is_member', '=', True)]"
 rule_slide_slide_resource_officer_read,Resource: officer: read all,slide.slide.resource,website_slides.group_website_slides_officer,r,
 rule_slide_slide_resource_officer_crud,Resource: officer: crud own only,slide.slide.resource,website_slides.group_website_slides_officer,crud,"[('slide_id.channel_id.user_id', '=', user.id)]"
 rule_slide_slide_resource_downloadable_manager,Resource: manager: crud all,slide.slide.resource,website_slides.group_website_slides_manager,crud,
-access_slide_channel_invite,access.slide.channel.invite,slide.channel.invite,base.group_user,cru,
+access_slide_channel_invite,access.slide.channel.invite,slide.channel.invite,base.group_user_regular,cru,

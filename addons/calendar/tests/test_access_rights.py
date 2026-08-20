@@ -15,11 +15,11 @@ class TestAccessRights(TransactionCase):
     @mute_logger('odoo.tests', 'odoo.addons.auth_signup.models.res_users')
     def setUpClass(cls):
         super().setUpClass()
-        cls.john = new_test_user(cls.env, login='john', groups='base.group_user')
-        cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user')
-        cls.george = new_test_user(cls.env, login='george', groups='base.group_user')
+        cls.john = new_test_user(cls.env, login='john', groups='base.group_user_regular')
+        cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user_regular')
+        cls.george = new_test_user(cls.env, login='george', groups='base.group_user_regular')
         cls.portal = new_test_user(cls.env, login='pot', groups='base.group_portal')
-        cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_partner_manager,base.group_user')
+        cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_partner_manager,base.group_user_regular')
         cls.admin_system_user = new_test_user(cls.env, login='admin_system_user', groups='base.group_system')
 
     def create_event(self, user, **values):
@@ -238,9 +238,9 @@ class TestAccessRights(TransactionCase):
             ('location', 'loc_2'),
             ('description', '<div>pub<br>'
                 '<strong>Organized by</strong><br>'
-                'john (base.group_user)<br><a href="mailto:j.j@example.com">j.j@example.com</a><br><br>'
+                'john (base.group_user_regular)<br><a href="mailto:j.j@example.com">j.j@example.com</a><br><br>'
                 '<strong>Contact Details</strong><br>'
-                'george (base.group_user)<br><a href="mailto:g.g@example.com">g.g@example.com</a></div>',
+                'george (base.group_user_regular)<br><a href="mailto:g.g@example.com">g.g@example.com</a></div>',
             ),
         ]:
             field_information = self.read_event(self.admin_user, john_public_evt, field)

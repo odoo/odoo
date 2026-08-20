@@ -254,7 +254,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
     @freezegun.freeze_time('2011-04-29 10:00:00')
     def test_event_creation_internal_user_invitation_ics(self):
         """ Check that internal user can read invitation.ics attachment """
-        internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user')
+        internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user_regular')
 
         partner = internal_user.partner_id
         self.event_tech_presentation.write({
@@ -541,7 +541,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
     def test_contact_details_single_vs_multiple_attendees(self):
         """Contact Details section should only appear for 1-on-1 meetings
         (single non-organizer attendee)."""
-        organizer = new_test_user(self.env, login='org_user', groups='base.group_user')
+        organizer = new_test_user(self.env, login='org_user', groups='base.group_user_regular')
         attendees = self.env['res.partner'].create([
             {'name': 'Attendee A', 'email': 'a@test.com', 'phone': '+1000000001'},
             {'name': 'Attendee B', 'email': 'b@test.com', 'phone': '+1000000002'},

@@ -475,7 +475,7 @@ class TestAccessFeatures(common.SlidesCase):
         new_user = self.env['res.users'].create({
             'name': 'NewUser',
             'login': 'NewUser',
-            'group_ids': [(6, 0, [self.ref('base.group_user')])]
+            'group_ids': [(6, 0, [self.ref('base.group_user_regular')])]
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
@@ -487,7 +487,7 @@ class TestAccessFeatures(common.SlidesCase):
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
-        new_user_2.write({'group_ids': [(4, self.ref('base.group_user'))]})
+        new_user_2.write({'group_ids': [(4, self.ref('base.group_user_regular'))]})
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
 
@@ -498,7 +498,7 @@ class TestAccessFeatures(common.SlidesCase):
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
-        self.env.ref('base.group_user').write({'user_ids': [(4, new_user_3.id)]})
+        self.env.ref('base.group_user_regular').write({'user_ids': [(4, new_user_3.id)]})
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id | new_user_3.partner_id)
 
@@ -613,7 +613,7 @@ class TestAccessFeatures(common.SlidesCase):
         # Other officers can only read
         user_officer_other = mail_new_test_user(
             self.env, name='Ornella Officer', login='user_officer_2', email='officer2@example.com',
-            groups='base.group_user,website_slides.group_website_slides_officer'
+            groups='base.group_user_regular,website_slides.group_website_slides_officer'
         )
         resource1.with_user(user_officer_other).read(['name'])
         with self.assertRaises(AccessError):

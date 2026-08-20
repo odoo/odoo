@@ -18,7 +18,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
     express checkout.
     """
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
         'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
     )

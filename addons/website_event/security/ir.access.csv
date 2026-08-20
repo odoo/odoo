@@ -1,13 +1,13 @@
 id,name,model_id,group_id/id,operation,domain
 event_event_public,Event: public/portal: published read,event.event,base.group_everyone,r,"[('website_published', '=', True)]"
-access_event_event_employee,event.event,event.event,base.group_user,r,
+access_event_event_employee,event.event,event.event,base.group_user_regular,r,
 ir_rule_event_event_ticket_public,Event Ticket: public/portal: published read,event.event.ticket,base.group_everyone,r,"[('event_id.website_published', '=', True)]"
-access_event_event_ticket_employee,event.event.ticket,event.event.ticket,base.group_user,r,
+access_event_event_ticket_employee,event.event.ticket,event.event.ticket,base.group_user_regular,r,
 ir_rule_event_slot_public,Event Slot: public/portal: published read,event.slot,base.group_everyone,r,"[('event_id.website_published', '=', True)]"
-access_event_event_slot_employee,event.slot,event.slot,base.group_user,r,
+access_event_event_slot_employee,event.slot,event.slot,base.group_user_regular,r,
 access_event_tag_category_public,event.tag.category,event.tag.category,base.group_everyone,r,
 ir_rule_event_tag_public,Event Tag: public/portal: color = published and category = published,event.tag,base.group_everyone,r,"[('category_id.website_published', '=', True), ('color', '!=', False), ('color', '!=', 0)]"
-access_event_tag_employee,event.tag,event.tag,base.group_user,r,
+access_event_tag_employee,event.tag,event.tag,base.group_user_regular,r,
 access_website_event_menu_public,website.event.menu,website.event.menu,base.group_everyone,r,
 access_website_event_menu_user,website.event.menu.user,website.event.menu,event.group_event_user,crud,
 access_website_visitor_user,website.visitor.user,website.visitor,event.group_event_registration_desk,ru,

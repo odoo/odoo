@@ -20,7 +20,7 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
                 "dashboard_group_id": group.id,
             }
         )
-        self.assertEqual(dashboard.group_ids, self.env.ref("base.group_user"))
+        self.assertEqual(dashboard.group_ids, self.env.ref("base.group_user_regular"))
         self.assertEqual(
             json.loads(dashboard.spreadsheet_data),
             dashboard._empty_spreadsheet_data()

@@ -3929,12 +3929,12 @@ class TestHtmlField(TransactionCase):
         internal_user = self.env['res.users'].create({
             'name': 'test internal user',
             'login': 'test_sanitize',
-            'group_ids': [(6, 0, [self.ref('base.group_user')])],
+            'group_ids': [(6, 0, [self.ref('base.group_user_regular')])],
         })
         bypass_user = self.env['res.users'].create({
             'name': 'test bypass user',
             'login': 'test_sanitize2',
-            'group_ids': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_sanitize_override')])],
+            'group_ids': [(6, 0, [self.ref('base.group_user_regular'), self.ref('base.group_sanitize_override')])],
         })
         record = self.env['test_orm.mixed'].create({})
 

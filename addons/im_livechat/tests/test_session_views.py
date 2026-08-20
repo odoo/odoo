@@ -13,7 +13,7 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
         operator = new_test_user(
             self.env,
             login="operator",
-            groups="base.group_user,im_livechat.im_livechat_group_manager",
+            groups="base.group_user_regular,im_livechat.im_livechat_group_manager",
         )
         self.livechat_channel.user_ids |= operator
         self.authenticate(None, None)
@@ -39,7 +39,7 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
         new_test_user(
             self.env,
             login="operator",
-            groups="base.group_user,im_livechat.im_livechat_group_manager",
+            groups="base.group_user_regular,im_livechat.im_livechat_group_manager",
         )
         [user_1, user_2] = self.env["res.partner"].create([{"name": "test 1"}, {"name": "test 2"}])
         # Freeze time to get around the last 30 days default filter hidding messages in tours
@@ -93,7 +93,7 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
         cls.bob = new_test_user(
             cls.env,
             login="bob_looking_for_help",
-            groups="base.group_user,im_livechat.im_livechat_group_user",
+            groups="base.group_user_regular,im_livechat.im_livechat_group_user",
         )
         cls.livechat_channel.user_ids |= cls.bob
 

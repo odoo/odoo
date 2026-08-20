@@ -166,7 +166,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     def test_blog_access_rights(self):
         group_website_blog_manager_id = self.ref("website_blog.group_website_blog_manager")
         group_website_designer_id = self.ref("website.group_website_designer")
-        group_employee_id = self.ref("base.group_user")
+        group_employee_id = self.ref("base.group_user_regular")
         self.env["res.users"].with_context({"no_reset_password": True}).create({
             "name": "Adam Blog Manager",
             "login": "adam",

@@ -262,7 +262,7 @@ class ResUsers(models.Model):
 
     view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
     role = fields.Selection([('group_user', 'Light User'), ('group_user_regular', 'User'), ('group_system', 'Administrator')],
-        compute='_compute_role', store=True, readonly=False, string="Role")
+        compute='_compute_role', inverse='_inverse_role', search='_search_role', string="Role")
 
     _login_key = models.Constraint("UNIQUE (login)",
         'You can not have two users with the same login!')
@@ -427,7 +427,7 @@ class ResUsers(models.Model):
             else:
                 user.password = user.new_password
 
-    @api.depends('all_group_ids')
+    @api.depends('group_ids')
     def _compute_role(self):
         group_user = self.env.ref('base.group_user')
         group_no_one = self.env.ref('base.group_no_one', raise_if_not_found=False) or self.env['res.groups']
@@ -443,8 +443,7 @@ class ResUsers(models.Model):
             else:
                 user.role = False
 
-    @api.onchange('role')
-    def _onchange_role(self):
+    def _inverse_role(self):
         group_admin = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
         group_user_regular = self.env['res.groups'].new(origin=self.env.ref('base.group_user_regular'))
         group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
@@ -456,6 +455,23 @@ class ResUsers(models.Model):
                 groups = user.group_ids - (group_admin + group_user_regular + group_user)
                 user.group_ids = groups + (group_admin if user.role == 'group_system'
                                            else group_user_regular)
+
+    @api.onchange('role')
+    def _onchange_role(self):
+        self._inverse_role()
+
+    def _search_role(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        group_admin = self.env.ref('base.group_system')
+        group_user_regular = self.env.ref('base.group_user_regular')
+        group_user = self.env.ref('base.group_user')
+        domains_by_role = {
+            'group_user': Domain('group_ids', 'in', [group_user.id]) & Domain('group_ids', 'not in', [group_user_regular.id]),
+            'group_user_regular': Domain('group_ids', 'in', [group_user_regular.id]) & Domain('group_ids', 'not in', [group_admin.id]),
+            'group_system': Domain('group_ids', 'in', [group_admin.id]),
+        }
+        return Domain.OR([domains_by_role[v] for v in value if v in domains_by_role])
 
     @api.depends('group_ids.all_implied_ids')
     def _compute_all_group_ids(self):

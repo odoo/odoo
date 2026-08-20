@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 class TestResPartner(TransactionCase):
 
     def test_meeting_count(self):
-        test_user = new_test_user(self.env, login='test_user', groups='base.group_user, base.group_partner_manager')
+        test_user = new_test_user(self.env, login='test_user', groups='base.group_user_regular, base.group_partner_manager')
         Partner = self.env['res.partner'].with_user(test_user)
         Event = self.env['calendar.event'].with_user(test_user)
 
@@ -93,7 +93,7 @@ class TestResPartner(TransactionCase):
             login='allcompany_user',
             company_id=company1.id,
             company_ids=[company1.id, company2.id],
-            groups='base.group_user',
+            groups='base.group_user_regular',
         )
         company1_user = mail_new_test_user(
             self.env,
@@ -101,7 +101,7 @@ class TestResPartner(TransactionCase):
             login='restricted_kanban_user',
             company_id=company1.id,
             company_ids=[company1.id, company2.id],
-            groups='base.group_user',
+            groups='base.group_user_regular',
         )
         company1_user.partner_id.write({'company_id': company1.id, 'parent_id': company1.partner_id.id})
 

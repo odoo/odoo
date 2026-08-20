@@ -1,4 +1,4 @@
 id,name,model_id,group_id/id,operation,domain
 hr_job_public,Job Positions: Public,hr.job,base.group_everyone,r,"[('website_published', '=', True)]"
-access_hr_job_public_employee,hr.job.public,hr.job,base.group_user,r,
+access_hr_job_public_employee,hr.job.public,hr.job,base.group_user_regular,r,
 hr_department_public,Job department: Public,hr.department,base.group_everyone,r,"['|', ('jobs_ids.website_published', '=', True), ('child_ids', 'not in', [])]"

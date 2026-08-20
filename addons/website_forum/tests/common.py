@@ -34,7 +34,7 @@ class TestForumCommon(common.TransactionCase):
 
         # Test users
         TestUsersEnv = cls.env['res.users'].with_context({'no_reset_password': True})
-        group_employee_id = cls.env.ref('base.group_user').id
+        group_employee_id = cls.env.ref('base.group_user_regular').id
         group_portal_id = cls.env.ref('base.group_portal').id
         group_public_id = cls.env.ref('base.group_public').id
         cls.user_employee = TestUsersEnv.create({
@@ -49,7 +49,7 @@ class TestForumCommon(common.TransactionCase):
             'login': 'Merlin',
             'email': 'merlin.employee@example.com',
             'karma': KARMA['ask'],
-            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user_regular').id])],
         })
         cls.user_portal = TestUsersEnv.create({
             'name': 'Beatrice Portal',

@@ -1,10 +1,10 @@
 id,name,model_id,group_id/id,operation,domain
 event_track_public,Event Tracks: public/portal: published,event.track,base.group_everyone,r,"[('website_published', '=', True)]"
-access_event_track_employee,event.track,event.track,base.group_user,r,
+access_event_track_employee,event.track,event.track,base.group_user_regular,r,
 access_event_track_user,event.track.user,event.track,event.group_event_user,cru,
 access_event_track_manager,event.track.manager,event.track,event.group_event_manager,crud,
 ir_rule_event_track_tag_public,Event Track Tag: public/portal: color = published,event.track.tag,base.group_everyone,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
-access_event_track_tag_employee,event.track.tag,event.track.tag,base.group_user,r,
+access_event_track_tag_employee,event.track.tag,event.track.tag,base.group_user_regular,r,
 access_event_track_tag_user,event.track.tag.user,event.track.tag,event.group_event_user,cru,
 access_event_track_tag_manager,event.track.tag.manager,event.track.tag,event.group_event_manager,crud,
 access_event_track_location_user,event.track.location.user,event.track.location,event.group_event_user,cru,

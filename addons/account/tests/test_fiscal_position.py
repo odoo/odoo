@@ -379,7 +379,7 @@ class TestFiscalPosition(common.TransactionCase):
         child_user = common.new_test_user(
             self.env,
             login='child_user_fp_test',
-            groups='base.group_user',
+            groups='base.group_user_regular',
             company_id=child_company.id,
             company_ids=[Command.set([child_company.id])],
         )

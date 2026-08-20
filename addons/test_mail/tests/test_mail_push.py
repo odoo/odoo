@@ -27,7 +27,7 @@ class TestWebPushNotification(SMSCommon):
         cls.user_email.notification_type = 'email'
 
         cls.user_inbox = mail_new_test_user(
-            cls.env, login='user_inbox', groups='base.group_user', name='User Inbox',
+            cls.env, login='user_inbox', groups='base.group_user_regular', name='User Inbox',
             notification_type='inbox'
         )
 
@@ -180,7 +180,7 @@ class TestWebPushNotification(SMSCommon):
             name="all",
             email="all@example.com",
             notification_type="inbox",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         mentions_test_user = mail_new_test_user(
             self.env,
@@ -188,7 +188,7 @@ class TestWebPushNotification(SMSCommon):
             name="mentions",
             email="mentions@example.com",
             notification_type="inbox",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         nothing_test_user = mail_new_test_user(
             self.env,
@@ -196,7 +196,7 @@ class TestWebPushNotification(SMSCommon):
             name="nothing",
             email="nothing@example.com",
             notification_type="inbox",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         all_test_user.res_users_settings_ids.write({"channel_notifications": "all"})
         nothing_test_user.res_users_settings_ids.write({"channel_notifications": "no_notif"})

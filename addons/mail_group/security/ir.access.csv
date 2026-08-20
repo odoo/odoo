@@ -13,10 +13,10 @@ mail_group_rule_read_all,Mail Group: Access only public and joined groups,mail.g
                     ('member_partner_ids', 'in', [user.partner_id.id]),
             ]
         "
-access_mail_group_user,access_mail_group_user,mail.group,base.group_user,c,
-mail_group_rule_write_all,Mail Group: Moderator have write access on their group,mail.group,base.group_user,ud,"[('moderator_ids', 'in', user.id)]"
+access_mail_group_user,access_mail_group_user,mail.group,base.group_user_regular,c,
+mail_group_rule_write_all,Mail Group: Moderator have write access on their group,mail.group,base.group_user_regular,ud,"[('moderator_ids', 'in', user.id)]"
 mail_group_rule_administrator,Mail Group: Administrator have access to all mail group,mail.group,mail_group.group_mail_group_manager,crud,
-mail_group_member_rule_user,Mail Group Member: Members are accessible only by moderators,mail.group.member,base.group_user,crud,"[('mail_group_id.moderator_ids', 'in', user.id)]"
+mail_group_member_rule_user,Mail Group Member: Members are accessible only by moderators,mail.group.member,base.group_user_regular,crud,"[('mail_group_id.moderator_ids', 'in', user.id)]"
 mail_group_member_rule_administrator,Mail Group Member: Administrator have access to all members,mail.group.member,mail_group.group_mail_group_manager,crud,
 mail_group_message_rule_public,Mail Group Message: Only accepted message are accessible,mail.group.message,base.group_everyone,r,"[
             '&',
@@ -24,8 +24,8 @@ mail_group_message_rule_public,Mail Group Message: Only accepted message are acc
                 ('mail_group_id', 'access', 'read'),
             ]
         "
-mail_group_message_rule_user,Mail Group Message: Non-accepted messages are accessible only by moderators,mail.group.message,base.group_user,r,"[('mail_group_id.moderator_ids', 'in', user.id)]"
-mail_group_message_rule_user_write,Mail Group Message: messages are writeable only by moderators,mail.group.message,base.group_user,cud,"[
+mail_group_message_rule_user,Mail Group Message: Non-accepted messages are accessible only by moderators,mail.group.message,base.group_user_regular,r,"[('mail_group_id.moderator_ids', 'in', user.id)]"
+mail_group_message_rule_user_write,Mail Group Message: messages are writeable only by moderators,mail.group.message,base.group_user_regular,cud,"[
                 '&',
                     '|',
                         ('moderation_status', '=', 'accepted'),
@@ -34,6 +34,6 @@ mail_group_message_rule_user_write,Mail Group Message: messages are writeable on
             ]
         "
 mail_group_message_rule_administrator,Mail Group Message: Administrator have access to all messages,mail.group.message,mail_group.group_mail_group_manager,crud,
-mail_group_moderation_rule_user,Mail Group Moderation: Moderation rules are accessible only by moderators,mail.group.moderation,base.group_user,crud,"[('mail_group_id.moderator_ids', 'in', user.id)]"
+mail_group_moderation_rule_user,Mail Group Moderation: Moderation rules are accessible only by moderators,mail.group.moderation,base.group_user_regular,crud,"[('mail_group_id.moderator_ids', 'in', user.id)]"
 mail_group_moderation_rule_administrator,Mail Group Moderation: Administrator have access to all moderation rules,mail.group.moderation,mail_group.group_mail_group_manager,crud,
-access_mail_group_message_reject,access_mail_group_message_reject,mail.group.message.reject,base.group_user,crud,
+access_mail_group_message_reject,access_mail_group_message_reject,mail.group.message.reject,base.group_user_regular,crud,

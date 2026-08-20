@@ -185,6 +185,8 @@ class TestSelfAccessRights(TestHrCommon):
         self.env['res.users'].with_user(self.richard).search([('employee_id', 'ilike', 'Hubert')])
 
     def test_user_can_edit_department_they_manage(self):
+        # editing a managed department requires a regular user (light users are excluded)
+        self.richard.group_ids += self.env.ref('base.group_user_regular')
         dept = self.env['hr.department'].create({
             'name': 'Managed Dept',
             'manager_id': self.richard_emp.id,
@@ -197,6 +199,8 @@ class TestSelfAccessRights(TestHrCommon):
         self.assertEqual(dept.name, 'Renamed Managed Dept')
 
     def test_user_can_edit_department_managed_by_subordinate(self):
+        # editing a managed department requires a regular user (light users are excluded)
+        self.richard.group_ids += self.env.ref('base.group_user_regular')
         # Subordinate user
         alice = new_test_user(
             self.env,

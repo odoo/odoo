@@ -20,7 +20,7 @@ class TestAccess(TransactionCase):
         cls.group3 = cls.env['res.groups'].create({'name': "Group 3"})
 
         # user belongs to Group 1, Group 2, but not to Group 3
-        groups = cls.env.ref('base.group_user') + cls.group1 + cls.group2
+        groups = cls.env.ref('base.group_user_regular') + cls.group1 + cls.group2
         cls.user = cls.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",

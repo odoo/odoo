@@ -469,7 +469,7 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(self.test_record.message_ids[0].author_id, from_1)
         self.test_record.message_unsubscribe([from_1.id])
 
-        from_2 = mail_new_test_user(self.env, login='B', groups='base.group_user', name='User Denisse', email='from.test@example.com')
+        from_2 = mail_new_test_user(self.env, login='B', groups='base.group_user_regular', name='User Denisse', email='from.test@example.com')
 
         self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, f'groups@{self.alias_domain}')
         self.assertEqual(self.test_record.message_ids[0].author_id, from_2.partner_id)
@@ -884,7 +884,7 @@ class TestMailgateway(MailGatewayCommon):
             'alias_parent_model_id': self.env['ir.model']._get_id(self.test_record._name),
             'alias_parent_thread_id': self.test_record.id,
         })
-        follower_user = mail_new_test_user(self.env, login='better', groups='base.group_user', name='Ernest Follower', email=self.user_employee.email)
+        follower_user = mail_new_test_user(self.env, login='better', groups='base.group_user_regular', name='Ernest Follower', email=self.user_employee.email)
         self.test_record.message_subscribe(follower_user.partner_id.ids)
 
         record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, f'groups@{self.alias_domain}', subject='FollowerWinner')

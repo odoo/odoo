@@ -16,7 +16,7 @@ class TestMassMailPerformanceBase(BaseMailPerformance):
 
         cls.user_marketing = mail_new_test_user(
             cls.env,
-            groups='base.group_user,mass_mailing.group_mass_mailing_user',
+            groups='base.group_user_regular,mass_mailing.group_mass_mailing_user',
             login='marketing',
             name='Martial Marketing',
             signature='--\nMartial'

@@ -21,7 +21,7 @@ class TestProjectUpdateAccessRights(TestProjectCommon):
             'name': 'Test Projec Milestone',
             'project_id': cls.project_pigs.id,
         })
-        cls.base_user = mail_new_test_user(cls.env, 'Base user', groups='base.group_user')
+        cls.base_user = mail_new_test_user(cls.env, 'Base user', groups='base.group_user_regular')
         cls.project_user = mail_new_test_user(cls.env, 'Project user', groups='project.group_project_user')
         cls.project_manager = mail_new_test_user(cls.env, 'Project admin', groups='project.group_project_manager')
         cls.portal_user = mail_new_test_user(cls.env, 'Portal user', groups='base.group_portal')

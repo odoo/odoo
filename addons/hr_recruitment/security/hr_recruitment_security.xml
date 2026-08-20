@@ -33,7 +33,7 @@
         <field name="name">Display CV on application form</field>
     </record>
 
-    <record id="base.group_user" model="res.groups">
+    <record id="base.group_user_regular" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_applicant_cv_display'))]"/>
     </record>
 

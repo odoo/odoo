@@ -83,7 +83,7 @@ class IrUiView(models.Model):
             returns templates info (which can be active or not)
             ``bundles=True`` returns also the asset bundles
         """
-        user_groups = set(self.env.user.group_ids)
+        user_groups = set(self.env.user.all_group_ids)
         new_context = {
             **self.env.context,
             'active_test': False,

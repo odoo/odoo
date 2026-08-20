@@ -205,7 +205,7 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{"ids": [%d], "fields": ["display_name"]}' % self.jackoneill.id,
             headers=CT_JSON | self.bearer_header,
         ).raise_for_status()
-        self.assertEqual(res.text, f'[{{"id": {self.jackoneill.id}, "display_name": "jackoneill (base.group_user)"}}]')
+        self.assertEqual(res.text, f'[{{"id": {self.jackoneill.id}, "display_name": "jackoneill (base.group_user_regular)"}}]')
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
         res = self.db_url_open(
@@ -213,7 +213,7 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{"ids": %d, "fields": ["display_name"]}' % self.jackoneill.id,
             headers=CT_JSON | self.bearer_header,
         ).raise_for_status()
-        self.assertEqual(res.text, f'[{{"id": {self.jackoneill.id}, "display_name": "jackoneill (base.group_user)"}}]')
+        self.assertEqual(res.text, f'[{{"id": {self.jackoneill.id}, "display_name": "jackoneill (base.group_user_regular)"}}]')
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
     def test_webjson2_api_model(self):

@@ -12,7 +12,7 @@ class TestWebsiteFieldSanitize(odoo.tests.HttpCase):
             'login': 'restricted',
             'password': 'restricted',
             'group_ids': [(6, 0, [
-                self.ref('base.group_user'),
+                self.ref('base.group_user_regular'),
                 self.ref('website.group_website_restricted_editor'),
                 self.ref('test_website.group_test_website_admin'),
             ])]

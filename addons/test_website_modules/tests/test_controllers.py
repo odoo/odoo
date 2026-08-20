@@ -62,7 +62,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
             ],
         })
         with mute_logger('odoo.http'):
@@ -73,7 +73,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
                 Command.link(self.env.ref('website.group_website_restricted_editor').id),
                 Command.link(self.env.ref('event.group_event_manager').id),
             ],
@@ -86,7 +86,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
                 Command.link(self.env.ref('website.group_website_designer').id),
             ],
         })
@@ -108,7 +108,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
             ],
         })
         with mute_logger('odoo.http'):
@@ -119,7 +119,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
                 Command.link(self.env.ref('website.group_website_restricted_editor').id),
                 Command.link(self.env.ref('sales_team.group_sale_manager').id),
             ],
@@ -132,7 +132,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
                 Command.link(self.env.ref('website.group_website_restricted_editor').id),
                 Command.link(self.env.ref('event.group_event_manager').id),
             ],
@@ -143,7 +143,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.user_demo.write({
             'group_ids': [
                 Command.clear(),
-                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('base.group_user_regular').id),
                 Command.link(self.env.ref('website.group_website_designer').id),
             ],
         })

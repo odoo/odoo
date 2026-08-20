@@ -940,9 +940,9 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
                 'end': {'dateTime': '2023-01-15T18:00:00+00:00', 'date': None},
                 'summary': 'Event',
                 'description': ('<div><strong>Organized by</strong><br>'
-                    'organizer_user (base.group_user)<br><a href="mailto:o.o@example.com">o.o@example.com</a><br><br>'
+                    'organizer_user (base.group_user_regular)<br><a href="mailto:o.o@example.com">o.o@example.com</a><br><br>'
                     '<strong>Contact Details</strong><br>'
-                    'attendee_user (base.group_user)<br><a href="mailto:a.a@example.com">a.a@example.com</a></div>'),
+                    'attendee_user (base.group_user_regular)<br><a href="mailto:a.a@example.com">a.a@example.com</a></div>'),
                 'location': '',
                 'guestsCanModify': True,
                 'transparency': 'opaque',

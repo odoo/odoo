@@ -22,7 +22,7 @@ class TestAccessRating(common.TransactionCase):
 
         cls.user_emp = mail_new_test_user(
             cls.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
-            groups='base.group_user'
+            groups='base.group_user_regular'
         )
 
         cls.user_portal = mail_new_test_user(

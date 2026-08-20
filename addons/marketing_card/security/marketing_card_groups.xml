@@ -9,7 +9,7 @@
         <field name="name">Marketing Card User</field>
         <field name="sequence">10</field>
         <field name="privilege_id" ref="res_groups_privilege_marketing_card"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mass_mailing.group_mass_mailing_user'))]"/>
+        <field name="implied_ids" eval="[(3, ref('base.group_user')), (4, ref('base.group_user_regular')), (4, ref('mass_mailing.group_mass_mailing_user'))]"/>
     </record>
 
     <record id="marketing_card_group_manager" model="res.groups">

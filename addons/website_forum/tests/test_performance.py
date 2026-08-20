@@ -15,7 +15,7 @@ class TestForumPerformance(UtilPerf):
         cls.user_employee = mail_new_test_user(
             cls.env,
             login="employee",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         cls.forum = cls.env['forum.forum'].create({'name': 'TestForum'})
         cls.post = cls.env['forum.post'].create({

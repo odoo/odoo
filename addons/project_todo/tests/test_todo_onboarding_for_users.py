@@ -11,7 +11,7 @@ class TestTodoOnboardingUsers(TransactionCase):
         internal_user = new_test_user(
             self.env,
             login="internal_user",
-            groups="base.group_user",
+            groups="base.group_user_regular",
         )
         onboarding_tasks = ProjectTaskSudo.search([('user_ids', 'in', internal_user.ids)])
 
@@ -37,7 +37,7 @@ class TestTodoOnboardingUsers(TransactionCase):
         other_internal_user = new_test_user(
             self.env,
             login="other_internal_user",
-            groups="base.group_user",
+            groups="base.group_user_regular",
             context={'default_project_id': project.id},
         )
         onboarding_tasks = ProjectTaskSudo.search([('user_ids', 'in', other_internal_user.ids)])

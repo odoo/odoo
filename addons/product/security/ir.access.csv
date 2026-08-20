@@ -7,7 +7,7 @@ product_category_comp_rule,Product category multi-company rule,product.category,
 access_product_template_user,product.template.user,product.template,base.group_user,r,
 access_product_template_manager,product.template.manager,product.template,product.group_product_manager,crud,
 product_comp_rule,Product multi-company,product.template,,crud," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]"
-access_product_supplierinfo_user,product.supplierinfo.user,product.supplierinfo,base.group_user,r,
+access_product_supplierinfo_user,product.supplierinfo.user,product.supplierinfo,base.group_user_regular,r,
 access_product_supplierinfo_manager,product.supplierinfo.manager,product.supplierinfo,product.group_product_manager,crud,
 product_supplierinfo_comp_rule,product supplierinfo company rule,product.supplierinfo,,crud,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]"
 access_product_pricelist_user,product.pricelist.user,product.pricelist,base.group_user,r,
@@ -37,7 +37,7 @@ product_combo_comp_rule,Product combo multi-company rule,product.combo,,crud,"
         "
 access_product_combo_item_user,product.combo.item.user,product.combo.item,base.group_user,r,
 access_product_combo_item_manager,product.combo.item.manager,product.combo.item,product.group_product_manager,crud,
-access_product_label_layout_user,product.label.layout.user,product.label.layout,base.group_user,crud,
+access_product_label_layout_user,product.label.layout.user,product.label.layout,base.group_user_regular,crud,
 access_product_document_user,access_product_document_user,product.document,base.group_user,r,
 access_product_document_manager,access_product_document_manager,product.document,product.group_product_manager,crud,
 product_document_comp_rule,Product multi-company,product.document,,crud," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]"

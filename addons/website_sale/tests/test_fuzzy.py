@@ -9,7 +9,7 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 @tagged("-at_install", "post_install")
 class TestFuzzy(ProductVariantsCommon):
     _test_user_groups = (
-        'base.group_user',
+        'base.group_user_regular',
         'product.group_product_manager',
         'website.group_website_designer',  # read website to run _search_with_fuzzy
     )

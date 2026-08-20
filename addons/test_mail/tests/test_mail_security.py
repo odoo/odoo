@@ -23,7 +23,7 @@ class TestSubtypeAccess(MailCommon):
             'description': 'only description',
         })
 
-        user = mail_new_test_user(self.env, 'Internal user', groups='base.group_user')
+        user = mail_new_test_user(self.env, 'Internal user', groups='base.group_user_regular')
 
         with self.assertRaises(AccessError):
             test_subtype.with_user(user).write({'description': 'changing description'})

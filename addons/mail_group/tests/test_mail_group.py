@@ -28,7 +28,7 @@ class TestMailGroup(TestMailListCommon):
             self.env, login='user_employee_nomail',
             company_id=self.company_admin.id,
             email=False,
-            groups='base.group_user',
+            groups='base.group_user_regular',
             name='User without email',
         )
 
