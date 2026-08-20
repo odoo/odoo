@@ -88,6 +88,9 @@ class AccountReconcileModelLine(models.Model):
     * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)""")
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
+        relation='account_reconcile_model_line_account_tax_rel',
+        column1='account_reconcile_model_line_id',
+        column2='account_tax_id',
         string="Taxes",
         ondelete='restrict',
         check_company=True,
