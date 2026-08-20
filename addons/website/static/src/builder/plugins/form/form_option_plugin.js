@@ -987,7 +987,7 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect === "true") {
+        if (params.isSelect) {
             value = parseInt(value);
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
