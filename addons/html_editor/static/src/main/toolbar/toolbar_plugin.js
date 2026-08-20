@@ -498,19 +498,10 @@ export class ToolbarPlugin extends Plugin {
         if (!this.overlay.isOpen) {
             return;
         }
-        // TODO: refactor candidate : Remove data-prevent-closing-overlay
-        const anchor = selectionData?.documentSelectionIsInEditable
-            ? selectionData.editableSelection?.anchorNode
-            : document.getSelection()?.anchorNode;
-        const shouldPreventClosing =
-            !force &&
-            anchor?.closest?.("[data-prevent-closing-overlay]")?.dataset?.preventClosingOverlay ===
-                "true";
-        if (!shouldPreventClosing) {
-            this.overlay.close();
-            this.isToolbarExpanded = false;
-            this.state.namespace = null;
-        }
+
+        this.overlay.close();
+        this.isToolbarExpanded = false;
+        this.state.namespace = null;
     }
 
     /**

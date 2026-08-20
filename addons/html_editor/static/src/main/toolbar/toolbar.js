@@ -65,15 +65,10 @@ export class Toolbar extends Component {
         useHotkey("alt+f", () => this.focusFirstToolbarButton(), {
             bypassEditableProtection: true,
             withOverlay: () =>
-                document.activeElement.closest(
-                    ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
-                )
+                document.activeElement.closest(".o-we-toolbar[data-namespace]")
                     ? null
                     : this.toolbarEl(),
-            isAvailable: () =>
-                !document.activeElement.closest(
-                    ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
-                ),
+            isAvailable: () => !document.activeElement.closest(".o-we-toolbar[data-namespace]"),
         });
     }
 

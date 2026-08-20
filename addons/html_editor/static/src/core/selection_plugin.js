@@ -373,10 +373,13 @@ export class SelectionPlugin extends Plugin {
                     if (ev.target.tagName === "IFRAME") {
                         return;
                     }
-                    const preventClosing = ev.target?.closest?.("[data-prevent-closing-overlay]");
-                    if (preventClosing?.dataset?.preventClosingOverlay === "true") {
+                    // We don't consider clicking on the overlay in iframe is
+                    // unfocus the editable, to align with the normal editor.
+                    const preventClosing = ev.target?.closest?.(".o-overlay-item");
+                    if (preventClosing) {
                         return;
                     }
+
                     this.focusEditableDocument = false;
                     this.trigger("on_selection_leave_handlers");
                 }
@@ -648,7 +651,19 @@ export class SelectionPlugin extends Plugin {
      */
     getSelectionData() {
         const selection = this.getCachedSelection() || this.document.getSelection();
-        const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
+        // Check if the selection is in an iframe overlay item (excluding tour anchors).
+        const selectionInIframeOverlay =
+            this.document !== document &&
+            document
+                .getSelection()
+                .anchorNode?.closest?.(".o-overlay-item:not(:has(div.o_tour_anchor))");
+        // When it's in an iframe and the selection is in an overlayitem, we
+        // consider the selection is not in the editable. This is to alain with
+        // the normal editor case. The overlay items are under the outer document
+        // instead of under the iframe document, which causes a misalignment from
+        // the non-iframe case.
+        const documentSelectionIsInEditable =
+            selection && this.isSelectionInEditable(selection) && !selectionInIframeOverlay;
         let collapsed;
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
