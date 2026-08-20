@@ -12,5 +12,8 @@ class ResGroups(models.Model):
         write_res = super().write(vals)
         if vals.get('user_ids'):
             # TDE FIXME: maybe directly check users and subscribe them
-            self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', self._ids)])._add_groups_members()
+            # also match channels enrolling groups implied by the written ones
+            # (e.g. adding a user to group_user_regular must subscribe them to
+            # channels enrolling base.group_user)
+            self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', self.all_implied_ids.ids)])._add_groups_members()
         return write_res

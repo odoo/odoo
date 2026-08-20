@@ -253,7 +253,7 @@ class WebsitePage(models.Model):
             if website.is_public_user():
                 domain.append([('visibility', '!=', 'connected')])
             domain.append(Domain.OR([
-                [('group_ids', '=', False)], [('group_ids', 'in', self.env.user.group_ids.ids)]
+                [('group_ids', '=', False)], [('group_ids', 'in', self.env.user.all_group_ids.ids)]
             ]))
 
         search_fields = ['name', 'url', 'arch_db']
