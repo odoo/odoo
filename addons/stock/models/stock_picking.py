@@ -722,19 +722,19 @@ class StockPicking(models.Model):
         if self.env.user.allowed_picking_type_ids:
             for picking in self:
                 if picking.picking_type_id not in self.env.user.allowed_picking_type_ids:
-                    raise AccessError("You are not authorized to perform this operation type « %s: %s »." % (picking.picking_type_id.warehouse_id.name, picking.picking_type_id.name))
+                    raise AccessError(_("You are not authorized to perform this operation type « %s: %s »." % (picking.picking_type_id.warehouse_id.name, picking.picking_type_id.name)))
 
                 if picking.location_id != picking.picking_type_id.default_location_src_id:
-                    raise AccessError("The source location must be « %s »." % picking.picking_type_id.default_location_src_id.name)
+                    raise AccessError(_("The source location must be « %s »." % picking.picking_type_id.default_location_src_id.name))
 
                 if any(mvline.location_id != picking.picking_type_id.default_location_src_id for mvline in picking.move_line_ids):
-                    raise AccessError("All the lines source location must be « %s »." % picking.picking_type_id.default_location_src_id.name)
+                    raise AccessError(_("All the lines source location must be « %s »." % picking.picking_type_id.default_location_src_id.name))
 
                 if picking.location_dest_id != picking.picking_type_id.default_location_dest_id:
-                    raise AccessError("The destination location must be « %s »." % picking.picking_type_id.default_location_dest_id.name)
+                    raise AccessError(_("The destination location must be « %s »." % picking.picking_type_id.default_location_dest_id.name))
 
                 if any(mvline.location_dest_id != picking.picking_type_id.default_location_dest_id for mvline in picking.move_line_ids):
-                    raise AccessError("All the lines destination location must be « %s »." % picking.picking_type_id.default_location_dest_id.name)
+                    raise AccessError(_("All the lines destination location must be « %s »." % picking.picking_type_id.default_location_dest_id.name))
 
     @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
