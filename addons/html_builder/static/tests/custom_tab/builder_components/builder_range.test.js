@@ -234,6 +234,40 @@ test("should syncronize previews", async () => {
     await expect(".options-container input[type='number']").toHaveProperty("value", 10);
 });
 
+test("number input arrow changes should be committed after debounce", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value, isPreviewing }) {
+                expect.step(`customAction isPreviewing: ${isPreviewing}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderRange action="'customAction'" withNumberInput="true"/>`;
+        }
+    );
+    freezeTime();
+    await setupHTMLBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+    expect.verifySteps(["customAction isPreviewing: true"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("11");
+
+    await advanceTime(550);
+    expect.verifySteps(["customAction isPreviewing: false"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("11");
+});
+
 test("number input should have the same min, max and step as the range input", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
