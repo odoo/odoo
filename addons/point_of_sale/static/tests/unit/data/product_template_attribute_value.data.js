@@ -55,5 +55,11 @@ export class ProductTemplateAttributeValue extends models.ServerModel {
             is_custom: false,
             attribute_id: 13,
         },
+        {
+            id: 12,
+            name: "Male",
+            is_custom: false,
+            attribute_id: 8,
+        },
     ];
 }

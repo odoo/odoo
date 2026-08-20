@@ -121,6 +121,8 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Combo"),
+            combo.select("Whiteboard Pen"),
+            Dialog.confirm(),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Combo", "1", "7.00"),
                 ...ProductScreen.orderLineHas("Desk Organizer", "1"),
