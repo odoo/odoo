@@ -136,6 +136,7 @@ class Website(models.CachedModel):
         'website.page',
         string="Cookie Policy Page",
         help="Page used as the Cookie Policy link in the cookies bar.",
+        ondelete='restrict',
     )
     configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
     block_third_party_domains = fields.Boolean(
@@ -315,13 +316,14 @@ class Website(models.CachedModel):
                 company = self.env['res.company'].browse(values['company_id'])
                 super(Website, public_user_to_change_websites).write(dict(values, user_id=company and company._get_public_user().id))
 
+        default_policy_page_to_unlink = self.env['website.page']
         if 'cookies_bar' in values or ('cookie_policy_id' in values and not values['cookie_policy_id']):
             default_policy_page = self.env['website.page'].search([
                 ('website_id', '=', self.id),
                 ('url', '=', '/cookie-policy'),
             ])
             if not values.get('cookies_bar', self.cookies_bar):
-                default_policy_page.unlink()
+                default_policy_page_to_unlink = default_policy_page
                 values['cookie_policy_id'] = False
             elif not values.get('cookie_policy_id', self.cookie_policy_id):
                 cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
@@ -339,6 +341,7 @@ class Website(models.CachedModel):
                     values["cookie_policy_id"] = default_policy_page
 
         result = super(Website, self - public_user_to_change_websites).write(values)
+        default_policy_page_to_unlink.unlink()
 
         if 'logo' in values:
             self._ensure_logo_media_attachment()
