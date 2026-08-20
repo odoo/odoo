@@ -23,6 +23,13 @@ const AnimationEdit = (I) =>
             // it here because otherwise it is added back when exiting edit
             // mode.
             this.el.classList.remove("o_animate_preview");
+            // An inline "animation-name" is only ever a way to restart an
+            // animation ("dummy" in "forceAnimation", "dummy-none" in the
+            // "Animation" interaction), never a configuration to keep. If the
+            // interaction happened to start while one was set, it was taken as
+            // the initial state and has just been restored: it would otherwise
+            // be saved along with the element.
+            this.el.style.removeProperty("animation-name");
         }
     };
 
