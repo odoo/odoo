@@ -1,6 +1,6 @@
 from odoo.fields import Command, Domain
 from odoo.tests import TransactionCase, tagged, warmup
-from odoo.tools import SQL, mute_logger
+from odoo.tools import BinaryBytes, SQL, mute_logger
 
 from .common import TestOrmPartnerCommon
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
@@ -2141,6 +2141,43 @@ class TestDatePartNumber(TransactionExpressionCase):
 
         result = self._search(self.env["test_orm.person.account"], [('person_id.birthday.month_number', '=', 2)])
         self.assertEqual(result, account)
+
+
+class TestBinarySearch(TransactionExpressionCase):
+    def test_binary_search(self):
+        binary_value = BinaryBytes(b'content', filename='test')
+        binary_value_noname = BinaryBytes(b'nocontent')
+        record = self.env['test_orm.mixed'].create({
+            'binary_with_attachment': binary_value,
+            'binary_without_attachment': binary_value,
+        })
+        record_noname = record.create({
+            'binary_with_attachment': binary_value_noname,
+            'binary_without_attachment': binary_value_noname,
+        })
+        empty = record.create({})
+        records = record + record_noname + empty
+
+        for field_name in ('binary_with_attachment', 'binary_without_attachment'):
+            with self.subTest("per field", field=field_name):
+                has_att = field_name == 'binary_with_attachment'
+                res = self._search(record, [(field_name, '=', False)])
+                self.assertEqual(res & records, empty)
+
+                res = self._search(record, [(f'{field_name}.size', '>', 0)])
+                self.assertEqual(res & records, record + record_noname)
+
+                res = self._search(record, [(f'{field_name}.size', '=', 0)])
+                self.assertEqual(res & records, empty)
+
+                res = self._search(record, [(f'{field_name}.filename', 'like', 't%')])
+                self.assertEqual(res & records, record if has_att else record.browse())
+
+                with self.assertRaises(ValueError):
+                    record.search([(field_name, '=', binary_value)])
+
+                with self.assertRaises(ValueError):
+                    self._search(record, [(field_name, 'like', 't%')])
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

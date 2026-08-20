@@ -1774,23 +1774,6 @@ def _optimize_type_selection(condition, model):
     return DomainCondition(condition.field_expr, 'in', included)
 
 
-@field_type_optimization(['binary'])
-def _optimize_type_binary_attachment(condition, model):
-    field = condition._field(model)
-    operator = condition.operator
-    value = condition.value
-    if field.attachment and not (operator in ('in', 'not in') and set(value) == {False}):
-        try:
-            condition._raise('Binary field stored in attachment, accepts only existence check; skipping domain')
-        except ValueError:
-            # log with stacktrace
-            _logger.exception("Invalid operator for a binary field")
-        return _TRUE_DOMAIN
-    if operator.endswith('like'):
-        condition._raise('Cannot use like operators with binary fields', error=NotImplementedError)
-    return condition
-
-
 @operator_optimization(['parent_of', 'child_of'], OptimizationLevel.FULL)
 def _operator_hierarchy(condition, model):
     """Transform a hierarchy operator into a simpler domain.
