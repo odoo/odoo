@@ -179,6 +179,13 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'adyen':
             return super()._send_refund_request()
 
+        # Adyen's refund endpoint requires the PSP reference of the original payment. Under manual
+        # capture, self.source_transaction_id is the capture transaction rather than the original
+        # payment, and its provider_reference is the capture's own PSP reference
+        source_tx = self.source_transaction_id
+        while source_tx.source_transaction_id:
+            source_tx = source_tx.source_transaction_id
+
         # Send the refund request to Adyen.
         converted_amount = payment_utils.to_minor_currency_units(
             -self.amount,  # The amount is negative for refund transactions
@@ -197,7 +204,7 @@ class PaymentTransaction(models.Model):
             'POST',
             '/payments/{}/refunds',
             json=data,
-            endpoint_param=self.source_transaction_id.provider_reference,
+            endpoint_param=source_tx.provider_reference,
         )
 
         # Process the refund request response.
