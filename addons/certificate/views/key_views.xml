@@ -7,9 +7,6 @@
         <field name="arch" type="xml">
             <form string="key form">
                 <sheet>
-                    <div class="alert alert-warning" role="alert" invisible="not loading_error">
-                        <field name="loading_error"/>
-                    </div>
                     <group id="key_input">
                         <field name="name"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
