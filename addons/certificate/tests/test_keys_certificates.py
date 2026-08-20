@@ -139,15 +139,15 @@ class TestKeysCertificates(TransactionCase):
         correct_password = 'foobar'
         wrong_password = 'barfoo'
         key_path = 'certificate/tests/data/encrypted_private.key'
-        key = self.env['certificate.key'].create({
-            'content': self.file_read(key_path),
-            'password': wrong_password,
-        })
-        self.assertEqual(key.loading_error, 'This key could not be loaded. Either its content or its password is erroneous.')
-        key.write({
-            'password': correct_password,
-        })
+        loading_error = self.env._("This key could not be loaded. Either its content or its password is erroneous.")
+        with self.assertRaises(UserError, msg=loading_error):
+            self.env['certificate.key'].create({'content': self.file_read(key_path)})
+        with self.assertRaises(UserError, msg=loading_error):
+            self.env['certificate.key'].create({'content': self.file_read(key_path), 'password': wrong_password})
+        key = self.env['certificate.key'].create({'content': self.file_read(key_path), 'password': correct_password})
         self.assertEqual(key.loading_error, '')
+        with self.assertRaises(UserError, msg=loading_error):
+            key.write({'password': wrong_password})
 
     def test_der_certificate(self):
         certificate = self.env['certificate.certificate'].create({
