@@ -13,6 +13,10 @@ class PosOrder(models.Model):
 
     applied_codes = fields.Json(default=list, copy=False)
 
+    active_rewards = fields.Json(default=list, copy=False)
+    active_payment_programs = fields.Json(default=list, copy=False)
+    disabled_program_ids = fields.Json(default=list, copy=False)
+
     def _process_saved_order(self, draft):
         """
         Override to update loyalty points and generate history lines

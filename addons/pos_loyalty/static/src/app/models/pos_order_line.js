@@ -62,13 +62,13 @@ patch(PosOrderline.prototype, {
         }
         const order = this.order_id;
         if (order && this.is_reward_line && this.reward_id?.reward_type === "product") {
-            const entry = order._active_rewards.find(
+            const entry = order.active_rewards.find(
                 (entry) => entry.reward_id === this.reward_id.id
             );
             if (entry) {
                 entry.qty = quantity;
             } else {
-                order._active_rewards.push({ reward_id: this.reward_id.id, qty: quantity });
+                order.active_rewards.push({ reward_id: this.reward_id.id, qty: quantity });
             }
         }
         const result = super.setQuantity(quantity, keep_price);

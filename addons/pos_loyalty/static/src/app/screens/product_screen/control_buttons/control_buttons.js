@@ -16,7 +16,7 @@ patch(ControlButtons.prototype, {
     },
     _getEWalletRewards(order) {
         const appliedRewardIds = new Set(
-            order._active_payment_programs.map((entry) => entry.reward_id)
+            order.active_payment_programs.map((entry) => entry.reward_id)
         );
         const rewards = [];
         for (const program of this._getEWalletPrograms()) {
@@ -121,7 +121,7 @@ patch(ControlButtons.prototype, {
         }
         if (eWalletReward) {
             // Activate the eWallet by its card code: applyCode routes payment programs
-            // into _active_payment_programs, which recomputeRewards spends via
+            // into active_payment_programs, which recomputeRewards spends via
             // applyPaymentProgram.
             const card = this.pos.models["loyalty.card"].get(eWalletReward.card_id);
             await this.pos.applyCode(card.code);
@@ -193,8 +193,8 @@ patch(ControlButtons.prototype, {
                 getPayload: async (selectedReward) => {
                     const reward = selectedReward.reward;
                     const programId = reward.program_id?.id;
-                    if (order._disabled_program_ids.includes(programId)) {
-                        order._disabled_program_ids = order._disabled_program_ids.filter(
+                    if (order.disabled_program_ids.includes(programId)) {
+                        order.disabled_program_ids = order.disabled_program_ids.filter(
                             (id) => id !== programId
                         );
                         if (order.appliedPrograms.some((program) => program.id === programId)) {
@@ -222,7 +222,7 @@ patch(ControlButtons.prototype, {
                         }
                     }
 
-                    order._active_rewards.push({ reward_id: reward.id, reward_product_id });
+                    order.active_rewards.push({ reward_id: reward.id, reward_product_id });
                     order.recomputeRewards();
                     if (order._selectRewardLine(reward)) {
                         this.numberBuffer.reset();
