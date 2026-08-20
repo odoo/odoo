@@ -4,7 +4,7 @@
     <t t-name="web.KanbanHeader">
         <div class="o_kanban_header position-sticky top-0 z-1" t-ref="this.rootRef" t-attf-class="{{ !this.uiService.isSmall and this.group.isFolded ? 'd-print-none pt-2' : 'py-2 pt-print-0' }}">
             <div class="o_kanban_header_title position-relative d-flex lh-lg">
-                <div t-if="this.group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
+                <div t-if="this.group.isFolded" class="o_column_title d-flex align-items-center pb-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
                      t-on-mouseenter="this.onTitleMouseEnter" t-on-mouseleave="this.onTitleMouseLeave">
                     <t t-out="this.odoomark(this.group.displayName)"></t>
                     <span t-if="this.group.count > 0 and !this.props.list.model.useSampleModel" t-out="'(' + this.group.count + ')'"/>
@@ -22,9 +22,9 @@
                         <i class="oi" data-icon="add_2" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>
                 </t>
-                <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-between flex-nowrap transition-base">
-                    <i class="oi transition-base" data-icon="arrow_left" role="img" aria-label="Unfold" title="Unfold" />
-                    <i class="oi" data-icon="arrow_right" role="img" aria-label="Unfold" title="Unfold" />
+                <button t-else="" class="o_column_unfold btn d-flex align-items-center justify-content-center flex-nowrap transition-base">
+                    <i class="oi d-flex align-items-center justify-content-center" data-icon="arrow_left" role="img" aria-label="Unfold" title="Unfold" />
+                    <i class="oi d-flex align-items-center justify-content-center" data-icon="arrow_right" role="img" aria-label="Unfold" title="Unfold" />
                 </button>
             </div>
             <div t-if="(this.uiService.isSmall or !this.group.isFolded) and this.progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !this.group.count }">
