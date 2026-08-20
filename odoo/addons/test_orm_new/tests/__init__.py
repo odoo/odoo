@@ -23,3 +23,4 @@ from . import test_parent_store
 from . import test_performance
 from . import test_prefetch
 from . import test_query
+from . import test_registry
