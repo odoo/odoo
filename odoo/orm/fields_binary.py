@@ -13,6 +13,7 @@ from odoo.tools import SQL
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
 from .fields import Field
+from .utils import parse_field_expr
 
 if typing.TYPE_CHECKING:
     from .environments import Environment
@@ -221,17 +222,55 @@ class Binary(Field[BinaryValue]):
             else:
                 atts.unlink()
 
+    def expression_getter(self, field_expr):
+        get_value = self.__get__
+        _fname, property_name = parse_field_expr(field_expr)
+        if property_name == 'size':
+            return lambda record: get_value(record).size
+        if property_name == 'filename':
+            return lambda record: get_value(record).filename
+        return super().expression_getter(field_expr)
+
+    def to_sql(self, table):
+        if self.attachment and self.store and not self.compute and not self.compute_sql:
+            Attachment = table._model.sudo().env['ir.attachment']
+            alias = table._make_alias(self.name, Attachment)
+            table._query.add_join('LEFT JOIN', alias, SQL("""(
+                SELECT DISTINCT (res_id) res_id, file_size, name, id
+                FROM ir_attachment
+                WHERE res_model = %s AND res_field = %s AND res_id IS NOT NULL
+                ORDER BY res_id, id
+            )""", self.model_name, self.name), SQL("%s = %s", alias.res_id, table.id, to_flush=self))
+            return alias.id  # dummy value
+        return super().to_sql(table)
+
+    def property_to_sql(self, field_sql, property_name):
+        if self.attachment:
+            Attachment = field_sql._table._model.sudo().env['ir.attachment']
+            alias = field_sql._table._make_alias(self.name, Attachment)
+            if property_name == 'size':
+                return SQL("COALESCE(%s, 0)", alias.file_size)
+            if property_name == 'filename':
+                return SQL("COALESCE(NULLIF(%s, %s), '')", alias.name, self.name)
+        else:
+            if property_name == 'size':
+                return SQL("COALESCE(octet_length(%s), 0)", field_sql)
+            if property_name == 'filename':
+                return SQL("''::varchar")
+        return super().property_to_sql(field_sql, property_name)
+
     def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
-        if not self.attachment or field_expr != self.name:
+        if field_expr != self.name or (not self.attachment and operator in ('in', 'not in') and set(value) == {False}):
             return super().condition_to_sql(table, field_expr, operator, value)
-        assert operator in ('in', 'not in') and set(value) == {False}, "Should have been done in Domain optimization"
-        return SQL(
-            "%sEXISTS (SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s AND res_id = %s)",
-            SQL("NOT ") if operator == 'in' else SQL(),
-            table._model._name,
-            self.name,
-            table.id,
-        )
+        if self.attachment and operator in ('in', 'not in') and set(value) == {False}:
+            return SQL(
+                "%sEXISTS (SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s AND res_id = %s)",
+                SQL("NOT ") if operator == 'in' else SQL(),
+                table._model._name,
+                self.name,
+                table.id,
+            )
+        raise ValueError('Binary field, accepts only existence check; skipping domain')
 
 
 class Image(Binary):

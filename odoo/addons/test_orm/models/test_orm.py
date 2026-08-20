@@ -982,7 +982,7 @@ class TesOrmComputedInverseOne2manyLine(models.Model):
 
 class TestOrmModel_Binary(models.Model):
     _name = 'test_orm.model_binary'
-    _description = 'Test Image field'
+    _description = 'Test Binary field'
 
     binary = fields.Binary()
     binary_x_filename = fields.Char()
