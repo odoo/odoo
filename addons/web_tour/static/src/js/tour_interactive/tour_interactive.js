@@ -115,7 +115,16 @@ export class TourInteractive {
         tourState.setCurrentIndex(this.currentActionIndex);
         this.anchorEl = this.currentAction.findTrigger();
         this.setActionListeners();
+        if (!this.config.robot && this.anchorEl && !this.hasConsumeEvent) {
+            this.currentActionIndex++;
+            this.play();
+            return;
+        }
         this.updatePointer();
+    }
+
+    get hasConsumeEvent() {
+        return this.getConsumeEventType(this.anchorEl, this.currentAction.event).length > 0;
     }
 
     updatePointer() {
@@ -143,12 +152,20 @@ export class TourInteractive {
      * never type and click the very same input at once.
      */
     playRobot() {
-        const step = this.currentAction.step;
+        const action = this.currentAction;
+        const step = action.step;
         if (step === this.robotStep) {
             return;
         }
         this.robotStep = step;
-        this.robotQueue = (this.robotQueue || Promise.resolve()).then(() => step.doAction());
+        const selfAdvance = !this.hasConsumeEvent;
+        this.robotQueue = (this.robotQueue || Promise.resolve()).then(async () => {
+            await step.doAction();
+            if (selfAdvance && this.currentAction === action) {
+                this.currentActionIndex++;
+                this.play();
+            }
+        });
     }
 
     setActionListeners() {
