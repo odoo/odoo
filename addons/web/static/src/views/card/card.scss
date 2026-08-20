@@ -41,8 +41,9 @@
 
     padding: var(--Card-padding-v) var(--Card-padding-h);
     border-width: var(--Card-border-width, #{$border-width});
+    border-radius: var(--Card-border-radius);
     border-style: solid;
-    border-color: $border-color;
+    border-color: var(--Card-border-color, #{$border-color});
 
     @include media-only(print) {
         .o_field_background_image {

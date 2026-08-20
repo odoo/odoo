@@ -1,0 +1,78 @@
+/**
+ * Custom Circle Button
+ * A simple button that resets the default button styles and adds a circular shape with a pseudo-element for the
+ * background. The button's size is determined by the height of the pseudo-element, which can be customized using CSS
+ * variables. It supports hover, focus, active, and disabled states.
+ *
+ * @extends Component
+ */
+
+
+.o_btn_circle {
+    $_btn_ratio: 3;
+    $_btn_default_height: 26px;
+
+    position: relative;
+    z-index: 0;
+    margin: calc(var(--btn-padding-y) * #{$_btn_ratio * 0.5});
+    padding: 0;
+    line-height: 1;
+
+    // Reset button's background and border properties
+    background: none!important;
+    border: 0 !important;
+
+    // Define the pseudo-element
+    &:before {
+        @include o-position-absolute(50%, $left: 50%);
+        transform: translate(-50%, -50%);
+        content: "";
+        z-index: -1;
+        height: var(--o-btn-circle-height, #{$_btn_default_height});
+        aspect-ratio: 1;
+        border-radius: var(--o-btn-circle-radius, 100%);
+
+        // Apply button rules to the pseudoelement itself
+        background: var(--btn-bg);
+        border: var(--btn-border-width) solid var(--btn-border-color);
+    }
+
+    &:hover:before {
+        background-color: var(--btn-hover-bg);
+        border-color: var(--btn-hover-border-color);
+    }
+
+    &:focus-visible:before {
+        @include gradient-bg(var(--btn-hover-bg));
+        border-color: var(--btn-hover-border-color);
+
+        @if $enable-shadows {
+            box-shadow: var(--btn-box-shadow), var(--btn-focus-box-shadow);
+        } @else {
+            box-shadow: var(--btn-focus-box-shadow);
+        }
+    }
+
+    &.active, &.show {
+        background-color: var(--btn-active-bg);
+        background-image: if($enable-gradients, none, null);
+        border-color: var(--btn-active-border-color);
+        @include box-shadow(var(--btn-active-shadow));
+
+        &:focus-visible {
+            @if $enable-shadows {
+                box-shadow: var(--btn-active-shadow), var(--btn-focus-box-shadow);
+            } @else {
+                box-shadow: var(--btn-focus-box-shadow);
+            }
+        }
+    }
+
+    &:disabled, &.disabled {
+        background-color: var(--btn-disabled-bg);
+        background-image: if($enable-gradients, none, null);
+        border-color: var(--btn-disabled-border-color);
+        opacity: var(--btn-disabled-opacity);
+        @include box-shadow(none);
+    }
+}
