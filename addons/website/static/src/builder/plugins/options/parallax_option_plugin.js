@@ -9,12 +9,13 @@ import { withSequence } from "@html_editor/utils/resource";
 /**
  * @typedef { Object } WebsiteParallaxShared
  * @property { WebsiteParallaxPlugin['applyParallaxType'] } applyParallaxType
+ * @property { WebsiteParallaxPlugin['getParallaxBgSelector'] } getParallaxBgSelector
  */
 
 export class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
     static dependencies = ["builderActions", "backgroundImageOption", "builderOptions"];
-    static shared = ["applyParallaxType"];
+    static shared = ["applyParallaxType", "getParallaxBgSelector"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
@@ -55,9 +56,7 @@ export class WebsiteParallaxPlugin extends Plugin {
             delete editingElement.dataset.parallaxType;
         }
 
-        let parallaxBgEl = editingElement.querySelector(
-            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap .s_parallax_bg"
-        );
+        let parallaxBgEl = editingElement.querySelector(this.getParallaxBgSelector());
         const parallaxBgWrapEl = editingElement.querySelector(":scope > .s_parallax_bg_wrap");
         if (isParallax) {
             if (!parallaxBgEl) {
@@ -93,6 +92,10 @@ export class WebsiteParallaxPlugin extends Plugin {
                 backgroundClass
             );
         }
+    }
+    getParallaxBgSelector() {
+        // ":scope > .s_parallax_bg" is kept for compatibility
+        return ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap > .s_parallax_bg";
     }
     removeParallax(editingEl) {
         // ":scope > .s_parallax_bg" is kept for compatibility

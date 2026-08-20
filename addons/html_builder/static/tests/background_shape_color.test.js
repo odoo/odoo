@@ -1,20 +1,22 @@
 import {
     addBuilderOption,
     confirmAddSnippet,
+    dummyBase64Img,
     getSnippetStructure,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { t } from "@odoo/owl";
-import { expect, test, describe, beforeEach } from "@odoo/hoot";
+import { expect, test, describe, beforeEach, queryFirst } from "@odoo/hoot";
 import { queryOne, setInputRange } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
 const RGB_RED = "rgb(255, 0, 0)";
 const RGB_BLUE = "rgb(0, 0, 255)";
 const RGB_GREEN = "rgb(0, 255, 0)";
+const HEX_RED = "#ff0000";
 const HEX_BLUE = "#0000ff";
 const HEX_GREEN = "#00ff00";
 const HEX_O_CC_4 = "#383e45";
@@ -178,6 +180,23 @@ test("Connections shape uses contrasting color when neighbor has same background
     const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.shape).toBe("html_builder/Connections/01");
     expect(shapeData.colors.c5).toBe(HEX_O_CC_5);
+});
+
+test("Connections shape takes color when neighbor has same background", async () => {
+    onRpc("/html_editor/get_image_info", () => ({}));
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `
+        ${getNoBgShapeSection1(RGB_RED)}
+        ${getNoBgShapeSection2(RGB_RED)}
+    `,
+        { styleContent: getShapeTestCSS() }
+    );
+    queryFirst(":iframe #section1").style.backgroundImage = "url('" + dummyBase64Img + "')";
+    await clickOnSnippetAndApplyShape("#section1", waitSidebarUpdated);
+    expect(":iframe #section1 .o_we_shape").toHaveCount(1);
+    const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.shape).toBe("html_builder/Connections/01");
+    expect(shapeData.colors.c5).toBe(HEX_RED);
 });
 
 test("Non-Connections shapes are not affected by neighbor color changes", async () => {

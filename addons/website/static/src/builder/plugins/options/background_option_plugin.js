@@ -4,6 +4,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { _t } from "@web/core/l10n/translation";
 import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
+import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 
 /**
  * @typedef { Object } WebsiteBackgroundVideoShared
@@ -26,9 +27,19 @@ function getBgVideoOrParallax(editingElement) {
 
 export class WebsiteBackgroundImageOptionPlugin extends Plugin {
     static id = "websiteBackgroundImageOptionPlugin";
+    static dependencies = ["websiteParallaxPlugin"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         background_filter_target_providers: withSequence(10, getBgVideoOrParallax),
+        should_ignore_background_color_for_shapes_predicates: (el) =>
+            // This computation is what is done for the `isApplied` of
+            // `toggleBgImage` with the website module's xpath
+            getBgImageURLFromEl(
+                el.querySelector(this.dependencies.websiteParallaxPlugin.getParallaxBgSelector()) ??
+                    el
+            )
+                ? true
+                : undefined,
     };
 }
 
@@ -56,6 +67,8 @@ export class WebsiteBackgroundVideoPlugin extends Plugin {
             ReplaceBgVideoAction,
         },
         system_node_selectors: ".o_bg_video_container",
+        should_ignore_background_color_for_shapes_predicates: (el) =>
+            el.classList.contains("o_background_video") ? true : undefined,
     };
     loadReplaceBackgroundVideo() {
         return new Promise((resolve) => {
