@@ -117,10 +117,26 @@ class ResPartner(models.Model):
                 raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' instead. "))
         vat_prefix, vat_number = self._split_vat(vat)
 
+<<<<<<< 7b107160ab4c8a046628c1c4ebde27697ac654a9
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
             # may have a VATIN starting with "EU" instead of a country code.
             return vat, False
+||||||| df8a3fb0ccfc69fdc612b69e0a22ef1b1b37b779
+        country_code = _eu_country_vat_inverse.get(country_code.upper(), country_code).lower()
+        check_func_name = 'check_vat_' + country_code
+        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
+        if not check_func:
+            # No VAT validation available, default to check that the country code exists
+            return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
+        return check_func(vat_number)
+=======
+        check_func = self._get_vat_validation_method(country_code)
+        if not check_func:
+            # No VAT validation available, default to check that the country code exists
+            return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
+        return check_func(vat_number)
+>>>>>>> a5ee638505352cf80b6a58a26482e97b0522148c
 
         do_eu_check = False
         prefixed_country = ''
@@ -198,7 +214,103 @@ class ResPartner(models.Model):
                 and self.env.company.vat_check_vies
             )
 
+<<<<<<< 7b107160ab4c8a046628c1c4ebde27697ac654a9
     @api.depends('vat')
+||||||| df8a3fb0ccfc69fdc612b69e0a22ef1b1b37b779
+    @api.model
+    def fix_eu_vat_number(self, country_id, vat):
+        europe = self.env.ref('base.europe')
+        country = self.env["res.country"].browse(country_id)
+        # In Romania, the CUI can be used as tax identifier and it is not prefixed with the country code
+        country_codes_to_not_prepend = ['RO']
+        if not europe:
+            europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+        if europe and country and country.id in europe.country_ids.ids:
+            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
+            country_code = _eu_country_vat.get(country.code, country.code).upper()
+            if vat[:2] != country_code and (
+                country_code not in country_codes_to_not_prepend or
+                country_code != self.env.company.country_code
+            ):
+                vat = country_code + vat
+        return vat
+
+    @api.constrains('vat', 'country_id')
+    def check_vat(self):
+        # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
+        # This is for API pushes from external platforms where you have no control over VAT numbers.
+        if self.env.context.get('no_vat_validation'):
+            return
+
+        for partner in self:
+            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
+            # A partner for which they didn't input VAT, and the one not subject to VAT
+            if not partner.vat or len(partner.vat) == 1:
+                continue
+            country = partner.commercial_partner_id.country_id
+            if self._run_vat_test(partner.vat, country, partner.is_company) is False:
+                partner_label = _("partner [%s]", partner.name)
+                msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
+                raise ValidationError(msg)
+
+    @api.depends('vies_vat_to_check')
+=======
+    @api.model
+    def fix_eu_vat_number(self, country_id, vat):
+        europe = self.env.ref('base.europe')
+        country = self.env["res.country"].browse(country_id)
+        # In Romania, the CUI can be used as tax identifier and it is not prefixed with the country code
+        country_codes_to_not_prepend = ['RO']
+        if not europe:
+            europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+        if europe and country and country.id in europe.country_ids.ids:
+            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
+            country_code = _eu_country_vat.get(country.code, country.code).upper()
+            if vat[:2] != country_code and (
+                country_code not in country_codes_to_not_prepend or
+                country_code != self.env.company.country_code
+            ):
+                vat = country_code + vat
+        return vat
+
+    @api.constrains('vat', 'country_id')
+    def check_vat(self):
+        # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
+        # This is for API pushes from external platforms where you have no control over VAT numbers.
+        if self.env.context.get('no_vat_validation'):
+            return
+
+        for partner in self:
+            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
+            # A partner for which they didn't input VAT, and the one not subject to VAT
+            if not partner.vat or len(partner.vat) == 1:
+                continue
+
+            partner_country = partner.commercial_partner_id.country_id
+            company_country = self.env.company.country_id
+
+            if self._run_vat_test(partner.vat, partner_country, partner.is_company) is not False:
+                continue
+
+            if company_country and company_country != partner_country:
+                if self._get_vat_validation_method(company_country.code):
+                    if self._run_vat_test(partner.vat, company_country, partner.is_company) is not False:
+                        continue
+
+            partner_label = _("partner [%s]", partner.name)
+            msg = partner._build_vat_error_message(partner_country and partner_country.code.lower() or None, partner.vat, partner_label)
+            raise ValidationError(msg)
+
+    @api.model
+    def _get_vat_validation_method(self, country_code):
+        country_code = _eu_country_vat_inverse.get(country_code.upper(), country_code).lower()
+        check_func_name = 'check_vat_' + country_code
+        stdnum_vat_module = stdnum.util.get_cc_module(country_code, 'vat')
+
+        return getattr(self, check_func_name, None) or getattr(stdnum_vat_module, 'is_valid', None)
+
+    @api.depends('vies_vat_to_check')
+>>>>>>> a5ee638505352cf80b6a58a26482e97b0522148c
     def _compute_vies_valid(self):
         """ Check the VAT number with VIES, if enabled."""
         if not self.env['res.company'].sudo().search_count([('vat_check_vies', '=', True)]):
