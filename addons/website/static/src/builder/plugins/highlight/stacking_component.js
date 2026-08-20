@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { xml, Component, proxy } from "@odoo/owl";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 
@@ -33,12 +32,12 @@ export class StackingComponent extends Component {
     };
     setup() {
         this.stack = proxy(this.props.stackState.stack);
-        useLayoutEffect(
-            () => {
-                // Recompute the positioning of the popover if any.
-                this.env[POSITION_BUS]?.trigger("update");
-            },
-            () => [this.stack.length]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         // Recompute the positioning of the popover if any.
+        //         this.env[POSITION_BUS]?.trigger("update");
+        //     },
+        //     () => [this.stack.length]
+        // );
     }
 }
