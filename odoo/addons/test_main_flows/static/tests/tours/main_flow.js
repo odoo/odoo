@@ -852,6 +852,12 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 },
 {
+    isActive: ["desktop"],
+    trigger: ".o_data_cell[name=product_min_qty]",
+    content: "Focus the minimum product quantity input",
+    run: "click",
+},
+{
     trigger: ".o_field_widget[name=product_min_qty] input",
     content: "Set the minimum product quantity",
     run: "edit 1",

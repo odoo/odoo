@@ -190,8 +190,8 @@
             }
         }
 
-        &:has(.o_data_row_selected) {
-            user-select: none;
+        &.o_data_row_selected:not(.o_readonly_modifier) {
+           user-select: none;
         }
 
         tfoot {
@@ -403,6 +403,10 @@
             }
         }
 
+        .o_cursor_text {
+            cursor: text !important;
+        }
+
         .o_data_row:not(.o_selected_row) {
             .o_list_many2one,
             .o_list_char,
@@ -463,23 +467,6 @@
                 }
                 .form-check {
                     width: 100%;
-                }
-            }
-        }
-
-        .o_data_row_selected {
-            --mass-edit-btn-display: none;
-
-            .o_mass_edit_btn {
-                display: var(--mass-edit-btn-display);
-
-            }
-
-            &:hover {
-                --mass-edit-btn-display: block;
-                td:last-of-type {
-                    position: sticky;
-                    right: 0;
                 }
             }
         }
