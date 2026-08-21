@@ -784,18 +784,44 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                 trigger: ".orderline-combo",
             },
             ProductScreen.addCourse(),
-            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.clickOrderline("Office Combo"),
             ProductScreen.transferCourseTo("Course 2"),
             {
                 content: "Check if entire combo is transfered to course 2",
                 trigger: ".pos", // dummy trigger
                 run: function () {
-                    const onlyCourse2 = window.posmodel
-                        .getOrder()
-                        .lines.every((x) => x.course_id.name === "Course 2");
+                    const lines = window.posmodel.getOrder().lines;
+                    const allCourse2 = lines.every((x) => x.course_id.name === "Course 2");
 
-                    if (!onlyCourse2) {
-                        throw new Error("The entire combo must be transferred to Course 2.");
+                    if (!allCourse2) {
+                        throw new Error(
+                            "The entire combo must be transferred to Course 2 when parent is moved."
+                        );
+                    }
+                },
+            },
+
+            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.transferCourseTo("Course 1"),
+            {
+                content: "Check if ONLY the child is transferred to course 1",
+                trigger: ".pos", // dummy trigger
+                run: function () {
+                    const lines = window.posmodel.getOrder().lines;
+                    const child = lines.find((x) =>
+                        x.getFullProductName().includes("Combo Product 2")
+                    );
+                    const others = lines.filter(
+                        (x) => !x.getFullProductName().includes("Combo Product 2")
+                    );
+
+                    if (child.course_id.name !== "Course 1") {
+                        throw new Error("The child must be transferred to Course 1.");
+                    }
+
+                    const othersInCourse2 = others.every((x) => x.course_id.name === "Course 2");
+                    if (!othersInCourse2) {
+                        throw new Error("The rest of the combo must remain in Course 2.");
                     }
                 },
             },

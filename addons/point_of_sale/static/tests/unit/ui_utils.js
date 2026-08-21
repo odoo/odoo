@@ -785,3 +785,18 @@ export async function closeNotifications() {
     }
     await animationFrame();
 }
+
+export function getOrderlineText(productName) {
+    const lines = Array.from(document.querySelectorAll(".orderline"));
+    const targetLine = lines.find((el) => el.textContent.includes(productName));
+    return targetLine ? targetLine.textContent : "";
+}
+
+export async function deleteOrderline(productName) {
+    await contains(`.orderline:has(.product-name:contains("${productName}"))`).click();
+    await animationFrame();
+    await contains(`button.numpad-button[value="⌫"]`).click();
+    await animationFrame();
+    await contains(`button.numpad-button[value="⌫"]`).click();
+    await animationFrame();
+}

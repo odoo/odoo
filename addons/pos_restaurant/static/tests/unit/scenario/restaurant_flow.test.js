@@ -1054,7 +1054,7 @@ test("test_multiple_preparation_printer_different_categories: both printers trig
     expect(store.router.currentScreen()).toBe("FeedbackScreen");
 });
 
-test("test_combo_synchronisation: combo links persist after partner change, course transfer moves entire combo", async () => {
+test("test_combo_synchronisation: combo links persist after partner change, course transfer moves only the selected child", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
     await Utils.clickTable("1");
@@ -1091,11 +1091,21 @@ test("test_combo_synchronisation: combo links persist after partner change, cour
     await animationFrame();
 
     const order = store.getOrder();
-    const comboLines = order.lines.filter((l) => l.combo_parent_id || l.combo_line_ids?.length > 0);
-    const allSameCourse = comboLines.every(
-        (l) => l.course_id?.name === comboLines[0].course_id?.name
+
+    const parentLine = order.lines.find((l) => l.combo_line_ids?.length > 0);
+    const chairLine = order.lines.find(
+        (l) => l.combo_parent_id && l.product_id?.name === "Wood chair"
     );
-    expect(allSameCourse).toBe(true);
+    const deskLine = order.lines.find(
+        (l) => l.combo_parent_id && l.product_id?.name === "Wood desk"
+    );
+
+    expect(chairLine.course_id?.name).toBe("Course 2");
+
+    expect(parentLine.course_id?.name).not.toBe("Course 2");
+    expect(deskLine.course_id?.name).not.toBe("Course 2");
+
+    expect(parentLine.course_id?.id).toBe(deskLine.course_id?.id);
 });
 
 test("test_combo_preparation_receipt_layout: combo parent above children in receipt", async () => {
