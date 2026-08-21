@@ -41,6 +41,9 @@ class TestProjectCommon(TransactionCase):
         cls.partner_3 = cls.env['res.partner'].create({
             'name': 'Valid Poilboeuf',
             'email': 'valid.poilboeuf@gmail.com'})
+        cls.partner_4 = cls.env['res.partner'].create({
+            'name': 'Valid banana',
+            'email': 'valid.banana@gmail.com'})
 
         # Test users to use through the various tests
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
@@ -76,7 +79,14 @@ class TestProjectCommon(TransactionCase):
             'login': 'bastien',
             'email': 'bastien.projectmanager@example.com',
             'group_ids': [(6, 0, [user_group_employee.id, user_group_project_manager.id, user_group_partner_manager.id])]})
-
+        cls.user_portal_1 = Users.create({
+            'login': 'banana',
+            'name': 'Valid banana',
+            'email': 'valid.banana@agrolait.com',
+            'partner_id': cls.partner_4.id,
+            'signature': 'SignBanana',
+            'notification_type': 'email',
+            'group_ids': [(6, 0, [cls.env.ref('base.group_public').id])]})
         # Test 'Pigs' project
         cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs',

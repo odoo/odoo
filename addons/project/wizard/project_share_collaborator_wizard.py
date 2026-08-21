@@ -37,8 +37,5 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
     def _compute_send_invitation(self):
         project = self.parent_wizard_id.resource_ref
         for collaborator in self:
-            if (
-                collaborator.partner_id not in project.message_partner_ids
-                or (collaborator.access_mode != 'view' and collaborator.partner_id not in project.collaborator_ids.partner_id)
-            ):
+            if (collaborator.partner_id not in project.collaborator_ids.partner_id):
                 collaborator.send_invitation = True
