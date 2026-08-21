@@ -1,4 +1,3 @@
-import { registry } from "@web/core/registry";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { EpsonPrinter } from "../utils/printer/epson_printer";
 import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
@@ -11,35 +10,35 @@ import { waitImages } from "@point_of_sale/utils";
 import { SelectDefaultPrinterPopup } from "@point_of_sale/app/components/popups/select_default_printer_popup/select_default_printer_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { ZebraPrinter } from "@point_of_sale/app/utils/printer/zebra_printer";
-import { useApp, usePlugin } from "@odoo/owl";
+import { useApp, usePlugin, Plugin } from "@odoo/owl";
+import { PosDataPlugin } from "../plugins/pos_data_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { services } from "@web/core/services";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
 
-export const posTicketPrinterService = {
-    dependencies: ["dialog", "pos_data", "notification"],
-    async start(env, dependencies) {
-        const service = new PosTicketPrinterService(env, dependencies);
-        await service.initPrinters();
-        return service;
-    },
-};
+export class PosTicketPrinterPlugin extends Plugin {
+    // After PosDataPlugin (20)
+    static sequence = 30;
 
-export class PosTicketPrinterService {
     debugMode = usePlugin(DebugModePlugin);
+    data = usePlugin(PosDataPlugin);
+    notification = usePlugin(NotificationPlugin);
+    dialog = usePlugin(DialogPlugin);
 
-    constructor(...args) {
-        this.setup(...args);
+    setup() {
+        this.app = useApp();
+        this.env = null; // needed in createPrinterInstance for iot printers, will be removed after full conversion to owl 3
+        this.defaultPrinter = null;
     }
 
-    setup(env, { dialog, pos_data, notification }) {
-        this.app = useApp();
-        this.env = env;
-        this.dialog = dialog;
-        this.notification = notification;
-        this.data = pos_data;
-        this.defaultPrinter = null;
-        this.initDefaultPrinter();
+    init(env) {
+        this.env = env; // needed in createPrinterInstance for iot printers, will be removed after full conversion to owl 3
+
+        this.initDefaultPrinter(); // Will be moved in setup after full conversion to owl 3
+        this.initPrinters(); // Will be moved in setup after full conversion to owl 3
     }
 
     get printers() {
@@ -588,4 +587,4 @@ export class PosTicketPrinterService {
     }
 }
 
-registry.category("services").add("pos_ticket_printer", posTicketPrinterService);
+services.add(PosTicketPrinterPlugin);

@@ -1,7 +1,7 @@
 import { Loader } from "@point_of_sale/app/components/loader/loader";
 import { getTemplate } from "@web/core/templates";
 import { mount, whenReady, proxy } from "@odoo/owl";
-import { _t, appTranslateFn } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
@@ -38,44 +38,9 @@ whenReady(() => {
     }
     browser.sessionStorage.removeItem("pos_reload_recovery");
     try {
-        const { env } = await mountComponent(Chrome, document.body, {
+        await mountComponent(Chrome, document.body, {
             name: "Odoo Point of Sale",
             props: { disableLoader: () => (loader.isShown = false) },
-        });
-        window.addEventListener("beforeunload", function (event) {
-            if (env.services.pos_data.network.offline) {
-                var confirmationMessage = _t(
-                    "You are currently offline. Reloading the page may cause you to lose unsaved data."
-                );
-                event.returnValue = confirmationMessage;
-                return confirmationMessage;
-            }
-            if (env.services.pos_data.localUnsyncedPaidOrderUuids.size > 0) {
-                const confirmationMessage = _t(
-                    "Some paid orders have not been synced to the server yet. Closing or reloading now may cause data loss."
-                );
-                event.returnValue = confirmationMessage;
-                return confirmationMessage;
-            }
-            const pos = env.services.pos;
-            if (pos?.session?.state === "opening_control") {
-                browser.sessionStorage.setItem("pos_reload_recovery", String(pos.session.id));
-                const data = JSON.stringify({
-                    jsonrpc: "2.0",
-                    method: "call",
-                    id: 1,
-                    params: {
-                        model: "pos.session",
-                        method: "delete_opening_control_session",
-                        args: [[pos.session.id]],
-                        kwargs: {},
-                    },
-                });
-                navigator.sendBeacon(
-                    "/web/dataset/call_kw",
-                    new Blob([data], { type: "application/json" })
-                );
-            }
         });
         const classList = document.body.classList;
         if (localization.direction === "rtl") {

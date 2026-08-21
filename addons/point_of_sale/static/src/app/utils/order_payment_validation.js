@@ -148,7 +148,7 @@ export default class OrderPaymentValidation {
 
         this.pos.addPendingOrder([this.order.id]);
         this.order.state = "paid";
-        this.pos.data.localUnsyncedPaidOrderUuids.add(this.order.uuid);
+        this.pos.data.localUnsyncedPaidOrderUuids().add(this.order.uuid);
 
         this.pos.customerDisplay.send({ processingValidation: true });
         try {

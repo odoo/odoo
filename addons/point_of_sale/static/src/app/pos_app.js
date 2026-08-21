@@ -8,6 +8,8 @@ import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
 import { PosRouterPlugin } from "./plugins/pos_router_plugin";
+import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 /**
@@ -52,6 +54,41 @@ export class Chrome extends Component {
         onMounted(() => {
             this.props.disableLoader();
             this.pos.debounceUpdateCustomerDisplay();
+        });
+
+        window.addEventListener("beforeunload", (event) => {
+            if (this.pos.data.network.offline) {
+                var confirmationMessage = _t(
+                    "You are currently offline. Reloading the page may cause you to lose unsaved data."
+                );
+                event.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+            if (this.pos.data.localUnsyncedPaidOrderUuids().size > 0) {
+                const confirmationMessage = _t(
+                    "Some paid orders have not been synced to the server yet. Closing or reloading now may cause data loss."
+                );
+                event.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+            if (this.pos?.session?.state === "opening_control") {
+                browser.sessionStorage.setItem("pos_reload_recovery", String(this.pos.session.id));
+                const data = JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: "call",
+                    id: 1,
+                    params: {
+                        model: "pos.session",
+                        method: "delete_opening_control_session",
+                        args: [[this.pos.session.id]],
+                        kwargs: {},
+                    },
+                });
+                navigator.sendBeacon(
+                    "/web/dataset/call_kw",
+                    new Blob([data], { type: "application/json" })
+                );
+            }
         });
     }
 }

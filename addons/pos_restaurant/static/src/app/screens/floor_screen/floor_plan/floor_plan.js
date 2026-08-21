@@ -18,7 +18,7 @@ export class FloorPlan extends FloorPlanBase {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.alert = useService("alert");
+        this.alert = this.pos.alert;
         this.ui = useService("ui");
         useListener(window, "resize", useDebounced(this.handleWindowResize.bind(this), 100));
         this.scrollFloorId = null;
@@ -356,7 +356,7 @@ export class FloorPlan extends FloorPlanBase {
                     restoreToOriginalPosition(element, table);
                 }
                 clearTimeout(dndContext.checkTimeout);
-                this.alert.dismiss();
+                this.alert.remove();
                 dndContext = null;
             },
         });

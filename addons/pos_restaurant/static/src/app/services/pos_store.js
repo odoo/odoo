@@ -771,7 +771,7 @@ patch(PosStore.prototype, {
     },
     prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
-        this.alert.dismiss();
+        this.alert.remove();
 
         if (destinationTable.rootTable.id === originalTable?.id) {
             this.setOrder(order);
