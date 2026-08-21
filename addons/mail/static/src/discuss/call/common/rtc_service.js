@@ -393,6 +393,7 @@ export class Rtc extends Record {
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     microphonePermission;
     isMicrophonePermissionWarningDismissed = false;
+    isFullscreenHintDismissed = false;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     cameraPermission;
     /**
@@ -508,12 +509,22 @@ export class Rtc extends Record {
 
     get showMicrophonePermissionWarning() {
         return (
-            !this.isMicrophonePermissionWarningDismissed && this.microphonePermission !== "granted"
+            !this.isMicrophonePermissionWarningDismissed &&
+            this.microphonePermission !== "granted" &&
+            !this.showFullscreenHint
         );
     }
 
     get showMicrophoneSilentWarning() {
-        return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
+        return !this.selfSession?.isMute && this.isMicAudioTrackMuted && !this.showFullscreenHint;
+    }
+
+    get showFullscreenHint() {
+        return (
+            !this.isFullscreenHintDismissed &&
+            !this.isFullscreen &&
+            this.channel?.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+        );
     }
 
     callActions = this.computed(() => {
@@ -957,6 +968,7 @@ export class Rtc extends Record {
      */
     async enterFullscreen(props, { browserFullscreen = false } = {}) {
         const Meeting = registry.category("discuss.call/components").get("Meeting");
+        this.isFullscreenHintDismissed = true;
         this.viewToRestore =
             browserFullscreen && this.isFullscreen && !this.isBrowserFullscreen
                 ? VIEW_TO_RESTORE.FULLSCREEN
@@ -2226,6 +2238,7 @@ export class Rtc extends Record {
             isSendingScreen: false,
             isMicAudioTrackMuted: false,
             isMicrophonePermissionWarningDismissed: false,
+            isFullscreenHintDismissed: false,
             localChannel: undefined,
             localSession: undefined,
             micAudioTrack: undefined,
