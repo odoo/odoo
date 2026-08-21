@@ -4,6 +4,17 @@ from odoo import models
 class AccountEdiXmlUblTr(models.AbstractModel):
     _inherit = 'account.edi.xml.ubl.tr'
 
+    def _get_additional_document_reference_vals(self, invoice):
+        additional_document_vals = super()._get_additional_document_reference_vals(invoice)
+
+        if invoice._has_earchive_despatch_moves():
+            additional_document_vals.append({
+                'cbc:ID': {'_text': '.'},
+                'cbc:IssueDate': {'_text': invoice.invoice_date},
+                'cbc:DocumentTypeCode': {'_text': 'IS_DESPATCH'},
+            })
+        return additional_document_vals
+
     def _get_dispatch_document_reference_vals(self, invoice):
         dispatch_document_vals = []
         for picking in invoice.l10n_tr_nilvera_edispatch_ids:
