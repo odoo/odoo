@@ -1081,13 +1081,16 @@ class TransactionCase(BaseCase):
             caller = inspect.currentframe().f_back
             filename = inspect.getsourcefile(caller)
 
+            # Normalize path separators for cross-platform compatibility (Windows uses \)
+            filename_normalized = filename.replace(os.sep, '/') if filename else ''
+
             # special case / fastpath because this does model alterations everywhere
-            if filename.endswith(('odoo/orm/models.py', 'odoo/orm/model_classes.py')):
+            if filename_normalized.endswith(('odoo/orm/models.py', 'odoo/orm/model_classes.py')):
                 actual_setattr(model, key, value)
                 return
 
             valid_paths = SETATTR_SOURCES.get(caller.f_code.co_name)
-            if not (valid_paths and filename.endswith(valid_paths)):
+            if not (valid_paths and filename_normalized.endswith(valid_paths)):
                 _logger.runbot(
                     "%s:%s:%s setting %s.%s to %s",
                     filename,
