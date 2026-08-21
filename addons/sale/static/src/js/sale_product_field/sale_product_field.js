@@ -36,7 +36,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 if (this.relation === "product.template" || this.isCombo) {
                     this._onProductTemplateUpdate();
                 } else {
-                    this._onProductUpdate();
+                    this._onProductVariantUpdate();
                 }
             }
             this.isInternalUpdate = false;
@@ -133,6 +133,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return "";
     }
     _onProductTemplateUpdate() {}
+    _onProductVariantUpdate() {}
     _onProductUpdate() {}
     onEditConfiguration() {}
 }

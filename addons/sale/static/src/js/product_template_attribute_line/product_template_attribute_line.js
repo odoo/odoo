@@ -134,7 +134,11 @@ export class ProductTemplateAttributeLine extends Component {
     }
 
     get showValuesChoice() {
-        return (this.env.canChangeVariant || this.props.create_variant === 'no_variant') && (
+        const canChooseValues = this.env.canChangeVariant
+            // optional products should remain configurable
+            || this.props.productTmplId !== this.env.mainProductTmplId
+            || this.props.create_variant === 'no_variant';
+        return canChooseValues && (
             this.props.attribute_values.length > 1 || this.props.attribute.display_type === 'multi'
         )
     }

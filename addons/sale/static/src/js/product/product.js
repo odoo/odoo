@@ -77,6 +77,7 @@ export class Product extends Component {
      */
     shouldShowPtal(ptal) {
         return this.env.canChangeVariant
+            || !this.isMainProduct  // optional products should remain configurable
             || ptal.create_variant === 'no_variant'
             || !!getSelectedCustomPtav(ptal);
     }
