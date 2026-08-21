@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="discuss.FullscreenHint">
+        <div class="p-2 d-flex flex-row gap-1" style="max-width: 300px">
+            <div class="m-1">
+                <i class="oi text-info me-2" data-icon="info" aria-hidden="true"/>Switch to fullscreen mode
+            </div>
+            <div class="align-self-start cursor-pointer" t-on-click="this.onClickClose" title="Dismiss hint" aria-label="Dismiss hint">
+                <i class="oi" data-icon="close" role="img"/>
+            </div>
+        </div>
+    </t>
+</templates>
