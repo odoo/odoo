@@ -1679,16 +1679,16 @@ class MailThread(models.AbstractModel):
         an attachment. Keep an embedded message (``.eml``) whole instead of
         merging it into the outer message.
         """
-        attachments = []
+        body, attachments = self._message_extract_part(
+            message, is_bounce=bool(message_dict.get('is_bounce')), is_top_level=True)
         if save_original:
             attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
-        body, extracted = self._message_extract_part(
-            message, is_bounce=bool(message_dict.get('is_bounce')), is_top_level=True)
         return self._message_parse_extract_payload_postprocess(
-            message, {'body': body, 'attachments': attachments + extracted})
+            message, {'body': body, 'attachments': attachments})
 
-    def _message_extract_part(self, part, is_bounce=False, is_top_level=False):
-        """Extract ``(body, attachments)`` from one MIME ``part``.
+    def _message_extract_part(self, part, *, is_bounce=False, is_top_level=False):
+        """Extract ``(body, attachments)`` from one MIME ``part``, exploring
+        nested parts as needed.
 
         Handle unknown ``multipart/*`` subtypes like ``multipart/mixed`` and
         unknown leaf parts as attachments (RFC 2046 §5.1.7 and §4.5.3).
@@ -1740,7 +1740,7 @@ class MailThread(models.AbstractModel):
             attachments += child_attachments
             if child_body and child_body.strip():
                 last_any = child_body
-                if self._message_body_is_html(child):
+                if self._message_body_contains_html(child):
                     last_html = child_body
         return (last_html or last_any or Markup()), attachments
 
@@ -1799,7 +1799,7 @@ class MailThread(models.AbstractModel):
                     return child
         return children[0]
 
-    def _message_body_is_html(self, part):
+    def _message_body_contains_html(self, part):
         """Return whether ``part`` provides HTML body content."""
         if part.get_content_maintype() != 'multipart':
             return part.get_content_type() == 'text/html' and not self._message_is_attachment(part)
@@ -1807,8 +1807,8 @@ class MailThread(models.AbstractModel):
         if not children:
             return False
         if part.get_content_subtype() == 'related':
-            return self._message_body_is_html(self._message_related_root(children, part))
-        return any(self._message_body_is_html(child) for child in children)
+            return self._message_body_contains_html(self._message_related_root(children, part))
+        return any(self._message_body_contains_html(child) for child in children)
 
     def _message_is_attachment(self, part):
         return part.get_content_disposition() == 'attachment' or bool(part.get_filename())
