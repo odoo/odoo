@@ -17,10 +17,8 @@
                             <field name="tds_deduction" required="1"/>
                             <field name="tds_certificate"
                                    widget="binary"
-                                   filename="tds_certificate_filename"
                                    options="{'accepted_file_extensions': '.pdf', 'allowed_mime_type' : 'application/pdf'}"
                             />
-                            <field name="tds_certificate_filename" invisible="1"/> <!-- Hidden field to store the filename of the uploaded certificate -->
                         </group>
                         <group>
                             <field name="msme_type"/>
