@@ -25,14 +25,13 @@
                 <button name="action_send_edispatch_xml"
                         type="object"
                         class="btn-primary"
-                        invisible="country_code != 'TR' or state != 'done' or l10n_tr_nilvera_send_status != 'not_sent' or picking_type_code != 'outgoing'"
-                        string="Send GİB e-Dispatch (XML)"
-                        />
+                        invisible="country_code != 'TR' or state != 'done' or l10n_tr_nilvera_send_status != 'not_sent' or picking_type_code != 'outgoing' or l10n_tr_nilvera_dispatch_type == 'IS_DESPATCH'"
+                        string="Send GİB e-Dispatch (XML)"/>
                 <button name="button_l10n_tr_nilvera_update_data_from_xml"
                         type="object"
                         class="btn-primary"
-                        invisible="country_code != 'TR' or state == 'done' or picking_type_code != 'incoming' or not l10n_tr_nilvera_edispatch_xml_id"
-                        string="Update From GİB e-Dispatch (XML)" />
+                        invisible="country_code != 'TR' or state == 'done' or picking_type_code != 'incoming' or not l10n_tr_nilvera_edispatch_xml_id or l10n_tr_nilvera_dispatch_type == 'IS_DESPATCH'"
+                        string="Update From GİB e-Dispatch (XML)"/>
             </xpath>
             <field name="origin" position="after">
                 <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or picking_type_code != 'outgoing'"/>

@@ -28,11 +28,12 @@ class StockPicking(models.Model):
         default=lambda self: str(uuid.uuid4()),
     )
     l10n_tr_nilvera_dispatch_type = fields.Selection(
-        string="Dispatch Type",
-        help="Used to populate the type of dispatch.",
+        string="Dispatch Handling",
+        help="Used to populate the type of dispatch. 'Invoice Serves as e-Dispatch' is only applicable for e-Archive Customers.",
         selection=[
             ('SEVK', "Online"),
             ('MATBUDAN', "Pre-printed"),
+            ('IS_DESPATCH', "Invoice Serves as e-Dispatch"),
         ],
         default='SEVK',
         tracking=True,
@@ -269,6 +270,9 @@ class StockPicking(models.Model):
                 'action': invalid_tckn_drivers._get_records_action(name=_("Drivers")),
                 'level': 'danger',
             }
+
+        if self.l10n_tr_nilvera_dispatch_type == 'IS_DESPATCH':
+            return error_messages or False
 
         if (
             not self.l10n_tr_nilvera_carrier_id
