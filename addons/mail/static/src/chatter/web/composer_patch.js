@@ -54,20 +54,14 @@ patch(Composer.prototype, {
         this.chatterState = proxy({
             isCcEnabled: false,
         });
-        useEffect(
-            () => {
-                const allRecipients = (
-                    this.webComposerProps.thread?.suggestedRecipients || []
-                ).concat(this.webComposerProps.thread?.additionalRecipients || []);
-                if (allRecipients.some((r) => r.recipient_type === "cc")) {
-                    this.chatterState.isCcEnabled = true;
-                }
-            },
-            () => [
-                this.webComposerProps.thread?.suggestedRecipients,
-                this.webComposerProps.thread?.additionalRecipients,
-            ]
-        );
+        useEffect(() => {
+            const allRecipients = (this.webComposerProps.thread?.suggestedRecipients || []).concat(
+                this.webComposerProps.thread?.additionalRecipients || []
+            );
+            if (allRecipients.some((r) => r.recipient_type === "cc")) {
+                this.chatterState.isCcEnabled = true;
+            }
+        });
     },
 
     async onClickFullComposerGetAction() {
