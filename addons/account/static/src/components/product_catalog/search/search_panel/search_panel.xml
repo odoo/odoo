@@ -72,7 +72,7 @@
                 <SectionRow t-props="section"/>
             </t>
         </ul>
-        <div class="mt-3 border-top">
+        <div t-if="this.showSectionAmounts" class="mt-3 border-top">
             <div class="d-flex justify-content-between mt-4">
                 <span>Total</span>
                 <span t-out="this.formatAmount(this.state.totalUntaxedAmount)"/>

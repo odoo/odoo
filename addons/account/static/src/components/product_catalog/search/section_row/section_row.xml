@@ -46,6 +46,7 @@
                             t-out="this.props.name"
                         />
                         <span
+                            t-if="this.env.showSectionAmounts"
                             class="ms-auto text-muted o_section_subtotal"
                             t-out="this.env.formatAmount(this.props.subtotal)"
                         />
