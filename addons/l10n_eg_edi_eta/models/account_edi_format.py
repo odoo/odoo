@@ -218,13 +218,16 @@ class AccountEdiFormat(models.Model):
             tax = tax_values['tax_repartition_line'].tax_id
             return {'l10n_eg_eta_code': tax.l10n_eg_eta_code.split('_')[0]}
 
+        document_type = 'i' if invoice.move_type == 'out_invoice' else 'c' if invoice.move_type == 'out_refund' else ''
+        if 'debit_origin_id' in invoice and invoice.debit_origin_id:
+            document_type = 'd'
         date_string = invoice.invoice_date.strftime('%Y-%m-%dT%H:%M:%SZ')
         grouped_taxes = invoice._prepare_edi_tax_details(grouping_key_generator=group_tax_retention)
         invoice_line_data, totals = self._l10n_eg_eta_prepare_invoice_lines_data(invoice, grouped_taxes['tax_details_per_record'])
         eta_invoice = {
             'issuer': self._l10n_eg_eta_prepare_address_data(invoice.journal_id.l10n_eg_branch_id, invoice, issuer=True,),
             'receiver': self._l10n_eg_eta_prepare_address_data(invoice.partner_id, invoice),
-            'documentType': 'i' if invoice.move_type == 'out_invoice' else 'c' if invoice.move_type == 'out_refund' else 'd' if invoice.move_type == 'in_refund' else '',
+            'documentType': document_type,
             'documentTypeVersion': '1.0',
             'dateTimeIssued': date_string,
             'taxpayerActivityCode': invoice.journal_id.l10n_eg_activity_type_id.code,
