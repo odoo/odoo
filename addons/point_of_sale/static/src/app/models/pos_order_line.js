@@ -293,6 +293,7 @@ export class PosOrderline extends PosOrderlineAccounting {
             ? 0
             : parseFloat("" + price);
         this.price_unit = ProductPrice.round(parsed_price || 0);
+        this.document_tax_mode = false;
     }
 
     displayDiscountPolicy() {

@@ -45,24 +45,51 @@ test("setLinePrice: input is per-unit tax-included price, discount is preserved"
     order.config.iface_tax_included = "total";
 
     // singleTaxLine: 25% tax-excluded, qty=1, no discount.
-    // User types 125 (per-unit tax-included). price_unit should be 100.
+    // User types 125 (per-unit tax-included), kept as typed.
     const singleTaxLine = order.lines[0];
     await orderSummary.setLinePrice(singleTaxLine, 125);
-    expect(singleTaxLine.price_unit).toBe(100);
+    expect(singleTaxLine.price_unit).toBe(125);
+    expect(singleTaxLine.document_tax_mode).toBe("tax_included");
     expect(singleTaxLine.displayPrice).toBe(125);
 
     // multiTaxLine: 15% + 25% (both tax-excluded) = 40% total, qty=1, no discount.
-    // User types 140 (per-unit tax-included). price_unit should be 100.
+    // User types 140 (per-unit tax-included), kept as typed.
     const multiTaxLine = order.lines[1];
     await orderSummary.setLinePrice(multiTaxLine, 140);
-    expect(multiTaxLine.price_unit).toBe(100);
+    expect(multiTaxLine.price_unit).toBe(140);
     expect(multiTaxLine.displayPrice).toBe(140);
 
     // Discount is preserved: 10% discount on singleTaxLine.
     // User types 110 as pre-discount per-unit tax-included price.
-    // price_unit = 110 / 1.25 = 88. displayPrice = 88 * 0.9 * 1.25 = 99.
+    // displayPrice = 110 * 0.9 = 99.
     singleTaxLine.setDiscount(10);
     await orderSummary.setLinePrice(singleTaxLine, 110);
-    expect(singleTaxLine.price_unit).toBe(88);
+    expect(singleTaxLine.price_unit).toBe(110);
     expect(singleTaxLine.displayPrice).toBe(99);
+});
+
+test("setLinePrice: the manual price is not diluted by the quantity", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrderForPriceCheck(store);
+    const orderSummary = await mountWithCleanup(OrderSummary, {});
+
+    order.config.iface_tax_included = "total";
+    order.lines[1].delete();
+
+    const line = order.lines[0];
+    line.tax_ids = [["clear"], ["link", store.models["account.tax"].get(1)]];
+
+    await orderSummary.setLinePrice(line, 100);
+    expect(line.displayPrice).toBe(100);
+
+    for (const [qty, total] of [
+        [2, 200],
+        [3, 300],
+        [7, 700],
+        [100, 10000],
+    ]) {
+        line.setQuantity(qty);
+        expect(line.displayPrice).toBe(total);
+        expect(order.displayPrice).toBe(total);
+    }
 });

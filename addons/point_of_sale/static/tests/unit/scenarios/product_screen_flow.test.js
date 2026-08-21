@@ -377,3 +377,19 @@ test("test_delete_line: delete line through popup when disallowLineQuantityChang
     await animationFrame();
     expect(order.lines).toHaveLength(0);
 });
+
+test("long press keeps a manually set price", async () => {
+    const store = await setupAndMountPosApp({ use_pricelist: false });
+
+    await Utils.addOrderlineFromProductScreen("TEST", { unitPrice: 50 });
+    const line = store.getOrder().lines[0];
+    expect(line.price_type).toBe("manual");
+    expect(line.price_unit).toBe(50);
+    expect(line.document_tax_mode).toBe("tax_included");
+
+    await Utils.longPressOrderline("TEST");
+    expect(line.price_type).toBe("manual");
+    expect(line.price_unit).toBe(50);
+    expect(line.document_tax_mode).toBe("tax_included");
+    expect(line.displayPrice).toBe(50);
+});

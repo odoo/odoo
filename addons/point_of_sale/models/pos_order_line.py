@@ -62,6 +62,12 @@ class PosOrderLine(models.Model):
     is_edited = fields.Boolean('Edited')
     # Technical field holding custom data for the taxes computation engine.
     extra_tax_data = fields.Json()
+    document_tax_mode = fields.Selection([
+        ('tax_excluded', 'Tax Excl.'),
+        ('tax_included', 'Tax Incl.'),
+    ], string='Price Tax Mode',
+        help="Tax mode the manually entered price is expressed in. Not set when the price follows "
+             "the tax configuration of the product.")
 
     _unique_uuid = models.Constraint('unique (uuid)', 'An order line with this uuid already exists')
 
@@ -79,7 +85,7 @@ class PosOrderLine(models.Model):
             'product_id', 'discount', 'tax_ids', 'customer_note',
             'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id',
             'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids',
-            'extra_tax_data', 'write_date', 'prep_line_ids',
+            'extra_tax_data', 'write_date', 'prep_line_ids', 'document_tax_mode'
         ]
 
     @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
@@ -105,6 +111,7 @@ class PosOrderLine(models.Model):
             'order_id': refund_order.id,
             'is_total_cost_computed': False,
             'refunded_orderline_id': self.id,
+            'document_tax_mode': self.document_tax_mode,
         }
 
     @api.model_create_multi
@@ -158,6 +165,7 @@ class PosOrderLine(models.Model):
             line_qty,
             product=self.product_id,
             partner=self.order_id.partner_id,
+            document_tax_mode=self.document_tax_mode,
         )
         return {
             'price_subtotal_incl': abs(taxes['total_included']),  # Line prices are always positive
@@ -170,6 +178,7 @@ class PosOrderLine(models.Model):
             price = self.order_id.pricelist_id._get_product_price(
                 self.product_id, self.qty or 1.0, currency=self.currency_id,
             )
+            self.document_tax_mode = False
             self.tax_ids = self.product_id.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
             tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids)
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.tax_ids, tax_ids_after_fiscal_position, self.company_id)
@@ -181,7 +190,7 @@ class PosOrderLine(models.Model):
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
             if (self.tax_ids):
-                taxes = self.tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False)
+                taxes = self.tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False, document_tax_mode=self.document_tax_mode)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
@@ -228,7 +237,7 @@ class PosOrderLine(models.Model):
 
     def _get_discount_amount(self):
         self.ensure_one()
-        original_price = self.tax_ids_after_fiscal_position.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)['total_included']
+        original_price = self.tax_ids_after_fiscal_position.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id, document_tax_mode=self.document_tax_mode)['total_included']
         # Use magnitudes and reapply the line sign
         sign = -1 if self.price_unit * self.qty < 0 else 1
         return sign * (abs(original_price) - abs(self.price_subtotal_incl))
@@ -245,7 +254,7 @@ class PosOrderLine(models.Model):
 
     def _get_price_no_discount(self, config_id):
         def get_total(line):
-            data = self.tax_ids_after_fiscal_position.compute_all(line.price_unit, line.currency_id, self.qty, product=line.product_id, partner=line.order_id.partner_id)
+            data = self.tax_ids_after_fiscal_position.compute_all(line.price_unit, line.currency_id, self.qty, product=line.product_id, partner=line.order_id.partner_id, document_tax_mode=line.document_tax_mode)
             return (
                 data['total_included']
                 if config_id.iface_tax_included == "total"
@@ -297,6 +306,7 @@ class PosOrderLine(models.Model):
                     account_id=account,
                     is_refund=is_refund_document,
                     sign=-1 if is_refund_document else 1,
+                    document_tax_mode=line.document_tax_mode
                 ),
                 'uom_id': line.product_uom_id,
                 'name': product_name,

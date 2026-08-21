@@ -465,6 +465,7 @@ export class TicketScreen extends Component {
         return {
             qty: -refundDetail.qty,
             price_unit: refundLine.price_unit,
+            document_tax_mode: refundLine.document_tax_mode,
             product_id: refundLine.product_id,
             order_id: destinationOrder,
             discount: refundLine.discount,

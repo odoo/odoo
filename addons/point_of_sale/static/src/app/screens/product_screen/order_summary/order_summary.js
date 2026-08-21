@@ -102,7 +102,11 @@ export class OrderSummary extends Component {
         }
 
         // Price unit
-        this.pos.handlePriceUnit(values, order, undefined);
+        this.pos.handlePriceUnit(
+            values,
+            order,
+            orderline.price_type === "original" ? undefined : orderline.price_unit
+        );
 
         // Update orderline
         if (values.attribute_value_ids !== undefined) {
@@ -267,8 +271,9 @@ export class OrderSummary extends Component {
             const val = line.getQuantityFromDisplayPrice(parsedPrice);
             line.setQuantity(val, false);
         } else {
-            price = line.getUnitPriceFromDisplayPrice(parsedPrice);
             line.setUnitPrice(price);
+            line.document_tax_mode =
+                line.config.iface_tax_included === "total" ? "tax_included" : false;
         }
     }
 

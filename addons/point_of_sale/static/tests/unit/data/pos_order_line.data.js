@@ -27,6 +27,7 @@ export class PosOrderLine extends models.ServerModel {
             "note",
             "prep_line_ids",
             "price_type",
+            "document_tax_mode",
             "product_id",
             "discount",
             "tax_ids",

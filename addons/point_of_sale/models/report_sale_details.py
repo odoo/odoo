@@ -465,7 +465,14 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             products[key1][key2][3] = combo_products_label
 
         if line.tax_ids_after_fiscal_position:
-            line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+            line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(
+                line.price_unit * (1 - (line.discount or 0.0) / 100.0),
+                currency,
+                line.qty,
+                product=line.product_id,
+                partner=line.order_id.partner_id or False,
+                document_tax_mode=line.document_tax_mode,
+            )
             base_amounts = {}
             for tax in line_taxes['taxes']:
                 taxes['taxes'].setdefault(tax['id'], {'name': tax['name'], 'tax_amount': 0.0, 'base_amount': 0.0})
