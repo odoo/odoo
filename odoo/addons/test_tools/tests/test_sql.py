@@ -226,3 +226,180 @@ class TestSqlTools(TransactionCase):
         db_definition, db_comment = sql.index_definition(self.env.cr, 'test_tools_partner_test_percent_escape')
         self.assertIn('WHERE', db_definition)  # the definition is rewritten by postgres
         self.assertEqual(db_comment, comment)
+
+
+class TestFormatQuery(BaseCase):
+
+    def test_empty(self):
+        self.assertEqual(sql.format_query(''), ';')
+
+    def test_simple_select(self):
+        query = "SELECT id, name FROM res_partner WHERE active = true AND company_id = 1 ORDER BY name"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id, name\n"
+            "FROM res_partner\n"
+            "WHERE active = true\n"
+            "    AND company_id = 1\n"
+            "ORDER BY name;"
+        ))
+
+    def test_or_and_multiple_where_conditions(self):
+        query = "SELECT id FROM res_partner WHERE a = 1 AND b = 2 OR c = 3"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM res_partner\n"
+            "WHERE a = 1\n"
+            "    AND b = 2\n"
+            "    OR c = 3;"
+        ))
+
+    def test_joins(self):
+        query = (
+            "SELECT f.id FROM foo f "
+            "LEFT JOIN bar b ON b.foo_id = f.id "
+            "INNER JOIN baz z ON z.foo_id = f.id "
+            "WHERE f.active"
+        )
+        self.assertEqual(sql.format_query(query), (
+            "SELECT f.id\n"
+            "FROM foo f\n"
+            "LEFT JOIN bar b ON b.foo_id = f.id\n"
+            "INNER JOIN baz z ON z.foo_id = f.id\n"
+            "WHERE f.active;"
+        ))
+
+    def test_subquery_indentation(self):
+        query = "SELECT id FROM (SELECT id FROM res_partner WHERE active) sub"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM (\n"
+            "    SELECT id\n"
+            "    FROM res_partner\n"
+            "    WHERE active) sub;"
+        ))
+
+    def test_exists_subquery_indentation(self):
+        query = "SELECT id FROM res_partner WHERE EXISTS (SELECT id FROM res_partner WHERE active)"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM res_partner\n"
+            "WHERE\n"
+            "EXISTS (\n"
+            "    SELECT id\n"
+            "    FROM res_partner\n"
+            "    WHERE active);"
+        ))
+
+    def test_insert(self):
+        query = "INSERT INTO res_partner (name, active) VALUES (%s, %s)"
+        self.assertEqual(sql.format_query(query), (
+            "INSERT INTO res_partner (name, active)\n"
+            "VALUES (%s, %s);"
+        ))
+
+    def test_update(self):
+        query = "UPDATE res_partner SET name = %s, active = %s WHERE id = %s"
+        self.assertEqual(sql.format_query(query), (
+            "UPDATE res_partner\n"
+            "SET name = %s, active = %s\n"
+            "WHERE id = %s;"
+        ))
+
+    def test_union(self):
+        query = "SELECT id FROM foo UNION ALL SELECT id FROM bar"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM foo\n"
+            "UNION ALL\n"
+            "SELECT id\n"
+            "FROM bar;"
+        ))
+
+    def test_does_not_break_keywords_inside_string_literals(self):
+        query = "SELECT id FROM res_partner WHERE name = 'select from where and or'"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM res_partner\n"
+            "WHERE name = 'select from where and or';"
+        ))
+
+    def test_does_not_break_keywords_inside_quoted_identifiers(self):
+        query = 'SELECT "select", "from" FROM "where" WHERE "and" = 1'
+        self.assertEqual(sql.format_query(query), (
+            'SELECT "select", "from"\n'
+            'FROM "where"\n'
+            'WHERE "and" = 1;'
+        ))
+
+    def test_keyword_substrings_and_dot_notation(self):
+        query = "SELECT selection FROM my_table.select WHERE sand = true AND band = false"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT selection\n"
+            "FROM my_table.select\n"
+            "WHERE sand = true\n"
+            "    AND band = false;"
+        ))
+
+    def test_with_cte_and_returning(self):
+        query = "WITH x AS (SELECT id FROM foo) UPDATE bar SET active = false WHERE id IN (SELECT id FROM x) RETURNING id"
+        self.assertEqual(sql.format_query(query), (
+            "WITH x AS (\n"
+            "    SELECT id\n"
+            "    FROM foo)\n"
+            "UPDATE bar\n"
+            "SET active = false\n"
+            "WHERE id IN (\n"
+            "    SELECT id\n"
+            "    FROM x)\n"
+            "RETURNING id;"
+        ))
+
+    def test_deeply_nested_parentheses(self):
+        query = "SELECT id FROM (SELECT id FROM (SELECT id FROM foo WHERE active AND id > 0) t1) t2"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM (\n"
+            "    SELECT id\n"
+            "    FROM (\n"
+            "        SELECT id\n"
+            "        FROM foo\n"
+            "        WHERE active\n"
+            "            AND id > 0) t1) t2;"
+        ))
+
+    def test_preserves_weird_syntax_and_custom_operators(self):
+        query = "SELECT payload->>'name' AS user, tags @> ARRAY['vip']::text[] FROM users WHERE email ~* '.*@admin.com' AND score >= 100"
+
+        self.assertEqual(sql.format_query(query), (
+            "SELECT payload->>'name' AS user, tags @> ARRAY['vip']::text[]\n"
+            "FROM users\n"
+            "WHERE email ~* '.*@admin.com'\n"
+            "    AND score >= 100;"
+        ))
+
+    def test_does_not_break_line_comments(self):
+        """Splitting a comment would turn the rest of it into executable SQL."""
+        query = "SELECT id FROM res_partner -- the active and recent ones\nWHERE active"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM res_partner -- the active and recent ones\n"
+            "WHERE active;"
+        ))
+
+    def test_comment_marker_inside_a_string_literal(self):
+        query = "SELECT id FROM res_partner WHERE name = 'a -- and b' AND c = 1"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM res_partner\n"
+            "WHERE name = 'a -- and b'\n"
+            "    AND c = 1;"
+        ))
+
+    def test_multiple_statements(self):
+        query = "SELECT id FROM foo; SELECT id FROM bar"
+        self.assertEqual(sql.format_query(query), (
+            "SELECT id\n"
+            "FROM foo;\n"
+            "SELECT id\n"
+            "FROM bar;"
+        ))
