@@ -66,7 +66,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
         <field name="arch" type="xml">
             <field name="resource_id" position="after">
-                <field name="work_entry_type_id" domain="[('resource_calendar_selectable', '=', True)]"/>
+                <field name="work_entry_type_id" required="1" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
