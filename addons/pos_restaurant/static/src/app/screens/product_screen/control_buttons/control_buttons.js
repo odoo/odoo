@@ -38,6 +38,7 @@ patch(ControlButtons.prototype, {
     async clickTransferCourse() {
         this.dialog.closeAll();
         await this.pos.transferLinesToCourse();
+        this.currentOrder.cleanCourses();
     },
 });
 patch(ControlButtons, {
