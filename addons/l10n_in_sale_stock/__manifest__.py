@@ -19,7 +19,9 @@ So this module is to get the warehouse address if the invoice is created from Sa
         'l10n_in_stock',
         'sale_stock'
     ],
-
+    'data': [
+        'views/l10n_in_report_export_commercial_invoice_inherit.xml',
+    ],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

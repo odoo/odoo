@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_report_export_commercial_invoice_delivery_inherit" inherit_id="l10n_in.l10n_in_report_export_commercial_invoice_doc">
+        <xpath expr="//div[@id='payment_term']" position="before">
+
+            <t t-set="valid_packages" t-value="o.invoice_line_ids.sale_line_ids.order_id.picking_ids.filtered(lambda p: p.state != 'cancel').move_line_ids.result_package_id.filtered(lambda p: p.shipping_weight > 0)"/>
+
+            <div class="mt-4 mb-4 clearfix" name="delivery_info" t-if="valid_packages" style="page-break-inside: avoid;">
+                <table class="table table-sm o_main_table table-borderless mb-0 w-50" name="delivery_table">
+                    <thead class="text-center">
+                        <tr>
+                            <th name="th_package_type" class="text-start">Package Type</th>
+                            <th name="th_gross_weight">Shipping Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="valid_packages" t-as="package" name="package_row">
+                            <td class="text-start">
+                                <span t-if="package.package_type_id" t-field="package.package_type_id.name"/>
+                                <span t-else="">Box</span>
+                            </td>
+                            <td><span t-field="package.shipping_weight"/> kg</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </xpath>
+    </template>
+</odoo>

@@ -21,5 +21,17 @@
             <field name="binding_type">report</field>
             <field name="domain" eval="[('move_type', 'in', ['out_invoice', 'out_refund', 'in_refund'])]"/>
         </record>
+
+        <record id="action_l10n_in_report_commercial_invoice" model="ir.actions.report">
+            <field name="name">Export Commercial Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_in.l10n_in_report_export_commercial_invoice</field>
+            <field name="print_report_name">'Commercial Invoice - %s' % object.name</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="domain" eval="[('l10n_in_gst_treatment', '=', 'overseas')]"/>
+        </record>
+
     </data>
 </odoo>

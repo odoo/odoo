@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_report_export_commercial_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="l10n_in.l10n_in_report_export_commercial_invoice_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="l10n_in_report_export_commercial_invoice_doc" inherit_id="l10n_in.l10n_in_report_invoice_document_inherit" primary="True">
+        <xpath expr="//t[@name='invoice_title']" position="replace"/>
+        <xpath expr="//t[@name='proforma_invoice_title']" position="replace"/>
+        <xpath expr="//span[@t-field='o.name']" position="replace"/>
+
+        <xpath expr="//div[@id='informations']" position="before">
+            <div class="text-center w-100 mb-3 mt-1">
+                <h3 class="text-primary fw-bold mb-0">Commercial Invoice</h3>
+                <div class="text-muted small mt-1 mb-1" t-if="o.fiscal_position_id and not is_html_empty(o.fiscal_position_id.note)" t-field="o.fiscal_position_id.note"/>
+                <h5 class="fw-bold mb-0" t-if="o.name != '/'" t-field="o.name"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='informations']" position="after">
+            <div id="export_informations" class="row mt-3 mb-2">
+                <div class="col-auto col-3 mw-100 mb-2" name="shipping_bill_no" t-if="o.l10n_in_shipping_bill_number">
+                    <strong>Shipping Bill No.</strong>
+                    <p class="m-0" t-field="o.l10n_in_shipping_bill_number"/>
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2" name="incoterm" t-if="o.invoice_incoterm_id">
+                    <strong>Incoterm</strong>
+                    <p class="m-0" t-field="o.invoice_incoterm_id.code"/>
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2" name="port_code" t-if="o.l10n_in_shipping_port_code_id">
+                    <strong>Port Code</strong>
+                    <p class="m-0" t-field="o.l10n_in_shipping_port_code_id.code"/>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//table[@name='invoice_line_table']" position="replace">
+            <table class="table table-sm o_main_table table-borderless mt-2 mb-0" name="invoice_line_table">
+                <thead class="text-center small">
+                    <tr>
+                        <th name="th_description" class="text-start">Description</th>
+                        <th name="th_hsn">HSN</th>
+                        <th name="th_quantity">Quantity</th>
+                        <th name="th_priceunit">Unit Price</th>
+                        <th name="th_weight">Weight</th>
+                        <th name="th_totalweight" class="text-nowrap">Total Weight</th>
+                        <th name="th_subtotal" class="text-end">Amount (<span t-field="o.currency_id.name"/>)</th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                    <t t-foreach="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')" t-as="line">
+                        <tr class="text-center" name="invoice_line_row">
+                            <td class="text-start"><span t-field="line.name"/></td>
+                            <td><span t-field="line.l10n_in_hsn_code"/></td>
+                            <td><span t-field="line.quantity"/></td>
+                            <td><span t-field="line.price_unit"/></td>
+                            <td>
+                                <span t-field="line.product_id.weight"/>
+                                <span t-field="line.product_id.weight_uom_name"/>
+                            </td>
+                            <td>
+                                <span t-out="line.product_id.weight * line.quantity"/>
+                                <span t-field="line.product_id.weight_uom_name"/>
+                            </td>
+                            <td class="text-end"><span t-field="line.price_subtotal"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </xpath>
+
+        <xpath expr="//div[@id='payment_term']" position="replace">
+            <div id="payment_term" class="d-none"></div>
+        </xpath>
+
+        <xpath expr="//div[@name='l10n_in_hsn_summary']" position="replace"/>
+    </template>
+</odoo>
