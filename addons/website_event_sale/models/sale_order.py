@@ -53,7 +53,7 @@ class SaleOrder(models.Model):
         qty_added = new_qty - existing_qty
         warning = ''
         ticket_seats_available = ticket.event_id._get_seats_availability([(slot, ticket)])[0] if slot else ticket.seats_available
-        if ticket.seats_limited and ticket_seats_available <= 0:
+        if ticket.seats_limited and ticket_seats_available is not None and ticket_seats_available <= 0:
             # Remove existing line if exists and do not add a new one
             # if no ticket is available anymore
             new_qty = existing_qty
@@ -62,7 +62,7 @@ class SaleOrder(models.Model):
                 ticket=ticket.name,
                 event=ticket.event_id.name,
             )
-        elif ticket.seats_limited and qty_added > ticket_seats_available:
+        elif ticket.seats_limited and ticket_seats_available is not None and qty_added > ticket_seats_available:
             new_qty = existing_qty + ticket_seats_available
             warning = _(
                 'Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event%(slot)s.',
