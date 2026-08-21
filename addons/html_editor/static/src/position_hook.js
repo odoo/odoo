@@ -1,8 +1,7 @@
-import { untrack } from "@odoo/owl";
+import { useOnChange } from "@odoo/owl";
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * This hook has the same job as the PositionPlugin, but for Components.
@@ -19,7 +18,8 @@ export function usePositionHook(containerRef, document, callback) {
         target.addEventListener(eventName, onLayoutGeometryChange, capture);
         cleanups.push(() => target.removeEventListener(eventName, onLayoutGeometryChange, capture));
     };
-    useLayoutEffect(
+    useOnChange(
+        () => [containerRef()],
         (containerEl) => {
             if (containerEl) {
                 resizeObserver.observe(document.body);
@@ -36,15 +36,14 @@ export function usePositionHook(containerRef, document, callback) {
                     addDomListener(scrollableElement, "scroll");
                     resizeObserver.observe(scrollableElement);
                 }
+                return () => {
+                    resizeObserver.disconnect();
+                    for (const cleanup of cleanups.toReversed()) {
+                        cleanup();
+                        cleanups.pop();
+                    }
+                };
             }
-            return () => {
-                resizeObserver.disconnect();
-                for (const cleanup of cleanups.toReversed()) {
-                    cleanup();
-                    cleanups.pop();
-                }
-            };
-        },
-        () => [untrack(containerRef)]
+        }
     );
 }

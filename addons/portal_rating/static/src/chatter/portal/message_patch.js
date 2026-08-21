@@ -3,11 +3,10 @@ import { Message } from "@mail/core/common/message";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
-import { signal } from "@odoo/owl";
+import { signal, useOnChange } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 Message.components = { ...Message.components, DropdownItem };
 
@@ -19,13 +18,13 @@ patch(Message.prototype, {
         this.state.isBodyClamped = false;
         this.portalChatterPlugin = useMaybePlugin(PortalChatterPlugin);
         this.richBodyRef = signal.ref(HTMLDivElement);
-        useLayoutEffect(
+        useOnChange(
+            () => [this.richBodyRef()],
             (el) => {
                 if (el) {
                     this.state.isBodyClamped = el.scrollHeight > el.clientHeight;
                 }
-            },
-            () => [this.richBodyRef()]
+            }
         );
     },
 

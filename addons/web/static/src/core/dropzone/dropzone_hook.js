@@ -1,8 +1,7 @@
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Dropzone } from "@web/core/dropzone/dropzone";
 import { useService } from "@web/core/utils/hooks";
-import { useListener, usePlugin } from "@odoo/owl";
+import { useListener, useOnChange, usePlugin } from "@odoo/owl";
 
 /**
  * @param {import("@odoo/owl").Signal<HTMLElement>} targetRef - Element on which to place the dropzone.
@@ -79,12 +78,12 @@ export function useCustomDropzone(
         }
     }
 
-    useLayoutEffect(
+    useOnChange(
+        () => [getTargetEl()],
         (el) => {
             hasTarget = !!el;
             updateDropzone();
-        },
-        () => [getTargetEl()]
+        }
     );
 }
 

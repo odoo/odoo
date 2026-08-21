@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, signal } from "@odoo/owl";
+import { Component, onMounted, signal } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { renderToElement } from "@web/core/utils/render";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -13,14 +12,7 @@ export class TestPopup extends Component {
     setup() {
         this.pos = usePos();
 
-        useLayoutEffect(
-            () => {
-                if (this.ref()) {
-                    this.fetchReceiptTemplate();
-                }
-            },
-            () => [this.ref()]
-        );
+        onMounted(() => this.fetchReceiptTemplate());
     }
 
     async fetchReceiptTemplate() {

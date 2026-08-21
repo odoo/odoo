@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
@@ -13,9 +12,9 @@ import {
     status,
     t,
     toRaw,
-    untrack,
     useEffect,
     useListener,
+    useOnChange,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
@@ -124,16 +123,15 @@ export class MassMailingHtmlField extends HtmlField {
             }
         });
 
-        useLayoutEffect(
-            () => {
-                const codeViewEl = this.codeViewRef();
+        useOnChange(
+            () => [this.codeViewRef()],
+            (codeViewEl) => {
                 if (!codeViewEl) {
                     return;
                 }
                 // Set the initial textArea height.
                 codeViewEl.style.height = codeViewEl.scrollHeight + "px";
-            },
-            () => [untrack(this.codeViewRef)]
+            }
         );
 
         useListener(window, "pointerdown", this.onPointerDown.bind(this));

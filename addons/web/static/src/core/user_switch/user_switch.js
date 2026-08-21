@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, Portal, signal, proxy } from "@odoo/owl";
+import { Component, Portal, proxy, signal, useOnChange } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getLastConnectedUsers, setLastConnectedUsers } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
@@ -19,9 +18,9 @@ export class UserSwitch extends Component {
         this.form = document.querySelector("form.oe_login_form");
         this.form.classList.toggle("d-none", users.length > 1);
         this.form.querySelector(":placeholder-shown")?.focus();
-        useLayoutEffect(
-            (el) => el?.querySelector("button.list-group-item-action")?.focus(),
-            () => [this.rootRef()]
+        useOnChange(
+            () => [this.rootRef()],
+            (el) => el?.querySelector("button.list-group-item-action")?.focus()
         );
     }
 
