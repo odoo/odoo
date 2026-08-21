@@ -42,7 +42,13 @@ class ResUsers(models.Model):
         if reset_role:
             current_cm.filtered("channel_role").write({"channel_role": False})
         current_cm.filtered(
-            lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
+            lambda cm: (
+                cm.channel_id.channel_type == "channel"
+                and cm.channel_id.group_public_id
+                and not (
+                    cm.channel_id.group_public_id & (cm.partner_id.user_ids - self).all_group_ids
+                )
+            )
         ).unlink()
 
     def _store_init_global_fields(self, res: Store.FieldList):

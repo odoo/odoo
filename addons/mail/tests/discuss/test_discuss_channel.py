@@ -438,6 +438,31 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | self.partner_employee_nomail)
 
+    @mute_logger("odoo.models.unlink")
+    def test_channel_user_synchronize_partner_with_several_users(self):
+        """A partner stays in a group restricted channel as long as one of its users has access"""
+        group_restricted_channel = self.env["discuss.channel"]._create_channel(
+            name="Sic Mundus",
+            group_id=self.env.ref("base.group_user").id,
+        )
+        second_user = (
+            self.env["res.users"]
+            .with_context(self._test_context)
+            .create(
+                {
+                    "group_ids": [Command.set([self.env.ref("base.group_user").id])],
+                    "login": "employee_second_login",
+                    "partner_id": self.partner_employee.id,
+                },
+            )
+        )
+        group_restricted_channel.add_members(self.partner_employee.ids)
+        self.assertIn(self.partner_employee, group_restricted_channel.channel_partner_ids)
+        self.user_employee.active = False
+        self.assertIn(self.partner_employee, group_restricted_channel.channel_partner_ids)
+        second_user.active = False
+        self.assertNotIn(self.partner_employee, group_restricted_channel.channel_partner_ids)
+
     @users('employee_nomail')
     def test_channel_info_get(self):
         # `channel_get` should return a new channel the first time a partner is given
