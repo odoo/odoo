@@ -2,7 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { Component, xml, onWillStart, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
+import { Component, xml, onWillStart, useOnChange, useProps, proxy, t } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
@@ -140,18 +140,23 @@ class _Record extends Component {
             }
             this.model.whenReady.resolve();
         });
-        onWillUpdateProps(async (nextProps) => {
+        const reload = async (resId, values) => {
             const params = {};
-            if (nextProps.info.resId !== this.model.root.resId) {
-                params.resId = nextProps.info.resId;
+            if (resId !== this.model.root.resId) {
+                params.resId = resId;
             }
-            if (nextProps.values) {
-                params.values = await prepareLoadWithValues(nextProps.values);
+            if (values) {
+                params.values = await prepareLoadWithValues(values);
             }
             if (Object.keys(params).length) {
-                return this.model.load(params);
+                await this.model.load(params);
             }
-        });
+        };
+        useOnChange(
+            () => [this.props.info.resId, this.props.values],
+            (resId, values) => void reload(resId, values),
+            { initialRun: false }
+        );
     }
 
     getActiveFields() {
