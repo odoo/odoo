@@ -202,6 +202,17 @@ class StockRule(models.Model):
     def _compute_picking_type_code_domain(self):
         self.picking_type_code_domain = []
 
+    def _create_mto_rule_if_not_exist(self, vals):
+        route_exists = self.env['stock.rule'].search_count([
+            ('route_id', '=', vals.get('route_id', False)),
+            ('location_src_id', '=', vals.get('location_src_id', False)),
+            ('location_dest_id', '=', vals.get('location_dest_id', False)),
+            ('picking_type_id', '=', vals.get('picking_type_id', False)),
+            ('procure_method', '=', vals.get('procure_method', False)),
+        ], limit=1)
+        if not route_exists:
+            self.env['stock.rule'].create(vals)
+
     def _get_push_new_date(self, move):
         """ Get the new date for a push rule.
 
@@ -240,6 +251,7 @@ class StockRule(models.Model):
             'procure_method': 'make_to_order',
             'move_orig_ids': [Command.link(move_to_copy.id)],
             'move_dest_ids': [Command.link(move_dest.id) for move_dest in move_to_copy.move_dest_ids],
+            'partner_id': self.partner_address_id.id or move_to_copy.partner_id.id,
         }
         return new_move_vals
 
@@ -307,6 +319,9 @@ class StockRule(models.Model):
                     if len(partners) == 1:
                         partner = partners.id
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
+
+        # Set partner as `values` to avoid being overwritten in _get_custom_move_fields
+        values['partner_id'] = partner
 
         # If the quantity is negative the move should be considered as a refund
         if uom_id.compare(product_qty, 0.0) < 0:

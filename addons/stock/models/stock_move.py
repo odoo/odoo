@@ -232,7 +232,6 @@ class StockMove(models.Model):
     @api.depends('picking_id.location_dest_id', 'is_scrap')
     def _compute_location_dest_id(self):
         customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
-        inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
         for move in self:
             location_dest = False
             if move.is_scrap:
@@ -253,13 +252,13 @@ class StockMove(models.Model):
                 location_dest = move.rule_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
-            is_move_to_interco_transit = False
+            is_move_to_transit = False
             if location_dest:
-                is_move_to_interco_transit = location_dest._child_of(customer_loc) and move.forecasted_location_id == inter_comp_location
-            if location_dest and move.forecasted_location_id and (move.forecasted_location_id._child_of(location_dest) or is_move_to_interco_transit):
+                is_move_to_transit = location_dest._child_of(customer_loc) and move.forecasted_location_id.usage == 'transit'
+            if location_dest and move.forecasted_location_id and (move.forecasted_location_id._child_of(location_dest) or is_move_to_transit):
                 # Force the location_final as dest in the following cases:
                 # - The location_final is a sublocation of destination -> Means we reached the end
-                # - The location dest is an out location (i.e. Customers) but the final dest is different (e.g. Inter-Company transfers)
+                # - The location dest is an out location (i.e. Customers) but the final dest is different (e.g. Inter-Company/Warehouse transfers)
                 location_dest = move.forecasted_location_id
             move.location_dest_id = location_dest
 
@@ -1275,7 +1274,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         for move in self:
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if not move.location_dest_id.company_id:
+            if not move.location_dest_id.warehouse_id:
                 warehouse_id = False
 
             # Multi companies check
@@ -2290,8 +2289,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                         move.move_orig_ids.sudo().filtered(lambda m: m.state != 'done')._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
+                    # Need sudo() as removing the `move_orig_ids` link will revoke the extra access, but would still trigger a recompute_state on the move.
                     move_dest_ids = move.move_dest_ids
-                    move_dest_ids.write({
+                    move_dest_ids.sudo().write({
                         'procure_method': 'make_to_stock',
                         'move_orig_ids': [Command.unlink(move.id)]
                     })

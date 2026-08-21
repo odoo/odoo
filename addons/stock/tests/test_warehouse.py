@@ -551,8 +551,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_B.lot_stock_id), 1)
 
     def test_change_delivery_step_resupply_warehouse(self):
-        """ Verifies that when changing the delivery steps of a warehouse, it correctly adds/removes the extra rule
-        that is required to resupply the Output location.
+        """ Verifies that when changing the delivery steps of a warehouse, it correctly edits the rules to initiate the resupply.
         """
         warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse X',
@@ -564,35 +563,27 @@ class TestWarehouse(TestStockCommon):
             'resupply_wh_ids': [Command.link(warehouse_A.id)],
         })
         resupply_rules = warehouse_B.resupply_route_ids.rule_ids
-        self.assertEqual(len(resupply_rules), 2)
-        stock_A_to_transit = resupply_rules.filtered(lambda r: r.location_dest_id == self.env.company.internal_transit_location_id)
+        self.assertEqual(len(resupply_rules), 3)
+        stock_A_to_transit = resupply_rules.filtered(lambda r: r.location_dest_id == self.env.company.internal_transit_location_id and r.action == 'pull')
         self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
+        self.assertEqual(stock_A_to_transit.picking_type_id, warehouse_A.out_type_id)
 
-        # Set Warehouse A to 3 steps, a new rule should be created to resupply Output.
+        # Set Warehouse A to 3 steps, the picking type should be updated to use PICK
         warehouse_A.delivery_steps = 'pick_pack_ship'
-        new_resupply_rules = warehouse_B.resupply_route_ids.rule_ids
-        self.assertEqual(len(new_resupply_rules), 3)
-        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.wh_output_stock_loc_id)
-        stock_to_output = new_resupply_rules - resupply_rules
-        self.assertEqual(stock_to_output.location_src_id, warehouse_A.lot_stock_id)
-        self.assertEqual(stock_to_output.location_dest_id, warehouse_A.wh_output_stock_loc_id)
+        self.assertEqual(len(warehouse_B.resupply_route_ids.rule_ids), 3)
+        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
+        self.assertEqual(stock_A_to_transit.picking_type_id, warehouse_A.pick_type_id)
 
         # Set Warehouse A to 2 steps, no change should have been made.
         warehouse_A.delivery_steps = 'pick_ship'
-        self.assertEqual(warehouse_B.resupply_route_ids.rule_ids, new_resupply_rules)
-        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.wh_output_stock_loc_id)
-        self.assertEqual(stock_to_output.location_dest_id, warehouse_A.wh_output_stock_loc_id)
-
-        # Set Warehouse A to 1 step, the rule to resupply Output should be archived.
-        warehouse_A.delivery_steps = 'ship_only'
-        self.assertEqual(warehouse_B.resupply_route_ids.rule_ids, resupply_rules)
+        self.assertEqual(len(warehouse_B.resupply_route_ids.rule_ids), 3)
         self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
-        self.assertFalse(stock_to_output.active, "The intermediate rule should have been archived.")
+        self.assertEqual(stock_A_to_transit.picking_type_id, warehouse_A.pick_type_id)
 
-        # Set Warehouse A back to 2 steps, the rule to resupply Output should be unarchived.
-        warehouse_A.delivery_steps = 'pick_ship'
-        self.assertTrue(stock_to_output.active, "The intermediate rule should have been unarchived.")
-        self.assertEqual(warehouse_B.resupply_route_ids.rule_ids, new_resupply_rules, "No new rule should have been created.")
+        # Set Warehouse A to 1 step, the picking type should be updated back to OUT
+        warehouse_A.delivery_steps = 'ship_only'
+        self.assertEqual(stock_A_to_transit.location_src_id, warehouse_A.lot_stock_id)
+        self.assertEqual(stock_A_to_transit.picking_type_id, warehouse_A.out_type_id)
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
@@ -772,9 +763,20 @@ class TestWarehouse(TestStockCommon):
 
         wh = Form(warehouse)
         wh.code = 'CH'
-        wh.save()
+        warehouse = wh.save()
         self.assertEqual(warehouse.int_type_id.barcode, 'CHINT')
         self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'CH/INT/')
+
+        previous_address = warehouse.partner_id
+        warehouse.resupply_wh_ids = [Command.set([self.warehouse_1.id])]
+        rule_to_wh = warehouse.resupply_route_ids.rule_ids.filtered(lambda r: r.action == 'pull_push')
+        self.assertIn(f'("partner_id", "=", {warehouse.partner_id.id})', rule_to_wh.push_domain)
+        self.assertEqual(rule_to_wh.partner_address_id, self.warehouse_1.partner_id)
+        # Updating warehouse partner should also update resupply rule push_domain
+        warehouse.partner_id = self.partner_1
+        self.assertIn(f'("partner_id", "=", {self.partner_1.id})', rule_to_wh.push_domain)
+        self.warehouse_1.partner_id = previous_address
+        self.assertEqual(rule_to_wh.partner_address_id, previous_address)
 
     def test_location_warehouse(self):
         """ Check that the closest warehouse is selected
