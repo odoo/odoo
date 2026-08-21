@@ -319,7 +319,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.move.line',
         compute='_compute_reconciled_lines_excluding_exchange_diff_ids',
     )
-    count_reconciled_lines_excluding_exchange_diff = fields.Boolean(compute='_compute_reconciled_lines_excluding_exchange_diff_ids')
+    count_reconciled_lines_excluding_exchange_diff = fields.Integer(compute='_compute_reconciled_lines_excluding_exchange_diff_ids')
     exchange_move_ids = fields.Many2many(
         comodel_name='account.move',
         compute='_compute_exchange_move',
