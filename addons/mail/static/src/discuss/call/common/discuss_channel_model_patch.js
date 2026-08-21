@@ -38,6 +38,11 @@ const DiscussChannelPatch = {
         this.videoCount = this.computed(
             () => this.rtc_session_ids.filter((s) => s.hasVideo).length
         );
+        this.isFullscreenPromotable = this.computed(
+            () =>
+                Boolean(this.chatWindow?.isOpen) &&
+                this.rtc_session_ids.some((s) => s.hasVideo && s.notEq(this.store.rtc.selfSession))
+        );
         this.focusStack = fields.Many("discuss.channel.rtc.session");
         /**
          * Remote participants talking, or stopped less than {@link SPEAKER_WINDOW} ago, in the
