@@ -20,3 +20,5 @@ from . import (
     sale_order_line,
     utm_campaign,
 )
+
+from . import res_groups

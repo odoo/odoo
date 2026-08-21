@@ -20,6 +20,8 @@ from odoo.tests import (
 )
 from odoo.tools import mute_logger
 
+from odoo.addons.base.models.res_groups import ResGroups
+
 
 class UsersCommonCase(TransactionCase):
     @classmethod
@@ -434,6 +436,8 @@ class TestUsers2(UsersCommonCase):
         group_manager.implied_ids = group_user
         group_user.implied_ids = group_visitor
         groups = group_visitor + group_user + group_manager
+        # the lowest-rights group of a privilege implies the regular-user marker
+        group_regular = self.env.ref('base.group_user_regular')
 
         # create a user
         user = self.env['res.users'].create({'name': 'foo', 'login': 'foo'})
@@ -443,7 +447,7 @@ class TestUsers2(UsersCommonCase):
         self.assertEqual(user.group_ids & groups, group_visitor)
         self.assertEqual(user.all_group_ids & groups, group_visitor)
         self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_visitor.id])
-        self.assertEqual(user.read(['all_group_ids'])[0]['all_group_ids'], [group_visitor.id])
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_regular).ids))
 
         # remove group_visitor
         user.write({'group_ids': [Command.unlink(group_visitor.id)]})
@@ -454,14 +458,14 @@ class TestUsers2(UsersCommonCase):
         self.assertEqual(user.group_ids & groups, group_manager)
         self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
         self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_manager.id])
-        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user).ids))
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user + group_regular).ids))
 
         # add user in group_user, and check field value
         user.write({'group_ids': [Command.link(group_user.id)]})
         self.assertEqual(user.group_ids & groups, group_manager + group_user)
         self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
         self.assertEqual(set(user.read(['group_ids'])[0]['group_ids']), set((group_manager + group_user).ids))
-        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user).ids))
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user + group_regular).ids))
 
         groups = self.env['res.groups'].search([('all_user_ids', '=', user.id)])
         self.assertEqual(groups, user.all_group_ids)
@@ -543,6 +547,36 @@ class TestUsers2(UsersCommonCase):
         with patch('odoo.addons.base.models.res_groups.ResGroups._get_view_group_hierarchy') as mock:
             self.user_portal_1.copy_data()
             self.assertFalse(mock.called)
+
+    def test_change_user_to_light(self):
+        group_user = self.env.ref('base.group_user')
+        hr = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+        hr_interviewer = self.env['res.groups'].create({'name': 'HR Interviewer', 'privilege_id': hr.id})
+        hr_user = self.env['res.groups'].create({'name': 'HR Officer', 'privilege_id': hr.id})
+        hr_user.implied_ids += hr_interviewer
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
+        hr_manager.implied_ids += hr_user
+
+        light_groups = ('base.group_user', hr_interviewer.id)
+        with patch.object(ResGroups, '_get_light_group_xmlids', lambda s: light_groups):
+
+            self.assertEqual(hr_manager._reduce_to_light_groups().mapped('name'), hr_interviewer.mapped('name'))
+
+            user = self.user_internal
+            user.group_ids += hr_manager
+
+            self.assertEqual(user.group_ids._reduce_to_light_groups().mapped('name'), (group_user + hr_interviewer).mapped('name'))
+
+            self.assertEqual(user.role, 'regular_user')
+            self.assertEqual(set(user.group_ids.mapped('name')), {'Role / User', 'HR Manager'})
+            self.assertIn('Is regular user', user.all_group_ids.mapped('name'))
+
+            with Form(user, view='base.view_users_form') as UserForm:
+                UserForm.role = "light_user"
+                self.assertEqual(UserForm.role, 'light_user')
+
+            self.assertEqual(user.role, 'light_user')
+            self.assertEqual(set(user.group_ids.mapped('name')), {'Role / User', 'HR Interviewer'})
 
     @users('user_internal', 'portal_1')
     @mute_logger('odoo.addons.base.models.ir_access')

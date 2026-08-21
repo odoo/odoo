@@ -8,6 +8,9 @@ from odoo.fields import Command, Domain
 from odoo.tools import SetDefinitions
 
 
+REGULAR_VALUE = object()
+
+
 class ResGroups(models.Model):
     _name = 'res.groups'
     _description = "Access Groups"
@@ -256,6 +259,20 @@ class ResGroups(models.Model):
         # when writing
         if any(self._ids) and not self.env.su:
             self.env['ir.access']._clear_caches()
+
+        if self.env.context.get('apply_regular_group') is not REGULAR_VALUE:
+            self._apply_group_regular()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        self._apply_group_regular()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self._apply_group_regular()
         return res
 
     def _ensure_xml_id(self):
@@ -376,6 +393,102 @@ class ResGroups(models.Model):
         """
         groups = self.all_implied_ids.filtered(lambda g: implied_group in g.implied_ids)
         groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+
+    def _get_light_group_xmlids(self):
+        """List of XML IDs of groups considered light
+
+        Addons that declare light groups extend this method to append their
+        own XML IDs (see e.g. ``hr_holidays``, ``point_of_sale``).
+        """
+        return (
+            'base.group_user',
+            'base.group_portal',
+            'base.group_public',
+            'base.group_everyone',
+            'base.group_no_one',
+            'base.group_multi_currency',
+            'base.default_user_group',
+        )
+
+    def _apply_group_regular(self):
+        group_definitions = self._get_group_definitions()
+        group_user_regular_id = group_definitions.get_id('base.group_user_regular')
+        if not group_user_regular_id:
+            return
+
+        # All groups not marked as light are regular
+
+        light_group_ids = {gid for xid in self._get_light_group_xmlids() if (gid := group_definitions.get_id(xid))}
+        all_group_ids = group_definitions.get_all_ids()
+        regular_group_ids = set(all_group_ids) - light_group_ids - {group_user_regular_id}
+        # ``base.default_user_group`` is a container of the groups granted to new
+        # users, not a functional access group held for its own rights.
+        if default_user_group_id := group_definitions.get_id('base.default_user_group'):
+            regular_group_ids.discard(default_user_group_id)
+
+        # The group is only applied to groups with the fewest rights for each privilege.
+
+        data_privileges = self._get_view_group_hierarchy()['privileges']
+        data_groups = self._get_view_group_hierarchy()['groups']
+
+        regular_sorted_ids = sorted(regular_group_ids, key=lambda gid: (pid := data_groups[gid]['privilege_id']) and data_privileges[pid]['group_ids'].index(gid))
+
+        privilege_ids = set()
+        ids = []
+        for gid in regular_sorted_ids:
+            if not (pid := data_groups[gid]['privilege_id']) or not (set(data_groups[gid]['implied_ids']) & regular_group_ids):
+                ids.append(gid)
+            elif pid not in privilege_ids:
+                ids.append(gid)
+                privilege_ids.add(pid)
+
+        # save
+
+        group_user_regular = self.browse(group_user_regular_id)
+        if set(ids) != set(group_user_regular.implied_by_ids.ids):
+            group_user_regular.with_context(apply_regular_group=REGULAR_VALUE).implied_by_ids = [Command.set(ids)]
+
+    def _is_light_groups(self):
+        """Check if the set of groups provided is light or not"""
+        group_definitions = self._get_group_definitions()
+        light_groups = {group_definitions.get_id(xid) for xid in self._get_light_group_xmlids()}
+        return set(self.ids) <= light_groups
+
+    def _reduce_to_light_groups(self):
+        """ Reduce the group recordset to its light-group equivalents.
+
+        Groups in `self` that are already light groups (or implied by them) are
+        retained. Non-light groups are mapped to their closest implied light group
+        belonging to the same privilege hierarchy.
+
+        see: `_get_light_group_xmlids`
+
+        :return: A recordset containing only the mapped light groups.
+        :rtype: res.groups
+        """
+        group_definitions = self._get_group_definitions()
+        light_groups = self.browse(gid for xid in self._get_light_group_xmlids() if (gid := group_definitions.get_id(xid)))
+
+        data_privileges = self._get_view_group_hierarchy()['privileges']
+        data_groups = self._get_view_group_hierarchy()['groups']
+
+        # Keep only the light groups.
+        # We then add the light groups according to the privilege hierarchy
+        result = self & light_groups
+
+        for group in self - light_groups:
+            privilege_id = data_groups[group.id]['privilege_id']
+            if not privilege_id:
+                continue
+            sorted_intermediates = (
+                # The intermediaries who are light are ordered to have the valid group with the most rights.
+                (group.all_implied_ids & light_groups)
+                .filtered(lambda g: data_groups[g.id]['privilege_id'] == privilege_id)
+                .sorted(lambda g: data_privileges[data_groups[g.id]['privilege_id']]['group_ids'].index(g.id))
+            )
+            result |= sorted_intermediates[:1]
+
+        return result
 
     def _compute_view_group_hierarchy(self):
         self.view_group_hierarchy = self._get_view_group_hierarchy()
