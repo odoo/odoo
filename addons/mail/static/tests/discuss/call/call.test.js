@@ -1583,26 +1583,6 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await contains(".o-discuss-CallParticipantCard", { count: 2 }); // card does not get focused in meeting view
 });
 
-test("show pulse effect on fullscreen mode only when another participant's camera is on", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const aliceMemberId = pyEnv["discuss.channel.member"].create({
-        channel_id: channelId,
-        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
-    });
-    setupChatHub({ opened: [channelId] });
-    const env = await start();
-    const network = await makeMockRtcNetwork({ env, channelId });
-    const aliceRemote = network.makeMockRemote(aliceMemberId);
-    await click("[title='Join Call']");
-    await aliceRemote.updateConnectionState("connected");
-    await contains(".o-discuss-Call");
-    await aliceRemote.updateInfo({ is_camera_on: true });
-    await contains(".o-discuss-CallActionList-pulse[title='More']");
-    await aliceRemote.updateInfo({ is_camera_on: false });
-    await contains(".o-discuss-CallActionList-pulse[title='More']", { count: 0 });
-});
-
 test.tags("focus required");
 test("open conversation from call invitation (chat window)", async () => {
     const pyEnv = await startServer();
@@ -1905,4 +1885,26 @@ test("confirm before switching calls", async () => {
     );
     await click(".modal-footer button:text('Switch')");
     await contains(".o-discuss-CallMenu-channelInfo:text('channel2')");
+});
+
+test("show fullscreen tooltip and suppress microphone warning when another participant's camera is on", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const rtc = getService("discuss.rtc");
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const aliceRemote = network.makeMockRemote(aliceMemberId);
+    await click("[title='Join Call']");
+    await aliceRemote.updateConnectionState("connected");
+    await contains(".o-discuss-Call");
+    rtc.microphonePermission = "denied";
+    await aliceRemote.updateInfo({ is_camera_on: true });
+    await contains(".o-discuss-CallActionList button[title='More']");
+    await contains("#fullscreen_hint:text('Switch to fullscreen mode')");
+    await contains("#mic_permission:text('No microphone permissions')", { count: 0 });
 });
