@@ -283,3 +283,42 @@ test("should apply gradient color style only on font inside list item", async ()
             '<ol><li><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%);">[abc]</font></li><li>def</li></ol>',
     });
 });
+
+test("should remove color of the node even if the color is not applied on the direct parent", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgba(255, 0, 0); "><h3>[abcd]</h3></li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: '<ol><li style=""><h3>[abcd]</h3></li></ol>',
+    });
+});
+
+test("should remove color from partially selected text of a block inside a list item", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);"><h1>ab[cd]ef</h1></li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);"><h1>ab<font style="color: initial;">[cd]</font>ef</h1></li></ol>',
+    });
+});
+
+test("should remove color at cursor position inside a colored list item", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);">ab[]cd</li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit:
+            '<ol><li style="color: rgb(255, 0, 0);">ab' +
+            '<font style="color: initial;">\u200B[]</font>' +
+            "cd</li></ol>",
+    });
+});
+
+test("should remove color at cursor position inside a block of a colored list item", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);"><p>ab[]cd</p></li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit:
+            '<ol><li style="color: rgb(255, 0, 0);"><p>ab' +
+            '<font style="color: initial;">\u200B[]</font>' +
+            "cd</p></li></ol>",
+    });
+});

@@ -2,6 +2,8 @@ import { expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
+import { getContent } from "./_helpers/selection";
+import { execCommand } from "./_helpers/userCommands";
 
 test("should apply a color to a slice of text in a span in a font", async () => {
     await testEditor({
@@ -716,4 +718,21 @@ test("Should properly apply color when selection on feff", async () => {
     // Ensure the link inherited the font color.
     const a = el.querySelector("a");
     expect(getComputedStyle(a).color).toBe("rgb(255, 0, 0)");
+});
+
+test("should remove color of the node even if the font is not the direct parent of the text node", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;">Test</span>\ufeff]</a></p>',
+        stepFunction: (editor) => {
+            setColor("rgb(255, 0, 0)", "color")(editor);
+            expect(getContent(editor.editable)).toBe(
+                '<p>\ufeff<a href="#" class="btn btn-primary">[\ufeff<font style="color: rgb(255, 0, 0);"><span style="font-weight: normal;">Test</span></font>\ufeff]</a>\ufeff</p>'
+            );
+            // Remove format
+            execCommand(editor, "removeFormat");
+        },
+        contentAfterEdit:
+            '<p>\ufeff<a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;">Test</span>\ufeff]</a>\ufeff</p>',
+    });
 });
