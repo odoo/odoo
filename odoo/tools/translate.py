@@ -204,6 +204,7 @@ def translate_xml_node(node, callback, parse, serialize):
         force_inline = force_inline or is_force_inline(node)
         return (
             (force_inline or node.tag in TRANSLATED_ELEMENTS)
+            and not "o_not_translate_inline" in node.attrib.get("class", "").split()
             # Nodes with directives are not translatable. Directives usually
             # start with `t-`, but this prefix is optional for `groups` (see
             # `_compile_directive_groups` which reads `t-groups` and `groups`)
