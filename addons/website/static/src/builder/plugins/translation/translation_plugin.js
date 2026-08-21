@@ -131,7 +131,7 @@ export class TranslationPlugin extends Plugin {
         this.nonTranslatedSelector = `:not(${[
             ...this.config.translatedElements,
             "a:not([type]):not([role=button])", // see is_translatable_link
-        ].join(", ")})`;
+        ].join(", ")}) , .o_not_translate_inline`;
     }
 
     prepareTranslation() {
