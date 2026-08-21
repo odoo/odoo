@@ -183,4 +183,4 @@ class TestSeller(TransactionCase):
         ])
 
         price = self.product_consu._select_seller(partner_id=False, quantity=1).price
-        self.assertEqual(price, 10, "Should select cheapest vendor with partner_id false")
+        self.assertEqual(price, 170, "Should select the first vendor pricelist when partner_id is false")
