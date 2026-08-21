@@ -12,10 +12,10 @@ PRICE = 718.75 - 100  # total price minus glass
 
 class TestMrpValuationStandard(TestBomPriceCommon):
     _test_user_groups = (
-        'mrp.group_mrp_user',  # subject: manufacturing orders drive the valuation layers (implies stock.group_stock_user)
+        'mrp.group_mrp_manager',  # subject: manufacturing orders drive the valuation layers and BOM updates (implies stock.group_stock_user)
         'stock.group_stock_manager',  # setup: _make_in_move sets value_manual -> inverse creates product.value (stock.group_stock_manager)
         'account.group_account_invoice',  # subject: stock valuation journal entries asserted by the tests
-        'product.group_product_manager',  # subject: action_bom_cost recomputes product standard_price (test_kit_product_valuation)
+        'product.group_product_manager',  # subject: action_update_product_cost_from_bom recomputes product standard_price (test_kit_product_valuation)
     )
 
     _test_user_name = 'Test User'
@@ -368,7 +368,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 0}])
         self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
         old_stock_value = sum(self.env.company.stock_value().values())
-        self.table_head.action_bom_cost()
+        self.bom_2.action_update_product_cost_from_bom()
+        self.table_head.standard_price = self.bom_2.unit_cost
         self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 0}])
         self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
         products = self.table_head.with_context(to_date=fields.Datetime.now())
