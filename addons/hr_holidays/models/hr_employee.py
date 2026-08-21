@@ -781,6 +781,9 @@ class HrEmployee(models.Model):
                 # Quick calculation to center flexible hours around 12PM midday
                 if version.is_flexible:
                     hours_day = version.hours_per_day
+                    # no average hours configured: treat as fully flexible (full day)
+                    if not hours_day:
+                        return (0, 24)
                 elif count_non_working_days:
                     hours_day = calendar.hours_per_day
                 else:
