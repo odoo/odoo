@@ -32,6 +32,7 @@ function sanitizeSearchItems(model) {
         delete copy.groupId;
         delete copy.groupNumber;
         delete copy.id;
+        delete copy.relativeFilterId;
         return copy;
     });
 }
@@ -202,7 +203,7 @@ test("parsing one filter tag with default_period date attribute", async () => {
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["year", "year-1"],
             description: "Date",
@@ -213,46 +214,6 @@ test("parsing one filter tag with default_period date attribute", async () => {
             name: "date_filter",
             optionsParams: {
                 customOptions: [],
-                endMonth: 0,
-                endYear: 0,
-                startMonth: -2,
-                startYear: -2,
-            },
-        },
-    ]);
-});
-
-test("parsing date filter with start_month, end_month, start_year, end_year attributes", async () => {
-    const model = await createSearchModel({
-        searchViewArch: `
-            <search>
-                <filter
-                    name="date_filter"
-                    string="Date"
-                    date="date_field"
-                    start_month="-4"
-                    end_month="-1"
-                    start_year="-1"
-                    end_year="3"
-                />
-            </search>
-        `,
-    });
-    expect(sanitizeSearchItems(model)).toEqual([
-        {
-            defaultGeneratorIds: ["month-1"],
-            description: "Date",
-            domain: "[]",
-            fieldName: "date_field",
-            fieldType: "date",
-            type: "dateFilter",
-            name: "date_filter",
-            optionsParams: {
-                customOptions: [],
-                endMonth: -1,
-                endYear: 3,
-                startMonth: -4,
-                startYear: -1,
             },
         },
     ]);
@@ -269,7 +230,7 @@ test("parsing date filter with custom options", async () => {
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["month"],
             description: "Date",
@@ -292,10 +253,6 @@ test("parsing date filter with custom options", async () => {
                         type: "innerFilter",
                     },
                 ],
-                endMonth: 0,
-                endYear: 0,
-                startMonth: -2,
-                startYear: -2,
             },
             type: "dateFilter",
         },
@@ -310,7 +267,7 @@ test("parsing one filter tag with date attribute ", async () => {
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["month"],
             description: "Date",
@@ -320,10 +277,6 @@ test("parsing one filter tag with date attribute ", async () => {
             name: "date_filter",
             optionsParams: {
                 customOptions: [],
-                endMonth: 0,
-                endYear: 0,
-                startMonth: -2,
-                startYear: -2,
             },
             type: "dateFilter",
         },
@@ -602,7 +555,7 @@ test("parsing a filter and a dateFilter", async () => {
         `,
     });
     const groupNumbers = model.getSearchItems(() => true).map((i) => i.groupNumber);
-    expect(groupNumbers).toEqual([1, 1]);
+    expect(groupNumbers).toEqual([1, 1, 1]);
 });
 
 test("parsing a groupBy and a dateGroupBy", async () => {

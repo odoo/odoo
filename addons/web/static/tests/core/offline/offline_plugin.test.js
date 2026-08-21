@@ -6,13 +6,23 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 import { advanceTime, animationFrame, expect, runAllTimers, test, tick } from "@odoo/hoot";
 import {
+    contains,
     getService,
     makeTestApp,
     mockOffline,
     mountWithCleanup,
+    mountWithSearch,
     onRpc,
     patchWithCleanup,
+    toggleMenuItem,
+    toggleMenuItemOption,
+    toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
+
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { defineSearchBarModels } from "../../search/search_bar_menu/models";
+
+defineSearchBarModels();
 
 test("RPC:RESPONSE: rpc returning a status 502", async () => {
     expect.errors(1);
@@ -285,6 +295,67 @@ test("getAvailableSearches (searches order)", async () => {
         { key: "5" }, // accessed once
         { key: "4" }, // accessed once (less recently)
     ]);
+});
+
+test("relative date filter available offline, loosing its navigation capabilities", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field"/>
+            </search>
+        `,
+    });
+    const searchModel = searchBar.env.searchModel;
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    await toggleMenuItemOption("Date", "This Week");
+
+    const thisWeekDomain = [
+        "&",
+        ["date_field", ">=", "today =week_start"],
+        ["date_field", "<", "today =week_start +1w"],
+    ];
+    expect(searchModel.domain).toEqual(thisWeekDomain);
+    expect(searchModel.facets.map((f) => f.type)).toEqual(["relative"]);
+    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(2);
+
+    const offline = getService(OfflinePlugin);
+    await offline.setAvailableOffline(1, "list", { search: searchModel.getCurrentSearch() });
+
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    const nextWeekDomain = [
+        "&",
+        ["date_field", ">=", "today =week_start +1w"],
+        ["date_field", "<", "today =week_start +2w"],
+    ];
+    expect(searchModel.domain).toEqual(nextWeekDomain);
+    await offline.setAvailableOffline(1, "list", { search: searchModel.getCurrentSearch() });
+
+    // Go offline: both cached states remain available.
+    offline.setOffline(true);
+    await tick();
+    expect(offline.isOffline()).toBe(true);
+
+    const cachedSearches = await offline.getAvailableSearches(1, "list");
+    expect(cachedSearches.length).toBe(2);
+
+    // Both restore their frozen smart-date domain, each degraded to a plain
+    // static "filter" facet (no navigation arrows). getAvailableSearches returns
+    // the most recently cached first, so "Next week" precedes "This Week".
+    searchModel.applySearch(cachedSearches[0]);
+    await animationFrame();
+    expect(searchModel.domain).toEqual(nextWeekDomain);
+    expect(searchModel.facets.map((f) => f.type)).toEqual(["filter"]);
+    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(0);
+
+    searchModel.applySearch(cachedSearches[1]);
+    await animationFrame();
+    expect(searchModel.domain).toEqual(thisWeekDomain);
+    expect(searchModel.facets.map((f) => f.type)).toEqual(["filter"]);
+    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(0);
 });
 
 test("scheduleORM", async () => {

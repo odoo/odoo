@@ -1,5 +1,6 @@
 export const FACET_ICONS = {
     filter: "filter_alt",
+    relative: "filter_alt",
     groupBy: "stacks",
     favorite: "star",
 };

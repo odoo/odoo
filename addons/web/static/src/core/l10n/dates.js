@@ -222,6 +222,25 @@ export function getEndOfLocalWeek(date) {
 }
 
 /**
+ * Formats the week the given date belongs to, as its number followed by the
+ * days it spans, e.g.: Week 32, Aug 2 - Aug 8
+ * As in toLocaleDateString, the year is left out while it is the current one.
+ *
+ * @param {Date | luxon.DateTime} date
+ * @returns {string}
+ */
+export function formatLocalWeekRange(date) {
+    const { year, week, startDate } = getLocalYearAndWeek(date);
+    const format = { month: "short", day: "numeric" };
+    const result = _t("Week %(week)s, %(startDate)s - %(endDate)s", {
+        week,
+        startDate: startDate.toLocaleString(format),
+        endDate: startDate.plus({ days: 6 }).toLocaleString(format),
+    });
+    return today().year === year ? result : `${result} ${year}`;
+}
+
+/**
  * @param {NullableDateTime | NullableDateRange} value
  * @param {NullableDateRange} range
  * @returns {boolean}

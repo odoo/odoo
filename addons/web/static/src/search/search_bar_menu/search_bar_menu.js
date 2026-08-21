@@ -15,6 +15,8 @@ import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { _t } from "@web/core/l10n/translation";
 import { render } from "@web/owl2/utils";
+import { condition } from "@web/core/tree_editor/condition_tree";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -61,15 +63,29 @@ export class SearchBarMenu extends Component {
         }
     }
 
-    // Filter Panel
     get filterItems() {
-        return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter", "parentFilter", "lazyParentFilter"].includes(searchItem.type)
-        );
+        const show = ["filter", "dateFilter", "parentFilter", "lazyParentFilter", "relativeFilter"];
+        return this.env.searchModel.getSearchItems((item) => show.includes(item.type));
     }
 
-    async onAddCustomFilterClick() {
+    /** Filter out top level items that are only shown nested. */
+    get displayedFilterItems() {
+        return this.filterItems.filter((item) => item.type !== "relativeFilter"); // A relative filter is modeled as top-level search item, but shown nested.
+    }
+
+    /** Get associated relative filter, that are modeled as top level items */
+    getRelativeItem(item) {
+        return this.filterItems.find((i) => i.id === item.relativeFilterId) ?? null;
+    }
+
+    onAddCustomFilterClick() {
         this.env.searchModel.spawnCustomFilterDialog();
+    }
+
+    /** Opens a domain editor dialog for the given item, default to "is in" "today" option */
+    onAddCustomDateFilterClick({ fieldName, fieldType }) {
+        const domain = domainFromTree(condition(fieldName, "in range", [fieldType, "today"]));
+        this.env.searchModel.spawnCustomFilterDialog({ domain });
     }
 
     /**
@@ -83,6 +99,14 @@ export class SearchBarMenu extends Component {
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
+    }
+
+    onRelativeFilterSelected({ itemId, optionId }) {
+        this.env.searchModel.toggleRelativeFilter(itemId, optionId);
+    }
+
+    hasActiveOption(item, relativeItem) {
+        return item.isActive || (relativeItem?.options?.some((o) => o.isActive) ?? false);
     }
 
     async onToggle({ itemId, optionsParams }) {

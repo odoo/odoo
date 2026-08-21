@@ -162,7 +162,6 @@ test("group by a date field using interval works", async () => {
     await toggleSearchBarMenu();
     expect(searchBar.env.searchModel.groupBy).toEqual(["date_field:week"]);
 
-    await toggleMenuItem("Date");
     expect(isOptionSelected("Date", "Week")).toBe(true);
     expect(queryAllTexts`.o_item_option`).toEqual(["Year", "Quarter", "Month", "Week", "Day"]);
 
