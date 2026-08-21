@@ -15,6 +15,7 @@
     ],
     'demo': [
         'data/product_demo.xml',
+        'data/warehouse_demo.xml',
     ],
     'installable': True,
     'auto_install': True,
