@@ -5055,7 +5055,7 @@ test("one2many list (editable): readonly domain is evaluated", async () => {
     });
 
     // switch the first row in edition
-    await contains(".o_data_cell").click();
+    await contains(".o_data_cell:not(.o_readonly_modifier)").click();
     expect(".o_selected_row .o_field_widget:eq(0)").toHaveClass("o_readonly_modifier", {
         message: "first record should have name in readonly mode",
     });

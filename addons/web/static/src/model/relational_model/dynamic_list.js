@@ -376,11 +376,17 @@ export class DynamicList extends DataPoint {
                 invalidRecords.push(record);
             }
         }
-        const discardInvalidRecords = () => invalidRecords.forEach((record) => record._discard());
+        const discardInvalidRecords = (excludeEditedRecord = false) =>
+            invalidRecords.forEach((record) => {
+                if (excludeEditedRecord && record === editedRecord) {
+                    return;
+                }
+                record._discard();
+            });
 
         if (validRecords.length === 0) {
             editedRecord._displayInvalidFieldNotification();
-            discardInvalidRecords();
+            discardInvalidRecords(true);
             return false;
         }
 
