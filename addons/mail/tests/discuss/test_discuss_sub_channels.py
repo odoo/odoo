@@ -185,3 +185,30 @@ class TestDiscussSubChannels(HttpCase):
             partner_ids=[alice_user.partner_id.id],
         )
         self.assertIn(alice_user.partner_id, sub_channel.channel_member_ids.partner_id)
+
+    def test_10_mentioned_partner_with_several_users_becomes_sub_channel_member(self):
+        alice_user = new_test_user(self.env, "alice_user", groups="base.group_user")
+        # only an administrator can read the notification settings of another user
+        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user,base.group_system")
+        carol_user = new_test_user(self.env, "carol_user", groups="base.group_user")
+        for user in (alice_user, carol_user):
+            self.env["res.users"].create({
+                "groups_id": [Command.set([self.env.ref("base.group_user").id])],
+                "login": f"{user.login}_second",
+                "partner_id": user.partner_id.id,
+            })
+        parent = self.env["discuss.channel"].create({
+            "name": "General",
+            "channel_member_ids": [
+                Command.create({"partner_id": alice_user.partner_id.id}),
+                Command.create({"partner_id": bob_user.partner_id.id}),
+            ],
+        })
+        message = parent.with_user(bob_user).message_post(body="Hello there!")
+        sub_channel = parent._create_sub_channel(from_message_id=message.id)
+        sub_channel.with_user(bob_user).message_post(
+            body="Check this out @Alice @Carol",
+            partner_ids=[alice_user.partner_id.id, carol_user.partner_id.id],
+        )
+        self.assertIn(alice_user.partner_id, sub_channel.channel_member_ids.partner_id)
+        self.assertIn(carol_user.partner_id, sub_channel.channel_member_ids.partner_id)
