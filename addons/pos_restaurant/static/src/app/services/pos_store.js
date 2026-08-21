@@ -402,13 +402,23 @@ patch(PosStore.prototype, {
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         let currentCourse;
+        let autoAllocation = null;
+
         if (this.config.module_pos_restaurant) {
             const order = this.getOrder();
             this.addPendingOrder([order.id]);
             if (!order.uiState.booked) {
                 order.setBooked(true);
             }
-            if (order.hasCourses()) {
+
+            if (this.config.use_course_allocation && vals.product_tmpl_id) {
+                autoAllocation = this.autoCourseAllocation(vals.product_tmpl_id);
+            }
+
+            if (autoAllocation) {
+                currentCourse = autoAllocation.course;
+                vals = { ...vals, course_id: currentCourse };
+            } else if (order.hasCourses()) {
                 let course = order.getSelectedCourse();
                 if (!course) {
                     course = order.getLastCourse();
@@ -418,7 +428,12 @@ patch(PosStore.prototype, {
                 vals = { ...vals, course_id: course };
             }
         }
+
         const result = await super.addLineToCurrentOrder(vals, opts, configure);
+
+        if (!result && autoAllocation?.isNew) {
+            autoAllocation.course.delete();
+        }
 
         if (currentCourse && result?.combo_line_ids) {
             result.combo_line_ids.forEach((line) => {
@@ -427,6 +442,34 @@ patch(PosStore.prototype, {
         }
 
         return result;
+    },
+
+    autoCourseAllocation(productTmpl) {
+        const order = this.getOrder();
+        const categories = productTmpl.pos_categ_ids
+            .map((c) => c.id)
+            .includes(this.selectedCategory?.id)
+            ? [this.selectedCategory]
+            : productTmpl.pos_categ_ids;
+
+        const courseCandidate = categories
+            .map((c) => c.course_id)
+            .filter(Boolean)
+            .sort((a, b) => a.sequence - b.sequence);
+
+        if (courseCandidate.length === 0) {
+            return null;
+        }
+
+        let isNew = false;
+        let course = order.course_ids.find((c) => c.name === courseCandidate[0].name);
+        if (!course) {
+            isNew = true;
+            course = this.addCourse({ backendCourse: courseCandidate[0] });
+        }
+
+        order.selectCourse(course);
+        return { course, isNew };
     },
     async submitOrder() {
         const order = this.getOrder();
