@@ -226,10 +226,50 @@
         opacity: 0;
         transition: opacity 0.2s ease-in-out;
         pointer-events: none;
+    }
 
+    .o-doc-docutils {
         p {
             margin-bottom: 0 !important;
+            color: var(--text);
         }
+
+        ul {
+            padding-left: 1.5rem;
+            list-style-type: disc;
+            list-style-position: outside;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        tt {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        dl {
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        dl dt {
+            font-weight: normal;
+            margin-top: 0.5rem;
+        }
+
+        dl dd {
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            font-weight: normal;
+        }
+
     }
 
     .btn-sm {
