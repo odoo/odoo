@@ -1126,10 +1126,10 @@ class ResPartner(models.Model):
                 'target': 'current',
                 }
 
-    @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id')
+    @api.depends('complete_name', 'email', 'vat', 'additional_identifiers', 'state_id', 'country_id')
     @api.depends_context(
         'show_address', 'partner_show_db_id',
-        'show_email', 'show_vat', 'lang', 'formatted_display_name'
+        'show_email', 'show_identifier', 'lang', 'formatted_display_name'
     )
     def _compute_display_name(self):
         type_description = dict(self._fields['type']._description_selection(self.env))
@@ -1154,11 +1154,13 @@ class ResPartner(models.Model):
                 if partner.env.context.get('show_address'):
                     name = name + "\n" + partner.address
 
-                if partner.env.context.get('show_vat') and partner.vat:
-                    if partner.env.context.get('show_address'):
-                        name = f"{name} \n {partner.vat}"
-                    else:
-                        name = f"{name} - {partner.vat}"
+                if partner.env.context.get('show_identifier'):
+                    identifier = partner.vat or partner._get_preferred_legal_entity_identifier_vals().get('value')
+                    if identifier:
+                        if partner.env.context.get('show_address'):
+                            name = f"{name} \n {identifier}"
+                        else:
+                            name = f"{name} - {identifier}"
 
             # Remove extra empty lines
             name = re.sub(r'\s+\n', '\n', name)
