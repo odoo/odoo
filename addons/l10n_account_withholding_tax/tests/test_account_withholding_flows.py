@@ -80,6 +80,38 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {'balance': -1000.0,    'tax_ids': withholding_tax.ids},
         ])
 
+    def test_withholding_tax_line_kept_when_resetting_the_payment_entry(self):
+        withholding_tax = self.percent_tax(-10, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(withholding_tax.ids)],
+            })],
+        })
+        bill.action_post()
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=bill.ids)\
+            .create({})
+        self.assertEqual(payment_register.withhold, 'withhold_pay')
+        payment = payment_register._create_payments()
+        move = payment.move_id
+
+        def withholding_tax_lines():
+            return move.line_ids.filtered(lambda line: line.tax_line_id == withholding_tax)
+
+        self.assertRecordValues(withholding_tax_lines(), [{'balance': -100.0}])
+
+        move.button_draft()
+        move.action_post()
+
+        self.assertRecordValues(withholding_tax_lines(), [{'balance': -100.0}])
+        self.assertFalse(move.line_ids.filtered(lambda line: line.name == 'Automatic Balancing Line'))
+
     def test_withholding_tax_before_payment(self):
         """
         Post the invoice, then register withholding taxes.
