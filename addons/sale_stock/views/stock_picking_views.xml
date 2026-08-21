@@ -14,7 +14,8 @@
             </t>
         </xpath>
         <xpath expr="//p[@name='bottom_help_message']" position="after">
-            <a t-if="picking_type_code == 'outgoing'" class="btn btn-secondary" name="sale.action_orders" type="action">Sales Orders</a>
+            <a t-if="picking_type_code == 'outgoing'" class="btn btn-secondary" name="sale.action_orders" type="action"
+                groups="stock.group_stock_user">Sales Orders</a>
         </xpath>
     </template>
     <record model="ir.ui.view" id="view_picking_form">

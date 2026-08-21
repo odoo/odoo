@@ -6,18 +6,28 @@
         <field name="category_id" ref="base.module_category_supply_chain"/>
     </record>
 
+    <record id="group_stock_light_user" model="res.groups">
+        <field name="name">Barcode Only</field>
+        <field name="privilege_id" ref="res_groups_privilege_inventory"/>
+    </record>
+
     <record id="group_stock_user" model="res.groups">
         <field name="name">User</field>
         <field name="sequence">10</field>
         <field name="privilege_id" ref="res_groups_privilege_inventory"/>
-        <field name="implied_ids" eval="[(3, ref('base.group_user')), (4, ref('base.group_user_regular'))]"/>
+        <field name="implied_ids" eval="[(3, ref('base.group_user')), Command.link(ref('base.group_user_regular')), Command.link(ref('group_stock_light_user'))]"/>
     </record>
+
     <record id="group_stock_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="sequence">20</field>
         <field name="privilege_id" ref="res_groups_privilege_inventory"/>
         <field name="implied_ids" eval="[(4, ref('group_stock_user'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+     <record id="base.default_user_group" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_stock_light_user'))]"/>
     </record>
 
     <!-- hidden groups -->

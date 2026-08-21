@@ -7,12 +7,19 @@
         <field name="category_id" ref="base.module_category_supply_chain"/>
     </record>
 
+    <record id="group_mrp_light_user" model="res.groups">
+        <field name="name">Shopfloor Only</field>
+        <field name="implied_ids" eval="[(4, ref('stock.group_stock_light_user'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_manufacturing"/>
+    </record>
+
     <record id="group_mrp_user" model="res.groups">
         <field name="name">User</field>
         <field name="sequence">10</field>
-        <field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('stock.group_stock_user')), (4, ref('group_mrp_light_user'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_manufacturing"/>
     </record>
+
     <record id="group_mrp_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="sequence">20</field>
@@ -22,6 +29,9 @@
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
+    <record id="base.default_user_group" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_mrp_light_user'))]"/>
+    </record>
 
     <record id="group_mrp_routings" model="res.groups">
         <field name="name">Manage Work Order Operations</field>
