@@ -49,7 +49,7 @@ import {
     queryFirst,
     test,
 } from "@odoo/hoot";
-import { press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
+import { animationFrame, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import {
     Command,
     contains,
@@ -2573,6 +2573,84 @@ test("confirm before switching calls", async () => {
     );
     await contains(".modal-footer button:text('Switch'):count(1)").click();
     await waitFor(".o-discuss-CallMenu-channelInfo:text('channel2'):count(1)");
+});
+
+test("show fullscreen tooltip after microphone warning is dismissed and when another participant's camera is on", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const rtc = getService("discuss.rtc");
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const aliceRemote = network.makeMockRemote(aliceMemberId);
+    await contains("[title='Join Call']").click();
+    await aliceRemote.updateConnectionState("connected");
+    await waitFor(".o-discuss-Call:count(1)");
+    rtc.microphonePermission = "denied";
+    await aliceRemote.updateInfo({ is_camera_on: true });
+    await waitFor(".o-discuss-CallActionList button[title='More']:count(1)");
+    await waitFor(".o_popover:contains('No microphone permissions'):count(1)");
+    await waitForNone(".o_popover:contains('Switch to fullscreen mode')");
+    await click(".o_popover [data-icon='close']");
+    await waitForNone(".o_popover:contains('No microphone permissions')");
+    await waitFor(".o_popover:contains('Switch to fullscreen mode'):count(1)");
+});
+
+test("fullscreen hint closes when picture-in-picture is opened", async () => {
+    mockPipWindow();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const rtc = getService("discuss.rtc");
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const aliceRemote = network.makeMockRemote(aliceMemberId);
+    await contains("[title='Join Call']").click();
+    await aliceRemote.updateConnectionState("connected");
+    await waitFor(".o-discuss-Call:count(1)");
+    rtc.microphonePermission = "granted";
+    await aliceRemote.updateInfo({ is_camera_on: true });
+    await waitFor(".o_popover:contains('Switch to fullscreen mode'):count(1)");
+    await contains(".o-discuss-CallActionList button[title='More']").click();
+    await contains("[name='picture-in-picture']").click();
+    await waitForNone(".o_popover:contains('Switch to fullscreen mode')");
+});
+
+test("fullscreen hint does not come back after entering fullscreen", async () => {
+    mockBrowserFullscreen();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const rtc = getService("discuss.rtc");
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const aliceRemote = network.makeMockRemote(aliceMemberId);
+    await contains("[title='Join Call']").click();
+    await aliceRemote.updateConnectionState("connected");
+    await waitFor(".o-discuss-Call:count(1)");
+    rtc.microphonePermission = "granted";
+    await aliceRemote.updateInfo({ is_camera_on: true });
+    await waitFor(".o_popover:contains('Switch to fullscreen mode'):count(1)");
+    await contains(".o-discuss-CallActionList button[title='More']").click();
+    await contains("[name='fullscreen']").click();
+    await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
+    await rtc.exitFullscreen();
+    await waitForNone(".o-mail-Meeting");
+    await waitFor(".o-discuss-Call:count(1)");
+    await animationFrame();
+    await waitForNone(".o_popover:contains('Switch to fullscreen mode')");
 });
 
 test("meeting ready banner is hidden in chat but shown in channel", async () => {
