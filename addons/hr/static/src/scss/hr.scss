@@ -24,23 +24,6 @@
             margin-left: 0!important;
         }
     }
-    .o_employee_avatar {
-        position: relative;
-        width: fit-content;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        .o_field_hr_presence_status, .o_field_hr_presence_status_private {
-            z-index: 1;
-            transform: translate(50%, -50%);
-            width: 1rem;
-            span {
-                line-height: 1rem;
-                width: 1rem;
-                height: 1rem;
-            }
-        }
-    }
     .oe_title {
         flex: 1;
     }
@@ -49,12 +32,6 @@
     }
     .o_employee_user_status_wrapper{
         flex: 3;
-    }
-}
-
-.o_hr_employee_kanban .o_kanban_renderer {
-    .o_employee_availability {
-        margin: unset !important;
     }
 }
 
@@ -123,4 +100,36 @@
 
 .o_hr_address .o_address_city span {
     margin-right: 0 !important;
+}
+
+// The presence badge overlaps the top-right corner of the employee picture.
+// Scoped to `.o_employee_avatar` on purpose: the same widget is rendered inline
+// in the kanban and hierarchy cards, where it must stay in the text flow.
+.o_employee_avatar {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .o_field_hr_presence_status, .o_field_hr_presence_status_private {
+        --o-hr-presence-badge-size: #{$spacer};
+
+        @include o-position-absolute($top: 0, $right: 0);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(50%, -50%);
+        width: var(--o-hr-presence-badge-size);
+        height: var(--o-hr-presence-badge-size);
+        border-radius: 50%;
+        background-color: $o-view-background-color;
+
+        span {
+            width: var(--o-hr-presence-badge-size);
+            height: var(--o-hr-presence-badge-size);
+            line-height: var(--o-hr-presence-badge-size);
+        }
+    }
 }
