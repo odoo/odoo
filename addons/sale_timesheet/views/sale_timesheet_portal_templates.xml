@@ -9,66 +9,33 @@
         </xpath>
     </template>
 
-    <template id="portal_my_timesheets_inherit" inherit_id="hr_timesheet.portal_my_timesheets">
-        <xpath expr="//t[@t-foreach='grouped_timesheets']/tbody/tr[hasclass('table-light')]/th[hasclass('text-end')]" position="attributes">
-            <attribute name="colspan">2</attribute>
-        </xpath>
-        <xpath expr="//t[@t-foreach='grouped_timesheets']/tbody/tr[hasclass('table-light')]/th[hasclass('text-end')]" position="before">
-            <t t-elif="groupby == 'so_line'">
-                <t t-set="sol" t-value="timesheets[0].so_line"/>
-                <th colspan="5">
-                    <t t-if="sol">
-                        <span t-field="sol.display_name"/>
-                        <t t-if="sol.remaining_hours_available">
-                            <span class="text-muted fw-normal">
-                                <t t-if="is_uom_day">
-                                    (<span t-out="timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_day')" t-options='{"widget": "timesheet_uom"}'></span> Days Ordered, <span t-out="timesheets._convert_hours_to_days(sol.remaining_hours)" t-options='{"widget": "timesheet_uom"}'></span> Days Remaining)
-                                </t>
-                                <t t-else="">
-                                    (<span t-out="timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_hour')" t-options='{"widget": "float_time"}'></span> Hours Ordered, <span t-out="sol.remaining_hours" t-options='{"widget": "float_time"}'></span> Hours Remaining)
-                                </t>
-                            </span>
+    <template id="portal_timesheet_cell_so_line" name="Portal Timesheet Sales Order Item Cell">
+        <td t-att-name="column['name']">
+            <span t-if="record.so_line" t-field="record.so_line" t-att-title="record.so_line.display_name"/>
+            <span t-else="" class="text-muted">Non-billable</span>
+        </td>
+    </template>
+
+    <template id="portal_timesheet_so_line_group_row" name="Portal Timesheets Sales Order Item Group Row">
+        <t t-set="timesheets" t-value="group['records']"/>
+        <t t-set="sol" t-value="timesheets[0].so_line"/>
+        <t t-set="label">
+            <t t-if="sol">
+                <span t-field="sol.display_name"/>
+                <t t-if="sol.remaining_hours_available">
+                    <span class="text-muted fw-normal">
+                        <t t-if="is_uom_day">
+                            (<span t-out="timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_day')" t-options='{"widget": "timesheet_uom"}'/> Days Ordered, <span t-out="timesheets._convert_hours_to_days(sol.remaining_hours)" t-options='{"widget": "timesheet_uom"}'/> Days Remaining)
                         </t>
-                    </t>
-                    <t t-else="">
-                        Not Billed
-                    </t>
-                </th>
+                        <t t-else="">
+                            (<span t-out="timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_hour')" t-options='{"widget": "float_time"}'/> Hours Ordered, <span t-out="sol.remaining_hours" t-options='{"widget": "float_time"}'/> Hours Remaining)
+                        </t>
+                    </span>
+                </t>
             </t>
-            <t t-elif="groupby == 'order_id'">
-                <t t-set="so" t-value="timesheets[0].order_id"/>
-                <th colspan="6">
-                    <t t-if="so">
-                        <span t-field="so.display_name"/>
-                    </t>
-                    <t t-else="">
-                        Not Billed
-                    </t>
-                </th>
-            </t>
-            <t t-elif="groupby == 'reinvoice_move_id'">
-                <t t-set="invoice" t-value="timesheets.reinvoice_move_id"/>
-                <th colspan="6">
-                    <t t-if="invoice">
-                        <span t-field="invoice.display_name"/>
-                    </t>
-                    <t t-else="">
-                        No Invoice
-                    </t>
-                </th>
-            </t>
-        </xpath>
-        <th name="t_label" position="before">
-            <th t-if="not groupby == 'so_line'">Sales Order Item</th>
-            <th t-if="not groupby == 'reinvoice_move_id'">Invoice</th>
-        </th>
-        <xpath expr="//tbody//td[hasclass('text-end')]" position="before">
-            <td t-if="not groupby == 'so_line' and timesheets[0].env['account.analytic.line']._show_portal_timesheets()">
-                <span t-if="timesheet.so_line" t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span>
-                <span t-else="" class="text-muted">Non-billable</span>
-            </td>
-            <td t-if="not groupby == 'reinvoice_move_id'"><span t-field="timesheet.reinvoice_move_id" t-att-title="timesheet.reinvoice_move_id.display_name"></span></td>
-        </xpath>
+            <t t-else="">Not Billed</t>
+        </t>
+        <t t-call="hr_timesheet.portal_timesheet_group_row"/>
     </template>
 
     <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">

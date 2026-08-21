@@ -29,7 +29,21 @@ class CustomerPortal(portal.CustomerPortal):
             'amount_total': {'label': _('Total'), 'order': 'amount_total desc, id desc'},
         }
 
-    def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key):
+    def _get_rfq_portal_columns(self):
+        return [
+            {'name': 'name', 'label': _("Request for Quotation #"), 'label_mobile': _("Ref."), 'field': 'name', 'link': True},
+            {'name': 'date_order', 'label': _("Order Deadline"), 'class': 'text-end', 'cell': 'purchase.portal_rfq_cell_date'},
+        ]
+
+    def _get_purchase_order_portal_columns(self):
+        return [
+            {'name': 'name', 'label': _("Purchase Order #"), 'label_mobile': _("Ref."), 'field': 'name', 'link': True},
+            {'name': 'date_approve', 'label': _("Confirmation Date"), 'label_mobile': _("Confirmation"), 'class': 'text-end', 'cell': 'purchase.portal_order_cell_date'},
+            {'name': 'badge', 'label': "", 'class': 'text-center', 'cell': 'purchase.portal_order_cell_badge'},
+            {'name': 'amount_total', 'label': _("Total"), 'class': 'text-end', 'field': 'amount_total'},
+        ]
+
+    def _render_portal(self, template, page, date_begin, date_end, sortby, filterby, domain, searchbar_filters, default_filter, url, history, page_name, key, columns=None):
         values = self._prepare_portal_layout_values()
         PurchaseOrder = request.env['purchase.order']
 
@@ -79,6 +93,7 @@ class CustomerPortal(portal.CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
             'default_url': url,
+            **self._portal_list_values('purchase.order', template, columns or []),
         })
         return request.render(template, values)
 
@@ -113,7 +128,8 @@ class CustomerPortal(portal.CustomerPortal):
             "/my/rfq",
             'my_rfqs_history',
             'rfq',
-            'rfqs'
+            'rfqs',
+            self._get_rfq_portal_columns(),
         )
 
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
@@ -131,7 +147,8 @@ class CustomerPortal(portal.CustomerPortal):
             "/my/purchase",
             'my_purchases_history',
             'purchase',
-            'orders'
+            'orders',
+            self._get_purchase_order_portal_columns(),
         )
 
     @http.route(['/my/purchase/<int:order_id>'], type='http', auth="public", website=True)

@@ -21,71 +21,40 @@
     <template id="portal_my_quotations" name="My Quotations">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
             <t t-call="portal.portal_searchbar" title.translate="Quotations"/>
-            <div t-if="not quotations" class="alert alert-warning" role="alert">
-                There are currently no quotations for your account.
-            </div>
-            <t t-if="quotations" t-call="portal.portal_table">
-                <thead>
-                    <tr class="active">
-                        <th>Quotation #</th>
-                        <th class="text-end">Quotation Date</th>
-                        <th class="text-end">Valid Until</th>
-                        <th class="text-center"/>
-                        <th class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <t t-foreach="quotations" t-as="quotation">
-                    <tr>
-                        <td><a t-att-href="quotation.get_portal_url()"><t t-out="quotation.name"/></a></td>
-                        <td class="text-end"><span t-field="quotation.date_order"/></td>
-                        <td class="text-end"><span t-field="quotation.validity_date"/></td>
-                        <td class="text-center">
-                            <span t-if="quotation.state == 'cancel'" class="badge rounded-pill text-bg-danger">
-                                <i class="oi oi-fw" data-icon="close"/> Cancelled</span>
-                            <span t-if="quotation.is_expired" class="badge rounded-pill text-bg-danger">
-                                <i class="oi oi-fw" data-icon="schedule"/> Expired</span>
-                        </td>
-                        <td class="text-end">
-                            <span t-field="quotation.amount_total"/>
-                        </td>
-                    </tr>
-                </t>
+            <t t-call="portal.portal_list_table" rows="quotations">
+                <div class="alert alert-warning" role="alert">
+                    There are currently no quotations for your account.
+                </div>
             </t>
         </t>
+    </template>
+
+    <template id="portal_quotation_cell_state" name="Portal Quotation Status Cell">
+        <td t-attf-class="#{column.get('class') or ''}">
+            <span t-if="record.state == 'cancel'" class="badge rounded-pill text-bg-danger">
+                <i class="oi oi-fw" data-icon="close"/> Cancelled</span>
+            <span t-if="record.is_expired" class="badge rounded-pill text-bg-danger">
+                <i class="oi oi-fw" data-icon="schedule"/> Expired</span>
+        </td>
     </template>
 
     <template id="portal_my_orders" name="My Sales Orders">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
             <t t-call="portal.portal_searchbar" title.translate="Your Orders"/>
-            <div t-if="not orders" class="alert alert-warning" role="alert">
-                There are currently no sales orders for your account.
-            </div>
-            <t t-if="orders" t-call="portal.portal_table">
-                <thead>
-                    <tr class="active">
-                        <th>
-                            <span class='d-none d-md-inline'>Sales Order #</span>
-                            <span class='d-block d-md-none'>Ref.</span>
-                        </th>
-                        <th class="text-end">Order Date</th>
-                        <th name="order_total" class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <t t-foreach="orders" t-as="order">
-                    <tr>
-                        <td><a t-att-href="order.get_portal_url()"><t t-out="order.name"/></a></td>
-                        <td class="text-end">
-                            <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                            <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
-                        </td>
-                        <td name="order_amount_total" class="text-end">
-                            <span t-field="order.amount_total"/>
-                        </td>
-                    </tr>
-                </t>
+            <t t-call="portal.portal_list_table" rows="orders">
+                <div class="alert alert-warning" role="alert">
+                    There are currently no sales orders for your account.
+                </div>
             </t>
         </t>
+    </template>
+
+    <template id="portal_order_cell_date" name="Portal Sales Order Date Cell">
+        <td t-attf-class="#{column.get('class') or ''}">
+            <span t-field="record.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
+            <span class='d-none d-md-inline' t-field="record.date_order" t-options="{'time_only': True}"/>
+        </td>
     </template>
 
     <!-- Complete page of the sale_order -->

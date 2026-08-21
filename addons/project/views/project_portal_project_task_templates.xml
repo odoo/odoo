@@ -20,102 +20,46 @@
         />
     </template>
 
-    <template id="portal_tasks_list" name="Tasks List">
-        <t t-if="grouped_tasks">
-            <t t-call="portal.portal_table">
-                <thead>
-                    <tr>
-                        <t t-set="grouped_tasks_colspan" t-value="3 if multiple_projects and groupby != 'project_id' else 2"/>
-                        <th>Name</th>
-                        <th class="ps-5">Assignees</th>
-                        <th t-if="groupby != 'project_id' and multiple_projects">Project</th>
-                        <th t-if="groupby != 'stage_id'" class="text-end" name="stage_id_col">Stage</th>
-                    </tr>
-                </thead>
-                <t t-foreach="grouped_tasks" t-as="tasks">
-                    <tbody t-if="tasks">
-                        <tr name="grouped_tasks_groupby_columns" t-if="groupby != 'none'" class="table-light">
-                            <th name="groupby_name_col" t-att-colspan="grouped_tasks_colspan">
-                                <t t-if="groupby == 'project_id' and multiple_projects">
-                                    <!-- This div is necessary for documents_project_sale -->
-                                    <div name="project_name" class="d-flex w-100 align-items-center">
-                                        <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
-                                        <span t-else="">No Project</span>
-                                    </div>
-                                </t>
-                                <t t-elif="groupby == 'milestone_id'">
-                                    <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
-                                        class="text-truncate"
-                                        t-field="tasks[0].sudo().milestone_id.name"/>
-                                    <span t-else="">No Milestone</span>
-                                </t>
-                                <t t-if="groupby == 'stage_id'">
-                                    <!-- This div is necessary for documents_project_sale -->
-                                    <div name="stage_name" class="d-flex w-100 align-items-center">
-                                        <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/>
-                                    </div>
-                                </t>
-                                <t t-if="groupby == 'priority'">
-                                    <span class="text-truncate" t-field="tasks[0].sudo().priority"/>
-                                </t>
-                                <t t-if="groupby == 'state'">
-                                    <span class="text-truncate" t-field="tasks[0].sudo().state"/>
-                                </t>
-                                <t t-if="groupby == 'partner_id'">
-                                    <span t-if="tasks[0].sudo().partner_id"
-                                        class="text-truncate"
-                                        t-field="tasks[0].sudo().partner_id.name"/>
-                                    <span t-else="">No Customer</span>
-                                </t>
-                                <t t-if="groupby == 'parent_id'">
-                                    <span t-if="tasks[0].sudo().parent_id"
-                                        class="text-truncate"
-                                        t-field="tasks[0].sudo().parent_id.name"/>
-                                    <span t-else="">No Parent Task</span>
-                                </t>
-                            </th>
-                            <th name="stage_id_col" t-if="groupby != 'stage_id'"/>
-                        </tr>
-                    </tbody>
-                    <tbody t-if="tasks">
-                        <t t-foreach="tasks" t-as="task">
-                            <tr>
-                                <td class="text-wrap">
-                                    <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-att-title="task.name" t-field="task.name"/></a>
-                                </td>
-                                <td class="ps-5">
-                                    <t t-set="assignees" t-value="task.sudo().user_ids"/>
-                                    <div t-if="assignees" class="flex-nowrap">
-                                        <img class="o_avatar rounded" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User"/>
-                                        <span class="align-middle" t-att-title="'\n'.join(assignees.mapped('name'))">
-                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td t-if="groupby != 'project_id' and multiple_projects" name="project_portal_project">
-                                    <span title="Current project of the task" t-out="task.project_id.name" />
-                                </td>
-                                <td t-if="groupby != 'stage_id'" class="text-end lh-1">
-                                    <t t-call="project.portal_my_tasks_badge_widget_template"/>
-                                </td>
-                            </tr>
-                        </t>
-                    </tbody>
-                </t>
-            </t>
-        </t>
+    <template id="portal_task_cell_name" name="Portal Task Name Cell">
+        <td t-att-name="column['name']" class="text-wrap">
+            <a t-attf-href="/my/#{task_url}/#{record.id}?{{ keep_query() }}"><span t-att-title="record.name" t-field="record.name"/></a>
+        </td>
+    </template>
+
+    <template id="portal_task_cell_assignees" name="Portal Task Assignees Cell">
+        <td t-att-name="column['name']" t-attf-class="#{column.get('class') or ''}">
+            <t t-set="assignees" t-value="record.sudo().user_ids"/>
+            <div t-if="assignees" class="flex-nowrap">
+                <img class="o_avatar rounded" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User"/>
+                <span class="align-middle" t-att-title="'\n'.join(assignees.mapped('name'))">
+                    <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
+                </span>
+            </div>
+        </td>
+    </template>
+
+    <template id="portal_task_cell_project" name="Portal Task Project Cell">
+        <td t-att-name="column['name']">
+            <span title="Current project of the task" t-out="record.project_id.name"/>
+        </td>
+    </template>
+
+    <template id="portal_task_cell_stage" name="Portal Task Stage Cell">
+        <td t-att-name="column['name']" t-attf-class="#{column.get('class') or ''} lh-1">
+            <t t-set="task" t-value="record"/>
+            <t t-call="project.portal_my_tasks_badge_widget_template"/>
+        </td>
     </template>
 
     <template id="portal_my_tasks" name="My Tasks">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
             <t t-call="portal.portal_searchbar" title.translate="Tasks"/>
-            <t t-if="not grouped_tasks">
+            <t t-call="portal.portal_list_table">
                 <div class="alert alert-warning" role="alert">
                     There are no tasks.
                 </div>
             </t>
-            <t t-call="project.portal_tasks_list"/>
         </t>
     </template>
 

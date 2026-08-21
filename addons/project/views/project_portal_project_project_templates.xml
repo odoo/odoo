@@ -42,25 +42,19 @@
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
             <t t-call="portal.portal_searchbar" title.translate="Projects"/>
-            <t t-if="not projects">
+            <t t-call="portal.portal_list_table" rows="projects" hide_header="True">
                 <div class="alert alert-warning" role="alert">
                     There are no projects.
                 </div>
             </t>
-            <t t-if="projects" t-call="portal.portal_table">
-                <tbody>
-                    <tr t-foreach="projects" t-as="project">
-                        <td>
-                            <a t-attf-href="/my/projects/#{project.id}"><span t-field="project.name"/></a>
-                        </td>
-                        <td class="text-end">
-                            <t t-out="project.task_count" />
-                            <t t-out="project.label_tasks" />
-                        </td>
-                    </tr>
-                </tbody>
-            </t>
         </t>
+    </template>
+
+    <template id="portal_project_cell_task_count" name="Portal Project Task Count Cell">
+        <td t-att-name="column['name']" class="text-end">
+            <t t-out="record.task_count"/>
+            <t t-out="record.label_tasks"/>
+        </td>
     </template>
 
     <template id="portal_my_project" name="My Project">
@@ -73,13 +67,11 @@
             o_portal_fullwidth_alert="o_portal_fullwidth_alert">
 
             <t t-call="portal.portal_searchbar" title.translate="Tasks"/>
-            <t t-if="not grouped_tasks">
+            <t t-call="portal.portal_list_table">
                 <div class="alert alert-warning" role="alert">
                     There are no tasks.
                 </div>
             </t>
-
-            <t t-call="project.portal_tasks_list"/>
         </t>
     </template>
 </odoo>

@@ -11,6 +11,15 @@ from odoo.addons.payment.controllers.portal import PaymentPortal
 
 class PortalAccount(portal.PortalAccount, PaymentPortal):
 
+    def _get_invoice_portal_columns(self):
+        # EXTENDS account
+        columns = super()._get_invoice_portal_columns()
+        columns += [
+            {'name': 'installment', 'label': "", 'class': 'd-none d-lg-table-cell', 'cell': 'account_payment.portal_invoice_cell_installment'},
+            {'name': 'paynow', 'label': "", 'cell': 'account_payment.portal_invoice_cell_paynow'},
+        ]
+        return columns
+
     def _invoice_get_page_view_values(self, invoice, access_token, payment=False, amount=None, **kwargs):
         # EXTENDS account
 

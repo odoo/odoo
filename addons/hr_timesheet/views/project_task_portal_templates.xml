@@ -43,61 +43,46 @@
         </t>
     </template>
 
-    <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
-        <xpath expr="//thead" position="before">
-            <t t-set="allow_timesheets" t-value="any(task.allow_timesheets for group in grouped_tasks for task in group)"/>
-            <t t-set="show_portal_timesheets" t-value="grouped_tasks[0][0].env['account.analytic.line']._show_portal_timesheets()"/>
-        </xpath>
-        <xpath expr="//t[@t-foreach='tasks']/tr" position="before">
-            <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
-            <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
-        </xpath>
-        <xpath expr="//thead/tr/th[@name='stage_id_col']" position="before">
-            <t t-if="(not project or project.allow_timesheets) and show_portal_timesheets">
-                <th class="text-end">Time Spent</th>
+    <template id="portal_task_cell_time_spent" name="Portal Task Time Spent Cell">
+        <td t-att-name="column['name']" t-attf-class="#{column.get('class') or ''}">
+            <t t-if="record.allow_timesheets">
+                <t t-set="timesheet_ids" t-value="record.sudo().timesheet_ids"/>
+                <t t-if="is_uom_day">
+                    <t t-out="timesheet_ids._convert_hours_to_days(record.total_hours_spent)"/>
+                    <span t-if="record.allocated_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(record.allocated_hours)"/></span>
+                </t>
+                <t t-else="">
+                    <span t-field="record.total_hours_spent" t-options='{"widget": "float_time"}'/>
+                    <t t-if="record.allocated_hours > 0">
+                        /
+                        <span t-field="record.allocated_hours" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </t>
             </t>
-        </xpath>
-        <xpath expr="//tr[@name='grouped_tasks_groupby_columns']//th[@name='stage_id_col']" position="before">
-            <th t-if="(not project or project.allow_timesheets) and show_portal_timesheets" class="text-end text-muted fw-normal">
-                <t t-set="total_hours_dict" t-value="tasks._get_portal_total_hours_dict()"/>
-                <t t-if="total_hours_dict">
-                    <t t-set="total_allocated_hours" t-value="tasks.project_id.allocated_hours if groupby == 'project_id' else total_hours_dict['allocated_hours']"/>
-                    <t t-set="total_effective_hours" t-value="total_hours_dict['effective_hours']"/>
-                    <span>
-                        Total:
-                        <t t-if="is_uom_day">
-                            <t t-out="tasks._convert_hours_to_days(total_effective_hours)" t-options='{"widget": "timesheet_uom"}'/>
-                            <t t-if="total_allocated_hours"> /
-                                <t t-out="tasks._convert_hours_to_days(total_allocated_hours)" t-options='{"widget": "timesheet_uom"}'/>
-                            </t>
-                        </t>
-                        <t t-else="">
-                            <t t-out="total_effective_hours" t-options='{"widget": "float_time"}'/>
-                            <t t-if="total_allocated_hours"> /
-                                <t t-out="total_allocated_hours" t-options='{"widget": "float_time"}'/>
-                            </t>
-                        </t>
-                    </span>
-                </t>
-            </th>
-        </xpath>
-        <xpath expr="//tbody/t/tr/td[@name='project_portal_project']" position="after">
-            <td t-if="(not project or project.allow_timesheets) and show_portal_timesheets" class="text-end">
-                <t t-if="task.allow_timesheets">
-                    <t t-if="is_uom_day">
-                        <t t-out="timesheet_ids._convert_hours_to_days(task.total_hours_spent)"/>
-                        <span t-if="task.allocated_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.allocated_hours)"/></span>
-                    </t>
-                    <t t-else="">
-                        <span t-field="task.total_hours_spent" t-options='{"widget": "float_time"}'/>
-                        <t t-if="task.allocated_hours > 0">
-                            /
-                            <span t-field="task.allocated_hours" t-options='{"widget": "float_time"}'/>
-                        </t>
+        </td>
+    </template>
+
+    <template id="portal_task_group_row" name="Portal Tasks Group Row">
+        <t t-set="tasks" t-value="group['records']"/>
+        <t t-set="total">
+            <span>
+                Total:
+                <t t-if="is_uom_day">
+                    <t t-out="tasks._convert_hours_to_days(group['effective_hours'])" t-options='{"widget": "timesheet_uom"}'/>
+                    <t t-if="group['allocated_hours']"> /
+                        <t t-out="tasks._convert_hours_to_days(group['allocated_hours'])" t-options='{"widget": "timesheet_uom"}'/>
                     </t>
                 </t>
-            </td>
-        </xpath>
+                <t t-else="">
+                    <t t-out="group['effective_hours']" t-options='{"widget": "float_time"}'/>
+                    <t t-if="group['allocated_hours']"> /
+                        <t t-out="group['allocated_hours']" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </t>
+            </span>
+        </t>
+        <t t-set="aggregates" t-value="{'time_spent': total}"/>
+        <t t-call="portal.portal_list_group_row"/>
     </template>
 
 </odoo>

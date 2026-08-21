@@ -86,9 +86,23 @@ class CustomerPortalLoyalty(CustomerPortal):
             "page_name": "loyalty_history",
             "sortby": sortby,
             "history_lines": history_lines,
+            **self._portal_list_values(
+                "loyalty.history",
+                "loyalty.loyalty_card_history_template",
+                self._get_loyalty_history_portal_columns(),
+            ),
         }
 
         return request.render("loyalty.loyalty_card_history_template", values)
+
+    def _get_loyalty_history_portal_columns(self):
+        return [
+            {'name': 'description', 'label': request.env._("Description"), 'field': 'description'},
+            {'name': 'order', 'label': request.env._("Order"), 'cell': 'loyalty.portal_loyalty_cell_order'},
+            {'name': 'date', 'label': request.env._("Date"), 'field': 'create_date', 'options': {'widget': 'datetime', 'format': 'short'}},
+            {'name': 'issued', 'label': request.env._("Issued"), 'cell': 'loyalty.portal_loyalty_cell_issued'},
+            {'name': 'used', 'label': request.env._("Used"), 'cell': 'loyalty.portal_loyalty_cell_used'},
+        ]
 
     @route("/my/loyalty_card/<int:card_id>/values", type="jsonrpc", auth="user")
     def portal_get_card_history_values(self, card_id):

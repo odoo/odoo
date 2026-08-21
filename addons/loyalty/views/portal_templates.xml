@@ -49,42 +49,34 @@
     <template id="loyalty_card_history_template" name="My Loyalty History">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
             <t t-call="portal.portal_searchbar" title.translate="Loyalty Transaction"/>
-            <t t-if="not history_lines">
+            <t t-call="portal.portal_list_table" rows="history_lines">
                 <p class="alert alert-warning">
                     There are currently no transaction lines for this card.
                 </p>
             </t>
-            <t t-else="" t-call="portal.portal_table">
-                <thead>
-                    <tr class="active">
-                        <th>Description</th>
-                        <th>Order</th>
-                        <th>Date</th>
-                        <th>Issued</th>
-                        <th>Used</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr t-foreach="history_lines" t-as="line">
-                        <td><span t-out="line.description"/></td>
-                        <td t-if="line.order_id">
-                            <t t-set="order_portal_url" t-value="line._get_order_portal_url()"/>
-                            <t t-set="order_description" t-value="line._get_order_description()"/>
-                            <a t-if="order_portal_url" t-att-href="order_portal_url">
-                                <t t-out="order_description"/>
-                            </a>
-                            <t t-else="">
-                                <t t-out="order_description"/>
-                            </t>
-                        </td>
-                        <td t-else=""/>
-                        <td><t t-out="line.create_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
-                        <td><span t-out="line.card_id._format_points(line.issued)"/></td>
-                        <td><span t-out="line.card_id._format_points(line.used)"/></td>
-                    </tr>
-                </tbody>
-            </t>
         </t>
+    </template>
+
+    <template id="portal_loyalty_cell_order" name="Portal Loyalty History Order Cell">
+        <td t-if="record.order_id">
+            <t t-set="order_portal_url" t-value="record._get_order_portal_url()"/>
+            <t t-set="order_description" t-value="record._get_order_description()"/>
+            <a t-if="order_portal_url" t-att-href="order_portal_url">
+                <t t-out="order_description"/>
+            </a>
+            <t t-else="">
+                <t t-out="order_description"/>
+            </t>
+        </td>
+        <td t-else=""/>
+    </template>
+
+    <template id="portal_loyalty_cell_issued" name="Portal Loyalty History Issued Cell">
+        <td><span t-out="record.card_id._format_points(record.issued)"/></td>
+    </template>
+
+    <template id="portal_loyalty_cell_used" name="Portal Loyalty History Used Cell">
+        <td><span t-out="record.card_id._format_points(record.used)"/></td>
     </template>
 
     <template

@@ -80,8 +80,33 @@ class WebsiteAccount(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
+            **self._portal_list_values(
+                'crm.lead',
+                'website_crm_partner_assign.portal_my_leads',
+                self._get_lead_portal_columns(),
+            ),
         })
         return request.render("website_crm_partner_assign.portal_my_leads", values)
+
+    def _get_lead_portal_columns(self):
+        return [
+            {'name': 'date', 'label': _("Date"), 'field': 'create_date'},
+            {'name': 'name', 'label': _("Lead"), 'class': 'w-25', 'cell': 'website_crm_partner_assign.portal_lead_cell_name'},
+            {'name': 'contact_name', 'label': _("Contact Name"), 'field': 'contact_name'},
+            {'name': 'email', 'label': _("Email"), 'field': 'email_from'},
+            {'name': 'phone', 'label': _("Phone"), 'field': 'phone'},
+        ]
+
+    def _get_opportunity_portal_columns(self):
+        return [
+            {'name': 'date', 'label': _("Date"), 'field': 'create_date'},
+            {'name': 'name', 'label': _("Opportunity"), 'class': 'w-25', 'cell': 'website_crm_partner_assign.portal_opportunity_cell_name'},
+            {'name': 'contact', 'label': _("Contact"), 'field': 'contact_name'},
+            {'name': 'email', 'label': _("Email"), 'field': 'email_from'},
+            {'name': 'phone', 'label': _("Phone"), 'field': 'phone'},
+            {'name': 'expected', 'label': _("Expected"), 'cell': 'website_crm_partner_assign.portal_opportunity_cell_expected'},
+            {'name': 'stage', 'label': _("Stage"), 'cell': 'website_crm_partner_assign.portal_opportunity_cell_stage'},
+        ]
 
     @http.route(['/my/opportunities', '/my/opportunities/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
@@ -149,6 +174,11 @@ class WebsiteAccount(CustomerPortal):
             'sortby': sortby,
             'searchbar_filters': searchbar_filters,
             'filterby': filterby,
+            **self._portal_list_values(
+                'crm.lead',
+                'website_crm_partner_assign.portal_my_opportunities',
+                self._get_opportunity_portal_columns(),
+            ),
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 

@@ -45,7 +45,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     expectUnloadPage: true,
 }, {
     id: 'project_sharing_feature',
-    trigger: 'table > tbody > tr a:has(span:contains(Project Sharing))',
+    trigger: 'table > tbody > tr a:contains(Project Sharing)',
     content: 'Select "Project Sharing" project to go to project sharing feature for this project.',
     run: "click",
     expectUnloadPage: true,
@@ -147,7 +147,7 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour", {
 
 registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour", {
     steps: () => [{
-        trigger: 'table > tbody > tr a:has(span:contains("Project Sharing"))',
+        trigger: 'table > tbody > tr a:contains("Project Sharing")',
         content: 'Click on the portal project.',
         run: "click",
         expectUnloadPage: true,
@@ -169,7 +169,7 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disall
     steps: () => [
         {
             id: "project_sharing_feature",
-            trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
+            trigger: "table > tbody > tr a:contains(Project Sharing)",
             content:
                 'Select "Project Sharing" project to go to project sharing feature for this project.',
             run: "click",
@@ -214,7 +214,7 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disall
 registry.category("web_tour.tours").add("test_04_project_sharing_chatter_message_reactions", {
     steps: () => [
         {
-            trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
+            trigger: "table > tbody > tr a:contains(Project Sharing)",
             run: "click",
             expectUnloadPage: true,
         },
@@ -228,7 +228,7 @@ registry.category("web_tour.tours").add("test_04_project_sharing_chatter_message
 registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_users", {
     steps: () => [
         {
-            trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
+            trigger: "table > tbody > tr a:contains(Project Sharing)",
             run: "click",
             expectUnloadPage: true,
         },

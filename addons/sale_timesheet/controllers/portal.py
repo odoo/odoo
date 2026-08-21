@@ -67,9 +67,32 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_searchbar_groupby(self):
         return super()._get_searchbar_groupby() | {
-            'so_line': {'label': _('Sales Order Item'), 'sequence': 80},
-            'reinvoice_move_id': {'label': _('Invoice'), 'sequence': 90},
+            'so_line': {'label': _('Sales Order Item'), 'sequence': 80, 'empty_label': _('Not Billed')},
+            'reinvoice_move_id': {'label': _('Invoice'), 'sequence': 90, 'empty_label': _('No Invoice')},
         }
+
+    def _get_timesheets_portal_columns(self, groupby='none'):
+        columns = super()._get_timesheets_portal_columns(groupby)
+        index = next(index for index, column in enumerate(columns) if column['name'] == 'unit_amount')
+        columns[index:index] = [
+            {
+                'name': 'so_line', 'label': _('Sales Order Item'),
+                'cell': 'sale_timesheet.portal_timesheet_cell_so_line',
+                'hidden': not request.env['account.analytic.line']._show_portal_timesheets(),
+            },
+            {
+                'name': 'reinvoice_move_id', 'label': _('Invoice'),
+                'field': 'reinvoice_move_id',
+            },
+        ]
+        return columns
+
+    def _prepare_timesheets_portal_groups(self, grouped_timesheets, groupby, searchbar_groupby):
+        groups = super()._prepare_timesheets_portal_groups(grouped_timesheets, groupby, searchbar_groupby)
+        if groupby == 'so_line':
+            for group in groups:
+                group['row'] = 'sale_timesheet.portal_timesheet_so_line_group_row'
+        return groups
 
     def _get_search_domain(self, search_in, search):
         if search_in == 'so':

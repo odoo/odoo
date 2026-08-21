@@ -11,3 +11,4 @@ from . import res_config_settings
 from . import res_partner
 from . import res_users_apikeys_description
 from . import portal_entry
+from . import portal_list_column

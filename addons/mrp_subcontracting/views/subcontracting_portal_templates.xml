@@ -20,31 +20,18 @@
 
             <t t-call="portal.portal_searchbar" title.translate="Productions"/>
 
-            <t t-if="not pickings">
+            <t t-call="portal.portal_list_table" rows="pickings">
                 <p class="alert alert-warning">There are currently no productions for your account.</p>
             </t>
-
-            <t t-if="pickings" t-call="portal.portal_table">
-                <thead>
-                    <tr class="active">
-                        <th>Order</th>
-                        <th class="text-end">Source Document</th>
-                        <th class="text-end">Scheduled Date</th>
-                        <th class="text-end">Deadline Date</th>
-                        <th class="text-end">State</th>
-                    </tr>
-                </thead>
-                <t t-foreach="pickings" t-as="picking">
-                    <tr>
-                        <td><a t-attf-href="/my/productions/#{picking.id}?{{ keep_query() }}"><span t-field="picking.name"/></a></td>
-                        <td class="text-end"><span t-field="picking.origin"/></td>
-                        <td class="text-end"><span t-field="picking.scheduled_date" t-options='{"widget": "date"}'/></td>
-                        <td class="text-end"><span t-field="picking.date_deadline" t-options='{"widget": "date"}'/></td>
-                        <td class="text-end"><span t-field="picking.state"/></td>
-                    </tr>
-                </t>
-            </t>
         </t>
+    </template>
+
+    <template id="portal_production_cell_name" name="Portal Production Order Cell">
+        <td><a t-attf-href="/my/productions/#{record.id}?{{ keep_query() }}"><span t-field="record.name"/></a></td>
+    </template>
+
+    <template id="portal_production_cell_state" name="Portal Production State Cell">
+        <td t-attf-class="#{column.get('class') or ''}"><span t-field="record.state"/></td>
     </template>
 
     <template id="subcontracting_portal" name="Subcontracting View in Portal">

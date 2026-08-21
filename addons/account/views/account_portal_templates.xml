@@ -16,69 +16,63 @@
       <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
         <t t-call="portal.portal_searchbar" title.translate="Invoices"/>
-        <t t-if="not invoices">
+        <t t-call="portal.portal_list_table" rows="invoices" record_key.f="invoice">
             <p class="alert alert-warning">There are currently no invoices and payments for your account.</p>
         </t>
-        <t t-if="invoices" t-call="portal.portal_table">
-            <thead>
-                <tr class="active">
-                    <th name="invoice_number">Invoice #</th>
-                    <th name="invoice_date">Invoice Date</th>
-                    <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
-                    <th name="amount_due" class="text-end pe-3">Amount Due</th>
-                    <th name="status">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <t t-foreach="invoices" t-as="invoice_data">
-                    <t t-set="invoice" t-value="invoice_data['invoice']"/>
-                    <tr>
-                        <td>
-                            <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
-                                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
-                                <em t-else="">Draft Invoice</em>
-                            </a>
-                        </td>
-                        <td><span t-field="invoice.invoice_date"/></td>
-                        <td class='d-none d-md-table-cell'
-                            t-att-class="'d-none d-md-table-cell text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else 'd-none d-md-table-cell'">
-                            <span t-field="invoice.invoice_date_due"/>
-                        </td>
-                        <td name="invoice_amount" class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
-                        <td name="invoice_status">
-                            <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
-                                <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
-                                      class="badge rounded-pill text-bg-success">
-                                    <i class="oi oi-fw" data-icon="check" aria-label="Paid" title="Paid" role="img"/>
-                                    <span class="d-none d-md-inline"> Paid</span>
-                                </span>
-                                <span t-elif="invoice.payment_state == 'in_payment' and not invoice.currency_id.is_zero(invoice.amount_residual)"
-                                      class="badge rounded-pill text-bg-info">
-                                    <i class="oi oi-fw" data-icon="check" aria-label="processing_payment" title="Processing Payment" role="img"/>
-                                    <span class="d-none d-md-inline"> Processing Payment</span>
-                                </span>
-                                <span t-elif="invoice.payment_state == 'reversed'"
-                                      class="badge rounded-pill text-bg-success">
-                                    <i class="oi oi-fw" data-icon="check" aria-label="Reversed" title="Reversed" role="img"/>
-                                    <span class="d-none d-md-inline"> Reversed</span>
-                                </span>
-                                <span t-else="" class="badge rounded-pill text-bg-info" name="invoice_status_waiting_for_payment">
-                                    <i class="oi oi-fw" data-icon="schedule" aria-label="Opened" title="Opened" role="img"/>
-                                    <span class="d-none d-md-inline"> Waiting for Payment</span>
-                                </span>
-                            </t>
-                            <t t-elif="invoice.state == 'cancel'">
-                                <span class="badge rounded-pill text-bg-warning">
-                                    <i class="oi oi-fw" data-icon="close" aria-label="Cancelled" title="Cancelled" role="img"/>
-                                    <span class="d-none d-md-inline"> Cancelled</span>
-                                </span>
-                            </t>
-                        </td>
-                    </tr>
-                </t>
-            </tbody>
-        </t>
       </t>
+    </template>
+
+    <!-- Portal invoices table cells. `record` is the account.move; `row` is the
+         dict returned by account.move._get_invoice_portal_extra_values(). -->
+    <template id="portal_invoice_cell_number" name="Portal Invoice Number Cell">
+        <td>
+            <a t-att-href="record.get_portal_url()" t-att-title="record.name">
+                <t t-out="record.name" t-if="record.name != '/'"/>
+                <em t-else="">Draft Invoice</em>
+            </a>
+        </td>
+    </template>
+
+    <template id="portal_invoice_cell_due_date" name="Portal Invoice Due Date Cell">
+        <td t-attf-class="#{column.get('class') or ''} #{'text-danger' if record.invoice_date_due and record.invoice_date_due &lt; datetime.date.today() and record.payment_state in ['not_paid', 'partial'] else ''}">
+            <span t-field="record.invoice_date_due"/>
+        </td>
+    </template>
+
+    <template id="portal_invoice_cell_amount" name="Portal Invoice Amount Cell">
+        <td name="invoice_amount" t-attf-class="#{column.get('class') or ''}"><span t-out="-record.amount_residual if record.move_type == 'out_refund' else record.amount_residual" t-options='{"widget": "monetary", "display_currency": record.currency_id}'/></td>
+    </template>
+
+    <template id="portal_invoice_cell_status" name="Portal Invoice Status Cell">
+        <td name="invoice_status">
+            <t t-if="record.state == 'posted'" name="invoice_status_posted">
+                <span t-if="record.currency_id.is_zero(record.amount_residual)"
+                      class="badge rounded-pill text-bg-success">
+                    <i class="oi oi-fw" data-icon="check" aria-label="Paid" title="Paid" role="img"/>
+                    <span class="d-none d-md-inline"> Paid</span>
+                </span>
+                <span t-elif="record.payment_state == 'in_payment' and not record.currency_id.is_zero(record.amount_residual)"
+                      class="badge rounded-pill text-bg-info">
+                    <i class="oi oi-fw" data-icon="check" aria-label="processing_payment" title="Processing Payment" role="img"/>
+                    <span class="d-none d-md-inline"> Processing Payment</span>
+                </span>
+                <span t-elif="record.payment_state == 'reversed'"
+                      class="badge rounded-pill text-bg-success">
+                    <i class="oi oi-fw" data-icon="check" aria-label="Reversed" title="Reversed" role="img"/>
+                    <span class="d-none d-md-inline"> Reversed</span>
+                </span>
+                <span t-else="" class="badge rounded-pill text-bg-info" name="invoice_status_waiting_for_payment">
+                    <i class="oi oi-fw" data-icon="schedule" aria-label="Opened" title="Opened" role="img"/>
+                    <span class="d-none d-md-inline"> Waiting for Payment</span>
+                </span>
+            </t>
+            <t t-elif="record.state == 'cancel'">
+                <span class="badge rounded-pill text-bg-warning">
+                    <i class="oi oi-fw" data-icon="close" aria-label="Cancelled" title="Cancelled" role="img"/>
+                    <span class="d-none d-md-inline"> Cancelled</span>
+                </span>
+            </t>
+        </td>
     </template>
 
     <template id="portal_my_journal_mail_notifications" name="My journal email notification settings">

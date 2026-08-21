@@ -72,9 +72,23 @@ class CustomerPortal(portal.CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
             'default_url': '/my/productions',
+            **self._portal_list_values(
+                'stock.picking',
+                'mrp_subcontracting.portal_my_productions',
+                self._get_production_portal_columns(),
+            ),
         }
 
         return http.request.render("mrp_subcontracting.portal_my_productions", values)
+
+    def _get_production_portal_columns(self):
+        return [
+            {'name': 'name', 'label': _("Order"), 'cell': 'mrp_subcontracting.portal_production_cell_name'},
+            {'name': 'origin', 'label': _("Source Document"), 'class': 'text-end', 'field': 'origin'},
+            {'name': 'scheduled_date', 'label': _("Scheduled Date"), 'class': 'text-end', 'field': 'scheduled_date'},
+            {'name': 'date_deadline', 'label': _("Deadline Date"), 'class': 'text-end', 'field': 'date_deadline'},
+            {'name': 'state', 'label': _("State"), 'class': 'text-end', 'cell': 'mrp_subcontracting.portal_production_cell_state'},
+        ]
 
     @http.route("/my/productions/<int:picking_id>", type="http", auth="user", methods=['GET'], website=True)
     def portal_my_production(self, picking_id):
