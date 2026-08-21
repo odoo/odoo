@@ -1,6 +1,5 @@
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { propComputed } from "@mail/utils/common/hooks";
 
 import { Component, t, useProps } from "@odoo/owl";
 
@@ -21,12 +20,11 @@ export class SubChannelPreview extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
-        this.class = propComputed("class", t.string().optional());
-        this.onClick = useProps.static(
-            "onClick",
-            subChannelPreviewOnClickType(this.store).optional()
-        );
+        this.props = useProps({
+            channel: t.signal(t.instanceOf(this.store["discuss.channel"])),
+            class: t.signal(t.string()).optional(),
+            onClick: subChannelPreviewOnClickType(this.store).optional().static(),
+        });
     }
 
     bodyText(message) {
@@ -34,13 +32,13 @@ export class SubChannelPreview extends Component {
     }
 
     get messageCountText() {
-        if (this.channel().message_count === 1) {
+        if (this.props.channel().message_count === 1) {
             return _t("1 Message");
         }
-        return _t("%(count)s Messages", { count: this.channel().message_count });
+        return _t("%(count)s Messages", { count: this.props.channel().message_count });
     }
 
     get startedByText() {
-        return _t("Started by %(name)s", { name: this.channel().create_uid.name });
+        return _t("Started by %(name)s", { name: this.props.channel().create_uid.name });
     }
 }

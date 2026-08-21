@@ -1,9 +1,7 @@
 import { ActionList } from "./action_list";
 import { useMessageActions } from "./message_actions";
 
-import { propSignal } from "@mail/utils/common/hooks";
-
-import { Component, computed, t, useProps } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -17,15 +15,15 @@ export class MessageContextMenu extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
+            /** Anchor element, owned by the parent and bound here with `t-ref`. */
+            anchorRef: t.signal(t.instanceOf(HTMLElement), { settable: true }),
             dropdownState: t.instanceOf(DropdownState),
             message: t.instanceOf(this.store["mail.message"]),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
-        /** Anchor element, owned by the parent and bound here with `t-ref`. */
-        this.anchorRef = propSignal("anchorRef", t.instanceOf(HTMLElement));
         this.messageActions = useMessageActions({
             message: () => this.props.message,
-            reactionAnchorRef: computed(() => this.anchorRef()),
+            reactionAnchorRef: this.props.anchorRef,
             thread: () => this.props.thread,
         });
     }

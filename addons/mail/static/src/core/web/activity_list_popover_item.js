@@ -2,7 +2,6 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
-import { propComputed } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, computed, signal, t, useProps } from "@odoo/owl";
@@ -20,27 +19,23 @@ export class ActivityListPopoverItem extends Component {
         super.setup();
         this.action = useService("action");
         this.store = useService("mail.store");
-        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
-        this.onActivityChanged = useProps.static("onActivityChanged", t.function([]).optional());
-        this.onClickDoneAndScheduleNext = useProps.static(
-            "onClickDoneAndScheduleNext",
-            t.function([]).optional()
-        );
-        this.onClickEditActivityButtonProp = useProps.static(
-            "onClickEditActivityButton",
-            t.function([]).optional()
-        );
+        this.props = useProps({
+            activity: t.signal(t.instanceOf(this.store["mail.activity"])),
+            onActivityChanged: t.function([]).optional().static(),
+            onClickDoneAndScheduleNext: t.function([]).optional().static(),
+            onClickEditActivityButton: t.function([]).optional().static(),
+        });
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "right" });
-        // bound once so `close` can be passed as a stable (useProps.static) handler
+        // bound once so `close` can be passed as a stable (propStatic) handler
         this.closeMarkDoneView = () => this.hasMarkDoneView.set(false);
-        if (this.activity().activity_category === "upload_file") {
+        if (this.props.activity().activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
                 computed(() =>
                     this.store["mail.thread"].insert({
-                        model: this.activity().res_model,
-                        id: this.activity().res_id,
+                        model: this.props.activity().res_model,
+                        id: this.props.activity().res_id,
                     })
                 )
             );
@@ -48,7 +43,7 @@ export class ActivityListPopoverItem extends Component {
     }
 
     get delayLabel() {
-        const diff = this.store.daysUntil(this.activity().date_deadline);
+        const diff = this.store.daysUntil(this.props.activity().date_deadline);
         if (diff === 0) {
             return _t("Today");
         } else if (diff === -1) {
@@ -62,31 +57,34 @@ export class ActivityListPopoverItem extends Component {
         } else if (diff == 7) {
             return _t("Due in 1 week");
         } else {
-            return _t("Due %s", this.activity().date_deadline.toLocaleString({
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-            }));
+            return _t(
+                "Due %s",
+                this.props.activity().date_deadline.toLocaleString({
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                })
+            );
         }
     }
 
     get hasEditButton() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         return activity.state !== "done" && activity.can_write;
     }
 
     get hasAssignButton() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         return activity.state !== "done" && activity.can_write && !activity.user_id;
     }
 
     get hasFileUploader() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         return activity.state !== "done" && activity.activity_category === "upload_file";
     }
 
     get hasMailButton() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         return (
             activity.state !== "done" &&
             activity.activity_type_id?.id === (this.store.emailActivityTypeId ?? false) && // type is the built-in email type
@@ -95,14 +93,15 @@ export class ActivityListPopoverItem extends Component {
     }
 
     get hasMarkDoneButton() {
-        return this.activity().state !== "done" && !this.hasFileUploader;
+        return this.props.activity().state !== "done" && !this.hasFileUploader;
     }
 
     onClickEditActivityButton() {
-        this.onClickEditActivityButtonProp?.();
-        this.activity()
+        this.props.onClickEditActivityButton?.();
+        this.props
+            .activity()
             .edit()
-            .then(() => this.onActivityChanged?.());
+            .then(() => this.props.onActivityChanged?.());
     }
 
     onClickAssignButton(ev) {
@@ -111,9 +110,9 @@ export class ActivityListPopoverItem extends Component {
             return;
         }
         this.assignPopover.open(ev.currentTarget, {
-            activity: this.activity,
+            activity: this.props.activity,
             hasHeader: true,
-            onActivityChanged: (thread) => this.onActivityChanged?.(thread),
+            onActivityChanged: (thread) => this.props.onActivityChanged?.(thread),
         });
     }
 
@@ -122,16 +121,15 @@ export class ActivityListPopoverItem extends Component {
      * record chatter then mark activity as done.
      */
     onClickMailButton() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         const thread = this.store["mail.thread"].insert({
             model: activity.res_model,
             id: activity.res_id,
         });
-        const recipients = [
-            ...thread.suggestedRecipients,
-            ...thread.additionalRecipients,
-        ].filter((r) => r.partner_id);
-        this.onActivityChanged?.(thread);
+        const recipients = [...thread.suggestedRecipients, ...thread.additionalRecipients].filter(
+            (r) => r.partner_id
+        );
+        this.props.onActivityChanged?.(thread);
         this.action.doAction(
             {
                 type: "ir.actions.act_window",
@@ -162,18 +160,18 @@ export class ActivityListPopoverItem extends Component {
                     }
                     // Mark done
                     await activity.markAsDone();
-                    this.onActivityChanged?.(thread);
+                    this.props.onActivityChanged?.(thread);
                 },
             }
         );
     }
 
     async onFileUploaded(data) {
-        const activity = this.activity();
+        const activity = this.props.activity();
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
             activity,
         });
         await activity.markAsDone([attachmentId]);
-        this.onActivityChanged?.();
+        this.props.onActivityChanged?.();
     }
 }

@@ -13,7 +13,7 @@ const ChannelMemberPatch = {
      * pending invitee is detected through the channel's invited list instead.
      */
     get callSession() {
-        const member = this.member();
+        const member = this.props.member();
         if (member.in(member.channel_id?.invited_member_ids)) {
             return undefined;
         }
@@ -22,7 +22,7 @@ const ChannelMemberPatch = {
 
     get isTalking() {
         return Boolean(
-            this.member().channel_id?.isSelfInCall && this.callSession?.isActuallyTalking
+            this.props.member().channel_id?.isSelfInCall && this.callSession?.isActuallyTalking
         );
     },
 };
