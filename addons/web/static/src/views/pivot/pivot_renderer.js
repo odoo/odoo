@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, signal, useProps } from "@odoo/owl";
+import { Component, signal, useEffect, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -10,7 +10,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
@@ -77,10 +77,10 @@ export class PivotRenderer extends Component {
         }
         this.fields = sortBy(fields, "string");
 
-        onWillUpdateProps(this.onWillUpdateProps);
-    }
-    onWillUpdateProps() {
-        this.table = this.model.getTable();
+        useEffect(() => {
+            this.table = this.model.getTable();
+        });
+        useBus(this.model.bus, "update", () => (this.table = this.model.getTable()));
     }
     /**
      * Get the formatted value of the cell.

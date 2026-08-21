@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { formatInteger, formatMonetary } from "@web/views/fields/formatters";
 
-import { Component, onWillUnmount, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
@@ -24,9 +24,10 @@ export class AnimatedNumber extends Component {
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",
         });
-        onWillUpdateProps((nextProps) => {
-            const { value: from } = this.props;
-            const { value: to, duration } = nextProps;
+        useEffect(() => {
+            void this.props.currencies;
+            void this.props.title;
+            const { value: from, value: to, duration } = this.props;
             if (!this.constructor.enableAnimations || !duration || to <= from) {
                 browser.cancelAnimationFrame(this.handle);
                 this.state.value = to;
