@@ -23,7 +23,7 @@ export class MessagingMenuInDropdown extends Component {
         this.discussSystray = useDiscussSystray(this.dropdown);
         this.store = useService("mail.store");
         this.menuState = computed(() => this.store.messagingMenuSystrayState);
-        // Bound once so `close` is a stable (useProps.static) handler.
+        // Bound once so `close` is a stable (static prop) handler.
         this.closeDropdown = this.dropdown.close.bind(this.dropdown);
         this.searchInputAutofocus = signal(0);
         this.triggerSearchInputAutofocus = incrementFn(this.searchInputAutofocus);

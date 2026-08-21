@@ -24,7 +24,7 @@ const messagingMenuPatch = {
             },
             { newWindow: options?.isMiddleClick }
         );
-        this.close?.();
+        this.props.close?.();
     },
     getFailureNotificationName(failure) {
         if (failure.type === "snail") {
