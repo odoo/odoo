@@ -27,3 +27,5 @@ from . import stock_picking_batch
 from . import stock_picking_type
 from . import stock_storage_category
 from . import stock_scrap_reason_tag
+
+from . import res_groups

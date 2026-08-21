@@ -188,15 +188,13 @@ class ResUsers(models.Model):
         # see `_has_field_access``
         return name == 'user_writeable' or super()._valid_field_parameter(field, name)
 
-    def _default_groups(self, group='user_regular'):
+    def _default_groups(self):
         """Default groups for employees
 
         All the groups of the Default User Group
         """
-        if group not in ['user', 'user_regular', 'system']:
-            raise UserError(self.env._('Invalid user group.'))
-        groups = self.env.ref(f'base.group_{group}')
-        default_group = self.env.ref(f'base.default_{group}_group', raise_if_not_found=False)
+        groups = self.env.ref('base.group_user')
+        default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
         if default_group:
             groups += default_group.implied_ids
         return groups
@@ -263,8 +261,8 @@ class ResUsers(models.Model):
         return self.env['res.groups']._get_view_group_hierarchy()
 
     view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
-    role = fields.Selection([('group_user', 'Light User'), ('group_user_regular', 'User'), ('group_system', 'Administrator')],
-        compute='_compute_role', inverse='_inverse_role', search='_search_role', string="Role")
+    role = fields.Selection([('light_user', 'Light'), ('regular_user', 'User'), ('group_system', 'Administrator')],
+        compute='_compute_role', search='_search_role', readonly=False, string="Role")
 
     _login_key = models.Constraint("UNIQUE (login)",
         'You can not have two users with the same login!')
@@ -431,47 +429,53 @@ class ResUsers(models.Model):
 
     @api.depends('group_ids')
     def _compute_role(self):
-        group_user = self.env.ref('base.group_user')
-        group_no_one = self.env.ref('base.group_no_one', raise_if_not_found=False) or self.env['res.groups']
-        light_groups = (group_user + self._default_groups(group='user')).all_implied_ids - group_no_one
-        for user in self:
-            if user.has_group('base.group_system'):
-                user.role = 'group_system'
-            elif user.has_group('base.group_user_regular'):
-                user.role = 'group_user_regular'
-            elif user.has_group('base.group_user'):
-                user_groups = user.all_group_ids._origin - group_no_one
-                user.role = 'group_user' if set(user_groups).issubset(set(light_groups)) else 'group_user_regular'
-            else:
-                user.role = False
+        group_system = self.env.ref('base.group_system', raise_if_not_found=False)
+        group_user_regular = self.env.ref('base.group_user_regular', raise_if_not_found=False)
+        group_user = self.env.ref('base.group_user', raise_if_not_found=False)
 
-    def _inverse_role(self):
-        group_admin = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
-        group_user_regular = self.env['res.groups'].new(origin=self.env.ref('base.group_user_regular'))
-        group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
         for user in self:
-            # If set to light user, access should be reset as a fresh new light user.
-            if user.role == 'group_user':
-                user.group_ids = self._default_groups(group='user')
-            elif user.role and user.has_group('base.group_user'):
-                groups = user.group_ids - (group_admin + group_user_regular + group_user)
-                user.group_ids = groups + (group_admin if user.role == 'group_system'
-                                           else group_user_regular)
+            groups = user.group_ids._origin
+            if group_user_regular:
+                groups -= group_user_regular
+            user.role = (
+                'group_system' if group_system and group_system in groups else
+                'light_user' if group_user and group_user in groups and groups._is_light_groups() else
+                'regular_user' if group_user and group_user in groups else
+                False
+            )
 
     @api.onchange('role')
     def _onchange_role(self):
-        self._inverse_role()
+        group_admin = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
+        group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
+        group_regular = self.env['res.groups'].new(origin=self.env.ref('base.group_user_regular'))
+        default_groups = self._default_groups()
+
+        if self.role == 'regular_user':
+            self.group_ids -= group_admin
+        elif self.role == 'group_system':
+            self.group_ids += group_admin + group_user
+        elif self.role == 'light_user':
+            # If set to light user from portal or public user then add default groups
+            if group_user not in self.all_group_ids:
+                self.group_ids += default_groups
+            # Reduce all access to light user.
+            self.group_ids = group_user + self.group_ids._origin._reduce_to_light_groups()
+
+        # The group is never assigned to a user; it is implied by functional groups.
+        self.group_ids -= group_regular
 
     def _search_role(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        group_admin = self.env.ref('base.group_system')
-        group_user_regular = self.env.ref('base.group_user_regular')
-        group_user = self.env.ref('base.group_user')
+
+        is_system = Domain('all_group_ids', 'in', [self.env.ref('base.group_system').id])
+        is_user_regular = Domain('all_group_ids', 'in', [self.env.ref('base.group_user_regular').id])
+        is_user = Domain('all_group_ids', 'in', [self.env.ref('base.group_user').id])
         domains_by_role = {
-            'group_user': Domain('group_ids', 'in', [group_user.id]) & Domain('group_ids', 'not in', [group_user_regular.id]),
-            'group_user_regular': Domain('group_ids', 'in', [group_user_regular.id]) & Domain('group_ids', 'not in', [group_admin.id]),
-            'group_system': Domain('group_ids', 'in', [group_admin.id]),
+            'light_user': is_user & ~is_user_regular,
+            'regular_user': is_user & is_user_regular & ~is_system,
+            'group_system': is_system,
         }
         return Domain.OR([domains_by_role[v] for v in value if v in domains_by_role])
 
@@ -611,6 +615,7 @@ class ResUsers(models.Model):
             # Generate employee initals as avatar for internal users without image
             if not user.image_1920 and not user.share and user.name:
                 user.image_1920 = user.partner_id._avatar_generate_svg()
+
         if setting_vals:
             self.env['res.users.settings'].sudo().create(setting_vals)
         return users
