@@ -177,7 +177,7 @@ class Manager(Thread):
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
         self.previous_iot_devices = []
-        while 1:
+        while True:
             try:
                 if self._get_changes_to_send():
                     self.send_alldevices(iot_client)
