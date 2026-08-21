@@ -588,7 +588,8 @@ export class ProductPage extends Interaction {
      */
     _disableInput(parent, attributeValueId, excludedBy, attributeNames, productName) {
         const input = parent.querySelector(
-            `option[value="${attributeValueId}"], input[value="${attributeValueId}"]`
+            `select.js_variant_change option[value="${attributeValueId}"],
+            input.js_variant_change[value="${attributeValueId}"]`
         );
         input.classList.add('css_not_available')
         input.closest('label')?.classList?.add('css_not_available');
