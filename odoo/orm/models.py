@@ -1067,7 +1067,7 @@ class BaseModel(metaclass=MetaModel):
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
-        flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(1024))
+        flush_recordset = self.with_context(import_flush=flush, import_cache=LRU(10000))
 
         # TODO: break load's API instead of smuggling via context?
         limit = self.env.context.get('_import_limit')
