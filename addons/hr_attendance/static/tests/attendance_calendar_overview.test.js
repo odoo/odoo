@@ -34,10 +34,14 @@ test("worked hours display updates when dateRange prop changes", async () => {
     });
     await animationFrame();
     expect.verifySteps(["load:2024-01-01"]);
-    expect(".o_attendance_info_number").toHaveText(["8h", "0h"]);
+    const [workedEl1, overtimeEl1] = document.querySelectorAll(".o_attendance_info_number");
+    expect(workedEl1).toHaveText("8h");
+    expect(overtimeEl1).toHaveText("0h");
 
     dateRange.set({ start: "2024-02-01", end: "2024-02-29" });
     await animationFrame();
     expect.verifySteps(["load:2024-02-01"]);
-    expect(".o_attendance_info_number").toHaveText(["16h", "0h"]);
+    const [workedEl2, overtimeEl2] = document.querySelectorAll(".o_attendance_info_number");
+    expect(workedEl2).toHaveText("16h");
+    expect(overtimeEl2).toHaveText("0h");
 });
