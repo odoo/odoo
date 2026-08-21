@@ -72,8 +72,8 @@ const formWithRestrictedFieldsTemplate = /* html */ `
                         <div data-name="Field" data-requirement-comparator="substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;hello&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;hello&quot;},{&quot;requirement_text&quot;:&quot;noway&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;noway&quot;}]" data-error-message="This field must contain one of the keyword(s): 'hello and noway'" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o5vq2ntfwjaw">
-                                    <span class="s_website_form_label_content">Your Name</span>
-                                    <span class="s_website_form_mark">  *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Your Name</span>
+                                    <span class="s_website_form_mark o_not_translate_inline">  *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input" type="text" name="name" required="" placeholder="" id="o5vq2ntfwjaw" data-fill-with="name">
@@ -83,8 +83,8 @@ const formWithRestrictedFieldsTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-requirement-comparator="domain" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;gmail.com&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;gmail.com&quot;},{&quot;requirement_text&quot;:&quot;icloud.com&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;icloud.com&quot;}]" data-error-message="This field must have one of these email domain(s): gmail.com and icloud.com.">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="odfcbsocir26">
-                                    <span class="s_website_form_label_content">Your Email</span>
-                                    <span class="s_website_form_mark">  *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Your Email</span>
+                                    <span class="s_website_form_mark o_not_translate_inline">  *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input" type="email" name="email_from" required="" placeholder="" id="odfcbsocir26" data-fill-with="email">
@@ -94,8 +94,8 @@ const formWithRestrictedFieldsTemplate = /* html */ `
                         <div data-name="Field" data-requirement-comparator="!substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;football&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;football&quot;},{&quot;requirement_text&quot;:&quot;cricket&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;cricket&quot;}]" data-error-message="This field must not include the keyword(s): 'football and cricket'" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ogrut2y7e6ld">
-                                    <span class="s_website_form_label_content">Subject</span>
-                                    <span class="s_website_form_mark">  *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Subject</span>
+                                    <span class="s_website_form_mark o_not_translate_inline">  *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input" type="text" name="subject" required="" value="" placeholder="" id="ogrut2y7e6ld" data-fill-with="undefined">
@@ -123,8 +123,8 @@ const formWithCharacterLimitRuleTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
-                                    <span class="s_website_form_label_content">Your Name</span>
-                                    <span class="s_website_form_mark"> *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Your Name</span>
+                                    <span class="s_website_form_mark o_not_translate_inline"> *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input" type="text" name="name" required="" value="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name" maxlength="21" minlength="6">
@@ -152,8 +152,8 @@ const formWithRestrictedFileTypesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ooas5l5yuhg">
-                                    <span class="s_website_form_label_content">Your Email</span>
-                                    <span class="s_website_form_mark"> *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Your Email</span>
+                                    <span class="s_website_form_mark o_not_translate_inline"> *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input" type="email" name="email_from" required="" value="" placeholder="" id="ooas5l5yuhg" data-fill-with="email">
@@ -163,7 +163,7 @@ const formWithRestrictedFileTypesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="binary">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onfhvm7weawe">
-                                    <span class="s_website_form_label_content">Photo</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Photo</span>
                                 </label>
                                 <div class="col-sm">
                                     <div class="o_files_zone row gx-1"></div>
@@ -201,8 +201,8 @@ function createFileUploadForm(maxFiles = 1) {
                                 data-type="binary">
                                 <div class="row s_col_no_resize s_col_no_bgcolor">
                                     <label class="col-sm-auto s_website_form_label" style="width: 200px" for="o3xe8o85w0ct">
-                                        <span class="s_website_form_label_content">File Upload</span>
-                                        <span class="s_website_form_mark">*</span>
+                                        <span class="s_website_form_label_content o_not_translate_inline">File Upload</span>
+                                        <span class="s_website_form_mark o_not_translate_inline">*</span>
                                     </label>
                                     <div class="col-sm">
                                         <div class="o_files_zone row gx-1"></div>
@@ -235,7 +235,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
-                                    <span class="s_website_form_label_content"></span>
+                                    <span class="s_website_form_label_content o_not_translate_inline"></span>
                                 </label>
                                 <div class="col-sm">
                                     <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com">
@@ -246,8 +246,8 @@ const formWithVisibilityRulesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
-                                    <span class="s_website_form_label_content">Your Email</span>
-                                    <span class="s_website_form_mark"> *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Your Email</span>
+                                    <span class="s_website_form_mark o_not_translate_inline"> *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input o_translatable_attribute" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf">
@@ -257,8 +257,8 @@ const formWithVisibilityRulesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
-                                    <span class="s_website_form_label_content">Subject</span>
-                                    <span class="s_website_form_mark"> *</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">Subject</span>
+                                    <span class="s_website_form_mark o_not_translate_inline"> *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="subject" required="" id="oqsf4m51acj">
@@ -268,7 +268,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oea48nwznnp">
-                                    <span class="s_website_form_label_content">FieldA</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">FieldA</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="FieldA" id="oea48nwznnp">
@@ -278,7 +278,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldA" data-visibility-comparator="equal" data-visibility-condition="foo">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o42sfafdr6r9">
-                                    <span class="s_website_form_label_content">FieldB</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">FieldB</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="FieldB" id="o42sfafdr6r9" disabled="disabled">
@@ -288,7 +288,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldB" data-visibility-comparator="equal" data-visibility-condition="foo">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onhykjagdxb">
-                                    <span class="s_website_form_label_content">FieldC</span>
+                                    <span class="s_website_form_label_content o_not_translate_inline">FieldC</span>
                                 </label>
                                 <div class="col-sm">
                                     <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="FieldC" id="onhykjagdxb" disabled="disabled">
@@ -558,7 +558,7 @@ function formWithVisibilityRulesOnCheckbox(condition) {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
-                            <span class="s_website_form_label_content">Custom Text</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">Custom Text</span>
                         </label>
                         <div class="col-sm">
                             <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
@@ -587,7 +587,7 @@ function formWithVisibilityRulesOnCheckbox(condition) {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition='["Option 1","Option 2"]' data-visibility-comparator="${condition}">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                            <span class="s_website_form_label_content">b</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">b</span>
                         </label>
                         <div class="col-sm">
                             <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -644,7 +644,7 @@ function formWithVisibilityRulesOnText(condition) {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
-                            <span class="s_website_form_label_content">a</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">a</span>
                         </label>
                         <div class="col-sm">
                             <input class="form-control s_website_form_input" type="text" name="a" required="1" id="obij2aulqyau"/>
@@ -654,7 +654,7 @@ function formWithVisibilityRulesOnText(condition) {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-condition='test' data-visibility-comparator="${condition}">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                            <span class="s_website_form_label_content">b</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">b</span>
                         </label>
                         <div class="col-sm">
                             <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -928,8 +928,8 @@ test("add aria-invalid to invalid checkbox fields", async () => {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px;" for="o8j0sq77aobs">
-                            <span class="s_website_form_label_content">Label</span>
-                            <span class="s_website_form_mark"> *</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">Label</span>
+                            <span class="s_website_form_mark o_not_translate_inline"> *</span>
                         </label>
                         <div class="col-sm">
                             <div class="form-check">
