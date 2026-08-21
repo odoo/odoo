@@ -14,6 +14,7 @@ class TestMultiCompany(TransactionCase):
         group_user = cls.env.ref('base.group_user')
         group_stock_manager = cls.env.ref('stock.group_stock_manager')
 
+        cls.interco_location = cls.env.ref('stock.stock_location_inter_company')
         cls.company_a = cls.env['res.company'].create({'name': 'Company A'})
         cls.company_b = cls.env['res.company'].create({'name': 'Company B'})
         cls.branch_company_a = cls.env['res.company'].create({
@@ -21,7 +22,9 @@ class TestMultiCompany(TransactionCase):
             'parent_id': cls.company_a.id,
         })
         cls.warehouse_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_a.id)], limit=1)
+        cls.warehouse_a.code = 'WHA'
         cls.warehouse_b = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_b.id)], limit=1)
+        cls.warehouse_b.code = 'WHB'
         cls.warehouse_branch_a = cls.env['stock.warehouse'].search([('company_id', '=', cls.branch_company_a.id)], limit=1)
         cls.stock_location_a = cls.warehouse_a.lot_stock_id
         cls.stock_location_b = cls.warehouse_b.lot_stock_id
@@ -781,3 +784,95 @@ class TestMultiCompany(TransactionCase):
         domain = Domain.AND([base_domain, self.env['stock.quant'].with_company(self.branch_company_a)._get_quants_action()['domain']])
         quants_branch = self.env['stock.quant'].with_company(self.branch_company_a).search(domain)
         self.assertTrue(quants_branch)
+
+    def test_resupply_intercompany_warehouse(self):
+        """ Ensure that when resupplying from a warehouse from another company, the partner are correctly set on each side.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Something',
+            'is_storable': True,
+        })
+        self.warehouse_a.resupply_wh_ids = [Command.link(self.warehouse_b.id)]
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_b, 10)
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.user_a).create({
+            'location_id': self.stock_location_a.id,
+            'trigger': 'manual',
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'route_id': self.warehouse_a.resupply_route_ids.id,
+        })
+        op_name = orderpoint.name
+        orderpoint.action_replenish()
+        pickings = self.env['stock.picking'].sudo().search([('origin', '=', op_name)])
+        in_from_b = pickings.filtered(lambda p: p.picking_type_code == 'incoming')
+        out_to_a = pickings - in_from_b
+
+        self.assertRecordValues(in_from_b, [{
+            'company_id': self.company_a.id,
+            'partner_id': self.warehouse_b.partner_id.id,
+            'location_id': self.interco_location.id,
+            'location_dest_id': self.stock_location_a.id,
+            'state': 'waiting',
+        }])
+
+        self.assertRecordValues(out_to_a, [{
+            'company_id': self.company_b.id,
+            'partner_id': self.warehouse_a.partner_id.id,
+            'location_id': self.stock_location_b.id,
+            'location_dest_id': self.interco_location.id,
+            'state': 'assigned',
+        }])
+
+        out_to_a.button_validate()
+        self.assertEqual(in_from_b.state, 'assigned')
+
+    def test_resupply_inter_warehouse(self):
+        """ Ensure that when resupplying from another warehouse, the partner are correctly set on each side.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Something',
+            'is_storable': True,
+        })
+        other_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Other warehouse',
+            'code': 'OWH',
+            'company_id': self.company_a.id,
+        })
+        inter_wh_location = self.company_a.internal_transit_location_id
+        self.warehouse_a.resupply_wh_ids = [Command.link(other_warehouse.id)]
+        self.env['stock.quant']._update_available_quantity(product, other_warehouse.lot_stock_id, 10)
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_company(self.company_a).create({
+            'location_id': self.stock_location_a.id,
+            'trigger': 'manual',
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'route_id': self.warehouse_a.resupply_route_ids.id,
+        })
+        op_name = orderpoint.name
+        orderpoint.action_replenish()
+        pickings = self.env['stock.picking'].search([('origin', '=', op_name)])
+        in_from_other = pickings.filtered(lambda p: p.picking_type_code == 'incoming')
+        out_to_a = pickings - in_from_other
+
+        self.assertRecordValues(in_from_other, [{
+            'company_id': self.company_a.id,
+            'partner_id': other_warehouse.partner_id.id,
+            'location_id': inter_wh_location.id,
+            'location_dest_id': self.stock_location_a.id,
+            'state': 'waiting',
+        }])
+
+        self.assertRecordValues(out_to_a, [{
+            'company_id': self.company_a.id,
+            'partner_id': self.warehouse_a.partner_id.id,
+            'location_id': other_warehouse.lot_stock_id.id,
+            'location_dest_id': inter_wh_location.id,
+            'state': 'assigned',
+        }])
+
+        out_to_a.button_validate()
+        self.assertEqual(in_from_other.state, 'assigned')

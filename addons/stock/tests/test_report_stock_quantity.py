@@ -236,8 +236,8 @@ class TestReportStockQuantity(tests.TransactionCase):
         Verify that available quantities are correctly computed at different past dates
         when using multi-step receipt/delivery.
         """
-        def get_inv_qty_at_date(product_id, inv_datetime):
-            product = self.env['product.product'].with_context(to_date=inv_datetime).browse(product_id)
+        def get_inv_qty_at_date(product_id, inv_datetime, warehouse_id):
+            product = self.env['product.product'].with_context(to_date=inv_datetime, warehouse_id=warehouse_id).browse(product_id)
             return (product.qty_available, product.virtual_available)
         # We add a second warehouse and put the resuplying flow in push mechanic to test receipt in 2 steps with an external transfer
         warehouse, warehouse_2 = self.wh, self.env['stock.warehouse'].sudo().create({
@@ -249,14 +249,14 @@ class TestReportStockQuantity(tests.TransactionCase):
             'resupply_wh_ids': [Command.set(warehouse_2.ids)],
             'delivery_steps': 'pick_ship',
         })
-        warehouse.resupply_route_ids.rule_ids.filtered(lambda r: r.location_src_id == transit_loc).action = 'push'
         product = self.env['product.product'].create({'name': 'Test', 'is_storable': True})
+        self.env['stock.quant']._update_available_quantity(product, warehouse_2.lot_stock_id, 150)
         today = fields.Date.today()
         with freeze_time(today - timedelta(days=8)):
             move_transit = self.env['stock.move'].create({
-                'warehouse_id': warehouse.id,
-                'picking_type_id': warehouse.in_type_id.id,
-                'location_id': self.supplier_location.id,
+                'partner_id': warehouse.partner_id.id,
+                'picking_type_id': warehouse_2.out_type_id.id,
+                'location_id': warehouse_2.lot_stock_id.id,
                 'location_dest_id': transit_loc.id,
                 'forecasted_location_id': warehouse.lot_stock_id.id,
                 'route_ids': [Command.set(warehouse.resupply_route_ids.ids)],
@@ -307,7 +307,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             (move_out.date - timedelta(days=1), (100.0, 115.0)),  # The backorder of move_out contributes in the outgoing qty
             (today - timedelta(days=1), (75.0, 90.0)),
         ):
-            qty = get_inv_qty_at_date(product.id, date)
+            qty = get_inv_qty_at_date(product.id, date, warehouse.id)
             self.assertEqual(qty, expected_qties)
 
     def test_transfer_where_qty_done_differs_from_demand(self):
