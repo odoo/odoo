@@ -54,6 +54,10 @@ class DiscussChannelMember(models.Model):
         "Customized Notifications",
         help="Use default from user settings if not specified. This setting will only be applied to channels.",
     )
+    invitation_sent_dt = fields.Datetime(
+        "Invitation Sent On",
+        help="Date and time at which the invitation was last sent to this member. Cleared when the member joins, so a value means the invitation is still pending.",
+    )
     mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
     is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")
     unpin_dt = fields.Datetime("Unpin date", index=True, help="Contains the date and time when the channel was unpinned by the user.")
@@ -299,6 +303,7 @@ class DiscussChannelMember(models.Model):
         super()._sync_field_names(res)
         # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res["channel_id", None].attr("channel_role", sudo=True)
+        res["channel_id", None].attr("invitation_sent_dt")
         res[None].extend(["custom_notifications", "is_favorite"])
         res[None].extend(["is_pinned", "last_interest_dt", "message_unread_counter"])
         res[None].extend(["mute_until_dt", "new_message_separator"])
@@ -459,7 +464,7 @@ class DiscussChannelMember(models.Model):
     def _store_member_fields(self, res: Store.FieldList):
         # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res.attr("channel_role", sudo=True)
-        res.extend(["create_date", "last_seen_dt", "seen_message_id"])
+        res.extend(["create_date", "invitation_sent_dt", "last_seen_dt", "seen_message_id"])
         self._store_persona_default_fields(res)
 
     # --------------------------------------------------------------------------
@@ -672,6 +677,9 @@ class DiscussChannelMember(models.Model):
         :param last_message_id: the id of the message to be marked as read.
         """
         self.ensure_one()
+        if self.invitation_sent_dt:
+            # Reading the channel is showing up: the invitation is no longer pending.
+            self.invitation_sent_dt = False
         domain = [
             ("model", "=", "discuss.channel"),
             ("res_id", "=", self.channel_id.id),

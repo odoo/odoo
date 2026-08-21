@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 from lxml import html
 from itertools import product
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
-from odoo.tests import HttpCase, new_test_user, users
+from odoo.tests import HttpCase, JsonRpcException, new_test_user, users
+from odoo.tools import mute_logger
 from odoo.tools.misc import hash_sign
 
 
@@ -62,11 +64,6 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
     def test_03_only_invite_by_email_on_allowed_channel_types(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user")
         john = new_test_user(self.env, "john", groups="base.group_user")
-        chat = (
-            self.env["discuss.channel"]
-            .with_user(bob)
-            ._get_or_create_chat(partners_to=john.partner_id.ids)
-        )
         group_chat = (
             self.env["discuss.channel"]
             .with_user(bob)
@@ -90,7 +87,8 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                 f"Inviting by email is not allowed for this channel type ({channel.channel_type}).",
             )
         with self.mock_mail_gateway():
-            for channel in [chat, group_chat, public_channel]:
+            # Inviting by email on chat will be allowed but will convert it to a group channel first to allow multiple members.
+            for channel in [group_chat, public_channel]:
                 channel.invite_by_email(["some@email.com"])
                 self.assertMailMail(
                     self.env["res.partner"],
@@ -136,11 +134,6 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         alfred_guest = self.env["mail.guest"].create({"email": "alfred@test.com", "name": "Alfred"})
-        chat = (
-            self.env["discuss.channel"]
-            .with_user(bob)
-            ._get_or_create_chat(partners_to=john.partner_id.ids)
-        )
         group_chat = (
             self.env["discuss.channel"]
             .with_user(bob)
@@ -160,7 +153,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         )
         cases = [
             *product(
-                [chat, private_channel, group_chat, public_channel],
+                [private_channel, group_chat, public_channel],
                 ["foo@bar"],
                 [False],
             ),
@@ -172,7 +165,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             ),
             # Channel types that allow inviting by email, valid email, selectable.
             *product(
-                [chat, group_chat, public_channel],
+                [group_chat, public_channel],
                 ["bob@odoo.com", "alfred@odoo.com", "jane@odoo.com"],
                 [True],
             ),
@@ -210,3 +203,160 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         self.assertEqual(response.status_code, 404)
         response = self.url_open(new_url)
         self.assertEqual(response.status_code, 200)
+
+    def test_08_invite_by_email_resent_while_invitation_is_pending(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        with self.mock_mail_gateway():
+            group_chat.invite_by_email(["alfred@test.com"])
+            self.assertMailMail(
+                self.env["res.partner"],
+                status=None,
+                email_to_all=["alfred@test.com"],
+                author=bob.partner_id,
+            )
+        pending_member = group_chat.channel_member_ids.filtered(
+            lambda member: member.guest_id.email == "alfred@test.com"
+        )
+        self.assertTrue(pending_member.invitation_sent_dt)
+        # A pending address is still selectable, and flagged as already invited.
+        result = self.env["res.partner"].search_for_channel_invite(
+            "alfred@test.com", channel_id=group_chat.id
+        )
+        self.assertEqual(result["selectable_email"], "alfred@test.com")
+        self.assertTrue(result["email_already_sent"])
+        # Inviting again sends the link a second time, reusing the pending member.
+        with self.mock_mail_gateway():
+            group_chat.invite_by_email(["alfred@test.com"])
+            self.assertMailMail(
+                self.env["res.partner"],
+                status=None,
+                email_to_all=["alfred@test.com"],
+                author=bob.partner_id,
+            )
+        self.assertEqual(
+            group_chat.channel_member_ids.filtered(
+                lambda member: member.guest_id.email == "alfred@test.com"
+            ),
+            pending_member,
+        )
+        # Once the invitation is accepted, the address is no longer invitable.
+        self.url_open(
+            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
+        )
+        self.assertFalse(pending_member.invitation_sent_dt)
+        result = self.env["res.partner"].search_for_channel_invite(
+            "alfred@test.com", channel_id=group_chat.id
+        )
+        self.assertFalse(result["selectable_email"])
+        with self.mock_mail_gateway():
+            group_chat.invite_by_email(["alfred@test.com"])
+            self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
+
+    def test_09_resend_invitation_from_the_member_list(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        with self.mock_mail_gateway():
+            group_chat.invite_by_email(["alfred@test.com"])
+        pending_member = group_chat.channel_member_ids.filtered(
+            lambda member: member.guest_id.email == "alfred@test.com"
+        )
+        self.assertTrue(pending_member.invitation_sent_dt)
+        # Backdate the first invitation to tell both invitation dates apart.
+        first_sent_dt = pending_member.invitation_sent_dt - timedelta(days=1)
+        pending_member.sudo().invitation_sent_dt = first_sent_dt
+        self.authenticate("bob", "bob")
+        with self.mock_mail_gateway():
+            self.make_jsonrpc_request(
+                "/discuss/channel/member/resend_invitation", {"member_id": pending_member.id}
+            )
+            self.assertMailMail(
+                self.env["res.partner"],
+                status=None,
+                email_to_all=["alfred@test.com"],
+                author=bob.partner_id,
+            )
+        pending_member.invalidate_recordset(["invitation_sent_dt"])
+        self.assertGreater(pending_member.invitation_sent_dt, first_sent_dt)
+        # Members who already joined have no invitation left to resend.
+        with self.assertRaises(JsonRpcException), self.mock_mail_gateway():
+            self.make_jsonrpc_request(
+                "/discuss/channel/member/resend_invitation",
+                {"member_id": group_chat.self_member_id.id},
+            )
+
+    def test_10_inviting_a_portal_user_shows_them_once_as_pending(self):
+        """A portal user is mailed the link and shown as a single pending member: a guest for
+        their address on top of their own member would look like two different people."""
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        joel = new_test_user(
+            self.env, "joel", groups="base.group_portal", email="joel@test.com", name="Joel Willis"
+        )
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        self.authenticate("bob", "bob")
+        with self.mock_mail_gateway():
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "/discuss/channel/add_members",
+                            {"channel_id": group_chat.id, "user_ids": joel.ids},
+                        ],
+                    ],
+                },
+            )
+            self.assertMailMail(
+                self.env["res.partner"],
+                status=None,
+                email_to_all=["joel@test.com"],
+                author=bob.partner_id,
+            )
+        group_chat.invalidate_recordset(["channel_member_ids"])
+        self.assertEqual(
+            group_chat.channel_member_ids.partner_id, bob.partner_id + joel.partner_id
+        )
+        self.assertFalse(group_chat.channel_member_ids.guest_id)
+        # The invitation is tracked on Joel's own member, so it can be sent again from there.
+        joel_member = group_chat.channel_member_ids.filtered(
+            lambda member: member.partner_id == joel.partner_id
+        )
+        self.assertEqual(group_chat.channel_member_ids.filtered("invitation_sent_dt"), joel_member)
+        # Joel is a member from the start: he stays pending until he shows up himself.
+        self.url_open(
+            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'joel@test.com')}"
+        )
+        joel_member.invalidate_recordset(["invitation_sent_dt"])
+        self.assertTrue(joel_member.invitation_sent_dt, "the link was opened by bob, not joel")
+        self.authenticate("joel", "joel")
+        self.make_jsonrpc_request(
+            "/discuss/channel/mark_as_read",
+            {"channel_id": group_chat.id, "last_message_id": group_chat.message_ids[:1].id},
+        )
+        joel_member.invalidate_recordset(["invitation_sent_dt"])
+        self.assertFalse(joel_member.invitation_sent_dt)
+
+    def test_11_only_members_can_send_the_invitation_link_again(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "Public Channel", "group_public_id": False},
+        )
+        public_channel._add_members(users=bob)
+        with self.mock_mail_gateway():
+            public_channel.with_user(bob).invite_by_email(["alfred@test.com"])
+        pending_member = public_channel.channel_member_ids.filtered(
+            lambda member: member.guest_id.email == "alfred@test.com"
+        )
+        # John reaches the channel and its members, but did not join it.
+        self.authenticate("john", "john")
+        with (
+            self.assertRaises(JsonRpcException, msg="odoo.exceptions.AccessError"),
+            self.mock_mail_gateway(),
+            mute_logger("odoo.http"),
+        ):
+            self.make_jsonrpc_request(
+                "/discuss/channel/member/resend_invitation", {"member_id": pending_member.id}
+            )
+        with self.mock_mail_gateway():
+            self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")

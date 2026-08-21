@@ -73,6 +73,8 @@ export const ACTION_TAGS = Object.freeze({
  * @property {DropdownState|(params: ActionParams_T) => DropdownState} [dropdownState]
  * @property {string|(params: ActionParams_T) => string} [dropdownTemplate]
  * @property {Object|(params: ActionParams_T) => Object} [dropdownTemplateParams]
+ * @property {Component} [extraContentComponent]
+ * @property {(params: ActionParams_T) => Object} [extraContentComponentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [hasBtnBg]
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
@@ -462,6 +464,23 @@ export class Action {
             (typeof this.definition.dropdownTemplateParams === "function"
                 ? this.definition.dropdownTemplateParams.call(this, this.params)
                 : this.definition.dropdownTemplateParams)
+        );
+    }
+
+    /** @param {Action} action @returns {Component|undefined} */
+    _extraContentComponent(action) {}
+    /** When action needs a small widget on the action button (toggle, checkbox, etc), this allows loading an extra widget that gets aligned to the right */
+    get extraContentComponent() {
+        return this._extraContentComponent(this.params) ?? this.definition.extraContentComponent;
+    }
+
+    /** @param {Action} action @returns {Object|undefined} */
+    _extraContentComponentProps(action) {}
+    /** When action needs a small widget on the action button (toggle, checkbox, etc), this determines optional props to pass to the widget. */
+    get extraContentComponentProps() {
+        return (
+            this._extraContentComponentProps(this.params) ??
+            this.definition.extraContentComponentProps?.call(this, this.params)
         );
     }
 

@@ -59,7 +59,9 @@ class ResPartner(models.Model):
         if not partner_ids and single_email_re.match(search_term):
             email = email_normalize(search_term)
             channel = self.env["discuss.channel"].search_fetch([("id", "=", int(channel_id))])
-            member_domain = Domain("channel_id", "=", channel.id)
+            member_domain = Domain("channel_id", "=", channel.id) & Domain(
+                "invitation_sent_dt", "=", False
+            )
             member_domain &= Domain("guest_id.email", "=", email) | Domain(
                 "partner_id.email", "=", email
             )
