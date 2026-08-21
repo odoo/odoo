@@ -6,6 +6,29 @@ import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scroll
  */
 
 /**
+ * `_queueCallback`/`executeAfterTransition` waits for a CSS transition on an
+ * element before running a callback, with a `setTimeout` fallback in case
+ * the transition event never fires. That timeout is not cancelled if the
+ * element gets removed/replaced in the meantime (e.g. a template re-render
+ * discarding it), so the callback can still fire later against an element
+ * that is no longer part of the page - and, transitively, against whatever
+ * component instance owned it, which may by then be disposed. Skip it in
+ * that case: there is nothing left on screen for it to act on.
+ */
+const bsExecuteAfterTransition = window.Index.executeAfterTransition;
+window.Index.executeAfterTransition = function (callback, transitionElement, waitForTransition) {
+    return bsExecuteAfterTransition(
+        () => {
+            if (transitionElement.isConnected) {
+                callback();
+            }
+        },
+        transitionElement,
+        waitForTransition
+    );
+};
+
+/**
  * Review Bootstrap Sanitization: leave it enabled by default but extend it to
  * accept more common tag names like tables and buttons, and common attributes
  * such as style or data-. If a specific tooltip or popover must accept custom
