@@ -6877,6 +6877,47 @@ class TestStockMove(TestStockCommon):
                 'packaging_qty_ordered': 5.0,
             })
 
+    def test_delivery_slip_quantity_aggregation_across_move_lines(self):
+        """ A receipt for a fractional quantity that is over-received in two operations should
+        report the expected and received quantities on a single line, both in the product's unit
+        and in the vendor's packaging unit.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 11.1,
+            })],
+        })
+        receipt.move_ids.packaging_uom_id = pack_of_6
+        receipt.action_confirm()
+        # Receiving more than expected adds a second move line for the excess.
+        receipt.move_ids.quantity = 13.9
+        self.assertEqual(len(receipt.move_ids.move_line_ids), 2)
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        aggregated_lines = receipt.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregated_lines), 1)
+        aggregate_val = next(iter(aggregated_lines.values()))
+        self.assertDictEqual({
+            'name': aggregate_val['name'],
+            'qty_ordered': aggregate_val['qty_ordered'],
+            'quantity': aggregate_val['quantity'],
+            'packaging_qty_ordered': aggregate_val['packaging_qty_ordered'],
+            'packaging_quantity': aggregate_val['packaging_quantity'],
+        }, {
+            'name': self.productA.name,
+            'qty_ordered': 11.1,
+            'quantity': 13.9,
+            'packaging_qty_ordered': 1.86,
+            'packaging_quantity': 2.32,
+        })
+
     def test_aggregated_quantities_partial_and_over_delivery(self):
         """
         Test that aggregated product quantities preserve the original demand
