@@ -1349,6 +1349,9 @@ class HrLeave(models.Model):
                     holiday_sudo.action_approve()
                     holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
+                    # Nobody had to approve it, so we tell the manager about the time off ourselves
+                    if holiday_sudo.state == 'validate' and not self.env.context.get('import_file'):
+                        holiday_sudo._notify_leave_request()
                 elif not self.env.context.get('import_file'):
                     holiday_sudo.activity_update()
         if employees_without_allocation:
@@ -2018,8 +2021,10 @@ class HrLeave(models.Model):
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
         self.env['mail.activity'].with_context(short_name=False, mail_activity_quick_update=True).create(activity_vals)
-        if activity_vals:
-            self._notify_leave_request()
+        # Send the mail even if no approval task was made, the manager still needs to know
+        leaves_to_notify = self.filtered(lambda holiday: holiday.state in ['confirm', 'validate1'])
+        if leaves_to_notify:
+            leaves_to_notify._notify_leave_request()
 
     ####################################################
     # Messaging methods
@@ -2056,17 +2061,19 @@ class HrLeave(models.Model):
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
 
     def _notify_leave_request(self):
-        """Notifies the responsible approver(s) when an employee applies for leave."""
+        """ Notifies the responsible approver(s) and the employee's manager when an employee applies for leave. """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 
         leave_model_description = self.env['ir.model']._get(self._name).display_name
         subject = self.env.ref('hr_holidays.new_timeoff_request_template')._render_field('subject', self.ids, compute_lang=True)
         for holiday in self:
-            if holiday.work_entry_type_id.leave_validation_type == 'no_validation':
-                continue
-
-            partner_ids = holiday.sudo()._get_responsible_for_approval().mapped('partner_id')
+            # We always notify the manager, even when someone else has to approve the time off
+            employee_sudo = holiday.employee_id.sudo()
+            responsible_users = holiday.sudo()._get_responsible_for_approval() | employee_sudo.leave_manager_id
+            manager_partner = employee_sudo.parent_id.user_id.partner_id or employee_sudo.parent_id.work_contact_id
+            # No need to write to the one who request the time off, or to the one acting on it
+            partner_ids = (responsible_users.partner_id | manager_partner) - (holiday.user_id.partner_id | self.env.user.partner_id)
 
             if not partner_ids:
                 continue
@@ -2080,7 +2087,7 @@ class HrLeave(models.Model):
 
             subtitles = [
                 self.env._('%(employee_name)s requested a time-off \n',
-                    employee_name=holiday.employee_id.name),
+                    employee_name=employee_sudo.name),
                 self.env._('%(start_date)s → %(end_date)s (%(duration)s)',
                     start_date=format_date(self.env, holiday.request_date_from, date_format='MMM dd'),
                     end_date=format_date(self.env, holiday.request_date_to, date_format='MMM dd'),
