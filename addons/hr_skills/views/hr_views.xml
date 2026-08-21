@@ -55,8 +55,7 @@
                             <span invisible="not is_course">
                                 <field name="duration" style="width: 4ch;"/> hours
                             </span>
-                            <field name="certificate_filename" invisible="1"/>
-                            <field name="certificate_file" filename="certificate_filename"/>
+                            <field name="certificate_file" />
                         </group>
                     </group>
                     <field name="resume_line_properties"/>
@@ -140,7 +139,7 @@
                                     'warning': 'valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime(\'%Y-%m-%d\') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime(\'%Y-%m-%d\')'
                                 }
                             }"/>
-                            <field name="certificate_file" widget="binary" filename="certificate_filename"/>
+                            <field name="certificate_file" widget="binary"/>
                         </list>
                     </field>
                 </page>
@@ -252,8 +251,7 @@
                 <field name="date_start" string="Date"/>
                 <field name="course_type" string="Type" column_invisible="1"/>
                 <field name="line_type_id" string="Resume Section" optional="show" required="1" domain="[('is_course', '=', True)]"/>
-                <field name="certificate_filename" column_invisible="1"/>
-                <field name="certificate_file" filename="certificate_filename" widget="binary"/>
+                <field name="certificate_file" widget="binary"/>
                 <field name="duration" string="Number of Hours" optional="hide"/>
                 <field name="external_url" optional="hide" column_invisible="1"/>
                 <field name="description" optional="hide"/>
@@ -414,8 +412,7 @@
                     </group>
                     <group>
                         <group>
-                            <field name="certificate_filename" invisible="1"/>
-                            <field name="certificate_file" string="Certificate" filename="certificate_filename" invisible="not is_certification"/>
+                            <field name="certificate_file" string="Certificate" invisible="not is_certification"/>
                         </group>
                     </group>
                     <div class="alert alert-warning ps-3" role="alert" invisible="not display_warning_message">
@@ -555,8 +552,7 @@
                 <field name="company_id" optional="hide"/>
                 <field name="valid_from" string="From" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
                 <field name="valid_to" string="To" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
-                <field name="certificate_filename" column_invisible="1"/>
-                <field name="certificate_file" filename="certificate_filename" widget="binary" optional="hidden"/>
+                <field name="certificate_file" widget="binary" optional="hidden"/>
             </list>
         </field>
     </record>

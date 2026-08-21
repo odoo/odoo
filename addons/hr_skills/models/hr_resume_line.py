@@ -30,7 +30,6 @@ class HrResumeLine(models.Model):
     )
     color = fields.Char(compute='_compute_color', default='#000000')
     external_url = fields.Char(string="External URL", compute='_compute_external_url', store=True, readonly=False)
-    certificate_filename = fields.Char()
     certificate_file = fields.Binary(string="Certificate")
     resume_line_properties = fields.Properties(
         'Properties',
