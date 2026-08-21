@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urlsplit
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 
@@ -21,6 +22,13 @@ class ProductProduct(models.Model):
         comodel_name="product.image",
         inverse_name="product_variant_id",
     )
+
+    # Storage for a video explicitly set on this variant's own main image slot (e.g. via the
+    # website builder while that variant is selected). Kept separate from `image_variant_1920`
+    # so that the video's own poster frame (stored in `image_variant_1920` alongside it) is never
+    # mistaken for a variant-specific photo that should hide the video.
+    video_variant_url = fields.Char(string="Variant Video URL")
+    video_url = fields.Char(compute="_compute_video_url", inverse="_inverse_video_url")
 
     website_url = fields.Char(
         string="Website URL",
@@ -42,6 +50,40 @@ class ProductProduct(models.Model):
                 query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
                 url = url._replace(query=urlencode(query_params))
             product.website_url = url.geturl()
+
+    @api.depends("video_variant_url", "image_variant_1920", "product_tmpl_id.video_url")
+    def _compute_video_url(self):
+        for product in self:
+            product.video_url = product.video_variant_url or (
+                not product.image_variant_1920 and product.product_tmpl_id.video_url
+            )
+
+    def _inverse_video_url(self):
+        for product in self:
+            if product.video_url:
+                # Always attach a newly set video to this specific variant: its own poster
+                # frame may also land in `image_variant_1920` (see `_compute_video_url`), and
+                # that must never end up hiding the video that poster belongs to.
+                product.video_variant_url = product.video_url
+            elif product.video_variant_url:
+                # This variant had its own video: only clear that one.
+                product.video_variant_url = False
+            else:
+                # This variant was only showing the template's fallback video (it never had an
+                # override of its own): clear that, since there is no other video left to fall
+                # back on.
+                product.product_tmpl_id.video_url = False
+
+    @api.constrains("video_variant_url")
+    def _check_valid_video_variant_url(self):
+        for product in self:
+            if product.video_variant_url and not urlsplit(product.video_variant_url).netloc:
+                raise ValidationError(
+                    product.env._(
+                        "Provided video URL for '%s' is not valid. Please enter a valid video URL.",
+                        product.display_name,
+                    )
+                )
 
     # === BUSINESS METHODS ===#
 

@@ -1044,10 +1044,30 @@
 
     <template id="website_sale.shop_product_image">
         <div
-            t-if="product_image._name == 'product.image' and product_image.video_url"
-            t-att-class="image_classes + ' ratio ratio-16x9'"
+            t-if="product_image.video_url"
+            t-att-data-wsale-model="product_image._name"
+            t-att-data-wsale-id="product_image.id"
+            t-att-class="image_classes + ' oe_unmovable o_savable'"
         >
-            <div data-embedded="video" t-attf-data-embedded-props='{"src": "#{product_image.video_url}"}'/>
+            <!-- "data-wsale-*" (not "data-oe-*") on purpose: this isn't a real
+                 "t-field" reference, and the website editor's generic save logic
+                 crashes on any "[data-oe-model]" element that isn't one.
+                 "o_savable" (normally added dynamically to "[data-oe-model]"
+                 elements) is added here by hand instead, so this element is
+                 still individually selectable/click-through in edit mode. -->
+            <div class="media_iframe_video w-100 h-100" t-att-data-embed-url="product_image.video_url">
+                <!-- "data-embed-url" lets the video dialog pre-fill the current video
+                     when re-editing it (see VideoSelector's "onMounted"). -->
+                <div class="css_editable_mode_display"/>
+                <div class="media_iframe_video_size" contenteditable="false"/>
+                <iframe
+                    t-att-src="product_image.video_url"
+                    loading="lazy"
+                    frameborder="0"
+                    contenteditable="false"
+                    allowfullscreen="allowfullscreen"
+                />
+            </div>
         </div>
         <div
             t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
@@ -1172,7 +1192,7 @@
                         t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'object-fit-cover w-100 h-100', 'alt-field': 'name'}"
                     />
                     <i
-                        t-if="product_image._name == 'product.image' and product_image.video_url"
+                        t-if="product_image.video_url"
                         class="oi oi-2x oi-filled o_product_video_thumb bg-black-50 text-center" data-icon="play_circle"
                     />
                 </li>

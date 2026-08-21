@@ -4,17 +4,24 @@
 <t t-name="website_sale.ProductImageOption">
     <BuilderRow label.translate="Media">
         <BuilderButton
-            action="'replaceMedia'"
-            title.translate="Replace image"
+            action="'chooseMedia'"
+            title.translate="Choose an image"
             className="'flex-grow-1'"
             type="'success'"
-            label.translate="Replace" />
+            icon="'photo_camera'" />
+        <BuilderButton
+            action="'chooseVideoMedia'"
+            title.translate="Choose a video"
+            className="'flex-grow-1'"
+            type="'success'"
+            icon="'videocam'" />
         <BuilderButton
             action="'removeMedia'"
             className="'flex-grow-1'"
             type="'danger'"
             preview="false"
-            label.translate="Remove"/>
+            title.translate="Remove"
+            icon="'close_small'"/>
     </BuilderRow>
     <BuilderRow label.translate="Re-order">
         <BuilderButtonGroup preview="false" action="'setPosition'">

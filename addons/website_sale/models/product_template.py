@@ -3,7 +3,7 @@
 import logging
 import random
 from collections import defaultdict
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urlsplit
 
 from psycopg2 import sql
 
@@ -167,6 +167,11 @@ class ProductTemplate(models.Model):
         inverse_name="product_tmpl_id",
         copy=True,
     )
+    video_url = fields.Char(
+        string="Video URL",
+        help="URL of a video showcasing the product, displayed instead of the main image on the"
+        " eCommerce product page.",
+    )
 
     compare_list_price = fields.Monetary(
         string="Compare to Price",
@@ -305,6 +310,19 @@ class ProductTemplate(models.Model):
             template.variants_default_code = RARE_DELIMITER.join(
                 template.product_variant_ids.filtered("default_code").mapped("default_code")
             )
+
+    # === CONSTRAINT METHODS ===#
+
+    @api.constrains("video_url")
+    def _check_valid_video_url(self):
+        for template in self:
+            if template.video_url and not urlsplit(template.video_url).netloc:
+                raise ValidationError(
+                    template.env._(
+                        "Provided video URL for '%s' is not valid. Please enter a valid video URL.",
+                        template.name,
+                    )
+                )
 
     # === CRUD METHODS ===#
 

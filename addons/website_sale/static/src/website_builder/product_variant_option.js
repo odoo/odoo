@@ -9,9 +9,16 @@ export class ProductVariantOption extends ProductTemplateOption {
     setup() {
         super.setup();
         this.domState = useDomState(async (el) => {
-            const productProduct = el.querySelector('[data-oe-model="product.product"]');
+            // The main image is usually the only "product.product" `t-field` reference on the
+            // page (hence "data-oe-model"), but it uses "data-wsale-model" instead when it's a
+            // showcase video (see "shop_product_image"), so that must be checked too.
+            const productProduct = el.querySelector(
+                '[data-oe-model="product.product"], [data-wsale-model="product.product"]'
+            );
             const productTemplate = el.querySelector('[data-oe-model="product.template"]');
-            const variantId = productProduct ? parseInt(productProduct.dataset.oeId) : null;
+            const variantId = productProduct
+                ? parseInt(productProduct.dataset.oeId || productProduct.dataset.wsaleId)
+                : null;
             const templateId = productTemplate ? parseInt(productTemplate.dataset.oeId) : null;
             const hasVariants = el.querySelector(".variant_attribute") || !templateId;
 
