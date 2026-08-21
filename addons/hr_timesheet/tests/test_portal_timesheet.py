@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import tagged
@@ -14,12 +13,6 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         """ Ensure that the method _fields_view_get is accessible without
             raising an error for all portal users
         """
-        # A portal collaborator is added to a project to enable the rule analytic.account.analytic.line.timesheet.portal.user
-        self.project_portal.write({
-            'collaborator_ids': [
-                Command.create({'partner_id': self.user_portal.partner_id.id}),
-            ],
-        })
         for view in ['form', 'list']:
             # Ensure that uom.uom records are not present in cache
             self.env.invalidate_all()
@@ -30,12 +23,6 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         """ Ensure that the action view_subtask_timesheet is accessible without
             raising an error for all portal users
         """
-        # A portal collaborator is added to a project to enable the rule analytic.account.analytic.line.timesheet.portal.user
-        self.project_portal.write({
-            'collaborator_ids': [
-                Command.create({'partner_id': self.user_portal.partner_id.id}),
-            ],
-        })
         action = self.task_portal.action_view_subtask_timesheet()
         tree_view_id = form_view_id = kanban_view_id = False
         for view_id, view_type in action['views']:
@@ -181,9 +168,6 @@ class TestPortalTimesheet(TestProjectSharingCommon):
             login="employee_user",
             groups="hr_timesheet.group_hr_timesheet_user",
         )
-        self.project_portal.collaborator_ids = [
-            Command.create({"partner_id": self.partner_portal.id}),
-        ]
 
         def store_fields(res: Store.FieldList):
             res.from_method("_store_thread_fields", request_list=["followers"])

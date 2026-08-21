@@ -1,4 +1,3 @@
-from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.project.tests.test_project_sharing_ui import TestProjectSharingUi
@@ -18,14 +17,9 @@ class TestProjectSharingHrTimesheet(TestProjectSharingUi):
             'name': 'Employee',
             'company_id': company_2.id,
         })
-        project_share_wizard = self.env['project.share.wizard'].create({
-            'res_model': 'project.project',
-            'res_id': self.project_portal.id,
-            'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
-            ],
-        })
-        project_share_wizard.action_send_mail()
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.partner_portal
+        ).write({'access_mode': 'advanced_edit'})
         task_portal = self.env['project.task'].create({
             'name': 'Test',
             'project_id': self.project_portal.id,

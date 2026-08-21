@@ -143,11 +143,15 @@ class ProjectCustomerPortal(CustomerPortal):
         lang = user_context.get("lang")
 
         project_company = self._get_project_sharing_company(project)
+        collaborator = project.collaborator_ids.filtered(
+            lambda c: c.partner_id == request.env.user.partner_id
+        )[:1]
 
         session_info.update(
             action_name="project.project_sharing_project_task_action",
             project_id=project.id,
             project_name=project.name,
+            portal_is_readonly=collaborator.access_mode == 'view' if collaborator else False,
             user_companies={
                 'current_company': project_company.id,
                 'allowed_companies': {
@@ -160,14 +164,12 @@ class ProjectCustomerPortal(CustomerPortal):
             # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
             currencies=request.env['res.currency'].get_all_currencies(),
         )
-        collaborator = project.collaborator_ids.filtered(
-            lambda c: c.partner_id == request.env.user.partner_id
-        )[:1]
 
         session_info['user_context'].update({
             'allow_milestones': project.allow_milestones,
             'allow_task_dependencies': project.allow_task_dependencies,
             'portal_can_advanced_edit': not self.env.user.share or (collaborator and collaborator.access_mode == 'advanced_edit'),
+            'portal_is_readonly': self.env.user.share and (collaborator and collaborator.access_mode == 'view'),
         })
         return session_info
 

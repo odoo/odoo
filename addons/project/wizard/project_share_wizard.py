@@ -24,21 +24,12 @@ class ProjectShareWizard(models.TransientModel):
         if result['res_model'] and result['res_id']:
             project = self.env[result['res_model']].browse(result['res_id'])
             collaborator_vals_list = []
-            collaborator_ids = []
             for collaborator in project.collaborator_ids:
-                collaborator_ids.append(collaborator.partner_id.id)
                 collaborator_vals_list.append({
                     'partner_id': collaborator.partner_id.id,
                     'partner_name': collaborator.partner_id.display_name,
-                    'access_mode': 'edit' if collaborator.limited_access else 'advanced_edit',
+                    'access_mode': collaborator.access_mode,
                 })
-            for follower in project.message_partner_ids:
-                if follower.partner_share and follower.id not in collaborator_ids:
-                    collaborator_vals_list.append({
-                        'partner_id': follower.id,
-                        'partner_name': follower.display_name,
-                        'access_mode': 'view',
-                    })
             if collaborator_vals_list:
                 collaborator_vals_list.sort(key=operator.itemgetter('partner_name'))
                 result['collaborator_ids'] = [
@@ -74,63 +65,38 @@ class ProjectShareWizard(models.TransientModel):
         wizards = super().create(vals_list)
         for wizard in wizards:
             collaborator_ids_to_add = []
-            collaborator_ids_to_add_with_limited_access = []
             collaborator_ids_vals_list = []
             project = wizard.resource_ref
             project_collaborator_ids_to_remove = [
-                c.id
-                for c in project.collaborator_ids
+                c.id for c in project.collaborator_ids
                 if c.partner_id not in wizard.collaborator_ids.partner_id
-            ]
-            project_followers = project.message_partner_ids
-            project_followers_to_add = []
-            project_followers_to_remove = [
-                partner.id
-                for partner in project_followers
-                if partner not in wizard.collaborator_ids.partner_id and partner.partner_share
             ]
             project_collaborator_per_partner_id = {c.partner_id.id: c for c in project.collaborator_ids}
             for collaborator in wizard.collaborator_ids:
                 partner_id = collaborator.partner_id.id
-                project_collaborator = project_collaborator_per_partner_id.get(partner_id, self.env['project.collaborator'])
-                if collaborator.access_mode in ("edit", "advanced_edit"):
-                    limited_access = collaborator.access_mode == "edit"
-                    if not project_collaborator:
-                        if limited_access:
-                            collaborator_ids_to_add_with_limited_access.append(partner_id)
-                        else:
-                            collaborator_ids_to_add.append(partner_id)
-                    elif project_collaborator.limited_access != limited_access:
-                        collaborator_ids_vals_list.append(
-                            Command.update(
-                                project_collaborator.id,
-                                {'limited_access': limited_access},
-                            )
-                        )
-                elif project_collaborator:
-                    project_collaborator_ids_to_remove.append(project_collaborator.id)
-                if partner_id not in project_followers.ids:
-                    project_followers_to_add.append(partner_id)
+                project_collaborator = project_collaborator_per_partner_id.get(partner_id)
+                if not project_collaborator:
+                    collaborator_ids_to_add.append((partner_id, collaborator.access_mode))
+                elif project_collaborator.access_mode != collaborator.access_mode:
+                    collaborator_ids_vals_list.append(
+                        Command.update(project_collaborator.id, {'access_mode': collaborator.access_mode})
+                    )
+
             if collaborator_ids_to_add:
-                partners = project._get_new_collaborators(self.env['res.partner'].browse(collaborator_ids_to_add))
-                collaborator_ids_vals_list.extend(Command.create({'partner_id': partner_id}) for partner_id in partners.ids)
-                project.tasks.message_subscribe(partner_ids=partners.ids)
-            if collaborator_ids_to_add_with_limited_access:
-                partners = project._get_new_collaborators(self.env['res.partner'].browse(collaborator_ids_to_add_with_limited_access))
-                collaborator_ids_vals_list.extend(
-                    Command.create({'partner_id': partner_id, 'limited_access': True}) for partner_id in partners.ids
-                )
+                partner_ids_list = [c[0] for c in collaborator_ids_to_add]
+                partners = project._get_new_collaborators(self.env['res.partner'].browse(partner_ids_list))
+                for partner_id, access_mode in collaborator_ids_to_add:
+                    if partner_id in partners.ids:
+                        collaborator_ids_vals_list.append(
+                            Command.create({'partner_id': partner_id, 'access_mode': access_mode})
+                        )
+
             if project_collaborator_ids_to_remove:
-                collaborator_ids_vals_list.extend(Command.delete(collaborator_id) for collaborator_id in project_collaborator_ids_to_remove)
-            project_vals = {}
+                collaborator_ids_vals_list.extend(Command.delete(c_id) for c_id in project_collaborator_ids_to_remove)
+
             if collaborator_ids_vals_list:
-                project_vals['collaborator_ids'] = collaborator_ids_vals_list
-            if project_vals:
-                project.write(project_vals)
-            if project_followers_to_add:
-                project._add_followers(self.env['res.partner'].browse(project_followers_to_add))
-            if project_followers_to_remove:
-                project.message_unsubscribe(project_followers_to_remove)
+                project.write({'collaborator_ids': collaborator_ids_vals_list})
+
         return wizards
 
     def action_share_record(self):
@@ -161,21 +127,8 @@ class ProjectShareWizard(models.TransientModel):
                 'type': 'success',
                 'message': _("Project shared with your collaborators."),
                 'next': {'type': 'ir.actions.act_window_close'},
-            }}
-        partner_ids_in_readonly_mode = []
-        partner_ids_in_edit_mode = []
-        for collaborator in self.collaborator_ids:
-            if not collaborator.send_invitation:
-                continue
-            if collaborator.access_mode == 'view':
-                partner_ids_in_readonly_mode.append(collaborator.partner_id.id)
-            else:
-                partner_ids_in_edit_mode.append(collaborator.partner_id.id)
-        if partner_ids_in_edit_mode:
-            new_collaborators = self.env['res.partner'].browse(partner_ids_in_edit_mode)
-            # send mail to users
-            self._send_signup_link(partners=new_collaborators.with_context({'signup_valid': True}))
-        if partner_ids_in_readonly_mode:
-            self.partner_ids = self.env['res.partner'].browse(partner_ids_in_readonly_mode)
-            super().action_send_mail()
+            }
+        }
+        if partners_to_invite := self.collaborator_ids.filtered('send_invitation').partner_id:
+            self._send_signup_link(partners=partners_to_invite.with_context({'signup_valid': True}))
         return result

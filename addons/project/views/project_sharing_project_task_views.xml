@@ -44,7 +44,7 @@
                                     <t t-if="user_count > 1"><t t-out="user_count"/> assignees</t>
                                     <field t-else="" name="portal_user_names"/>
                                 </span>
-                                <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
+                                <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}" readonly="context.get('portal_is_readonly', False)"/>
                             </div>
                         </footer>
                     </t>
