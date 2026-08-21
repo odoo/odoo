@@ -236,7 +236,8 @@ test("breakCombo with course allocation", async () => {
     expect(order.courses[0].name).toBe("Default Course 2");
     expect(order.courses).toHaveLength(1);
 
-    store.breakCombo(order.lines[0]);
+    await contains(".orderline").click();
+    await store.breakCombo(order.lines[0]);
 
     expect(order.courses[0].name).toBe("Default Course 1");
     expect(order.courses[1].name).toBe("Default Course 2");

@@ -15,9 +15,7 @@ patch(OrderDisplay.prototype, {
     getLinesWithoutCourse(lines) {
         // Global discount lines (or any other lines without a course) should be displayed
         const courseUuids = new Set(this.order.course_ids.map((course) => course.uuid));
-        return lines.filter(
-            (line) => !courseUuids.has((line.combo_parent_id || line).course_id?.uuid)
-        );
+        return lines.filter((line) => !courseUuids.has(line.course_id?.uuid));
     },
 });
 OrderDisplay.components = { ...OrderDisplay.components, OrderCourse };

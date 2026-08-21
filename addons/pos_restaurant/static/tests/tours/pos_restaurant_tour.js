@@ -806,18 +806,22 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
             },
             ProductScreen.clickDisplayedProduct("Coca-Cola"), // fake product to prevent course from being cleaned up
             ProductScreen.addCourse(),
-            ProductScreen.clickOrderline("Combo Product 2"),
+            ProductScreen.clickOrderline("Office Combo"),
             ProductScreen.transferCourseTo("Course 2"),
             {
                 content: "Check if entire combo is transfered to course 2",
-                trigger: ".pos", // dummy trigger
+                trigger: "body:not(:has(.modal-dialog))",
                 run: function () {
-                    const comboLines = window.posmodel
-                        .getOrder()
-                        .lines.filter((x) => x.combo_parent_id || x.combo_line_ids?.length);
+                    const lines = window.posmodel.getOrder().lines;
+                    const comboLines = lines.filter(
+                        (x) => x.product_id.display_name !== "Coca-Cola"
+                    );
+                    const allCourse2 = comboLines.every((x) => x.course_id?.name === "Course 2");
 
-                    if (!comboLines.every((x) => x.course_id.name === "Course 2")) {
-                        throw new Error("The entire combo must be transferred to Course 2.");
+                    if (!allCourse2) {
+                        throw new Error(
+                            "The entire combo must be transferred to Course 2 when parent is moved."
+                        );
                     }
                 },
             },
