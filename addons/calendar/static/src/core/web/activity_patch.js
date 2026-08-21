@@ -25,7 +25,7 @@ patch(Activity.prototype, {
         return luxon.DateTime.DATE_FULL;
     },
     get meeting() {
-        return this.activity().calendar_event_id;
+        return this.props.activity().calendar_event_id;
     },
     get timeFormat() {
         return luxon.DateTime.TIME_SIMPLE;
@@ -39,6 +39,6 @@ patch(Activity.prototype, {
             : this.attendeeNames;
     },
     onClickReschedule() {
-        this.activity().rescheduleMeeting();
+        this.props.activity().rescheduleMeeting();
     },
 });

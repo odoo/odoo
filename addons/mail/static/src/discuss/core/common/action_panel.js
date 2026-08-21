@@ -13,6 +13,10 @@ export class ActionPanel extends Component {
         this.props = useProps({
             close: t.function([]).optional(),
             contentPadding: t.boolean().optional(true),
+            /** Content element, either owned by the parent (`contentRef` prop) or local. */
+            contentRef: t
+                .signal(t.instanceOf(HTMLDivElement), { settable: true })
+                .optional(() => signal.ref()),
             icon: t.string().optional(),
             iconClass: t.string().optional(),
             initialWidth: t.number().optional(),
@@ -20,11 +24,6 @@ export class ActionPanel extends Component {
             resizable: t.boolean().optional(true),
             title: t.string().optional(),
         });
-        /** Content element, either owned by the parent (`contentRef` prop) or local. */
-        this.contentRef = useProps.static(
-            "contentRef",
-            t.signal(t.instanceOf(HTMLDivElement)).optional(() => signal.ref())
-        );
         this.store = useService("mail.store");
         this.ui = useService("ui");
         useSubEnv({ inDiscussActionPanel: true });

@@ -1,4 +1,3 @@
-import { propSignal } from "@mail/utils/common/hooks";
 import { Component, signal, types, useEffect, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
@@ -9,13 +8,13 @@ export class DiscussSearch extends Component {
     searchInput = signal();
 
     setup() {
-        this.autofocus = propSignal("autofocus", types.number(), { optional: true });
-        this.searchTerm = propSignal("searchTerm", types.string());
         this.props = useProps({
+            autofocus: types.signal(types.number()).optional(),
+            searchTerm: types.signal(types.string(), { settable: true }),
             class: types.or([types.string(), types.object()]).optional(),
         });
         useEffect(() => {
-            if (this.autofocus?.()) {
+            if (this.props.autofocus?.()) {
                 this.searchInput()?.focus();
             }
         });
@@ -35,11 +34,11 @@ export class DiscussSearch extends Component {
         if (getActiveHotkey(ev) === "escape") {
             ev.stopPropagation();
             ev.preventDefault();
-            this.searchTerm.set("");
+            this.props.searchTerm.set("");
         }
     }
 
     onClearSearch() {
-        this.searchTerm.set("");
+        this.props.searchTerm.set("");
     }
 }

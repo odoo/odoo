@@ -54,7 +54,7 @@ export class Thread extends Component {
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.onWheel = this.onWheel.bind(this);
-        // bound once so `onParentMessageClick` is a stable (useProps.static) handler
+        // bound once so `onParentMessageClick` is a stable (propStatic) handler
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
         this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();

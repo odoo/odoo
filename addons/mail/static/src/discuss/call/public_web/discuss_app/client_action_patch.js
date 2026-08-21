@@ -16,7 +16,7 @@ patch(DiscussClientAction.prototype, {
     async restoreDiscussThread() {
         const hasFullScreenUrl = new URL(browser.location.href).searchParams.has("fullscreen");
         await super.restoreDiscussThread(...arguments);
-        const action = this.props.action;
+        const action = this.props.action();
         if (!action) {
             return;
         }
