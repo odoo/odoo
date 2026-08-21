@@ -11,6 +11,7 @@ export class ProductCard extends Component {
         product: t.or([t.instanceOf(ProductTemplate), t.instanceOf(ProductProduct)]),
         productId: t.or([t.number(), t.string()]),
         comboExtraPrice: t.string().optional(),
+        selectedComboExtraPrice: t.string().optional(),
         color: t.or([t.number(), t.literal(undefined)]).optional(),
         imageUrl: t.or([t.string(), t.boolean()]),
         onClick: t.function().optional(() => () => {}),

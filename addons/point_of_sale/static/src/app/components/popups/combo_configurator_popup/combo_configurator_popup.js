@@ -1,6 +1,8 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
+import { _t } from "@web/core/l10n/translation";
+import { getAttributesPriceExtra } from "@point_of_sale/app/models/utils/compute_combo_items";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { QuantityButtons } from "@point_of_sale/app/components/buttons/quantity_buttons/quantity_buttons";
@@ -160,54 +162,96 @@ export class ComboConfiguratorPopup extends Component {
         });
     }
 
+    formattedBasePrice(combo) {
+        return formatCurrency(combo.base_price, this.pos.currency.id, { trailingZeros: false });
+    }
+
+    extraUnitPriceText(combo) {
+        return _t("& %s per extra unit", this.formattedBasePrice(combo));
+    }
+
     formattedComboPrice(comboItem) {
-        if (this.pos.currency.isZero(comboItem.extra_price)) {
+        let extraPrice = comboItem.extra_price || 0;
+        if (comboItem.combo_id.qty_free === 0) {
+            extraPrice += comboItem.combo_id.base_price;
+        }
+        if (this.pos.currency.isZero(extraPrice)) {
             return "";
         }
-        const priceSign = comboItem.extra_price > 0 ? "+" : "-";
+        const priceSign = extraPrice > 0 ? "+" : "-";
         return (
             priceSign +
             " " +
-            formatCurrency(comboItem.extra_price, this.pos.currency.id, { trailingZeros: false })
+            formatCurrency(Math.abs(extraPrice), this.pos.currency.id, { trailingZeros: false })
         );
+    }
+
+    getExtraQtyForItem(comboItem) {
+        const combo = comboItem.combo_id;
+        let remainingFree = combo.qty_free;
+        for (const item of combo.combo_item_ids) {
+            const qty = this.state.qty[combo.id]?.[item.id] || 0;
+            const freeQty = Math.min(qty, Math.max(0, remainingFree));
+            remainingFree -= freeQty;
+            if (item.id === comboItem.id) {
+                return qty - freeQty;
+            }
+        }
+        return 0;
+    }
+
+    getExtraPriceForItem(comboItem) {
+        const qtySelected = this.state.qty[comboItem.combo_id.id]?.[comboItem.id] || 0;
+        if (!qtySelected) {
+            return 0;
+        }
+        const surcharge = (comboItem.extra_price || 0) + this.attributesExtraPrice(comboItem);
+        return (
+            this.getExtraQtyForItem(comboItem) * comboItem.combo_id.base_price +
+            qtySelected * surcharge
+        );
+    }
+
+    formattedSelectedExtraPrice(comboItem) {
+        if (comboItem.combo_id.qty_free === 0) {
+            return "";
+        }
+        const extraPrice = this.getExtraPriceForItem(comboItem);
+        if (this.pos.currency.isZero(extraPrice)) {
+            return "";
+        }
+        return formatCurrency(extraPrice, this.pos.currency.id, { trailingZeros: false });
     }
 
     getSelectedComboItems() {
         const itemsIncluded = [];
         const itemsExtra = [];
-        const comboFreeQtyTracker = {};
-        Object.values(this.state.qty).forEach((comboItems) => {
-            Object.entries(comboItems)
-                .filter(([, qty]) => qty > 0)
-                .forEach(([itemId, qty]) => {
-                    const comboItemId = this.pos.models["product.combo.item"].get(itemId);
-                    const comboId = comboItemId.combo_id.id;
-                    const comboFreeQty = comboItemId.combo_id.qty_free;
+        this.props.productTemplate.combo_ids.forEach((combo) => {
+            let remainingFree = combo.qty_free;
+            combo.combo_item_ids.forEach((comboItem) => {
+                const qty = this.state.qty[combo.id]?.[comboItem.id] || 0;
+                if (qty <= 0) {
+                    return;
+                }
+                const includedQty = Math.min(qty, Math.max(0, remainingFree));
+                remainingFree -= includedQty;
+                const extraQty = qty - includedQty;
 
-                    if (!comboFreeQtyTracker[comboId]) {
-                        comboFreeQtyTracker[comboId] = 0;
-                    }
-
-                    const remainingFreeQty = comboFreeQty - comboFreeQtyTracker[comboId];
-                    if (remainingFreeQty > 0) {
-                        const includedQty = Math.min(qty, remainingFreeQty);
-                        itemsIncluded.push({
-                            combo_item_id: comboItemId,
-                            configuration: this.state.configuration[comboItemId.id],
-                            qty: includedQty,
-                        });
-                        comboFreeQtyTracker[comboId] += includedQty;
-                        qty -= includedQty;
-                    }
-
-                    if (qty > 0) {
-                        itemsExtra.push({
-                            combo_item_id: comboItemId,
-                            configuration: this.state.configuration[comboItemId.id],
-                            qty: qty,
-                        });
-                    }
-                });
+                if (includedQty > 0) {
+                    itemsIncluded.push({
+                        combo_item_id: comboItem,
+                        configuration: this.state.configuration[comboItem.id],
+                        qty: includedQty,
+                    });
+                }
+                if (extraQty > 0) {
+                    itemsExtra.push({
+                        combo_item_id: comboItem,
+                        configuration: this.state.configuration[comboItem.id],
+                        qty: extraQty,
+                    });
+                }
+            });
         });
 
         return [itemsIncluded, itemsExtra];
@@ -298,13 +342,22 @@ export class ComboConfiguratorPopup extends Component {
         return Object.values(this.state.qty[comboId]).reduce((total, qty) => total + qty, 0);
     }
 
+    attributesExtraPrice(comboItem) {
+        const attributeValueIds = this.state.configuration[comboItem.id]?.attribute_value_ids;
+        return getAttributesPriceExtra(
+            (attributeValueIds ?? []).map((id) =>
+                this.pos.models["product.template.attribute.value"].get(id)
+            )
+        );
+    }
+
     computeComboExtraPrice(combo) {
         const extraQty = this.totalQuantityForCombo(combo.id) - combo.qty_free;
         const extraQtyPrice = extraQty > 0 ? extraQty * combo.base_price : 0;
 
         const comboChoicesExtraPrices = combo.combo_item_ids.reduce((acc, comboItem) => {
             const qty = this.state.qty[combo.id][comboItem.id];
-            const extraPrice = comboItem.extra_price;
+            const extraPrice = comboItem.extra_price + this.attributesExtraPrice(comboItem);
             return acc + qty * extraPrice;
         }, 0);
         return extraQtyPrice + comboChoicesExtraPrices;
