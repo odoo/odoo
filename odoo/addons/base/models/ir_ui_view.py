@@ -1264,8 +1264,7 @@ actual arch.
         """
         self._clear_preload_views_cache_if_needed()
 
-        context = {k: self.env.context.get(k) for k in self.env['ir.qweb']._get_template_cache_keys()}
-        cache_key = tuple(context.values())
+        cache_key = tuple(self.env.context.get(k) or False for k in self.env['ir.qweb']._get_template_cache_keys())
 
         compile_batch = self.env.cr.cache.setdefault('_compile_batch_', {}).setdefault(cache_key, {})
 
