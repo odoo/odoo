@@ -1,5 +1,13 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillDestroy, useListener } from "@odoo/owl";
+import {
+    computed,
+    onWillDestroy,
+    shallowEqual,
+    signal,
+    untrack,
+    useEffect,
+    useListener,
+    useOnChange,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -111,11 +119,96 @@ export class Navigator {
     /**@type {number}*/
     activeItemIndex = -1;
 
-    /**@type {Array<NavigationItem>}*/
-    items = [];
-
     /**@private*/ _hotkeyRemoves = [];
     /**@private*/ _hotkeyService = undefined;
+
+    /**
+     * Bumped by @see update to force a re-derivation when the DOM changed
+     * under us. The DOM is not reactive, so a mutation cannot invalidate
+     * @see _elements on its own.
+     * @private
+     */
+    _domVersion = signal(0);
+
+    /**@private*/ _isDestroyed = false;
+
+    /**
+     * The derivation of @see items the active item was last reconciled with.
+     * @private
+     * @type {Array<NavigationItem>|undefined}
+     */
+    _syncedItems = undefined;
+
+    /**
+     * The navigable elements, as returned by `options.getItems`. Any signal
+     * that callback reads (the container ref, an `isOpen()` state, ...) is
+     * tracked, so the list re-derives on its own when they change.
+     *
+     * Memoised on a shallow comparison: an `update()` that yields the same
+     * elements in the same order does not invalidate @see _items, which is
+     * what the old `didUpdate` bookkeeping did by hand.
+     * @private
+     */
+    _elements = computed(
+        () => {
+            this._domVersion();
+            return [...this._options.getItems()];
+        },
+        { equals: shallowEqual }
+    );
+
+    /**
+     * Previous derivation of @see _items, kept so the next one can reuse the
+     * NavigationItem of an element that is still there (and therefore keep
+     * its listeners) rather than rebuild it.
+     * @private
+     * @type {Array<NavigationItem>}
+     */
+    _itemCache = [];
+
+    /**
+     * @private
+     * @type {import("@odoo/owl").Computed<Array<NavigationItem>>}
+     */
+    _items = computed(() => {
+        const staleItems = new Map(this._itemCache.map((item) => [item.el, item]));
+        const items = [];
+        const elements = this._elements();
+        for (let index = 0; index < elements.length; index++) {
+            const el = elements[index];
+            let item = staleItems.get(el);
+            if (item) {
+                item.index = index;
+                staleItems.delete(el);
+            } else {
+                item = new NavigationItem({
+                    index,
+                    el,
+                    options: this._options,
+                    navigator: this,
+                });
+            }
+            items.push(item);
+        }
+        for (const item of staleItems.values()) {
+            item._removeListeners();
+        }
+        this._itemCache = items;
+        return items;
+    });
+
+    /**
+     * Derived lazily: reading this from anywhere -- including a consumer's
+     * own `onMounted` -- recomputes against the DOM as it is at that moment,
+     * so there is no longer an ordering contract between the hook and its
+     * consumers.
+     * @type {Array<NavigationItem>}
+     */
+    get items() {
+        // Guarded here rather than in the derivation: _destroy() must not
+        // write to a signal, or it would wake the effect it is tearing down.
+        return this._isDestroyed ? [] : this._items();
+    }
 
     /**
      * @param {NavigationOptions} options
@@ -207,63 +300,66 @@ export class Navigator {
         }
     }
 
+    /**
+     * Invalidates the item list. The DOM is not reactive, so a caller that
+     * mutated it (or a MutationObserver) has to say so; everything reachable
+     * through a signal invalidates itself.
+     *
+     * The rebuild is lazy -- it happens on the next read of @see items -- but
+     * the read-after-update contract is preserved: `update(); this.items`
+     * always yields the current DOM.
+     */
     update() {
-        const oldItems = new Map(this.items.map((item) => [item.el, item]));
+        this._domVersion.set(untrack(this._domVersion) + 1);
+        // Imperative callers (dropdown.js, the MutationObserver) expect the
+        // active item to be reconciled by the time update() returns, so the
+        // sync runs eagerly here rather than waiting for the effect. The
+        // effect covers the signal-driven changes no one calls update() for.
+        this._syncActiveItem();
+    }
+
+    /**
+     * Reconciles the active item with a freshly derived item list: keep the
+     * same element active if it survived, otherwise fall back to the nearest
+     * index, then the focused element, then nothing.
+     *
+     * Focus is moved here, so this must run from an effect, never from the
+     * derivation itself -- a plain read of `items` (from a render, from a
+     * hotkey callback) must not steal focus.
+     * @param {Array<NavigationItem>} [items] the derivation to reconcile
+     *  against, when the caller already read (and tracked) it
+     * @private
+     */
+    _syncActiveItem(items = this.items) {
+        // Idempotent per derivation: whichever of update() and the effect gets
+        // here first does the work, the other one is a no-op. This is what the
+        // old `didUpdate` flag bought, without the ordering contract.
+        if (items === this._syncedItems) {
+            return;
+        }
+        this._syncedItems = items;
+
         const oldActiveItem = this.activeItem;
-        const elements = this._options.getItems();
-        this.items = [];
-
-        let didUpdate = elements.length !== oldItems.size;
-        for (let index = 0; index < elements.length; index++) {
-            const element = elements[index];
-
-            let item = oldItems.get(element);
-            if (item) {
-                if (item.index !== index) {
-                    item.index = index;
-                    didUpdate = true;
-                }
-                oldItems.delete(element);
-            } else {
-                didUpdate = true;
-                item = new NavigationItem({
-                    index,
-                    el: element,
-                    options: this._options,
-                    navigator: this,
-                });
-            }
-            this.items.push(item);
+        const activeItemIndex =
+            oldActiveItem && oldActiveItem.el.isConnected
+                ? items.findIndex((item) => item.el === oldActiveItem.el)
+                : -1;
+        const focusedElementIndex = items.findIndex((item) => item.el === document.activeElement);
+        if (activeItemIndex > -1) {
+            this._updateActiveItemIndex(activeItemIndex);
+        } else if (this.activeItemIndex >= 0) {
+            const closest = Math.min(this.activeItemIndex, items.length - 1);
+            this._updateActiveItemIndex(closest);
+        } else if (focusedElementIndex >= 0) {
+            this._updateActiveItemIndex(focusedElementIndex);
+        } else {
+            this._updateActiveItemIndex(-1);
         }
 
-        for (const item of oldItems.values()) {
-            item._removeListeners();
-        }
+        this._options.onUpdated?.(this);
 
-        if (didUpdate) {
-            const activeItemIndex =
-                oldActiveItem && oldActiveItem.el.isConnected
-                    ? this.items.findIndex((item) => item.el === oldActiveItem.el)
-                    : -1;
-            const focusedElementIndex = this.items.findIndex(
-                (item) => item.el === document.activeElement
-            );
-            if (activeItemIndex > -1) {
-                this._updateActiveItemIndex(activeItemIndex);
-            } else if (this.activeItemIndex >= 0) {
-                const closest = Math.min(this.activeItemIndex, elements.length - 1);
-                this._updateActiveItemIndex(closest);
-            } else if (focusedElementIndex >= 0) {
-                this._updateActiveItemIndex(focusedElementIndex);
-            } else {
-                this._updateActiveItemIndex(-1);
-            }
-
-            this._options.onUpdated?.(this);
-
-            if (this._options.shouldFocusFirstItem) {
-                this.items[0]?.setActive();
-            }
+        if (this._options.shouldFocusFirstItem) {
+            items[0]?.setActive();
         }
     }
 
@@ -318,10 +414,12 @@ export class Navigator {
      * @private
      */
     _destroy() {
-        for (const item of this.items) {
+        this._isDestroyed = true;
+        for (const item of this._itemCache) {
             item._removeListeners();
         }
-        this.items = [];
+        this._itemCache = [];
+        this._syncedItems = undefined;
         this.unregisterHotkeys();
     }
 
@@ -446,18 +544,34 @@ export function useNavigation(containerRef, options = {}) {
     const navigator = new Navigator(newOptions, hotkeyService);
     const observer = new MutationObserver(() => navigator.update());
 
-    useLayoutEffect(
+    // The item list derives itself from `getItems` -- which reads the container
+    // ref -- so nothing has to push an update in here. All this has to do is
+    // watch the derived list and reconcile the active item with it, which is a
+    // side effect and cannot live in the derivation.
+    useEffect(() => {
+        // Skip the setup-time run, where the ref is still null and the list is
+        // trivially empty: firing onUpdated with no items before mount is
+        // noise the old useLayoutEffect never produced.
+        if (!getContainerEl()) {
+            return;
+        }
+        const items = navigator.items;
+        untrack(() => navigator._syncActiveItem(items));
+    });
+
+    // The DOM is the one input that cannot invalidate the derivation on its
+    // own, so it gets an observer.
+    useOnChange(
+        () => [getContainerEl()],
         (containerEl) => {
             if (containerEl) {
-                navigator.update();
                 observer.observe(containerEl, {
                     childList: true,
                     subtree: true,
                 });
+                return () => observer.disconnect();
             }
-            return () => observer.disconnect();
-        },
-        () => [getContainerEl()]
+        }
     );
 
     useListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);

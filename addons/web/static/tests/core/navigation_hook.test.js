@@ -205,9 +205,12 @@ test("hovering an item makes it active but doesn't focus", async () => {
 
 test("navigation disabled when component is destroyed", async () => {
     patchWithCleanup(Navigator.prototype, {
-        update() {
+        // update() is now only an invalidation signal and no longer runs on
+        // mount at all -- the item list derives itself. _syncActiveItem is the
+        // hook's post-derivation step, and it is what runs once on mount.
+        _syncActiveItem() {
             expect.step("enable");
-            super.update();
+            super._syncActiveItem();
         },
         _destroy() {
             expect.step("disable");
