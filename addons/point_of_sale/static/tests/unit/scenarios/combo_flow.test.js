@@ -782,3 +782,90 @@ test("test_combo_no_free_item: combo with all upsell items (no free qty)", async
     await Utils.clickPaymentMethod("Card");
     await Utils.clickValidatePayment();
 });
+
+test("test_convert_orderlines_to_combo_with_same_product: same product with different attributes stays split", async () => {
+    const store = await setupAndMountPosApp({ use_pricelist: false });
+
+    const officeCombo = createComboSetup(store, {
+        id: 8300,
+        name: "Office Combo",
+        price: 40,
+        combos: [
+            {
+                name: "Desks Combo",
+                items: [{ name: "Combo Product 4", price: 20 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+                sequence: 1,
+            },
+            {
+                name: "Chairs Combo",
+                items: [{ name: "Combo Product 6", price: 30 }],
+                basePrice: 10,
+                qtyFree: 1,
+                qtyMax: 1,
+                sequence: 2,
+            },
+        ],
+    });
+
+    const colorAttribute = createAttribute(store, "Color", "color");
+    const red = createAttributeValue(store, colorAttribute, "Red", { id: 8350 });
+    const blue = createAttributeValue(store, colorAttribute, "Blue", { id: 8351 });
+    const { variant: comboProduct1 } = createTestProduct(store, {
+        id: 8360,
+        name: "Combo Product 1",
+        price: 10,
+        attributes: [createAttributeLine(store, colorAttribute, [red, blue])],
+    });
+    const comboItem = store.models["product.combo.item"].create({
+        id: 8370,
+        combo_id: false,
+        product_id: comboProduct1,
+        extra_price: 0,
+    });
+    const deskAccessoriesCombo = store.models["product.combo"].create({
+        id: 8380,
+        name: "Desk Accessories Combo",
+        combo_item_ids: [comboItem],
+        base_price: 10,
+        qty_free: 1,
+        qty_max: 2,
+        is_upsell: false,
+        sequence: 3,
+    });
+    comboItem.combo_id = deskAccessoriesCombo;
+    officeCombo.template.combo_ids = [...officeCombo.combos, deskAccessoriesCombo];
+    store.comboSuggestion.productCombos = store.comboSuggestion._getProductCombos();
+    await animationFrame();
+
+    await Utils.clickDisplayedProduct("Combo Product 1");
+    await waitFor(".modal");
+    await Utils.pickColor("Blue");
+    await Utils.confirmConfigurator();
+
+    await Utils.clickDisplayedProduct("Combo Product 1");
+    await waitFor(".modal");
+    await Utils.pickColor("Red");
+    await Utils.confirmConfigurator();
+
+    await Utils.clickDisplayedProduct("Combo Product 4");
+    await Utils.clickDisplayedProduct("Combo Product 6");
+
+    await Utils.ensurePane("left");
+    await waitFor(".combo-proposition");
+    await contains(".combo-proposition button.btn").click();
+    await animationFrame();
+
+    expect(Utils.hasOrderline({ productName: "Office Combo", quantity: "1" })).toBe(true);
+    expect(
+        Utils.hasOrderline({ productName: "Combo Product 1", quantity: "1", attributeLine: "Red" })
+    ).toBe(true);
+    expect(
+        Utils.hasOrderline({ productName: "Combo Product 1", quantity: "1", attributeLine: "Blue" })
+    ).toBe(true);
+    expect(Utils.hasOrderline({ productName: "Combo Product 4", quantity: "1" })).toBe(true);
+    expect(Utils.hasOrderline({ productName: "Combo Product 6", quantity: "1" })).toBe(true);
+    expect(queryAll(".orderline")).toHaveLength(5);
+});
