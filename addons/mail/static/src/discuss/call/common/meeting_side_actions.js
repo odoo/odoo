@@ -8,6 +8,33 @@ import { useService } from "@web/core/utils/hooks";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
+/** Thread actions a meeting has no use for, wherever its actions end up being rendered. */
+const HIDDEN_ACTION_IDS = ["advanced-settings", "leave"];
+/** Thread actions a bar with room to spare shows as their own button. */
+const QUICK_ACTION_IDS = ["member-list", "meeting-chat"];
+
+/**
+ * The thread actions of a meeting, grouped for a "More" menu: everything the thread offers except
+ * what is already a button of its own and what a meeting hides outright.
+ *
+ * Exported because a small screen does not render the side actions at all — their menu goes into
+ * the call bar's own "More", so that a phone has one menu instead of two side by side.
+ *
+ * @param {import("@mail/core/common/thread_actions").UseThreadActions} threadActions
+ * @param {string[]} [shownActionIds] ids already rendered as their own button
+ * @returns {Array<Array>} non-empty action groups
+ */
+export function meetingMoreActionGroups(threadActions, shownActionIds = []) {
+    const inMore = (action) =>
+        !shownActionIds.includes(action.id) && !HIDDEN_ACTION_IDS.includes(action.id);
+    const { quick, other, group } = threadActions.partition;
+    return [
+        quick.filter(inMore),
+        other.filter(inMore),
+        ...group.map((actions) => actions.filter(inMore)),
+    ].filter((actions) => actions.length);
+}
+
 export class MeetingSideActions extends Component {
     static template = "mail.MeetingSideActions";
     static components = { ActionList };
@@ -17,7 +44,6 @@ export class MeetingSideActions extends Component {
         this.props = useProps({
             threadActions: types.instanceOf(UseThreadActions),
         });
-        this.ui = useService("ui");
     }
 
     get callActionsParams() {
@@ -28,30 +54,14 @@ export class MeetingSideActions extends Component {
         const threadActions = this.props.threadActions;
         // the channel can already be gone while the meeting view tears down
         if (this.store.rtc.channel?.default_display_mode === "video_full_screen") {
-            return threadActions.actions.filter((action) =>
-                ["member-list", "meeting-chat"].includes(action.id)
-            );
+            return threadActions.actions.filter((action) => QUICK_ACTION_IDS.includes(action.id));
         }
-        const quickThreadActionIds = this.ui.isSmall ? [] : ["member-list", "meeting-chat"];
-        const hiddenActionIds = ["advanced-settings", "leave"];
-        const actionsInMore = (action) =>
-            !quickThreadActionIds.includes(action.id) && !hiddenActionIds.includes(action.id);
-        const { quick, other, group } = threadActions.partition;
-        const partitionedActions = {
-            quick: quick.filter(actionsInMore),
-            other: other.filter(actionsInMore),
-            group: group.map((group) => group.filter(actionsInMore)).filter((g) => g.length > 0),
-        };
         const actions = threadActions.actions.filter((action) =>
-            quickThreadActionIds.includes(action.id)
+            QUICK_ACTION_IDS.includes(action.id)
         );
         actions.push(
             threadActions.more(this.callActionsParams, {
-                actions: [
-                    partitionedActions.quick,
-                    partitionedActions.other,
-                    ...partitionedActions.group,
-                ],
+                actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
                 dropdownMenuClass: attClassObjectToString({
                     "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
                 }),

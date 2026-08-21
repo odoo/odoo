@@ -4,7 +4,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 
 import { useService } from "@web/core/utils/hooks";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 
 export class QuickVideoSettings extends Component {
     static template = "discuss.QuickVideoSettings";
@@ -13,8 +13,14 @@ export class QuickVideoSettings extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
         this.dialogService = useService("dialog");
         this.isBrowserSafari = isBrowserSafari;
+    }
+
+    /** @returns {boolean} whether this device has another camera to switch to. */
+    get canSwitchCamera() {
+        return isMobileOS() && Boolean(this.rtc.selfSession?.is_camera_on);
     }
 
     onClickVideoSettings() {
