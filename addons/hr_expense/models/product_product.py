@@ -1,5 +1,4 @@
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
 
 class ProductProduct(models.Model):
@@ -59,42 +58,3 @@ class ProductProduct(models.Model):
                     })
                 expense_sudo.write(expense_vals)
         return result
-
-
-class HrExpenseProductJobPositionLimit(models.Model):
-    _name = 'hr.expense.product.job.position.limit'
-    _description = "Expense Product Limit by Job Position"
-    _order = 'sequence, id'
-
-    sequence = fields.Integer(default=10)
-    product_id = fields.Many2one(
-        comodel_name='product.product',
-        required=True,
-        ondelete='cascade',
-        index=True,
-    )
-    job_ids = fields.Many2many(
-        comodel_name='hr.job',
-        string="Job Positions",
-        help="Leave empty to define the limit for all job positions.",
-    )
-    currency_id = fields.Many2one(
-        related='product_id.currency_id',
-        readonly=True,
-    )
-    limit_amount = fields.Monetary(
-        string="Limit",
-        currency_field='currency_id',
-        required=True,
-    )
-
-    @api.constrains('product_id', 'job_ids')
-    def _check_unique_generic_job_position_limit(self):
-        for limit in self.filtered(lambda line: not line.job_ids):
-            duplicate = self.search_count([
-                ('product_id', '=', limit.product_id.id),
-                ('job_ids', '=', False),
-                ('id', '!=', limit.id),
-            ], limit=1)
-            if duplicate:
-                raise ValidationError(self.env._("Only one generic expense limit can be defined per product."))
