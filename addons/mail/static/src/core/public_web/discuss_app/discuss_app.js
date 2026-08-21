@@ -1,6 +1,5 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { propSignal } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -37,10 +36,8 @@ export class Discuss extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = useProps({
+            channel: t.signal(t.instanceOf(this.store["discuss.channel"])).optional(),
             hasSidebar: t.boolean().optional(true),
-        });
-        this.channel = propSignal("channel", t.instanceOf(this.store["discuss.channel"]), {
-            optional: true,
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
         providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
@@ -92,6 +89,6 @@ export class Discuss extends Component {
     }
 
     get thread() {
-        return this.channel?.()?.thread || this.store.discuss.thread;
+        return this.props.channel?.()?.thread || this.store.discuss.thread;
     }
 }

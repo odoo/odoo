@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMarkAsDone">
-        <PopoverCard class="'o-mail-ActivityMarkAsDone'" darkerInDarkTheme="true" hasHeader="this.hasHeader">
+        <PopoverCard class="'o-mail-ActivityMarkAsDone'" darkerInDarkTheme="true" hasHeader="this.props.hasHeader">
             <t t-set-slot="header">
                 <h6 class="fw-bolder">Mark Done</h6>
             </t>
-            <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.activity().feedback" t-ref="this.textArea"/>
+            <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.props.activity().feedback" t-ref="this.textArea"/>
             <div class="mt-2">
                 <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
                     Done &amp; Schedule Next
@@ -13,7 +13,7 @@
                 <button type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
                     Done
                 </button>
-                <button type="button" class="btn btn-sm btn-link" t-on-click="this.close">
+                <button type="button" class="btn btn-sm btn-link" t-on-click="this.props.close">
                     Discard
                 </button>
             </div>

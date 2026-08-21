@@ -10,7 +10,7 @@ const composerPatch = {
         if (
             ev.key === "Tab" &&
             this.thread?.channel?.channel_type === "livechat" &&
-            !this.props.composer.composerText
+            !this.props.composer().composerText
         ) {
             const threadChanged = this.store.goToOldestUnreadLivechatThread();
             if (threadChanged) {
@@ -22,7 +22,7 @@ const composerPatch = {
         }
     },
     get placeholder() {
-        if (this.displayNextLivechatHint() && this.props.composer.isFocused) {
+        if (this.displayNextLivechatHint() && this.props.composer().isFocused) {
             return _t("Tab to next live chat");
         }
         return super.placeholder;
