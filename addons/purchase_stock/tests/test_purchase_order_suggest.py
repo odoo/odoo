@@ -685,6 +685,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'route_id': other_warehouse.resupply_route_ids.id,
         })
         orderpoint.action_replenish()
+        pick_move = self.env['stock.move'].search([('origin', '=', orderpoint.name), ('location_id', '=', warehouse.lot_stock_id.id)])
+        pick_move.write({
+            'quantity': 20,
+            'picked': 20,
+        })
+        pick_move.picking_id.button_validate()
 
         # Monthly demand should be 20.0 as only the outgoing move is counted with two-step delivery.
         self.assertEqual(product.with_context(warehouse_id=warehouse.id).monthly_demand, 20.0)
