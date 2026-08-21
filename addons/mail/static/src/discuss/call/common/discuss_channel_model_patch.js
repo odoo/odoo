@@ -2,24 +2,24 @@ import { fields } from "@mail/model/export";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 
+import { browser } from "@web/core/browser/browser";
 import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
 
-export const CALL_PROMOTE_FULLSCREEN = Object.freeze({
-    INACTIVE: "INACTIVE",
-    ACTIVE: "ACTIVE",
-    DISCARDED: "DISCARDED",
-});
+/**
+ * How long (ms) a participant keeps their place on the main stage after they stop talking. Without
+ * it the stage would swap on every turn of a conversation: two people going back and forth would
+ * trade the main window on every sentence.
+ */
+export const SPEAKER_WINDOW = 3000;
 
 /** @type {import("models").DiscussChannel} */
 const DiscussChannelPatch = {
     setup() {
         super.setup(...arguments);
         this.activeRtcSession = fields.One("discuss.channel.rtc.session");
-        /** @type {typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN]} */
-        this.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISABLED;
         this.hadSelfSession = false;
         /** @type {Set<number>} */
         this.lastSessionIds = new Set();
@@ -55,26 +55,19 @@ const DiscussChannelPatch = {
                 }
             },
         });
-        this.videoCountNotSelf = fields.Attr(0, {
-            compute() {
-                return this.rtc_session_ids.filter(
-                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
-                ).length;
-            },
-            onUpdate() {
-                if (this.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.DISCARDED) {
-                    return;
-                }
-                this.promoteFullscreen =
-                    this.videoCountNotSelf > 0 && this.chatWindow?.isOpen
-                        ? CALL_PROMOTE_FULLSCREEN.ACTIVE
-                        : CALL_PROMOTE_FULLSCREEN.INACTIVE;
-            },
-        });
         this.videoCount = this.computed(
             () => this.rtc_session_ids.filter((s) => s.hasVideo).length
         );
         this.focusStack = fields.Many("discuss.channel.rtc.session");
+        /**
+         * Remote participants who are talking, or stopped less than {@link SPEAKER_WINDOW} ago, in
+         * the order they took the floor. Entry order is what makes the stage stable: a participant
+         * keeps their place until they fall out of the window, so a fifth speaker waits for a
+         * place to free instead of pushing someone out mid-sentence.
+         */
+        this.activeSpeakers = fields.Many("discuss.channel.rtc.session");
+        /** @type {number|undefined} */
+        this.pruneSpeakersTimeout = undefined;
         this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
         /** @type {import("@mail/discuss/call/common/call").CardData[]} */
         this.visibleCards = this.computed(() => {
@@ -238,6 +231,48 @@ const DiscussChannelPatch = {
         }
         this.activeRtcSession = activeSession;
         activeSession.mainVideoStreamType = "camera";
+    },
+    /**
+     * Reconcile {@link activeSpeakers} with who is talking right now: anyone speaking joins the
+     * end of the list, anyone whose {@link SPEAKER_WINDOW} has lapsed leaves it. Callers never
+     * decide *how many* of them get the stage — that is a per-view choice.
+     *
+     * @returns {void}
+     */
+    updateActiveSpeakers() {
+        browser.clearTimeout(this.pruneSpeakersTimeout);
+        if (this.notEq(this.store.rtc?.channel) || !this.store.settings.useCallAutoFocus) {
+            this.activeSpeakers = [];
+            return;
+        }
+        const now = Date.now();
+        const isInWindow = (session) =>
+            session.isActuallyTalking || now - (session.stoppedTalkingAt ?? 0) < SPEAKER_WINDOW;
+        for (const session of [...this.activeSpeakers]) {
+            if (!isInWindow(session)) {
+                this.activeSpeakers.delete(session);
+            }
+        }
+        for (const session of this.rtc_session_ids) {
+            if (
+                session.isActuallyTalking &&
+                session.notEq(this.store.rtc.selfSession) &&
+                !session.in(this.activeSpeakers)
+            ) {
+                this.activeSpeakers.push(session);
+            }
+        }
+        // Nothing fires when a window merely lapses: the last speaker to stop would otherwise hold
+        // the stage until somebody else talks.
+        const stoppedAt = this.activeSpeakers
+            .filter((session) => !session.isActuallyTalking)
+            .map((session) => session.stoppedTalkingAt ?? 0);
+        if (stoppedAt.length) {
+            this.pruneSpeakersTimeout = browser.setTimeout(
+                () => this.updateActiveSpeakers(),
+                Math.max(0, Math.min(...stoppedAt) + SPEAKER_WINDOW - now)
+            );
+        }
     },
     get hasRtcSessionActive() {
         return this.rtc_session_ids.length > 0;

@@ -14,14 +14,6 @@
         background-color: var(--o-discuss-Call-bgColor, #{$dark});
     }
 
-    &:has(.o-discuss-Call-sidebar) {
-        grid-template-columns: 1fr 230px;
-
-        @include media-breakpoint-down(sm) {
-            grid-template-columns: 1fr 160px;
-        }
-    }
-
     &.o-compact {
         height: auto;
         min-height: auto;
@@ -54,39 +46,9 @@
     }
 }
 
-.o-discuss-Call-sidebar {
-    overflow-y: auto;
-    overflow-x: hidden;
-
+.o-discuss-Call-mainCards {
     &::-webkit-scrollbar {
         width: 0.3vw;
-    }
-}
-
-.o-discuss-Call-sidebarCard {
-    aspect-ratio: 16/9;
-}
-
-.o-discuss-Call-mainCardStyle {
-    width: var(--width);
-    height: var(--height);
-    min-width: var(--width);
-    min-height: var(--height);
-    aspect-ratio: 16/9;
-
-    &.o-active {
-        width: 100%;
-        height: auto;
-    }
-}
-
-// ------------------------------------------------------------------
-// Style
-// ------------------------------------------------------------------
-
-.o-discuss-Call-sidebar {
-
-    &::-webkit-scrollbar {
         background: map-get($grays, '900');
     }
 
@@ -94,3 +56,19 @@
         background: map-get($grays, '700');
     }
 }
+
+// Every surface is placed by the layout engine, which writes its size and its translate as inline
+// styles: out of the flow is all the stylesheet has to say about their geometry. The card
+// selectors are doubled up on purpose — they have to outweigh the `position: relative` a card
+// gives itself, which would otherwise leave the surfaces stacking in the flow.
+.o-discuss-Call-sidebarCard,
+.o-discuss-CallParticipantCard.o-discuss-Call-sidebarCard,
+.o-discuss-Call-mainCardStyle,
+.o-discuss-CallParticipantCard.o-discuss-Call-mainCardStyle,
+.o-discuss-Call-moreIndicator {
+    position: absolute;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------

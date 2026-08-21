@@ -12,33 +12,28 @@
             'o-selfInCall': this.isActiveCall,
             'border-bottom': !this.isActiveCall,
         }" t-ref="this.rootRef">
-            <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="this.onMouseleaveMain">
+            <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin h-100" t-on-mouseleave="this.onMouseleaveMain">
                 <PttAdBanner t-if="!this.props.compact"/>
                 <BlurPerformanceWarning t-if="this.store.settings.blurPerformanceWarning"/>
                 <CallPresentationBar t-if="this.rtc.selfSession and this.isAnyonePresenting" />
                 <div
-                    class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
-                    t-att-class="{'mt-1': this.minimized}"
-                    t-attf-style="--height:{{this.state.tileHeight}}px; --width:{{this.state.tileWidth}}px;"
+                    class="o-discuss-Call-mainCards position-relative overflow-auto o-scrollbar-thin w-100 flex-grow-1 o-min-height-0"
+                    t-att-class="{'mt-1': this.minimized, 'o-discuss-Call-sidebar': this.hasSidebar}"
                     t-on-click="() => this.showOverlay()"
                     t-on-mousemove="this.onMousemoveMain"
                     t-ref="this.gridRef"
                 >
-                    <CallParticipantCard t-foreach="this.visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
-                        cardData="cardData"
-                        className="'o-discuss-Call-mainCardStyle'"
+                    <t t-set="rendered" t-value="this.renderedSurfaces"/>
+                    <CallParticipantCard t-foreach="rendered.surfaces" t-as="surface" t-key="surface.key"
+                        cardData="surface.data"
+                        className="this.surfaceClassName(surface)"
+                        isSidebarItem="surface.data.placement === 'sidebar'"
+                        isCropped="this.state.cropsTiles and surface.data.placement === 'main' and surface.data.type !== 'screen'"
+                        inset="surface.data.placement === 'inset'"
                         minimized="this.minimized"
-                        compact="this.props.compact"
                         channel="this.channel"
                     />
-                    <span t-if="this.env.inChatWindow and this.visibleMainCards.length > 6" class="oi ps-1 pe-1" data-icon="more_horiz"/>
-                    <CallParticipantCard t-if="!this.env.inChatWindow" t-foreach="this.visibleMainCards.slice(6)" t-as="cardData" t-key="cardData.key"
-                        cardData="cardData"
-                        className="'o-discuss-Call-mainCardStyle p-1'"
-                        minimized="this.minimized"
-                        compact="this.props.compact"
-                        channel="this.channel"
-                    />
+                    <span t-if="rendered.hasMoreCards" class="oi ps-1 pe-1 o-discuss-Call-moreIndicator d-flex align-items-center justify-content-center text-white-50" data-icon="more_horiz" t-att-data-surface="'__more__'"/>
                 </div>
 
                 <!-- Buttons -->
@@ -54,21 +49,6 @@
                     <span class="o-discuss-Call-notification text-bg-light shadow-lg rounded-1 m-1" t-att-class="{ 'p-3 fs-4': this.rtc.isFullscreen, 'p-2': !this.rtc.isFullscreen }" t-foreach="this.bottomNotifications" t-as="notification" t-key="notification.id" t-out="notification.text"/>
                 </div>
             </div>
-            <div t-if="this.state.sidebar and this.channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
-                <CallParticipantCard t-foreach="this.sidebarCards" t-as="cardData" t-key="cardData.key"
-                    cardData="cardData"
-                    className="'o-discuss-Call-sidebarCard w-100 p-1'"
-                    channel="this.channel"
-                    isSidebarItem="true"
-                />
-            </div>
-            <CallParticipantCard
-                t-if="this.channel.videoCount > 0 and this.state.insetCard and !this.state.sidebar"
-                cardData="this.state.insetCard"
-                className="'o-discuss-Call-mainCardStyle o-bg-black'"
-                channel="this.channel"
-                inset.bind="this.setInset"
-            />
         </div>
     </t>
 

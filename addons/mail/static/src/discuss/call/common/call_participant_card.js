@@ -16,7 +16,6 @@ import {
     signal,
     types,
     useEffect,
-    useListener,
     usePlugin,
     useProps,
 } from "@odoo/owl";
@@ -52,13 +51,8 @@ export class CallParticipantCard extends Component {
             }),
             channel: types.instanceOf(this.store["discuss.channel"]),
             className: types.string(),
-            compact: types.boolean().optional(),
-            inset: types
-                .function([
-                    types.instanceOf(this.store["discuss.channel.rtc.session"]),
-                    types.selection(["camera", "screen"]),
-                ])
-                .optional(),
+            inset: types.boolean().optional(),
+            isCropped: types.boolean().optional(),
             isSidebarItem: types.boolean().optional(),
             minimized: types.boolean().optional(),
         });
@@ -67,7 +61,6 @@ export class CallParticipantCard extends Component {
         this.isMobileOS = isMobileOS();
         this.dragPos = undefined;
         this.isDrag = false;
-        this.parentBoundingRect = undefined;
         onMounted(async () => {
             const avatarUrl = this.channelMember?.avatarUrl;
             if (avatarUrl) {
@@ -89,7 +82,6 @@ export class CallParticipantCard extends Component {
                 viewCountIncrement: -1,
             });
         });
-        useListener(browser, "fullscreenchange", () => this.onFullScreenChange());
         // Drive the talking glow on rAF, reading volume in render would re-render too often.
         useEffect(() => {
             if (!this.isTalking) {
@@ -144,10 +136,6 @@ export class CallParticipantCard extends Component {
         return Boolean(
             this.props.isSidebarItem || this.ui.isSmall || this.props.minimized || this.props.inset
         );
-    }
-
-    get window() {
-        return this.env.pipWindow || window;
     }
 
     get showLiveLabel() {
@@ -252,19 +240,12 @@ export class CallParticipantCard extends Component {
             if (!this.props.inset) {
                 return;
             }
-            const channel = this.rtcSession.channel;
             // The inset only swaps which stream of the spotlighted participant is shown (e.g.
             // screen ⇄ camera); it must not promote a different participant into the spotlight.
-            if (this.rtcSession.notEq(channel.activeRtcSession)) {
+            if (this.rtcSession.notEq(this.rtcSession.channel.activeRtcSession)) {
                 return;
             }
             this.rtcSession.mainVideoStreamType = this.props.cardData.type;
-            const activeRtcSession = channel.activeRtcSession;
-            const currentMainVideoType = this.rtcSession.mainVideoStreamType;
-            channel.activeRtcSession = this.rtcSession;
-            if (activeRtcSession) {
-                this.props.inset(activeRtcSession, currentMainVideoType);
-            }
             return;
         }
         await rpc("/mail/rtc/channel/cancel_call_invitation", {
@@ -283,27 +264,7 @@ export class CallParticipantCard extends Component {
         }
         const onMousemove = (ev) => this.drag(ev);
         const onMouseup = () => {
-            const insetEl = this.root();
-            const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
-            if (parseInt(insetEl.style.left) < insetEl.parentNode.offsetWidth / 2) {
-                insetEl.style.left = "1vh";
-                insetEl.style.right = "";
-            } else {
-                insetEl.style.left = "";
-                insetEl.style.right = "1vh";
-            }
-            if (
-                parseInt(insetEl.style.top) <
-                (insetEl.parentNode.offsetHeight - bottomOffset) / 2
-            ) {
-                insetEl.style.top = "1vh";
-                insetEl.style.bottom = "";
-            } else {
-                insetEl.style.bottom = this.env.inChatWindow ? "5vh" : "1vh";
-                insetEl.style.top = "unset";
-            }
-            this.dragPos = undefined;
-            this.parentBoundingRect = undefined;
+            this.drop();
             document.removeEventListener("mouseup", onMouseup);
             document.removeEventListener("mousemove", onMousemove);
         };
@@ -318,33 +279,38 @@ export class CallParticipantCard extends Component {
         this.drag(ev);
     }
 
-    drag(ev) {
-        this.isDrag = true;
-        const insetEl = this.root();
-        const parent = insetEl.parentNode;
-        const boundingRect =
-            this.parentBoundingRect || (this.parentBoundingRect = parent.getBoundingClientRect());
-        const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
-        const clientX = Math.max((ev.clientX ?? ev.touches[0].clientX) - boundingRect.left, 0);
-        const clientY = Math.max((ev.clientY ?? ev.touches[0].clientY) - boundingRect.top, 0);
-        if (!this.dragPos) {
-            this.dragPos = { posX: clientX, posY: clientY };
-        }
-        const dX = this.dragPos.posX - clientX;
-        const dY = this.dragPos.posY - clientY;
-        const widthOffset = parent.offsetWidth - insetEl.clientWidth;
-        const heightOffset = parent.offsetHeight - insetEl.clientHeight - bottomOffset;
-        this.dragPos.posX = Math.min(clientX, widthOffset);
-        this.dragPos.posY = Math.min(clientY, heightOffset);
-        insetEl.style.left = Math.min(Math.max(insetEl.offsetLeft - dX, 0), widthOffset) + "px";
-        insetEl.style.top = Math.min(Math.max(insetEl.offsetTop - dY, 0), heightOffset) + "px";
-    }
-
-    onFullScreenChange() {
-        if (!this.root()) {
+    onTouchEnd() {
+        if (!this.props.inset) {
             return;
         }
-        this.root().style.left = "";
-        this.root().style.top = "";
+        this.drop();
+    }
+
+    /**
+     * Report how far the pointer moved to the call: the card knows the pointer, never where the
+     * inset ends up.
+     *
+     * @param {MouseEvent|TouchEvent} ev
+     */
+    drag(ev) {
+        this.isDrag = true;
+        const clientX = ev.clientX ?? ev.touches[0].clientX;
+        const clientY = ev.clientY ?? ev.touches[0].clientY;
+        if (this.dragPos) {
+            this.env.dragInsetBy(
+                this.props.cardData.key,
+                clientX - this.dragPos.posX,
+                clientY - this.dragPos.posY
+            );
+        }
+        this.dragPos = { posX: clientX, posY: clientY };
+    }
+
+    drop() {
+        if (!this.dragPos) {
+            return;
+        }
+        this.dragPos = undefined;
+        this.env.dropInset(this.props.cardData.key);
     }
 }

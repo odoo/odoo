@@ -6,7 +6,6 @@ import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dial
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
 import { Component, useEffect } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -165,16 +164,24 @@ export const quickVideoSettings = {
     sequenceGroup: 120,
 };
 registerCallAction("quick-video-settings", quickVideoSettings);
-/** @type {CallActionDefinition} */
+/**
+ * Everywhere the quick video settings are reachable, switching camera lives in there with the rest
+ * of the camera settings. The call menu has no such dropdown, so it keeps the standalone button.
+ *
+ * @type {CallActionDefinition}
+ */
 export const switchCameraAction = {
-    condition: ({ channel, store }) =>
-        channel?.isSelfInCall && isMobileOS() && store.rtc.selfSession?.is_camera_on,
+    condition: ({ owner, channel, store }) =>
+        channel?.isSelfInCall &&
+        isMobileOS() &&
+        store.rtc.selfSession?.is_camera_on &&
+        owner.env.inCallMenu,
     name: _t("Switch Camera"),
     isActive: false,
     icon: "refresh",
     onSelected: ({ store }) => store.rtc.toggleCameraFacingMode(),
     sequence: 40,
-    sequenceGroup: 100,
+    sequenceGroup: 120,
 };
 registerCallAction("switch-camera", switchCameraAction);
 registerCallAction("raise-hand", {
@@ -217,7 +224,6 @@ registerCallAction("fullscreen", {
     name: _t("Fullscreen"),
     icon: "expand_content",
     onSelected: ({ channel, store }) => {
-        channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         store.rtc.closePip();
         store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
     },
@@ -232,7 +238,6 @@ registerCallAction("wide-view", {
     name: _t("Wide View"),
     icon: "fullscreen",
     onSelected: ({ channel, store }) => {
-        channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         store.rtc.closePip();
         store.rtc.enterFullscreen();
     },
@@ -257,7 +262,6 @@ registerCallAction("picture-in-picture", {
     isActive: ({ store }) => store.rtc?.isPipMode,
     icon: "open_in_browser",
     onSelected: ({ owner, channel, store }) => {
-        channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         const isPipMode = store.rtc?.isPipMode;
         if (isPipMode) {
             store.rtc.closePip();

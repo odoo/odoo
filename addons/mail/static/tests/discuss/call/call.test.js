@@ -91,6 +91,60 @@ test("basic rendering", async () => {
     await contains("[name='picture-in-picture']");
 });
 
+test("a small screen keeps the microphone, the camera and a way out in its bar", async () => {
+    await patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    // A small screen keeps the thread actions behind a menu of their own. The dropdown needs an
+    // extra delay before the click: its handler is registered in a useEffect.
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Start Call')");
+    await contains(".o-discuss-Call");
+    // Six against the wide bar's eight: the two devices with their settings, "More", and hang up.
+    await contains(".o-discuss-CallActionList button", { count: 6 });
+    await contains("button[aria-label='Unmute'], button[aria-label='Mute']");
+    await contains("button[aria-label='Voice Settings']");
+    await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
+    await contains("button[aria-label='Video Settings']");
+    await contains(".o-discuss-CallActionList button[title='More']");
+    await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    // Everything the wide bar spread across its own row and two separate menus is in this one.
+    await click(".o-discuss-CallActionList button[title='More']");
+    await contains("[name='share-screen']");
+    await contains("[name='raise-hand']");
+    await contains("[name='fullscreen']");
+    await contains("[name='change-layout']");
+    await contains("[name='picture-in-picture']");
+});
+
+test("a small screen meeting has one More menu, not one per cluster", async () => {
+    await patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Start Call')");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    // The side actions used to sit next to the call bar with a "More" of their own.
+    await contains(".o-mail-MeetingSideActions", { count: 0 });
+    await contains(".o-mail-Meeting button[title='More']", { count: 1 });
+    // And with one bar that fits, there is nothing left to scroll sideways to.
+    const bar = queryFirst(".o-mail-Meeting-bar");
+    expect(bar.scrollWidth).toBeLessThan(bar.clientWidth + 1);
+    expect(getComputedStyle(bar).overflowX).toBe("visible");
+    // Both sides are behind that single one.
+    await click(".o-mail-Meeting button[title='More']");
+    await contains("[name='share-screen']");
+    await contains("[name='member-list']");
+});
+
 test("mobile UI", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -388,7 +442,11 @@ test("switch front/back camera in mobile", async () => {
     await click("[title='Start Call']");
     await click("[title='Turn camera on']");
     await contains("video[data-facing-mode='user']");
-    await click("[title='Switch Camera']");
+    // It is a camera setting, so it lives with the camera settings rather than in the bar next to
+    // the microphone, where a phone has no room for it anyway.
+    await contains(".o-discuss-CallActionList button[name='switch-camera']", { count: 0 });
+    await click("button[aria-label='Video Settings']");
+    await click(".o-discuss-QuickVideoSettings button[aria-label='Switch Camera']");
     await contains("video[data-facing-mode='environment']");
 });
 
@@ -561,7 +619,9 @@ test("'New Meeting' in mobile", async () => {
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Partner 2'))");
     await click("button:not([disabled]):text('Invite to Meeting')");
     await contains(".o-discuss-Call");
-    await click(".o-mail-MeetingSideActions button[title='Members']");
+    // A small screen has no side actions cluster: they live in the call bar's "More".
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='member-list']");
     await contains(".o-discuss-ChannelMember:text('Partner 2')");
 });
 
@@ -1581,26 +1641,6 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
     await contains(".o-discuss-CallParticipantCard", { count: 2 }); // card does not get focused in meeting view
-});
-
-test("show pulse effect on fullscreen mode only when another participant's camera is on", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const aliceMemberId = pyEnv["discuss.channel.member"].create({
-        channel_id: channelId,
-        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
-    });
-    setupChatHub({ opened: [channelId] });
-    const env = await start();
-    const network = await makeMockRtcNetwork({ env, channelId });
-    const aliceRemote = network.makeMockRemote(aliceMemberId);
-    await click("[title='Join Call']");
-    await aliceRemote.updateConnectionState("connected");
-    await contains(".o-discuss-Call");
-    await aliceRemote.updateInfo({ is_camera_on: true });
-    await contains(".o-discuss-CallActionList-pulse[title='More']");
-    await aliceRemote.updateInfo({ is_camera_on: false });
-    await contains(".o-discuss-CallActionList-pulse[title='More']", { count: 0 });
 });
 
 test.tags("focus required");

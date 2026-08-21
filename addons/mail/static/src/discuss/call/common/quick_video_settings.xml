@@ -4,6 +4,14 @@
     <t t-name="discuss.QuickVideoSettings">
         <div class="o-discuss-QuickVideoSettings d-flex flex-column">
             <DeviceSelect label.translate="Camera" kind="'videoinput'" menuClass="this.store.discussDropdownMenuClass(this) + (this.env.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
+            <t t-if="this.canSwitchCamera">
+                <hr class="mx-2 my-1 o-discuss-separator"/>
+                <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.rtc.toggleCameraFacingMode()" aria-label="Switch Camera">
+                    <span>Switch Camera</span>
+                    <div class="flex-grow-1"/>
+                    <i class="oi oi-fw oi-filled o-fs-small opacity-75" data-icon="refresh"/>
+                </button>
+            </t>
             <t t-if="!this.isBrowserSafari()">
                 <hr class="mx-2 my-1 o-discuss-separator"/>
                 <div class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.settings.useBlur = !this.store.settings.useBlur">

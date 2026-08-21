@@ -1,26 +1,13 @@
 .o-discuss-CallParticipantCard {
+    position: relative;
     background-color: transparent;
     color: white;
-    aspect-ratio: 16/9;
+    // Sized by the layout engine, not here. `container-type` stays: the overlay scales its text
+    // and its talking glow off the card's own width (the `cq*` units below).
     container-type: inline-size;
 
     &.o-inset {
-        height: 20%;
-        max-height: 125px !important;
-        right: 1vh;
-        bottom: 1vh;
-        position: absolute !important;
         cursor: move !important;
-
-        &.o-small {
-            width: 30%;
-            left: 0;
-            top: 0;
-        }
-
-        .o-mail-ChatWindow & {
-            bottom: 5vh;
-        }
 
         .o-discuss-CallParticipantCard-avatar img {
             max-height: #{"min(70%, 70px)"};
