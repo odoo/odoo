@@ -273,11 +273,6 @@ export class PosTicketPrinterService {
         formattedAmount,
         webFallback = true,
     }) {
-        const printer = this.defaultPrinter;
-        if (!printer) {
-            return;
-        }
-
         const generator = this.getGenerator({ models: this.data.models, order });
         const data = generator.generateCashMoveData({ reason, translatedType, formattedAmount });
         const iframe = await this.generateIframe("point_of_sale.pos_cash_move_receipt", data);
