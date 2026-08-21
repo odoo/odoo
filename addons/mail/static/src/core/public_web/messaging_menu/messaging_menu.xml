@@ -35,7 +35,7 @@
                         </div>
                         <t t-else="" t-call="mail.MessagingMenu-action"/>
                     </t>
-                    <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" messagingMenuUiState="this.state"/>
+                    <DiscussSearch autofocus="this.props.searchInputAutofocus" class="'flex-grow-1 min-w-0'" messagingMenuUiState="this.state"/>
                 </div>
                 <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
                     <button
@@ -88,7 +88,7 @@
                         <MessagingMenuEmpty t-if="(this.state().selectedFilter and !this.state().selectedFilter.isDefault) or this.state().activePluginFilters.length" title="this.noFilterResultText"/>
                         <t t-elif="this.activeTab().emptyState">
                             <t t-set="emptyState" t-value="this.activeTab().emptyState"/>
-                            <t t-if="emptyState.component" t-component="emptyState.component" tab="this.activeTab()" title="emptyState.title" subtitle="emptyState.subtitle" close="this.close"/>
+                            <t t-if="emptyState.component" t-component="emptyState.component" tab="this.activeTab()" title="emptyState.title" subtitle="emptyState.subtitle" close="this.props.close"/>
                             <MessagingMenuEmpty t-else="" title="emptyState.title" subtitle="emptyState.subtitle" action="emptyState.action"/>
                         </t>
                     </t>

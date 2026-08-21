@@ -1,9 +1,8 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -17,9 +16,9 @@ export class ChannelMemberContextMenu extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.props = usePropsPlus({
+        this.props = useProps({
             /** Anchor element, owned by the parent and bound here with `t-ref`. */
-            anchorRef: propStatic(t.signal(t.instanceOf(HTMLElement))),
+            anchorRef: t.signal(t.instanceOf(HTMLElement), { settable: true }),
             dropdownState: t.instanceOf(DropdownState),
             member: t.instanceOf(this.store["discuss.channel.member"]),
         });

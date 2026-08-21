@@ -1,4 +1,4 @@
-import { propComputed, propStatic, useHover, usePropsPlus } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -24,14 +24,11 @@ export class MessageReactionList extends Component {
         this.ancestors = useAncestors();
         this.loadEmoji = useLoadEmoji();
         this.store = useService("mail.store");
-        this.props = usePropsPlus({
-            message: propStatic(t.signal(t.instanceOf(this.store["mail.message"]))),
+        this.props = useProps({
+            message: t.signal(t.instanceOf(this.store["mail.message"])),
+            openReactionMenu: openReactionMenuType(this.store).static(),
+            reaction: t.signal(t.instanceOf(this.store.MessageReactions)),
         });
-        this.openReactionMenu = useProps.static(
-            "openReactionMenu",
-            openReactionMenuType(this.store)
-        );
-        this.reaction = propComputed("reaction", t.instanceOf(this.store.MessageReactions));
         this.ui = usePlugin(UIPlugin);
         this.preview = useDropdownState();
         this.hover = useHover([this.reactionButtonRef, this.reactionPreviewRef], {
@@ -119,7 +116,7 @@ export class MessageReactionList extends Component {
     onContextMenu(ev) {
         if (this.ui.isSmall()) {
             ev.preventDefault();
-            this.openReactionMenu();
+            this.props.openReactionMenu();
         }
     }
 
@@ -130,6 +127,6 @@ export class MessageReactionList extends Component {
      */
     onClickReactionList(ev, { reactionAtRender }) {
         this.preview.isOpen = false; // closes dropdown immediately as to not recover focus after dropdown closes
-        this.openReactionMenu(reactionAtRender);
+        this.props.openReactionMenu(reactionAtRender);
     }
 }

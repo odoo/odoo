@@ -1,5 +1,4 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { Component, onWillUnmount, t, usePlugin, useProps, xml } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -416,11 +415,9 @@ export class ActionList extends Component {
 
     setup() {
         super.setup();
-        this.props = usePropsPlus({
-            actions: propStatic(
-                t.signal(
-                    t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))]))
-                )
+        this.props = useProps({
+            actions: t.signal(
+                t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))]))
             ),
             dropdown: t.boolean().optional(),
             groupClass: t.string().optional(),

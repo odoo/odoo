@@ -2,7 +2,7 @@ import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dial
 import { Gif } from "@mail/core/common/gif";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { useSearchHighlight } from "@mail/core/common/message_search_plugin";
-import { propStatic, useMaybePlugin, usePropsPlus } from "@mail/utils/common/hooks";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -54,7 +54,7 @@ export class AttachmentList extends Component {
         this.store = useService("mail.store");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.maybeHighlight = useSearchHighlight();
-        this.props = usePropsPlus({
+        this.props = useProps({
             attachmentGroups: t.array(
                 t.object({
                     attachment: t.instanceOf(this.store["ir.attachment"]),
@@ -64,9 +64,7 @@ export class AttachmentList extends Component {
             isSelecting: t.boolean().optional(false),
             onToggleSelected: t.function([t.instanceOf(this.store["ir.attachment"])]).optional(),
             selectedAttachments: t.array(t.instanceOf(this.store["ir.attachment"])).optional(),
-            thread: propStatic(
-                t.signal(t.instanceOf(this.store["mail.thread"])).optional(() => signal(null))
-            ),
+            thread: t.signal(t.instanceOf(this.store["mail.thread"])).optional(),
             unlinkAttachments: t.function(
                 [t.array(t.instanceOf(this.store["ir.attachment"]))],
                 t.or([t.promise(), t.literal(undefined)])

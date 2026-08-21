@@ -44,7 +44,9 @@ export class NotificationItem extends Component {
                     t.instanceOf(this.store["mail.guest"]),
                 ])
                 .optional(),
-            rootRef: t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref()),
+            rootRef: t
+                .signal(t.instanceOf(HTMLElement), { settable: true })
+                .optional(() => signal.ref()),
             slots: t.object().optional(),
             textClassName: t.string().optional(""),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
