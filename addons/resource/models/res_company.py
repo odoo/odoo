@@ -11,6 +11,7 @@ class ResCompany(models.Model):
         'resource.calendar', 'company_id', 'Working Hours')
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Default Working Hours', ondelete='restrict')
+    tz = fields.Selection(related='partner_id.tz', string='Timezone', readonly=False)
 
     @api.model
     def _init_data_resource_calendar(self):
