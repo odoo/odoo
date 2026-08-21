@@ -913,3 +913,43 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         sale_order.action_confirm()
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_variant_popup_qty_free', login="pos_user")
+
+    def test_settle_mto_sale_order_with_manufacture_bom(self):
+        "Test that MTO+Manufacture product Sale order is correctly settled in POS"
+        if not self.env['ir.module.module'].search([('name', '=', 'mrp'), ('state', '=', 'installed')]):
+            self.skipTest('mrp module is required for this test')
+
+        self.env.user.group_ids |= self.env.ref('mrp.group_mrp_user')
+        warehouse = self.main_pos_config.warehouse_id
+        mto_route = warehouse.mto_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        manufacture_route.product_selectable = True
+        mto_route.write({'active': True, 'product_selectable': True})
+        finished = self.env['product.product'].create({
+            'name': 'MTO Finished Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 100.0,
+            'route_ids': [Command.set([mto_route.id, manufacture_route.id])],
+        })
+        self.env['mrp.bom'].create({  # noqa: OLS03001
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product.id, 'product_qty': 1.0}),
+            ],
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': warehouse.id,
+            'order_line': [Command.create({
+                'product_id': finished.id,
+                'product_uom_qty': 2,
+                'price_unit': finished.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        pos_order = self._settle_in_pos(sale_order)
+        self.assertEqual(pos_order.state, 'paid')
