@@ -84,16 +84,6 @@ export class HrPresenceStatus extends Component {
 }
 
 export const hrPresenceStatus = {
-    additionalClasses: [
-        "position-absolute",
-        "d-flex",
-        "align-items-center",
-        "justify-content-center",
-        "bg-light",
-        "rounded-circle",
-        "top-0",
-        "end-0",
-    ],
     component: HrPresenceStatus,
     fieldDependencies: [
         { name: "active", type: "boolean" },
