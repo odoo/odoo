@@ -1,5 +1,6 @@
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dialog";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
@@ -10,6 +11,7 @@ import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { Activity } from "@mail/core/web/activity";
 import { FollowerList } from "@mail/core/web/follower_list";
+import { groupAttachments } from "@mail/utils/common/attachments";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
 import { status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
@@ -93,10 +95,14 @@ const chatterPatch = {
                 ? CHATTER_PANEL.ATTACHMENT
                 : CHATTER_PANEL.NONE,
             composerType: false,
+            isSelectingAttachments: false,
+            /** @type {number[]} ids of the attachments standing for the selected groups */
+            selectedAttachmentIds: [],
             showActivities: true,
             showAttachmentLoading: false,
             showScheduledMessages: true,
         });
+        this.dialog = useService("dialog");
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(this.thread);
         this.followerListDropdown = useDropdownState();
@@ -243,8 +249,25 @@ const chatterPatch = {
         ];
     },
 
+    /**
+     * Copies of a same file are grouped in the attachment box, where an image
+     * repeated on every message would otherwise bury the relevant files.
+     */
+    get attachmentGroups() {
+        return groupAttachments(this.attachments, { byContent: true });
+    },
+
     get attachments() {
         return this.state.thread?.sortedAttachments ?? [];
+    },
+
+    /** Shows the amount of selected files, to confirm the selection at a glance. */
+    get deleteSelectedAttachmentsLabel() {
+        const count = this.state.selectedAttachmentIds.length;
+        if (count === 1) {
+            return _t("Delete 1 file");
+        }
+        return _t("Delete %(count)s files", { count });
     },
 
     get subEnv() {
@@ -293,8 +316,19 @@ const chatterPatch = {
         return this.state.thread?.sortedScheduledMessages ?? [];
     },
 
+    get selectedAttachmentGroups() {
+        return this.attachmentGroups.filter((group) =>
+            this.state.selectedAttachmentIds.includes(group.attachment.id)
+        );
+    },
+
+    get selectedAttachments() {
+        return this.selectedAttachmentGroups.map((group) => group.attachment);
+    },
+
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
+        this.discardAttachmentSelection();
         if (threadId === false) {
             this.state.composerType = false;
         } else {
@@ -311,6 +345,11 @@ const chatterPatch = {
         }
         this.messageSearch.reset();
         this.state.activePanel = CHATTER_PANEL.NONE;
+    },
+
+    discardAttachmentSelection() {
+        this.state.isSelectingAttachments = false;
+        this.state.selectedAttachmentIds = [];
     },
 
     /** @override */
@@ -343,6 +382,7 @@ const chatterPatch = {
         }
         const isOpening = this.state.activePanel !== CHATTER_PANEL.ATTACHMENT;
         this.state.activePanel = isOpening ? CHATTER_PANEL.ATTACHMENT : CHATTER_PANEL.NONE;
+        this.discardAttachmentSelection();
         if (isOpening) {
             this.rootRef().scrollTop = 0;
             this.state.thread.scrollTop = "bottom";
@@ -358,6 +398,19 @@ const chatterPatch = {
             return false;
         }
     },
+    /**
+     * Copies usually affect more than a single file, so deleting them one by
+     * one is fastidious: this deletes them for every selected group at once.
+     */
+    onClickDeleteSelectedAttachments() {
+        this.dialog.add(AttachmentDeleteDialog, {
+            groups: this.selectedAttachmentGroups,
+            onDelete: async (attachments) => {
+                this.discardAttachmentSelection();
+                await this.unlinkAttachments(attachments);
+            },
+        });
+    },
     onClickPinnedMessages() {
         this.closeSearch();
         const isOpening = this.state.activePanel !== CHATTER_PANEL.PINNED_MESSAGES;
@@ -372,6 +425,10 @@ const chatterPatch = {
                 ? CHATTER_PANEL.NONE
                 : CHATTER_PANEL.SEARCH;
         this.state.composerType = false;
+    },
+    onClickSelectAttachments() {
+        this.state.isSelectingAttachments = true;
+        this.state.selectedAttachmentIds = [];
     },
 
     onCloseFullComposerCallback(isDiscard) {
@@ -465,6 +522,14 @@ const chatterPatch = {
         this.state.showActivities = !this.state.showActivities;
     },
 
+    /** @param {import("models").Attachment} attachment */
+    toggleAttachmentSelected(attachment) {
+        const { selectedAttachmentIds } = this.state;
+        this.state.selectedAttachmentIds = selectedAttachmentIds.includes(attachment.id)
+            ? selectedAttachmentIds.filter((id) => id !== attachment.id)
+            : [...selectedAttachmentIds, attachment.id];
+    },
+
     toggleComposer(mode = false, { force = false } = {}) {
         this.closeSearch();
         const toggle = async () => {
@@ -489,8 +554,9 @@ const chatterPatch = {
         this.state.showScheduledMessages = !this.state.showScheduledMessages;
     },
 
-    async unlinkAttachment(attachment) {
-        await this.attachmentUploader.unlink(attachment);
+    /** Trimming the attachment list of the record keeps the posted files on their message. */
+    async unlinkAttachments(attachments) {
+        await this.attachmentUploader.unlink(attachments, { keepOnMessages: true });
         if (this.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }

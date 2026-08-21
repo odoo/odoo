@@ -146,15 +146,33 @@ async function mail_attachment_delete(request) {
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
 
-    const { attachment_id } = await parseRequestParams(request);
+    const { access_token_by_attachment_id, keep_on_messages } = await parseRequestParams(request);
+    const attachmentIds = Object.keys(access_token_by_attachment_id).map(Number);
+    const keptIds = [];
+    if (keep_on_messages) {
+        for (const message of MailMessage._filter([["attachment_ids", "in", attachmentIds]])) {
+            const posted = attachmentIds.filter((id) => message.attachment_ids.includes(id));
+            if (posted.length) {
+                // the attachments stay on their message, out of the thread only
+                IrAttachment.write(posted, { res_id: message.id, res_model: "mail.message" });
+                keptIds.push(...posted);
+            }
+        }
+    }
     const [partner] = ResPartner.read(this.env.user.partner_id);
-    BusBus._sendone(partner, "ir.attachment/delete", {
-        id: attachment_id,
-    });
-    return IrAttachment.unlink([attachment_id]);
+    const deletedIds = attachmentIds.filter((id) => !keptIds.includes(id));
+    for (const attachmentId of deletedIds) {
+        BusBus._sendone(partner, "ir.attachment/delete", {
+            id: attachmentId,
+        });
+    }
+    IrAttachment.unlink(deletedIds);
+    return { kept_attachment_ids: keptIds };
 }
 
 registerRoute("/discuss/channel/attachments", load_attachments);

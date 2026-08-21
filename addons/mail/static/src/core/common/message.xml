@@ -114,8 +114,8 @@
                             <div class="position-relative">
                                 <AttachmentList
                                     t-if="this.message.extra_body_attachment_ids.length > 0 and !this.isEditing"
-                                    attachments="this.message.extra_body_attachment_ids"
-                                    unlinkAttachment.bind="this.onClickAttachmentUnlink"
+                                    attachmentGroups="this.attachmentGroups"
+                                    unlinkAttachments.bind="this.onClickAttachmentUnlink"
                                     messageSearch="this.props.messageSearch"/>
                             </div>
                             <MessageLinkPreviewList t-if="(this.message.message_link_preview_ids.length > 0 and this.store.hasLinkPreviewFeature and !this.message.linkPreviewSquash) or (!this.isEditing and this.message.linkPreviewSquash and this.message.parent_id)" messageLinkPreviews="this.message.message_link_preview_ids"/>

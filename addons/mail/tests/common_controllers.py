@@ -163,8 +163,9 @@ class MailControllerAttachmentCommon(MailControllerCommon):
             self.make_jsonrpc_request(
                 route="/mail/attachment/delete",
                 params={
-                    "attachment_id": attachment.id,
-                    "access_token": attachment._get_ownership_token() if token else None,
+                    "access_token_by_attachment_id": {
+                        attachment.id: attachment._get_ownership_token() if token else None,
+                    },
                 },
             )
 

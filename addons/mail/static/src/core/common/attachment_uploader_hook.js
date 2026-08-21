@@ -32,8 +32,12 @@ export class AttachmentUploader {
         return this.attachmentUploadService.upload(thread, this.composer?.(), file, options);
     }
 
-    async unlink(attachment) {
-        await this.attachmentUploadService.unlink(attachment);
+    /**
+     * @param {import("models").Attachment[]} attachments
+     * @param {Object} [options] see `removeAttachments`
+     */
+    async unlink(attachments, options) {
+        await this.attachmentUploadService.unlink(attachments, options);
     }
 }
 

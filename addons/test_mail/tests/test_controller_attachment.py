@@ -34,6 +34,39 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             thread=thread,
         )
 
+    def test_attachment_delete_kept_on_message(self):
+        """Test that trimming the attachment list of a thread doesn't remove the
+        files from the message they were posted on, with the write access on the
+        attachment as well as with an `ownership_token` alone"""
+        thread = self.env["mail.test.simple"].create({"name": "Test"})
+        attachments = self.env["ir.attachment"].create([
+            {"name": "sample attachment", "res_id": thread.id, "res_model": thread._name},
+            {"name": "other attachment", "res_id": thread.id, "res_model": thread._name},
+        ])
+        messages = [
+            thread.message_post(body="Sample", attachment_ids=attachment.ids)
+            for attachment in attachments
+        ]
+        users = (self.user_admin, self.user_portal)
+        for attachment, message, user in zip(attachments, messages, users):
+            with self.subTest(user=user.name):
+                self.authenticate(user.login, user.login)
+                self.make_jsonrpc_request(
+                    route="/mail/attachment/delete",
+                    params={
+                        "access_token_by_attachment_id": {
+                            attachment.id: attachment._get_ownership_token(),
+                        },
+                        "keep_on_messages": True,
+                    },
+                )
+                self.env.invalidate_all()
+                self.assertEqual(attachment.res_model, "mail.message")
+                self.assertEqual(attachment.res_id, message.id)
+                self.assertIn(attachment, message.attachment_ids)
+                self.assertNotIn(attachment, thread._get_mail_thread_data_attachments())
+                self.assertNotIn("o-mail-Message-edited", message.body)
+
     def test_upload_multi_company(self):
         record = self.user_employee.partner_id
         record.company_id = self.user_employee.company_id

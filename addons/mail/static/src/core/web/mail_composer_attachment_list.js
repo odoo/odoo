@@ -29,7 +29,7 @@ export class MailComposerAttachmentList extends Many2ManyBinaryField {
         super.onFileRemove(fileId);
         const attachment = this.mailStore["ir.attachment"].insert(fileId);
         if (attachment && attachment.res_model === "mail.compose.message") {
-            await this.attachmentUploadService.unlink(attachment);
+            await this.attachmentUploadService.unlink([attachment]);
         }
         this.env.fullComposerBus?.trigger("ATTACHMENT_REMOVED", {
             id: attachment.id,
