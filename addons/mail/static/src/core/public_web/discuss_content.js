@@ -9,6 +9,7 @@ import {
     useEffect,
     useOnChange,
     usePlugin,
+    useProps,
     useScope,
 } from "@odoo/owl";
 
@@ -24,7 +25,6 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { ACTION_GROUP_TAGS, PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
@@ -55,12 +55,8 @@ export class DiscussContent extends Component {
             },
         });
         this.store = useService("mail.store");
-        this.props = usePropsPlus({
-            channel: propStatic(
-                types
-                    .signal(types.instanceOf(this.store["discuss.channel"]))
-                    .optional(() => signal(null))
-            ),
+        this.props = useProps({
+            channel: types.signal(types.instanceOf(this.store["discuss.channel"])).optional(),
         });
         this.ui = usePlugin(UIPlugin);
         this.rootRef = signal.ref(HTMLDivElement);

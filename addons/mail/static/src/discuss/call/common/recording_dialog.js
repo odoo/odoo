@@ -8,10 +8,9 @@ export class RecordingDialog extends Component {
     static template = "discuss.RecordingDialog";
     static components = { CheckBox, Dialog };
 
-    close = useProps.static("close", t.function([]));
-
     setup() {
         super.setup();
+        this.props = useProps({ close: t.function([]).static() });
         this.store = useService("mail.store");
         const recordingState = this.store.rtc?.recordingState;
         const isRecording = this.store.rtc?.isRecording();
@@ -83,16 +82,16 @@ export class RecordingDialog extends Component {
             transcription: this.state().transcription,
             video: this.state().video,
         });
-        this.close();
+        this.props.close();
     }
 
     onClickStopRecording() {
         this.store.rtc.stopRecording();
-        this.close();
+        this.props.close();
     }
 
     onClickUpdate() {
         this.store.rtc.setRecording({ transcription: this.state().transcription });
-        this.close();
+        this.props.close();
     }
 }
