@@ -2538,8 +2538,14 @@ class BaseModel(metaclass=MetaModel):
                     for field in sorted(self._fields.values(), key=lambda f: f.column_order)
                     if field.name != 'id' and field.store and field.column_type
                 ], id_type=self.pool.id_column_type[0])
-                from odoo.modules.db import RANDOM_SERIAL  # noqa: PLC0415
-                if RANDOM_SERIAL and not self._name.startswith('test'):
+                from odoo.modules.db import INT4_MAX, RANDOM_SERIAL, bigint_stress  # noqa: PLC0415
+                if bigint_stress():
+                    # TODELETE: start past the largest 32-bit integer, keeping a
+                    # per-table offset so two models still never share an id.
+                    cr.execute(
+                        "SELECT setval(pg_get_serial_sequence(%s, 'id'), %s::bigint + abs(hashtext(%s)) %% 1000)",
+                        (self._table, INT4_MAX, self._table))
+                elif RANDOM_SERIAL and not self._name.startswith('test'):
                     # Randomize first sequence number to avoid having records
                     # with similar ids when testing. For example, avoid having
                     # first res_users and res_partner sharing the same id.

@@ -44,6 +44,16 @@ _logger = logging.getLogger(__name__)
 DB_NAME_RE = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_.-]+$')
 RANDOM_SERIAL = any(map(os.getenv, ('ODOO_RUNBOT', 'ODOO_TEST')))
 
+# TODELETE: with --dev=bigint-stress, every "id" sequence starts past the
+# largest 32-bit integer, so the whole instance is built with identifiers that
+# do not fit in an int4. Anything still handling ids as 32-bit fails loudly
+# instead of waiting for the database to grow into the problem.
+INT4_MAX = 2**31 - 1
+
+
+def bigint_stress() -> bool:
+    return 'bigint-stress' in config['dev_mode']
+
 
 def is_initialized(cr: Cursor) -> bool:
     """ Check if a database has been initialized for the ORM.
@@ -73,6 +83,27 @@ def initialize(cr: Cursor) -> None:
         _logger.info("Initializing tables with random ids")
         with odoo.tools.misc.file_open('base/data/base_data_test.sql') as base_sql_file:
             cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
+
+    if bigint_stress():
+        # TODELETE: the tables of base_data.sql already exist when _auto_init()
+        # runs, so they never reach the sequence bump there; do them here. The
+        # rows already inserted keep their small ids on purpose, which is what a
+        # database that grew past the limit actually looks like.
+        _logger.info("Initializing bootstrap tables with ids above the int4 limit")
+        cr.execute("""
+            SELECT setval(s.oid::regclass,
+                          %s::bigint + (abs(hashtext(t.relname)) %% 1000))
+            FROM pg_class s
+            JOIN pg_depend d ON d.objid = s.oid
+                            AND d.classid = 'pg_class'::regclass
+                            AND d.deptype IN ('a', 'i')
+            JOIN pg_class t ON t.oid = d.refobjid
+            JOIN pg_attribute a ON a.attrelid = t.oid
+                               AND a.attnum = d.refobjsubid
+                               AND a.attname = 'id'
+            JOIN pg_namespace n ON n.oid = t.relnamespace
+            WHERE s.relkind = 'S' AND n.nspname = current_schema
+        """, (INT4_MAX,))
 
     for info in odoo.modules.Manifest.all_addon_manifests():
         module_name = info.name
