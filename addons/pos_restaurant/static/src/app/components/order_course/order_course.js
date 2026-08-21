@@ -22,8 +22,14 @@ export class OrderCourse extends Component {
         }
         return [...regularLines, ...serviceFeeLines].reduce((acc, line) => {
             if (line.combo_line_ids?.length > 0) {
-                acc.push(line, ...line.combo_line_ids);
+                acc.push(line);
+                const childrenInCourse = line.combo_line_ids.filter(
+                    (child) => child.course_id === line.course_id
+                );
+                acc.push(...childrenInCourse);
             } else if (!line.combo_parent_id) {
+                acc.push(line);
+            } else if (line.combo_parent_id && line.course_id !== line.combo_parent_id.course_id) {
                 acc.push(line);
             }
             return acc;
