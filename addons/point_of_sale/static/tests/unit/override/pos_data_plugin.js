@@ -1,4 +1,4 @@
-import { PosData } from "@point_of_sale/app/services/data_service";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { patch } from "@web/core/utils/patch";
 
 /**
@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
  *
  * IndexedDB is still tested in dedicated tours.
  */
-patch(PosData.prototype, {
+patch(PosDataPlugin.prototype, {
     setup() {
         this.indexedDB = {
             delete: async () => ({}),

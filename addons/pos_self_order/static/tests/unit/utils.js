@@ -12,7 +12,7 @@ import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 import { selfOrderIndex } from "@pos_self_order/app/self_order_index";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
-import { unpatchSelf } from "@pos_self_order/app/services/data_service";
+import { unpatchSelf } from "@pos_self_order/app/plugins/pos_data_plugin";
 import { SelfOrderRouter } from "@pos_self_order/app/services/self_order_router_service";
 import { PosSession } from "@point_of_sale/../tests/unit/data/pos_session.data";
 

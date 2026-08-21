@@ -397,9 +397,6 @@ describe("restaurant pos_store.js", () => {
         const tableSrc = store.models["restaurant.table"].get(1);
         const tableDst = store.models["restaurant.table"].get(2);
         const order = store.addNewOrder({ table_id: tableSrc });
-        store.alert = {
-            dismiss: () => {},
-        };
         const result = store.prepareOrderTransfer(order, tableDst);
         expect(result).toBe(false);
         expect(order.table_id).toBe(tableDst);

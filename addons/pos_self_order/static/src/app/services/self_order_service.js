@@ -2,7 +2,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
-import { markup } from "@odoo/owl";
+import { markup, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -25,35 +25,28 @@ import { SnoozeTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { InfoPopup } from "@pos_self_order/app/components/info_popup/info_popup";
 import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestion";
 import { session } from "@web/session";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
+import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
 
 const { DateTime } = luxon;
 
 export class SelfOrder extends Reactive {
-    static serviceDependencies = [
-        "notification",
-        "router",
-        "pos_data",
-        "pos_ticket_printer",
-        "barcode",
-        "bus_service",
-        "dialog",
-    ];
+    static serviceDependencies = ["notification", "router", "barcode", "bus_service", "dialog"];
 
     constructor(...args) {
         super();
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(
-        env,
-        { notification, router, pos_ticket_printer, barcode, bus_service, dialog, pos_data }
-    ) {
+    async setup(env, { notification, router, barcode, bus_service, dialog }) {
+        this.data = usePlugin(PosDataPlugin);
+        this.ticketPrinter = usePlugin(PosTicketPrinterPlugin);
+        this.ticketPrinter.init(env);
+
         // services
         this.notification = notification;
         this.router = router;
-        this.data = pos_data;
         this.env = env;
-        this.ticketPrinter = pos_ticket_printer;
         this.barcode = barcode;
         this.bus = bus_service;
         this.dialog = dialog;

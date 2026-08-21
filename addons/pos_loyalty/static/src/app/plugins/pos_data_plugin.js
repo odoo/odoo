@@ -1,7 +1,7 @@
-import { PosData } from "@point_of_sale/app/services/data_service";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { patch } from "@web/core/utils/patch";
 
-patch(PosData.prototype, {
+patch(PosDataPlugin.prototype, {
     async initData(...args) {
         await super.initData(...args);
         this.sanitizeData();
