@@ -303,8 +303,8 @@ test(`simple readonly list`, async () => {
         { message: "integer cells should be right aligned" }
     );
     expect(`.o_list_button_add`).toBeVisible();
-    expect(`.o_list_button_save`).not.toHaveCount();
-    expect(`.o_list_button_discard`).not.toHaveCount();
+    expect(`.o_form_button_save`).not.toHaveCount();
+    expect(`.o_form_button_cancel`).not.toHaveCount();
 });
 
 test.tags("desktop");
@@ -1874,19 +1874,19 @@ test(`simple editable rendering`, async () => {
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
     expect(`td:contains(yop)`).toHaveCount(1);
     expect(`.o_list_button_add`).toHaveCount(1);
-    expect(`.o_list_button_save`).toHaveCount(0);
-    expect(`.o_list_button_discard`).toHaveCount(0);
+    expect(`.o_form_button_save`).toHaveCount(0);
+    expect(`.o_form_button_cancel`).toHaveCount(0);
 
     await contains(`.o_field_cell`).click();
-    expect(`.o_list_button_add`).toHaveCount(0);
-    expect(`.o_list_button_save`).toHaveCount(1);
-    expect(`.o_list_button_discard`).toHaveCount(1);
+    expect(`.o_form_button_save`).toHaveCount(1);
+    expect(`.o_form_button_cancel`).toHaveCount(1);
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("plop", { confirm: false });
+    await contains(`.o_form_button_save`).click();
     expect(`.o_list_button_add`).toHaveCount(1);
-    expect(`.o_list_button_save`).toHaveCount(0);
-    expect(`.o_list_button_discard`).toHaveCount(0);
+    expect(`.o_form_button_save`).toHaveCount(0);
+    expect(`.o_form_button_cancel`).toHaveCount(0);
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
 });
 
@@ -2059,9 +2059,8 @@ test("multi_edit: edit a required field with invalid value", async () => {
 
     expect(`.o_notification`).toHaveCount(1);
     expect(`.o_notification`).toHaveText("Missing required fields");
-    expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
+    expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("");
     expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
-    expect(`.o_data_row:eq(0)`).not.toHaveClass("o_selected_row");
     expect.verifySteps([]);
 });
 
@@ -2078,10 +2077,10 @@ test(`multi_edit: clicking on a readonly field switches the focus to the next ed
         `,
     });
     await contains(`.o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(0) [name=int_field]`).click();
+    await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_field_widget[name=foo] input`).toBeFocused();
 
-    await contains(`.o_data_row:eq(0) [name=int_field]`).click();
+    await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_field_widget[name=foo] input`).toBeFocused();
 });
 
@@ -2256,13 +2255,11 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(
-            ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
-        ).click();
-        expect(`.o_list_button_discard`).toHaveCount(0);
+        await contains(`.o_form_status_indicator .o_form_button_cancel`).click();
+        expect(`.o_form_status_indicator .o_form_button_cancel`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
-        await contains(`.o_list_button_discard`).click();
+        await contains(`.o_form_button_cancel`).click();
     }
 
     expect(`.o_data_row`).toHaveCount(3);
@@ -4010,7 +4007,7 @@ test(`editable list view: readonly fields cannot be edited`, async () => {
             </list>
         `,
     });
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row", {
         message: "row should be in edit mode",
     });
@@ -4055,7 +4052,7 @@ test(`editable list view: line with no active element`, async () => {
     });
     expect(`.o_data_cell:eq(1) .o_field_widget`).toHaveClass("o_boolean_interactive");
 
-    await contains(`.o_data_cell`).click();
+    await contains(`.o_data_cell:eq(1)`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_cell:eq(0)`).toHaveClass("o_readonly_modifier");
 
@@ -4168,7 +4165,7 @@ test(`editable list: add a line and discard`, async () => {
     });
     expect(`.o_pager_value`).toHaveText("1-2", { message: "pager should be correct" });
 
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    await contains(`.o_form_button_cancel:not(.dropdown-item)`).click();
     expect(`tbody tr`).toHaveCount(4, { message: "list should still contain 4 rows" });
     expect(`.o_data_row`).toHaveCount(1, {
         message: "list should contain one record (and thus 3 empty rows)",
@@ -4282,7 +4279,7 @@ test(`editable list view: edit an invalid row`, async () => {
     expect(`.o_selected_row .o_invalid_cell`).toHaveCount(1);
 
     await contains(`.o_control_panel`).click();
-    expect(`.o_selected_row`).toHaveCount(0);
+    expect(`.o_selected_row`).toHaveCount(1);
 
     // switch again first row on edition, edit, and click out
     await contains(`.o_field_cell`).click();
@@ -4340,8 +4337,8 @@ test(`editable list view: check that controlpanel buttons are updating when grou
     await mountWithCleanup(WebClient);
     await getService("action").doAction(11);
     await contains(`.o_list_button_add`).click();
-    expect(`.o_list_button_add`).toHaveCount(0);
-    expect(`.o_list_button_save`).toHaveCount(1, {
+    expect(`.o_list_button_add`).toHaveCount(1);
+    expect(`.o_form_button_save`).toHaveCount(1, {
         message: "Should have 2 save button (small and xl screens)",
     });
 
@@ -4350,7 +4347,7 @@ test(`editable list view: check that controlpanel buttons are updating when grou
     expect(`.o_list_button_add`).toHaveCount(1, {
         message: "Create available as list is grouped",
     });
-    expect(`.o_list_button_save`).toHaveCount(0, {
+    expect(`.o_form_button_save`).toHaveCount(0, {
         message: "Save not available as no row in edition",
     });
 });
@@ -6249,6 +6246,33 @@ test(`colspan of empty lines is correct in readonly`, async () => {
     });
     // in readonly mode, the delete action is not available
     expect(`tbody td:eq(0)`).toHaveAttribute("colspan", "1");
+});
+
+test.tags("desktop");
+test(`editable list New button stays available when an inline record is invalid`, async () => {
+    mockService("notification", {
+        add(message, { type }) {
+            expect.step(`${type}:${message}`);
+        },
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_list_button_add`).click();
+    expect(`.o_list_button_add`).toHaveCount(1);
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_selected_row`).toHaveCount(1);
+
+    await contains(`.o_list_button_add`).click();
+    expect(`.o_list_button_add`).toHaveCount(1);
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_selected_row .o_field_widget[name=foo].o_field_invalid`).toHaveCount(1);
+
+    expect.verifySteps(["danger:Missing required fields"]);
 });
 
 test(`colspan of empty lines is correct in edit`, async () => {
@@ -8681,7 +8705,7 @@ test(`empty editable list with sample data: start create record and cancel`, asy
     expect(`.o_data_row`).toHaveCount(1);
 
     // Discard temporary record
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
 
     // Final state: there should be no table, but the no content helper
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
@@ -8718,7 +8742,7 @@ test(`empty editable list with sample data: create and delete record`, async () 
     expect(`.o_data_row`).toHaveCount(1);
 
     // Save temporary record
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(1);
@@ -8765,7 +8789,7 @@ test(`empty editable list with sample data: create and duplicate record`, async 
     expect(`.o_data_row`).toHaveCount(1);
 
     // Save temporary record
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(1);
@@ -9236,7 +9260,7 @@ test(`list view, editable, without data`, async () => {
         message: "buttons should not be disabled while the record is not yet created",
     });
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`tbody tr .o_list_record_selector input`).toHaveProperty("disabled", false, {
         message: "record selector checkbox should not be disabled once the record is created",
     });
@@ -9306,19 +9330,20 @@ test(`list view, editable, can discard`, async () => {
     expect(`td:not(.o_list_record_selector) input`).toHaveCount(0, {
         message: "no input should be in the table",
     });
-    expect(`.o_list_button_discard`).toHaveCount(0);
+    expect(`.o_form_button_cancel`).toHaveCount(0);
 
     await contains(`.o_data_cell`).click();
     expect(`td:not(.o_list_record_selector) input`).toHaveCount(1, {
         message: "first cell should be editable",
     });
-    expect(`.o_list_button_discard`).toHaveCount(1);
+    expect(`.o_form_button_cancel`).toHaveCount(1);
 
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("plop", { confirm: false });
+    await contains(`.o_form_button_cancel:not(.dropdown-item)`).click();
     expect(`td:not(.o_list_record_selector) input`).toHaveCount(0, {
         message: "no input should be in the table",
     });
-    expect(`.o_list_button_discard`).toHaveCount(0);
+    expect(`.o_form_button_cancel`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -9350,7 +9375,7 @@ test(`editable list view, click on the list to save`, async () => {
     await contains(`.o_list_button_add`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new value");
     await contains(`tbody tr:eq(2) .o_data_cell`).click();
-    expect.verifySteps(["web_save"]);
+    expect.verifySteps(["web_save", "web_save"]);
 });
 
 test.tags("desktop");
@@ -9521,7 +9546,8 @@ test(`invisible attrs in readonly and editable list`, async () => {
         `<div class="d-flex flex-wrap gap-1"></div>`
     );
 
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    await contains(`.o_selected_row [name=int_field] input`).edit("42", { confirm: false });
+    await contains(`.o_form_button_cancel:not(.dropdown-item)`).click();
     // click on the invisible field's cell to edit first row
     await contains(`.o_field_cell[name=foo]`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
@@ -9600,7 +9626,7 @@ test(`edit a row by clicking on a readonly field`, async () => {
     });
 
     // edit the first row
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row", {
         message: "first row should be selected",
     });
@@ -9795,18 +9821,18 @@ test(`edition: create new line, then discard`, async () => {
     });
     expect(`tr.o_data_row`).toHaveCount(4, { message: "should have 4 records" });
     expect(`.o_list_button_add`).toHaveCount(1);
-    expect(`.o_list_button_discard`).toHaveCount(0);
+    expect(`.o_form_button_cancel`).toHaveCount(0);
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
 
     await contains(`.o_list_button_add`).click();
-    expect(`.o_list_button_add`).toHaveCount(0);
-    expect(`.o_list_button_discard`).toHaveCount(1);
+    expect(`.o_list_button_add`).toHaveCount(1);
+    expect(`.o_form_button_cancel`).toHaveCount(1);
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    await contains(`.o_form_button_cancel:not(.dropdown-item)`).click();
     expect(`tr.o_data_row`).toHaveCount(4, { message: "should still have 4 records" });
     expect(`.o_list_button_add`).toHaveCount(1);
-    expect(`.o_list_button_discard`).toHaveCount(0);
+    expect(`.o_form_button_cancel`).toHaveCount(0);
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
 });
 
@@ -9839,7 +9865,7 @@ test(`invisible attrs on fields are re-evaluated on field change on desktop`, as
 
     // Reswitch the field to visible and save the row
     await contains(`.o_field_widget[name=bar] input`).click();
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "", "", "blip"]);
 });
 
@@ -9872,7 +9898,7 @@ test(`invisible attrs on fields are re-evaluated on field change on mobile`, asy
 
     // Reswitch the field to visible and save the row
     await contains(`.o_field_widget[name=bar] input`).click();
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "", "", "blip"]);
 });
 
@@ -9883,13 +9909,14 @@ test(`readonly attrs on fields are re-evaluated on field change`, async () => {
         arch: `
             <list editable="top">
                 <field name="foo" readonly="bar"/>
+                <field name="int_field"/>
                 <field name="bar"/>
             </list>
         `,
     });
 
     // Make first line editable
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo] span`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_readonly_modifier");
@@ -9910,7 +9937,7 @@ test(`readonly attrs on fields are re-evaluated on field change`, async () => {
     await contains(`.o_control_panel`).click();
     expect(`.o_selected_row`).toHaveCount(0);
 
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo] input`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo]`).not.toHaveClass("o_readonly_modifier");
@@ -9943,7 +9970,7 @@ test(`required attrs on fields are re-evaluated on field change on desktop`, asy
     await contains(`.o_field_widget[name=bar] input`).click();
     expect(`.o_selected_row .o_field_widget[name=foo]`).not.toHaveClass("o_required_modifier");
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     await contains(`.o_field_cell`).click();
     expect(`.o_selected_row .o_field_widget[name=foo]`).not.toHaveClass("o_required_modifier");
 });
@@ -9975,7 +10002,7 @@ test(`required attrs on fields are re-evaluated on field change on mobile`, asyn
     await contains(`.o_field_widget[name=bar] input`).click();
     expect(`.o_selected_row .o_field_widget[name=foo]`).not.toHaveClass("o_required_modifier");
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     await contains(`.o_field_cell`).click();
     expect(`.o_selected_row .o_field_widget[name=foo]`).not.toHaveClass("o_required_modifier");
 });
@@ -10673,11 +10700,12 @@ test(`edit list line after line deletion`, async () => {
     await contains(`.o_data_row:eq(2) .o_data_cell`).click();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("plop", { confirm: false });
+    await contains(`.o_form_button_cancel`).click();
     await contains(`.o_list_button_add`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     expect(`.o_selected_row`).toHaveCount(0, { message: "no row should be selected" });
 
     await contains(`.o_data_row:eq(2) .o_data_cell`).click();
@@ -11008,7 +11036,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in first column`
             </list>
         `,
     });
-    await contains(`.o_data_row:eq(1) .o_data_cell`).click();
+    await contains(`.o_data_row:eq(1) .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
@@ -11231,7 +11259,7 @@ test(`discarding changes in a row properly updates the rendering`, async () => {
 
     await contains(`.o_field_cell`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("hello", { confirm: false });
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    await contains(`.o_form_button_cancel:not(.dropdown-item)`).click();
     expect(`.modal`).toHaveCount(0, { message: "should be no modal to ask for discard" });
     expect(`.o_field_cell:eq(0)`).toHaveText("yop", {
         message: "first cell should still contain 'yop'",
@@ -11340,7 +11368,7 @@ test(`pressing ESC discard the current line changes`, async () => {
     expect(`tr.o_data_row.o_selected_row`).toHaveCount(0, {
         message: "no rows should be selected",
     });
-    expect(`.o_list_button_save`).toHaveCount(0, { message: "should not have a save button" });
+    expect(`.o_form_button_save`).toHaveCount(0, { message: "should not have a save button" });
 });
 
 test.tags("desktop");
@@ -11359,7 +11387,7 @@ test(`pressing ESC discard the current line changes (with required)`, async () =
     expect(`tr.o_data_row.o_selected_row`).toHaveCount(0, {
         message: "no rows should be selected",
     });
-    expect(`.o_list_button_save`).toHaveCount(0, { message: "should not have a save button" });
+    expect(`.o_form_button_save`).toHaveCount(0, { message: "should not have a save button" });
 });
 
 test(`field with password attribute`, async () => {
@@ -12469,8 +12497,7 @@ test(`editable list with handle widget with slow network`, async () => {
     });
 
     await contains(`.o_data_row [name='amount'] input`).edit("301", { confirm: false });
-    await contains(`tbody tr:eq(0) .o_field_widget[name='amount']`).click();
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(queryAllTexts(`.o_data_cell[name=amount]`)).toEqual(["1,200", "0", "500", "301"]);
 
     await contains(`tbody tr:eq(3) .o_field_widget[name='amount']`).click();
@@ -12839,7 +12866,7 @@ test(`editable list view: contexts are correctly sent`, async () => {
 
     await contains(`.o_data_cell`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("abc", { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
 });
 
@@ -12906,7 +12933,7 @@ test(`editable list view: non dirty record with required fields`, async () => {
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(1);
 
-    // do not change anything and then click outside should discard record
+    // Leaving edit mode keeps the required-field draft in edition.
     await contains(`.o_list_view`).click();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_selected_row`).toHaveCount(0);
@@ -12916,16 +12943,16 @@ test(`editable list view: non dirty record with required fields`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
 
     // do not change anything and then click save button should not allow to discard record
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(1);
 
-    // selecting some other row should discard non dirty record
+    // The invalid draft prevents switching to another row.
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
-    expect(`.o_data_row`).toHaveCount(4);
+    expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(1);
 
-    // click somewhere else to discard currently selected row
+    // Clicking outside also leaves edition mode.
     await contains(`.o_list_view`).click();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_selected_row`).toHaveCount(0);
@@ -12939,14 +12966,16 @@ test(`editable list view: non dirty record with required fields`, async () => {
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
 
-    // discard row and create new record and keep required field empty and click anywhere
-    await contains(`.o_list_button_discard:not(.dropdown-item)`).click();
+    // Explicitly discard the invalid draft before creating another one.
+    await contains(`.o_form_button_cancel:not(.dropdown-item)`).click();
+    expect(`.o_data_row`).toHaveCount(4);
     await contains(`.o_list_button_add`).click();
     expect(`.o_selected_row`).toHaveCount(1, { message: "row should be selected" });
 
     await contains(`.o_selected_row [name=int_field] input`).edit("123", { confirm: false });
     await contains(`.o_list_view`).click();
     expect(`.o_selected_row`).toHaveCount(1, { message: "row should still be in edition" });
+    expect(`.o_data_row`).toHaveCount(5);
 });
 
 test.tags("desktop");
@@ -12998,7 +13027,7 @@ test(`editable list view: multi edition`, async () => {
     await contains(`.o_selected_row [name=int_field] input`).edit("123", { confirm: false });
     expect(`.modal`).toHaveCount(0);
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
 
     // edit a field
@@ -13170,7 +13199,7 @@ test(`editable list view: multi edition error and cancellation handling`, async 
     await contains(`.o_selected_row [name=foo] input`).edit("abc");
     await contains(`.modal .btn.btn-secondary`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
-        message: "first cell should have discarded any change",
+        message: "changes should be discarded",
     });
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
 
@@ -13193,10 +13222,10 @@ test(`editable list view: multi edition error and cancellation handling`, async 
     await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
     await contains(`.o_control_panel`).click();
     expect(`.o_notification`).toHaveCount(1);
-    expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
-        message: "changes should be discarded",
+    expect(queryOne(`.o_data_row:eq(0) .o_data_cell.o_invalid_cell`)).toHaveCount(1, {
+        message: "changes should remain, and the input should be in invalid state",
     });
-    expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
+    expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -13476,6 +13505,115 @@ test(`multi edition: many2many field in grouped list`, async () => {
 });
 
 test.tags("desktop");
+test(`multi edit: saving an invalid required field keeps the invalid cell`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await contains(`.o_form_button_save`).click();
+
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect(`.o_selected_row`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_field_widget[name=foo].o_field_invalid`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveClass("o_invalid_cell");
+    expect(`.o_selected_row [name=foo] input`).toHaveValue("");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect(`.o_data_row:eq(1) .o_data_cell[name=foo]`).toHaveText("blip");
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`multi edit: tabbing away from an invalid required field keeps the invalid cell`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo" required="1"/>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await press("Tab");
+    await animationFrame();
+
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect(`.o_selected_row`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_field_widget[name=foo].o_field_invalid`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveClass("o_invalid_cell");
+    expect(`.o_selected_row [name=foo] input`).toHaveValue("");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`multi edit: pressing enter on an invalid required field keeps the invalid cell`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await press("Enter");
+    await animationFrame();
+
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect(`.o_selected_row`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_field_widget[name=foo].o_field_invalid`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveClass("o_invalid_cell");
+    expect(`.o_selected_row [name=foo] input`).toHaveValue("");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`multi edit: clicking outside an invalid required field keeps the invalid cell`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await contains(`.o_control_panel`).click();
+    await animationFrame();
+
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect(`.o_selected_row`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_field_widget[name=foo].o_field_invalid`).toHaveCount(1);
+    expect(`.o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveClass("o_invalid_cell");
+    expect(`.o_selected_row [name=foo] input`).toHaveValue("");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
 test(`editable list view: multi edition of many2one: set same value`, async () => {
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -13590,7 +13728,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
     await contains(`.o_data_row .o_data_cell input`).edit("oof", { confirm: false });
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     expect(`.modal`).toHaveCount(0);
     expect(`.o_data_row:eq(0) .o_data_cell input`).toHaveValue("oof");
 
@@ -13616,7 +13754,7 @@ test(`editable list view: mousedown on "Discard", mouseup somewhere else (no mul
 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: false });
-    await pointerDown(`.o_list_button_discard`);
+    await pointerDown(`.o_form_button_cancel`);
     await pointerUp(".o_control_panel");
     await animationFrame();
     expect(`.modal`).toHaveCount(0, { message: "should not open modal" });
@@ -13653,7 +13791,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
     await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("oof", { confirm: false });
 
     // mousedown on Discard and then mouseup also on Discard
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     expect(`.o_notification`).toHaveCount(0);
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("10");
 
@@ -13662,7 +13800,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
     await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("abc", { confirm: false });
 
     // mousedown on Discard (simulate a mousemove) and mouseup somewhere else
-    await pointerDown(".o_list_button_discard");
+    await pointerDown(".o_form_button_cancel");
     await animationFrame();
     expect(`.o_notification`).toHaveCount(0);
 
@@ -13685,7 +13823,7 @@ test(`editable list view (multi edition): mousedown on 'Discard', but mouseup so
     await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
     await contains(`.o_data_row [name=foo] input`).fill("oof", { confirm: false });
-    await pointerDown(".o_list_button_discard");
+    await pointerDown(".o_form_button_cancel");
     await animationFrame();
     await pointerUp(".o_control_panel");
     await animationFrame();
@@ -13812,7 +13950,7 @@ test(`editable list view: many2one with readonly modifier`, async () => {
     });
 
     // edit a field
-    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.o_data_row .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(0) .o_data_cell:eq(0) div[name=m2o] a`).toHaveCount(1);
     expect(`.o_data_row .o_data_cell:eq(1) input`).toBeFocused({
         message: "focus should go to the char input",
@@ -14702,7 +14840,7 @@ test(`list with handle field, override default_get, bottom when inline`, async (
     // check line is at the correct place
     await contains(`.o_list_button_add`).click();
     await contains(`[name=foo] input`).edit("ninja", { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     await contains(`.o_list_button_add`).click();
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual([
         "blip",
@@ -14736,12 +14874,12 @@ test(`create record on list with modifiers depending on id`, async () => {
 
     // set a value and save
     await contains(`.o_selected_row [name=foo] input`).edit("some value");
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     // int_field should not be displayed
     expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("");
 
     // edit again the just created record
-    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.o_data_row .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     // modifiers should be evaluated to true
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_readonly_modifier");
@@ -14759,13 +14897,12 @@ test(`readonly boolean in editable list is readonly`, async () => {
             </list>
         `,
     });
-    await contains(`.o_data_row:eq(1) .o_data_cell`).click();
+    await contains(`.o_data_row:eq(1) .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(1) [name=bar] input`).not.toBeEnabled();
     expect(`.o_data_row:eq(1) [name=bar] input`).toBeChecked();
 
     await contains(`.o_data_row:eq(1) [name=bar] div`).click();
     expect(`.o_data_row:eq(1) [name=bar] input`).toBeChecked();
-    expect(`.o_data_row:eq(1) input[type=text]`).toBeFocused();
 
     // clicking on enabled checkbox with active row toggles check mark
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
@@ -15160,7 +15297,7 @@ test(`char field edition in editable grouped list`, async () => {
     await contains(`.o_group_header`).click();
     await contains(`.o_data_cell`).click();
     await contains(`.o_selected_row .o_data_cell [name=foo] input`).edit("pla");
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(MockServer.env["foo"].browse(4)[0].foo).toBe("pla", {
         message: "the edition should have been properly saved",
     });
@@ -15241,12 +15378,14 @@ test(`edit a line and discard it in grouped editable`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:nth-child(5)`).toHaveClass("o_selected_row");
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("plop", { confirm: false });
+    await contains(`.o_form_button_cancel`).click();
     await contains(`.o_data_row:nth-child(4) .o_data_cell:nth-child(2)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:nth-child(4)`).toHaveClass("o_selected_row");
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("plop", { confirm: false });
+    await contains(`.o_form_button_cancel`).click();
     expect(`.o_selected_row`).toHaveCount(0);
 
     await contains(`.o_data_row:nth-child(5) .o_data_cell:nth-child(2)`).click();
@@ -15274,7 +15413,7 @@ test(`add and discard a record in a multi-level grouped list view`, async () => 
     expect(`.o_data_row`).toHaveCount(2);
 
     // discard
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     expect(`.o_data_row`).toHaveCount(1);
 });
 
@@ -15304,7 +15443,7 @@ test(`pressing ESC in editable grouped list should discard the current line chan
     expect(`tbody tr td:contains(yop)`).toHaveCount(1);
     expect(`tr.o_data_row`).toHaveCount(3);
     expect(`tr.o_data_row.o_selected_row`).toHaveCount(0);
-    expect(`.o_list_button_save`).not.toHaveCount();
+    expect(`.o_form_button_save`).not.toHaveCount();
 });
 
 test.tags("desktop");
@@ -15570,11 +15709,11 @@ test(`editing then pressing TAB in editable grouped list`, async () => {
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
     // leave this new row empty and press tab -> should discard the new record and move to the
-    // next group
+    // next group while retaining the empty draft row
     await press("tab");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
+    expect(`.o_data_row`).toHaveCount(6);
+    expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -15587,6 +15726,7 @@ test(`editing then pressing TAB in editable grouped list`, async () => {
         "onchange",
         "web_save",
         "onchange",
+        "web_save",
     ]);
 });
 
@@ -15876,7 +16016,7 @@ test(`keyboard navigation from last cell in editable list`, async () => {
     // Enter should discard the edited row as it is pristine + get to first row
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(4);
+    expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Click on last cell
@@ -15886,17 +16026,17 @@ test(`keyboard navigation from last cell in editable list`, async () => {
     // Enter should add a new row at the bottom
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_data_row`).toHaveCount(6);
 
     // Edit the row and press enter: should add a new row
     await contains(`.o_data_row:eq(-1) [name=foo] input`).edit("blork", { confirm: "enter" });
-    expect(`.o_data_row`).toHaveCount(6);
+    expect(`.o_data_row`).toHaveCount(7);
     expect(`.o_data_row:eq(-1) [name=foo] input`).toBeFocused();
 
     // Escape should discard the added row as it is pristine + view should go into readonly mode
     await press("Escape");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_data_row`).toHaveCount(6);
     expect(`.o_selected_row`).toHaveCount(0);
 });
 
@@ -15944,7 +16084,8 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     // Enter should discard the edited row as it is pristine + get to first row
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(4);
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_group_header:eq(0)`).toHaveText("No 1 record -4", { inline: true });
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Click on last cell
@@ -15982,26 +16123,26 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     // Enter should discard the edited row as it is pristine + get to next data row
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_group_header:eq(0)`).toHaveText("No 1 record -4", { inline: true });
-    expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
+    expect(`.o_data_row`).toHaveCount(6);
+    expect(`.o_group_header:eq(0)`).toHaveText("No 2 records -4", { inline: true });
+    expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of first row
     await press("Shift+Tab");
     await animationFrame();
-    expect(`.o_data_row:eq(0) [name=int_field] input`).toBeFocused();
+    expect(`.o_data_row:eq(1) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row in the first group
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(6);
-    expect(`.o_group_header:eq(0)`).toHaveText("No 2 records -4", { inline: true });
-
-    // Edit the row and press enter: should add a new row
-    await contains(`.o_data_row:eq(1) [name=foo] input`).edit("zzapp", { confirm: "enter" });
     expect(`.o_data_row`).toHaveCount(7);
     expect(`.o_group_header:eq(0)`).toHaveText("No 3 records -4", { inline: true });
-    expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
+
+    // Edit the row and press enter: should add a new row
+    await contains(`.o_data_row:eq(2) [name=foo] input`).edit("zzapp", { confirm: "enter" });
+    expect(`.o_data_row`).toHaveCount(8);
+    expect(`.o_group_header:eq(0)`).toHaveText("No 4 records -4", { inline: true });
+    expect(`.o_data_row:eq(3) [name=foo] input`).toBeFocused();
 });
 
 test.tags("desktop");
@@ -16048,7 +16189,8 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     // Enter should discard the edited row as it is pristine + get to first row
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(4);
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(`.o_group_header:eq(0)`).toHaveText("No 1 record -4", { inline: true });
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Click on last cell
@@ -16086,27 +16228,27 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     // Enter should discard the edited row as it is pristine + get to next data row
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_group_header:eq(0)`).toHaveText("No 1 record -4", { inline: true });
-    expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
+    expect(`.o_data_row`).toHaveCount(6);
+    expect(`.o_group_header:eq(0)`).toHaveText("No 2 records -4", { inline: true });
+    expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of first row
     await press("Shift+Tab");
     await animationFrame();
-    expect(`.o_data_row:eq(0) [name=int_field] input`).toBeFocused();
+    expect(`.o_data_row:eq(1) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row in the first group
     await press("Enter");
     await animationFrame();
-    expect(`.o_data_row`).toHaveCount(6);
-    expect(`.o_group_header:eq(0)`).toHaveText("No 2 records -4", { inline: true });
-
-    // Edit the row and press enter: should add a new row
-    expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
-    await contains(`.o_data_row:eq(1) [name=foo] input`).edit("zzapp", { confirm: "enter" });
     expect(`.o_data_row`).toHaveCount(7);
     expect(`.o_group_header:eq(0)`).toHaveText("No 3 records -4", { inline: true });
+
+    // Edit the row and press enter: should add a new row
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
+    await contains(`.o_data_row:eq(2) [name=foo] input`).edit("zzapp", { confirm: "enter" });
+    expect(`.o_data_row`).toHaveCount(8);
+    expect(`.o_group_header:eq(0)`).toHaveText("No 4 records -4", { inline: true });
+    expect(`.o_data_row:eq(3) [name=foo] input`).toBeFocused();
 });
 
 test.tags("desktop");
@@ -16554,7 +16696,7 @@ test(`add a new row in grouped editable="top" list`, async () => {
     });
     expect(`.o_data_row`).toHaveCount(2);
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(4);
 
@@ -16567,7 +16709,7 @@ test(`add a new row in grouped editable="top" list`, async () => {
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
     await contains(`.o_selected_row [name=foo] input`).edit("pla", { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_data_row`).toHaveCount(5);
 });
 
@@ -16584,7 +16726,7 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row`).toHaveCount(2);
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(4);
 
@@ -16592,7 +16734,7 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
     expect(`.o_data_row:eq(4)`).toHaveClass("o_selected_row");
 
     await contains(`.o_selected_row [name=foo] input`).edit("pla", { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_data_row`).toHaveCount(5);
 });
 
@@ -16610,7 +16752,7 @@ test("editable grouped list: fold group with edited row", async () => {
     await contains(".o_selected_row [name=foo] input").edit("some change");
     await contains(".o_group_header").click();
     await contains(".o_group_header").click();
-    expect(".o_data_row .o_data_cell").toHaveText("some change");
+    expect(queryAllTexts(".o_data_row .o_data_cell")).toEqual(["some change"]);
 });
 
 test("editable grouped list: add row with edited row", async () => {
@@ -16652,7 +16794,7 @@ test(`add and discard a line through keyboard navigation without crashing`, asyn
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     // At this point, a crash manager should appear if no proper link targetting
     expect(`.o_data_row`).toHaveCount(3);
 });
@@ -16675,7 +16817,7 @@ test(`discard an invalid row in a list`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`[name=foo] input`).toHaveValue("");
 
-    await contains(`.o_list_button_discard`).click();
+    await contains(`.o_form_button_cancel`).click();
     expect(`.o_field_invalid`).toHaveCount(0);
     expect(`.o_selected_row`).toHaveCount(0);
     expect(`[name='foo']:eq(0)`).toHaveText("yop");
@@ -17462,8 +17604,8 @@ test(`Auto save: add a record and leave action`, async () => {
     // change action and come back
     await getService("action").doAction(2);
     await getService("action").doAction(1, { clearBreadcrumbs: true });
-    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap", "blip", "test"]);
-    expect(`.o_data_row`).toHaveCount(5);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap", "blip", "test", ""]);
+    expect(`.o_data_row`).toHaveCount(6);
 });
 
 test(`Auto save: create a new record without modifying it and leave action`, async () => {
@@ -17502,8 +17644,8 @@ test(`Auto save: create a new record without modifying it and leave action`, asy
     // change action and come back
     await getService("action").doAction(2);
     await getService("action").doAction(1, { clearBreadcrumbs: true });
-    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap", "blip"]);
-    expect(`.o_data_row`).toHaveCount(4);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["", "yop", "blip", "gnap", "blip"]);
+    expect(`.o_data_row`).toHaveCount(5);
 });
 
 test(`Auto save: modify a record and leave action`, async () => {
@@ -18617,7 +18759,7 @@ test(`Search more in a many2one`, async () => {
     await contains(`.modal .o_data_row:eq(2) td[name=display_name]`).click();
     expect.verifySteps(["web_read 3"]);
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(queryAllTexts`.o_data_row td[name=m2o]`).toEqual([
         "Value 3",
         "Value 2",
@@ -18811,7 +18953,7 @@ test(`Properties: char`, async () => {
     await contains(`[name='m2o']`).click();
     expect(`.o_field_cell.o_char_cell input`).toHaveValue("TEST");
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_char_cell:eq(0)`).toHaveText("TEST");
     expect.verifySteps(["web_save"]);
 
@@ -18857,7 +18999,7 @@ test(`Properties: boolean`, async () => {
     expect(`.o_field_cell.o_boolean_cell`).toHaveCount(3);
 
     await contains(`.o_field_cell.o_boolean_cell`).click();
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_boolean_cell input:first`).not.toBeChecked();
     expect.verifySteps(["web_save"]);
 });
@@ -18900,7 +19042,7 @@ test(`Properties: integer`, async () => {
 
     await contains(`.o_field_cell.o_integer_cell`).click();
     await contains(`.o_field_cell.o_integer_cell input`).edit(321, { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_integer_cell:eq(0)`).toHaveText("321");
     expect(`.o_list_footer .o_list_number`).toHaveText("567", {
         message:
@@ -18947,7 +19089,7 @@ test(`Properties: float`, async () => {
 
     await contains(`.o_field_cell.o_float_cell`).click();
     await contains(`.o_field_cell.o_float_cell input`).edit(3.21, { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_float_cell:eq(0)`).toHaveText("3.21");
     expect(`.o_list_footer .o_list_number`).toHaveText("126.66", {
         message:
@@ -18993,7 +19135,7 @@ test(`Properties: date`, async () => {
     await contains(`.o_field_cell.o_date_cell`).click();
     await contains(`.o_field_date input`).click();
     await contains(getPickerCell("19")).click();
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_date_cell:eq(0)`).toHaveText("Dec 19, 2022");
     expect.verifySteps(["web_save"]);
 });
@@ -19051,7 +19193,7 @@ test(`Properties: datetime`, async () => {
     if (isSmall()) {
         await click(".o_bottom_sheet_backdrop");
     }
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("Dec 19, 2022, 12:12 PM");
     expect.verifySteps(["web_save"]);
 });
@@ -19099,7 +19241,7 @@ test(`Properties: selection`, async () => {
 
     await contains(`.o_field_cell.o_selection_cell`).click();
     await editSelectMenu(".o_field_cell.o_selection_cell input", { value: "A" });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_selection_cell:eq(0)`).toHaveText("A");
     expect.verifySteps(["web_save"]);
 });
@@ -19164,7 +19306,7 @@ test(`Properties: tags`, async () => {
     await contains(`.o_field_cell.o_property_tags_cell`).click();
     await contains(`.o_field_cell.o_property_tags_cell .o_delete`).click();
     expectedValue = ["c"];
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_property_tags_cell:eq(0)`).toHaveText("C");
     expect.verifySteps(["web_save"]);
 
@@ -19172,7 +19314,7 @@ test(`Properties: tags`, async () => {
     await clickFieldDropdown(`properties.property_tags`);
     await clickFieldDropdownItem(`properties.property_tags`, "B");
     expectedValue = ["c", "b"];
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_property_tags_cell:eq(0)`).toHaveText("B\nC");
     expect.verifySteps(["web_save"]);
 });
@@ -19214,7 +19356,7 @@ test(`Properties: many2one`, async () => {
     expect(`.o_field_cell.o_many2one_cell`).toHaveCount(3);
 
     await selectMany2xItem(`properties.property_many2one`, "EUR");
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_field_cell.o_many2one_cell:eq(0)`).toHaveText("EUR");
     expect.verifySteps(["web_save"]);
 });
@@ -19707,7 +19849,7 @@ test(`x2many onchange, check result`, async () => {
     await selectMany2xItem("m2m", "Value 3");
     expect.verifySteps(["onchange"]);
 
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     deferred.resolve();
     await animationFrame();
     expect(`.o_data_cell.o_many2many_tags_cell:eq(0)`).toHaveText("Value 1\nValue 2\nValue 3");
@@ -22137,7 +22279,7 @@ test(`column tag: clicking a specific sub-field focuses that sub-field`, async (
 });
 
 test.tags("desktop");
-test(`column tag: readonly column_group is skipped when entering edit mode`, async () => {
+test(`column tag: clicking a readonly column_group does not enter edit mode`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -22153,6 +22295,11 @@ test(`column tag: readonly column_group is skipped when entering edit mode`, asy
     });
 
     await contains(`.o_data_row:eq(0) td[name='int_field']`).click();
+    expect(`.o_data_row:eq(0)`).not.toHaveClass("o_selected_row");
+    expect(`.o_data_row:eq(0) td[name='int_field']`).toHaveClass("cursor-default");
+
+    // Clicking an editable cell of the row enters edit mode
+    await contains(`.o_data_row:eq(0) td[name='foo']`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_selected_row [name='foo'] input`).toBeFocused();
 });
@@ -22831,7 +22978,7 @@ test(`optional columns toggle button is highlighted when a hidden field is inval
 
     await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
     await contains(`[name=foo] input`).edit("", { confirm: false });
-    await contains(".o_list_button_save").click();
+    await contains(".o_form_button_save").click();
     expect(`.o_field_invalid`).toHaveCount(1);
     expect(`.o_invalid_optional_columns_button`).toHaveCount(0);
     await contains(`.o_optional_columns button`).click();
@@ -22861,27 +23008,6 @@ test("should not crash in lists with groupby node and sample data", async () => 
     });
 
     expect(queryAll(".o_group_header").length).toBeGreaterThan(0);
-});
-
-test.tags("desktop");
-test("mass edit discoverability: pencil icon displays on selected row and enters edit mode", async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list multi_edit="1">
-            <field name="foo"/>
-            <field name="int_field"/>
-            <field name="reference" optional="hide"/>
-        </list>`,
-    });
-    expect(".o_mass_edit_btn").toHaveCount(0);
-
-    await clickRecordSelector(1);
-    expect(".o_data_row:eq(0) .o_mass_edit_btn").toHaveCount(1);
-
-    await click(`.o_data_row:eq(0) .o_mass_edit_btn`);
-    await animationFrame();
-    expect(".o_selected_row .o_field_widget[name='foo'] input").toBeFocused();
 });
 
 test("Empty Groups: filter out empty groups unless field has group_expand", async () => {
@@ -22965,4 +23091,70 @@ test("handles column node with untolerrated content", async () => {
         `,
     });
     expect(".o_list_view th:not(.o_list_record_selector)").toHaveCount(1);
+});
+
+test.tags("desktop");
+test(`list status indicator replaces save/discard buttons when not in dialog`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top">
+            <field name="foo"/>
+            <field name="int_field"/>
+        </list>`,
+    });
+
+    // Enter edit mode
+    await contains(`.o_data_row:eq(0) .o_data_cell:not(.o_readonly_modifier)`).click();
+    expect(`.o_form_status_indicator`).toHaveCount(1);
+
+    // The status indicator now handles the save/discard buttons
+    expect(`.o_form_status_indicator .o_form_button_save`).toHaveCount(1);
+    expect(`.o_form_status_indicator .o_form_button_cancel`).toHaveCount(1);
+});
+
+test.tags("desktop");
+test(`list status indicator only displays its buttons when the edited record has changes`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top">
+            <field name="foo"/>
+            <field name="int_field"/>
+        </list>`,
+    });
+
+    // Entering edit mode on an existing record does not display the buttons
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    expect(`.o_form_status_indicator_buttons`).toHaveClass("invisible");
+
+    // A pending change displays them, as soon as the input is dirty
+    await contains(`.o_selected_row [name=foo] input`).edit("changed", { confirm: false });
+    expect(`.o_form_status_indicator_buttons`).not.toHaveClass("invisible");
+
+    // Saving hides them again
+    await contains(`.o_form_status_indicator .o_form_button_save`).click();
+    expect(`.o_form_status_indicator`).toHaveCount(0);
+
+    // A new record displays them right away
+    await contains(`.o_list_button_add`).click();
+    expect(`.o_form_status_indicator_buttons`).not.toHaveClass("invisible");
+});
+
+test(`save/discard buttons remain standard when list is rendered in dialog`, async () => {
+    await mountViewInDialog({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top">
+            <field name="foo"/>
+            <field name="int_field"/>
+        </list>`,
+    });
+
+    // Enter edit mode
+    await contains(`.o_data_row:eq(0) .o_data_cell:not(.o_readonly_modifier)`).click();
+
+    expect(`.o_form_status_indicator`).toHaveCount(0);
+    expect(`.o_form_button_save`).toHaveCount(1);
+    expect(`.o_form_button_cancel`).toHaveCount(1);
 });

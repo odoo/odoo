@@ -172,7 +172,7 @@ test("FavoriteField in editable list view without label", async () => {
     });
 
     // save
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(
         `.o_data_row:first .o_field_widget .o_favorite i[data-icon="star"]:not(.oi-filled)`
     ).toHaveCount(1, {

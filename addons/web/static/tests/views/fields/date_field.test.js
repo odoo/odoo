@@ -450,7 +450,7 @@ test("date field in editable list view", async () => {
     expect(".o_datetime_picker").toHaveCount(0);
     expect(".o_field_date button").toHaveText("Feb 22, 2017");
 
-    await contains(".o_list_button_save").click();
+    await contains(".o_form_button_save").click();
     expect("tr.o_data_row td:not(.o_list_record_selector)").toHaveText("Feb 22, 2017");
 });
 

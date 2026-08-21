@@ -880,7 +880,7 @@ test(`freeze widths: edit a record`, async () => {
         "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
         "ipsum purus bibendum est.";
     await contains(`.o_field_widget[name=text] .o_input`).edit(longVal, { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(`.o_selected_row`).toHaveCount(0);
     expect(getColumnWidths()).toEqual(initialWidths);
 });
@@ -928,9 +928,8 @@ test(`freeze widths: switch mode`, async () => {
     await contains(`td:not(.o_list_record_selector)`).click();
     const editionWidths = getColumnWidths();
     const editionWidth = queryRect(`table`).width;
-
     // leave edition
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_list_renderer`).click();
     const readonlyWidths = getColumnWidths();
     const readonlyWidth = queryRect(`table`).width;
     expect(editionWidth).toBe(startWidth, {
@@ -986,7 +985,7 @@ test(`freeze widths: switch mode (lot of fields)`, async () => {
     const editionWidth = queryRect(`.o_data_row:eq(0)`).width;
 
     // leave edition
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_list_renderer`).click();
     const readonlyHeight = queryRect(`.o_data_row:eq(0)`).height;
     const readonlyWidth = queryRect(`.o_data_row:eq(0)`).width;
     expect(startHeight).toBe(editionHeight);
@@ -1165,7 +1164,7 @@ test(`freeze widths: add a record in empty list`, async () => {
         "Some very very long value for a char field",
         { confirm: false }
     );
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(getColumnWidths()).toEqual(initialWidths);
 });
 
@@ -1192,7 +1191,7 @@ test(`freeze widths: add a record in empty list with handle widget`, async () =>
 
     // creating one record
     await contains(`.o_selected_row [name='foo'] input`).edit("test_foo", { confirm: false });
-    await contains(`.o_list_button_save`).click();
+    await contains(`.o_form_button_save`).click();
     expect(getColumnWidths()).toEqual(initialWidths);
 });
 

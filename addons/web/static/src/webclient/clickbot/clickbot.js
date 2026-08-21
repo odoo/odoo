@@ -569,7 +569,7 @@ class Clickbot {
             );
         } else {
             await this._triggerClick(
-                document.querySelector(".o_list_button_discard"),
+                document.querySelector(".o_form_button_cancel"),
                 () => document.querySelector(viewSelector) !== null,
                 "discard the editable list"
             );
@@ -622,7 +622,7 @@ class Clickbot {
             }
             if (document.querySelector(".o_data_row.o_selected_row")) {
                 return this._triggerClick(
-                    document.querySelector(".o_list_button_discard"),
+                    document.querySelector(".o_form_button_cancel"),
                     () => document.querySelector(`.o_list_view`) !== null,
                     "discard the editable list (from new record, editable list)"
                 );
