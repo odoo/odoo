@@ -272,8 +272,7 @@ class StockMove(models.Model):
         total_qty = sum(m._get_valued_qty() * (-1 if m.is_in else 1) for m in self)
         valued_consigned_qty = self._get_valued_consigned_qty()
         total_valued_qty = total_qty + valued_consigned_qty
-        if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
-            (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
+        if total_valued_qty and (self.product_id.cost_method in ['fifo', 'average'] or valued_consigned_qty):
             total_value = sum(m.value * (-1 if m.is_in else 1) for m in self)
             return total_value / total_valued_qty
         else:
