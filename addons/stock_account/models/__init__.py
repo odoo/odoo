@@ -17,3 +17,5 @@ from . import stock_picking
 from . import stock_picking_type
 from . import stock_quant
 from . import res_config_settings
+
+from . import res_groups

@@ -22,3 +22,5 @@ from . import res_users_settings
 from . import res_users
 from . import digest_digest
 from . import ir_ui_menu
+
+from . import res_groups

@@ -1680,7 +1680,7 @@ class HrEmployee(models.Model):
                     raise UserError(self.env._('A user already exist with the following login: %(login)s. '
                                                'User Name: %(user_name)s. Please link the user instead before sending invitation.', login=login, user_name=user.name))
                 return user
-        groups = ResUsers._default_groups(group='user')
+        groups = ResUsers._default_groups()._reduce_to_light_groups()
         return ResUsers.create({
             'name': self.name,
             'login': login,

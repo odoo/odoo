@@ -17,6 +17,7 @@ from . import hr_version
 from . import mail_activity_type
 from . import mail_message_subtype
 from . import res_company
+from . import res_groups
 from . import res_partner
 from . import res_users
 from . import calendar_event
