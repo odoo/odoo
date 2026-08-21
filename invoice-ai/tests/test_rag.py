@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import math
 from typing import Any
-from unittest.mock import AsyncMock
 
 import pytest
 
@@ -141,7 +140,7 @@ class TestVectorSearch:
     @pytest.mark.anyio
     async def test_top1_recall(self, synthetic_vendor):
         """A paraphrase of one seeded bill should return it in results."""
-        from app.retrieve import get_pool, vector_search
+        from app.retrieve import vector_search
 
         partner_id = synthetic_vendor["partner_id"]
         target_bill = synthetic_vendor["bills"][0]
@@ -151,7 +150,6 @@ class TestVectorSearch:
         )
 
         pool = FakePool()
-        original_get_pool = get_pool
         import app.retrieve as retrieve_mod
 
         retrieve_mod._pool = pool  # inject directly into module global

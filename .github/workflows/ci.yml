@@ -23,11 +23,11 @@ jobs:
         with:
           terraform_version: "1.9"
 
+      - name: Terraform Init
+        run: terraform -chdir=infra/terraform/ init -backend=false
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive infra/terraform/
-
-      - name: Terraform Init (no backend)
-        run: terraform init -backend=false infra/terraform/
 
       - name: Terraform Validate
         run: terraform validate -chdir=infra/terraform/
@@ -203,19 +203,19 @@ jobs:
       - name: Run Bandit (Odoo addon)
         run: |
           bandit -r custom_addons/invoice_agent/ \
-            -ll --severity-level medium \
+            --severity-level medium \
             -f json -o bandit-addon.json || true
           bandit -r custom_addons/invoice_agent/ \
-            -ll --severity-level medium \
+            --severity-level medium \
             -f screen
 
       - name: Run Bandit (invoice-ai)
         run: |
           bandit -r invoice-ai/app/ \
-            -ll --severity-level medium \
+            --severity-level medium \
             -f json -o bandit-ai.json || true
           bandit -r invoice-ai/app/ \
-            -ll --severity-level medium \
+            --severity-level medium \
             -f screen
 
       - name: Upload Bandit reports

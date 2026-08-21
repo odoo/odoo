@@ -23,12 +23,10 @@ from __future__ import annotations
 
 import os
 import time
-import uuid
 from pathlib import Path
 
 from locust import HttpUser, between, events, task
 from locust.load_test_shape import LoadTestShape
-
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -74,9 +72,7 @@ def on_test_start(environment, **kwargs):  # type: ignore[no-untyped-def]
     """Collect test PDFs at the start of the test."""
     global _PDF_FILES
     if PDF_DIR.exists():
-        _PDF_FILES = sorted(
-            list(PDF_DIR.glob("*.pdf")) + list(PDF_DIR.glob("*.png"))
-        )
+        _PDF_FILES = sorted(list(PDF_DIR.glob("*.pdf")) + list(PDF_DIR.glob("*.png")))
     if not _PDF_FILES:
         print(
             f"WARNING: No PDF/PNG fixtures found in {PDF_DIR}. "
@@ -95,12 +91,12 @@ class StagedLoadShape(LoadTestShape):
     """
 
     stages = [
-        {"duration": 120, "users": 10, "spawn_rate": 1},   # 0-2 min: warm up
-        {"duration": 300, "users": 25, "spawn_rate": 2},   # 2-5 min: moderate
-        {"duration": 600, "users": 50, "spawn_rate": 3},   # 5-10 min: heavy
-        {"duration": 900, "users": 75, "spawn_rate": 3},   # 10-15 min: stress
-        {"duration": 1200, "users": 100, "spawn_rate": 4}, # 15-20 min: spike
-        {"duration": 1800, "users": 100, "spawn_rate": 0}, # 20-30 min: hold
+        {"duration": 120, "users": 10, "spawn_rate": 1},  # 0-2 min: warm up
+        {"duration": 300, "users": 25, "spawn_rate": 2},  # 2-5 min: moderate
+        {"duration": 600, "users": 50, "spawn_rate": 3},  # 5-10 min: heavy
+        {"duration": 900, "users": 75, "spawn_rate": 3},  # 10-15 min: stress
+        {"duration": 1200, "users": 100, "spawn_rate": 4},  # 15-20 min: spike
+        {"duration": 1800, "users": 100, "spawn_rate": 0},  # 20-30 min: hold
     ]
 
     def tick(self) -> tuple[int, int] | None:
@@ -248,7 +244,9 @@ class FullPipelineUser(HttpUser):
             },
         }
         resp = self.client.post(
-            "/jsonrpc", json=payload, name=f"/jsonrpc/{model}.{method}",
+            "/jsonrpc",
+            json=payload,
+            name=f"/jsonrpc/{model}.{method}",
         )
         if resp.ok:
             return resp.json().get("result")
@@ -266,14 +264,18 @@ class FullPipelineUser(HttpUser):
 
         # Step 1: Create a draft vendor bill
         move_id = self._jsonrpc_call(
-            "account.move", "create", [{"move_type": "in_invoice"}],
+            "account.move",
+            "create",
+            [{"move_type": "in_invoice"}],
         )
         if not move_id:
             return
 
         # Step 2: Trigger extraction
         self._jsonrpc_call(
-            "account.move", "action_request_ai_extraction", [move_id],
+            "account.move",
+            "action_request_ai_extraction",
+            [move_id],
         )
 
         # Step 3: Poll until extraction completes or timeout

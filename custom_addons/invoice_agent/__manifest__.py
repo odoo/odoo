@@ -19,16 +19,16 @@
         "wizard/bulk_process_wizard_views.xml",
         "data/automation_data.xml",
         "data/cron.xml",
-        "data/queue_cron.xml"
+        "data/queue_cron.xml",
     ],
     "assets": {
         "web.assets_backend": [
             "invoice_agent/static/src/js/suggestion_panel.js",
             "invoice_agent/static/src/js/suggestion_panel.xml",
-            "invoice_agent/static/src/js/ai_status_widget.js"
+            "invoice_agent/static/src/js/ai_status_widget.js",
         ]
     },
     "installable": True,
     "application": False,
-    "license": "LGPL-3"
+    "license": "LGPL-3",
 }

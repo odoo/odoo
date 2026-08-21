@@ -16,13 +16,9 @@ Accuracy numbers are written to ``docs/rag-eval.md``.
 
 from __future__ import annotations
 
-import asyncio
-import json
 import math
 import time
 from pathlib import Path
-from typing import Any
-from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -34,9 +30,11 @@ pytestmark = [pytest.mark.anyio, pytest.mark.slow]
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _fake_embed(text: str, dim: int = 1024) -> list[float]:
     """Deterministic pseudo-embedding for the evaluation harness."""
     import hashlib
+
     h = hashlib.sha256(text.encode()).digest()
     raw = [h[i % len(h)] / 255.0 for i in range(dim)]
     norm = math.sqrt(sum(v * v for v in raw))
@@ -45,10 +43,17 @@ def _fake_embed(text: str, dim: int = 1024) -> list[float]:
 
 class EvalRecord:
     """One bill's evaluation result."""
-    def __init__(self, move_id: int, predicted_account: str,
-                 actual_account: str, amount_plausible: bool,
-                 is_duplicate: bool, predicted_duplicate: bool,
-                 latency_ms: float):
+
+    def __init__(
+        self,
+        move_id: int,
+        predicted_account: str,
+        actual_account: str,
+        amount_plausible: bool,
+        is_duplicate: bool,
+        predicted_duplicate: bool,
+        latency_ms: float,
+    ):
         self.move_id = move_id
         self.predicted_account = predicted_account
         self.actual_account = actual_account
@@ -66,6 +71,7 @@ class EvalRecord:
 # Evaluation (requires live DB + API)
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.slow
 async def test_evaluate_50_bills():
     """Replay 50 bills through extract → retrieve → validate.
@@ -79,14 +85,11 @@ async def test_evaluate_50_bills():
         pytest.skip("asyncpg not installed")
 
     # Check for required env vars
-    db_url = (
-        __import__("os").environ.get("INVOICE_AI_DATABASE_URL", "")
-        or __import__("os").environ.get("EVAL_DATABASE_URL", "")
-    )
+    db_url = __import__("os").environ.get("INVOICE_AI_DATABASE_URL", "") or __import__(
+        "os"
+    ).environ.get("EVAL_DATABASE_URL", "")
     if not db_url:
-        pytest.skip(
-            "Set INVOICE_AI_DATABASE_URL to run the 50-bill evaluation"
-        )
+        pytest.skip("Set INVOICE_AI_DATABASE_URL to run the 50-bill evaluation")
 
     pool = await asyncpg.create_pool(db_url, min_size=1, max_size=2)
     try:
@@ -126,7 +129,7 @@ async def test_evaluate_50_bills():
             # just verify the retrieval works.
             if row["has_embedding"]:
                 query_vector = _fake_embed(row["content"] or "")
-                result = await pool.fetch(
+                await pool.fetch(
                     """
                     SELECT 1 - (embedding <=> $1::vector) AS similarity
                     FROM invoice_agent_vendor_doc
@@ -167,7 +170,7 @@ async def test_evaluate_50_bills():
             content = content.replace("_TBD_", str(account_correct))
             content = content.replace(
                 "_TBD_",
-                f"{account_correct}/{total} ({account_correct/total*100:.0f}%)",
+                f"{account_correct}/{total} ({account_correct / total * 100:.0f}%)",
             )
             eval_path.write_text(content, encoding="utf-8")
 

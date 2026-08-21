@@ -13,8 +13,8 @@
 # AUTH token for Redis (stored in Secrets Manager)
 # ---------------------------------------------------------------------------
 resource "random_password" "redis_auth" {
-  length           = 32
-  special          = false  # AUTH token: alphanumeric only per AWS spec
+  length  = 32
+  special = false # AUTH token: alphanumeric only per AWS spec
 }
 
 resource "aws_secretsmanager_secret" "redis_auth" {
@@ -92,7 +92,7 @@ resource "aws_elasticache_parameter_group" "redis" {
 
   parameter {
     name  = "notify-keyspace-events"
-    value = ""  # No event notifications needed
+    value = "" # No event notifications needed
   }
 
   tags = {
@@ -107,10 +107,10 @@ resource "aws_elasticache_replication_group" "redis" {
   replication_group_id = "${local.name_prefix}-redis"
   description          = "Redis 7 for Odoo sessions + LLM extraction cache"
 
-  engine               = "redis"
-  engine_version       = "7.1"
-  node_type            = "cache.t4g.medium"
-  num_cache_clusters   = 2  # 1 primary + 1 replica for Multi-AZ failover
+  engine             = "redis"
+  engine_version     = "7.1"
+  node_type          = "cache.t4g.medium"
+  num_cache_clusters = 2 # 1 primary + 1 replica for Multi-AZ failover
 
   parameter_group_name = aws_elasticache_parameter_group.redis.name
 

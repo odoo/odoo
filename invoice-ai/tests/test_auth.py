@@ -18,7 +18,6 @@ already exercised by the happy-path test in ``test_extract.py`` with the
 from datetime import UTC, datetime, timedelta
 
 import pytest
-
 from app.config import settings
 
 from .conftest import mint_token
@@ -101,7 +100,9 @@ async def test_healthz_never_requires_a_token(client):
 
 @pytest.mark.anyio
 async def test_extract_fails_closed_when_secret_not_configured(
-    client, fake_claude, monkeypatch,
+    client,
+    fake_claude,
+    monkeypatch,
 ):
     """A service without INVOICE_AI_JWT_SECRET refuses every request, even
     ones signed with a known secret — never silently accepts."""

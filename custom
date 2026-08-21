@@ -1,0 +1,66 @@
+"""Post-init hook: monkey-patch Odoo's session store with Redis.
+
+When ``ODOO_SESSION_REDIS_URL`` is set in the environment, this hook
+replaces ``odoo.http.Session.load`` and ``odoo.http.Session.save`` with
+Redis-backed implementations from ``session_store.py``.
+
+The patch is applied at module install / server start.  When Redis is
+not configured, the hook is a no-op — Odoo's default file-based session
+store is used unchanged.
+
+The monkey-patching targets ``odoo.http.Session`` *class* methods, not
+instances, so all workers (multi-process mode) pick up the change.
+"""
+
+import logging
+
+from odoo import http
+
+_logger = logging.getLogger(__name__)
+
+
+def _patch_session_store():
+    """Replace Odoo Session load/save with Redis-backed versions."""
+    from .session_store import session_store
+
+    if not session_store.available:
+        _logger.info(
+            "session_redis: Redis not configured "
+            "(ODOO_SESSION_REDIS_URL not set) — using file-based sessions"
+        )
+        return
+
+    # Save originals so we can fall back if needed.
+    _original_load = http.Session.load
+    _original_save = http.Session.save
+
+    def _redis_load(self, sid):
+        """Load session from Redis, falling back to file on error."""
+        data = session_store.load(sid)
+        if data:
+            self.__dict__.update(data)
+            return
+        # Redis miss — try the original file-based store
+        return _original_load(self, sid)
+
+    def _redis_save(self, *args, **kwargs):
+        """Save session to Redis AND file (belt-and-suspenders during
+        migration).  Once confident, the file save can be dropped."""
+        session_store.save(self)
+        # Keep original save as fallback during rollout
+        return _original_save(self, *args, **kwargs)
+
+    http.Session.load = _redis_load
+    http.Session.save = _redis_save
+
+    _logger.info(
+        "session_redis: session store patched — "
+        "sessions persisted to Redis (prefix=%s, ttl=%d days)",
+        session_store._prefix,
+        session_store._ttl // 86400,
+    )
+
+
+def post_init_hook(cr, registry):
+    """Odoo post-init hook — called after module installation."""
+    _patch_session_store()

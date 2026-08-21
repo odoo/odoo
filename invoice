@@ -1,0 +1,215 @@
+"""Redis-backed cache for Claude extraction results.
+
+Avoids redundant Anthropic API calls for invoices that have already been
+extracted.  The cache key is a SHA-256 hash of the OCR text, so
+re-processing the same document hits the cache instead of Claude.
+
+Design:
+- Cache key: ``llm-cache:sha256(<ocr_text>)`` — content-addressable,
+  deterministic, no stale references.
+- Value: JSON-serialized extraction result + metadata.
+- TTL: configurable via ``LLM_CACHE_TTL_HOURS`` (default 168 = 7 days).
+- Namespace: ``llm-cache:`` prefix, separate from session keys.
+- Disabled when ``REDIS_URL`` is not set (local dev without Redis).
+
+Cache contract:
+- The consumer checks the cache BEFORE calling Claude.
+- On cache hit, the result is returned immediately (no API call, no
+  tokens billed).
+- On cache miss, the consumer calls Claude, then stores the result.
+- Cache entries include the model name so a model upgrade automatically
+  invalidates old entries (different model = different cache key prefix).
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import logging
+import os
+from datetime import datetime, timezone
+from typing import Any
+
+_logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+REDIS_URL = os.environ.get("REDIS_URL", "")
+CACHE_PREFIX = os.environ.get("LLM_CACHE_PREFIX", "llm-cache:")
+CACHE_TTL_HOURS = int(os.environ.get("LLM_CACHE_TTL_HOURS", "168"))  # 7 days
+CACHE_TTL_SECONDS = CACHE_TTL_HOURS * 3600
+
+
+def _get_redis_client():
+    """Create a Redis client from the environment."""
+    if not REDIS_URL:
+        return None
+    try:
+        import redis
+
+        return redis.Redis.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            socket_connect_timeout=5,
+            socket_timeout=5,
+            retry_on_timeout=True,
+        )
+    except ImportError:
+        _logger.warning("llm_cache: redis package not installed; cache disabled")
+        return None
+    except Exception:
+        _logger.exception(
+            "llm_cache: failed to connect to Redis at %s", REDIS_URL,
+        )
+        return None
+
+
+_redis_client = None
+
+
+def _get_redis():
+    global _redis_client
+    if _redis_client is None:
+        _redis_client = _get_redis_client()
+    return _redis_client
+
+
+# ---------------------------------------------------------------------------
+# Key derivation
+# ---------------------------------------------------------------------------
+
+def _cache_key(ocr_text: str, model: str = "") -> str:
+    """Build a content-addressable cache key.
+
+    The model name is included so that upgrading Claude models
+    automatically invalidates stale cache entries.
+    """
+    h = hashlib.sha256(ocr_text.encode("utf-8")).hexdigest()
+    model_tag = f":{model}" if model else ""
+    return f"{CACHE_PREFIX}{model_tag}{h}"
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+def cache_get(ocr_text: str, model: str = "") -> dict[str, Any] | None:
+    """Look up a cached extraction result.
+
+    :return: The cached result dict, or ``None`` on miss.
+    """
+    r = _get_redis()
+    if r is None:
+        return None
+    try:
+        data = r.get(_cache_key(ocr_text, model))
+        if data is None:
+            return None
+        result = json.loads(data)
+        _logger.debug("llm_cache: hit for model=%s", model)
+        return result
+    except Exception:
+        _logger.exception("llm_cache: error reading cache")
+        return None
+
+
+def cache_set(
+    ocr_text: str,
+    result: dict[str, Any],
+    model: str = "",
+    ttl: int | None = None,
+) -> None:
+    """Store an extraction result in the cache.
+
+    :param ocr_text: The OCR text that was sent to Claude.
+    :param result: The full extraction result dict (parsed, usage, model).
+    :param model: The Claude model name (for cache invalidation on upgrade).
+    :param ttl: Override the default TTL (in seconds).
+    """
+    r = _get_redis()
+    if r is None:
+        return
+    try:
+        payload = {
+            "result": result,
+            "model": model,
+            "cached_at": datetime.now(timezone.utc).isoformat(),
+        }
+        r.setex(
+            _cache_key(ocr_text, model),
+            ttl or CACHE_TTL_SECONDS,
+            json.dumps(payload),
+        )
+        _logger.debug("llm_cache: stored for model=%s", model)
+    except Exception:
+        _logger.exception("llm_cache: error writing cache")
+
+
+def cache_invalidate(ocr_text: str, model: str = "") -> bool:
+    """Remove a specific cache entry.
+
+    :return: True if a key was deleted.
+    """
+    r = _get_redis()
+    if r is None:
+        return False
+    try:
+        return bool(r.delete(_cache_key(ocr_text, model)))
+    except Exception:
+        _logger.exception("llm_cache: error invalidating cache")
+        return False
+
+
+def cache_clear(prefix: str | None = None) -> int:
+    """Delete all cache entries matching a prefix.
+
+    WARNING: This is a scan+delete — use only for maintenance, not in
+    hot paths.
+
+    :return: Number of keys deleted.
+    """
+    r = _get_redis()
+    if r is None:
+        return 0
+    p = prefix or CACHE_PREFIX
+    count = 0
+    try:
+        cursor = 0
+        while True:
+            cursor, keys = r.scan(cursor=cursor, match=f"{p}*", count=100)
+            if keys:
+                count += r.delete(*keys)
+            if cursor == 0:
+                break
+        _logger.info("llm_cache: cleared %d keys (prefix=%s)", count, p)
+        return count
+    except Exception:
+        _logger.exception("llm_cache: error clearing cache")
+        return count
+
+
+def cache_stats() -> dict[str, Any]:
+    """Return cache statistics for health checks / monitoring."""
+    r = _get_redis()
+    if r is None:
+        return {"available": False}
+    try:
+        info = r.info("keyspace")
+        # Count our keys specifically
+        cursor = 0
+        key_count = 0
+        while True:
+            cursor, keys = r.scan(cursor=cursor, match=f"{CACHE_PREFIX}*", count=100)
+            key_count += len(keys)
+            if cursor == 0:
+                break
+        return {
+            "available": True,
+            "cached_extractions": key_count,
+            "ttl_hours": CACHE_TTL_HOURS,
+        }
+    except Exception:
+        _logger.exception("llm_cache: error reading stats")
+        return {"available": False}

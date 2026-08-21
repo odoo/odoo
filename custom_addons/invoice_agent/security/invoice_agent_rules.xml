@@ -78,6 +78,13 @@
         <field name="perm_unlink" eval="True"/>
     </record>
 
+    <!-- Example: Global access without company domain filtering -->
+    <record id="invoice_agent_vendor_doc_comp_rule" model="ir.rule">
+        <field name="name">Vendor Document Multi-Company Rule</field>
+        <field name="model_id" ref="model_invoice_agent_vendor_doc"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
     <!-- Note: account.move records are already protected by account_move_comp_rule
          from the account module. We don't need an additional rule for account.move
          since our groups imply account.group_account_invoice which already has

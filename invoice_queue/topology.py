@@ -180,12 +180,15 @@ DLX_BINDINGS = [
 
 
 def _retry_queue_arguments() -> list[dict]:
+    # Classic queues: the retry ladder needs x-message-ttl, which quorum
+    # queues do not support. No x-delivery-limit here — RabbitMQ only
+    # accepts it on quorum queues, and each retry message is a fresh
+    # single hop (the worker acks the original before publishing it).
     return [
         {
             "x-message-ttl": ttl_ms,
             "x-dead-letter-exchange": EXCHANGE_NAME,
             "x-dead-letter-routing-key": ROUTING_KEY_REQUEST,
-            "x-delivery-limit": DELIVERY_LIMIT,
         }
         for _, ttl_ms in RETRY_TIERS
     ]
@@ -253,7 +256,11 @@ def declare_topology(connection=None):
             # a drifted topology contract instead of silently mutating it.
             queue_arguments = None
             if queue_name == QUEUE_EXTRACT:
+                # Quorum queue: RabbitMQ 3.13 only honors x-delivery-limit
+                # on quorum queues (it rejects the argument on classic
+                # queues with PRECONDITION_FAILED).
                 queue_arguments = {
+                    "x-queue-type": "quorum",
                     "x-dead-letter-exchange": DLX_EXCHANGE,
                     "x-dead-letter-routing-key": ROUTING_KEY_DEAD,
                     "x-delivery-limit": DELIVERY_LIMIT,

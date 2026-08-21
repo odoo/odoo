@@ -35,13 +35,12 @@ The public entry point is ``retrieve_vendor_context``; the route in
 from __future__ import annotations
 
 import logging
-from collections import Counter
 from typing import Any
 
 import asyncpg
 
 from .config import settings
-from .embeddings import VOYAGE_DIMENSIONS, VoyageEmbedder
+from .embeddings import VoyageEmbedder
 from .rerank import VoyageReranker, VoyageRerankError
 
 _logger = logging.getLogger(__name__)
@@ -88,6 +87,7 @@ async def close_pool() -> None:
 # ---------------------------------------------------------------------------
 # Vector retrieval (Step 1-2: query construction + metadata prefiltering)
 # ---------------------------------------------------------------------------
+
 
 async def vector_search(
     partner_id: int,
@@ -140,6 +140,7 @@ async def vector_search(
 # GL account frequency (Step 3: vendor-context enrichment)
 # ---------------------------------------------------------------------------
 
+
 async def gl_account_frequencies(partner_id: int) -> dict[str, int]:
     """Count how often each GL account code appears in the vendor's history.
 
@@ -175,6 +176,7 @@ async def gl_account_frequencies(partner_id: int) -> dict[str, int]:
 # ---------------------------------------------------------------------------
 # Hybrid retrieval (Step 4: VAT/name + ref equality + dedup)
 # ---------------------------------------------------------------------------
+
 
 async def hybrid_retrieve(
     partner_id: int,
@@ -275,6 +277,7 @@ async def hybrid_retrieve(
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _vector_to_literal(vector: list[float]) -> str:
     """Format a float list as a pgvector literal: ``[0.1,0.2,...]``."""
     return "[" + ",".join(repr(float(v)) for v in vector) + "]"
@@ -317,6 +320,7 @@ async def _resolve_partner_id(
 # ---------------------------------------------------------------------------
 # High-level entry point (called by the route)
 # ---------------------------------------------------------------------------
+
 
 async def retrieve_vendor_context(
     *,

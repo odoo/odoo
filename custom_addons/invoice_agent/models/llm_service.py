@@ -1,4 +1,4 @@
-﻿"""LLM service — HTTP client for the standalone ``invoice-ai`` FastAPI service.
+"""LLM service — HTTP client for the standalone ``invoice-ai`` FastAPI service.
 
 The week's milestone replaced the in-process Anthropic SDK call with an HTTP
 call to the ``invoice-ai`` service (ADR-003): Odoo never blocks an HTTP
@@ -47,6 +47,7 @@ Invoice Agent):
 import json
 import logging
 import time
+from datetime import UTC
 
 import requests
 
@@ -55,9 +56,8 @@ from odoo.exceptions import UserError
 
 from .confidence import apply_rescues, combined_confidence
 from .invoice_extraction import (
-    InvoiceExtraction,
     _PYDANTIC_AVAILABLE,
-    invoice_extraction_json_schema,
+    InvoiceExtraction,
 )
 
 _logger = logging.getLogger(__name__)
@@ -161,8 +161,13 @@ class AIServiceUnavailable(Exception):
     """
 
 
-def mint_jwt(secret, audience=JWT_AUDIENCE, ttl_seconds=JWT_TTL_SECONDS,
-             subject="invoice.llm.service", issuer="odoo.invoice-agent"):
+def mint_jwt(
+    secret,
+    audience=JWT_AUDIENCE,
+    ttl_seconds=JWT_TTL_SECONDS,
+    subject="invoice.llm.service",
+    issuer="odoo.invoice-agent",
+):
     """Mint the JWT Odoo sends to ``invoice-ai`` (HS256, 60 s, no refresh).
 
     Claims follow the brief: ``iss``, ``aud``, ``sub``, ``iat``, ``exp``.
@@ -171,10 +176,11 @@ def mint_jwt(secret, audience=JWT_AUDIENCE, ttl_seconds=JWT_TTL_SECONDS,
     worthless in minutes. No refresh token: service-to-service calls just
     mint a fresh one.
     """
-    import jwt
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timedelta
 
-    now = datetime.now(timezone.utc)
+    import jwt
+
+    now = datetime.now(UTC)
     return jwt.encode(
         {
             "iss": issuer,
@@ -244,9 +250,7 @@ class InvoiceLlmService(models.AbstractModel):
     def confidence_threshold(self):
         """Resolve the global auto-approval threshold (0..1)."""
         raw = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(CONFIDENCE_THRESHOLD_PARAM)
+            self.env["ir.config_parameter"].sudo().get_param(CONFIDENCE_THRESHOLD_PARAM)
         )
         if not raw:
             return None
@@ -270,9 +274,7 @@ class InvoiceLlmService(models.AbstractModel):
         ``ir.config_parameter`` → 0.90 default.
         """
         raw = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(AUTO_FILL_THRESHOLD_PARAM)
+            self.env["ir.config_parameter"].sudo().get_param(AUTO_FILL_THRESHOLD_PARAM)
         )
         if not raw:
             return DEFAULT_AUTO_FILL_THRESHOLD
@@ -291,11 +293,7 @@ class InvoiceLlmService(models.AbstractModel):
 
         ``ir.config_parameter`` → 0.60 default.
         """
-        raw = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(REVIEW_THRESHOLD_PARAM)
-        )
+        raw = self.env["ir.config_parameter"].sudo().get_param(REVIEW_THRESHOLD_PARAM)
         if not raw:
             return DEFAULT_REVIEW_THRESHOLD
         try:
@@ -314,11 +312,7 @@ class InvoiceLlmService(models.AbstractModel):
 
         ``ir.config_parameter`` → True (RAG enabled) by default.
         """
-        raw = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(RAG_ENABLED_PARAM)
-        )
+        raw = self.env["ir.config_parameter"].sudo().get_param(RAG_ENABLED_PARAM)
         if raw is None:
             return DEFAULT_RAG_ENABLED
         return raw.lower() in ("true", "1", "yes")
@@ -347,9 +341,12 @@ class InvoiceLlmService(models.AbstractModel):
             _logger.warning(
                 "invoice_agent: refusing extraction — circuit breaker open",
             )
-            raise AIServiceUnavailable(
+            msg = (
                 "The AI service is unavailable (circuit breaker open). "
-                "The bill was queued for automatic retry.",
+                "The bill was queued for automatic retry."
+            )
+            raise AIServiceUnavailable(
+                msg,
             )
         if not _PYDANTIC_AVAILABLE:
             raise UserError(_("pydantic is not installed in the running image."))
@@ -406,9 +403,7 @@ class InvoiceLlmService(models.AbstractModel):
         if response.status_code == 503:
             retry_after = extract_retry_after_seconds(body)
             hint = (
-                _(" Retry after about %d seconds.") % retry_after
-                if retry_after
-                else ""
+                _(" Retry after about %d seconds.") % retry_after if retry_after else ""
             )
             _logger.warning(
                 "invoice_agent: AI service 503 at %s — queued for retry%s",
@@ -442,9 +437,7 @@ class InvoiceLlmService(models.AbstractModel):
 
         if response.status_code >= 500:
             message = (
-                body.get("error", {}).get("message")
-                if isinstance(body, dict)
-                else None
+                body.get("error", {}).get("message") if isinstance(body, dict) else None
             )
             _logger.error(
                 "invoice_agent: AI service HTTP %s at %s — %s",
@@ -464,15 +457,9 @@ class InvoiceLlmService(models.AbstractModel):
         if response.status_code != 200:
             # 400/413/415/422 — a request problem, surfaced as a UserError.
             message = (
-                body.get("error", {}).get("message")
-                if isinstance(body, dict)
-                else None
+                body.get("error", {}).get("message") if isinstance(body, dict) else None
             )
-            code = (
-                body.get("error", {}).get("code")
-                if isinstance(body, dict)
-                else None
-            )
+            code = body.get("error", {}).get("code") if isinstance(body, dict) else None
             _logger.warning(
                 "invoice_agent: AI service rejected request (HTTP %s, code %s): %s",
                 response.status_code,
@@ -573,9 +560,7 @@ class InvoiceLlmService(models.AbstractModel):
             )
         if response.status_code != 200:
             message = (
-                body.get("error", {}).get("message")
-                if isinstance(body, dict)
-                else None
+                body.get("error", {}).get("message") if isinstance(body, dict) else None
             )
             raise UserError(
                 _(
@@ -609,8 +594,9 @@ class InvoiceLlmService(models.AbstractModel):
     # Calibrated confidence (unchanged — deterministic Odoo-side logic)
     # ------------------------------------------------------------------
     @api.model
-    def score_extraction(self, payload, ocr_text=None, ocr_confidence=None,
-                         checks=None):
+    def score_extraction(
+        self, payload, ocr_text=None, ocr_confidence=None, checks=None
+    ):
         """Compute the calibrated confidence score for an extraction payload.
 
         :return: ``(score, details)`` — see ``models/confidence.py``.
@@ -640,17 +626,22 @@ class InvoiceLlmService(models.AbstractModel):
                     "model": model or "invoice-ai",
                     "input_tokens": usage.get("input_tokens") or 0,
                     "cache_creation_input_tokens": usage.get(
-                        "cache_creation_input_tokens", 0,
-                    ) or 0,
+                        "cache_creation_input_tokens",
+                        0,
+                    )
+                    or 0,
                     "cache_read_input_tokens": usage.get(
-                        "cache_read_input_tokens", 0,
-                    ) or 0,
+                        "cache_read_input_tokens",
+                        0,
+                    )
+                    or 0,
                     "output_tokens": usage.get("output_tokens") or 0,
                 },
             )
         except Exception:
             _logger.exception(
-                "invoice_agent failed to log usage for move_id=%s", move_id,
+                "invoice_agent failed to log usage for move_id=%s",
+                move_id,
             )
 
     # ------------------------------------------------------------------

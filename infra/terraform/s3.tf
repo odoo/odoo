@@ -77,7 +77,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "attachments" {
     }
     transition {
       days          = 365
-      storage_class = "GLACIER_DEEP_ARCHIVE"
+      storage_class = "DEEP_ARCHIVE"
     }
   }
 }

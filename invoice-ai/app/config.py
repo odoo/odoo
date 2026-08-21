@@ -13,7 +13,9 @@ class Settings(BaseSettings):
     # DOMAIN) is picked up by pydantic-settings auto-load; unknown keys must
     # never break the service.
     model_config = SettingsConfigDict(
-        env_prefix="INVOICE_AI_", env_file=".env", extra="ignore",
+        env_prefix="INVOICE_AI_",
+        env_file=".env",
+        extra="ignore",
     )
 
     anthropic_api_key: str = ""

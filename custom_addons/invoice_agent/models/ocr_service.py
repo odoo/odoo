@@ -93,8 +93,7 @@ class InvoiceOcrService(models.AbstractModel):
             return self._extract_image(raw, attachment.name)
         raise UserError(
             _(
-                "Attachment '%s' is type '%s' — only PDF and image files can "
-                "be OCR'd.",
+                "Attachment '%s' is type '%s' — only PDF and image files can be OCR'd.",
                 attachment.name,
                 mimetype,
             ),

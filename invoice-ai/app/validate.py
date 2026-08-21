@@ -26,7 +26,6 @@ Flow (called by the consumer after extract + retrieve)::
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 from typing import Any
 
 from anthropic import (
@@ -108,8 +107,14 @@ def _build_validation_system_blocks(
 
     return [
         {"type": "text", "text": f"CHART OF ACCOUNTS:\n{coa_text}"},
-        {"type": "text", "text": f"VENDOR HISTORY:\n{vendor_history or '(no history)'}"},
-        {"type": "text", "text": f"GL ACCOUNT FREQUENCIES:\n{gl_frequencies or '(none)'}"},
+        {
+            "type": "text",
+            "text": f"VENDOR HISTORY:\n{vendor_history or '(no history)'}",
+        },
+        {
+            "type": "text",
+            "text": f"GL ACCOUNT FREQUENCIES:\n{gl_frequencies or '(none)'}",
+        },
         {
             "type": "text",
             "text": validation_rules,
@@ -135,10 +140,7 @@ def _format_vendor_history(candidates: list[dict[str, Any]]) -> str:
         move_id = bill.get("move_id", 0)
         rerank = bill.get("rerank_score")
         similarity = 1.0 - distance
-        header = (
-            f"[Bill {i}] move_id={move_id} "
-            f"similarity={similarity:.3f}"
-        )
+        header = f"[Bill {i}] move_id={move_id} similarity={similarity:.3f}"
         if rerank is not None:
             header += f" rerank_score={rerank:.3f}"
         parts.append(f"{header}\n{content}")
@@ -178,7 +180,9 @@ def _validate_citations(
             )
     verdict.evidence = valid_citations
     if hallucinated:
-        hallucinated_flag = f"hallucinated_citation:{','.join(str(m) for m in hallucinated)}"
+        hallucinated_flag = (
+            f"hallucinated_citation:{','.join(str(m) for m in hallucinated)}"
+        )
         if hallucinated_flag not in verdict.flags:
             verdict.flags = list(verdict.flags) + [hallucinated_flag]
     if not verdict.evidence:
@@ -307,9 +311,7 @@ async def validate_extraction(
                 }
             },
         )
-        content_text = "".join(
-            getattr(block, "text", "") for block in message.content
-        )
+        content_text = "".join(getattr(block, "text", "") for block in message.content)
         verdict = ValidationVerdict.model_validate_json(content_text)
     except (APIStatusError, APIConnectionError) as exc:
         _logger.warning("validation Claude call failed: %s", exc)
@@ -318,10 +320,14 @@ async def validate_extraction(
     usage = {
         "input_tokens": getattr(message.usage, "input_tokens", None),
         "cache_creation_input_tokens": getattr(
-            message.usage, "cache_creation_input_tokens", None,
+            message.usage,
+            "cache_creation_input_tokens",
+            None,
         ),
         "cache_read_input_tokens": getattr(
-            message.usage, "cache_read_input_tokens", None,
+            message.usage,
+            "cache_read_input_tokens",
+            None,
         ),
         "output_tokens": getattr(message.usage, "output_tokens", None),
     }

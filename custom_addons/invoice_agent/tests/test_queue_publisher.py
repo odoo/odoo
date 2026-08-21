@@ -24,9 +24,8 @@ reaches the publish path).
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
-
 from odoo.addons.invoice_agent.models.queue_publisher import QueueUnavailable
+from odoo.tests import tagged
 
 from .test_extraction import InvoiceAgentTestCommon
 
@@ -58,7 +57,8 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         with self.assertRaisesRegex(RuntimeError, "force rollback"):
             with self.env.cr.savepoint(flush=False):
                 move.action_request_ai_extraction()
-                raise RuntimeError("force rollback")
+                msg = "force rollback"
+                raise RuntimeError(msg)
 
         jobs = self.env["invoice.agent.job"].search([("move_id", "=", move.id)])
         self.assertEqual(len(jobs), 0, "rollback must cascade to outbox rows")
@@ -68,8 +68,12 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         published = []
 
         def _fake_publish_extract_request(
-            _publisher, move_id, attachment_id=False, attempt=1,
-            job_uuid=False, ocr_text=False,
+            _publisher,
+            move_id,
+            attachment_id=False,
+            attempt=1,
+            job_uuid=False,
+            ocr_text=False,
         ):
             published.append((move_id, attachment_id, attempt))
 
@@ -82,7 +86,8 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
             with self.assertRaisesRegex(RuntimeError, "force rollback"):
                 with self.env.cr.savepoint(flush=False):
                     move.action_request_ai_extraction()
-                    raise RuntimeError("force rollback")
+                    msg = "force rollback"
+                    raise RuntimeError(msg)
 
             # …then rolls back. The drain cron runs later in a *separate*
             # transaction (the production shape): it must find no row to
@@ -145,8 +150,12 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         published = []
 
         def _fake_publish_extract_request(
-            _publisher, move_id, attachment_id=False, attempt=1,
-            job_uuid=False, ocr_text=False,
+            _publisher,
+            move_id,
+            attachment_id=False,
+            attempt=1,
+            job_uuid=False,
+            ocr_text=False,
         ):
             published.append((move_id, attachment_id, attempt))
 
@@ -170,8 +179,12 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         published = []
 
         def _fake_publish_extract_request(
-            _publisher, move_id, attachment_id=False, attempt=1,
-            job_uuid=False, ocr_text=False,
+            _publisher,
+            move_id,
+            attachment_id=False,
+            attempt=1,
+            job_uuid=False,
+            ocr_text=False,
         ):
             published.append(move_id)
 

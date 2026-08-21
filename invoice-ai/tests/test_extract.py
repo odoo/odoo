@@ -18,7 +18,6 @@ Coverage required by the week's brief:
 """
 
 import pytest
-
 from app.errors import ClaudeRateLimitError
 
 
@@ -34,7 +33,9 @@ async def test_healthz(client):
 
 
 @pytest.mark.anyio
-async def test_extract_happy_path_text(fake_claude, client, default_result, auth_headers):
+async def test_extract_happy_path_text(
+    fake_claude, client, default_result, auth_headers
+):
     fake_claude.result = default_result
 
     response = await client.post(
@@ -52,14 +53,16 @@ async def test_extract_happy_path_text(fake_claude, client, default_result, auth
     assert body["usage"]["cache_read_input_tokens"] == 4400
     assert body["model"] == "claude-opus-4-8"
     # The service must pass the raw OCR text straight to the model.
-    assert fake_claude.last_args["text"] == (
-        "ACME SUPPLIES LLC\nTOTAL USD 1,350.00"
-    )
+    assert fake_claude.last_args["text"] == ("ACME SUPPLIES LLC\nTOTAL USD 1,350.00")
 
 
 @pytest.mark.anyio
 async def test_extract_with_pdf_upload_runs_ocr(
-    fake_claude, client, default_result, monkeypatch, auth_headers,
+    fake_claude,
+    client,
+    default_result,
+    monkeypatch,
+    auth_headers,
 ):
     """A PDF upload goes through OCR first, then Claude on the OCR text."""
     fake_claude.result = default_result
@@ -77,9 +80,7 @@ async def test_extract_with_pdf_upload_runs_ocr(
     )
 
     assert response.status_code == 200
-    assert fake_claude.last_args["text"] == (
-        "OCR-DERIVED TEXT\nTOTAL EUR 100.00"
-    )
+    assert fake_claude.last_args["text"] == ("OCR-DERIVED TEXT\nTOTAL EUR 100.00")
 
 
 @pytest.mark.anyio
@@ -114,7 +115,9 @@ async def test_extract_bad_mimetype_returns_415(fake_claude, client, auth_header
 
 
 @pytest.mark.anyio
-async def test_extract_upstream_rate_limit_maps_to_503(fake_claude, client, auth_headers):
+async def test_extract_upstream_rate_limit_maps_to_503(
+    fake_claude, client, auth_headers
+):
     fake_claude.error = ClaudeRateLimitError(
         message="Anthropic rate limit (HTTP 429)",
         retry_after_seconds=17,
@@ -133,7 +136,9 @@ async def test_extract_upstream_rate_limit_maps_to_503(fake_claude, client, auth
 
 
 @pytest.mark.anyio
-async def test_extract_upstream_generic_error_maps_to_503(fake_claude, client, auth_headers):
+async def test_extract_upstream_generic_error_maps_to_503(
+    fake_claude, client, auth_headers
+):
     fake_claude.error = ClaudeRateLimitError(
         message="Anthropic API error",
     )

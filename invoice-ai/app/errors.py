@@ -12,8 +12,13 @@ class ServiceError(Exception):
     status_code: int = 500
     code: str = "E5000"
 
-    def __init__(self, message: str = "", code: str | None = None,
-                 retry_after_seconds: int | None = None, details: dict | None = None):
+    def __init__(
+        self,
+        message: str = "",
+        code: str | None = None,
+        retry_after_seconds: int | None = None,
+        details: dict | None = None,
+    ):
         super().__init__(message or self.code)
         self.message = message or self.code
         if code:

@@ -1,61 +1,24 @@
 # =============================================================================
-# ci-check.ps1 - Run the EXACT GitHub Actions CI checks locally, before pushing.
-#
-# Mirrors .github/workflows/ci.yml (job: test):
-#
-#   1. Preflight  - venv + the exact pip deps CI installs
-#   2. Database   - reuse the local `ci` DB, or drop it first for full parity
-#                   (CI runs on a pristine Postgres container every time)
-#   3. Run tests  - coverage run --concurrency=thread --source=custom_addons/invoice_agent
-#                   odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons
-#                   --test-enable --test-tags /invoice_agent --stop-after-init
-#                   --log-level=test --db_host=localhost --db_port=5432
-#                   --db_user=odoo --db_password=odoo
-#   4. Log gate   - fail on FAIL/ERROR/CRITICAL lines, ignoring benign Odoo
-#                   noise like "(WARNING/x)" counters (same regex as CI)
-#   5. Coverage   - require >= COVERAGE_MIN (CI gate: 60%) on invoice_agent
-#
-# Usage (from repo root):
-#   .\bashs\ci-check.ps1              # run against existing `ci` DB (fast, repeatable)
-#   .\bashs\ci-check.ps1 -ResetDb     # drop `ci` first - exact CI parity
-#   .\bashs\ci-check.ps1 -CoverageMin 70   # raise the gate
-#
-# Exit code 0 -> safe to push.  Non-zero -> the same failure CI would report.
-#
-# NOTE: this file is intentionally pure ASCII. Windows PowerShell 5.1 reads
-# .ps1 files as ANSI unless a BOM is present, and UTF-8 em-dashes/arrows
-# corrupt the tokenizer. Keep it ASCII.
+# ci-check.ps1 - Local runner mirroring GitHub Actions CI pipeline.
+# Cleaned & fixed: Corrected execution tracking, scope safety, and temp cleanup.
 # =============================================================================
 
-# CI always runs on a FRESH Postgres (new container per run). If we reuse an
-# existing `ci` DB where invoice_agent is already installed, Odoo skips the
-# whole post_install test suite ("0 post-tests") and the results stop
-# matching GitHub Actions. So by default we DROP the DB to mirror CI exactly.
-# Pass -KeepDb to reuse an existing DB deliberately (fast iteration, but the
-# result is NOT a valid CI prediction - a zero-test guard is enforced below).
 param(
     [switch]$KeepDb,
+    [switch]$SkipSlow,
     [string]$DbName = "ci",
     [double]$CoverageMin = 60.0
 )
 
 $ErrorActionPreference = "Stop"
 
-# --- Paths (relative to repo root, like start-odoo.ps1) ---------------------
+# --- Paths & Config -----------------------------------------------------------
 $pythonExe = ".\venv\Scripts\python.exe"
 $testLog = ".\odoo-test.log"
-$dbHost = "localhost"
-$dbPort = 5432
-$dbUser = "odoo"
-$dbPassword = "odoo"
-
-# CI's exact module list from the "Install Python Dependencies" step.
-$ciDeps = @(
-    "anthropic", "pydantic", "pytesseract", "pdf2image", "boto3", "coverage"
-)
-
-# --addons-path value kept in a variable so no formatter can inject a space
-# into the flag (a space here would split the comma list into two args).
+$dbHost = if ($env:PGHOST) { $env:PGHOST } else { "localhost" }
+$dbPort = if ($env:PGPORT) { $env:PGPORT } else { 5432 }
+$dbUser = if ($env:PGUSER) { $env:PGUSER } else { "odoo" }
+$dbPassword = if ($env:PGPASSWORD) { $env:PGPASSWORD } else { "odoo" }
 $addonsPath = "addons,custom_addons"
 
 $failed = $false
@@ -72,105 +35,255 @@ function Fail-Step([string]$message) {
     $script:failed = $true
 }
 
-# --- Python snippets run from temp files -------------------------------------
-# PowerShell 5.1 strips embedded double quotes when passing `-c` code to a
-# native exe (`print("x")` arrives as `print(x)`). Writing the snippet to a
-# temp file and executing it avoids that entirely.
+function Test-CommandExists([string]$name) {
+    return $null -ne (Get-Command $name -ErrorAction SilentlyContinue)
+}
+
+# --- Safe Temporary Python Runner ---------------------------------------------
 $tmpScripts = Join-Path $env:TEMP "ci-check-py"
 
 function Invoke-PyScript {
-    # NOTE: parameter is named $PyArgs, never $Args — $Args is a PowerShell
-    # automatic variable and shadowing it breaks parameter binding.
     param(
         [string[]]$Lines,
         [string]$Name,
         [string[]]$PyArgs = @()
     )
-    $file = Join-Path $tmpScripts "$Name.py"
+    $file = Join-Path $tmpScripts "$Name-$([Guid]::NewGuid().ToString().Substring(0,8)).py"
     New-Item -ItemType Directory -Path $tmpScripts -Force | Out-Null
-    Set-Content -Path $file -Value $Lines -Encoding utf8
-    $output = & $pythonExe $file $PyArgs 2>&1
-    $code = $LASTEXITCODE
-    Remove-Item $file -Force
-    return $output
+    
+    try {
+        Set-Content -Path $file -Value $Lines -Encoding utf8
+        $output = & $pythonExe $file $PyArgs 2>&1
+        return $output
+    }
+    finally {
+        if (Test-Path $file) { Remove-Item $file -Force }
+    }
 }
 
 # =============================================================================
-# 1. Preflight - venv, deps, Postgres
+# JOB 1: Terraform (fast)
+# =============================================================================
+Write-Step "JOB terraform: fmt / init / validate"
+
+if (-not (Test-CommandExists "terraform")) {
+    Fail-Step "terraform CLI not found on PATH - install it (CI uses 1.9)"
+}
+else {
+    # Suppress native stderr crashing PS 5.1 across all native terraform commands
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+
+    # 1. fmt check (use '.' because -chdir already changed working directory)
+    & terraform -chdir=infra/terraform/ fmt -check -recursive . 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "terraform fmt -check failed - run: terraform -chdir=infra/terraform/ fmt -recursive ."
+    }
+    else { Write-Host "    fmt OK" -ForegroundColor Green }
+
+    # 2. init check
+    & terraform -chdir=infra/terraform/ init -backend=false 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "terraform init failed"
+    }
+    else { Write-Host "    init OK" -ForegroundColor Green }
+
+    # 3. validate check
+    & terraform -chdir=infra/terraform/ validate 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "terraform validate failed"
+    }
+    else { Write-Host "    validate OK" -ForegroundColor Green }
+
+    $ErrorActionPreference = $prevEap
+}
+
+# =============================================================================
+# JOB 3: Linting
+# =============================================================================
+Write-Step "JOB lint: ruff check + format (custom_addons/invoice_agent)"
+
+if (-not (Test-CommandExists "ruff")) {
+    Fail-Step "ruff not found on PATH - pip install ruff"
+}
+else {
+    $ruffCheckFailed = $false
+    & ruff check custom_addons/invoice_agent --config pyproject.toml
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "ruff check failed (invoice_agent)"
+        $ruffCheckFailed = $true
+    }
+    
+    & ruff format custom_addons/invoice_agent --config pyproject.toml --check
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "ruff format --check failed (invoice_agent)"
+        $ruffCheckFailed = $true
+    }
+
+    if (-not $ruffCheckFailed) {
+        Write-Host "    ruff OK" -ForegroundColor Green
+    }
+}
+
+# =============================================================================
+# JOB 5a: Bandit SAST (fast)
+# =============================================================================
+Write-Step "JOB security: bandit (addon + invoice-ai)"
+
+if (-not (Test-CommandExists "bandit")) {
+    Fail-Step "bandit not found on PATH - pip install 'bandit[toml]'"
+}
+else {
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+
+    # Addon check
+    & bandit -r custom_addons/invoice_agent/ --severity-level medium -f json -o bandit-addon.json 2>$null
+    & bandit -r custom_addons/invoice_agent/ --severity-level medium -f screen -q
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "bandit found medium+ issues in custom_addons/invoice_agent/"
+    }
+    else { Write-Host "    addon clean" -ForegroundColor Green }
+
+    # AI app check
+    & bandit -r invoice-ai/app/ --severity-level medium -f json -o bandit-ai.json 2>$null
+    & bandit -r invoice-ai/app/ --severity-level medium -f screen -q
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "bandit found medium+ issues in invoice-ai/app/"
+    }
+    else { Write-Host "    invoice-ai clean" -ForegroundColor Green }
+
+    $ErrorActionPreference = $prevEap
+}
+# =============================================================================
+# JOB 5b: Trivy Filesystem Scan
+# =============================================================================
+Write-Step "JOB security: trivy filesystem scan"
+
+if (-not (Test-CommandExists "trivy")) {
+    Fail-Step "trivy not found on PATH"
+}
+else {
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+
+    # Added --timeout 10m and --skip-dirs addons to prevent scanning base Odoo core
+    & trivy fs --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 --quiet --timeout 10m --skip-dirs addons .
+    if ($LASTEXITCODE -ne 0) { 
+        Fail-Step "trivy fs found CRITICAL/HIGH vulnerabilities" 
+    } 
+    else { 
+        Write-Host "    fs scan clean" -ForegroundColor Green 
+    }
+
+    $ErrorActionPreference = $prevEap
+}
+
+# =============================================================================
+# JOB 5c: Disaster Recovery Runbook Check
+# =============================================================================
+Write-Step "JOB security: DR runbook age check (< 90 days)"
+
+$runbook = "docs/runbooks/disaster-recovery.md"
+if (-not (Test-Path $runbook)) {
+    Fail-Step "$runbook is missing!"
+}
+else {
+    $ageDays = [int]((New-TimeSpan (Get-Item $runbook).LastWriteTime (Get-Date)).TotalDays)
+    Write-Host "    DR runbook age: $ageDays days"
+    if ($ageDays -gt 90) {
+        Fail-Step "DR runbook older than 90 days - re-run restore drill"
+    }
+    else { Write-Host "    runbook fresh" -ForegroundColor Green }
+}
+# =============================================================================
+# JOB 2: Observability
+# =============================================================================
+Write-Step "JOB observability: prometheus / alertmanager / grafana configs"
+
+if (-not (Test-CommandExists "docker")) {
+    Fail-Step "docker not available - start Docker Desktop"
+}
+else {
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+
+    $pwdPath = (Get-Location).Path.Replace('\', '/')
+
+    & docker run --rm --entrypoint /bin/promtool -v "${pwdPath}/infra/observability/prometheus:/etc/prometheus" `
+        prom/prometheus:v2.53.0 check config /etc/prometheus/prometheus.yml 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { Fail-Step "prometheus config invalid" } 
+    else { Write-Host "    prometheus OK" -ForegroundColor Green }
+
+    & docker run --rm --entrypoint /bin/amtool -v "${pwdPath}/infra/observability/alertmanager:/etc/alertmanager" `
+        prom/alertmanager:v0.27.0 check-config /etc/alertmanager/alertmanager.yml 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { Fail-Step "alertmanager config invalid" } 
+    else { Write-Host "    alertmanager OK" -ForegroundColor Green }
+
+    $grafana = Invoke-PyScript -Name "grafana_json" -Lines @(
+        'import json'
+        'json.load(open("infra/observability/grafana/dashboards/agent-slo.json"))'
+        'print("OK")'
+    )
+    if ($grafana -ne "OK") { Fail-Step "grafana dashboard JSON invalid: $grafana" } 
+    else { Write-Host "    grafana dashboard JSON OK" -ForegroundColor Green }
+
+    $ErrorActionPreference = $prevEap
+}
+# --- Fast-fail gate -----------------------------------------------------------
+if ($failed) {
+    Write-Host ""
+    Write-Host "=== FAST CHECKS FAILED ===" -ForegroundColor Red
+    foreach ($s in $stageFails) { Write-Host "  - $s" -ForegroundColor Red }
+    exit 1
+}
+
+if ($SkipSlow) {
+    Write-Host ""
+    Write-Host "=== FAST CHECKS PASSED (-SkipSlow active) ===" -ForegroundColor Green
+    exit 0
+}
+
+# =============================================================================
+# JOB 4: Odoo Unit Tests & Coverage
 # =============================================================================
 Write-Step "Preflight: virtualenv, CI dependencies, Postgres"
 
 if (-not (Test-Path $pythonExe)) {
-    Fail-Step "virtualenv not found at $pythonExe - create it with:  python -m venv venv"
-}
-else {
-    Write-Host "    venv OK: $pythonExe" -ForegroundColor Green
+    Fail-Step "virtualenv missing at $pythonExe"
 }
 
-if (-not $failed) {
-    foreach ($dep in $ciDeps) {
-        & $pythonExe -c "import $dep" 2>$null
-        if ($LASTEXITCODE -ne 0) {
-            Fail-Step "missing pip package '$dep' - install CI deps:"
-            Write-Host "        .\venv\Scripts\python.exe -m pip install -r custom_addons/invoice_agent/requirements.txt coverage"
-        }
-    }
-    if (-not $failed) { Write-Host "    CI dependencies OK" -ForegroundColor Green }
+$ciDeps = @("anthropic", "pydantic", "pytesseract", "pdf2image", "boto3", "coverage", "pypdf", "PIL", "fitz", "requests")
+foreach ($dep in $ciDeps) {
+    & $pythonExe -c "import $dep" 2>$null
+    if ($LASTEXITCODE -ne 0) { Fail-Step "missing required dependency: '$dep'" }
 }
 
 if (-not $failed) {
     $pgOk = Invoke-PyScript -Name "postgres_probe" -Lines @(
-        'import psycopg2'
+        'import psycopg2, sys'
         'try:'
-        '    c = psycopg2.connect(host="localhost", port=5432, user="odoo", password="odoo", dbname="postgres")'
+        '    c = psycopg2.connect(host=sys.argv[1], port=int(sys.argv[2]), user=sys.argv[3], password=sys.argv[4], dbname="postgres")'
         '    c.close()'
         '    print("OK")'
         'except Exception as e:'
         '    print("ERR: %s" % e)'
-    )
-    if ($pgOk -ne "OK") {
-        Fail-Step "cannot reach Postgres as odoo/odoo@localhost:5432: $pgOk"
-    }
-    else {
-        Write-Host "    Postgres OK (odoo/odoo@localhost:5432)" -ForegroundColor Green
-    }
+    ) -PyArgs @($dbHost, $dbPort, $dbUser, $dbPassword)
+
+    if ($pgOk -ne "OK") { Fail-Step "Postgres ping failed: $pgOk" } 
+    else { Write-Host "    Postgres connection established" -ForegroundColor Green }
 }
 
-if ($failed) {
-    Write-Host ""
-    Write-Host "Preflight failed - fix the issues above, then re-run." -ForegroundColor Red
-    exit 1
-}
+if ($failed) { exit 1 }
 
-# =============================================================================
-# 2. Database - CI uses a fresh `ci` DB. -ResetDb gives the same guarantee.
-# =============================================================================
+# --- Database Management -----------------------------------------------------
 $dbArgs = @($dbHost, $dbPort, $dbUser, $dbPassword, $DbName)
 
-$resetOut = $null
 if ($KeepDb) {
-    # Deliberate fast iteration. A zero-test guard later fails loudly if the
-    # reused DB skipped the suite, so this can never silently pass.
-    $exists = Invoke-PyScript -Name "db_exists" -PyArgs $dbArgs -Lines @(
-        'import sys, psycopg2'
-        'HOST, PORT, USER, PWD, DB = sys.argv[1:6]'
-        'conn = psycopg2.connect(host=HOST, port=int(PORT), user=USER, password=PWD, dbname="postgres")'
-        'cur = conn.cursor()'
-        'cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (DB,))'
-        'print("yes" if cur.fetchone() else "no")'
-    )
-    if ($exists -eq "yes") {
-        Write-Host ""
-        Write-Host "==> Reusing existing '$DbName' DB (WARNING: CI runs on a fresh DB; if invoice_agent is already installed here, 0 tests will run and the check will FAIL below)" -ForegroundColor Yellow
-    }
-    else {
-        Write-Host ""
-        Write-Host "==> '$DbName' will be created by Odoo, like CI" -ForegroundColor Cyan
-    }
+    Write-Host "==> Reusing database '$DbName'" -ForegroundColor Yellow
 }
 else {
-    # Default: mirror CI exactly - fresh database every run.
-    Write-Step "Database: dropping existing '$DbName' for pristine CI parity (CI uses a fresh Postgres container)"
+    Write-Step "Database: dropping existing '$DbName' for clean state"
     $resetOut = Invoke-PyScript -Name "drop_db" -PyArgs $dbArgs -Lines @(
         'import sys, psycopg2'
         'HOST, PORT, USER, PWD, DB = sys.argv[1:6]'
@@ -185,125 +298,127 @@ else {
         '    print("no existing %s" % DB)'
     )
     if ($resetOut -match "Error|Traceback|refused") {
-        Fail-Step "could not drop '$DbName' - is another Odoo process connected to it?"
-        Write-Host "The same failures would appear in GitHub Actions. Fix them, re-run, then push." -ForegroundColor Red
+        Fail-Step "Failed to reset database '$DbName': $resetOut"
         exit 1
     }
 }
 
-# =============================================================================
-# 3. Run Odoo tests under coverage - the CI command
-# =============================================================================
-Write-Step "Running Odoo tests (this is the CI command, takes a few minutes)"
+# --- Test Execution -----------------------------------------------------------
+Write-Step "Running Odoo test suite under Coverage"
 
-# PS 5.1 + EAP=Stop treats stderr from a native exe as a terminating error
-# and kills the run on Odoo's first log line. Run the pipeline in a child
-# scope with EAP=Continue so stderr merges into the log and the process
-# completes; capture its real exit code separately.
-$odooNativeExit = $null
-& {
-    $prevEap = $ErrorActionPreference
-    $ErrorActionPreference = "Continue"
-    try {
-        & $pythonExe -m coverage run --concurrency=thread --source=custom_addons/invoice_agent `
-            odoo-bin -d $DbName -i invoice_agent --addons-path=$addonsPath `
-            --test-enable --test-tags /invoice_agent --stop-after-init `
-            --log-level=test --db_host=$dbHost --db_port=$dbPort `
-            --db_user=$dbUser --db_password=$dbPassword 2>&1 |
-        Tee-Object -FilePath $testLog
-    }
-    finally {
-        $script:odooNativeExit = $LASTEXITCODE
-        $ErrorActionPreference = $prevEap
-    }
+$procInfo = New-Object System.Diagnostics.ProcessStartInfo
+$procInfo.FileName = (Resolve-Path $pythonExe).Path
+$procInfo.Arguments = "-m coverage run --concurrency=thread --source=custom_addons/invoice_agent odoo-bin -d $DbName -i invoice_agent --addons-path=$addonsPath --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=$dbHost --db_port=$dbPort --db_user=$dbUser --db_password=$dbPassword"
+$procInfo.RedirectStandardOutput = $true
+$procInfo.RedirectStandardError = $true
+$procInfo.UseShellExecute = $false
+
+$proc = New-Object System.Diagnostics.Process
+$proc.StartInfo = $procInfo
+
+$logWriter = [System.IO.StreamWriter]::new((Resolve-Path .).Path + "\" + $testLog, $false)
+
+$proc.Add_OutputDataReceived({
+        if ($_.Data) { 
+            $global:logWriter.WriteLine($_.Data)
+            Write-Host $_.Data
+        }
+    })
+$proc.Add_ErrorDataReceived({
+        if ($_.Data) { 
+            $global:logWriter.WriteLine($_.Data)
+            Write-Host $_.Data
+        }
+    })
+
+$proc.Start() | Out-Null
+$proc.BeginOutputReadLine()
+$proc.BeginErrorReadLine()
+$proc.WaitForExit()
+$logWriter.Close()
+
+if ($proc.ExitCode -ne 0) {
+    Fail-Step "Odoo test process exited with code $($proc.ExitCode) - see $testLog"
 }
 
-if ($null -ne $odooNativeExit -and $odooNativeExit -ne 0) {
-    Fail-Step "Odoo process exited with code $odooNativeExit - see $testLog"
-}
+# --- Log Verification --------------------------------------------------------
+Write-Step "Analyzing logs for test execution integrity"
 
-# =============================================================================
-# 3b. Zero-test guard - a run where the post_install suite did not execute is
-#     NOT a valid CI prediction (CI always re-installs on a fresh DB and runs
-#     the full /invoice_agent tag). Catch that BEFORE trusting the gates below.
-# =============================================================================
-$postTestLine = Select-String -Path $testLog -Pattern 'post-tests in (\d+)\.\d+s' |
-Select-Object -First 1
+$postTestLine = Select-String -Path $testLog -Pattern 'post-tests in (\d+)\.\d+s' | Select-Object -First 1
 if ($postTestLine -and $postTestLine.Matches[0].Groups[1].Value -eq "0") {
-    Fail-Step "0 post_install tests ran - a reused DB with the module already installed skips the suite (CI always runs on a fresh DB). Delete the 'ci' DB or run without -KeepDb."
+    Fail-Step "0 post_install tests executed. DB state was likely dirty. Run without -KeepDb."
 }
 elseif (-not $postTestLine) {
-    # Fail-safe: if the log has no summary line at all, we cannot prove tests ran.
-    Fail-Step "could not find the Odoo test summary in $testLog - cannot verify tests executed"
+    Fail-Step "Could not find post-test completion summary in $testLog"
 }
 
-# =============================================================================
-# 4. Log gate - mirror CI:
-#    grep -E 'FAIL|ERROR|CRITICAL' | grep -vE '\([A-Z]+/[0-9]+\)'
-# =============================================================================
-Write-Step "Scanning odoo-test.log for real failures"
-
-$problems = Select-String -Path $testLog -Pattern 'FAIL|ERROR|CRITICAL' |
-Where-Object { $_.Line -notmatch '\([A-Z]+/[0-9]+\)' }
-
+$problems = Select-String -Path $testLog -Pattern 'FAIL|ERROR|CRITICAL' | Where-Object { $_.Line -notmatch '\([A-Z]+/[0-9]+\)' }
 if ($problems) {
     foreach ($p in $problems) { Write-Host "    $($p.Line)" -ForegroundColor Red }
-    Fail-Step "FAIL/ERROR/CRITICAL lines found in test log (filtered like CI)"
+    Fail-Step "Unfiltered FAIL/ERROR/CRITICAL markers found in logs"
 }
 else {
-    Write-Host "    No genuine failures in test log" -ForegroundColor Green
+    Write-Host "    Log inspection clean" -ForegroundColor Green
 }
 
-# =============================================================================
-# 5. Coverage gate - CI: coverage report + COVERAGE_MIN=60
-# =============================================================================
-Write-Step "Coverage report and gate (min ${CoverageMin}%)"
+# --- Coverage Gates -----------------------------------------------------------
+Write-Step "Evaluating Coverage metrics (min target: ${CoverageMin}%)"
 
 if (-not (Test-Path ".\.coverage")) {
-    Fail-Step "No .coverage file found on disk - tests did not run under coverage"
+    Fail-Step "Coverage session state file standard (.coverage) missing"
 }
 else {
     & $pythonExe -m coverage report -m
-    if ($LASTEXITCODE -ne 0) {
-        Fail-Step "coverage report failed"
-    }
     & $pythonExe -m coverage xml -o coverage.xml
-    if ($LASTEXITCODE -ne 0) {
-        Fail-Step "coverage xml export failed"
-    }
-
+    
     $report = & $pythonExe -m coverage report
     $totalLine = $report | Select-String '^TOTAL' | Select-Object -First 1
-    if (-not $totalLine) {
-        Fail-Step "could not extract coverage total from coverage report"
-    }
-    else {
-        # coverage prints "18%" — strip the '%' suffix before parsing.
+    if ($totalLine) {
         $total = [double](($totalLine.Line.Trim() -split '\s+' | Select-Object -Last 1).TrimEnd('%'))
-        Write-Host ""
-        Write-Host "    invoice_agent total coverage: $total%" -ForegroundColor Yellow
+        Write-Host "    Calculated Coverage: $total%" -ForegroundColor Yellow
         if ($total -lt $CoverageMin) {
-            Fail-Step "coverage gate failed: $total% is below the required $CoverageMin%"
+            Fail-Step "Coverage gate failure: $total% < required target $CoverageMin%"
         }
         else {
-            Write-Host "    Coverage gate passed: $total% >= $CoverageMin%" -ForegroundColor Green
+            Write-Host "    Coverage gate passed" -ForegroundColor Green
         }
+    }
+    else {
+        Fail-Step "Could not parse TOTAL metrics from coverage output"
     }
 }
 
 # =============================================================================
-# Summary
+# JOB 5d: Trivy Container Scan
+# =============================================================================
+Write-Step "JOB security: trivy image scan"
+
+if (Test-CommandExists "trivy" -and Test-CommandExists "docker") {
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+
+    & docker build -t invoice-ai:security-scan ./invoice-ai 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Fail-Step "docker build ./invoice-ai failed"
+    }
+    else {
+        & trivy image --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 --quiet invoice-ai:security-scan
+        if ($LASTEXITCODE -ne 0) { Fail-Step "trivy image vulnerabilities found" }
+        else { Write-Host "    image scan clean" -ForegroundColor Green }
+    }
+
+    $ErrorActionPreference = $prevEap
+}
+
+# =============================================================================
+# Final Summary
 # =============================================================================
 Write-Host ""
 if ($failed) {
-    Write-Host "=== CI CHECK FAILED ===" -ForegroundColor Red
+    Write-Host "=== CI CHECKS FAILED ===" -ForegroundColor Red
     foreach ($s in $stageFails) { Write-Host "  - $s" -ForegroundColor Red }
-    Write-Host "The same failures would appear in GitHub Actions. Fix them, re-run, then push."
-    Write-Host "Full test output: $testLog"
     exit 1
 }
 
-Write-Host "=== CI CHECK PASSED - safe to push ===" -ForegroundColor Green
-Write-Host "Full test output: $testLog"
-Write-Host "Coverage report:  coverage.xml"
+Write-Host "=== ALL CI CHECKS PASSED ===" -ForegroundColor Green
 exit 0

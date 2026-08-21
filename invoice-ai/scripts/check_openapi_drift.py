@@ -43,7 +43,6 @@ import sys
 from typing import Any
 
 import yaml
-
 from app.main import app
 
 
@@ -128,11 +127,7 @@ def _healthz_200_schema(spec: dict) -> dict:
         .get("responses", {})
         .get("200", {})
     )
-    schema = (
-        health_200.get("content", {})
-        .get("application/json", {})
-        .get("schema", {})
-    )
+    schema = health_200.get("content", {}).get("application/json", {}).get("schema", {})
     if "$ref" in schema:
         name = schema["$ref"].rsplit("/", 1)[-1]
         return _schemas(spec).get(name, {})

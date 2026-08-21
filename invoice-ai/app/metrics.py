@@ -121,7 +121,7 @@ class Timer:
         self._labels = labels
         self._start: float = 0.0
 
-    def __enter__(self) -> "Timer":
+    def __enter__(self) -> Timer:
         self._start = time.monotonic()
         return self
 

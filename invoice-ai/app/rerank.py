@@ -118,8 +118,7 @@ class VoyageReranker:
 
         assert last_error is not None
         raise VoyageRerankError(
-            f"voyage rerank failed after {RERANK_RETRIES + 1} attempts: "
-            f"{last_error}",
+            f"voyage rerank failed after {RERANK_RETRIES + 1} attempts: {last_error}",
         ) from last_error
 
     @staticmethod
@@ -145,11 +144,13 @@ class VoyageReranker:
             index = int(index)
             score = float(score)
             if 0 <= index < len(documents):
-                normalized.append({
-                    "index": index,
-                    "relevance_score": score,
-                    "original_text": documents[index],
-                })
+                normalized.append(
+                    {
+                        "index": index,
+                        "relevance_score": score,
+                        "original_text": documents[index],
+                    }
+                )
             else:
                 _logger.warning(
                     "voyage rerank: result index %d out of range for %d docs",

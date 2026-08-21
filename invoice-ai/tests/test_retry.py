@@ -15,7 +15,6 @@ Two layers are covered:
 import json
 
 import pytest
-
 from app.consumer import InvoiceConsumer, WorkerError, _parse_body
 from app.errors import (
     BadRequestError,
@@ -65,7 +64,8 @@ class TestRetryDecision:
 
     def test_transient_exhausts_ladder_dead_letters(self):
         decision = classify_failure(
-            ClaudeRateLimitError(), attempt=MAX_RETRY_ATTEMPTS + 1,
+            ClaudeRateLimitError(),
+            attempt=MAX_RETRY_ATTEMPTS + 1,
         )
         assert decision.is_dead
         assert "exhausted" in decision.reason
@@ -169,6 +169,12 @@ class FakeMessage:
         return _FakeProcessContext(self)
 
 
+class _FakeCfg:
+    """Mirrors the Settings surface the consumer reads on ClaudeService."""
+
+    anthropic_model = "claude-opus-4-8"
+
+
 class FakeClaude:
     """Stand-in for ClaudeService — never touches the SDK."""
 
@@ -176,6 +182,9 @@ class FakeClaude:
         self.result_value = result
         self.error = error
         self.calls: list[dict] = []
+        # Consumer reads ``claude._cfg.anthropic_model`` for the LLM cache
+        # key — mirror the real ClaudeService surface.
+        self._cfg = _FakeCfg()
 
     async def extract(self, text, effort="normal"):
         self.calls.append({"text": text, "effort": effort})
@@ -201,7 +210,12 @@ def _done_result():
         "parsed": type(
             "Parsed",
             (),
-            {"model_dump": lambda self, **kw: {"vendor_name": "ACME", "amount_total": "1350.00"}},
+            {
+                "model_dump": lambda self, **kw: {
+                    "vendor_name": "ACME",
+                    "amount_total": "1350.00",
+                }
+            },
         )(),
         "usage": {"input_tokens": 10, "output_tokens": 5},
         "model": "claude-opus-4-8",

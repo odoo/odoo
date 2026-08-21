@@ -71,7 +71,9 @@ def _usage_dict(message: Message) -> dict[str, Any]:
     return {
         "input_tokens": getattr(usage, "input_tokens", None),
         "cache_creation_input_tokens": getattr(
-            usage, "cache_creation_input_tokens", None,
+            usage,
+            "cache_creation_input_tokens",
+            None,
         ),
         "cache_read_input_tokens": getattr(usage, "cache_read_input_tokens", None),
         "output_tokens": getattr(usage, "output_tokens", None),
@@ -169,7 +171,8 @@ class ClaudeService:
         # delimiters make the boundary explicit so the model can
         # distinguish system instructions from adversarial invoice text.
         isolated_text = (
-            "<<<SCAN_CONTENT>>>\n" + (text or "No OCR text available")
+            "<<<SCAN_CONTENT>>>\n"
+            + (text or "No OCR text available")
             + "\n<<<END_SCAN_CONTENT>>>\n\n"
             "Extract structured invoice data from the scanned content above."
         )
@@ -221,9 +224,7 @@ class ClaudeService:
         }
 
     def _parse_content(self, message: Message) -> InvoiceExtraction:
-        content = "".join(
-            getattr(block, "text", "") for block in message.content
-        )
+        content = "".join(getattr(block, "text", "") for block in message.content)
         try:
             return InvoiceExtraction.model_validate_json(content)
         except Exception as exc:
