@@ -1,9 +1,14 @@
 $o-kanban-attachement-image-size: 80px;
 
-.o-discuss-CategoryKanban .o_kanban_record {
-    width: var(--KanbanRecord-width);
-    flex-grow: 1;
-    margin: calc(var(--KanbanRecord-margin-v) * 0.5) var(--KanbanRecord-margin-h);
+.o-discuss-CategoryKanban {
+    .o-discuss-CategoryKanban-group {
+        gap: var(--Kanban-gap);
+    }
+
+    .o_kanban_record {
+        width: var(--KanbanRecord-width);
+        flex-grow: 1;
+    }
 }
 
 .o_kanban_renderer {

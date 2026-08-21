@@ -4,11 +4,11 @@
         <div class="o_kanban_renderer o_kanban_ungrouped o_renderer o-discuss-CategoryKanban p-2" t-ref="this.rootRef">
             <t t-if="this.props.list.isGrouped" t-foreach="this.props.list.groups" t-as="group" t-key="group_index">
                 <t t-if="group.count > 0 or group.value === false">
-                    <span class="fw-bold fs-5">
+                    <div class="mb-2 fw-bold fs-5">
                         <t t-if="group.value === false">None (<t t-out="group.count"/>)</t>
                         <t t-else=""><t t-out="group.displayName"/></t>
-                    </span>
-                    <div class="d-flex flex-wrap align-content-start justify-content-start mb-2">
+                    </div>
+                    <div class="o-discuss-CategoryKanban-group d-flex flex-wrap align-content-start justify-content-start mb-2">
                         <KanbanRecord
                             t-foreach="group.list.records" t-as="record" t-key="record.id"
                             archInfo="this.props.archInfo"
