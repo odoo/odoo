@@ -28,15 +28,13 @@ class TestReorderingRule(TransactionCase):
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
         cls.buy_route.product_selectable = True
         # create product and set the vendor
-        product_form = Form(cls.env['product.product'])
-        product_form.name = 'Product A'
-        product_form.tracking = 'none'
-        product_form.description = 'Internal Notes'
-        with product_form.seller_ids.new() as seller:
-            seller.partner_id = cls.partner
-            seller.uom_id = product_form.uom_id
-        product_form.route_ids.add(cls.buy_route)
-        cls.product_01 = product_form.save()
+        cls.product_01 = cls.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'description': 'Internal Notes',
+            'seller_ids': [Command.create({'partner_id': cls.partner.id})],
+            'route_ids': [Command.link(cls.buy_route.id)],
+        })
 
     def test_reordering_rule_1(self):
         """
@@ -369,23 +367,18 @@ class TestReorderingRule(TransactionCase):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Simple Product'
-        product_form.tracking = 'none'
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product = product_form.save()
-
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Product BUY + MTO'
-        product_form.tracking = 'none'
-        product_form.route_ids.add(route_buy)
-        product_form.route_ids.add(route_mto)
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product_buy_mto = product_form.save()
+        product, product_buy_mto = self.env['product.product'].create([
+            {
+                'name': 'Simple Product',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+            }, {
+                'name': 'Product BUY + MTO',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+                'route_ids': [Command.link(route_buy.id), Command.link(route_mto.id)],
+            },
+        ])
 
         # Create Delivery Order of 20 product and 10 buy + MTO
         picking_form = Form(self.env['stock.picking'])
@@ -469,23 +462,18 @@ class TestReorderingRule(TransactionCase):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Simple Product'
-        product_form.tracking = 'none'
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product = product_form.save()
-
-        product_form = Form(self.env['product.product'])
-        product_form.name = 'Product BUY + MTO'
-        product_form.tracking = 'none'
-        product_form.route_ids.add(route_buy)
-        product_form.route_ids.add(route_mto)
-        with product_form.seller_ids.new() as s:
-            s.partner_id = partner
-            s.uom_id = product_form.uom_id
-        product_buy_mto = product_form.save()
+        product, product_buy_mto = self.env['product.product'].create([
+            {
+                'name': 'Simple Product',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+            }, {
+                'name': 'Product BUY + MTO',
+                'is_storable': True,
+                'seller_ids': [Command.create({'partner_id': partner.id})],
+                'route_ids': [Command.link(route_buy.id), Command.link(route_mto.id)],
+            },
+        ])
 
         # Create Delivery Order of 20 product and 10 buy + MTO
         picking_form = Form(self.env['stock.picking'])
