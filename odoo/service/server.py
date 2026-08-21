@@ -912,7 +912,7 @@ class PreforkServer(CommonServer):
 
     def process_zombie(self):
         # reap dead workers
-        while 1:
+        while True:
             try:
                 wpid, status = os.waitpid(-1, os.WNOHANG)
                 if not wpid:
@@ -1157,7 +1157,7 @@ class PreforkServer(CommonServer):
             os.kill(int(os.environ.pop('ODOO_READY_SIGHUP_PID')), signal.SIGHUP)
 
         self.logger.debug("starting")
-        while 1:
+        while True:
             try:
                 # self.logger.debug("Multiprocess beat (%s)",time.time())
                 self.process_signals()
