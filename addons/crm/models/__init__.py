@@ -18,3 +18,5 @@ from . import utm
 from . import crm_recurring_plan
 from . import mail_activity
 from . import res_users
+
+from . import res_groups

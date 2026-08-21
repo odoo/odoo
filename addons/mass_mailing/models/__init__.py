@@ -24,3 +24,5 @@ from . import res_users
 from . import utm_campaign
 from . import utm_medium
 from . import utm_source
+
+from . import res_groups

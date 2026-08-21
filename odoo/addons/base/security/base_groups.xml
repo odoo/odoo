@@ -29,9 +29,8 @@
         </record>
 
         <record model="res.groups" id="group_user_regular">
-            <field name="name">Role / User</field>
-            <field name="comment">Access to the home menu with regular access</field>
-            <field name="implied_ids" eval="[Command.link(ref('group_user'))]"/>
+            <field name="name">Is regular user</field>
+            <field name="comment">Base group for regular privilege tier (higher than light user)</field>
             <field name="api_key_duration">90.0</field>
         </record>
 
