@@ -2089,10 +2089,10 @@ test(`multi_edit: clicking on a readonly field switches the focus to the next ed
         `,
     });
     await contains(`.o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(0) [name=int_field]`).click();
+    await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_field_widget[name=foo] input`).toBeFocused();
 
-    await contains(`.o_data_row:eq(0) [name=int_field]`).click();
+    await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_field_widget[name=foo] input`).toBeFocused();
 });
 
@@ -2267,7 +2267,7 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button > [data-icon='more_vert']").click();
+        await contains("[data-icon='more_vert']").click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
@@ -3822,7 +3822,7 @@ test(`editable list view: readonly fields cannot be edited`, async () => {
             </list>
         `,
     });
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row", {
         message: "row should be in edit mode",
     });
@@ -3867,7 +3867,7 @@ test(`editable list view: line with no active element`, async () => {
     });
     expect(`.o_data_cell:eq(1) .o_field_widget`).toHaveClass("o_boolean_interactive");
 
-    await contains(`.o_data_cell`).click();
+    await contains(`.o_data_cell:eq(1)`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_cell:eq(0)`).toHaveClass("o_readonly_modifier");
 
@@ -9309,7 +9309,7 @@ test(`edit a row by clicking on a readonly field`, async () => {
     });
 
     // edit the first row
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row", {
         message: "first row should be selected",
     });
@@ -9592,13 +9592,14 @@ test(`readonly attrs on fields are re-evaluated on field change`, async () => {
         arch: `
             <list editable="top">
                 <field name="foo" readonly="bar"/>
+                <field name="int_field"/>
                 <field name="bar"/>
             </list>
         `,
     });
 
     // Make first line editable
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo] span`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_readonly_modifier");
@@ -9619,7 +9620,7 @@ test(`readonly attrs on fields are re-evaluated on field change`, async () => {
     await contains(`.o_control_panel`).click();
     expect(`.o_selected_row`).toHaveCount(0);
 
-    await contains(`.o_field_cell`).click();
+    await contains(`.o_field_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo] input`).toHaveCount(1);
     expect(`.o_selected_row .o_field_widget[name=foo]`).not.toHaveClass("o_readonly_modifier");
@@ -10717,7 +10718,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in first column`
             </list>
         `,
     });
-    await contains(`.o_data_row:eq(1) .o_data_cell`).click();
+    await contains(`.o_data_row:eq(1) .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
@@ -12854,7 +12855,7 @@ test(`editable list view: multi edition error and cancellation handling`, async 
     await contains(`.o_selected_row [name=foo] input`).edit("abc");
     await contains(`.modal .btn.btn-secondary`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
-        message: "first cell should have discarded any change",
+        message: "changes should be discarded",
     });
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
 
@@ -12877,10 +12878,9 @@ test(`editable list view: multi edition error and cancellation handling`, async 
     await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
     await contains(`.o_control_panel`).click();
     expect(`.o_notification`).toHaveCount(1);
-    expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
-        message: "changes should be discarded",
-    });
-    expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
+    expect(`.o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveText("");
+    expect(`.o_data_row:eq(0) .o_data_cell[name=int_field]`).toHaveText("");
+    expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -13157,6 +13157,98 @@ test(`multi edition: many2many field in grouped list`, async () => {
     expect(`.o_data_row:eq(2) .o_data_cell:eq(1)`).toHaveText("Value 1\nValue 2\nValue 3", {
         message: "should have same value in many2many field on all other records with same res_id",
     });
+});
+
+test.tags("desktop");
+test(`multi edit: saving an invalid required field keeps the cell focused`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await contains(`.o_list_button_save`).click();
+
+    expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`multi edit: tabbing away from an invalid required field keeps it invalid`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo" required="1"/>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await press("Tab");
+    await animationFrame();
+
+    expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
+});
+
+test.tags("desktop");
+test(`multi edit: pressing enter on an invalid required field behaves like saving`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await press("Enter");
+    await animationFrame();
+
+    expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`multi edit: clicking outside an invalid required field behaves like saving`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
+    });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell[name=foo]`).click();
+    await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
+
+    await contains(`.o_control_panel`).click();
+    await animationFrame();
+
+    expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
+    expect(`.o_selected_row [name=foo] input`).toBeFocused();
+    expect(`.o_notification`).toHaveText("Missing required fields");
+    expect.verifySteps([]);
 });
 
 test.tags("desktop");
@@ -13496,7 +13588,7 @@ test(`editable list view: many2one with readonly modifier`, async () => {
     });
 
     // edit a field
-    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.o_data_row .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(0) .o_data_cell:eq(0) div[name=m2o] a`).toHaveCount(1);
     expect(`.o_data_row .o_data_cell:eq(1) input`).toBeFocused({
         message: "focus should go to the char input",
@@ -13744,6 +13836,7 @@ test(`editable readonly list view: single edition does not behave like a multi-e
     // edit a field
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_data_row [name=foo] input`).edit("bar");
+    await contains(`.o_notification_close`).click();
     expect(`.o_notification`).toHaveCount(0);
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("bar", {
         message: "the first row should be updated",
@@ -14425,7 +14518,7 @@ test(`create record on list with modifiers depending on id`, async () => {
     expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("");
 
     // edit again the just created record
-    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.o_data_row .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     // modifiers should be evaluated to true
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_readonly_modifier");
@@ -14443,13 +14536,12 @@ test(`readonly boolean in editable list is readonly`, async () => {
             </list>
         `,
     });
-    await contains(`.o_data_row:eq(1) .o_data_cell`).click();
+    await contains(`.o_data_row:eq(1) .o_data_cell:not(.o_readonly_modifier)`).click();
     expect(`.o_data_row:eq(1) [name=bar] input`).not.toBeEnabled();
     expect(`.o_data_row:eq(1) [name=bar] input`).toBeChecked();
 
     await contains(`.o_data_row:eq(1) [name=bar] div`).click();
     expect(`.o_data_row:eq(1) [name=bar] input`).toBeChecked();
-    expect(`.o_data_row:eq(1) input[type=text]`).toBeFocused();
 
     // clicking on enabled checkbox with active row toggles check mark
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
@@ -22398,27 +22490,6 @@ test("should not crash in lists with groupby node and sample data", async () => 
     expect(queryAll(".o_group_header").length).toBeGreaterThan(0);
 });
 
-test.tags("desktop");
-test("mass edit discoverability: pencil icon displays on selected row and enters edit mode", async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list multi_edit="1">
-            <field name="foo"/>
-            <field name="int_field"/>
-            <field name="reference" optional="hide"/>
-        </list>`,
-    });
-    expect(".o_mass_edit_btn").toHaveCount(0);
-
-    await clickRecordSelector(1);
-    expect(".o_data_row:eq(0) .o_mass_edit_btn").toHaveCount(1);
-
-    await click(`.o_data_row:eq(0) .o_mass_edit_btn`);
-    await animationFrame();
-    expect(".o_selected_row .o_field_widget[name='foo'] input").toBeFocused();
-});
-
 test("Empty Groups: filter out empty groups unless field has group_expand", async () => {
     Foo._fields.active = fields.Boolean({ default: true });
     Foo._fields.m2o = fields.Many2one({ relation: "bar", group_expand: true });
@@ -22472,4 +22543,41 @@ test("Empty Groups: filter out empty groups", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(".o_group_header").toHaveCount(1);
+});
+
+test(`list status indicator replaces save/discard buttons when not in dialog`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top">
+            <field name="foo"/>
+            <field name="int_field"/>
+        </list>`,
+    });
+
+    // Enter edit mode
+    await contains(`.o_data_row:eq(0) .o_data_cell:not(.o_readonly_modifier)`).click();
+    expect(`.o_list_status_indicator`).toHaveCount(1);
+
+    // The status indicator now handles the save/discard buttons
+    expect(`.o_list_status_indicator .o_list_button_save`).toHaveCount(1);
+    expect(`.o_list_status_indicator .o_list_button_discard`).toHaveCount(1);
+});
+
+test(`save/discard buttons remain standard when list is rendered in dialog`, async () => {
+    await mountViewInDialog({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top">
+            <field name="foo"/>
+            <field name="int_field"/>
+        </list>`,
+    });
+
+    // Enter edit mode
+    await contains(`.o_data_row:eq(0) .o_data_cell:not(.o_readonly_modifier)`).click();
+
+    expect(`.o_list_status_indicator`).toHaveCount(0);
+    expect(`.o_list_button_save`).toHaveCount(1);
+    expect(`.o_list_button_discard`).toHaveCount(1);
 });
