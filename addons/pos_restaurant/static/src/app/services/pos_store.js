@@ -186,7 +186,7 @@ patch(PosStore.prototype, {
     },
     _assignCoursesToOrderLines(order, affectedLines) {
         for (const line of affectedLines) {
-            const { course } = this.autoCourseAllocation(line.product_id) || {};
+            const { course } = this.autoCourseAllocation(line.product_id.product_tmpl_id) || {};
             if (course) {
                 line.course_id = course;
             }
@@ -429,8 +429,16 @@ patch(PosStore.prototype, {
         return super.createOrderIfNeeded(...arguments);
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
+        if (typeof vals.product_tmpl_id === "number") {
+            vals = {
+                ...vals,
+                product_tmpl_id: this.models["product.template"].get(vals.product_tmpl_id),
+            };
+        }
         let currentCourse;
         let autoAllocation = null;
+
+        const isComboProduct = vals.product_tmpl_id.combo_ids?.length > 0;
 
         if (this.config.module_pos_restaurant) {
             const order = this.getOrder();
@@ -439,7 +447,7 @@ patch(PosStore.prototype, {
                 order.setBooked(true);
             }
 
-            if (this.config.use_course_allocation && vals.product_tmpl_id) {
+            if (this.config.use_course_allocation && vals.product_tmpl_id && !isComboProduct) {
                 autoAllocation = this.autoCourseAllocation(vals.product_tmpl_id);
             }
 
@@ -463,16 +471,41 @@ patch(PosStore.prototype, {
             autoAllocation.course.delete();
         }
 
-        if (currentCourse && result?.combo_line_ids) {
-            result.combo_line_ids.forEach((line) => {
-                line.course_id = currentCourse;
-            });
+        if (this.config.module_pos_restaurant && result?.combo_line_ids?.length) {
+            if (this.config.use_course_allocation) {
+                let firstChildCourse = null;
+                const parentAllocation = this.autoCourseAllocation(vals.product_tmpl_id);
+                result.combo_line_ids.forEach((line) => {
+                    const childTmpl = line.product_id.product_tmpl_id;
+                    const childAllocation = this.autoCourseAllocation(childTmpl);
+                    if (childAllocation) {
+                        line.course_id = childAllocation.course;
+                    } else {
+                        line.course_id = parentAllocation ? parentAllocation.course : currentCourse;
+                    }
+                    if (!firstChildCourse) {
+                        firstChildCourse = line.course_id;
+                    }
+                });
+                if (isComboProduct && firstChildCourse) {
+                    result.course_id = firstChildCourse;
+                }
+            } else if (currentCourse) {
+                result.combo_line_ids.forEach((line) => {
+                    line.course_id = currentCourse;
+                });
+            }
         }
 
         return result;
     },
 
     autoCourseAllocation(productTmpl) {
+        const config = this.config;
+        if (!config.module_pos_restaurant || !config.use_course_allocation) {
+            return null;
+        }
+
         const order = this.getOrder();
         const categories = productTmpl.pos_categ_ids
             .map((c) => c.id)
@@ -962,10 +995,29 @@ patch(PosStore.prototype, {
         }
         const lines = [];
         if (selectedLine) {
-            const mainLine = selectedLine.combo_parent_id || selectedLine;
-            lines.push(mainLine);
-            if (mainLine.combo_line_ids?.length) {
-                lines.push(...mainLine.combo_line_ids);
+            if (selectedLine.combo_parent_id) {
+                lines.push(selectedLine);
+
+                const parent = selectedLine.combo_parent_id;
+                const otherSiblingsInSameCourse = parent.combo_line_ids.filter(
+                    (child) =>
+                        child.id !== selectedLine.id &&
+                        child.course_id?.id === selectedLine.course_id?.id
+                );
+                if (
+                    otherSiblingsInSameCourse.length === 0 &&
+                    parent.course_id?.id === selectedLine.course_id?.id
+                ) {
+                    lines.push(parent);
+                }
+            } else {
+                lines.push(selectedLine);
+                if (selectedLine.combo_line_ids?.length) {
+                    const sameCourseChildren = selectedLine.combo_line_ids.filter(
+                        (child) => child.course_id?.id === selectedLine.course_id?.id
+                    );
+                    lines.push(...sameCourseChildren);
+                }
             }
         } else {
             lines.push(...selectedCourse.lines);

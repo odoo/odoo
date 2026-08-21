@@ -381,8 +381,6 @@ export class ProductScreen extends Component {
         if (result) {
             this.showOptionalProductPopupIfNeeded(product);
         }
-
-        return result;
     }
     async _getPartnerByBarcode(code) {
         let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
