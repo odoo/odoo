@@ -1003,7 +1003,7 @@ class PreforkServer(CommonServer):
 
     def process_zombie(self):
         # reap dead workers
-        while 1:
+        while True:
             try:
                 wpid, status = os.waitpid(-1, os.WNOHANG)
                 if not wpid:
@@ -1121,7 +1121,7 @@ class PreforkServer(CommonServer):
         sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
-        while 1:
+        while True:
             try:
                 #_logger.debug("Multiprocess beat (%s)",time.time())
                 self.process_signals()
