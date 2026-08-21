@@ -129,6 +129,7 @@ var owl = (() => {
     ComputationFlags2[ComputationFlags2["STATE_MASK"] = 3] = "STATE_MASK";
     ComputationFlags2[ComputationFlags2["DERIVED"] = 4] = "DERIVED";
     ComputationFlags2[ComputationFlags2["IMMEDIATE"] = 8] = "IMMEDIATE";
+    ComputationFlags2[ComputationFlags2["DISPOSED"] = 16] = "DISPOSED";
     return ComputationFlags2;
   })(ComputationFlags || {});
   var atomSymbol = /* @__PURE__ */ Symbol("Atom");
@@ -782,11 +783,6 @@ var owl = (() => {
   signal.Map = signalMap;
   signal.Object = signalObject;
   signal.Set = signalSet;
-  function readonlySetter() {
-    throw new OwlError(
-      "Cannot write to a read-only computed value. Pass a `set` option to make it writable."
-    );
-  }
   function computed(getter, options = {}) {
     const equalsFn = toEqualsFn(options.equals);
     let hasValue = false;
@@ -825,7 +821,9 @@ var owl = (() => {
       return computation.value;
     }
     readComputed[atomSymbol] = computation;
-    readComputed.set = options.set ?? readonlySetter;
+    if (options.set) {
+      readComputed.set = options.set;
+    }
     getScope()?.computations.push(computation);
     return readComputed;
   }
@@ -845,7 +843,26 @@ var owl = (() => {
         } else {
           removeSources(computation);
         }
-        return fn();
+        if (computation.flags & 16) {
+          return void 0;
+        }
+        let result;
+        try {
+          result = fn();
+        } finally {
+          if (computation.flags & 16) {
+            setComputation(void 0);
+            unsubscribeEffect(computation);
+            setComputation(computation);
+          }
+        }
+        if (computation.flags & 16 && typeof result === "function") {
+          setComputation(void 0);
+          result();
+          setComputation(computation);
+          return void 0;
+        }
+        return result;
       },
       immediate ? 8 | 1 : 1
       /* STALE */
@@ -861,7 +878,7 @@ var owl = (() => {
       throw error;
     }
     return function cleanupEffect2() {
-      computation.flags &= ~3;
+      computation.flags = computation.flags & ~3 | 16;
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       unsubscribeEffect(computation);
@@ -872,7 +889,7 @@ var owl = (() => {
     removeSources(effect2);
     cleanupEffect(effect2);
     for (const childEffect of effect2.observers) {
-      childEffect.flags &= ~3;
+      childEffect.flags = childEffect.flags & ~3 | 16;
       unsubscribeEffect(childEffect);
     }
     effect2.observers.clear();
@@ -880,8 +897,8 @@ var owl = (() => {
   function cleanupEffect(effect2) {
     const cleanupFn = effect2.value;
     if (cleanupFn && typeof cleanupFn === "function") {
-      cleanupFn();
       effect2.value = void 0;
+      cleanupFn();
     }
   }
   function asyncComputed(fetcher, options = {}) {
@@ -1042,9 +1059,42 @@ ${issueStrings}`);
   var shapeSymbol = /* @__PURE__ */ Symbol("shape");
   var elementTypeSymbol = /* @__PURE__ */ Symbol("elementType");
   var optionalSymbol = /* @__PURE__ */ Symbol("optional");
+  var staticSymbol = /* @__PURE__ */ Symbol("static");
+  var signalSymbol = /* @__PURE__ */ Symbol("signal");
   var intersectionSymbol = /* @__PURE__ */ Symbol("intersection");
   function getDefault(type) {
-    return typeof type === "function" ? type[defaultSymbol] : void 0;
+    return findInChain(type, defaultSymbol)?.[defaultSymbol];
+  }
+  function findInChain(type, symbol) {
+    while (typeof type === "function") {
+      if (symbol in type) {
+        return type;
+      }
+      type = type[innerTypeSymbol];
+    }
+    return void 0;
+  }
+  function isStaticType(type) {
+    return !!findInChain(type, staticSymbol);
+  }
+  function getSignalType(type) {
+    return findInChain(type, signalSymbol)?.[signalSymbol];
+  }
+  function promotableType(type) {
+    const meta = getSignalType(type);
+    if (!meta || meta.settable) {
+      return type;
+    }
+    const validate = function validatePromotable(context) {
+      const value = context.value;
+      if (value === void 0 || typeof value === "function" && value[atomSymbol]) {
+        context.validate(type);
+      } else if (meta.type) {
+        context.validate(meta.type);
+      }
+    };
+    validate[innerTypeSymbol] = type;
+    return validate;
   }
   function makeOptional(type, value) {
     const validate = function validateOptional(context) {
@@ -1055,16 +1105,30 @@ ${issueStrings}`);
     };
     validate[optionalSymbol] = true;
     validate[innerTypeSymbol] = type;
+    validate.static = () => makeStatic(validate);
     if (value !== void 0) {
       validate[defaultSymbol] = typeof value === "function" ? value : () => value;
     }
     return validate;
   }
   function isOptionalType(type) {
-    return typeof type === "function" && optionalSymbol in type;
+    return !!findInChain(type, optionalSymbol);
+  }
+  function makeStatic(type) {
+    const validate = makeType(function validateStatic(context) {
+      if (context.path.length > 1) {
+        context.addIssue({ message: "a static type is only valid on a prop" });
+        return;
+      }
+      context.validate(type);
+    });
+    validate[staticSymbol] = true;
+    validate[innerTypeSymbol] = type;
+    return validate;
   }
   function makeType(validate) {
     validate.optional = (value) => makeOptional(validate, value);
+    validate.static = () => makeStatic(validate);
     return validate;
   }
   function applyDefaults(value, type) {
@@ -1361,12 +1425,19 @@ ${issueStrings}`);
       });
     });
   }
-  function reactiveValueType(type) {
-    return makeType(function validateReactiveValue(context) {
+  function reactiveValueType(type, options) {
+    const settable = options?.settable ?? false;
+    const validate = makeType(function validateReactiveValue(context) {
       if (typeof context.value !== "function" || !context.value[atomSymbol]) {
         context.addIssue({ message: "value is not a reactive value" });
+        return;
+      }
+      if (settable && typeof context.value.set !== "function") {
+        context.addIssue({ message: "value is not a settable reactive value" });
       }
     });
+    validate[signalSymbol] = { settable, type };
+    return validate;
   }
   function ref(type) {
     if (typeof HTMLElement === "undefined") {
@@ -3437,6 +3508,7 @@ ${issueStrings}`);
       root.locked = false;
       current.children = [];
       current.childrenMap = {};
+      current.reachedComputedKeys = null;
       current.bdom = null;
       if (fibersInError.has(current)) {
         fibersInError.delete(current);
@@ -3500,6 +3572,7 @@ ${issueStrings}`);
     renderState = 0;
     deep = false;
     childrenMap = {};
+    reachedComputedKeys = null;
     constructor(node, parent) {
       this.node = node;
       this.parent = parent;
@@ -3677,6 +3750,8 @@ ${issueStrings}`);
         node.fiber = null;
         node.status = STATUS.MOUNTED;
         this.renderState |= APPLIED_TO_DOM;
+        node.sweepComputedCache(this);
+        node.triggerRerunOnPatch();
         let mountedFibers = this.mounted;
         while (current = mountedFibers.pop()) {
           if (current.renderState & APPLIED_TO_DOM) {
@@ -3717,6 +3792,13 @@ ${issueStrings}`);
     // after each patch and after this subtree is removed, to unset a ref pointing
     // at a bulk-removed element (slot host, enclosing t-if) — see sweepRefs.
     trackedRefs = null;
+    // `.signal=` expressions of descendants that threw before this node's
+    // pending render: they run again once that render is applied.
+    rerunOnPatch = null;
+    // `.signal=` computeds of the sites this node renders (slots included), by
+    // site and render key. The fiber of a render keeps the keys it reached: the
+    // others are dropped when it is applied (removed t-foreach items)
+    computedCache = null;
     constructor(C, props, app, pluginManager, parent, parentKey) {
       super(app);
       this.parent = parent;
@@ -3890,8 +3972,10 @@ ${issueStrings}`);
         }
         this.sweepRefs();
         sweepRemovedRefs();
+        this.sweepComputedCache(this.fiber);
         this.fiber.renderState |= APPLIED_TO_DOM;
         this.fiber = null;
+        this.triggerRerunOnPatch();
       }
     }
     // ---------------------------------------------------------------------------
@@ -3902,13 +3986,16 @@ ${issueStrings}`);
       return bdom2 ? bdom2.firstNode() : void 0;
     }
     mount(parent, anchor) {
-      const bdom2 = this.fiber.bdom;
+      const fiber = this.fiber;
+      const bdom2 = fiber.bdom;
       this.bdom = bdom2;
       bdom2.mount(parent, anchor);
       this.status = STATUS.MOUNTED;
-      this.fiber.renderState |= APPLIED_TO_DOM;
-      this.children = this.fiber.childrenMap;
+      fiber.renderState |= APPLIED_TO_DOM;
+      this.children = fiber.childrenMap;
       this.fiber = null;
+      this.sweepComputedCache(fiber);
+      this.triggerRerunOnPatch();
     }
     moveBeforeDOMNode(node, parent) {
       this.bdom.moveBeforeDOMNode(node, parent);
@@ -3945,8 +4032,34 @@ ${issueStrings}`);
       }
       this.sweepRefs();
       sweepRemovedRefs();
+      this.sweepComputedCache(fiber);
       fiber.renderState |= APPLIED_TO_DOM;
       this.fiber = null;
+      this.triggerRerunOnPatch();
+    }
+    sweepComputedCache(fiber) {
+      const cache22 = this.computedCache;
+      const reached = fiber.reachedComputedKeys;
+      if (cache22) {
+        for (const key of cache22.keys()) {
+          if (!reached?.has(key)) {
+            cache22.delete(key);
+          }
+        }
+      }
+    }
+    triggerRerunOnPatch() {
+      const rerun = this.rerunOnPatch;
+      if (rerun) {
+        this.rerunOnPatch = null;
+        for (const [s, owner] of rerun) {
+          try {
+            signal.trigger(s);
+          } catch (error) {
+            handleError({ node: owner, error });
+          }
+        }
+      }
     }
     beforeRemove() {
       this._destroy();
@@ -4196,22 +4309,69 @@ ${issueStrings}`);
     }
     fn.call(ctx["this"], ev);
   }
-  var signalCaches = /* @__PURE__ */ new WeakMap();
-  function toSignal(node, cacheKey, value) {
-    let cache22 = signalCaches.get(node);
-    if (!cache22) {
-      cache22 = /* @__PURE__ */ new Map();
-      signalCaches.set(node, cache22);
+  function ancestorsOf(node) {
+    const ancestors = [];
+    for (let current = node; current; current = current.parent || subRootHosts.get(current) || null) {
+      ancestors.push(current);
+    }
+    return ancestors;
+  }
+  function hasUnappliedRender(node) {
+    const fiber = node.fiber;
+    return !!fiber && !(fiber.renderState & APPLIED_TO_DOM && fibersInError.has(fiber));
+  }
+  function findUnappliedRenders(node) {
+    const ancestors = ancestorsOf(node);
+    for (let i = ancestors.length - 1; i >= 0; i--) {
+      updateComputation(ancestors[i].signalComputation);
+    }
+    return ancestors.filter(hasUnappliedRender);
+  }
+  function toComputed(node, cacheKey, fn, captures) {
+    const cache22 = node.computedCache ||= /* @__PURE__ */ new Map();
+    if (node.fiber) {
+      (node.fiber.reachedComputedKeys ||= /* @__PURE__ */ new Set()).add(cacheKey);
     }
     const existing = cache22.get(cacheKey);
     if (existing) {
-      existing.set(value);
-      return existing.readonly;
+      existing.captures?.set(captures);
+      return existing.value;
     }
-    const s = signal(value);
-    s.readonly = computed(s);
-    cache22.set(cacheKey, s);
-    return s.readonly;
+    const entry = {};
+    let evaluate = fn;
+    if (captures) {
+      const capturesSignal = signal(captures, { equals: shallowEqual2 });
+      entry.captures = capturesSignal;
+      evaluate = () => fn(capturesSignal());
+    }
+    const rerun = signal(void 0);
+    const createdIn = node.fiber ? new WeakRef(node.fiber) : null;
+    const createdAt = node.fiber ? node.fiber.renderState >> 1 : -1;
+    const topmostRoot = ancestorsOf(node).filter(hasUnappliedRender).at(-1)?.fiber.root;
+    const createdRoot = topmostRoot ? new WeakRef(topmostRoot) : null;
+    let evaluated = false;
+    let last;
+    entry.value = computed(() => {
+      rerun();
+      try {
+        last = evaluate();
+        evaluated = true;
+        return last;
+      } catch (error) {
+        const unapplied = findUnappliedRenders(node);
+        if (!unapplied.length) {
+          untrack(() => handleError({ node, error }));
+          return last;
+        }
+        if (!evaluated && node.fiber === createdIn?.deref() && node.fiber.renderState >> 1 === createdAt && unapplied[unapplied.length - 1].fiber.root === createdRoot?.deref()) {
+          throw error;
+        }
+        (unapplied[0].rerunOnPatch ||= /* @__PURE__ */ new Map()).set(rerun, node);
+        return last;
+      }
+    });
+    cache22.set(cacheKey, entry);
+    return entry.value;
   }
   function modelExpr(value) {
     if (typeof value !== "function" || typeof value.set !== "function") {
@@ -4363,7 +4523,7 @@ ${issueStrings}`);
     createComponent,
     callTemplate,
     callHandler,
-    toSignal
+    toComputed
   };
   var bdom = { text, createBlock, list, multi, html, toggler };
   var TemplateSet = class {
@@ -4776,16 +4936,83 @@ ${issueStrings}`);
         signals[key].set(resolveValue(node.props, key));
       }
     }
+    function isReactiveValue(value) {
+      return typeof value === "function" && !!value[atomSymbol];
+    }
+    function defineValueProp(key, value) {
+      Reflect.defineProperty(result, key, { enumerable: true, configurable: true, value });
+    }
+    function guardStaticProp(key, initial, message) {
+      if (!app.dev) {
+        return;
+      }
+      node.willUpdateProps.push((nextProps) => {
+        if (resolveValue(nextProps, key) !== initial) {
+          throw new OwlError(`Prop '${key}' in component '${componentName}' ${message}`);
+        }
+      });
+    }
+    function defineSignalProp(key, meta) {
+      const raw = resolveValue(node.props, key);
+      if (meta.settable || isReactiveValue(raw)) {
+        defineValueProp(key, meta.settable || !raw.set ? raw : computed(raw, { equals: false }));
+        guardStaticProp(
+          key,
+          raw,
+          "changed. A signal prop is static: pass the same signal (its inner value may change)."
+        );
+      } else {
+        const promoted = signal(raw);
+        defineValueProp(key, computed(promoted));
+        promotedUpdates.push(() => promoted.set(resolveValue(node.props, key)));
+        if (app.dev) {
+          node.willUpdateProps.push((nextProps) => {
+            if (isReactiveValue(resolveValue(nextProps, key))) {
+              throw new OwlError(
+                `Prop '${key}' in component '${componentName}' changed from a plain value to a signal. Pass the signal from the start instead.`
+              );
+            }
+          });
+        }
+      }
+    }
+    function defineStaticProp(key) {
+      const value = resolveValue(node.props, key);
+      defineValueProp(key, value);
+      guardStaticProp(
+        key,
+        value,
+        "changed. A static prop should not change. If the prop is a signal, pass the same signal reference (its inner value may change)."
+      );
+    }
+    const promotedUpdates = [];
     if (type) {
       const keys = Array.isArray(type) ? type : Object.keys(type);
-      defineProps(keys);
-      node.propsUpdated.push(() => updateSignals(keys));
+      const reactiveKeys = [];
+      for (const key of keys) {
+        const keyType = Array.isArray(type) ? void 0 : type[key];
+        const signalMeta = keyType && getSignalType(keyType);
+        if (signalMeta) {
+          defineSignalProp(key, signalMeta);
+        } else if (keyType && isStaticType(keyType)) {
+          defineStaticProp(key);
+        } else {
+          defineProp(key);
+          reactiveKeys.push(key);
+        }
+      }
+      node.propsUpdated.push(() => {
+        updateSignals(reactiveKeys);
+        for (const update of promotedUpdates) {
+          update();
+        }
+      });
       if (app.dev) {
         if (defaults) {
           const defaultedShape = {};
           for (const key in type) {
             if (key in defaults) {
-              defaultedShape[key] = type[key];
+              defaultedShape[key] = promotableType(type[key]);
             }
           }
           assertType(
@@ -4794,7 +5021,14 @@ ${issueStrings}`);
             `Invalid component default props (${componentName})`
           );
         }
-        const validation = types2.object(type);
+        let shape = type;
+        if (!Array.isArray(type)) {
+          shape = {};
+          for (const key in type) {
+            shape[key] = promotableType(type[key]);
+          }
+        }
+        const validation = types2.object(shape);
         assertType(node.props, validation, `Invalid component props (${componentName})`);
         node.willUpdateProps.push((np) => {
           assertType(np, validation, `Invalid component props (${componentName})`);
@@ -4842,7 +5076,9 @@ ${issueStrings}`);
       <t t-call-slot="default"/>
     </t>
   `;
-    props = useProps({ error: types2.signal().optional(() => signal(null)) });
+    props = useProps({
+      error: types2.signal(types2.any(), { settable: true }).optional(() => signal(null))
+    });
     setup() {
       onError((e) => this.props.error.set(e));
     }
@@ -5059,8 +5295,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-10-19T09:38:55.520Z",
-    hash: "7e1f64ac",
+    date: "2026-11-20T11:47:20.294Z",
+    hash: "69cb8908",
     url: "https://github.com/odoo/owl"
   };
 
@@ -5208,8 +5444,9 @@ ${issueStrings}`);
   var isLeftSeparator = (token) => token && (token.type === "LEFT_BRACE" || token.type === "COMMA");
   var isRightSeparator = (token) => token && (token.type === "RIGHT_BRACE" || token.type === "COMMA");
   var paddedValues = /* @__PURE__ */ new Map([["in ", " in "]]);
-  function processExpr(expr, seededLocals) {
+  function processExpr(expr, seededLocals, captureNonLocals = false, sharedCaptures) {
     const scopeStack2 = [];
+    const captureIndexes = sharedCaptures ?? /* @__PURE__ */ new Map();
     if (seededLocals?.size) {
       scopeStack2.push({ vars: seededLocals, depth: -Infinity });
     }
@@ -5261,7 +5498,9 @@ ${issueStrings}`);
         for (const scope of scopeStack2) {
           for (const v of scope.vars) currentLocals.add(v);
         }
-        token.value = token.replace((expr2) => compileExpr(expr2, currentLocals));
+        token.value = token.replace(
+          (expr2) => processExpr(expr2, currentLocals, captureNonLocals, captureIndexes).expr
+        );
       }
       if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
         const newScope = /* @__PURE__ */ new Set();
@@ -5287,7 +5526,16 @@ ${issueStrings}`);
         token.varName = token.value;
         if (!isLocal(token.value)) {
           token.originalValue = token.value;
-          token.value = `ctx['${token.value}']`;
+          if (captureNonLocals) {
+            let index = captureIndexes.get(token.value);
+            if (index === void 0) {
+              index = captureIndexes.size;
+              captureIndexes.set(token.value, index);
+            }
+            token.value = `__caps[${index}]`;
+          } else {
+            token.value = `ctx['${token.value}']`;
+          }
         } else {
           token.value = `_${token.value}`;
           token.isLocal = true;
@@ -5296,7 +5544,9 @@ ${issueStrings}`);
       i++;
     }
     let freeVariables = null;
-    if (topLevelArrowIndex !== -1) {
+    if (captureNonLocals) {
+      freeVariables = [...captureIndexes.keys()];
+    } else if (topLevelArrowIndex !== -1) {
       freeVariables = [];
       const seen = /* @__PURE__ */ new Set();
       for (let i2 = topLevelArrowIndex + 1; i2 < tokens.length; i2++) {
@@ -6958,7 +7208,7 @@ ${code}`;
       for (let i = 0; i < this.target.loopLevel; i++) {
         parts.push(`\${key${i + 1}}`);
       }
-      return `\`${parts.join("__")}\``;
+      return `key + \`${parts.join("__")}\``;
     }
     /**
      * Formats a prop name and value into a string suitable to be inserted in the
@@ -7015,11 +7265,22 @@ ${code}`;
       for (let p in ast.props || {}) {
         let [name, suffix] = p.split(".");
         if (suffix === "signal") {
-          const compiledValue2 = compileExpr(ast.props[p]);
+          const { expr: compiledValue2, freeVariables: freeVariables2 } = processExpr(
+            ast.props[p],
+            void 0,
+            true
+          );
           const propName2 = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
-          this.helpers.add("toSignal");
+          this.helpers.add("toComputed");
           const cacheKey = this.generateSignalCacheKey();
-          props.push(`${propName2}: toSignal(node, ${cacheKey}, ${compiledValue2})`);
+          if (freeVariables2?.length) {
+            const captures = freeVariables2.map((v) => `ctx['${v}']`).join(",");
+            props.push(
+              `${propName2}: toComputed(node, ${cacheKey}, (__caps) => (${compiledValue2}), [${captures}])`
+            );
+          } else {
+            props.push(`${propName2}: toComputed(node, ${cacheKey}, () => (${compiledValue2}))`);
+          }
           continue;
         }
         if (suffix) {
