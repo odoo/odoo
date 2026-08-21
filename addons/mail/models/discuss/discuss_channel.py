@@ -928,8 +928,9 @@ class DiscussChannel(models.Model):
 
     def invite_by_email(self, emails):
         """
-        Send channel invitation emails to a list of email addresses. Existing members'
-        email addresses are ignored.
+        Send channel invitation emails to a list of email addresses.
+        This creates "pending" members until the member has joined the conversation.
+        These "pending" members can have their invitation sent again by email.
 
         :param emails: List of email addresses to invite.
         :type emails: list[str]
@@ -943,7 +944,8 @@ class DiscussChannel(models.Model):
                 % self.channel_type
             )
         eligible_emails = OrderedSet(norm for email in emails if email and (norm := email_normalize(email)))
-        # Removing emails linked to members of this channel.
+        # Removing emails linked to members of this channel, keeping the ones
+        # whose invitation is still pending to send them the link again.
         member_domain = Domain("channel_id", "=", self.id) & Domain.OR(
             [
                 [(field, "=ilike", email)]
@@ -951,6 +953,7 @@ class DiscussChannel(models.Model):
                 for field in ("guest_id.email", "partner_id.email")
             ],
         )
+        member_domain &= Domain("invitation_sent_dt", "=", False)
         eligible_emails -= set(
             self.env["discuss.channel.member"]
             .search_fetch(member_domain, ["partner_id", "guest_id"])
@@ -1004,6 +1007,38 @@ class DiscussChannel(models.Model):
                     "Could not contact the mail server, please check your outgoing email server configuration."
                 )
             raise UserError(error_msg) from mde
+        invited_emails = list(eligible_emails)
+        found_partners = self.env["res.partner"]._find_or_create_from_emails(
+            invited_emails, no_create=True
+        )
+        partners = self.env["res.partner"].union(*found_partners)
+        guest_emails = [
+            email for email, partner in zip(invited_emails, found_partners) if not partner
+        ]
+        guests = self.env["mail.guest"].search_fetch([("email", "in", guest_emails)])
+        if guests_to_create := [
+            {"email": email, "name": email}
+            for email in guest_emails
+            if email not in guests.mapped("email")
+        ]:
+            # sudo: mail.guest - internal users only have read access on guests, and the
+            # invited addresses back no contact to invite under their own identity.
+            guests |= self.env["mail.guest"].sudo().create(guests_to_create).sudo(False)
+        invitation_sent_dt = fields.Datetime.now()
+        create_member_params = {"invitation_sent_dt": invitation_sent_dt}
+        new_members = self._add_members(
+            guests=guests, create_member_params=create_member_params, post_joined_message=False
+        )
+        new_members += self._add_members(
+            partners=partners, create_member_params=create_member_params
+        )
+        resent_members = self.env["discuss.channel.member"].sudo().search_fetch(
+            Domain("channel_id", "=", self.id)
+            & (Domain("guest_id", "in", guests.ids) | Domain("partner_id", "in", partners.ids))
+            & Domain("id", "not in", new_members.ids),
+            ["invitation_sent_dt"],
+        )
+        resent_members.invitation_sent_dt = invitation_sent_dt
 
     # ------------------------------------------------------------
     # RTC
@@ -1436,6 +1471,8 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         guest = self.env["mail.guest"]
         if member := self.self_member_id:
+            if member.invitation_sent_dt:
+                member.invitation_sent_dt = False
             return member.partner_id, member.guest_id
         if not self.env.user._is_public():
             self._add_members(users=self.env.user, post_joined_message=post_joined_message)

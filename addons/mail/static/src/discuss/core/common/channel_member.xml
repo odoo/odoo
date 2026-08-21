@@ -6,6 +6,7 @@
             <DiscussAvatar record="this.member()"/>
             <div t-ref="this.displayNameRef" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>
+                <span t-if="this.member().isInvitationPending" class="ms-2 pe-1 text-truncate smaller fst-italic text-muted">Invitation Pending</span>
             </div>
             <i t-if="this.member().channel_role === 'owner'" class="oi oi-filled ms-1 text-warning lh-sm" data-icon="star" role="img" title="Channel Owner" aria-label="Channel Owner"/>
             <i t-if="this.member().channel_role === 'admin'" class="oi oi-filled ms-1 text-primary lh-sm" data-icon="star" role="img" title="Channel Admin" aria-label="Channel Admin"/>

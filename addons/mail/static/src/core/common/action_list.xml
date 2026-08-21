@@ -128,6 +128,7 @@
     <i t-elif="this.props.dropdown" class="oi oi-fw opacity-0" data-icon="question_mark" t-att-class="this.props.fw ? 'oi-fw' : ''"/>
     <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
     <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>
+    <t t-if="this.action.extraContentComponent" t-component="this.action.extraContentComponent" t-props="this.action.extraContentComponentProps"/>
 </t>
 
 <t t-name="mail.Action.badge">

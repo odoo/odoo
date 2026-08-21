@@ -23,6 +23,7 @@ export class ChannelMember extends Record {
     custom_notifications;
     /** @type {number} */
     id;
+    invitation_sent_dt = fields.Datetime();
     /** @type {boolean} */
     is_favorite;
     is_pinned = fields.Attr(undefined, {
@@ -161,6 +162,14 @@ export class ChannelMember extends Record {
         );
     }
 
+    get canResendInvitation() {
+        return (
+            this.isInvitationPending &&
+            Boolean(this.channel_id?.self_member_id) &&
+            this.store.self_user?.share === false
+        );
+    }
+
     get canSetAdmin() {
         return (
             this.partner_id?.main_user_id?.active &&
@@ -219,12 +228,24 @@ export class ChannelMember extends Record {
             : undefined;
     }
 
+    get isInvitationPending() {
+        return Boolean(this.invitation_sent_dt);
+    }
+
     get selfChannelRole() {
         return this.channel_id?.self_member_id?.channel_role;
     }
 
     get isSelf() {
         return Boolean(this.store.self?.eq(this.persona));
+    }
+
+    async resendInvitation() {
+        await rpc("/discuss/channel/member/resend_invitation", { member_id: this.id });
+        this.store.env.services.notification.add(
+            _t("Invitation sent again to %(member_name)s.", { member_name: this.name }),
+            { type: "success" }
+        );
     }
 
     /** @param {string} role */

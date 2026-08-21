@@ -206,6 +206,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 {
                     "create_date": fields.Datetime.to_string(operator_member.create_date),
                     "id": operator_member.id,
+                    "invitation_sent_dt": False,
                     "livechat_member_type": "agent",
                     "last_seen_dt": False,
                     "partner_id": operator.partner_id.id,
@@ -217,6 +218,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
                     "custom_notifications": False,
                     "id": visitor_member.id,
+                    "invitation_sent_dt": False,
                     "livechat_member_type": "visitor",
                     "last_interest_dt": fields.Datetime.to_string(visitor_member.last_interest_dt),
                     "last_seen_dt": False,
@@ -291,6 +293,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "create_date": fields.Datetime.to_string(operator_member.create_date),
                     "custom_notifications": False,
                     "id": operator_member.id,
+                    "invitation_sent_dt": False,
                     "livechat_member_type": "agent",
                     "last_interest_dt": fields.Datetime.to_string(operator_member.last_interest_dt),
                     "last_seen_dt": False,

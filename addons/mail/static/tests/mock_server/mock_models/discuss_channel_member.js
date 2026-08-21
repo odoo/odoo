@@ -212,7 +212,7 @@ export class DiscussChannelMember extends models.ServerModel {
     _store_member_fields(res) {
         // sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res.attr("channel_role", undefined, { sudo: true });
-        res.extend(["create_date", "last_seen_dt", "seen_message_id"]);
+        res.extend(["create_date", "invitation_sent_dt", "last_seen_dt", "seen_message_id"]);
         this._store_persona_default_fields(res);
     }
 

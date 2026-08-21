@@ -337,6 +337,16 @@ class ChannelController(http.Controller):
             raise NotFound()
         channel_member.unlink()
 
+    @mail_route("/discuss/channel/member/resend_invitation", methods=["POST"], type="jsonrpc", auth="user")
+    def discuss_channel_member_resend_invitation(self, member_id):
+        channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
+        if not channel_member or not channel_member.invitation_sent_dt:
+            raise NotFound()
+        channel = channel_member.channel_id
+        if not channel.self_member_id:
+            raise AccessError(self.env._("Only members can send the invitation link again."))
+        channel.invite_by_email([channel_member.guest_id.email or channel_member.partner_id.email])
+
     @mail_route("/discuss/channel/member/set_role", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_set_channel_member_role(self, member_id, channel_role):
         channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])

@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { InvitationSentDate } from "@mail/discuss/core/common/invitation_sent_date";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { rpc } from "@web/core/network/rpc";
@@ -49,6 +50,16 @@ registerChannelMemberAction("set-owner", {
     name: _t("Set Owner"),
     onSelected: ({ member }) => member.setChannelRole("owner"),
     sequence: 30,
+});
+
+registerChannelMemberAction("resend-invitation", {
+    condition: ({ member }) => member.canResendInvitation,
+    extraContentComponent: InvitationSentDate,
+    extraContentComponentProps: ({ member }) => ({ datetime: member.invitation_sent_dt }),
+    icon: "refresh",
+    name: _t("Send Invite again"),
+    onSelected: ({ member }) => member.resendInvitation(),
+    sequence: 35,
 });
 
 registerChannelMemberAction("remove-member", {

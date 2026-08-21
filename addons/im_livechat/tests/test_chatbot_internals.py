@@ -284,6 +284,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                 "channel_role": False,
                                 "create_date": fields.Datetime.to_string(member_emp.create_date),
                                 "id": member_emp.id,
+                                "invitation_sent_dt": False,
                                 "livechat_member_type": "agent",
                                 "last_seen_dt": fields.Datetime.to_string(member_emp.last_seen_dt),
                                 "partner_id": self.partner_employee.id,
