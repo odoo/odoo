@@ -8,6 +8,7 @@
     'depends': [
         'l10n_ar',
         'l10n_latam_check',
+        'account_payment_bundle',
     ],
     'data': [
         'views/account_tax_views.xml',
