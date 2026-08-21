@@ -26,17 +26,20 @@ export class MvPrelogFuzzyMatching extends Component {
             timeBufferMinutes: 120,
             filters: { programId: false, weekStart: "", version: false, importJobId: false },
             activeTab: "all",
-            counts: { all: 0, matched: 0, suggestions: 0, no_suggestion: 0, removed: 0 },
+            counts: { all: 0, matched: 0, unmatched: 0, suggestions: 0, no_suggestion: 0, removed: 0 },
             searchTerm: "",
             airDate: "",
             issueFilter: "",
             sortBy: "air_date",
+            sortDirection: "asc",
             rows: [],
             total: 0,
             offset: 0,
             page: 0,
             pages: 0,
             selectedRows: {},
+            selectAllMatching: false,
+            excludedRows: {},
             drawerRow: false,
             manualSchedule: "",
         });
@@ -71,12 +74,8 @@ export class MvPrelogFuzzyMatching extends Component {
     async _refreshVersions(keepVersion = false) {
         const { programId, weekStart } = this.state.filters;
         this.state.versions = [];
-        if (!programId || !weekStart) {
-            this.state.filters.version = false;
-            return;
-        }
         const options = await this.orm.call(
-            "mv.prelog_data", "fuzzy_match_get_options", [Number(programId), weekStart]
+            "mv.prelog_data", "fuzzy_match_get_options", [programId || false, weekStart || false]
         );
         this._setOptions(options);
         if (keepVersion && !this.state.versions.includes(Number(keepVersion))) {
@@ -92,7 +91,7 @@ export class MvPrelogFuzzyMatching extends Component {
         this.state.rows = [];
         this.state.total = 0;
         this.state.offset = 0;
-        this.state.selectedRows = {};
+        this._resetSelection();
         this.state.drawerRow = false;
     }
 
@@ -116,24 +115,22 @@ export class MvPrelogFuzzyMatching extends Component {
         this.state.filters.importJobId = false;
     }
 
-    _filtersAreComplete() {
+    _filtersAreValid() {
         const filters = this.state.filters;
-        if (!filters.programId || !filters.weekStart || !filters.version) {
-            this.notification.add("Select a Program, Monday week, and version first.", { type: "warning" });
-            return false;
-        }
-        const date = new Date(`${filters.weekStart}T12:00:00`);
-        if (Number.isNaN(date.getTime()) || date.getDay() !== 1) {
-            this.notification.add("Week must be the Monday that starts the broadcast week.", { type: "warning" });
-            return false;
+        if (filters.weekStart) {
+            const date = new Date(`${filters.weekStart}T12:00:00`);
+            if (Number.isNaN(date.getTime()) || date.getDay() !== 1) {
+                this.notification.add("Week must be the Monday that starts the broadcast week.", { type: "warning" });
+                return false;
+            }
         }
         return true;
     }
 
     async onFilter() {
-        if (!this._filtersAreComplete()) return;
+        if (!this._filtersAreValid()) return;
         this.state.offset = 0;
-        this.state.selectedRows = {};
+        this._resetSelection();
         await this._loadResults();
     }
 
@@ -145,7 +142,7 @@ export class MvPrelogFuzzyMatching extends Component {
         if (this.state.querying || tab === this.state.activeTab) return;
         this.state.activeTab = tab;
         this.state.offset = 0;
-        this.state.selectedRows = {};
+        this._resetSelection();
         this.state.drawerRow = false;
         await this._loadResults();
     }
@@ -153,10 +150,10 @@ export class MvPrelogFuzzyMatching extends Component {
     _queryArgs() {
         const f = this.state.filters;
         return [
-            Number(f.programId), f.weekStart, Number(f.version), this.state.offset,
+            f.programId || false, f.weekStart || false, f.version || false, this.state.offset,
             this.state.pageSize, this.state.activeTab, this.state.searchTerm,
             this.state.airDate || false, this.state.issueFilter, this.state.sortBy,
-            f.importJobId || false,
+            f.importJobId || false, this.state.sortDirection,
         ];
     }
 
@@ -178,48 +175,113 @@ export class MvPrelogFuzzyMatching extends Component {
         }
     }
 
-    get selectedCount() { return Object.keys(this.state.selectedRows).length; }
+    _resetSelection() {
+        this.state.selectedRows = {};
+        this.state.selectAllMatching = false;
+        this.state.excludedRows = {};
+    }
+
+    get selectedCount() {
+        return this.state.selectAllMatching
+            ? Math.max(this.state.total - Object.keys(this.state.excludedRows).length, 0)
+            : Object.keys(this.state.selectedRows).length;
+    }
     get visibleRangeStart() { return this.state.total ? this.state.offset + 1 : 0; }
     get visibleRangeEnd() { return Math.min(this.state.offset + this.state.pageSize, this.state.total); }
     get allPageSelected() {
-        return Boolean(this.state.rows.length) && this.state.rows.every((row) => this.state.selectedRows[row.id]);
+        return Boolean(this.state.rows.length) && this.state.rows.every((row) => this.isSelected(row));
+    }
+    get canSelectAllMatching() {
+        return !this.state.selectAllMatching && this.allPageSelected && this.state.total > this.state.rows.length;
     }
 
-    isSelected(row) { return Boolean(this.state.selectedRows[row.id]); }
+    isSelected(row) {
+        return this.state.selectAllMatching
+            ? !this.state.excludedRows[row.id]
+            : Boolean(this.state.selectedRows[row.id]);
+    }
     toggleRow(row, ev) {
-        if (ev.target.checked) this.state.selectedRows[row.id] = true;
-        else delete this.state.selectedRows[row.id];
+        if (this.state.selectAllMatching) {
+            if (ev.target.checked) delete this.state.excludedRows[row.id];
+            else this.state.excludedRows[row.id] = true;
+        } else if (ev.target.checked) {
+            this.state.selectedRows[row.id] = true;
+        } else {
+            delete this.state.selectedRows[row.id];
+        }
     }
     toggleAll(ev) {
-        for (const row of this.state.rows) {
-            if (ev.target.checked) this.state.selectedRows[row.id] = true;
-            else delete this.state.selectedRows[row.id];
-        }
-    }
-    selectedRows() { return this.state.rows.filter((row) => this.state.selectedRows[row.id]); }
-
-    async attachSuggested() {
-        const rows = this.selectedRows().filter(
-            (row) => row.status === "suggestion" && row.suggested && row.suggestion_attachable
-        );
-        if (!rows.length) {
-            this.notification.add("Select one or more rows with attachable suggestions.", { type: "info" });
+        if (this.state.selectAllMatching && !ev.target.checked) {
+            this._resetSelection();
             return;
         }
-        const risky = rows.filter((row) => row.match_quality !== "exact");
-        if (risky.length && !window.confirm(
-            `${risky.length} selected suggestion(s) are fuzzy or contain a mismatch. Attach anyway?`
-        )) return;
-        const payload = rows.map((row) => ({
-            prelog_id: row.id, schedule_id: row.suggested.id, schedule_ref: "",
-            source: "suggested", confirmed_override: row.match_quality !== "exact",
-        }));
-        await this._applySchedules(payload);
+        for (const row of this.state.rows) {
+            if (ev.target.checked) {
+                delete this.state.excludedRows[row.id];
+                this.state.selectedRows[row.id] = true;
+            } else {
+                delete this.state.selectedRows[row.id];
+            }
+        }
+    }
+    selectEveryMatchingRow() {
+        this.state.selectAllMatching = true;
+        this.state.selectedRows = {};
+        this.state.excludedRows = {};
+    }
+    clearSelection() { this._resetSelection(); }
+    _selectionPayload(row = false) {
+        if (row) return { all_matching: false, ids: [row.id], excluded_ids: [] };
+        return this.state.selectAllMatching
+            ? { all_matching: true, ids: [], excluded_ids: Object.keys(this.state.excludedRows).map(Number) }
+            : { all_matching: false, ids: Object.keys(this.state.selectedRows).map(Number), excluded_ids: [] };
+    }
+
+    _bulkArgs(actionName, row = false, confirmedFuzzy = false) {
+        const f = this.state.filters;
+        return [
+            actionName, this._selectionPayload(row), f.programId || false,
+            f.weekStart || false, f.version || false, this.state.activeTab,
+            this.state.searchTerm, this.state.airDate || false,
+            this.state.issueFilter, this.state.sortBy, f.importJobId || false,
+            confirmedFuzzy, this.state.sortDirection,
+        ];
+    }
+
+    async attachSuggested() {
+        if (!this.selectedCount) {
+            this.notification.add("Select at least one Prelog row.", { type: "info" });
+            return;
+        }
+        await this._runBulkAttach(false);
     }
 
     async attachOneSuggestion(row) {
-        this.state.selectedRows = { [row.id]: true };
-        await this.attachSuggested();
+        await this._runBulkAttach(row);
+    }
+
+    async _runBulkAttach(row = false, confirmedFuzzy = false) {
+        this.state.mutating = true;
+        try {
+            let result = await this.orm.call(
+                "mv.prelog_data", "fuzzy_workbench_bulk_action",
+                this._bulkArgs("attach", row, confirmedFuzzy)
+            );
+            if (result.requires_confirmation) {
+                this.state.mutating = false;
+                const warning = `${result.fuzzy} of ${result.attachable} attachable suggestion(s) are fuzzy or contain a mismatch. Attach them anyway?`;
+                if (!window.confirm(warning)) return;
+                this.state.mutating = true;
+                result = await this.orm.call(
+                    "mv.prelog_data", "fuzzy_workbench_bulk_action",
+                    this._bulkArgs("attach", row, true)
+                );
+            }
+            this.notification.add(result.message, { type: result.attached ? "success" : "info" });
+            this._resetSelection();
+            this.state.drawerRow = false;
+            await this._loadResults();
+        } finally { this.state.mutating = false; }
     }
 
     async _applySchedules(payload) {
@@ -230,31 +292,51 @@ export class MvPrelogFuzzyMatching extends Component {
                 payload, Number(f.programId), f.weekStart, Number(f.version),
             ]);
             this.notification.add(result.message, { type: "success" });
-            this.state.selectedRows = {};
+            this._resetSelection();
             this.state.drawerRow = false;
             await this._loadResults();
         } finally { this.state.mutating = false; }
     }
 
     async setRemoved(removed, row = false) {
-        const ids = row ? [row.id] : this.selectedRows().map((item) => item.id);
-        if (!ids.length) {
+        const count = row ? 1 : this.selectedCount;
+        if (!count) {
             this.notification.add("Select at least one Prelog row.", { type: "info" });
             return;
         }
         const verb = removed ? "remove" : "unremove";
         const warning = removed
-            ? `Remove ${ids.length} row(s)? Any attached Schedule ID will be cleared.`
-            : `Unremove ${ids.length} row(s)? Schedule suggestions will be recalculated.`;
+            ? `Remove ${count} row(s)? Any attached Schedule ID will be cleared.`
+            : `Unremove ${count} row(s)? Schedule suggestions will be recalculated.`;
         if (!window.confirm(warning)) return;
-        const f = this.state.filters;
         this.state.mutating = true;
         try {
-            const result = await this.orm.call("mv.prelog_data", "fuzzy_match_set_removed", [
-                ids, removed, Number(f.programId), f.weekStart, Number(f.version), f.importJobId || false,
-            ]);
-            this.notification.add(result.message || `${ids.length} row(s) ${verb}d.`, { type: "success" });
-            this.state.selectedRows = {};
+            const result = await this.orm.call(
+                "mv.prelog_data", "fuzzy_workbench_bulk_action",
+                this._bulkArgs(removed ? "remove" : "unremove", row)
+            );
+            this.notification.add(result.message || `${count} row(s) ${verb}d.`, { type: "success" });
+            this._resetSelection();
+            this.state.drawerRow = false;
+            await this._loadResults();
+        } finally { this.state.mutating = false; }
+    }
+
+    async deleteSelected(row = false) {
+        const count = row ? 1 : this.selectedCount;
+        if (!count) {
+            this.notification.add("Select at least one Prelog row.", { type: "info" });
+            return;
+        }
+        if (!window.confirm(`Permanently delete ${count} Prelog row(s)? This cannot be undone.`)) return;
+        this.state.mutating = true;
+        try {
+            const result = await this.orm.call(
+                "mv.prelog_data", "fuzzy_workbench_bulk_action",
+                this._bulkArgs("delete", row)
+            );
+            this.notification.add(result.message, { type: "success" });
+            this._resetSelection();
             this.state.drawerRow = false;
             await this._loadResults();
         } finally { this.state.mutating = false; }
@@ -267,7 +349,7 @@ export class MvPrelogFuzzyMatching extends Component {
         try {
             const result = await this.orm.call("mv.prelog_data", "fuzzy_match_detach", [[
                 row.id,
-            ], Number(f.programId), f.weekStart, Number(f.version), f.importJobId || false]);
+            ], f.programId || false, f.weekStart || false, f.version || false, f.importJobId || false]);
             this.notification.add(result.message, { type: "success" });
             this.state.drawerRow = false;
             await this._loadResults();
@@ -295,14 +377,14 @@ export class MvPrelogFuzzyMatching extends Component {
     closeDrawer() { this.state.drawerRow = false; this.state.manualSchedule = ""; }
 
     async onExport() {
-        if (!this._filtersAreComplete()) return;
+        if (!this._filtersAreValid()) return;
         const f = this.state.filters;
         this.state.exporting = true;
         try {
             const result = await this.orm.call("mv.prelog_data", "fuzzy_workbench_export_csv", [
-                Number(f.programId), f.weekStart, Number(f.version), this.state.activeTab,
+                f.programId || false, f.weekStart || false, f.version || false, this.state.activeTab,
                 this.state.searchTerm, this.state.airDate || false, this.state.issueFilter,
-                this.state.sortBy, f.importJobId || false,
+                this.state.sortBy, f.importJobId || false, this.state.sortDirection,
             ]);
             const blob = new Blob(["\ufeff", result.content || ""], { type: "text/csv;charset=utf-8" });
             const url = window.URL.createObjectURL(blob);
@@ -324,6 +406,31 @@ export class MvPrelogFuzzyMatching extends Component {
         await this._loadResults();
     }
 
+    async onSort(column) {
+        if (this.state.querying || this.state.mutating) return;
+        if (this.state.sortBy === column) {
+            this.state.sortDirection = this.state.sortDirection === "asc" ? "desc" : "asc";
+        } else {
+            this.state.sortBy = column;
+            this.state.sortDirection = "asc";
+        }
+        this.state.offset = 0;
+        this._resetSelection();
+        this.state.drawerRow = false;
+        await this._loadResults();
+    }
+
+    sortAria(column) {
+        if (this.state.sortBy !== column) return "none";
+        return this.state.sortDirection === "desc" ? "descending" : "ascending";
+    }
+
+    sortIcon(column) {
+        if (this.state.sortBy !== column) return "fa fa-sort mv-fuzzy__sort-icon";
+        const direction = this.state.sortDirection === "desc" ? "down" : "up";
+        return `fa fa-sort-${direction} mv-fuzzy__sort-icon is-active`;
+    }
+
     formatRate(value) {
         const number = Number(value || 0);
         return Number.isFinite(number) ? number.toLocaleString(undefined, {
@@ -331,6 +438,16 @@ export class MvPrelogFuzzyMatching extends Component {
         }) : "";
     }
     statusBadge(row) { return `mv-fuzzy__status mv-fuzzy__status--${row.status}`; }
+    tabTitle() {
+        return {
+            all: "All",
+            matched: "Matched",
+            unmatched: "Unmatched",
+            suggestions: "Fuzzy Suggestions",
+            no_suggestion: "No Suggestion",
+            removed: "Removed",
+        }[this.state.activeTab] || "All";
+    }
 
     async openPrelog(row) {
         await this.action.doAction({
@@ -338,12 +455,9 @@ export class MvPrelogFuzzyMatching extends Component {
             res_id: row.id, views: [[false, "form"]], target: "current",
         });
     }
-    async openSchedule(schedule) {
-        if (!schedule) return;
-        await this.action.doAction({
-            type: "ir.actions.act_window", name: schedule.name, res_model: "mv.schedules",
-            res_id: schedule.id, views: [[false, "form"]], target: "current",
-        });
+    scheduleOpenUrl(schedule) {
+        if (!schedule?.id) return "#";
+        return `/odoo/mv.schedules/${schedule.id}`;
     }
 }
 

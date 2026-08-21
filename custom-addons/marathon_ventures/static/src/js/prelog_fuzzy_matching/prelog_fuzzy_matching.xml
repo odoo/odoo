@@ -17,9 +17,9 @@
         <section class="mv-fuzzy__filter-card">
           <div class="mv-fuzzy__filter-grid">
             <label class="mv-fuzzy__field">
-              <span>Program / Network</span>
+              <span>Program / Network <small>Optional</small></span>
               <select t-on-change="onProgramChange" t-att-disabled="state.querying or state.mutating">
-                <option value="">Choose a Program</option>
+                <option value="">All Programs</option>
                 <option t-foreach="state.programs" t-as="program" t-key="program.id"
                         t-att-value="program.id" t-att-selected="program.id === state.filters.programId">
                   <t t-esc="program.name"/><t t-if="program.inactive"> (Inactive)</t>
@@ -27,15 +27,15 @@
               </select>
             </label>
             <label class="mv-fuzzy__field">
-              <span>Week <small>Monday</small></span>
+              <span>Week <small>Optional · Monday</small></span>
               <input type="date" t-att-value="state.filters.weekStart"
                      t-on-change="onWeekChange" t-att-disabled="state.querying or state.mutating"/>
             </label>
             <label class="mv-fuzzy__field">
-              <span>Version</span>
+              <span>Version <small>Optional</small></span>
               <select t-on-change="onVersionChange"
-                      t-att-disabled="!state.filters.programId or !state.filters.weekStart or state.querying or state.mutating">
-                <option value=""><t t-esc="state.versions.length ? 'Choose a version' : 'No versions'"/></option>
+                      t-att-disabled="state.querying or state.mutating">
+                <option value="">All Versions</option>
                 <option t-foreach="state.versions" t-as="version" t-key="version"
                         t-att-value="version" t-att-selected="version === state.filters.version">
                   Version <t t-esc="version"/>
@@ -58,6 +58,7 @@
           <nav class="mv-fuzzy__tabs" aria-label="Prelog status">
             <button t-att-class="state.activeTab === 'all' ? 'active' : ''" t-on-click="() => this.setTab('all')">All <span t-esc="state.counts.all"/></button>
             <button t-att-class="state.activeTab === 'matched' ? 'active' : ''" t-on-click="() => this.setTab('matched')">Matched <span t-esc="state.counts.matched"/></button>
+            <button t-att-class="state.activeTab === 'unmatched' ? 'active' : ''" t-on-click="() => this.setTab('unmatched')">Unmatched <span t-esc="state.counts.unmatched"/></button>
             <button t-att-class="state.activeTab === 'suggestions' ? 'active' : ''" t-on-click="() => this.setTab('suggestions')">Fuzzy Suggestions <span t-esc="state.counts.suggestions"/></button>
             <button t-att-class="state.activeTab === 'no_suggestion' ? 'active' : ''" t-on-click="() => this.setTab('no_suggestion')">No Suggestion <span t-esc="state.counts.no_suggestion"/></button>
             <button t-att-class="state.activeTab === 'removed' ? 'active' : ''" t-on-click="() => this.setTab('removed')">Removed <span t-esc="state.counts.removed"/></button>
@@ -78,23 +79,19 @@
               <option value="length">Length issue</option><option value="ambiguous">Tied schedules</option>
               <option value="missing_deal">Missing deal #</option>
             </select>
-            <select class="mv-fuzzy__compact-input" t-on-change="(ev) => this.state.sortBy = ev.target.value">
-              <option value="air_date">Sort: Air date</option><option value="deal_number">Sort: Deal #</option>
-              <option value="advertiser_product">Sort: Adv/Product</option>
-            </select>
             <button class="btn btn-outline-primary btn-sm" t-on-click="onFilter" t-att-disabled="state.querying">Apply</button>
           </div>
 
           <div class="mv-fuzzy__results-toolbar">
             <div>
-              <h2><t t-esc="state.activeTab === 'suggestions' ? 'Fuzzy Suggestions' : state.activeTab.replace('_', ' ')"/></h2>
+              <h2 t-esc="tabTitle()"/>
               <p t-if="state.total">Showing <t t-esc="visibleRangeStart"/>–<t t-esc="visibleRangeEnd"/> of <t t-esc="state.total"/></p>
               <p t-else="">No rows in this view.</p>
             </div>
             <div class="mv-fuzzy__bulk-actions">
               <span t-if="selectedCount"><strong t-esc="selectedCount"/> selected</span>
               <button class="btn btn-success btn-sm" t-on-click="attachSuggested"
-                      t-if="state.activeTab === 'all' or state.activeTab === 'suggestions'"
+                      t-if="state.activeTab === 'all' or state.activeTab === 'unmatched' or state.activeTab === 'suggestions'"
                       t-att-disabled="!selectedCount or state.mutating">Attach Suggested</button>
               <button class="btn btn-outline-danger btn-sm" t-on-click="() => this.setRemoved(true)"
                       t-if="state.activeTab !== 'removed'" t-att-disabled="!selectedCount or state.mutating">
@@ -104,7 +101,22 @@
                       t-if="state.activeTab === 'removed'" t-att-disabled="!selectedCount or state.mutating">
                 <i class="fa fa-undo me-1"/>Unremove
               </button>
+              <button class="btn btn-danger btn-sm" t-on-click="() => this.deleteSelected()"
+                      t-att-disabled="!selectedCount or state.mutating">
+                <i class="fa fa-trash me-1"/>Delete
+              </button>
             </div>
+          </div>
+
+          <div class="mv-fuzzy__select-all" t-if="canSelectAllMatching">
+            All <strong t-esc="state.rows.length"/> rows on this page are selected.
+            <button type="button" t-on-click="selectEveryMatchingRow">
+              Select all <t t-esc="state.total"/> matching rows
+            </button>
+          </div>
+          <div class="mv-fuzzy__select-all" t-if="state.selectAllMatching and selectedCount">
+            All <strong t-esc="selectedCount"/> matching rows are selected.
+            <button type="button" t-on-click="clearSelection">Clear selection</button>
           </div>
 
           <div class="mv-fuzzy__loading" t-if="state.querying"><i class="fa fa-spinner fa-spin"/> Loading Prelog rows…</div>
@@ -116,8 +128,17 @@
             <table class="mv-fuzzy__table mv-fuzzy__table--workbench">
               <thead><tr>
                 <th class="mv-fuzzy__check"><input type="checkbox" t-att-checked="allPageSelected" t-on-change="toggleAll"/></th>
-                <th>Status</th><th>Prelog</th><th>Network</th><th>Air Date / Time</th><th>Length</th>
-                <th>Rate</th><th>Network Deal #</th><th>Adv / Product</th><th>Schedule</th><th>Reason</th><th>Details</th>
+                <th t-att-aria-sort="sortAria('status')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('status')"><span>Status</span><i t-att-class="sortIcon('status')"/></button></th>
+                <th t-att-aria-sort="sortAria('name')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('name')"><span>Prelog</span><i t-att-class="sortIcon('name')"/></button></th>
+                <th t-att-aria-sort="sortAria('network')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('network')"><span>Network</span><i t-att-class="sortIcon('network')"/></button></th>
+                <th t-att-aria-sort="sortAria('air_date')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('air_date')"><span>Air Date / Time</span><i t-att-class="sortIcon('air_date')"/></button></th>
+                <th t-att-aria-sort="sortAria('length')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('length')"><span>Length</span><i t-att-class="sortIcon('length')"/></button></th>
+                <th t-att-aria-sort="sortAria('rate')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('rate')"><span>Rate</span><i t-att-class="sortIcon('rate')"/></button></th>
+                <th t-att-aria-sort="sortAria('deal_number')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('deal_number')"><span>Network Deal #</span><i t-att-class="sortIcon('deal_number')"/></button></th>
+                <th t-att-aria-sort="sortAria('advertiser_product')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('advertiser_product')"><span>Adv / Product</span><i t-att-class="sortIcon('advertiser_product')"/></button></th>
+                <th t-att-aria-sort="sortAria('schedule')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('schedule')"><span>Schedule</span><i t-att-class="sortIcon('schedule')"/></button></th>
+                <th t-att-aria-sort="sortAria('reason')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('reason')"><span>Reason</span><i t-att-class="sortIcon('reason')"/></button></th>
+                <th>Details</th>
               </tr></thead>
               <tbody>
                 <tr t-foreach="state.rows" t-as="row" t-key="row.id" t-att-class="isSelected(row) ? 'is-selected' : ''">
@@ -131,8 +152,10 @@
                   <td t-esc="row.deal_number"/>
                   <td><span class="mv-fuzzy__advertiser-product" t-att-title="row.advertiser_product" t-esc="row.advertiser_product"/></td>
                   <td>
-                    <button t-if="row.attached" class="mv-fuzzy__record-link" t-on-click="() => this.openSchedule(row.attached)" t-esc="row.attached.name"/>
-                    <button t-elif="row.suggested" class="mv-fuzzy__record-link" t-on-click="() => this.openSchedule(row.suggested)" t-esc="row.suggested.name"/>
+                    <a t-if="row.attached" class="mv-fuzzy__record-link" target="_blank" rel="noopener"
+                       t-att-href="scheduleOpenUrl(row.attached)" t-on-click.stop="() => {}" t-esc="row.attached.name"/>
+                    <a t-elif="row.suggested" class="mv-fuzzy__record-link" target="_blank" rel="noopener"
+                       t-att-href="scheduleOpenUrl(row.suggested)" t-on-click.stop="() => {}" t-esc="row.suggested.name"/>
                     <span t-else="" class="mv-fuzzy__muted">No suggestion</span>
                     <span class="mv-fuzzy__quality mv-fuzzy__quality--exact" t-if="row.status === 'suggestion' and row.match_quality === 'exact'">Exact</span>
                     <span class="mv-fuzzy__quality mv-fuzzy__quality--fuzzy" t-if="row.status === 'suggestion' and row.match_quality === 'fuzzy'">Fuzzy</span>
@@ -175,7 +198,8 @@
               <span class="mv-fuzzy__quality mv-fuzzy__quality--fuzzy" t-if="state.drawerRow.status === 'suggestion' and state.drawerRow.match_quality === 'fuzzy'">Fuzzy</span>
             </h3>
             <t t-set="schedule" t-value="state.drawerRow.attached or state.drawerRow.suggested"/>
-            <dl class="mv-fuzzy__details"><dt>Name</dt><dd><button class="mv-fuzzy__record-link" t-on-click="() => this.openSchedule(schedule)" t-esc="schedule.name"/></dd>
+            <dl class="mv-fuzzy__details"><dt>Name</dt><dd><a class="mv-fuzzy__record-link" target="_blank" rel="noopener"
+              t-att-href="scheduleOpenUrl(schedule)" t-on-click.stop="() => {}" t-esc="schedule.name"/></dd>
               <dt>Rotation</dt><dd t-esc="schedule.time_range or '—'"/><dt>Days</dt><dd t-esc="schedule.days_allowed or '—'"/>
               <dt>Length / Rate</dt><dd><t t-esc="schedule.length"/> · $<t t-esc="formatRate(schedule.rate)"/></dd><dt>Deal #</dt><dd t-esc="schedule.deal_number"/>
             </dl>
@@ -199,6 +223,7 @@
             <button class="btn btn-outline-secondary w-100 mb-2" t-on-click="() => this.openPrelog(state.drawerRow)"><i class="fa fa-external-link me-1"/>Open Full Prelog Record</button>
             <button class="btn btn-outline-danger w-100" t-if="state.drawerRow.status !== 'removed'" t-on-click="() => this.setRemoved(true, state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-ban me-1"/>Remove Prelog Data</button>
             <button class="btn btn-outline-success w-100" t-if="state.drawerRow.status === 'removed'" t-on-click="() => this.setRemoved(false, state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-undo me-1"/>Unremove Prelog Data</button>
+            <button class="btn btn-danger w-100 mt-2" t-on-click="() => this.deleteSelected(state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-trash me-1"/>Permanently Delete Prelog Data</button>
           </section>
         </div>
       </aside>
