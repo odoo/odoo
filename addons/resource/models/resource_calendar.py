@@ -182,7 +182,7 @@ class ResourceCalendar(models.Model):
 
     def _compute_work_resources_count(self):
         resources_per_calendar = dict(self.env['resource.resource']._read_group(
-            domain=[('calendar_id', 'in', self.ids)],
+            domain=[('calendar_id', 'in', self.ids), ('resource_type', '=', 'material')],
             groupby=['calendar_id'],
             aggregates=['__count']))
         for calendar in self:
@@ -216,21 +216,43 @@ class ResourceCalendar(models.Model):
                 return True
         return False
 
+    def _get_unique_name(self, name, company_id):
+        domain = [('name', '=', name)]
+        domain.append(('company_id', '=', company_id)) if company_id else domain.append(('company_id', '=', False))
+
+        if self.id:
+            domain.append(('id', '!=', self.id))
+
+        if self.search_count(domain):
+            return self._get_unique_name(self.env._("%s (copy)", name), company_id)
+        return name
+
     # --------------------------------------------------
     # Overrides
     # --------------------------------------------------
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", calendar.name)) for calendar, vals in zip(self, vals_list)]
+        return [
+            dict(vals, name=calendar._get_unique_name(vals.get('name', calendar.name), vals.get('company_id', calendar.company_id.id)))
+            for calendar, vals in zip(self, vals_list)
+        ]
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if 'name' in vals:
+                company_id = vals.get('company_id') or self.env.company.id
+                vals['name'] = self._get_unique_name(vals['name'], company_id)
         calendars = super().create(vals_list)
         calendars._get_attendances_to_unlink().unlink()
         return calendars
 
     def write(self, vals):
+        if 'name' in vals:
+            for calendar in self:
+                company_id = vals.get('company_id', calendar.company_id.id)
+                vals['name'] = calendar._get_unique_name(vals['name'], company_id)
         res = super().write(vals)
         self._get_attendances_to_unlink().unlink()
         return res

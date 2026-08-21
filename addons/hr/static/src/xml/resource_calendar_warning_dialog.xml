@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.ResourceCalendarWarningDialog">
+        <Dialog size="'md'" title.translate="Resource Calendar Update?">
+            <p>
+                This Working Schedule is linked to 
+                <t t-esc="this.props.employeesCount"/> 
+                other employee(s). Are you sure you want to modify it?
+            </p>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.props.confirmUpdate">
+                    Update All
+                </button>
+                <button class="btn btn-secondary" t-on-click="this.props.createNew">
+                    Create New
+                </button>
+                <button class="btn btn-light" t-on-click="this.props.cancel">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

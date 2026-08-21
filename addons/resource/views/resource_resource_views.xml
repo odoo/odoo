@@ -86,6 +86,7 @@
         <field name="name">Resources</field>
         <field name="res_model">resource.resource</field>
         <field name="view_mode">list,form</field>
+        <field name="domain">[('resource_type', '=', 'material')]</field>
         <field name="context">{
             'default_calendar_id': active_id,
             'search_default_calendar_id': active_id}</field>
