@@ -15,9 +15,10 @@
     pointer-events: auto;
 }
 .tax_mode_badge > div > span {
-    &.active:focus {
-            outline: 0;
-        }
+    &:focus-visible,
+    &.active.focus:not(:focus-visible) {
+        outline: 0;
+    }
 }
 // Special class for the document tax mode in account_move, sale_order and purchase_order
 // Ensuring the margin rules applied in .o_notebook are not broken by the .overlap_badge_tab
