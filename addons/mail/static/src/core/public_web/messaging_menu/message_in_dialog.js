@@ -1,7 +1,5 @@
 import { Message } from "@mail/core/common/message";
 
-import { propComputed } from "@mail/utils/common/hooks";
-
 import { Component, t, useProps } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
@@ -15,11 +13,13 @@ export class MessageInDialog extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
-        this.close = useProps.static("close", t.function([]));
+        this.props = useProps({
+            close: t.function([]).static(),
+            message: t.signal(t.instanceOf(this.store["mail.message"])),
+        });
     }
 
     get title() {
-        return this.message().thread?.displayName ?? _t("Message");
+        return this.props.message().thread?.displayName ?? _t("Message");
     }
 }
