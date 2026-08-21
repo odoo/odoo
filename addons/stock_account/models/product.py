@@ -336,60 +336,51 @@ class ProductProduct(models.Model):
         return product_value.value if product_value else self.standard_price
 
     def _get_last_product_value(self, date=None, lot=False):
+        pvs_by_product, pvs_by_lot = self._get_last_product_value_batch(date=date, lots=lot or None)
+        if lot:
+            # We have to take the most recent `product_value` for each lot, either the one specific to the lot or the one specific to the product.
+            candidates = [pv for pv in (pvs_by_lot.get(lot), pvs_by_product.get(lot.product_id)) if pv]
+            if candidates:
+                pvs_by_product = {**pvs_by_product, lot.product_id: max(candidates, key=lambda pv: (pv.date, pv.id))}
+        return pvs_by_product
+
+    def _get_last_product_value_batch(self, date=None, lots=None):
         domain = Domain([
             ('product_id', 'in', self.ids),
             ('move_id', '=', False),
             ('company_id', '=', self.env.company.id),
         ])
-        if lot:
-            domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])
+        if lots:
+            # Lot-specific values (lot_id != False) and product-level values (lot_id = False)
+            domain &= Domain(['|', ('lot_id', 'in', lots._as_query()), ('lot_id', '=', False)])
         else:
+            # Product-level values only (lot_id = False)
             domain &= Domain([('lot_id', '=', False)])
         if date:
             domain &= Domain([('date', '<=', date)])
 
         query = self.env['product.value'].sudo()._search(domain)
-        query_select = SQL('distinct ON (product_value.product_id) product_value.id')
-        query.order = SQL('product_value.product_id, product_value.date DESC, product_value.id DESC')
-        query._ids = tuple(id_ for id_, in self.env.execute_query(query.select(query_select)))
-        product_values = self.env['product.value'].browse(query._ids)
-        product_values.sudo().fetch(['product_id', 'value', 'date'])
-        return {pv.product_id: pv for pv in product_values}
-
-    def _get_last_product_value_batch(self, date=None, lots=None):
-        # Product-level values (lot_id = False)
-        product_value_by_product = self._get_last_product_value(date=date)
-        product_value_by_lot = {}
-
-        if lots:
-            # Lot-specific values (lot_id != False)
-            domain = Domain([
-                ('product_id', 'in', self.ids),
-                ('move_id', '=', False),
-                ('company_id', '=', self.env.company.id),
-                ('lot_id', 'in', lots._as_query()),
-            ])
-            if date:
-                domain &= Domain([('date', '<=', date)])
-
-            query = self.env['product.value'].sudo()._search(domain)
-            query.order = SQL('product_value.lot_id, product_value.date DESC, product_value.id DESC')
-            query._ids = tuple(
-                id_ for id_, in self.env.execute_query(
-                    query.select(SQL('distinct ON (product_value.lot_id) product_value.id'))
-                )
+        query.order = SQL('product_value.product_id, product_value.lot_id, product_value.date DESC, product_value.id DESC')
+        query._ids = tuple(
+            id_ for id_, in self.env.execute_query(
+                query.select(SQL('distinct ON (product_value.product_id, product_value.lot_id) product_value.id')),
             )
-            pvs_lot = self.env['product.value'].browse(query._ids)
-            pvs_lot.sudo().fetch(['lot_id', 'product_id', 'value', 'date'])
+        )
+        pvs = self.env['product.value'].browse(query._ids)
+        pvs.sudo().fetch(['lot_id', 'product_id', 'value', 'date'])
 
-            # Merge: use whichever is more recent per lot (lot-specific or product-level)
-            for pv in pvs_lot:
-                product_pv = product_value_by_product.get(pv.product_id)
-                product_value_by_lot[pv.lot_id] = pv if not product_pv or pv.date >= product_pv.date else product_pv
+        product_value_by_product = {pv.product_id: pv for pv in pvs if not pv.lot_id}
+        lot_value_by_lot = {pv.lot_id: pv for pv in pvs if pv.lot_id}
 
-            for lot in lots - pvs_lot.lot_id:
-                if pv := product_value_by_product.get(lot.product_id):
-                    product_value_by_lot[lot] = pv
+        # Merge: use whichever is more recent per lot (lot-specific or product-level),
+        # falling back on the product-level value for lots without a specific one
+        product_value_by_lot = {}
+        for lot in lots or ():
+            lot_pv, product_pv = lot_value_by_lot.get(lot), product_value_by_product.get(lot.product_id)
+            if lot_pv and (not product_pv or lot_pv.date >= product_pv.date):
+                product_value_by_lot[lot] = lot_pv
+            elif product_pv:
+                product_value_by_lot[lot] = product_pv
 
         return product_value_by_product, product_value_by_lot
 
@@ -524,9 +515,7 @@ class ProductProduct(models.Model):
         )
 
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
-        move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
-
+        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'picked', 'value', 'product_id', 'company_id']
         product, valuation_from_date = False, False
         batch_size = 50000
 
@@ -546,13 +535,12 @@ class ProductProduct(models.Model):
                     continue
                 product_move_ids.append(move.id)
 
-            valued_qty.update(moves_batch._get_valued_qty_batch())
             self.env['stock.move'].invalidate_model()
 
         for moves_batch in split_every(batch_size, product_move_ids):
             moves_batch = self.env['stock.move'].browse(moves_batch)
             moves_batch.fetch(move_fields)
-            moves_batch.move_line_ids.fetch(move_line_fields)
+            valued_qty = moves_batch._get_valued_qty_batch()
             for move in moves_batch:
                 vq = valued_qty.get(move.id, {})
 
@@ -568,11 +556,6 @@ class ProductProduct(models.Model):
                 if move.is_in:
                     in_qty = vq.get(False, 0.0)
                     in_value = move.value
-                    if move.is_dropship:
-                        ignore_manual_update = False
-                        if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
-                            ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
-                        in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
 
                     # Product-level
                     previous_qty = quantity
@@ -797,7 +780,7 @@ class ProductProduct(models.Model):
                             product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
 
             elif cost_method == 'average':
-                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+                new_standard_price_by_product = products._run_average_batch(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]

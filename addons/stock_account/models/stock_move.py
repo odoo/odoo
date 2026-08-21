@@ -462,22 +462,18 @@ class StockMove(models.Model):
         )
         # location IS valued: belongs to a company and is internal/transit
         valued_dest = Domain([
-            ('location_dest_id.company_id', '!=', False),
-            ('location_dest_id.usage', 'in', ['internal', 'transit']),
+            ('location_dest_id.is_valued_internal', '=', True),
         ])
         # location is NOT valued: no company or external usage
-        not_valued_src = (
-            Domain([('location_id.company_id', '=', False)])
-            | Domain([('location_id.usage', 'not in', ['internal', 'transit'])])
-        )
-        valued_src = Domain([
-            ('location_id.company_id', '!=', False),
-            ('location_id.usage', 'in', ['internal', 'transit']),
+        not_valued_src = Domain([
+            ('location_id.is_valued_internal', '=', False),
         ])
-        not_valued_dest = (
-            Domain([('location_dest_id.company_id', '=', False)])
-            | Domain([('location_dest_id.usage', 'not in', ['internal', 'transit'])])
-        )
+        valued_src = Domain([
+            ('location_id.is_valued_internal', '=', True),
+        ])
+        not_valued_dest = Domain([
+            ('location_dest_id.is_valued_internal', '=', False),
+        ])
         return base_domain, valued_dest, not_valued_src, valued_src, not_valued_dest
 
     def _get_valued_qty_batch(self):
