@@ -7,7 +7,9 @@ export class AutoresizeInput extends Component {
         className: t.string().optional(""),
         enabled: t.boolean().optional(true),
         inputClassName: t.string().optional(""),
-        inputRef: t.signal(t.instanceOf(HTMLInputElement)).optional(() => signal.ref()),
+        inputRef: t
+            .signal(t.instanceOf(HTMLInputElement), { settable: true })
+            .optional(() => signal.ref()),
         onValidate: t.function([t.string()]).optional(() => () => {}),
         placeholder: t.string().optional(""),
         value: t.signal(t.string()),

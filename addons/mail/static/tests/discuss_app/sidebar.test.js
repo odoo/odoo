@@ -936,6 +936,14 @@ test("shown sidebar list stays while the right-click menu of an item is open", a
 test("hovering a tab shows its list, the active tab staying the one of the conversation", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
     await start();
     await openDiscuss(channelId);
     await click("button[title='Collapse sidebar']");
@@ -945,6 +953,8 @@ test("hovering a tab shows its list, the active tab staying the one of the conve
     await waitFor(
         ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
     );
+    await waitFor(".o-peek .o-mail-MessagingMenuItem:has(:text('Demo')):count(1)");
+    expect(".o-peek .o-mail-MessagingMenuItem:has(:text('General'))").toHaveCount(0);
     await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
     await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
     await hover(".o-mail-DiscussContent");
