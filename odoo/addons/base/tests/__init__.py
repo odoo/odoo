@@ -81,5 +81,10 @@ from . import test_config_parameter
 from . import test_ir_module_category
 from . import test_configmanager
 from . import test_num2words_ar
+<<<<<<< ff8d3195fd8cd14a5f3711a5a60d61acb85bb48c
 from . import test_cli
 from . import test_signature
+||||||| 5d5f5381c27f67a8655a1c18bf1802c877d4cae2
+=======
+from . import test_num2words_es
+>>>>>>> 72e0ee9cbcef49b2db5d5a3816aa34da1431eae7
