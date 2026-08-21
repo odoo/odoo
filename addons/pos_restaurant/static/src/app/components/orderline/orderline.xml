@@ -4,5 +4,15 @@
         <xpath expr="//t[@t-out='vals.unitPart']" position="replace">
             <t t-out="this.line.uiState.splitQty or vals.unitPart"/>
         </xpath>
+
+        <xpath expr="//span[hasclass('text-wrap')]/t[@t-out='vals.name']" position="after">
+            <span t-if="vals.comboParentName" class="text-muted ms-1">
+                [<t t-out="vals.comboParentName"/>]
+            </span>
+        </xpath>
+
+        <xpath expr="//div[hasclass('product-price')]" position="after">
+            <div t-if="vals.isIncluded" class="product-price price fst-italic text-muted">Included</div>
+        </xpath>
     </t>
 </templates>
