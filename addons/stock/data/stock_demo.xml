@@ -2,6 +2,10 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="base.user_light" model="res.users">
+            <field name="group_ids" eval="[Command.link(ref('stock.group_stock_light_user'))]"/>
+        </record>
+
         <record id="base.user_demo" model="res.users">
             <field eval="[(3, ref('group_stock_manager')), (4, ref('group_stock_user'))]" name="group_ids"/>
         </record>
