@@ -53,8 +53,8 @@
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                     </group>
-                                    <group name="group_resupply" string="Resupply" groups="stock.group_stock_multi_warehouses">
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id), ('company_id', '=', company_id)]" widget="many2many_checkboxes" groups="stock.group_stock_multi_warehouses"/>
+                                    <group name="group_resupply" string="Resupply" groups="stock.group_stock_multi_warehouses,base.group_multi_company">
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget="many2many_checkboxes"/>
                                     </group>
                                 </group>
                             </page>
