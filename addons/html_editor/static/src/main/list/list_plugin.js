@@ -1163,7 +1163,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set(
             targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
+        if (!listItems.size || (mode !== "color" && color) || isColorGradient(color)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
@@ -1184,6 +1184,9 @@ export class ListPlugin extends Plugin {
 
                     if (node.style.color) {
                         removeStyle(node, "color");
+                    }
+                    if (node.style.backgroundColor) {
+                        removeStyle(node, "background-color");
                     }
                 }
 
