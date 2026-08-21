@@ -1831,3 +1831,57 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 10.0},
             {'account_id': self.account_expense.id, 'debit': 10.0, 'credit': 0.0},
         ])
+
+    def test_cogs_average_multiple_invoices_and_deliveries(self):
+        """
+        In average perpetual
+        Deliver and Invoice 10 units with average cost at $10
+        In the same SO: Deliver and Invoice 1 unit with average cost at $5
+
+        The global COGS should be $105, with an average cogs of ~$9,55.
+        """
+
+        # INVOICE 1: Sell and Invoice 10 units with an average price of $10
+        self._make_in_move(self.product_avco_auto, 10, 10)
+        self.assertEqual(self.product_avco_auto.standard_price, 10)
+
+        sale_order = self._so_deliver(self.product_avco_auto, 10, 20)
+
+        invoice1 = sale_order._create_invoices()
+        invoice1.action_post()
+
+        # INVOICE 2: Add 1 unit when average price is $5
+        self._make_in_move(self.product_avco_auto, 1, 5)
+        self.assertEqual(self.product_avco_auto.standard_price, 5)
+
+        order_line = sale_order.order_line
+        order_line.product_uom_qty = 11
+
+        move = order_line.move_ids.filtered(lambda sm: sm.state != "done")
+        move.write({'quantity': 1, 'picked': True})
+        move.picking_id.button_validate()
+        self.assertEqual(move.value, -5)
+
+        # Change price to $7, should not impact the COGS
+        self._make_in_move(self.product_avco_auto, 1, 7)
+        self.assertEqual(self.product_avco_auto.standard_price, 7)
+
+        invoice2 = sale_order._create_invoices()
+        invoice2.action_post()
+
+        # COGS: Ensure the COGS and Move value matches
+        moves_value = sum(order_line.move_ids.mapped("value"))
+        self.assertEqual(moves_value, -105)
+
+        cogs_line_1 = invoice1.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        cogs_line_2 = invoice2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+
+        cogs_value = sum((cogs_line_1 | cogs_line_2).mapped('credit'))
+        self.assertEqual(cogs_value, 105)
+
+        self.assertRecordValues((cogs_line_1 | cogs_line_2), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 95.45},
+            {'account_id': self.account_expense.id, 'debit': 95.45, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 9.55},
+            {'account_id': self.account_expense.id, 'debit': 9.55, 'credit': 0.0},
+        ])
