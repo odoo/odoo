@@ -1185,6 +1185,37 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(orderpoint.uom_id, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
 
+    def test_replenish_orderpoint_keeps_first_vendor(self):
+        """
+        Check that replenishing a reordering rule orders from the first vendor of
+        the product at its best price, even when a lower-priority vendor is cheaper.
+        """
+        cheaper_vendor = self.env['res.partner'].create({'name': 'Jones'})
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'is_storable': True,
+            'seller_ids': [
+                Command.create({'partner_id': self.partner.id, 'sequence': 1, 'price': 100}),
+                Command.create({'partner_id': cheaper_vendor.id, 'sequence': 2, 'price': 50}),
+                Command.create({'partner_id': self.partner.id, 'sequence': 3, 'price': 80}),
+            ],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 10,
+        })
+
+        orderpoint.action_replenish()
+
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertRecordValues(po_line, [
+            {'partner_id': self.partner.id, 'product_qty': 10, 'price_unit': 80},
+        ])
+
     def test_tax_po_line_reordering_rule_with_branch_company(self):
         """
         Test that the parent company tax is correctly set in the purchase order line

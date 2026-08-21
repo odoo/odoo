@@ -77,14 +77,17 @@ class TestReplenishWizard(PurchaseTestCommon):
         self.assertEqual(po.order_line.price_unit, 100)
 
     def test_chose_supplier_2(self):
-        """ Choose supplier based on the ordered quantity and minimum price
+        """
+        Check that the vendor kept for the replenishment is the first one having an
+        offer for the ordered quantity, at its best price, even when another vendor
+        is cheaper.
 
         replenish 10
 
         1)seq1 vendor1 140 min qty 1
         2)seq2 vendor2 90  min qty 10
         3)seq3 vendor1 100 min qty 10
-        -> 2) should be chosen
+        -> 3) should be chosen
         """
         self._use_route_buy(self.product, create_seller=False)
 
@@ -121,8 +124,8 @@ class TestReplenishWizard(PurchaseTestCommon):
             'warehouse_id': self.warehouse.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
-        self.assertEqual(po.partner_id, vendor2)
-        self.assertEqual(po.order_line.price_unit, 90)
+        self.assertEqual(po.partner_id, vendor1)
+        self.assertEqual(po.order_line.price_unit, 100)
 
     def test_chose_supplier_3(self):
         """ Choose supplier based on the ordered quantity and minimum price
@@ -236,6 +239,40 @@ class TestReplenishWizard(PurchaseTestCommon):
         self.assertEqual(po.partner_id, self.vendor)
         self.assertEqual(po.order_line.price_unit, 110)
         self.assertEqual(po.order_line.discount, 20.0)
+
+    def test_chose_supplier_6(self):
+        """
+        Check that the vendor proposed by the replenish wizard is the one offering the
+        best price among all the vendors of the product, whatever their order in the list,
+        since the user can still change it before ordering.
+        """
+        self._use_route_buy(self.product, create_seller=False)
+        vendor1, vendor2 = self.env['res.partner'].create([
+            {'name': 'vendor1', 'email': 'from.test@example.com'},
+            {'name': 'vendor2', 'email': 'from.test2@example.com'},
+        ])
+        self.env['product.supplierinfo'].create([
+            {
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'partner_id': vendor1.id,
+                'price': 170,
+                'sequence': 1,
+            }, {
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'partner_id': vendor2.id,
+                'price': 10,
+                'sequence': 2,
+            },
+        ])
+
+        wizard_form = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id))
+        wizard_form.quantity = 1
+        wizard_form.route_id = self.route_buy
+        self.assertEqual(wizard_form.partner_id, vendor2, "The wizard should propose the cheapest vendor")
+
+        po = self._get_purchase_order_from_replenishment(wizard_form.save())
+        self.assertEqual(po.partner_id, vendor2)
+        self.assertEqual(po.order_line.price_unit, 10)
 
     def test_supplier_delay(self):
         self._use_route_buy(self.product, create_seller=False)
