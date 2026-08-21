@@ -1249,10 +1249,13 @@ class TestHrAttendanceOvertime(HttpCase):
             company_be = self.env['res.company'].create({'name': 'Odoo BE'})
             company_de = self.env['res.company'].create({'name': 'Odoo DE'})
 
-            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
-                holiday_form.name = 'Armistice Day'
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
-                holiday_form.save()
+            self.env['resource.calendar.leaves'].with_company(company_be).create({
+                'name': 'Armistice Day',
+                'date_from': datetime(2025, 11, 11, 0, 0, 0),
+                'date_to': datetime(2025, 11, 11, 23, 59, 59),
+                'calendar_id': company_be.resource_calendar_id.id,
+                'company_id': company_be.id,
+            })
 
             ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
                 'name': 'Ruleset schedule timing',
@@ -1310,19 +1313,16 @@ class TestHrAttendanceOvertime(HttpCase):
         """
         with freeze_time("2025-11-11 12:00:00"):
             self.env.user.tz = 'UTC'  # to avoid to shift the public holidays hours
-            company_be = self.env['res.company'].create({
-                'name': 'Odoo BE',
-                'resource_calendar_id': self.calendar_40h.id
-            })
-            company_de = self.env['res.company'].create({
-                'name': 'Odoo DE',
-                'resource_calendar_id': self.calendar_40h.id
-            })
+            company_be = self.env['res.company'].create({'name': 'Odoo BE'})
+            company_de = self.env['res.company'].create({'name': 'Odoo DE'})
 
-            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
-                holiday_form.name = 'Armistice Day'
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
-                holiday_form.save()
+            self.env['resource.calendar.leaves'].with_company(company_be).create({
+                'name': 'Armistice Day',
+                'date_from': datetime(2025, 11, 11, 0, 0, 0),
+                'date_to': datetime(2025, 11, 11, 23, 59, 59),
+                'calendar_id': company_be.resource_calendar_id.id,
+                'company_id': company_be.id,
+            })
 
             ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
                 'name': 'Ruleset schedule timing',
