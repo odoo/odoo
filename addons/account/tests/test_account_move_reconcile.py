@@ -625,6 +625,25 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': -40.0,      'amount_residual_currency': -120.0, 'reconciled': False},
         ])
 
+    def test_reconciled_lines_excluding_exchange_diff_on_partial_payment(self):
+        """ Test reconciliation widget is given the correct reconciled values
+        """
+        currency = self.other_currency
+
+        line_1 = self.create_line_for_reconciliation(120.0, 240.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        amls = line_1 + line_2 + line_3
+
+        amls.reconcile()
+        self.assertEqual(line_1.reconciled_lines_excluding_exchange_diff_ids, line_2 + line_3)
+        self.assertRecordValues(line_1, [{
+            'count_reconciled_lines': 4,
+            'first_reconciled_lines_id': line_2.id,
+            'count_reconciled_lines_excluding_exchange_diff': 2,
+            'first_reconciled_lines_excluding_exchange_diff_id': line_2.id,
+        }])
+
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_income_partial_payment(self):
         currency = self.other_currency
 
