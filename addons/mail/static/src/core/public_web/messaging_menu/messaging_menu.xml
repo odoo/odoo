@@ -20,7 +20,7 @@
                     </t>
                     <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" searchTerm="this.searchTerm"/>
                 </div>
-                <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
+                <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1 scrollbar-width-none" role="tablist">
                     <button
                         class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill px-3 flex-shrink-0"
                         t-att-class="{ 'o-active': !this.state().selectedFilter, 'text-muted': this.state().selectedFilter }"
@@ -41,7 +41,7 @@
                     />
                 </div>
             </div>
-            <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-px-1_5">
+            <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto scrollbar-width-thin flex-grow-1 o-px-1_5">
                 <NotificationItem
                     t-if="this.showPushPermissionRequest"
                     important="1"
@@ -98,7 +98,7 @@
 </t>
 
 <t t-name="mail.MessagingMenu-navigation">
-    <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 p-1 gap-2 overflow-auto h-100 border-end border-dark o-border-opacity-7_5 o-scrollbar-thin">
+    <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 p-1 gap-2 overflow-auto h-100 border-end border-dark o-border-opacity-7_5 scrollbar-width-thin">
         <button
             t-foreach="this.visibleTabs" t-key="tab.localId" t-as="tab"
             class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"

@@ -2,12 +2,13 @@
     overflow: hidden;
 
     > body {
+        --CustomScrollBar-gutter: stable both-edges;
+
         overflow-x: hidden;
         overflow-y: auto;
         width: calc(100% / 3.33);
         height: 100%;
         background-color: unset;
-        scrollbar-gutter: stable both-edges;
     }
     .o_snippets_preview_row {
         position: absolute; // Needed for RTL

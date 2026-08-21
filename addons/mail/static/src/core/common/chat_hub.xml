@@ -53,7 +53,7 @@
             </button>
         </div>
         <t t-set-slot="content">
-            <ul class="m-0 p-0 overflow-auto o-scrollbar-thin bg-100" role="menu">
+            <ul class="m-0 p-0 overflow-auto scrollbar-width-thin bg-100" role="menu">
                 <t t-foreach="this.chatHub.folded.slice(this.chatHub.maxFolded)" t-as="chatWindow" t-key="chatWindow.localId">
                     <li class="o-mail-ChatHub-hiddenItem gap-2 px-2 py-1" role="menuitem" t-att-name="chatWindow.channel.displayName" t-on-click="() => chatWindow.open({ focus: true })">
                         <img class="o-mail-ChatHub-hiddenAvatar rounded-circle object-fit-cover" t-att-src="chatWindow.channel.avatarUrl" alt="Channel image" draggable="false"/>

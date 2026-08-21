@@ -104,9 +104,10 @@
 }
 
 .o-tab-content {
+    --CustomScrollBar__thumb-color: #{$o-we-bg-lightest};
+    --CustomScrollBar__track-color: #{$o-we-bg-darker};
+
     border-top: $o-we-border-width solid $o-we-bg-lighter;
-    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
-    scrollbar-width: thin;
     will-change: scroll-position;
     opacity: 1;
     transition: opacity 0.2s ease;

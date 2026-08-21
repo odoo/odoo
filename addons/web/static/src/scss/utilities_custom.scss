@@ -225,16 +225,16 @@ $utilities: map-merge(
 
 @each $scrollbar-size in 'auto', 'thin', 'none' {
     .scrollbar-width-#{$scrollbar-size} {
-        --CustomScrollBar-width: #{$scrollbar-size};
+        scrollbar-width: #{$scrollbar-size};
     }
 }
 
 @each $scrollbar-gutter in 'auto', 'stable', 'both' {
     .scrollbar-gutter-#{$scrollbar-gutter} {
         @if ($scrollbar-gutter == 'both') {
-            --CustomScrollBar-gutter: stable both-edges;
+            scrollbar-gutter: stable both-edges;
         } @else {
-            --CustomScrollBar-gutter: #{$scrollbar-gutter};
+            scrollbar-gutter: #{$scrollbar-gutter};
         }
     }
 }

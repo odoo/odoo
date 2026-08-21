@@ -31,7 +31,7 @@
                         <t t-else="">No users found.</t>
                     </p>
                     <div t-if="this.state.showingPartialResults" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.showingResultNarrowText"/>
-                    <ul class="pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0}">
+                    <ul class="pb-0 overflow-auto scrollbar-width-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': this.selectablePartners.length === 0 and this.state.selectableEmails.length === 0}">
                         <t t-foreach="this.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
                             <t t-call="discuss.ChannelInvitation-selectableItem"
                                 selectableItemIndex="selectablePartner_index"/>
@@ -47,7 +47,7 @@
             <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
                 <t t-if="this.store.self_user" >
                     <div t-if="this.selectedPartners.length > 0 or this.state.selectedEmails.length > 0" class="pt-2">
-                        <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto o-scrollbar-thin">
+                        <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto scrollbar-width-thin">
                             <t t-foreach="this.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
                                 <button class="btn btn-light o-fw-600 smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
                                     <t t-out="selectedPartner.name"/> <i class="oi border border-dark-subtle ms-1" data-icon="close_small"/>

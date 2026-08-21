@@ -83,8 +83,10 @@
    // Besides the horizontal padding ($o-hb-row-padding-left + map-get($spacers, 2)),
    // we also need to reduce the width by an extra “Spacer 2” to compensate for the
    // editor’s scrollbar.
+    --CustomScrollBar__thumb-color: #{$o-we-bg-lightest};
+    --CustomScrollBar__track-color: #{$o-we-bg-darker};
+
     width: o-to-rem($o-we-sidebar-width) - (2 * map-get($spacers, 2)) - o-to-rem($o-hb-row-padding-left);
-    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
 
     .o_filtered_text {
         --SelectMenu__filteredText-bg-color: #{rgba($o-we-color-accent, .25)};

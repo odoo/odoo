@@ -109,7 +109,7 @@
                 <span t-ref="this.description" class="text-truncate text-muted flex-grow-1" t-out="this.channel.description"/>
                 <span t-if="this.shouldShowMoreDescription" t-on-click="this.unfoldDescription" class="text-primary fw-medium cursor-pointer">more</span>
             </div>
-            <div t-else="" t-ref="this.description" class="o-mail-WelcomePage-IsDescriptionUnfolded text-muted text-break overflow-auto o-scrollbar-thin">
+            <div t-else="" t-ref="this.description" class="o-mail-WelcomePage-IsDescriptionUnfolded text-muted text-break overflow-auto scrollbar-width-thin">
                 <span t-out="this.channel.description"/>
             </div>
         </div>
