@@ -91,7 +91,7 @@ test("Create new record correctly", async function () {
     await contains(".o_control_panel_main_buttons .o_list_button_add").click();
     await contains("[name=name] input").edit("Bilou", { confirm: false });
     await contains("[name=age] input").edit("24", { confirm: false });
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
 
     // Check new record is in the list
     expect(".o_data_row").toHaveCount(4);
@@ -114,7 +114,7 @@ test("Don't duplicate record", async function () {
     await contains(".o_control_panel_main_buttons .o_list_button_add").click();
     await contains("[name=name] input").edit("Leto II Atreides", { confirm: false });
     await contains("[name=age] input").edit("72", { confirm: false });
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
 
     expect(".o_data_row").toHaveCount(3, { message: "should still have 3 records" });
     expect(".o_data_row:eq(2) .o_list_number").toHaveText("72", {
@@ -148,7 +148,7 @@ test("Work in grouped list", async function () {
     await contains(".o_group_field_row_add a").click();
     await contains("[name=name] input").edit("Del Tutorial", { confirm: false });
     await contains("[name=age] input").edit("32", { confirm: false });
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
     // Check we have 2 records...
     expect(".o_data_row").toHaveCount(2);
 
@@ -156,7 +156,7 @@ test("Work in grouped list", async function () {
     await contains(".o_group_field_row_add a").click();
     await contains("[name=name] input").edit("Samuel Oak", { confirm: false });
     await contains("[name=age] input").edit("55", { confirm: false });
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
     // Check we still have 2 records...
     expect(".o_data_row").toHaveCount(2);
 
@@ -165,7 +165,7 @@ test("Work in grouped list", async function () {
     await contains("[name=name] input").edit("Daniel Fortesque", { confirm: false });
     await contains("[name=age] input").edit("55", { confirm: false });
     await contains("[name=job] input").edit("Soldier", { confirm: false }); // let it in its original group
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
     // Check we have 3 records...
     expect(".o_data_row").toHaveCount(3);
 

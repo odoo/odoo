@@ -29,6 +29,10 @@
             background-color: var(--o-input-invalid-bg);
         }
 
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):has(.o_field_invalid):has(:focus-within) {
+            --o-field-box-border-color: #{o-text-color('danger')};
+        }
+
         .o_outlined:focus-within,
         .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value:focus-within,
         .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):focus-within {

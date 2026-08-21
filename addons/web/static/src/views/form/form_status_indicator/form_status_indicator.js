@@ -21,15 +21,17 @@ export function useStatusIndicator(model, actions = {}) {
     };
 }
 
+export const BaseStatusIndicatorSchema = {
+    isDirty: t.boolean(),
+    isValid: t.boolean().optional(true),
+    isNew: t.boolean().optional(false),
+    save: t.function(),
+    discard: t.function(),
+};
+
 export class FormStatusIndicator extends Component {
     static template = "web.FormStatusIndicator";
-    props = useProps({
-        isDirty: t.boolean(),
-        isValid: t.boolean().optional(true),
-        isNew: t.boolean().optional(false),
-        save: t.function(),
-        discard: t.function(),
-    });
+    props = useProps(BaseStatusIndicatorSchema);
 
     get displayButtons() {
         return this.indicatorMode !== "saved";
