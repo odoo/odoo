@@ -12,6 +12,7 @@ import { MessageReactions } from "@mail/core/common/message_reactions";
 import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
+import { groupAttachments } from "@mail/utils/common/attachments";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { Component, computed, proxy, signal, t, untrack, useApp, useProps } from "@odoo/owl";
@@ -333,6 +334,10 @@ export class Message extends Component {
         return this.props.message;
     }
 
+    get attachmentGroups() {
+        return groupAttachments(this.message.extra_body_attachment_ids);
+    }
+
     get showTextVisually() {
         return (
             !this.message.linkPreviewSquash &&
@@ -447,8 +452,9 @@ export class Message extends Component {
         return true;
     }
 
-    onClickAttachmentUnlink(attachment) {
-        return attachment.remove();
+    /** @param {import("models").Attachment[]} attachments */
+    onClickAttachmentUnlink(attachments) {
+        return this.store.removeAttachments(attachments);
     }
 
     /**

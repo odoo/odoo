@@ -19,9 +19,32 @@ $o-mail-attachment-height: 10em;
     }
 }
 
+.o-mail-Attachment-selectCheckbox {
+    width: 1.5em;
+    height: 1.5em;
+    background-color: $body-bg;
+    z-index: 3;
+}
+
 .o-mail-AttachmentCard-image, .o-mail-Attachment-hover-image {
     width: 1.4em;
     height: 1.4em;
+}
+
+.o-mail-Attachment-duplicateCounter {
+    z-index: 3;
+
+    &:hover, &:focus-visible {
+        outline: 2px solid $body-bg;
+    }
+}
+
+.o-mail-Attachment-duplicateList {
+    max-width: 25em;
+}
+
+.o-mail-Attachment-duplicateUnlink:hover {
+    @include button-variant($danger, $danger);
 }
 
 .o-mail-Attachment-hover {

@@ -120,8 +120,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
-                    'attachment_id': create_res['id'],
-                    'access_token': "wrong",
+                    'access_token_by_attachment_id': {create_res['id']: "wrong"},
                 },
             },
         )
@@ -134,8 +133,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
-                    'attachment_id': create_res['id'],
-                    "access_token": create_res["ownership_token"],
+                    'access_token_by_attachment_id': {create_res['id']: create_res["ownership_token"]},
                 },
             },
         )
@@ -150,8 +148,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
-                    'attachment_id': attachment.id,
-                    "access_token": attachment._get_ownership_token(),
+                    'access_token_by_attachment_id': {attachment.id: attachment._get_ownership_token()},
                 },
             },
         )
@@ -174,8 +171,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
-                    'attachment_id': attachment.id,
-                    "access_token": attachment._get_ownership_token(),
+                    'access_token_by_attachment_id': {attachment.id: attachment._get_ownership_token()},
                 },
             },
         )

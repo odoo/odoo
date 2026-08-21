@@ -78,17 +78,38 @@
                     </div>
                     <div class="d-flex flex-column">
                         <AttachmentList
-                            attachments="this.attachments"
-                            unlinkAttachment.bind="this.unlinkAttachment"
+                            attachmentGroups="this.attachmentGroups"
+                            isSelecting="this.state.isSelectingAttachments"
+                            onToggleSelected.bind="this.toggleAttachmentSelected"
+                            selectedAttachments="this.selectedAttachments"
+                            unlinkAttachments.bind="this.unlinkAttachments"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
-                            <t t-set-slot="toggler">
-                                <button class="btn btn-link px-1" type="button" t-att-disabled="!this.state.thread.canPostMessage">
-                                    <i class="oi oi-filled" data-icon="add_box"/>
-                                    Attach files
+                        <div class="o-mail-Chatter-attachmentActions d-flex justify-content-center gap-2 mt-2">
+                            <t t-if="this.state.isSelectingAttachments">
+                                <button class="o-mail-Chatter-deleteSelected btn" type="button" t-att-class="this.state.selectedAttachmentIds.length ? 'btn-danger' : 'btn-secondary'" t-att-disabled="!this.state.selectedAttachmentIds.length" t-on-click="() => this.onClickDeleteSelectedAttachments()">
+                                    <i class="oi oi-filled me-1" data-icon="delete"/>
+                                    <t t-out="this.deleteSelectedAttachmentsLabel"/>
+                                </button>
+                                <button class="o-mail-Chatter-discardSelection btn btn-secondary" type="button" t-on-click="() => this.discardAttachmentSelection()">
+                                    <i class="oi me-1" data-icon="close"/>
+                                    Discard selection
                                 </button>
                             </t>
-                        </FileUploader>
+                            <t t-else="">
+                                <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
+                                    <t t-set-slot="toggler">
+                                        <button class="btn btn-link px-1" type="button" t-att-disabled="!this.state.thread.canPostMessage">
+                                            <i class="oi me-1" data-icon="add"/>
+                                            Attach files
+                                        </button>
+                                    </t>
+                                </FileUploader>
+                                <button t-if="this.attachmentGroups.length > 1" class="o-mail-Chatter-selectFiles btn btn-link px-1" type="button" t-on-click="() => this.onClickSelectAttachments()">
+                                    <i class="oi me-1" data-icon="checklist"/>
+                                    Select files
+                                </button>
+                            </t>
+                        </div>
                     </div>
                 </div>
                 <div t-if="this.state.activePanel === this.CHATTER_PANEL.PINNED_MESSAGES and this.hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">

@@ -149,13 +149,7 @@ export class Attachment extends FileModelMixin(Record) {
      * globally.
      */
     async remove() {
-        if (this.id > 0) {
-            await rpc(
-                "/mail/attachment/delete",
-                assignDefined({ attachment_id: this.id }, { access_token: this.ownership_token })
-            );
-        }
-        this.delete();
+        await this.store.removeAttachments([this]);
     }
 
     get previewName() {

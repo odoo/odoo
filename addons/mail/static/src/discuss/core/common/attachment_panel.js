@@ -4,6 +4,7 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 
 import { Component, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { groupAttachments } from "@mail/utils/common/attachments";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
 
 export class AttachmentPanel extends Component {
@@ -35,15 +36,20 @@ export class AttachmentPanel extends Component {
     }
 
     /**
-     * @return {Object<string, import("models").Attachment[]>}
+     * @return {Object<string, import("@mail/utils/common/attachments").AttachmentGroup[]>}
      */
-    get attachmentsByDate() {
+    get attachmentGroupsByDate() {
         const attachmentsByDate = {};
         for (const attachment of this.props.channel.sortedAttachments) {
             const attachments = attachmentsByDate[attachment.monthYear] ?? [];
             attachments.push(attachment);
             attachmentsByDate[attachment.monthYear] = attachments;
         }
-        return attachmentsByDate;
+        return Object.fromEntries(
+            Object.entries(attachmentsByDate).map(([date, attachments]) => [
+                date,
+                groupAttachments(attachments),
+            ])
+        );
     }
 }

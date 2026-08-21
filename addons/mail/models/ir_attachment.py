@@ -91,6 +91,18 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
+    def _unlink_from_thread_and_notify(self, message):
+        """ Attach the given attachments to the message they are posted on, so
+            that they leave the attachment list of their thread while staying on
+            that message: removing a file from that list is not meant to edit
+            the messages using it. They are then deleted along with the message.
+
+            :param message: the message the attachments are posted on
+        """
+        self.write({"res_model": message._name, "res_id": message.id})
+        for attachment in self:
+            Store(bus_channel=attachment).add(attachment, {"res_model": message._name, "thread": False})
+
     def _store_ownership_fields(self, res: Store.FieldList):
         res.attr("ownership_token", lambda a: a._get_ownership_token())
 
@@ -99,7 +111,8 @@ class IrAttachment(models.Model):
         res.attr("raw_access_token", lambda a: a._get_raw_access_token())
         res.attr("res_name")
         res.attr("res_model")
-        res.one("thread", [], as_thread=True)
+        # an attachment kept on its message alone has no thread to belong to
+        res.one("thread", [], as_thread=True, predicate=lambda a: a.res_model != "mail.message")
         res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token())
         res.extend(["type", "url"])
 

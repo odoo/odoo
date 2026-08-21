@@ -12,9 +12,9 @@
                         <t t-elif="this.props.channel.channel_type === 'channel'">This channel doesn't have any attachments.</t>
                         <t t-else="">This conversation doesn't have any attachments.</t>
                     </p>
-                    <div t-else="" t-foreach="this.attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
+                    <div t-else="" t-foreach="this.attachmentGroupsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
                         <DateSection date="dateDay" className="'my-1'"/>
-                        <AttachmentList attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                        <AttachmentList attachmentGroups="dateDay_value" unlinkAttachments="(attachments) => this.attachmentUploadService.unlink(attachments)"/>
                     </div>
                 </div>
                 <span t-ref="this.loadOlderRef"/>

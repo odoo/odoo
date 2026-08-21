@@ -671,6 +671,50 @@ export class Store extends BaseStore {
         });
     }
 
+    /**
+     * Delete the given attachments in a single query.
+     * Uploading attachments are cancelled.
+     *
+     * @param {import("models").Attachment[]} attachments
+     * @param {Object} [options]
+     * @param {boolean} [options.keepOnMessages=false] only remove the
+     *  attachments posted on a message from their thread, keeping them on that
+     *  message: trimming the attachment list of a record is not meant to edit
+     *  the messages of that record.
+     */
+    async removeAttachments(attachments, { keepOnMessages = false } = {}) {
+        const uploadService = this.env.services["mail.attachment_upload"];
+        const uploading = [];
+        if (uploadService) {
+            for (const att of attachments) {
+                if (uploadService.uploadingAttachmentIds.has(att.id)) {
+                    uploading.push(att);
+                }
+            }
+            if (uploading.length) {
+                uploadService.cancelUploads(uploading);
+            }
+        }
+        const stored = attachments.filter(({ id }) => id > 0);
+        let keptIds = [];
+        if (stored.length) {
+            const { kept_attachment_ids } = await rpc("/mail/attachment/delete", {
+                access_token_by_attachment_id: Object.fromEntries(
+                    stored.map(({ id, ownership_token }) => [id, ownership_token ?? null])
+                ),
+                keep_on_messages: keepOnMessages,
+            });
+            keptIds = kept_attachment_ids;
+        }
+        for (const attachment of attachments) {
+            if (keptIds.includes(attachment.id)) {
+                attachment.thread = undefined; // only leaves the attachment list of the thread
+            } else {
+                attachment.delete();
+            }
+        }
+    }
+
     getNextTemporaryId() {
         const lastMessageId = this.getLastMessageId();
         if (prevLastMessageId === lastMessageId) {

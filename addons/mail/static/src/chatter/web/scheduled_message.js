@@ -1,6 +1,7 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { groupAttachments } from "@mail/utils/common/attachments";
 import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, signal, types, useProps } from "@odoo/owl";
@@ -55,6 +56,10 @@ export class ScheduledMessage extends Component {
         );
     }
 
+    get attachmentGroups() {
+        return groupAttachments(this.props.scheduledMessage.attachment_ids.map((a) => a));
+    }
+
     async cancel() {
         const thread = this.props.scheduledMessage.thread;
         await this.props.scheduledMessage.cancel();
@@ -65,8 +70,9 @@ export class ScheduledMessage extends Component {
         this.props.scheduledMessage.store.handleClickOnLink(ev, this.props.scheduledMessage.thread);
     }
 
-    async onClickAttachmentUnlink(attachment) {
-        attachment.remove();
+    /** @param {import("models").Attachment[]} attachments */
+    async onClickAttachmentUnlink(attachments) {
+        await this.store.removeAttachments(attachments);
     }
 
     onClickAuthor(ev) {

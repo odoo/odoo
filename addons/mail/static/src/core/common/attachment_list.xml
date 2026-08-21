@@ -10,98 +10,174 @@
             t-ref="this.rootRef"
         >
             <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.env.inComposer}" role="menu" >
-                <div t-foreach="this.props.attachments" t-as="attachment" t-key="attachment.id"
-                     t-att-aria-label="attachment.name"
-                     class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
-                     t-att-title="attachment.name ? attachment.name : undefined"
-                     t-att-class="{
+                <t t-foreach="this.props.attachmentGroups" t-as="group" t-key="group.attachment.id">
+                    <t t-set="attachment" t-value="group.attachment" />
+                    <div t-att-aria-label="attachment.name"
+                        class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
+                        t-att-title="attachment.name ? attachment.name : undefined"
+                        t-att-class="{
                         'o-inMessage': this.env.inMessage,
                         'o-inChatter': this.env.inChatter,
                         'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
-                        'o-viewable': attachment.isViewable,
+                        'o-viewable': attachment.isViewable and !this.props.isSelecting,
                     }"
-                     tabindex="0"
-                     t-att-data-mimetype="attachment.mimetype"
-                     t-on-click="() => this.onClickAttachment(attachment)"
-                     role="menuitem"
-                >
-                    <!-- display of image attachments-->
-                    <Gif
-                        t-if="attachment.mimetype === 'image/gif'"
-                        src="this.getImageUrl(attachment)"
-                        paused="attachment.gifPaused"
-                        alt="attachment.name"
-                        class="this.attClassObjectToString({
+                        tabindex="0"
+                        t-att-data-mimetype="attachment.mimetype"
+                        t-on-click="() => this.onClickAttachment(attachment)"
+                        role="menuitem"
+                    >
+                        <input t-if="this.props.isSelecting" type="checkbox"
+                            class="o-mail-Attachment-selectCheckbox form-check-input position-absolute top-0 start-0 m-1 pe-none"
+                            t-att-checked="this.isSelected(attachment)"
+                            t-att-aria-label="'Select ' + attachment.name" />
+                        <!-- display of image attachments-->
+                        <Gif
+                            t-if="attachment.mimetype === 'image/gif'"
+                            src="this.getImageUrl(attachment)"
+                            paused="attachment.gifPaused"
+                            alt="attachment.name"
+                            class="this.attClassObjectToString({
                             'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
                             'o-inMessage': this.env.inMessage,
                             'o-inChatter object-fit-scale': this.env.inChatter,
                             'object-fit-contain': !this.env.inChatter and this.env.inMessage,
                             'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
                         })"
-                    />
-                    <img
-                        t-elif="attachment.isImage"
-                        class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
-                        t-att-class="{
+                        />
+                        <img
+                            t-elif="attachment.isImage"
+                            class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
+                            t-att-class="{
                             'o-inComposer': this.env.inComposer,
                             'o-inMessage': this.env.inMessage,
                             'o-inChatter object-fit-scale': this.env.inChatter,
                             'object-fit-contain': !this.env.inChatter and this.env.inMessage,
                             'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
                         }"
-                        t-att-src="this.getImageUrl(attachment)"
-                        t-att-alt="attachment.name"
-                        t-on-load="this.onImageLoaded"
-                    />
-                    <!-- display of non image attachments -->
-                    <div t-else="" class="o-mail-AttachmentCard d-flex flex-column w-100 h-100">
-                        <div class="d-flex justify-content-center align-items-center flex-grow-1 bg-white position-relative rounded-3 rounded-bottom-0" t-on-click="() => this.onClickAttachment(attachment)">
-                            <t t-if="attachment.has_thumbnail">
-                                <img t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name" class="object-fit-contain position-absolute top-0 start-0 w-100 h-100 rounded-top-3"/>
-                                <i t-if="attachment.isVideo" class="oi oi-2x oi-filled" data-icon="play_circle"/>
+                            t-att-src="this.getImageUrl(attachment)"
+                            t-att-alt="attachment.name"
+                            t-on-load="this.onImageLoaded"
+                        />
+                        <!-- display of non image attachments -->
+                        <div t-else="" class="o-mail-AttachmentCard d-flex flex-column w-100 h-100">
+                            <div
+                                class="d-flex justify-content-center align-items-center flex-grow-1 bg-white position-relative rounded-3 rounded-bottom-0"
+                                t-on-click="() => this.onClickAttachment(attachment)">
+                                <t t-if="attachment.has_thumbnail">
+                                    <img t-att-src="attachment.thumbnailUrl"
+                                        t-att-alt="attachment.name"
+                                        class="object-fit-contain position-absolute top-0 start-0 w-100 h-100 rounded-top-3" />
+                                    <i t-if="attachment.isVideo" class="oi oi-2x oi-filled"
+                                        data-icon="play_circle" />
+                                </t>
+                                <div t-else="" class="o_image" role="menuitem" aria-label="Preview"
+                                    t-att-tabindex="-1" t-att-aria-disabled="false"
+                                    t-att-data-mimetype="attachment.mimetype" />
+                            </div>
+                            <div
+                                class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
+                                <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0"
+                                    role="menuitem" aria-label="Preview" t-att-tabindex="-1"
+                                    t-att-aria-disabled="false"
+                                    t-att-data-mimetype="attachment.mimetype" />
+                                <div t-if="attachment.name"
+                                    class="text-truncate align-items-center fw-bold"
+                                    t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+                            </div>
+                        </div>
+                        <!-- hover information (not for mobile view) -->
+                        <div t-if="!this.isMobileOS"
+                            class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex align-items-end o-opacity-hoverable opacity-100-hover opacity-0 rounded-3"
+                            t-att-class="{ 'o-bgTranslucent': attachment.isImage or attachment.isVideo or attachment.isPdf, 'pe-5': group.duplicates.length > 1 }">
+                            <t t-if="!attachment.isPdf">
+                                <div class="d-flex flex-row align-items-start gap-2">
+                                    <img t-if="attachment.isImage"
+                                        src="/mail/static/src/img/image_icon.png"
+                                        class="mw-100 mh-100 rounded o-mt-0_5" draggable="false" />
+                                    <div t-else=""
+                                        class="o-mail-Attachment-hover-image o_image flex-shrink-0"
+                                        t-att-data-mimetype="attachment.mimetype" />
+                                    <div t-if="attachment.name"
+                                        class="o-mail-Attachment-hoverImageText o_line_clamp fw-bold text-break lh-sm"
+                                        t-att-class="{ 'o-text-white': attachment.isImage }"
+                                        t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+                                </div>
+                                <div t-if="attachment.file_size"
+                                    class="ms-4 o-mt-0_5 flex-shrink-0 text-nowrap"
+                                    t-att-class="{ 'ps-1': !attachment.isImage }">
+                                    <span class="opacity-75"
+                                        t-att-class="{ 'o-text-white': attachment.isImage }">
+                                        <t t-out="Math.round(attachment.file_size / 1024, 4)" /> KB </span>
+                                </div>
                             </t>
-                            <div t-else="" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                        </div>
-                         <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
-                            <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                            <div t-if="attachment.name" class="text-truncate align-items-center fw-bold" t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
-                        </div>
-                    </div>
-                    <!-- hover information (not for mobile view) -->
-                    <div t-if="!this.isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex align-items-end o-opacity-hoverable opacity-100-hover opacity-0 rounded-3" t-att-class="{ 'o-bgTranslucent': attachment.isImage or attachment.isVideo or attachment.isPdf }">
-                        <t t-if="!attachment.isPdf">
-                            <div class="d-flex flex-row align-items-start gap-2">
-                                <img t-if="attachment.isImage" src="/mail/static/src/img/image_icon.png" class="mw-100 mh-100 rounded o-mt-0_5" draggable="false" />
-                                <div t-else="" class="o-mail-Attachment-hover-image o_image flex-shrink-0" t-att-data-mimetype="attachment.mimetype" />
-                                <div t-if="attachment.name" class="o-mail-Attachment-hoverImageText o_line_clamp fw-bold text-break lh-sm" t-att-class="{ 'o-text-white': attachment.isImage }" t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+                            <!-- buttons on hover -->
+                            <div t-if="!this.props.isSelecting"
+                                class="o-mail-AttachmentButtons btn-group position-absolute top-0 end-0 p-2">
+                                <a t-if="!attachment.isImage and attachment.type === 'url'"
+                                    class="btn btn-secondary" t-att-href="attachment.url"
+                                    target='_blank' title="Open Link">
+                                    <i class="oi" data-icon="open_in_new" role="img"
+                                        aria-label="Open Link" />
+                                </a>
+                                <button t-elif="this.canDownload(attachment)"
+                                    class="btn btn-secondary"
+                                    t-on-click.stop="() => this.onClickDownload(attachment)"
+                                    title="Download">
+                                    <i class="oi" data-icon="download" role="img"
+                                        aria-label="Download" />
+                                </button>
+                                <button t-if="this.showDelete(attachment)"
+                                    class="o-mail-Attachment-unlink btn btn-secondary"
+                                    t-att-class="{ 'o-inComposer': this.env.inComposer }"
+                                    t-on-click.stop="() => this.onClickUnlink(attachment, group.duplicates)"
+                                    title="Remove">
+                                    <i class="oi oi-filled" data-icon="delete" role="img"
+                                        aria-label="Remove" />
+                                </button>
                             </div>
-                            <div t-if="attachment.file_size" class="ms-4 o-mt-0_5" t-att-class="{ 'ps-1': !attachment.isImage }">
-                                <span class="opacity-75" t-att-class="{ 'o-text-white': attachment.isImage }">
-                                    <t t-out="Math.round(attachment.file_size / 1024, 4)" /> KB
-                                </span>
-                            </div>
-                        </t>
-                        <!-- buttons on hover -->
-                        <div class="o-mail-AttachmentButtons btn-group position-absolute top-0 end-0 p-2">
-                            <a t-if="!attachment.isImage and attachment.type === 'url'" class="btn btn-secondary" t-att-href="attachment.url" target='_blank' title="Open Link">
-                                <i class="oi" data-icon="open_in_new" role="img" aria-label="Open Link"/>
-                            </a>
-                            <button t-elif="this.canDownload(attachment)" class="btn btn-secondary" t-on-click.stop="() => this.onClickDownload(attachment)" title="Download">
-                                <i class="oi" data-icon="download" role="img" aria-label="Download"/>
-                            </button>
-                            <button t-if="this.showDelete(attachment)" class="o-mail-Attachment-unlink btn btn-secondary" t-att-class="{ 'o-inComposer': this.env.inComposer }" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
-                                <i class="oi oi-filled" data-icon="delete" role="img" aria-label="Remove"/>
-                            </button>
+                        </div>
+                        <!-- dropdown (for mobile view only) -->
+                        <Actions t-elif="!this.props.isSelecting" actions="this.getActions(attachment, group.duplicates)" />
+                        <!-- same button as below, minus the dropdown: selecting toggles the whole group -->
+                        <button t-if="group.duplicates.length > 1 and this.props.isSelecting"
+                            class="o-mail-Attachment-duplicateCounter btn btn-primary btn-sm rounded-pill position-absolute bottom-0 end-0 m-1 py-0 px-2 pe-none"
+                            t-out="group.duplicates.length" />
+                        <Dropdown t-elif="group.duplicates.length > 1"
+                            menuClass="'o-mail-Attachment-duplicateList d-flex flex-column py-0'"
+                            position="'bottom-end'">
+                            <button
+                                class="o-mail-Attachment-duplicateCounter btn btn-primary btn-sm rounded-pill position-absolute bottom-0 end-0 m-1 py-0 px-2"
+                                title="Show all copies" aria-label="Show all copies"
+                                t-out="group.duplicates.length" />
+                            <t t-set-slot="content">
+                                <div t-foreach="group.duplicates" t-as="duplicate"
+                                    t-key="duplicate.id"
+                                    class="o-mail-Attachment-duplicate d-flex align-items-center gap-2 px-2 py-1">
+                                    <div class="d-flex align-items-center gap-1 flex-grow-1">
+                                        <span class="text-truncate" t-out="duplicate.name" />
+                                        <span t-if="duplicate.create_date"
+                                            class="flex-shrink-0 smaller text-muted">– <t
+                                                t-out="this.formatDateTime(duplicate.create_date)" /></span>
+                                    </div>
+                                    <button t-if="this.showDelete(duplicate)"
+                                        class="o-mail-Attachment-duplicateUnlink btn btn-secondary btn-sm py-0"
+                                        t-on-click.stop="() => this.onClickUnlink(duplicate)"
+                                        title="Remove">
+                                        <i class="oi oi-filled" data-icon="delete" role="img"
+                                            aria-label="Remove" />
+                                    </button>
+                                </div>
+                            </t>
+                        </Dropdown>
+                        <!-- uploading info -->
+                        <div t-if="attachment.uploading"
+                            class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center"
+                            title="Uploading">
+                            <i class="oi oi-spin" data-icon="autorenew" />
                         </div>
                     </div>
-                    <!-- dropdown (for mobile view only) -->
-                    <Actions t-else="" actions="this.getActions(attachment)"/>
-                    <!-- uploading info -->
-                    <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
-                        <i class="oi oi-spin" data-icon="autorenew"/>
-                    </div>
-                </div>
+                </t>
             </div>
         </div>
     </t>

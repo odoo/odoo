@@ -6,6 +6,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
+import { groupAttachments } from "@mail/utils/common/attachments";
 import { propComputed, useSelection, useVisible } from "@mail/utils/common/hooks";
 import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
@@ -551,6 +552,10 @@ export class Composer extends Component {
         return this.thread.rpcParams;
     }
 
+    get attachmentGroups() {
+        return groupAttachments(this.props.composer.attachments);
+    }
+
     get isSendButtonDisabled() {
         const attachments = this.props.composer.attachments;
         return (
@@ -560,13 +565,19 @@ export class Composer extends Component {
         );
     }
 
-    /** @param {import("models").Attachment} attachment */
-    async unlinkAttachment(attachment) {
-        if (this.message && attachment.in(this.message.attachment_ids)) {
+    /**
+     * @param {import("models").Attachment[]} attachments
+     */
+    async unlinkAttachments(attachments) {
+        const posted = this.message
+            ? attachments.filter((attachment) => attachment.in(this.message.attachment_ids))
+            : [];
+        for (const attachment of posted) {
             this.composer().attachments.delete(attachment);
-            return;
         }
-        await this.attachmentUploader.unlink(attachment);
+        await this.attachmentUploader.unlink(
+            attachments.filter((attachment) => !posted.includes(attachment))
+        );
     }
 
     get hasSuggestions() {
