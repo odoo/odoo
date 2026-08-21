@@ -255,6 +255,16 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+     <record id="hr_work_entry.l10n_be_work_entry_type_partial_incapacity" model="hr.work.entry.type">
+        <field name="time_off_selectable" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+     <record id="hr_work_entry.l10n_be_work_entry_type_illness_half_time_12m_workers_initiative" model="hr.work.entry.type">
+        <field name="time_off_selectable" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
         <field name="requires_allocation">True</field>
         <field name="employee_requests">True</field>
