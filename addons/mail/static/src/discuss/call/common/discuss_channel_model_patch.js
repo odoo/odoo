@@ -37,6 +37,21 @@ const DiscussChannelPatch = {
         this.videoCount = this.computed(
             () => this.rtc_session_ids.filter((s) => s.hasVideo).length
         );
+        this.isFullscreenPromotable = false;
+        this.videoCountNotSelf = this.computed(
+            () =>
+                this.rtc_session_ids.filter(
+                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
+                ).length
+        );
+        this.onChange(
+            () => [this.videoCountNotSelf, this.chatWindow?.isOpen],
+            function onChangeFullscreenPromotable() {
+                this.isFullscreenPromotable =
+                    this.videoCountNotSelf > 0 && this.chatWindow?.isOpen ? true : false;
+            },
+            { immediate: true }
+        );
         this.focusStack = fields.Many("discuss.channel.rtc.session");
         /**
          * Remote participants talking, or stopped less than {@link SPEAKER_WINDOW} ago, in the

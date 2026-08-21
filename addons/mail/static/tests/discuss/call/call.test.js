@@ -2508,6 +2508,31 @@ test("confirm before switching calls", async () => {
     await contains(".o-discuss-CallMenu-channelInfo:text('channel2')");
 });
 
+test("show fullscreen tooltip and suppress microphone warning when another participant's camera is on", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const rtc = getService("discuss.rtc");
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const aliceRemote = network.makeMockRemote(aliceMemberId);
+    await click("[title='Join Call']");
+    await aliceRemote.updateConnectionState("connected");
+    await contains(".o-discuss-Call");
+    rtc.microphonePermission = "denied";
+    await aliceRemote.updateInfo({ is_camera_on: true });
+    await contains(".o-discuss-CallActionList button[title='More']");
+    await contains(".o_popover:contains('No microphone permissions')");
+    await contains(".o-discuss-FullscreenTooltip:text('Switch to fullscreen mode')", { count: 0 });
+    await click(".o_popover [data-icon = close]");
+    await contains(".o_popover:contains('No microphone permissions')", { count: 0 });
+    await contains(".o-discuss-FullscreenTooltip:text('Switch to fullscreen mode')");
+});
+
 test("meeting ready banner is hidden in chat but shown in channel", async () => {
     mockBrowserFullscreen();
     let meeting;
