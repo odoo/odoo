@@ -1,6 +1,5 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -14,6 +13,7 @@ import {
     useListener,
     useOnChange,
     usePlugin,
+    useProps,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
@@ -53,10 +53,8 @@ export class Discuss extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = usePropsPlus({
-            channel: propStatic(
-                t.signal(t.instanceOf(this.store["discuss.channel"])).optional(() => signal(null))
-            ),
+        this.props = useProps({
+            channel: t.signal(t.instanceOf(this.store["discuss.channel"])).optional(),
             hasSidebar: t.boolean().optional(true),
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
