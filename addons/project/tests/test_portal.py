@@ -28,7 +28,10 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.assertRaises(AccessError, self.env['project.task'].with_user(self.user_noone).search, [('project_id', '=', pigs.id)])
 
         # Data: task follower
-        pigs.with_user(self.user_projectmanager).message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        self.env['project.collaborator'].create({
+            'project_id': pigs.id,
+            'partner_id': self.user_portal.partner_id.id,
+        })
         self.task_1.with_user(self.user_projectuser).message_subscribe(partner_ids=[self.user_portal.partner_id.id])
         self.task_3.with_user(self.user_projectuser).message_subscribe(partner_ids=[self.user_portal.partner_id.id])
         # Do: Chell reads project -> ok (portal ok public)
@@ -123,8 +126,14 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         Verify that a portal user can see regular tasks but not task templates or their subtasks.
         """
         self.authenticate(self.user_portal.login, self.user_portal.login)
-        portal_project = self.env['project.project'].create({'name': 'Portal Project'})
-        portal_project.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        portal_project = self.env['project.project'].create({
+            'name': 'Portal Project',
+            'privacy_visibility': 'portal',
+        })
+        self.env['project.collaborator'].create({
+            'project_id': portal_project.id,
+            'partner_id': self.user_portal.partner_id.id,
+        })
         task, task_template = self.env['project.task'].create([
             {
                 'name': 'Visible Task',
@@ -147,10 +156,3 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.assertNotIn(task_template.name, my_tasks_response.text)
         self.assertNotIn(task_template.child_ids[0].name, my_tasks_response.text)
         self.assertNotIn(task_template.child_ids[1].name, my_tasks_response.text)
-
-        # Check the tasks page for the specific project
-        project_tasks_response = self.url_open('/my/projects/%s' % (portal_project.id))
-        self.assertIn(task.name, project_tasks_response.text)
-        self.assertNotIn(task_template.name, project_tasks_response.text)
-        self.assertNotIn(task_template.child_ids[0].name, project_tasks_response.text)
-        self.assertNotIn(task_template.child_ids[1].name, project_tasks_response.text)

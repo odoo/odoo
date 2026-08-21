@@ -677,9 +677,16 @@ class ProjectProject(models.Model):
             if vals.pop('is_favorite', False):
                 vals['favorite_user_ids'] = [self.env.uid]
         projects = super().create(vals_list)
+        collaborators_to_create = []
         for project in projects:
-            if project.privacy_visibility == 'portal':
-                project.message_subscribe(partner_ids=[project.partner_id.id])
+            if project.privacy_visibility in ['portal', 'invited_users'] and project.partner_id:
+                collaborators_to_create.append({
+                    'project_id': project.id,
+                    'partner_id': project.partner_id.id,
+                    'access_mode': 'view',
+                })
+        if collaborators_to_create:
+            self.env['project.collaborator'].create(collaborators_to_create)
         return projects
 
     def write(self, vals):
@@ -773,7 +780,18 @@ class ProjectProject(models.Model):
                     task.user_ids = task.user_ids.filtered(
                         lambda user: project.company_id in user.company_ids
                     )
-
+        if 'partner_id' in vals or 'privacy_visibility' in vals:
+            collaborators_to_create = []
+            for project in self:
+                if project.privacy_visibility in ['portal', 'invited_users'] and project.partner_id:
+                    if project.partner_id not in project.collaborator_ids.partner_id:
+                        collaborators_to_create.append({
+                            'project_id': project.id,
+                            'partner_id': project.partner_id.id,
+                            'access_mode': 'view',
+                        })
+            if collaborators_to_create:
+                self.env['project.collaborator'].sudo().create(collaborators_to_create)
         return res
 
     def unlink(self):
@@ -1144,12 +1162,18 @@ class ProjectProject(models.Model):
             if project.privacy_visibility == new_visibility:
                 continue
             if new_visibility in ['invited_users', 'portal']:
-                project.message_subscribe(partner_ids=project.partner_id.ids)
+                if project.partner_id and project.partner_id not in project.collaborator_ids.partner_id:
+                    self.env['project.collaborator'].create({
+                            'project_id': project.id,
+                            'partner_id': project.partner_id.id,
+                            'access_mode': 'view',
+                        })
                 for task in project.task_ids.filtered('partner_id'):
                     task.message_subscribe(partner_ids=task.partner_id.ids)
             elif project.privacy_visibility in ['invited_users', 'portal']:
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
+                project.collaborator_ids.unlink()
                 project.with_context(active_test=False).tasks._unsubscribe_portal_users()
                 # revoke access_token since the project and its tasks are no longer accessible for portal/public users
                 project.with_context(active_test=False).tasks.access_token = ''
@@ -1166,7 +1190,7 @@ class ProjectProject(models.Model):
             return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user._is_internal()
 
-    def _add_collaborators(self, partners, limited_access=False):
+    def _add_collaborators(self, partners, access_mode='advanced_edit'):
         self.ensure_one()
         new_collaborators = self._get_new_collaborators(partners)
         if not new_collaborators:
@@ -1175,7 +1199,7 @@ class ProjectProject(models.Model):
         self.write({'collaborator_ids': [
             Command.create({
                 'partner_id': collaborator.id,
-                'limited_access': limited_access,
+                'access_mode': access_mode,
             }) for collaborator in new_collaborators],
         })
 

@@ -50,9 +50,6 @@ class TestProjectSharingUi(HttpCase):
 
         self.project_portal.write({
             'allow_task_dependencies': True,
-            'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id}),
-            ],
         })
 
         project = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
@@ -96,14 +93,9 @@ class TestProjectSharingUi(HttpCase):
             Since a problem to logout Mitchell Admin to log in as Georges user, this test is created
             to launch a tour with portal user.
         """
-        self.env['project.share.wizard'].create({
-            'res_model': 'project.project',
-            'res_id': self.project_portal.id,
-            'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
-            ],
-        })
-
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.partner_portal
+        ).write({'access_mode': 'advanced_edit'})
         self.project_portal.write({
             'task_ids': [Command.create({
                 'name': "Test Project Sharing",
@@ -113,13 +105,9 @@ class TestProjectSharingUi(HttpCase):
         self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1')
 
     def test_03_project_sharing(self):
-        self.env['project.share.wizard'].create({
-            'res_model': 'project.project',
-            'res_id': self.project_portal.id,
-            'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
-            ],
-        })
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.partner_portal
+        ).write({'access_mode': 'advanced_edit'})
 
         self.project_portal.write({
             'task_ids': [Command.create({

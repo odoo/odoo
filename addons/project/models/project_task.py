@@ -1115,6 +1115,20 @@ class ProjectTask(models.Model):
             if field and field.type == 'many2one':
                 self.env[field.comodel_name].browse(value).check_access('read')
 
+        if self.env.user._is_portal() and not self.env.su:
+            if {'stage_id', 'priority'}.intersection(vals.keys()):
+                project_ids = set(self.project_id.ids)
+                if vals.get('project_id'):
+                    project_ids.add(vals['project_id'])
+                if project_ids:
+                    advanced_collabs_count = self.env['project.collaborator'].sudo().search_count([
+                        ('project_id', 'in', list(project_ids)),
+                        ('partner_id', '=', self.env.user.partner_id.id),
+                        ('access_mode', '=', 'advanced_edit'),
+                    ])
+                    if advanced_collabs_count != len(project_ids):
+                        raise AccessError(self.env._("You need Advanced Edit access to change the stage or priority of a task."))
+
     def _set_stage_on_project_from_task(self):
         tasks_with_stage = self.filtered(lambda t: t.stage_id and t.project_id)
         if not tasks_with_stage:
@@ -1261,15 +1275,6 @@ class ProjectTask(models.Model):
         additional_vals = {}
         if self.env.user._is_portal() and not self.env.su:
             self._ensure_fields_write(vals, defaults=False)
-            if {'stage_id', 'priority'}.intersection(vals.keys()):
-                if self.project_id.ids:
-                    advanced_collabs_count = self.env['project.collaborator'].sudo().search_count([
-                        ('project_id', 'in', self.project_id.ids),
-                        ('partner_id', '=', self.env.user.partner_id.id),
-                        ('limited_access', '=', False),
-                    ])
-                    if advanced_collabs_count != len(self.project_id.ids):
-                        raise AccessError(self.env._("You need Advanced Edit access to change the stage or priority of a task."))
 
         if 'milestone_id' in vals:
             # WARNING: has to be done after 'project_id' vals is written on subtasks
@@ -2235,7 +2240,6 @@ class ProjectTask(models.Model):
 
     def project_sharing_toggle_is_follower(self):
         self.ensure_one()
-        self.check_access('write')
         is_follower = self.message_is_follower
         if is_follower:
             self.sudo().message_unsubscribe(self.env.user.partner_id.ids)

@@ -4,10 +4,10 @@ project_public_members_rule,Project: employees: following required for follower-
                                         ('privacy_visibility', 'in', ['employees', 'portal']),
                                         ('message_partner_ids', 'in', [user.partner_id.id])
                                     ]"
-project_project_rule_portal,Project: portal users: portal and following,project.project,base.group_portal,r,"[
+project_project_rule_portal,Project: portal users: portal and collaborator,project.project,base.group_portal,r,"[
             '&',
                 ('privacy_visibility', 'in', ['invited_users', 'portal']),
-                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                ('collaborator_ids.partner_id', 'in', [user.partner_id.id]),
         ]"
 project_comp_rule,Project: multi-company,project.project,,crud,"[('company_id', 'in', company_ids + [False])]"
 access_project_project_stage,project.project_stage,project.project.stage,base.group_user,r,
