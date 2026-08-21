@@ -767,9 +767,9 @@ class HrVersion(models.Model):
         that shares the same value for `field_name` as the current version.
 
         Useful to determine since when a given field value has been
-        continuously active (e.g. job category, job position, wage, ...).
+        continuously active (e.g. salary scale, job position, wage, ...).
 
-        :param field_name: str, the field to track (e.g. 'l10n_be_job_category_id')
+        :param field_name: str, the field to track (e.g. 'l10n_be_salary_scale_id')
         :return: date or None
         """
         self.ensure_one()
