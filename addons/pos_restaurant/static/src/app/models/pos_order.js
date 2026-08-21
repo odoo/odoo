@@ -90,10 +90,12 @@ patch(PosOrder.prototype, {
         return super.setPartner(...arguments);
     },
     removeOrderline(line, deep = true) {
-        super.removeOrderline(...arguments);
-        if (this.lines.length === 0 && this.hasCourses()) {
-            this.course_ids.forEach((course) => course.delete());
+        const courseId = line.course_id;
+        const result = super.removeOrderline(...arguments);
+        if (courseId && !this.lines.some((l) => l.course_id === courseId)) {
+            courseId.delete();
         }
+        return result;
     },
     cleanCourses() {
         if (!this.hasCourses()) {
@@ -111,7 +113,10 @@ patch(PosOrder.prototype, {
         const removedCourses = [];
         const cleanedCourses = courses
             .filter((course, index) => {
-                const shouldKeep = index <= lastFiredIndex || !course.isEmpty();
+                const hasLines = this.lines.some(
+                    (line) => !line.combo_parent_id && line.course_id === course
+                );
+                const shouldKeep = index <= lastFiredIndex || (hasLines && !course.isEmpty());
                 if (!shouldKeep) {
                     removedCourses.push(course);
                 }
@@ -121,9 +126,7 @@ patch(PosOrder.prototype, {
                 course.index = newIndex + 1;
                 return course;
             });
-        removedCourses.forEach((course) => {
-            course.delete();
-        });
+        removedCourses.forEach((course) => course.delete());
         if (cleanedCourses.length !== originalLength) {
             this.course_ids = cleanedCourses;
         }
