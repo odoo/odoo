@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal, t, toRaw, useProps } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, proxy, signal, t, toRaw, useOnChange, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -70,7 +70,8 @@ export class MultiSelectionButtons extends Component {
                 }
             },
         });
-        useLayoutEffect(
+        useOnChange(
+            () => [this.rootRef()],
             (el) => {
                 if (!el) {
                     return;
@@ -80,8 +81,7 @@ export class MultiSelectionButtons extends Component {
                 const { width } = el.getBoundingClientRect();
                 const left = Math.floor((parentWidth - width) / 2);
                 el.style.setProperty("left", `${left}px`);
-            },
-            () => [this.rootRef()]
+            }
         );
 
         useHotkey("escape", () => {

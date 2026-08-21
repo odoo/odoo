@@ -5,11 +5,10 @@ import {
     onWillUpdateProps,
     signal,
     t,
-    untrack,
     useListener,
+    useOnChange,
     useProps,
 } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 function useResizable({
     containerRef,
@@ -36,13 +35,13 @@ function useResizable({
     });
 
     let docDirection;
-    useLayoutEffect(
+    useOnChange(
+        () => [containerRef()],
         (container) => {
             if (container) {
                 docDirection = getComputedStyle(container).direction;
             }
-        },
-        () => [untrack(containerRef)]
+        }
     );
 
     onMounted(() => {

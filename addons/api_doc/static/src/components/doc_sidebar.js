@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal, untrack } from "@odoo/owl";
+import { Component, proxy, signal, useOnChange } from "@odoo/owl";
 import { simplifyString } from "@api_doc/utils/doc_model_search";
 
 export class DocSidebar extends Component {
@@ -17,11 +16,11 @@ export class DocSidebar extends Component {
             searchValue: "",
         });
 
-        useLayoutEffect(
-            () => {
-                this.containerRef()?.querySelector(":scope .o_active")?.scrollIntoView();
-            },
-            () => [untrack(this.containerRef)]
+        useOnChange(
+            () => [this.containerRef()],
+            (containerEl) => {
+                containerEl?.querySelector(":scope .o_active")?.scrollIntoView();
+            }
         );
 
         for (const addon of this.filteredAddons) {
