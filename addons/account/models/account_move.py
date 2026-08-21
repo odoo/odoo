@@ -7996,3 +7996,15 @@ class AccountMove(models.Model):
         with the Documents app.
         """
         return self.message_main_attachment_id
+
+    def _get_document_partner_ident_line(self):
+        return self.partner_id and (
+            (
+                (tax_ident := self.partner_id._get_preferred_tax_identifier_vals())
+                and f"{self.company_id.account_fiscal_country_id.vat_label or tax_ident.get('category') or 'Tax ID'}: {tax_ident.get('value')}"
+            )
+            or (
+                (legal_ident := self.partner_id._get_preferred_legal_entity_identifier_vals())
+                and f"{legal_ident.get('label') or legal_ident.get('key')}: {legal_ident.get('value')}"
+            )
+        ) or ""
