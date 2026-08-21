@@ -799,3 +799,65 @@ def quoted_identifier(cr, name: str) -> SQL:
     """
     name = quote_ident(name, cr._cnx)
     return SQL(name)  # pylint: disable=sql-injection
+
+
+_TOKEN_SPECIFICATION = [
+    ('PAREN_OPEN', r'\('),
+    ('PAREN_CLOSE', r'\)'),
+    ('LINE_COMMENT', r'--[^\n]*'),
+    ('STATEMENT_TERMINATOR', r';'),
+    ('STRING_LITERAL', r"'[^']*'"),
+    ('QUOTED_IDENTIFIER', r'"[^"]*"'),
+    ('KEYWORD', r'''(?<![\w.])(?:
+                          and | or | with | select | from | where | having | limit | offset | exists
+                        | (?:group|order)\s+by | union(?:\s+all)? | values | returning
+                        | insert\s+into | delete\s+from | update | set
+                        | (?:(?:left|right|full|inner|cross)\s+)?(?:outer\s+)?join
+                    )(?![\w.])'''),
+]
+
+
+_TOKEN_REGEX = re.compile(
+    '|'.join(f'(?P<{name}>{pattern})' for name, pattern in _TOKEN_SPECIFICATION),
+    re.IGNORECASE | re.VERBOSE
+)
+
+
+def format_query(query: str) -> str:
+    """ This is a naive, best-effort SQL query formatter. The result is not meant to be "correct".
+    """
+    lines: list[str] = []
+    line = ''
+    depth = 0  # current parenthesis nesting level
+    end = 0  # end of the previous token in ``query``
+
+    for match in _TOKEN_REGEX.finditer(query):
+        kind = match.lastgroup
+        token = match.group()
+
+        # `finditer` leaps between tokens and we manually grab the raw text we skipped over.
+        line += query[end:match.start()]
+        end = match.end()
+
+        if kind == 'KEYWORD':
+            # start a new line
+            lines.append(line)
+            indent = depth + (token.lower() in ('and', 'or'))  # one level deeper for the conditions of a WHERE clause
+            line = 4 * indent * ' ' + ' '.join(token.split())
+
+        elif kind == 'PAREN_OPEN':
+            depth += 1
+            line += token
+
+        elif kind == 'PAREN_CLOSE':
+            depth -= 1
+            line += token
+
+        else:
+            line += token
+
+    line += query[end:]
+    lines.append(line)
+
+    result = '\n'.join(line.rstrip() for line in lines).strip()
+    return result if result.endswith(';') else result + ';'
