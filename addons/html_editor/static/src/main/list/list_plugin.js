@@ -1,6 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { fillEmpty, removeClass, toggleClass, unwrapContents } from "@html_editor/utils/dom";
+import {
+    fillEmpty,
+    removeClass,
+    removeStyle,
+    toggleClass,
+    unwrapContents,
+} from "@html_editor/utils/dom";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
@@ -1159,7 +1165,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set(
             targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
+        if (!listItems.size || (mode !== "color" && color) || isColorGradient(color)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
@@ -1180,6 +1186,9 @@ export class ListPlugin extends Plugin {
 
                     if (node.style.color) {
                         this.dependencies.color.colorElement(node, color, mode);
+                    }
+                    if (node.style.backgroundColor) {
+                        removeStyle(node, "background-color");
                     }
                 }
 
