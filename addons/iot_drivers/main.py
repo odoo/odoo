@@ -171,7 +171,7 @@ class Manager(Thread):
 
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
-        while 1:
+        while True:
             try:
                 if self._get_changes_to_send():
                     self._send_all_devices()
