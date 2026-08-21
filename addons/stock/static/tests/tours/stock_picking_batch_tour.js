@@ -20,6 +20,10 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
             run: "click",
         },
         {
+            trigger: ".o_data_cell[name=quantity]",
+            run: "click",
+        },
+        {
             trigger: ".modal:contains(open: transfers) .o_list_number > div[name=quantity] input",
             run: "edit 7",
         },
@@ -60,6 +64,10 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
         {
             content: "Click in cell to start edition",
             trigger: ".modal:contains(open: transfers) .o_data_row > td:contains('Product A')",
+            run: "click",
+        },
+        {
+            trigger: ".o_data_cell[name=quantity]",
             run: "click",
         },
         {

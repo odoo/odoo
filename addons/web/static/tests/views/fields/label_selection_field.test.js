@@ -122,7 +122,7 @@ test("LabelSelectionField in editable list view", async () => {
     });
 
     // save and check the result
-    await click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main .o_list_button_save");
     await animationFrame();
     expect(".o_field_widget .badge:not(:empty)").toHaveCount(3, {
         message: "should have three visible status labels",

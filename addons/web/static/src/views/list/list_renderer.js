@@ -1218,11 +1218,22 @@ export class ListRenderer extends Component {
                 this.editedRecord() &&
                 this.isFieldReadonly(cellField, this.editedRecord())
             ) {
-                classNames.push("text-muted");
+                classNames.push("text-muted", "cursor-default");
             } else if (this.isRecordAvailable(record)) {
-                classNames.push("cursor-pointer");
+                if (record.selected) {
+                    classNames.push(
+                        `${
+                            this.isFieldReadonly(column, record)
+                                ? "cursor-default"
+                                : "o_cursor_text"
+                        }`
+                    );
+                } else {
+                    classNames.push("cursor-pointer");
+                }
             }
         }
+
         return classNames.join(" ");
     }
 
@@ -1554,14 +1565,17 @@ export class ListRenderer extends Component {
      * @param {RelationalRecord} record
      * @param {Column} column
      * @param {PointerEvent} ev
+     * @param {Boolean} newWindow
+     * @param {Boolean} allowEditOnReadOnlyCells
      */
-    async onCellClicked(record, column, ev, newWindow) {
+    async onCellClicked(record, column, ev, newWindow, allowEditOnReadOnlyCells) {
         if (ev.target.special_click) {
             return;
         }
 
         const multiEdit = this.props.list.model.multiEdit;
         const hasSelection = !!this.props.list.selection.length;
+        const isCurrentCellReadonly = column && this.isFieldReadonly(column, record);
         if (hasSelection && this.canSelectRecord && (!multiEdit || !record.selected)) {
             this.toggleRecordSelection(record);
         } else if (
@@ -1580,13 +1594,20 @@ export class ListRenderer extends Component {
                     this.lastEditedCell = { column, record };
                     return;
                 }
-                this.focusCell(column, true, clickedSubFieldName);
+                if (isCurrentCellReadonly && !allowEditOnReadOnlyCells) {
+                    document.activeElement?.blur();
+                } else {
+                    this.focusCell(column, true, clickedSubFieldName);
+                }
                 this.cellToFocus = null;
             } else {
                 const recordIndex = this.props.list.records.indexOf(record);
                 await this.resequencePromise;
                 // row might have changed record after resequence
                 record = this.props.list.records[recordIndex] || record;
+                if (isCurrentCellReadonly && !allowEditOnReadOnlyCells) {
+                    return;
+                }
                 await this.props.list.enterEditMode(record);
                 this.cellToFocus = { column, record, subFieldName: clickedSubFieldName };
                 if (
@@ -1594,10 +1615,7 @@ export class ListRenderer extends Component {
                     record.fields[column.name].type === "boolean" &&
                     (!column.widget || column.widget === "boolean")
                 ) {
-                    if (
-                        !this.isFieldReadonly(column, record) &&
-                        !this.evalInvisible(column.invisible, record)
-                    ) {
+                    if (!isCurrentCellReadonly && !this.evalInvisible(column.invisible, record)) {
                         await record.update({ [column.name]: !record.data[column.name] });
                     }
                 }
@@ -1748,7 +1766,7 @@ export class ListRenderer extends Component {
      * @param {Group | null} group
      * @param {RelationalRecord | null} record
      */
-    onCellKeydown(ev, group = null, record = null) {
+    async onCellKeydown(ev, group = null, record = null) {
         if (this.props.list.model.useSampleModel) {
             return;
         }
@@ -2478,11 +2496,13 @@ export class ListRenderer extends Component {
         if (target.closest(".o_datetime_picker")) {
             return;
         }
-        // Save, Discard
+        // Save, Discard, Add
         if (
             target.closest(".o_list_button_save") ||
+            target.closest(".o_list_button_add") ||
             target.closest(".o_list_button_discard") ||
-            target.closest(".o_form_status_indicator_buttons")
+            target.closest(".o_form_status_indicator_buttons") ||
+            target.closest(".o_list_status_indicator_buttons")
         ) {
             return;
         }
@@ -2502,7 +2522,7 @@ export class ListRenderer extends Component {
         if (target.closest("[data-list-ignore-click]")) {
             return;
         }
-        this.props.list.leaveEditMode();
+        this.props.list.leaveEditMode({ canAbandon: true });
     }
 
     /**
