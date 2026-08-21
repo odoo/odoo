@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_not_entire_pack_warning_view_form" model="ir.ui.view">
+        <field name="name">stock.not.entire.pack.warning.form</field>
+        <field name="model">stock.not.entire.pack.warning</field>
+        <field name="arch" type="xml">
+            <form string="Incomplete packages">
+                <p name="explanation-text">
+                    Some packages were intended to be entirely moved but some of the products they contain have not been moved and are still in their source location :
+                </p>
+                <field name="package_ids" nolabel="1">
+                    <list create="0" edit="0">
+                        <field name="display_name" string="Name" context="{'show_src_package': 1}"/>
+                    </list>
+                </field>
+                <p>
+                    Unpack the moved products from these packages to validate the transfer.
+                </p>
+                <footer>
+                    <button name="unpack" string="Unpack" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
