@@ -16,7 +16,8 @@
                             t-ref="iframeRef"/>
                     </div>
                 </div>
-                <div t-if="!props.readonly and props.withBuilder and !props.showThemeSelector and !props.showCodeView">
+                <div t-if="!props.readonly and props.withBuilder and !props.showThemeSelector and !props.showCodeView"
+                    style="align-self: flex-start; position: sticky; top: 0;">
                     <div class="position-sticky o_mass_mailing-builder_sidebar border-start border-dark o_builder_sidebar_open"
                         t-att-class="{ 'd-none': this.env.isSmall }" t-ref="sidebarRef">
                         <LazyComponent t-if="state.ready" Component="'mass_mailing.MassMailingBuilder'"
