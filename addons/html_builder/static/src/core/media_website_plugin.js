@@ -95,16 +95,22 @@ export class MediaWebsitePlugin extends Plugin {
      * Opens the media dialog to replace the selected media.
      *
      * @param {HTMLElement} mediaEl the media element to replace
+     * @param {Object} [dialogParams] extra params forwarded to the media
+     *      dialog (e.g. to restrict/preselect its tabs), overriding the
+     *      default ones.
      */
-    async replaceMedia(mediaEl) {
+    async replaceMedia(mediaEl, dialogParams = {}) {
         const sel = this.dependencies.selection.getEditableSelection();
         const editableEl =
             closestElement(mediaEl || sel.startContainer, ".o_savable") || this.editable;
         const closestSnippetEl = closestElement(mediaEl, "[data-snippet]");
-        const params = this.processThrough(
-            "replace_media_dialog_params_processors",
-            this.getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl })
-        );
+        const params = {
+            ...this.processThrough(
+                "replace_media_dialog_params_processors",
+                this.getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl })
+            ),
+            ...dialogParams,
+        };
         await this.dependencies.media.openMediaDialog(params, editableEl);
     }
 
