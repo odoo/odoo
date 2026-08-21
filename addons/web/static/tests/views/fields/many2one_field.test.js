@@ -1622,7 +1622,7 @@ test("list: quick create then save directly", async () => {
     await runAllTimers();
     await contains(".o_m2o_dropdown_option_create").click();
 
-    await contains(".o_list_button_save").click();
+    await contains(".o_form_button_save").click();
 
     // should wait for the name_create before creating the record
     expect.verifySteps(["name_create"]);

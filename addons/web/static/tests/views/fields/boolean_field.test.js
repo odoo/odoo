@@ -111,7 +111,7 @@ test("boolean field in editable list view", async () => {
     await click(`${cell} .o-checkbox`);
     await animationFrame();
 
-    await click(`.o_list_button_save`);
+    await click(`.o_form_button_save`);
     await animationFrame();
     expect(`${cell} .o-checkbox input:only`).not.toBeChecked();
     expect(`${cell} .o-checkbox input:only`).not.toBeEnabled();
@@ -124,7 +124,7 @@ test("boolean field in editable list view", async () => {
     await click(`${cell} .o-checkbox`);
     await animationFrame();
 
-    await click(`.o_list_button_save`);
+    await click(`.o_form_button_save`);
     await animationFrame();
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input`).toHaveCount(5);
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(3);

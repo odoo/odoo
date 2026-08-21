@@ -20,6 +20,7 @@
                     class="o_form_button_cancel btn btn-light p-1"
                     data-hotkey="j"
                     t-on-click.stop="this.discard"
+                    t-on-mousedown="(ev) => this.props.onMouseDownDiscard?.(ev)"
                     data-tooltip="Discard all changes"
                     data-available-offline=""
                     aria-label="Discard all changes">

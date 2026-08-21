@@ -68,7 +68,7 @@ test("List: placeholder_field shows as text/placeholder", async () => {
     });
     await fieldInput("code").edit("100001", { confirm: false });
 
-    await contains(".o_list_button_save").click();
+    await contains(".o_form_button_save").click();
     expect(firstCellSelector).toHaveText("100001", {
         message: "entered value should be saved",
     });
