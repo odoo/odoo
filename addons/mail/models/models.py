@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 
 import logging
+import typing
+
 from collections import defaultdict
 from datetime import datetime
 
@@ -9,13 +12,19 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, models, tools
 from odoo.fields import Domain
-from odoo.tools import parse_contact_from_email
+from odoo.tools import format_list, parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.addons.mail.tools.discuss import StoreVersion
 
 _logger = logging.getLogger(__name__)
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable
+    from odoo.addons.base.models.ir_model import IrModelFields
+    from odoo.models import BaseModel
+    from typing import Literal
 
 
 class Base(models.AbstractModel):
@@ -808,19 +817,16 @@ class Base(models.AbstractModel):
         """
         return []
 
-    def _find_value_from_field_path(self, field_path):
-        """Get the value of field, returning display_name(s) if the field is a
-        model. Can be called on a void recordset, in which case it mainly serves
-        as a field path validation."""
-        if self:
-            self.ensure_one()
-
-        # as we use mapped(False) returns record, better return a void string
+    def _check_find_field_from_field_path(
+            self, field_path: str, limiting_field_types: Iterable[str] | None = None
+        ) -> tuple(BaseModel | Literal[False], IrModelFields):
+        """ Get the Model and an ir.model.fields m2o based on a field_path. Return
+        False and empty field if not a valid path or field type. """
         if not field_path:
-            return ''
+            return False, self.env['ir.model.fields']
 
         try:
-            field_value = self.mapped(field_path)
+            _field_value = self.mapped(field_path)
         except KeyError:
             raise exceptions.UserError(
                 _("%(model_name)s.%(field_path)s does not seem to be a valid field path", model_name=self._name, field_path=field_path)
@@ -829,25 +835,71 @@ class Base(models.AbstractModel):
             raise exceptions.UserError(
                 _("We were not able to fetch value of field '%(field)s'", field=field_path)
             ) from err
+
+        # find last field / last model when having chained fields
+        # e.g. 'partner_id.country_id.state' -> ['partner_id.country_id', 'state']
+        field_path_models = field_path.rsplit('.', 1)
+        if len(field_path_models) > 1:
+            target_model_path, target_fname = field_path_models
+            target_model = self.mapped(target_model_path)
+            try:
+                target_model = self.mapped(target_model_path)
+            except Exception:  # noqa: BLE001
+                return False, self.env['ir.model.fields']
+        else:
+            target_model, target_fname = self, field_path
+        target_field = target_model._fields[target_fname]
+        try:
+            target_field = target_model._fields[target_fname]
+        except KeyError:
+            return False, self.env['ir.model.fields']
+
+        # optional additional limitation on field type (e.g. limit m2o)
+        if limiting_field_types and target_field.type not in limiting_field_types:
+            raise exceptions.UserError(
+                _(
+                    "%(model_name)s.%(field_path)s is not among allowed field types (%(types)s)",
+                    model_name=self._name, field_path=field_path,
+                    types=format_list(self.env, limiting_field_types, style="standard"),
+                )
+            )
+        return target_model, self.env['ir.model.fields']._get(target_model._name, target_fname)
+
+    def _find_field_from_field_path(
+            self, field_path: str, limiting_field_types: Iterable[str] | None = None
+        ) -> IrModelFields:
+        """ Get an ir.model.fields m2o based on a field_path. Return empty
+        recordset if not found / not a valid path or field type """
+        _target_model, ir_field = self._check_find_field_from_field_path(field_path, limiting_field_types)
+        return ir_field
+
+    def _find_value_from_field_path(
+            self, field_path: str, limiting_field_types: Iterable[str] | None = None
+        ) -> str:
+        """Get the value of field, returning display_name(s) if the field is a
+        model. Can be called on a void recordset, in which case it mainly serves
+        as a field path validation."""
+        if self:
+            self.ensure_one()
+        target_model, ir_field = self._check_find_field_from_field_path(field_path, limiting_field_types)
+
+        # as we use mapped(False) returns record, better return a void string
+        if not target_model:
+            return ''
+
+        field_value = self.mapped(field_path)
         if isinstance(field_value, models.Model):
             return ' '.join((value.display_name or '') for value in field_value)
         if any(isinstance(value, datetime) for value in field_value):
             tz = (self and self._mail_get_timezone()) or self.env.user.tz or 'UTC'
             return ' '.join([f"{tools.format_datetime(self.env, value, tz=tz)} {tz}"
                              for value in field_value if value and isinstance(value, datetime)])
-        # find last field / last model when having chained fields
-        # e.g. 'partner_id.country_id.state' -> ['partner_id.country_id', 'state']
-        field_path_models = field_path.rsplit('.', 1)
-        if len(field_path_models) > 1:
-            last_model_path, last_fname = field_path_models
-            last_model = self.mapped(last_model_path)
-        else:
-            last_model, last_fname = self, field_path
-        last_field = last_model._fields[last_fname]
+
         # if selection -> return value, not the key
-        if last_field.type == 'selection':
+        if ir_field.ttype == 'selection':
+            field = target_model._fields[ir_field.name]
             return ' '.join(
-                last_field.convert_to_export(value, last_model)
+                field.convert_to_export(value, target_model)
                 for value in field_value
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
