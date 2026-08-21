@@ -745,12 +745,19 @@ class Channel(models.Model):
                 ("channel_id", "=", self.parent_channel_id.id),
                 ("partner_id", "in", message.partner_ids.ids),
             ])
+
+            def wants_channel_notifications(partner):
+                return not partner.user_ids or any(
+                    user.res_users_settings_id.channel_notifications != "no_notif"
+                    for user in partner.user_ids
+                )
+
             members_to_invite = members.filtered(lambda m:
                 m.custom_notifications != "no_notif" if m.custom_notifications
-                else m.partner_id.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+                else wants_channel_notifications(m.partner_id)
             ).partner_id
-            non_members_to_invite = (message.partner_ids - members.partner_id).filtered(lambda p:
-                p.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+            non_members_to_invite = (message.partner_ids - members.partner_id).filtered(
+                wants_channel_notifications
             )
             self._add_members(partners=members_to_invite | non_members_to_invite)
         return super()._message_post_after_hook(message, msg_vals)
