@@ -43,6 +43,10 @@
     --o-caret-color: var(--danger);
 }
 
+.o_field_invalid:focus-within {
+    --o-input-border-color: var(--danger);
+}
+
 /* ------------------------------------------------------------------------------ */
 /* Generic input */
 /* ------------------------------------------------------------------------------ */
@@ -69,7 +73,6 @@
     &.o_input, > .o_input, &.o_form_label {
         color: var(--o-text-color-danger);
     }
-
     &:not(.o_form_label) {
         --o-input-background-color: var(--o-input-invalid-bg);
     }

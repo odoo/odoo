@@ -1,6 +1,14 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
+/**
+ * @param {Object} model
+ * @param {Object} [actions]
+ * @param {Function} [actions.save]
+ * @param {Function} [actions.discard]
+ * @param {() => Object | null} [actions.getRecord] the record the indicator reflects,
+ *  defaults to the root of the model (a list gives its edited record instead)
+ */
 export function useStatusIndicator(model, actions = {}) {
     const _fieldIsDirty = proxy({ value: false });
     useBus(model.bus, "FIELD_IS_DIRTY", (ev) => {
@@ -9,11 +17,11 @@ export function useStatusIndicator(model, actions = {}) {
 
     return {
         props() {
-            const { root } = model;
+            const record = actions.getRecord ? actions.getRecord() : model.root;
             return {
-                isDirty: root.dirty || _fieldIsDirty.value,
-                isValid: root.isValid,
-                isNew: root.isNew && !root.offlineId,
+                isDirty: Boolean(record?.dirty) || _fieldIsDirty.value,
+                isValid: record?.isValid ?? true,
+                isNew: Boolean(record?.isNew && !record.offlineId),
                 save: actions.save,
                 discard: actions.discard,
             };
@@ -21,15 +29,18 @@ export function useStatusIndicator(model, actions = {}) {
     };
 }
 
+export const BaseStatusIndicatorSchema = {
+    isDirty: t.boolean(),
+    isValid: t.boolean().optional(true),
+    isNew: t.boolean().optional(false),
+    save: t.function(),
+    discard: t.function(),
+    onMouseDownDiscard: t.function().optional(),
+};
+
 export class FormStatusIndicator extends Component {
     static template = "web.FormStatusIndicator";
-    props = useProps({
-        isDirty: t.boolean(),
-        isValid: t.boolean().optional(true),
-        isNew: t.boolean().optional(false),
-        save: t.function(),
-        discard: t.function(),
-    });
+    props = useProps(BaseStatusIndicatorSchema);
 
     get displayButtons() {
         return this.indicatorMode !== "saved";
