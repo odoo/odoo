@@ -13,6 +13,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.models import Query
 from odoo.tools import SQL, convert, email_normalize, format_date, format_time
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.intervals import Intervals
@@ -1511,11 +1512,24 @@ class HrEmployee(models.Model):
         if self.browse().has_access('read') or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
         domain = Domain(domain)
+
         # HACK Some fields are inherited from the `current_version_id` and may have been already
         # optimized, showing current_version_id in the domain, but public employee does not have
         # that field and may have fields directly on the model, just change the condition to `id` in
         # that case.
-        domain = domain.map_conditions(lambda cond: Domain('id', cond.operator, cond.value) if cond.field_expr == 'current_version_id' else cond)
+        def adapt_condition(cond):
+            if cond.field_expr != 'current_version_id':
+                return cond
+            if cond.operator in ('any', 'not any'):
+                raise AccessError(self.env._('You do not have access to this document.'))
+            if cond.operator in ('any!', 'not any!'):
+                if isinstance(cond.value, Query):
+                    query = cond.value.subselect(cond.value.table.employee_id)
+                else:
+                    query = self.env['hr.version'].sudo()._search(Domain('id', 'any!', cond.value), active_test=False)
+                return Domain('id', cond.operator, query)
+            return Domain('id', cond.operator, cond.value)
+        domain = domain.map_conditions(adapt_condition)
         try:
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order, **kwargs)
         except (ValueError, KeyError) as e:
@@ -1607,7 +1621,7 @@ class HrEmployee(models.Model):
 
     def _prepare_resource_values(self, vals, tz):
         resource_vals = super()._prepare_resource_values(vals, tz)
-        vals.pop('name')  # Already considered by super call but no popped
+        vals.pop('name', False)  # Already considered by super call but no popped
         # We need to pop it to avoid useless resource update (& write) call
         # on every newly created resource (with the correct name already)
         user_id = vals.pop('user_id', None)
