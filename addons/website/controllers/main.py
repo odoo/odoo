@@ -35,7 +35,7 @@ from odoo.tools.json import scriptsafe as json
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value
-from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
+from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS, TRANSLATED_ATTRS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -354,6 +354,10 @@ class Website(Home):
     @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
     def translated_elements(self, **kwargs):
         return list(TRANSLATED_ELEMENTS)
+
+    @http.route('/website/get_translated_attributes', type='jsonrpc', auth="user", readonly=True)
+    def translated_attributes(self, **kwargs):
+        return [attr for attr in TRANSLATED_ATTRS if not attr.startswith('t-')]
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
