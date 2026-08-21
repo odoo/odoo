@@ -13,6 +13,7 @@
     ],
     'demo': [
         'data/product_demo.xml',
+        'data/warehouse_demo.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',
