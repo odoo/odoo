@@ -23,6 +23,7 @@ export class MediaWebsiteTranslationPlugin extends MediaWebsitePlugin {
         // through `findOEditable` and `buildTranslationInfoMap` in the
         // TranslationPlugin. We can rely on that information.
         return mediaEl.classList.contains("o_translatable_attribute");
+        // TODO: this hypothesis above is not really correct anymore (but I believe the conclusion is still correct)
     }
 }
 
