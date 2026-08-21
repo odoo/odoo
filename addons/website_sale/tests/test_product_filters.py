@@ -120,7 +120,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                     "filter_id": filter.id,
                     "template_key": "website_sale.dynamic_filter_template_product_product_products_item",  # noqa: E501
                     "limit": 16,
-                    "search_domain": [],
+                    "search_domain": [["active", "=", True]],
                     **kwargs,
                 }
             },
