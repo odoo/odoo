@@ -12,13 +12,13 @@
                     index="holiday_index + 2"
                 />
             </t>
-            <div t-if="this.state.allocationRequestDaysHours"
+            <div t-if="this.state.allocationsNumber"
                  class="o_timeoff_card d-flex justify-content-center gap-3"
                  role="button"
             >
                 <div class="d-inline-flex flex-row align-items-center justify-content-center bg-warning-subtle bg-gradient rounded px-4 py-2 gap-2 cursor-pointer o_timeoff_card_inner">
                     <span class="o_timeoff_duration font-monospace">
-                        <t t-out="this.state.allocationRequestDaysHours"/>
+                        <t t-out="this.state.allocationsNumber"/>
                     </span>
                     <div class="d-flex flex-column align-items-start justify-content-center">
                         <span class="o_timeoff_name m-0 fw-semibold">Pending<br/>Allocations</span>

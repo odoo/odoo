@@ -21,7 +21,7 @@ export class TimeOffDashboard extends Component {
             date: luxon.DateTime.now(),
             today: luxon.DateTime.now(),
             holidays: [],
-            allocationRequestDaysHours: "",
+            allocationsNumber: "",
         });
 
         usePlugin(TimeOffPlugin).onUpdateDashboard(() => this.loadDashboardData());
@@ -49,7 +49,7 @@ export class TimeOffDashboard extends Component {
             { context }
         );
         this.state.holidays = dashboardData["allocation_data"];
-        this.state.allocationRequestDaysHours = dashboardData["allocation_request_days_hours"];
+        this.state.allocationsNumber = dashboardData["allocations_number"];
         this.hasAccrualAllocation = dashboardData["has_accrual_allocation"];
         this.hasFutureAllocation = dashboardData["has_future_allocation"];
     }
