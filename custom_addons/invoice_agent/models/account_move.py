@@ -574,6 +574,7 @@ class AccountMove(models.Model):
             and self.journal_id.ai_agent_enabled
         ):
             auto_fill = self.journal_id.ai_min_confidence or DEFAULT_AUTO_FILL_THRESHOLD
+
         return auto_fill, review
 
     # -------------------------------------------------------------------------
