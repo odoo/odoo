@@ -4,8 +4,8 @@ access_stock_picking_sales,stock.picking.sales,stock.picking,sales_team.group_sa
 stock_picking_rule_portal,Portal Follower Transfers,stock.picking,base.group_portal,r,"['|', ('partner_id', '=', user.partner_id.id), ('sale_id.partner_id', '=', user.partner_id.id)]"
 access_stock_move_salesman,stock_move salesman,stock.move,sales_team.group_sale_salesman,cru,
 access_stock_move_manager,stock_move manager,stock.move,sales_team.group_sale_manager,crud,
-sale_order_stock_rule,Stock User Orders,sale.order,stock.group_stock_user,ru,
-sale_order_line_rule_stock_user,Stock User Sales Orders Line,sale.order.line,stock.group_stock_user,ru,
+sale_order_stock_rule,Stock User Orders,sale.order,stock.group_stock_light_user,ru,
+sale_order_line_rule_stock_user,Stock User Sales Orders Line,sale.order.line,stock.group_stock_light_user,ru,
 access_stock_warehouse_user,stock.warehouse.user,stock.warehouse,sales_team.group_sale_salesman,r,
 access_stock_location_user,stock.location.user,stock.location,sales_team.group_sale_salesman,r,
 access_stock_warehouse_orderpoint_sale_salesman,stock.warehouse.orderpoint,stock.warehouse.orderpoint,sales_team.group_sale_salesman,r,

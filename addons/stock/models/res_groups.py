@@ -19,4 +19,6 @@ class ResGroups(models.Model):
             'stock.group_stock_lot_print_gs1',
             'stock.group_stock_sign_delivery',
             'stock.group_warning_stock',
+            'stock.group_stock_multi_warehouses',
+            'stock.group_stock_light_user',
         )
