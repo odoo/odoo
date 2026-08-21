@@ -83,9 +83,10 @@ class StockLot(models.Model):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
         avco_lots = self.filtered(
             lambda l: l.lot_valuated and l.product_id.cost_method == 'average').with_context(
-                warehouse_id=False)
+                warehouse_id=False, disable_auto_revaluation=True)
         _, _, std_price_by_lot_id, _ = avco_lots.product_id._run_average_batch_lot(
             lots=avco_lots,
+            force_recompute=True,
         )
         for lot in self:
             lot = lot.with_context(disable_auto_revaluation=True)

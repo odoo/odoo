@@ -524,9 +524,7 @@ class ProductProduct(models.Model):
         )
 
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
-        move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
-
+        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'picked', 'value', 'product_id', 'company_id']
         product, valuation_from_date = False, False
         batch_size = 50000
 
@@ -546,13 +544,12 @@ class ProductProduct(models.Model):
                     continue
                 product_move_ids.append(move.id)
 
-            valued_qty.update(moves_batch._get_valued_qty_batch())
             self.env['stock.move'].invalidate_model()
 
         for moves_batch in split_every(batch_size, product_move_ids):
             moves_batch = self.env['stock.move'].browse(moves_batch)
             moves_batch.fetch(move_fields)
-            moves_batch.move_line_ids.fetch(move_line_fields)
+            valued_qty = moves_batch._get_valued_qty_batch()
             for move in moves_batch:
                 vq = valued_qty.get(move.id, {})
 
@@ -568,11 +565,6 @@ class ProductProduct(models.Model):
                 if move.is_in:
                     in_qty = vq.get(False, 0.0)
                     in_value = move.value
-                    if move.is_dropship:
-                        ignore_manual_update = False
-                        if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
-                            ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
-                        in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
 
                     # Product-level
                     previous_qty = quantity
@@ -797,7 +789,7 @@ class ProductProduct(models.Model):
                             product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
 
             elif cost_method == 'average':
-                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+                new_standard_price_by_product = products._run_average_batch(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
