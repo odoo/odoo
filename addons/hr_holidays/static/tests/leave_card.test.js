@@ -48,7 +48,7 @@ test("Test request creator buttons", async() => {
     onRpc("get_allocation_data_request", () => ({}));
     onRpc("get_special_days_data", () => ({bankHolidays: [], mandatoryDays: []}));
     onRpc("hr.employee", "get_time_off_dashboard_data", () => (
-        {has_accrual_allocation: true, allocation_data: {}, allocation_request_days_hours: ""}
+        {has_accrual_allocation: true, allocation_data: {}, allocations_number: ""}
     ));
 
     await mountView({
