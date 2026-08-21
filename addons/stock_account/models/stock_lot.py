@@ -82,18 +82,15 @@ class StockLot(models.Model):
 
     def _update_standard_price(self):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
-<<<<<<< HEAD
         lots = self.with_context(owners=[False, self.env.company.partner_id.id])
-        for lot in lots:
-=======
-        avco_lots = self.filtered(
+        avco_lots = lots.filtered(
             lambda l: l.lot_valuated and l.product_id.cost_method == 'average').with_context(
-                warehouse_id=False)
+                warehouse_id=False, disable_auto_revaluation=True)
         _, _, std_price_by_lot_id, _ = avco_lots.product_id._run_average_batch_lot(
             lots=avco_lots,
+            force_recompute=True,
         )
-        for lot in self:
->>>>>>> 14e4b0563ead (fixup! [PERF] stock_account: batch lot average cost valuation)
+        for lot in lots:
             lot = lot.with_context(disable_auto_revaluation=True)
             if not lot.product_id.lot_valuated:
                 continue

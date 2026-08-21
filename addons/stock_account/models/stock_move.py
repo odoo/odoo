@@ -471,22 +471,18 @@ class StockMove(models.Model):
         )
         # location IS valued: belongs to a company and is internal/transit
         valued_dest = Domain([
-            ('location_dest_id.company_id', '!=', False),
-            ('location_dest_id.usage', 'in', ['internal', 'transit']),
+            ('location_dest_id.is_valued_internal', '=', True),
         ])
         # location is NOT valued: no company or external usage
-        not_valued_src = (
-            Domain([('location_id.company_id', '=', False)])
-            | Domain([('location_id.usage', 'not in', ['internal', 'transit'])])
-        )
-        valued_src = Domain([
-            ('location_id.company_id', '!=', False),
-            ('location_id.usage', 'in', ['internal', 'transit']),
+        not_valued_src = Domain([
+            ('location_id.is_valued_internal', '=', False),
         ])
-        not_valued_dest = (
-            Domain([('location_dest_id.company_id', '=', False)])
-            | Domain([('location_dest_id.usage', 'not in', ['internal', 'transit'])])
-        )
+        valued_src = Domain([
+            ('location_id.is_valued_internal', '=', True),
+        ])
+        not_valued_dest = Domain([
+            ('location_dest_id.is_valued_internal', '=', False),
+        ])
         return base_domain, valued_dest, not_valued_src, valued_src, not_valued_dest
 
     def _get_valued_qty_batch(self):
@@ -527,7 +523,7 @@ class StockMove(models.Model):
             # Dropship moves: neither location is a valued internal/transit location.
             # For the no-lot total use move.quantity with UOM conversion (mirrors original logic);
             # for lot-specific quantities, sum the matching move lines.
-            moves_dropship = moves.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
+            moves_dropship = moves.filtered(lambda m: m.is_dropship or (m.state == 'done' and (m._is_dropshipped_returned() or m._is_dropshipped())))
             if moves_dropship:
                 for move, lot, qty in self.env['stock.move.line']._read_group(
                     domain=[('move_id', 'in', moves_dropship.filtered('product_id.lot_valuated').ids), ('lot_id', '!=', False)],
