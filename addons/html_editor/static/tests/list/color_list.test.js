@@ -375,3 +375,11 @@ test("should apply gradient color style only on font inside list item", async ()
             '<ol><li><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%);">[abc]</font></li><li>def</li></ol>',
     });
 });
+
+test("should be able to remove background-color from list item", async () => {
+    await testEditor({
+        contentBefore: `<ul><li style="background-color: red;">[a]</li></ul>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: `<ul><li>[a]</li></ul>`,
+    });
+});
