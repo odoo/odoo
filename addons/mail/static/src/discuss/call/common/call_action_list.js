@@ -1,4 +1,4 @@
-import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
+import { Component, computed, signal, toRaw, types, useProps, useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -8,7 +8,7 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
+import { FullscreenTooltip } from "./fullscreen_tooltip";
 
 export class CallActionList extends Component {
     static components = { ActionList };
@@ -30,6 +30,11 @@ export class CallActionList extends Component {
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
         this.popover = usePopover(Tooltip, {
+            position: "top-middle",
+        });
+        this.fullscreenHintPopover = usePopover(FullscreenTooltip, {
+            closeOnClickAway: false,
+            closeOnEscape: false,
             position: "top-middle",
         });
         this.actions = computed(() => {
@@ -79,19 +84,10 @@ export class CallActionList extends Component {
             );
             if (layoutActions.length) {
                 const layoutGroup = [
-                    this.callActions.more(
+                    (this.callLayoutMoreAction = this.callActions.more(
                         this.callActionsParams,
                         {
                             actions: [layoutActions],
-                            // Pulse the toggle to nudge fullscreen, as the Fullscreen action that
-                            // used to carry the pulse now lives inside this menu.
-                            btnClass: ({ channel }) =>
-                                attClassObjectToString({
-                                    "o-discuss-CallActionList-pulse": Boolean(
-                                        channel?.promoteFullscreen ===
-                                            CALL_PROMOTE_FULLSCREEN.ACTIVE
-                                    ),
-                                }),
                             dropdownMenuClass: attClassObjectToString({
                                 "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
                                 "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
@@ -103,7 +99,7 @@ export class CallActionList extends Component {
                             name: this.MORE,
                         },
                         "call-layout"
-                    ),
+                    )),
                 ];
                 group2.splice(
                     disconnectGroupIndex === -1 ? group2.length : disconnectGroupIndex,
@@ -112,6 +108,21 @@ export class CallActionList extends Component {
                 );
             }
             return [...group2, other];
+        });
+        useEffect(() => {
+            this.actions();
+
+            const moreAction = this.callLayoutMoreAction;
+            if (
+                moreAction &&
+                !this.fullscreenHintPopover.isOpen &&
+                moreAction.actionRef() &&
+                this.rtc.showFullscreenHintWarning
+            ) {
+                this.fullscreenHintPopover.open(moreAction.actionRef(), {});
+            } else {
+                this.fullscreenHintPopover.close();
+            }
         });
     }
 
