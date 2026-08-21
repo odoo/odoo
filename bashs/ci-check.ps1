@@ -167,8 +167,11 @@ else {
     $prevEap = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
 
-    # Added --timeout 10m and --skip-dirs addons to prevent scanning base Odoo core
-    & trivy fs --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 --quiet --timeout 10m --skip-dirs addons .
+    # Skip dirs that are NOT part of the pushed repo (CI never sees them):
+    #   addons  - base Odoo core, unchanged upstream code
+    #   venv    - local virtualenv, gitignored
+    #   .git    - object store, gitignored from scan perspective
+    & trivy fs --severity CRITICAL,HIGH --ignore-unfixed --exit-code 1 --quiet --timeout 10m --skip-dirs addons,venv,.git .
     if ($LASTEXITCODE -ne 0) { 
         Fail-Step "trivy fs found CRITICAL/HIGH vulnerabilities" 
     } 

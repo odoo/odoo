@@ -1,14 +1,15 @@
-# Local CI Check - run GitHub Actions checks before you push
+# Local CI Check - run ALL GitHub Actions checks before you push
 
-Your GitHub Actions CI (`.github/workflows/ci.yml`) runs on every push to
-`main` / `production`. Every time it fails remotely, you only find out after
-the full pipeline has run on GitHub. These scripts run the **exact same
-checks locally** so a failing push is caught in minutes, on your machine.
+Your GitHub Actions CI (`.github/workflows/ci.yml`) runs **five jobs** on
+every push to `main` / `production`. Every time one fails remotely, you only
+find out after the full pipeline has run on GitHub. `ci-check.ps1` runs the
+**same checks locally** so a failing push is caught in minutes, on your
+machine.
 
 ## The two commands
 
 ```powershell
-# 1. Run the full CI 'test' job locally (this is the one that gatekeeps pushes)
+# 1. Run ALL CI jobs locally (fast checks first, slow ones last)
 .\bashs\ci-check.ps1
 
 # 2. Optional: block pushes automatically until the check passes
@@ -21,29 +22,45 @@ pre-push hook (`.githooks/pre-push`) so every `git push` runs the check
 first - the push is blocked until it passes. Bypass once with
 `git push --no-verify`.
 
-## What ci-check.ps1 runs (identical to CI)
+## What ci-check.ps1 runs (mirrors every CI job)
 
-1. **Preflight** - venv exists, every pip dep CI installs is importable,
-   Postgres answers as `odoo/odoo@localhost:5432`.
-2. **Database** - **the `ci` DB is DROPPED before every run by default.**
-   GitHub Actions always runs on a fresh Postgres container; reusing a DB
-   where invoice_agent is already installed makes Odoo skip the whole
-   `post_install` suite ("0 post-tests") so the local results silently stop
-   matching CI. Drop the DB and you get the same 64-module install + full
-   suite that CI runs. For deliberate fast iteration use `-KeepDb` - the
-   script then fails loudly if the reused DB skipped the suite.
-3. **Tests** - the CI command verbatim under coverage:
-   `coverage run --concurrency=thread --source=custom_addons/invoice_agent odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=localhost --db_port=5432 --db_user=odoo --db_password=odoo`
-4. **Log gate** - greps the log for `FAIL|ERROR|CRITICAL`, filtering benign
-   `(WARNING/x)` counters, same as CI's `grep` pipeline.
-5. **Coverage gate** - requires >= 60% coverage on `custom_addons/invoice_agent`
-   (CI's `COVERAGE_MIN`). Raise it with `-CoverageMin 70`.
+**Fast phase (seconds):**
 
-## Requirements (already set up on this machine)
+| CI job | Local check |
+|---|---|
+| `terraform` | `fmt -check -recursive`, `init -backend=false`, `validate` |
+| `lint` | `ruff check` + `ruff format --check` on `custom_addons/invoice_agent` |
+| `security` | `bandit --severity-level medium` on addon + invoice-ai |
+| `security` | `trivy fs --severity CRITICAL,HIGH --ignore-unfixed` |
+| `security` | DR runbook exists and is < 90 days old |
+| `observability` | prometheus + alertmanager `checkconfig` via docker, grafana JSON validity |
+
+If any fast check fails, the script stops immediately - you get feedback in
+seconds instead of minutes.
+
+**Slow phase (minutes, skipped with `-SkipSlow`):**
+
+| CI job | Local check |
+|---|---|
+| `test` | The exact CI command under coverage: `coverage run --concurrency=thread --source=custom_addons/invoice_agent odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test ...` |
+| `test` | Log gate: greps for `FAIL\|ERROR\|CRITICAL`, filtering benign `(WARNING/x)` counters, same as CI |
+| `test` | Coverage gate: >= 60% on invoice_agent (`-CoverageMin 70` to raise) |
+| `security` | `docker build ./invoice-ai` + `trivy image --severity CRITICAL,HIGH` |
+
+## Database parity
+
+GitHub Actions always runs on a **fresh Postgres container**. Reusing a local
+DB where invoice_agent is already installed makes Odoo skip the whole
+`post_install` suite ("0 post-tests") so results silently stop matching CI.
+By default the script **drops the `ci` DB before every run**. Use `-KeepDb`
+for deliberate fast iteration - a zero-test guard then fails loudly if the
+reused DB skipped the suite.
+
+## Requirements
 
 - Python 3.12 venv at `.\venv` (CI runner uses 3.12 too)
-- PostgreSQL 16 reachable as `odoo/odoo@localhost:5432` with `CREATEDB`
-  (CI auto-creates the `ci` database; the script does the same)
+- PostgreSQL 16 reachable as `odoo/odoo@localhost:5432`
+- Tools on PATH: `terraform`, `ruff`, `bandit`, `trivy`, `docker`
 - CI deps:
   `.\venv\Scripts\python.exe -m pip install -r custom_addons/invoice_agent/requirements.txt coverage`
 
@@ -51,20 +68,16 @@ first - the push is blocked until it passes. Bypass once with
 
 - Full Odoo test log: `odoo-test.log` (in `.gitignore`)
 - Coverage report: `coverage.xml` (in `.gitignore`)
+- Bandit reports: `bandit-addon.json`, `bandit-ai.json`
 
-## Verified parity with GitHub Actions (2026-08-08)
+## Quick iteration during development
 
-A fresh-DB local run ended with `55 post-tests`, ~13 failures - the same
-shape as the GitHub run. The fixed OCR pipeline issues (invalid `numbercall`
-cron field, `skipTest` TypeError, cron commit-forbidden cursor, the corrupt
-PDF guard) are gone from both.
+```powershell
+.\bashs\ci-check.ps1 -SkipSlow      # seconds: terraform + lint + bandit + trivy fs
+.\bashs\ci-check.ps1                # full run before pushing
+```
 
-## Known remaining failures (same on local and GitHub CI)
+Install the pre-push hook once and you never have to remember:
 
-- `test_controllers.py` group of 12: the routes are registered in code but
-  the `HttpCase` HTTP process does not expose them yet; all 12 fail
-  identically locally and on GitHub.
-- The tesseract binary is not present on the GitHub runner either, so the
-  end-to-end OCR test is skipped there too (now with the fixed `SkipTest`).
-- If a run fails and leaves the `ci` DB mid-state, just re-run - the DB is
-  dropped automatically on each run.
+```powershell
+.\bashs\install-pre-push.ps1
