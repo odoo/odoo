@@ -99,6 +99,9 @@ class SaleOrderTemplateLine(models.Model):
     price_unit = fields.Float(
         string="Unit Price", digits="Product Price", min_display_digits="Product Price"
     )
+    price_subtotal = fields.Float(
+        string="Subtotal", compute="_compute_price_subtotal", digits="Product Price"
+    )
     tax_ids = fields.Many2many(string="Taxes", comodel_name="account.tax", check_company=True)
 
     mandatory_product = fields.Boolean(
@@ -165,6 +168,11 @@ class SaleOrderTemplateLine(models.Model):
                 line.section_uom_id = default_uom_id
             else:
                 line.section_uom_id = False
+
+    @api.depends("price_unit", "product_uom_qty")
+    def _compute_price_subtotal(self):
+        for line in self:
+            line.price_subtotal = line.price_unit * line.product_uom_qty
 
     # === CRUD METHODS ===#
 
@@ -255,3 +263,9 @@ class SaleOrderTemplateLine(models.Model):
 
     def _get_product_uom_field(self) -> str:
         return "product_uom_id"
+
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.sale_order_template_id.sale_order_template_line_ids.filtered(
+            self._is_line_in_section
+        )
