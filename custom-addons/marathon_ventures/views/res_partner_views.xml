@@ -42,7 +42,11 @@
           </group>
 
           <!-- ====================== Email CCs ====================== -->
-          <group string="Notification CCs" name="mv_group_email_ccs">
+          <!-- Only exposed on Contact (person) records - Accounts /
+               Companies never CC prelog / postlog emails, so hide
+               the whole group when is_company is True. -->
+          <group string="Notification CCs" name="mv_group_email_ccs"
+                 invisible="is_company">
             <field name="prelog_cc" widget="mv_email_tags"/>
             <field name="logs_cc" widget="mv_email_tags"/>
           </group>

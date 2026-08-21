@@ -19,8 +19,12 @@ from odoo.exceptions import UserError
 
 # Fields that are almost never useful in a report and just clutter
 # the field picker. Hidden by default from report_get_fields.
+#
+# `id` is intentionally NOT hidden - users need to see the record
+# id as a selectable column so reports can uniquely identify rows
+# even when display_name / label values collide.
 _HIDDEN_FIELDS = {
-    'id', 'create_uid', 'create_date', 'write_uid', 'write_date',
+    'create_uid', 'create_date', 'write_uid', 'write_date',
     '__last_update', 'display_name',
     'message_ids', 'message_follower_ids', 'message_partner_ids',
     'message_attachment_count', 'message_has_error', 'message_needaction',
