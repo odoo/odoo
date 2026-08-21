@@ -4,11 +4,29 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 
 patch(ControlButtons.prototype, {
     onClickQuotation() {
+        const context = this.getSaleOrderCreateDialogContext();
+        const domain = this.getSaleOrderCreateDialogDomain();
+        this.dialog.add(SelectCreateDialog, {
+            resModel: "sale.order",
+            noCreate: true,
+            multiSelect: false,
+            domain,
+            context: context,
+            onSelected: async (resIds) => {
+                await this.pos.onClickSaleOrder(resIds[0]);
+            },
+        });
+    },
+
+    getSaleOrderCreateDialogContext() {
         const context = {};
         if (this.partner) {
             context["search_default_partner_id"] = this.partner.id;
         }
+        return context;
+    },
 
+    getSaleOrderCreateDialogDomain() {
         let domain = [
             ["state", "!=", "cancel"],
             ["invoice_status", "!=", "invoiced"],
@@ -21,16 +39,9 @@ patch(ControlButtons.prototype, {
                 ["partner_id", "any", [["id", "child_of", [this.pos.getOrder().getPartner().id]]]],
             ];
         }
-
-        this.dialog.add(SelectCreateDialog, {
-            resModel: "sale.order",
-            noCreate: true,
-            multiSelect: false,
-            domain,
-            context: context,
-            onSelected: async (resIds) => {
-                await this.pos.onClickSaleOrder(resIds[0]);
-            },
-        });
+        return domain;
     },
+
+
+
 });
