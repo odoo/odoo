@@ -2603,6 +2603,76 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_variant_popup_qty_free', login="pos_user")
 
+    def test_settle_mto_sale_order_with_manufacture_bom(self):
+        "Test that MTO+Manufacture product Sale order is correctly settled in POS"
+        if not self.env['ir.module.module'].search([('name', '=', 'mrp'), ('state', '=', 'installed')]):
+            self.skipTest('mrp module is required for this test')
+
+        self.env.user.group_ids |= self.env.ref('mrp.group_mrp_user')
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        finished = self.env['product.product'].create({
+            'name': 'MTO Finished Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 100.0,
+            'route_ids': [Command.set([mto_route.id, self.env.ref('mrp.route_warehouse0_manufacture').id])],
+        })
+        self.env['mrp.bom'].create({  # noqa: OLS03001
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product.id, 'product_qty': 1.0}),
+            ],
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': finished.id,
+                'product_uom_qty': 2,
+                'price_unit': finished.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        pos_order_payload = {
+            'amount_paid': sale_order.amount_total,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': sale_order.amount_total,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'to_invoice': False,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': finished.lst_price,
+                'product_id': finished.id,
+                'price_subtotal': sale_order.amount_total - sale_order.amount_tax,
+                'price_subtotal_incl': sale_order.amount_total,
+                'sale_order_line_id': sale_order.order_line.id,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 2,
+                'tax_ids': [],
+            })],
+            'name': 'Order 0001',
+            'session_id': current_session.id,
+            'sequence_number': self.main_pos_config.journal_id.id,
+            'payment_ids': [Command.create({
+                'amount': sale_order.amount_total,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+            'user_id': self.env.uid,
+            'uuid': str(uuid.uuid4()),
+        }
+        data = self.env['pos.order'].sync_from_ui([pos_order_payload])
+        self.assertEqual(self.env['pos.order'].browse(data['pos.order'][0]['id']).state, 'paid')
+
 
 @tagged('post_install', '-at_install')
 class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
