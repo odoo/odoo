@@ -644,6 +644,7 @@ export class PaletteSelectionScreen extends Component {
         const catalog = {};
         palettes.forEach((palette, idx) => {
             catalog[idx] = {
+                name: palette.label,
                 mode: palette.isDark ? "dark" : "light",
                 colors: {
                     primary: palette.color1,
@@ -662,7 +663,7 @@ Consider both light and dark palettes, and select the one that feels most suitab
 
 Return ONLY a JSON object with:
 - "id": the numeric ID from the catalog
-- "reason": a short, user-friendly sentence in ${userLanguage} mentioning the business context without technical color terms or color codes, like: "For a family restaurant with a cozy positioning, I'd recommend warm colors to feel welcoming."`;
+- "reason": a short, user-friendly sentence in ${userLanguage} mentioning the business context without technical color terms or color codes, like: "For a family restaurant with a cozy positioning, I'd recommend the \\"Coral\\" palette for its warm and welcoming feel."`;
         this.state.styleRecommendation = undefined;
         let palette;
         let reason = " ";
