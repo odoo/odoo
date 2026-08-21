@@ -31,6 +31,10 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
+            trigger: ".o_data_cell[name=quantity]",
+            run: "click",
+        },
+        {
             trigger: ".o_field_widget[name=quantity] input",
             run: 'edit 21',
         },
@@ -108,6 +112,10 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
         {
             trigger: ".o_data_row:has([name=quantity]:contains(2.00)) > td[name=product_id]:contains(product2)",
             run: "dblclick",
+        },
+        {
+            trigger: ".o_data_cell[name=quantity]",
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name=quantity] input",

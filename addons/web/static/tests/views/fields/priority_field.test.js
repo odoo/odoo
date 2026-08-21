@@ -283,7 +283,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // save
-    await click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main .o_list_button_save");
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority button.o_priority_star").toHaveCount(2, {
@@ -356,7 +356,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // save
-    await click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main .o_list_button_save");
     await animationFrame();
 
     expect(".o_data_row:last-child .o_priority button.o_priority_star").toHaveCount(2, {
