@@ -1,31 +1,56 @@
 name: Build and Push Images to Docker Hub
 
 on:
-    push:
-        branches:
-            - production
+  push:
+    branches:
+      - production
 
 jobs:
-    build-and-push:
-        runs-on: ubuntu-latest
+  build-and-push:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Log in to Docker Hub
-              uses: docker/login-action@v3
-              with:
-                  username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # تحويل اسم الحساب إلى Lowercase لتجنب خطأ صيغ Docker / GHCR
+      - name: Set Lowercase Repository Owner
+        run: |
+          echo "REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            - name: Build and push Odoo Image
-              uses: docker/build-push-action@v6
-              with:
-                  context: .
-                  file: ./Dockerfile # أو حددي المسار الصحيح للـ Dockerfile في مجلدك
-                  push: true
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/odoo:19
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 1. بناء وصورة الـ Odoo Custom Image
+      - name: Build and push Odoo Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/odoo:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/odoo:19
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 2. بناء وصورة الـ Invoice AI Service Image
+      - name: Build and push Invoice AI Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./invoice-ai
+          file: ./invoice-ai/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/invoice-ai:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/invoice-ai:latest
+          build-args: |
+            INVOICE_AI_BUILD_SHA=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
