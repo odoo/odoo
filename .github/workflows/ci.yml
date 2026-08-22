@@ -21,17 +21,19 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.9"
+          terraform_version: "1.9.0"
+          terraform_wrapper: false # <-- يحل مشكلة الـ Flag Error تماماً
 
       - name: Terraform Init
-        run: terraform -chdir=infra/terraform/ init -backend=false
+        run: terraform init -backend=false
+        working-directory: infra/terraform
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive infra/terraform/
 
       - name: Terraform Validate
-        run: terraform validate -chdir=infra/terraform/
-
+        run: terraform validate
+        working-directory: infra/terraform
   # ==========================================================================
   # Observability: validate Prometheus + Alertmanager + Grafana configs
   # ==========================================================================
