@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 18:11+0000\n"
+"POT-Creation-Date: 2026-08-21 18:23+0000\n"
 "PO-Revision-Date: 2026-08-06 12:13+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-3-l10n/"
@@ -487,14 +487,14 @@ msgstr "Riferimento fattura"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-msgid "Invoice(s) to check"
-msgstr "Fattura/e da controllare"
+msgid "Invoices must have %(number)s one %(kind)s tax set per line."
+msgstr "Le fatture devono riportare %(number)s un'imposta %(kind)s per riga."
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-msgid "Invoices must have %(number)s one %(kind)s tax set per line."
-msgstr "Le fatture devono riportare %(number)s un'imposta %(kind)s per riga."
+msgid "Invoices to check"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_edi_purchase_journal_id
@@ -1070,6 +1070,39 @@ msgid "Shareholder"
 msgstr "Socio"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"Simplified Invoices (TD07) are generally preferred when partner address is "
+"incomplete, so please issue an ordinary invoice instead."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"Simplified Invoices (TD07) can only be issued for a total amount of up to "
+"400€. Please issue an ordinary invoice instead."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"Simplified Invoices (TD07) can only be used with domestic partners that do "
+"not belong to the Public Administration. Please issue an ordinary invoice "
+"instead."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"Simplified Invoices (TD07) cannot be used for self-invoices. Please issue an "
+"ordinary invoice instead."
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__su
 msgid "Socio unico"
 msgstr "Socio unico"
@@ -1497,6 +1530,12 @@ msgstr "Visualizza fatture"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "View invoices"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
 "We are simulating the sending of the e-invoice file %s, as we are in demo "
 "mode."
@@ -1723,6 +1762,9 @@ msgstr "iva"
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 msgid "zip"
 msgstr "codice postale"
+
+#~ msgid "Invoice(s) to check"
+#~ msgstr "Fattura/e da controllare"
 
 #~ msgid "Bank account not found, useful informations from XML file:"
 #~ msgstr "Conto bancario non trovato, informazioni utili dal file XML:"
