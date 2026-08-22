@@ -2528,7 +2528,7 @@ class BaseModel(metaclass=MetaModel):
         if self._auto:
             if must_create_table:
                 def make_type(field):
-                    typ = field.stored_sql_column_type
+                    typ = field.db_stored_sql_column_type(self)
                     if field.required:
                         typ = SQL("%s NOT NULL", typ)
                     return typ
@@ -2537,7 +2537,7 @@ class BaseModel(metaclass=MetaModel):
                     (field.name, make_type(field), field.string)
                     for field in sorted(self._fields.values(), key=lambda f: f.column_order)
                     if field.name != 'id' and field.store and field.column_type
-                ])
+                ], id_type=self.pool.id_column_type[0])
                 from odoo.modules.db import RANDOM_SERIAL  # noqa: PLC0415
                 if RANDOM_SERIAL and not self._name.startswith('test'):
                     # Randomize first sequence number to avoid having records
@@ -3754,8 +3754,8 @@ class BaseModel(metaclass=MetaModel):
                             SELECT jsonb_object_agg(
                                 key,
                                 CASE
-                                    WHEN value::int4 in %(ids)s THEN NULL
-                                    ELSE value::int4
+                                    WHEN value::int8 in %(ids)s THEN NULL
+                                    ELSE value::int8
                                 END)
                             FROM jsonb_each_text(%(field)s)
                         )
@@ -4019,7 +4019,7 @@ class BaseModel(metaclass=MetaModel):
                 assert field.store and field.column_type
                 column = SQL.identifier(fname)
                 # the type cast is necessary for some values, like NULLs
-                expr = SQL('"__tmp".%s::%s', column, SQL.identifier(field.column_type[0]))
+                expr = SQL('"__tmp".%s::%s', column, SQL.identifier(field.db_column_type(self)[0]))
                 if field.translate is True:
                     # this is the SQL equivalent of:
                     # None if expr is None else (

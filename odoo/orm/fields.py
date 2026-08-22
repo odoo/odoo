@@ -267,6 +267,10 @@ class Field[T]:
     # Database column type (ident, spec) for non-company-dependent fields.
     # Company-dependent fields are stored as jsonb (see column_type_ident).
     _column_type: tuple[str, str] | None = None
+    # Whether the column holds record identifiers: such columns follow the
+    # width the database uses for "id" columns, and are never converted from
+    # one width to the other (see db_column_type() and update_db_column()).
+    _id_column: bool = False
 
     _args__: dict[str, typing.Any] | None = None  # the parameters given to __init__()
     _module: str | None = None          # the field's module name
@@ -893,11 +897,34 @@ class Field[T]:
         _ident, spec = self.column_type
         return SQL(spec)  # pylint: disable=sql-injection
 
+    def db_column_type(self, model: BaseModel) -> tuple[str, str]:
+        """ Return the column type to give this field in the database schema.
+
+        Unlike :attr:`column_type`, this depends on the database: columns
+        holding record identifiers follow the width the database was created
+        with (see :attr:`odoo.orm.registry.Registry.id_column_type`).
+        """
+        if self._id_column and not (self.company_dependent or self.translate):
+            return model.pool.id_column_type
+        return self.column_type
+
+    def db_stored_sql_column_type(self, model: BaseModel) -> SQL:
+        """ Column type to use when creating the column, for the given model. """
+        if self._id_column and not (self.company_dependent or self.translate):
+            return sql.ID_SQL_TYPES[model.pool.id_column_type[0]]
+        return self.stored_sql_column_type
+
     @functools.cached_property
     def sql_column_type(self) -> SQL:
         """ Column type used for casting into the field's type. """
         ident, _spec = self._column_type
         return SQL.identifier(ident)
+
+    def db_sql_column_type(self, model: BaseModel) -> SQL:
+        """ Type to cast into, for the given model's database. """
+        if self._id_column:
+            return SQL.identifier(model.pool.id_column_type[0])
+        return self.sql_column_type
 
     @property
     def base_field(self) -> Self:
@@ -1274,15 +1301,24 @@ class Field[T]:
         """
         if not column:
             # the column does not exist, create it
-            sql.create_column(model.env.cr, model._table, self.name, self.stored_sql_column_type, self.string)
+            sql.create_column(model.env.cr, model._table, self.name, self.db_stored_sql_column_type(model), self.string)
             return
-        if column['udt_name'] == self.column_type[0]:
+        if column['udt_name'] == self.db_column_type(model)[0]:
+            return
+        if self._id_column and column['udt_name'] in sql.ID_COLUMN_TYPES:
+            # Never convert an identifier column from one width to the other:
+            # rewriting it locks the table for as long as it takes to rewrite
+            # every row and index, and it only makes sense for a whole database
+            # at once. Keep whatever the database already has.
+            logging.getLogger('odoo.schema').debug(
+                "Table %r: column %r kept as %s", model._table, self.name, column['udt_name'],
+            )
             return
         self._convert_db_column(model, column)
 
     def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Convert the given database column to the type of the field. """
-        sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
+        sql.convert_column(model.env.cr, model._table, self.name, self.db_stored_sql_column_type(model))
 
     def _init_column_data(self, model: BaseModel) -> None:
         """ Initialize null values in the column. """
@@ -1379,15 +1415,15 @@ class Field[T]:
                 column=sql_field,
                 company_id=company_id,
                 fallback=fallback,
-                column_type=self.sql_column_type,
+                column_type=self.db_sql_column_type(model),
             )
             if self.type in ('boolean', 'integer', 'float', 'monetary'):
-                return SQL('(%s)::%s', sql_field, self.sql_column_type)
+                return SQL('(%s)::%s', sql_field, self.db_sql_column_type(model))
             # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
             # the result of current sql_field might be 'null'::jsonb
             # ('null'::jsonb)::text == 'null'
             # ('null'::jsonb->>0)::text IS NULL
-            return SQL('(%s->>0)::%s', sql_field, self.sql_column_type)
+            return SQL('(%s->>0)::%s', sql_field, self.db_sql_column_type(model))
 
         return sql_field
 

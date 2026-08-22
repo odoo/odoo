@@ -100,13 +100,23 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
         # XML 1.0 disallows control characters, remove them otherwise they break clients
         return super().dump_unicode(value.translate(CONTROL_CHARACTERS), write)
 
+    def dump_int(self, value, write):
+        # Record identifiers are 64-bit, while <int> is defined as 32-bit by the
+        # XML-RPC specification. Values that do not fit are sent with the <i8>
+        # extension, as the Apache XML-RPC implementation does.
+        if not -2**63 <= value <= 2**63 - 1:
+            raise OverflowError("int exceeds XML-RPC limits")
+        tag = 'int' if -2**31 <= value <= 2**31 - 1 else 'i8'
+        write(f"<value><{tag}>{int(value)}</{tag}></value>\n")
+
     dispatch[MappingProxyType] = dump_frozen_dict
     dispatch[bytes] = dump_bytes
     dispatch[datetime] = dump_datetime
     dispatch[date] = dump_date
     dispatch[lazy] = dump_lazy
     dispatch[str] = dump_unicode
-    dispatch[Command] = dispatch[int]
+    dispatch[int] = dump_int
+    dispatch[Command] = dump_int
     dispatch[Domain] = lambda self, value, write: self.dispatch[list](self, list(value), write)
     dispatch[defaultdict] = dispatch[dict]
     dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)

@@ -1531,18 +1531,21 @@ class ResUsersApikeys(models.Model):
 
     def init(self):
         table = SQL.identifier(self._table)
+        big_id = self.pool.id_column_type[0] == 'int8'
         self.env.cr.execute(SQL("""
         CREATE TABLE IF NOT EXISTS %(table)s (
-            id serial primary key,
+            id %(serial_type)s primary key,
             name varchar not null,
-            user_id integer not null REFERENCES res_users(id) ON DELETE CASCADE,
+            user_id %(id_type)s not null REFERENCES res_users(id) ON DELETE CASCADE,
             scope varchar,
             expiration_date timestamp without time zone,
             index varchar(%(index_size)s) not null CHECK (char_length(index) = %(index_size)s),
             key varchar not null,
             create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
         )
-        """, table=table, index_size=INDEX_SIZE))
+        """, table=table, index_size=INDEX_SIZE,
+             serial_type=SQL('bigserial' if big_id else 'serial'),
+             id_type=SQL('bigint' if big_id else 'integer')))
 
         index_name = self._table + "_user_id_index_idx"
         if len(index_name) > 63:

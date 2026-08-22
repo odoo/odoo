@@ -90,6 +90,7 @@ class Id(Field[IdType | typing.Literal[False]]):
     # Note: This field type is not necessarily an integer!
     type = 'integer'  # note this conflicts with Integer
     column_type = ('int4', 'int4')
+    _id_column = True
 
     string = 'ID'
     store = True

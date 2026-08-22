@@ -1789,11 +1789,12 @@ class TestFlushSearch(TransactionCase):
         ])
 
     def test_flush_fields_in_domain(self):
-        with self.assertQueries(['''
+        id_type = self.env.registry.id_column_type[0]
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -1806,11 +1807,12 @@ class TestFlushSearch(TransactionCase):
             self.model.search([('name', 'like', 'foo')], order='id')
 
     def test_flush_fields_in_subdomain(self):
-        with self.assertQueries(['''
+        id_type = self.env.registry.id_column_type[0]
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
-            SET "country_id" = "__tmp"."country_id"::"int4",
+            SET "country_id" = "__tmp"."country_id"::"{id_type}",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "country_id", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -1826,11 +1828,11 @@ class TestFlushSearch(TransactionCase):
             self.brussels.country_id = self.france
             self.model.search([('country_id.name', 'like', 'foo')], order='id')
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_country"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_country"."id" = "__tmp"."id"
         ''', '''
@@ -1847,13 +1849,14 @@ class TestFlushSearch(TransactionCase):
             self.model.search([('country_id.name', 'like', 'foo')], order='id')
 
     def test_flush_bypass_access_field_in_domain(self):
+        id_type = self.env.registry.id_column_type[0]
         self.patch(self.env.registry['test_orm.city'].country_id, 'bypass_search_access', True)
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
-            SET "country_id" = "__tmp"."country_id"::"int4",
+            SET "country_id" = "__tmp"."country_id"::"{id_type}",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "country_id", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -1870,14 +1873,15 @@ class TestFlushSearch(TransactionCase):
             self.model.search([('country_id.name', 'like', 'foo')], order='id')
 
     def test_flush_inherited_field_in_domain(self):
+        id_type = self.env.registry.id_column_type[0]
         payment = self.env['test_orm.payment'].create({})
         move = self.env['test_orm.move'].create({})
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_payment"
-            SET "move_id" = "__tmp"."move_id"::"int4",
+            SET "move_id" = "__tmp"."move_id"::"{id_type}",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "move_id", "write_date", "write_uid")
             WHERE "test_orm_payment"."id" = "__tmp"."id"
         ''', '''
@@ -1891,11 +1895,11 @@ class TestFlushSearch(TransactionCase):
             payment.move_id = move
             payment.search([('tag_repeat', '>', 0)], order='id')
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_move"
             SET "tag_repeat" = "__tmp"."tag_repeat"::"int4",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "tag_repeat", "write_date", "write_uid")
             WHERE "test_orm_move"."id" = "__tmp"."id"
         ''', '''
@@ -1910,6 +1914,7 @@ class TestFlushSearch(TransactionCase):
             payment.search([('tag_repeat', '>', 0)], order='id')
 
     def test_flush_fields_in_access_rules(self):
+        id_type = self.env.registry.id_column_type[0]
         model = self.model.with_user(self.env.ref('base.user_admin'))
         self.env['ir.access'].create({
             'name': 'city_rule',
@@ -1919,11 +1924,11 @@ class TestFlushSearch(TransactionCase):
         })
         model.search([])
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -1936,11 +1941,12 @@ class TestFlushSearch(TransactionCase):
             model.search([('id', '=', self.paris.id)], order='id')
 
     def test_flush_fields_in_order(self):
-        with self.assertQueries(['''
+        id_type = self.env.registry.id_column_type[0]
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -1953,11 +1959,11 @@ class TestFlushSearch(TransactionCase):
             self.model.search([('id', '=', self.paris.id)], order='name, id')
 
         # test indirect fields, when ordering by many2one field
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_country"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_country"."id" = "__tmp"."id"
         ''', '''
@@ -1973,11 +1979,11 @@ class TestFlushSearch(TransactionCase):
             self.belgium.name = "Belgique"
             self.model.search([('id', '=', self.paris.id)], order='country_id, id')
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
-            SET "country_id" = "__tmp"."country_id"::"int4",
+            SET "country_id" = "__tmp"."country_id"::"{id_type}",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "country_id", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -1994,6 +2000,7 @@ class TestFlushSearch(TransactionCase):
             self.model.search([('id', '=', self.paris.id)], order='country_id, id')
 
     def test_do_not_flush_fields_to_fetch(self):
+        id_type = self.env.registry.id_column_type[0]
         with self.assertQueries(['''
             SELECT "test_orm_city"."id", "test_orm_city"."name"
             FROM "test_orm_city"
@@ -2004,11 +2011,11 @@ class TestFlushSearch(TransactionCase):
             self.model.search_fetch([('id', '=', self.brussels.id)], ['name'], order='id')
 
         # except when the field appears in another clause
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''
@@ -2020,11 +2027,11 @@ class TestFlushSearch(TransactionCase):
             self.brussels.name = "Brussel"
             self.model.search_fetch([('name', 'like', 'Brussel')], ['name'], order='id')
 
-        with self.assertQueries(['''
+        with self.assertQueries([f'''
             UPDATE "test_orm_city"
             SET "name" = "__tmp"."name"::"varchar",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "name", "write_date", "write_uid")
             WHERE "test_orm_city"."id" = "__tmp"."id"
         ''', '''

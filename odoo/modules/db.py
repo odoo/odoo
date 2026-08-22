@@ -218,6 +218,35 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
 
 
+#: table whose "id" tells which width the database uses for identifiers; it is
+#: created by base_data.sql, so it exists in every database from its creation.
+ID_COLUMN_WITNESS_TABLE = 'res_partner'
+
+
+def id_column_type(cr: BaseCursor) -> tuple[str, str]:
+    """ Return the column type to use for record identifiers in this database.
+
+    Databases created before identifiers became 64-bit keep their existing
+    32-bit columns: converting them means rewriting every table and index of a
+    live database. The width in use is read from the database itself rather
+    than stored, so that restoring a dump or converting a database by hand
+    stays consistent with what the schema actually contains.
+    """
+    cr.execute(SQL(
+        """ SELECT a.atttypid = 'int8'::regtype
+            FROM pg_attribute a
+            JOIN pg_class c ON c.oid = a.attrelid
+            WHERE c.relname = %s AND c.relnamespace = current_schema::regnamespace
+            AND a.attname = 'id' AND a.attnum > 0 """,
+        ID_COLUMN_WITNESS_TABLE,
+    ))
+    row = cr.fetchone()
+    if row is None:
+        # the database has no base tables yet: it is being created
+        return odoo.tools.sql.ID_COLUMN_TYPE_BIG
+    return odoo.tools.sql.ID_COLUMN_TYPE_BIG if row[0] else odoo.tools.sql.ID_COLUMN_TYPE_SMALL
+
+
 def has_trigram(cr: BaseCursor) -> bool:
     """ Test if the database has the a word_similarity function.
 

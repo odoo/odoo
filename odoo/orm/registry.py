@@ -334,6 +334,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         with closing(self.cursor()) as cr:
             self.has_unaccent = db.has_unaccent(cr)
             self.has_trigram = db.has_trigram(cr)
+            # width of the "id" columns and of the columns referencing them;
+            # it follows what the database already contains, so that existing
+            # databases are never converted (see odoo.modules.db.id_column_type)
+            self.id_column_type: tuple[str, str] = db.id_column_type(cr)
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
@@ -1088,8 +1092,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for table_name in signaling_tables:
                 if table_name not in existing_sig_tables:
                     cr.execute(SQL(
-                        "CREATE TABLE %s (id SERIAL PRIMARY KEY, date TIMESTAMP DEFAULT now())",
+                        "CREATE TABLE %s (id %s PRIMARY KEY, date TIMESTAMP DEFAULT now())",
                         SQL.identifier(table_name),
+                        SQL('BIGSERIAL' if self.id_column_type[0] == 'int8' else 'SERIAL'),
                     ))
                     cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(table_name)))
 

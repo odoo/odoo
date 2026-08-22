@@ -1410,6 +1410,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(message['attributes']['my_tags'], tags)
 
     def test_properties_field_performance(self):
+        id_type = self.env.registry.id_column_type[0]
         self.env.invalidate_all()
         with self.assertQueryCount(5):
             # read to put the partner name in cache
@@ -1418,11 +1419,11 @@ class PropertiesCase(TestPropertiesMixin):
         with self.assertQueryCount(0, msg='Must read value from cache'):
             self.message_1.attributes
 
-        expected = ["""
+        expected = [f"""
             UPDATE "test_orm_message"
             SET "attributes" = "__tmp"."attributes"::"jsonb",
                 "write_date" = "__tmp"."write_date"::"timestamp",
-                "write_uid" = "__tmp"."write_uid"::"int4"
+                "write_uid" = "__tmp"."write_uid"::"{id_type}"
             FROM (VALUES %s) AS "__tmp"("id", "attributes", "write_date", "write_uid")
             WHERE "test_orm_message"."id" = "__tmp"."id"
         """]

@@ -249,6 +249,7 @@ class Many2one(_Relational):
     """
     type = 'many2one'
     _column_type = ('int4', 'int4')
+    _id_column = True
 
     ondelete: OnDelete | None = None    # what to do when value is deleted
     delegate: bool = False              # whether self implements delegation
@@ -1374,14 +1375,15 @@ class Many2many(_RelationalMulti):
         comodel = model.env[self.comodel_name]
         if not sql.table_exists(cr, self.relation):
             cr.execute(SQL(
-                """ CREATE TABLE %(rel)s (%(id1)s INTEGER NOT NULL,
-                                          %(id2)s INTEGER NOT NULL,
+                """ CREATE TABLE %(rel)s (%(id1)s %(id_type)s NOT NULL,
+                                          %(id2)s %(id_type)s NOT NULL,
                                           PRIMARY KEY(%(id1)s, %(id2)s));
                     COMMENT ON TABLE %(rel)s IS %(comment)s;
                     CREATE INDEX ON %(rel)s (%(id2)s, %(id1)s); """,
                 rel=SQL.identifier(self.relation),
                 id1=SQL.identifier(self.column1),
                 id2=SQL.identifier(self.column2),
+                id_type=SQL('BIGINT' if model.pool.id_column_type[0] == 'int8' else 'INTEGER'),
                 comment=f"RELATION BETWEEN {model._table} AND {comodel._table}",
             ))
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)

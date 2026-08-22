@@ -67,6 +67,7 @@ class Many2oneReference(Integer):
     :param str model_field: name of the :class:`Char` where the model name is stored.
     """
     type = 'many2one_reference'
+    _id_column = True
 
     model_field = None
     aggregator = None
