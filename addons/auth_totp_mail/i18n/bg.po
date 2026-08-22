@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_totp_mail
+# * auth_totp_mail
 #
 # Translators:
 # Petko Karamotchev, 2024
 # aleksandar ivanov, 2024
 # Milena Georgieva, 2024
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Milena Georgieva, 2024\n"
-"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"PO-Revision-Date: 2026-08-18 16:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
+"auth_totp_mail/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -65,6 +68,7 @@ msgstr ""
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
+"Току-що от акаунта ви беше премахнато доверено устройство: %(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -81,6 +85,7 @@ msgstr "Устройство за автентикация"
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr ""
+"Покана за активиране на двуфакторно удостоверяване във вашия Odoo акаунт"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -89,16 +94,18 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
+"Покана за използване на двуфакторно удостоверяване, изпратена за следния(те) "
+"потребител(и): %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr ""
+msgstr "Покана за използване на 2FA"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr ""
+msgstr "Покана за използване на двуфакторно удостоверяване"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -108,19 +115,19 @@ msgstr "Име"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr ""
+msgstr "Отваряне на конфигурация на двуфакторно удостоверяване"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Activated"
-msgstr ""
+msgstr "Актуализация на сигурността: 2FA е активирана"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Deactivated"
-msgstr ""
+msgstr "Актуализация на сигурността: 2FA е деактивирана"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -132,24 +139,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 msgid "Security Update: Device Removed"
-msgstr ""
+msgstr "Актуализация на сигурността: Устройството е премахнато"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "Настройки: Покана за 2Fa"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been activated on your account"
-msgstr ""
+msgstr "Двуфакторното удостоверяване беше активирано за вашия акаунт"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr ""
+msgstr "Двуфакторното удостоверяване беше деактивирано за вашия акаунт"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
@@ -159,4 +166,4 @@ msgstr "Потребител"
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
 msgid "activating Two-factor Authentication"
-msgstr ""
+msgstr "активиране на двуфакторна автентикация"
