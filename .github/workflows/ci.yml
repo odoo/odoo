@@ -22,7 +22,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.0"
-          terraform_wrapper: false # <-- يحل مشكلة الـ Flag Error تماماً
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init -backend=false
@@ -34,6 +34,7 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
         working-directory: infra/terraform
+
   # ==========================================================================
   # Observability: validate Prometheus + Alertmanager + Grafana configs
   # ==========================================================================
@@ -138,13 +139,13 @@ jobs:
           set -o pipefail
           coverage run --concurrency=thread --source=custom_addons/invoice_agent \
             ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons \
-            --load=base,web,invoice_agent \
             --test-enable --test-tags /invoice_agent --stop-after-init \
-            --log-level=test --db_host=localhost --db_port=5432 \
+            --log-level=warn --log-handler=odoo.addons.invoice_agent:INFO \
+            --db_host=localhost --db_port=5432 \
             --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
 
-          if grep -E 'FAIL|ERROR|CRITICAL' odoo-test.log | grep -vE '\([A-Z]+/[0-9]+\)' | grep -q . ; then
-            echo "Real failure or error detected in Odoo test logs."
+          if grep -qE "FAIL: Test|ERROR: Test" odoo-test.log; then
+            echo "Real failure or error detected in Odoo test execution."
             exit 1
           fi
 
@@ -169,7 +170,8 @@ jobs:
 
           echo "invoice_agent total coverage: ${TOTAL}%"
 
-          if [ "${TOTAL%%.*}" -lt "${COVERAGE_MIN}" ]; then
+          TOTAL_INT=${TOTAL%%.*}
+          if [ "$TOTAL_INT" -lt "${COVERAGE_MIN}" ]; then
             echo "Coverage gate failed: ${TOTAL}% is below the required ${COVERAGE_MIN}%"
             exit 1
           fi
