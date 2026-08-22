@@ -23,23 +23,6 @@
         </table>
     </div>
 
-    <div t-name="stock.replenishmentGraph" class="col-11">
-        <div class="o_replenishment_graph">
-            <canvas t-ref="this.chart.ref"/>
-        </div>
-        <div class="d-flex pt-3">
-            <h6 class="row text-muted">
-                <span>Daily Demand: <span t-out="this.dailyDemand"/> <span t-out="this.productUomName"/>/day</span>
-                <span class="pt-2">Average Stock: <span t-out="this.averageStock"/> <span t-out="this.productUomName"/></span>
-            </h6>
-            <h6 class="row text-muted">
-                <span t-if="!this.qtiesAreTheSame">Ordering Frequency: <span t-out="this.orderingPeriod"/> days</span>
-                <span t-if="this.qtiesAreTheSame">Ordering Frequency: On demand</span>
-                <span class="pt-2">Lead Time: <span t-out="this.leadTime"/> days</span>
-            </h6>
-        </div>
-    </div>
-
     <button t-name="stock.updateButton"
             class="btn btn-link btn-icon oi"
             data-icon="refresh"
