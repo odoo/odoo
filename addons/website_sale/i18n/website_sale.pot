@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 17:37+0000\n"
-"PO-Revision-Date: 2026-08-14 17:37+0000\n"
+"POT-Creation-Date: 2026-08-21 17:38+0000\n"
+"PO-Revision-Date: 2026-08-21 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -473,6 +473,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:mail.template,body_html:website_sale.mail_template_withdrawal_request_notification
+msgid ""
+"<p>\n"
+"A withdrawal request was submitted for order <t t-out=\"object.order_reference\">S00001</t>.\n"
+"</p>\n"
+"<div style=\"margin: 16px 0; text-align: center;\">\n"
+"    <a t-att-href=\"ctx.get('order_access_link')\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 14px; display: inline-block;\">\n"
+"        View Order\n"
+"    </a>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
@@ -772,6 +786,19 @@ msgid ""
 "                        </table>\n"
 "                    </div>\n"
 "                </div>\n"
+"            "
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,body_html:website_sale.mail_template_sale_withdrawal_request_confirmation
+msgid ""
+"<t>\n"
+"Hello,<br/><br/>\n"
+"This email confirms that we have received your request to cancel Order <t t-out=\"object.name\">S00001</t>.<br/><br/>\n"
+"Our team is currently reviewing your request. We will notify you once it is processed.<br/><br/>\n"
+"Sincerely,<br/>\n"
+"<t t-out=\"(object.company_id or object.user_id.company_id or user.company_id).name\">YourCompany</t> Team\n"
+"</t>\n"
 "            "
 msgstr ""
 
@@ -2260,6 +2287,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -2281,6 +2309,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__create_date
 msgid "Created on"
 msgstr ""
 
@@ -2681,6 +2710,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -2876,6 +2906,16 @@ msgid "Ecommerce: Order Rating Request"
 msgstr ""
 
 #. module: website_sale
+#: model:mail.template,name:website_sale.mail_template_sale_withdrawal_request_confirmation
+msgid "Ecommerce: Withdrawal Request Confirmation"
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,name:website_sale.mail_template_withdrawal_request_notification
+msgid "Ecommerce: Withdrawal Request Notification"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
@@ -2901,6 +2941,13 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.js:0
+msgid ""
+"Email addresses of the recipients of the withdrawal request notification"
 msgstr ""
 
 #. module: website_sale
@@ -3212,7 +3259,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #: model:product.public.category,name:website_sale.public_category_furnitures
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_preview_data
-msgid "Furnitures"
+msgid "Furniture"
 msgstr ""
 
 #. module: website_sale
@@ -3445,6 +3492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
 #: model:ir.model.fields,field_description:website_sale.field_website_track__id
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__id
 msgid "ID"
 msgstr ""
 
@@ -3700,6 +3748,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__is_published
+#: model:ir.model.fields,field_description:website_sale.field_product_product__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__is_published
@@ -3806,30 +3855,6 @@ msgid "Large Images"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/date_filter_button/date_filter_button.js:0
-msgid "Last 30 days"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/date_filter_button/date_filter_button.js:0
-msgid "Last 365 days"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/date_filter_button/date_filter_button.js:0
-msgid "Last 7 days"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/date_filter_button/date_filter_button.js:0
-msgid "Last 90 days"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_abandoned_cart_search
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -3851,6 +3876,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -3864,6 +3890,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -4031,6 +4058,11 @@ msgid "Mega menu default image"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__log_message
+msgid "Message"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_has_error
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
 msgid "Message Delivery error"
@@ -4121,12 +4153,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "My Wishlist"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/dashboard/dashboard.xml:0
-msgid "N/A"
 msgstr ""
 
 #. module: website_sale
@@ -4508,6 +4534,7 @@ msgid "Options"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__order_id
 #: model:website.checkout.step,name:website_sale.checkout_step_cart
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Order"
@@ -4529,6 +4556,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
 msgid "Order Lines displayed on Website"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
+msgid "Order Number"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__order_reference
+msgid "Order Reference"
 msgstr ""
 
 #. module: website_sale
@@ -5377,6 +5415,13 @@ msgid "Recently Viewed Products (per user)"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.js:0
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__recipient_emails
+msgid "Recipient Emails"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
 msgid "Recliners"
 msgstr ""
@@ -5496,6 +5541,11 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace image"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model,website_form_label:website_sale.model_withdrawal_request
+msgid "Request Withdrawal"
 msgstr ""
 
 #. module: website_sale
@@ -5832,6 +5882,17 @@ msgstr ""
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_order_rating
 msgid "Sent to customers to request feedback on their order"
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,description:website_sale.mail_template_sale_withdrawal_request_confirmation
+msgid ""
+"Sent to the customer to confirm their withdrawal request has been received"
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,description:website_sale.mail_template_withdrawal_request_notification
+msgid "Sent to the internal team when a withdrawal request is submitted"
 msgstr ""
 
 #. module: website_sale
@@ -6861,11 +6922,6 @@ msgid "Unfortunately, there is no longer enough stock to fulfill your order."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
-msgid "Unfulfilled Orders"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
 msgstr ""
@@ -6873,6 +6929,22 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 msgid "Unpaid Orders"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_unpublish_out_of_stock
+#: model:res.groups,name:website_sale.group_unpublish_out_of_stock
+msgid "Unpublish Out-of-Stock Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Unpublish out-of-stock products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Unpublish/Republish products based on stock availability."
 msgstr ""
 
 #. module: website_sale
@@ -7067,6 +7139,13 @@ msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
 "promising to repair or replace it if necessary within a specified period of "
 "time."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/withdrawal_request.py:0
+msgid ""
+"We could not find any order matching this email address and order number."
 msgstr ""
 
 #. module: website_sale
@@ -7298,6 +7377,27 @@ msgid "With three feet"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_withdrawal_request
+msgid "Withdrawal Request"
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,subject:website_sale.mail_template_withdrawal_request_notification
+msgid "Withdrawal Request - {{ object.order_reference }}"
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,subject:website_sale.mail_template_sale_withdrawal_request_confirmation
+msgid "Withdrawal Request Confirmation"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/withdrawal_request.py:0
+msgid "Withdrawal Requested"
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
@@ -7378,6 +7478,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
+#: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__email
 msgid "Your Email"
 msgstr ""
 
@@ -7660,6 +7761,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "slide"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/withdrawal_request.py:0
+msgid "string"
 msgstr ""
 
 #. module: website_sale
