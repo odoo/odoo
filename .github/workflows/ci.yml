@@ -43,14 +43,16 @@ jobs:
       - name: Validate Prometheus config
         run: |
           docker run --rm -v "${{ github.workspace }}/infra/observability/prometheus:/etc/prometheus" \
+            --entrypoint promtool \
             prom/prometheus:v2.53.0 \
-            checkconfig /etc/prometheus/prometheus.yml
+            check config /etc/prometheus/prometheus.yml
 
       - name: Validate Alertmanager config
         run: |
           docker run --rm -v "${{ github.workspace }}/infra/observability/alertmanager:/etc/alertmanager" \
+            --entrypoint amtool \
             prom/alertmanager:v0.27.0 \
-            checkconfig /etc/alertmanager/alertmanager.yml
+            check-config /etc/alertmanager/alertmanager.yml
 
       - name: Validate Grafana dashboard JSON
         run: |

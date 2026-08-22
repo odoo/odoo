@@ -15,7 +15,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /build
 
-# تثبيت أدوات التجميع
+# تثبيت الأدوات الأساسية لبناء الـ wheels
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY pyproject.toml README.md ./
 COPY app ./app
 
-# بناء الـ Wheels من المشروع الحالي (pyproject.toml) وكل تبعياته
+# بناء الـ Wheels من المشروع الحالي وكل تبعياته
 RUN pip wheel --wheel-dir /build/wheels .
 
 # ==========================================
@@ -32,8 +32,9 @@ RUN pip wheel --wheel-dir /build/wheels .
 # ==========================================
 FROM python:3.12-slim AS runtime
 
+ARG INVOICE_AI_BUILD_SHA=dev
+
 # OCI labels: org.opencontainers.image.revision is what the deploy job reads
-# to discover the currently running image for rollback.
 LABEL org.opencontainers.image.title="invoice-ai" \
     org.opencontainers.image.description="Standalone vendor invoice extraction service (ADR-003)" \
     org.opencontainers.image.source="https://github.com/7ananSaif/odoo" \
@@ -43,8 +44,8 @@ ENV PYTHONUNBUFFERED=1 \
     PATH="/home/appuser/.local/bin:$PATH" \
     INVOICE_AI_BUILD_SHA="${INVOICE_AI_BUILD_SHA}"
 
-# تثبيت أدوات الـ OCR والـ PDF (طابق حزمة Odoo للغة العربية والإنجليزية)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# ترقية حزم النظام وتثبيت أدوات OCR و PDF للتخلص من ثغرات Trivy
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     poppler-utils \
     tesseract-ocr \
     tesseract-ocr-eng \
