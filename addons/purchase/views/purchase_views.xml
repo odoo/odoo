@@ -179,7 +179,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'default_is_company': True, 'show_vat': True}"
                                 placeholder="Name, TIN, Email, or Reference"
                              readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="partner_ref"/>
