@@ -17,6 +17,7 @@ from odoo.http import request
 from odoo.tools.image import image_process, image_data_uri, binary_to_image, get_webp_size
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
+from odoo.tools.urls import UnsafeUrlError, safe_requests
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
 from lxml import html, etree
@@ -287,7 +288,10 @@ class HTML_Editor(http.Controller):
             # This approach is beneficial when the URL doesn't conclude with an
             # image extension. By verifying the MIME type, the code ensures that
             # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
+            try:
+                response = safe_requests.head(url, timeout=10)
+            except UnsafeUrlError:
+                raise UserError(_("The provided URL is not allowed."))
             if response.status_code == 200:
                 mime_type = response.headers.get('content-type')
                 if mime_type in SUPPORTED_IMAGE_MIMETYPES:

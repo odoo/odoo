@@ -1,5 +1,9 @@
+import ipaddress
 import re
+import socket
 import urllib.parse
+
+import requests
 
 __all__ = ['urljoin']
 
@@ -72,3 +76,76 @@ def urljoin(base: str, extra: str) -> str:
         raise ValueError("Dot segments are not allowed")
 
     return urllib.parse.urlunsplit((b_scheme, b_netloc, path, e_query, e_fragment))
+
+
+class UnsafeUrlError(ValueError):
+    """Raised when a URL is unsafe to fetch server-side (bad scheme or a
+    non-public target address)."""
+
+
+def validate_public_url(url):
+    """Validate the scheme and the resolved address(es) of ``url``.
+
+    :raise UnsafeUrlError: if the scheme is not http/https or the host resolves
+        to a loopback/private/link-local/reserved/multicast/unspecified address.
+    :return: ``url`` unchanged when it is considered safe.
+    """
+    try:
+        parts = urllib.parse.urlsplit(url)
+        port = parts.port
+    except ValueError as exc:
+        raise UnsafeUrlError("Malformed URL: %r" % (url,)) from exc
+    if parts.scheme not in ('http', 'https'):
+        raise UnsafeUrlError("Disallowed URL scheme: %r" % (url,))
+    host = parts.hostname
+    if not host:
+        raise UnsafeUrlError("URL has no host: %r" % (url,))
+    port = port or (443 if parts.scheme == 'https' else 80)
+    try:
+        addrinfo = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
+    except socket.gaierror as exc:
+        raise UnsafeUrlError("Cannot resolve host %r" % (host,)) from exc
+    for *_, sockaddr in addrinfo:
+        ip = ipaddress.ip_address(sockaddr[0])
+        if not ip.is_global or ip.is_multicast:
+            raise UnsafeUrlError("URL resolves to non-public address %s: %r" % (ip, url))
+    return url
+
+
+class safe_requests:
+    """:abbr:`SSRF (Server-Side Request Forgery)` egress guard for server-side fetches of user-supplied URLs.
+
+    Restricts outbound requests to the http/https schemes and to
+    publicly-routable target addresses, re-validating after every redirect hop.
+    """
+
+    @classmethod
+    def request(cls, method, url, *, session=None, max_redirects=5, **kwargs):
+        """Perform ``method`` on ``url`` with per-hop SSRF validation.
+
+        Redirects are followed manually so that every hop is re-validated; with
+        ``allow_redirects=False`` the redirect response is returned as is.
+        """
+        if method not in ('HEAD', 'GET'):
+            e = f"not HEAD or GET: {method!r}"
+            raise ValueError(e)
+        sess = session or requests
+        follow_redirects = kwargs.pop('allow_redirects', True)
+        current = url
+        for _hop in range(max_redirects + 1):
+            validate_public_url(current)
+            http_method = sess.head if method == 'HEAD' else sess.get
+            response = http_method(current, allow_redirects=False, **kwargs)
+            if follow_redirects and response.next:
+                current = response.next.url
+                continue
+            return response
+        raise UnsafeUrlError("Too many redirects while fetching %r" % (url,))
+
+    @classmethod
+    def get(cls, url, **kwargs):
+        return cls.request('GET', url, **kwargs)
+
+    @classmethod
+    def head(cls, url, **kwargs):
+        return cls.request('HEAD', url, **kwargs)
