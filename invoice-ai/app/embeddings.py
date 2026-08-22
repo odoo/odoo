@@ -136,8 +136,7 @@ class VoyageEmbedder:
                 time.sleep(VOYAGE_RETRY_BACKOFF_SECONDS)
         assert last_error is not None
         raise VoyageEmbeddingError(
-            f"voyage embedding failed after {VOYAGE_RETRIES + 1} attempts: "
-            f"{last_error}",
+            f"voyage embedding failed after {VOYAGE_RETRIES + 1} attempts: {last_error}",
         ) from last_error
 
     @staticmethod

@@ -180,15 +180,12 @@ def _validate_citations(
             )
     verdict.evidence = valid_citations
     if hallucinated:
-        hallucinated_flag = (
-            f"hallucinated_citation:{','.join(str(m) for m in hallucinated)}"
-        )
+        hallucinated_flag = f"hallucinated_citation:{','.join(str(m) for m in hallucinated)}"
         if hallucinated_flag not in verdict.flags:
             verdict.flags = list(verdict.flags) + [hallucinated_flag]
     if not verdict.evidence:
         _logger.warning(
-            "validate citation guard: no valid citations in verdict — "
-            "adding no_history flag"
+            "validate citation guard: no valid citations in verdict — adding no_history flag"
         )
         if "no_history" not in verdict.flags:
             verdict.flags = list(verdict.flags) + ["no_history"]
@@ -213,9 +210,7 @@ def _format_extraction_for_validation(extraction: InvoiceExtraction) -> str:
     if extraction.lines:
         line_parts = []
         for line in extraction.lines:
-            line_parts.append(
-                f"  - {line.name}: qty={line.quantity} unit_price={line.price_unit}"
-            )
+            line_parts.append(f"  - {line.name}: qty={line.quantity} unit_price={line.price_unit}")
         lines_text = "\n".join(line_parts)
 
     parts = [

@@ -182,9 +182,7 @@ class TestVectorSearch:
         retrieve_mod._pool = pool
         try:
             query_vector = [0.0] * 1024
-            results = await retrieve_mod.vector_search(
-                partner_id, query_vector, limit=8
-            )
+            results = await retrieve_mod.vector_search(partner_id, query_vector, limit=8)
             for result in results:
                 matching = [d for d in _SEED_DATA if d["move_id"] == result["move_id"]]
                 assert matching
@@ -228,9 +226,7 @@ class TestHybridRetrieve:
                 extracted_ref="INV-2025-001",
             )
             move_ids = [r["move_id"] for r in results]
-            assert len(move_ids) == len(set(move_ids)), (
-                f"Duplicate move_ids found: {move_ids}"
-            )
+            assert len(move_ids) == len(set(move_ids)), f"Duplicate move_ids found: {move_ids}"
         finally:
             retrieve_mod._pool = None
 

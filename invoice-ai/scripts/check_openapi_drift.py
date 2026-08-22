@@ -43,6 +43,7 @@ import sys
 from typing import Any
 
 import yaml
+
 from app.main import app
 
 
@@ -112,8 +113,7 @@ def _fingerprint(schema: dict) -> dict:
         "type": _canonical_type(schema),
         "additionalProperties": schema.get("additionalProperties", True),
         "properties": {
-            name: _canonical_type(definition)
-            for name, definition in sorted(props.items())
+            name: _canonical_type(definition) for name, definition in sorted(props.items())
         },
     }
 
@@ -121,11 +121,7 @@ def _fingerprint(schema: dict) -> dict:
 def _healthz_200_schema(spec: dict) -> dict:
     """Resolve the /healthz 200 schema, following $ref into components."""
     health_200 = (
-        spec.get("paths", {})
-        .get("/healthz", {})
-        .get("get", {})
-        .get("responses", {})
-        .get("200", {})
+        spec.get("paths", {}).get("/healthz", {}).get("get", {}).get("responses", {}).get("200", {})
     )
     schema = health_200.get("content", {}).get("application/json", {}).get("schema", {})
     if "$ref" in schema:
@@ -145,21 +141,12 @@ def main() -> int:
     #    behaviour — HTTPValidationError — not the runtime ErrorEnvelope the
     #    YAML documents; tolerated, see module docstring).
     def extract_responses(spec: dict) -> dict:
-        return (
-            spec.get("paths", {})
-            .get("/v1/extract", {})
-            .get("post", {})
-            .get("responses", {})
-        )
+        return spec.get("paths", {}).get("/v1/extract", {}).get("post", {}).get("responses", {})
 
     def response_refs(spec: dict) -> dict:
         refs = {}
         for status, definition in extract_responses(spec).items():
-            schema = (
-                definition.get("content", {})
-                .get("application/json", {})
-                .get("schema", {})
-            )
+            schema = definition.get("content", {}).get("application/json", {}).get("schema", {})
             refs[status] = (schema.get("$ref") or "").rsplit("/", 1)[-1]
         return refs
 

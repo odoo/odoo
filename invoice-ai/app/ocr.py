@@ -103,8 +103,7 @@ def _ocr_images(images: list[Any]) -> dict[str, Any]:
     text = "\n".join(part for part in text_parts if part.strip())
     if not text.strip():
         raise BadRequestError(
-            "OCR produced no text — the document is blank, too dark, or not "
-            "a text document.",
+            "OCR produced no text — the document is blank, too dark, or not a text document.",
         )
     return {
         "text": text,

@@ -66,9 +66,9 @@ TOPOLOGY_BINDINGS = [
     (QUEUE_DEAD, ROUTING_KEY_DEAD),
 ]
 
-DLX_BINDINGS = [
-    (queue_name, RETRY_KEYS[queue_name]) for queue_name, _ in RETRY_TIERS
-] + [(QUEUE_DEAD, ROUTING_KEY_DEAD)]
+DLX_BINDINGS = [(queue_name, RETRY_KEYS[queue_name]) for queue_name, _ in RETRY_TIERS] + [
+    (QUEUE_DEAD, ROUTING_KEY_DEAD)
+]
 
 
 def build_amqp_url() -> str:

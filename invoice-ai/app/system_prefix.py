@@ -64,8 +64,7 @@ def render_system_prefix() -> list[TextBlockParam]:
     vendors = "\n".join(str(vendor) for vendor in coa["vendors"])
 
     coa_block = (
-        "CHART OF ACCOUNTS (authoritative account names + codes):\n"
-        f"{accounts or '(none loaded)'}"
+        f"CHART OF ACCOUNTS (authoritative account names + codes):\n{accounts or '(none loaded)'}"
     )
     vendor_block = (
         "KNOWN VENDORS (match the vendor name against this list, then use "

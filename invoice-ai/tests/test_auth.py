@@ -18,6 +18,7 @@ already exercised by the happy-path test in ``test_extract.py`` with the
 from datetime import UTC, datetime, timedelta
 
 import pytest
+
 from app.config import settings
 
 from .conftest import mint_token

@@ -18,6 +18,7 @@ Coverage required by the week's brief:
 """
 
 import pytest
+
 from app.errors import ClaudeRateLimitError
 
 
@@ -33,9 +34,7 @@ async def test_healthz(client):
 
 
 @pytest.mark.anyio
-async def test_extract_happy_path_text(
-    fake_claude, client, default_result, auth_headers
-):
+async def test_extract_happy_path_text(fake_claude, client, default_result, auth_headers):
     fake_claude.result = default_result
 
     response = await client.post(
@@ -115,9 +114,7 @@ async def test_extract_bad_mimetype_returns_415(fake_claude, client, auth_header
 
 
 @pytest.mark.anyio
-async def test_extract_upstream_rate_limit_maps_to_503(
-    fake_claude, client, auth_headers
-):
+async def test_extract_upstream_rate_limit_maps_to_503(fake_claude, client, auth_headers):
     fake_claude.error = ClaudeRateLimitError(
         message="Anthropic rate limit (HTTP 429)",
         retry_after_seconds=17,
@@ -136,9 +133,7 @@ async def test_extract_upstream_rate_limit_maps_to_503(
 
 
 @pytest.mark.anyio
-async def test_extract_upstream_generic_error_maps_to_503(
-    fake_claude, client, auth_headers
-):
+async def test_extract_upstream_generic_error_maps_to_503(fake_claude, client, auth_headers):
     fake_claude.error = ClaudeRateLimitError(
         message="Anthropic API error",
     )

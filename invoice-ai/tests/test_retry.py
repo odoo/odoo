@@ -15,6 +15,7 @@ Two layers are covered:
 import json
 
 import pytest
+
 from app.consumer import InvoiceConsumer, WorkerError, _parse_body
 from app.errors import (
     BadRequestError,

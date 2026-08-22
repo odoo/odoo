@@ -63,8 +63,7 @@ async def get_pool() -> asyncpg.Pool:
         dsn = settings.database_url
         if not dsn:
             raise RuntimeError(
-                "INVOICE_AI_DATABASE_URL is not configured — "
-                "cannot create an asyncpg pool."
+                "INVOICE_AI_DATABASE_URL is not configured — cannot create an asyncpg pool."
             )
         _pool = await asyncpg.create_pool(
             dsn,
@@ -403,8 +402,7 @@ async def retrieve_vendor_context(
         except VoyageRerankError:
             # Degraded: keep original cosine ordering
             _logger.warning(
-                "retrieve rerank: reranker failed, keeping cosine ordering "
-                "(%d candidates)",
+                "retrieve rerank: reranker failed, keeping cosine ordering (%d candidates)",
                 len(candidates),
             )
     elif candidates:

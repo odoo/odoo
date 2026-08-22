@@ -317,8 +317,7 @@ class InvoiceConsumer:
             WORKER_JOBS_TOTAL.labels(status="done").inc()
             WORKER_JOB_DURATION.observe(job_elapsed)
             _logger.info(
-                "invoice-ai worker: job %s move_id=%s done model=%s "
-                "validation=%s duration=%.1fs",
+                "invoice-ai worker: job %s move_id=%s done model=%s validation=%s duration=%.1fs",
                 job_uuid,
                 move_id,
                 result["model"],
@@ -326,9 +325,7 @@ class InvoiceConsumer:
                 job_elapsed,
             )
 
-    async def _publish_started(
-        self, topic_exchange, job_uuid: str, move_id: int
-    ) -> None:
+    async def _publish_started(self, topic_exchange, job_uuid: str, move_id: int) -> None:
         """Publish ``extract.started`` on the topic exchange (live UI state)."""
         await topic_exchange.publish(
             aio_pika.Message(
@@ -432,8 +429,7 @@ class InvoiceConsumer:
                     await self._publish_result(topic_exchange, failed_payload)
             except Exception:
                 _logger.exception(
-                    "invoice-ai worker: could not publish failed result for "
-                    "dead-lettered job",
+                    "invoice-ai worker: could not publish failed result for dead-lettered job",
                 )
         WORKER_JOBS_TOTAL.labels(status="dead-lettered").inc()
         _logger.warning("invoice-ai worker: dead-lettered job: %s", reason)

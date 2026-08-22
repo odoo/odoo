@@ -138,9 +138,7 @@ class VoyageReranker:
                     index = item.get("index")
                     score = item.get("relevance_score")
             if index is None or score is None:
-                raise VoyageRerankError(
-                    f"malformed rerank result (no index/score): {item!r}"
-                )
+                raise VoyageRerankError(f"malformed rerank result (no index/score): {item!r}")
             index = int(index)
             score = float(score)
             if 0 <= index < len(documents):

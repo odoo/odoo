@@ -15,6 +15,7 @@ captured the function object at import time (the same lesson documented in
 """
 
 import pytest
+
 from app.embeddings import (
     VOYAGE_DIMENSIONS,
     VoyageEmbedder,

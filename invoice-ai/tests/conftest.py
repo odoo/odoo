@@ -18,12 +18,13 @@ from decimal import Decimal
 
 import jwt
 import pytest
+from httpx import ASGITransport, AsyncClient
+
 from app.claude import ClaudeService
 from app.config import settings
 from app.dependencies import get_claude_service
 from app.main import app
 from app.schemas import InvoiceExtraction, InvoiceLine
-from httpx import ASGITransport, AsyncClient
 
 TEST_JWT_SECRET = "test-shared-secret-not-for-production"
 

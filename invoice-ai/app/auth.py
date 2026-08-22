@@ -63,8 +63,7 @@ def _require_token(
 
     if not secret:
         _logger.error(
-            "invoice-ai JWT_SECRET is not configured — refusing all "
-            "authenticated requests",
+            "invoice-ai JWT_SECRET is not configured — refusing all authenticated requests",
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
