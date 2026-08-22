@@ -2,12 +2,10 @@
 
 import babel.dates
 from json import dumps
-from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.fields import Domain
 from odoo.tools.date_utils import get_month, subtract
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import get_lang, format_date
@@ -102,32 +100,6 @@ class StockReplenishmentInfo(models.TransientModel):
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
 
-    def _get_period_of_time(self, period=None):
-        self.ensure_one()
-        if not period:
-            period = self.based_on
-        today = fields.Datetime.now()
-        start_date = limit_date = today
-        if period == 'one_week':
-            start_date = start_date - relativedelta(weeks=1)
-        elif period == 'one_month':
-            start_date = start_date - relativedelta(months=1)
-        elif period == 'three_months':
-            start_date = start_date - relativedelta(months=3)
-        elif period == 'one_year':
-            start_date = start_date - relativedelta(years=1)
-        else:  # Relative period of time.
-            start_date = datetime(year=today.year - 1, month=today.month, day=1)
-            if period == 'last_year_2':
-                start_date += relativedelta(months=1)
-            elif period == 'last_year_3':
-                start_date += relativedelta(months=2)
-            if period == 'last_year_quarter':
-                limit_date = start_date + relativedelta(months=3)
-            else:
-                limit_date = start_date + relativedelta(months=1)
-        return start_date, limit_date
-
     def _prepare_graph_data(self):
         self.ensure_one()
         if self.daily_demand == 0:
@@ -158,13 +130,13 @@ class StockReplenishmentInfo(models.TransientModel):
 
     def _inverse_based_on(self):
         for report in self:
-            if report.orderpoint_id.based_on != report.based_on:
-                report.orderpoint_id.based_on = report.based_on
+            if report.orderpoint_id.min_max_based_on != report.based_on:
+                report.orderpoint_id.min_max_based_on = report.based_on
 
     def _inverse_percent_factor(self):
         for report in self:
-            if report.orderpoint_id.percent_factor != report.percent_factor:
-                report.orderpoint_id.percent_factor = report.percent_factor
+            if report.orderpoint_id.min_max_based_on_factor != report.percent_factor:
+                report.orderpoint_id.min_max_based_on_factor = report.percent_factor
 
     @api.onchange('daily_demand')
     def _onchange_daily_demand(self):
@@ -254,53 +226,8 @@ class StockReplenishmentInfo(models.TransientModel):
 
     def get_daily_demand(self, period=None, ratio=None):
         self.ensure_one()
-        if not ratio:
-            ratio = self.percent_factor
-        date_from, date_to = self._get_period_of_time(period=period)
-        domain = Domain.AND([
-            [('product_id', '=', self.product_id.id)],
-            [('date', '>=', date_from)],
-            [('date', '<=', datetime.combine(date_to, time.max))],
-            [('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done'])],
-            [('company_id', '=', self.orderpoint_id.company_id.id)],
-        ])
-        quantity_out = self.env['stock.move']._read_group(
-            Domain.AND([domain, [('location_dest_id.usage', 'in', ['customer', 'production'])]]),
-            aggregates=['product_qty:sum'],
-        )[0][0] or 0.0
-        quantity_returned = self.env['stock.move']._read_group(
-            Domain.AND([domain, [('location_id.usage', '=', 'customer')]]),
-            aggregates=['product_qty:sum'],
-        )[0][0] or 0.0
-        return ((quantity_out - quantity_returned) / (date_to - date_from).days) * (ratio / 100)
+        return self.orderpoint_id._get_daily_demand(period=period, ratio=ratio)
 
-    def action_update_daily_demand(self):
-        self.ensure_one()
-        if self.based_on == 'custom':
-            return self.orderpoint_id.action_stock_replenishment_info()
-        date_from, date_to = self._get_period_of_time()
-        domain = Domain.AND([
-            [('product_id', '=', self.product_id.id)],
-            [('date', '>=', date_from)],
-            [('date', '<=', datetime.combine(date_to, time.max))],
-            [('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done'])],
-            [('company_id', '=', self.orderpoint_id.company_id.id)],
-        ])
-        quantity_out = self.env['stock.move']._read_group(
-            Domain.AND([domain, [('location_dest_id.usage', 'in', ['customer', 'production'])]]),
-            aggregates=['product_qty:sum'],
-        )[0][0] or 0.0
-        quantity_returned = self.env['stock.move']._read_group(
-            Domain.AND([domain, [('location_id.usage', '=', 'customer')]]),
-            aggregates=['product_qty:sum'],
-        )[0][0] or 0.0
-        daily_demand = ((quantity_out - quantity_returned) / (date_to - date_from).days) * (self.percent_factor / 100)
-        product_min_qty = daily_demand * self.min_coverage
-        product_max_qty = product_min_qty + (daily_demand * self.replenish_frequency)
-        self.product_min_qty = product_min_qty
-        self.product_max_qty = product_max_qty
-        self.daily_demand = daily_demand
-        return self.orderpoint_id.action_stock_replenishment_info()
 
 class StockReplenishmentOption(models.TransientModel):
     _name = 'stock.replenishment.option'
