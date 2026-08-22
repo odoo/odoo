@@ -12,6 +12,10 @@
                     class="o_button_snooze btn btn-secondary me-1">
                 Snooze
             </button>
+            <button t-if="this.hasSelectedRecords" type="button" t-on-click="this.onClickSuggest"
+                    class="o_button_snooze btn btn-secondary me-1">
+                Suggest
+            </button>
         </xpath>
     </t>
 

@@ -34,6 +34,14 @@ export class StockOrderpointListController extends ListController {
         });
     }
 
+    async onClickSuggest() {
+        const resIds = await this.model.root.getResIds(true);
+        return this.actionService.doAction('stock.action_orderpoint_suggest', {
+            additionalContext: { default_orderpoint_ids: resIds },
+            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
+        });
+    }
+
     async createRecord() {
         const location_id = this.env.searchModel.categories.find((category) => category.fieldName === "location_id")?.activeValueId;
         await super.createRecord(...arguments);
