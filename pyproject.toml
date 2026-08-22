@@ -31,7 +31,23 @@ ignore = [
 "**/tests/*" = ["PLC0415", "B018", "B017", "EM101", "EM102"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["odoo", "odoo.addons"]
+known-first-party = ["app", "odoo", "odoo.addons"]
+
+# ==========================================
+# Mypy Config
+# ==========================================
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "asyncpg.*",
+    "prometheus_fastapi_instrumentator",
+    "prometheus_fastapi_instrumentator.*",
+]
+ignore_missing_imports = true
 # ruff check custom_addons/invoice_agent --fix; ruff format custom_addons/invoice_agent
 # ruff check custom_addons/invoice_agent --config pyproject.toml --fix; ruff format custom_addons/invoice_agent --config pyproject.toml
 

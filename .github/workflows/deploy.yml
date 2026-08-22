@@ -30,6 +30,10 @@ jobs:
                   username: ${{ secrets.EC2_USERNAME }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   port: 22
+                  # Default is 10m — the pre-upgrade pg_dumpall of all Odoo
+                  # databases alone can exceed that on large data volumes,
+                  # which would kill the SSH session mid-deploy.
+                  command_timeout: 30m
                   script: |
                       set -e
 
@@ -64,6 +68,26 @@ jobs:
                       echo "Taking pre-upgrade DB snapshot..."
                       docker compose exec -T db pg_dumpall -U odoo -f "/tmp/pre_deploy_${TIMESTAMP}.sql" \
                           || echo "WARNING: Pre-upgrade snapshot failed — continuing anyway"
+
+                      # ==================================================================
+                      # 2b. Collation version guard
+                      #
+                      # A mismatch means the OS libc collation changed under a
+                      # live data volume (e.g. the db image's Debian base
+                      # drifted). Indexes built under the old collation can be
+                      # misordered — deploying on top of it risks silent data
+                      # corruption. Fail loudly and direct to the repair script.
+                      # ==================================================================
+                      COLLATION_MISMATCH=$(docker compose exec -T db psql -U odoo -d postgres -t -A -c \
+                          "SELECT d.datname FROM pg_database d WHERE d.datallowconn AND d.datcollversion IS DISTINCT FROM (SELECT c.collversion FROM pg_collation c WHERE c.collname = 'default');" \
+                          | tr -d '\r' || true)
+
+                      if [ -n "$COLLATION_MISMATCH" ]; then
+                          echo "ERROR: collation version mismatch detected in databases:"
+                          echo "$COLLATION_MISMATCH"
+                          echo "Run 'bash scripts/fix_collation.sh' on the EC2 host (stops app containers), then re-deploy."
+                          exit 1
+                      fi
 
                       # ==================================================================
                       # 3. Pull latest code and rebuild

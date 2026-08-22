@@ -44,7 +44,18 @@ services:
     # extension — the `CREATE EXTENSION vector` init below (idempotent on
     # every fresh-volume start) enables it per database. v0.10: vendor-doc
     # RAG embeddings live in a vector(1024) column with an HNSW cosine index.
-    image: pgvector/pgvector:pg16
+    #
+    # PINNED (version + base-OS variant + digest): the floating `pg16` tag
+    # silently switched its Debian base (trixie → bookworm), which changed
+    # glibc's collation version under a live data volume and caused
+    # "collation version mismatch" warnings on every deploy. libc-collated
+    # indexes can be misordered across such a switch, so the base OS must
+    # never drift implicitly. To upgrade the db image deliberately:
+    #   1. pick the new tag/digest,
+    #   2. run scripts/fix_collation.sh after `up -d` (REINDEX + REFRESH
+    #      COLLATION VERSION for every database),
+    #   3. verify no mismatch warnings remain.
+    image: pgvector/pgvector:0.8.6-pg16-bookworm@sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b
     restart: unless-stopped
     env_file: .env
     environment:
