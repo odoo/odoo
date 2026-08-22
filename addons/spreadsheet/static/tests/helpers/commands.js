@@ -236,7 +236,7 @@ export function createScorecardChart(
         sheetId: sheetId,
         definition: {
             title: { text: "test" },
-            keyValue: "A1",
+            keyValue: "=A1",
             type: "scorecard",
             background: "#fff",
             baselineColorDown: "#DC6965",
