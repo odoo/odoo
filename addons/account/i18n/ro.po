@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 17:38+0000\n"
+"POT-Creation-Date: 2026-08-21 17:40+0000\n"
 "PO-Revision-Date: 2026-06-28 00:10+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -964,14 +964,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Facturat</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Inregistrări în jurnal</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Înregistrare jurnal</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18424,18 +18424,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Nu puteți arhiva un jurnal care conține înregistrări jurnal în stadiu "
-"ciornă.\n"
-"\n"
-"Pentru a continua:\n"
-"1/ apăsați butonul din dreapta sus 'Jurnal înregistrări' din acest formular "
-"jurnal\n"
-"2/ apoi filtrați pe 'Ciornă' înregistrări\n"
-"3/ selectați-le pe toate și postați sau ștergeți-le prin meniul de acțiune"
 
 #. module: account
 #. odoo-python
@@ -19888,6 +19880,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Chitanță de plată (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Inregistrări în jurnal</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Nu puteți arhiva un jurnal care conține înregistrări jurnal în stadiu "
+#~ "ciornă.\n"
+#~ "\n"
+#~ "Pentru a continua:\n"
+#~ "1/ apăsați butonul din dreapta sus 'Jurnal înregistrări' din acest "
+#~ "formular jurnal\n"
+#~ "2/ apoi filtrați pe 'Ciornă' înregistrări\n"
+#~ "3/ selectați-le pe toate și postați sau ștergeți-le prin meniul de acțiune"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Limitați utilizarea taxelor la un tip de produs."

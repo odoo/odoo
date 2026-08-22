@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 17:38+0000\n"
-"PO-Revision-Date: 2026-08-12 09:29+0000\n"
+"POT-Creation-Date: 2026-08-21 17:40+0000\n"
+"PO-Revision-Date: 2026-08-18 07:09+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/de/>\n"
@@ -1022,14 +1022,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Abgerechnet</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Journalbuchungen</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Journalbuchung</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14511,12 +14511,12 @@ msgstr "Ausgewählte Codes für Zahlungsarten"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Self Billing"
-msgstr ""
+msgstr "Selbstfakturierung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "Selbstfakturierte Gutschrift"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -18760,19 +18760,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Sie können ein Journal, das Entwürfe von Journalbuchungen enthält, nicht "
-"archivieren.\n"
-"\n"
-"Um fortzufahren:\n"
-"1/ Klicken Sie in diesem Journalformular auf die Schaltfläche "
-"„Journalbuchungen“ oben rechts\n"
-"2/ Filtern Sie dann nach „Entwurf“\n"
-"3/ Wählen Sie alle Einträge aus und buchen oder löschen Sie sie über das "
-"Aktionsmenü"
 
 #. module: account
 #. odoo-python
@@ -20263,6 +20254,28 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Zahlungseingang (Ref {{ object.name or 'k. "
 "A.' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Journalbuchungen</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Sie können ein Journal, das Entwürfe von Journalbuchungen enthält, nicht "
+#~ "archivieren.\n"
+#~ "\n"
+#~ "Um fortzufahren:\n"
+#~ "1/ Klicken Sie in diesem Journalformular auf die Schaltfläche "
+#~ "„Journalbuchungen“ oben rechts\n"
+#~ "2/ Filtern Sie dann nach „Entwurf“\n"
+#~ "3/ Wählen Sie alle Einträge aus und buchen oder löschen Sie sie über das "
+#~ "Aktionsmenü"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr ""

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 17:38+0000\n"
+"POT-Creation-Date: 2026-08-21 17:40+0000\n"
 "PO-Revision-Date: 2026-06-28 00:39+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -897,14 +897,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Виставлено рахунок</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Записи журналу</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Запис в журналі</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18285,17 +18285,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Ви не можете архівувати журнал, що містить чернетки записів журналу.\n"
-"\n"
-"Щоби продовжити:\n"
-"1/ натисніть у верхньому правому куті кнопку «Записи в журналі» у цій формі "
-"журналу\n"
-"2/ потім відфільтруйте записи \"Чернетки\"\n"
-"3/ виберіть їх усі та опублікуйте або видаліть їх за допомогою меню дій"
 
 #. module: account
 #. odoo-python
@@ -19746,6 +19739,26 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Квитанція про оплату (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Записи журналу</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Ви не можете архівувати журнал, що містить чернетки записів журналу.\n"
+#~ "\n"
+#~ "Щоби продовжити:\n"
+#~ "1/ натисніть у верхньому правому куті кнопку «Записи в журналі» у цій "
+#~ "формі журналу\n"
+#~ "2/ потім відфільтруйте записи \"Чернетки\"\n"
+#~ "3/ виберіть їх усі та опублікуйте або видаліть їх за допомогою меню дій"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Обмежте використання податків певним видом продукції."

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 17:38+0000\n"
+"POT-Creation-Date: 2026-08-21 17:40+0000\n"
 "PO-Revision-Date: 2026-06-28 00:42+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -1016,14 +1016,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">청구 완료</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">전표 입력</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">전표 입력</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18309,16 +18309,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"전표 입력 상태가 초안인 전표는 보관 처리할 수 없습니다.\n"
-"\n"
-"계속하려면 다음을 참고하세요:\n"
-"1/ 전표 양식의 오른쪽 상단에 있는 '전표 입력'을 클릭하세요.\n"
-"2/ 그 다음 필터를 '미결'로 설정하세요.\n"
-"3/ 전체 선택 후 활동 메뉴를 통해 발행 또는 삭제하세요."
 
 #. module: account
 #. odoo-python
@@ -19704,6 +19698,25 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 결제 영수증 (참조 {{ object.name or 'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">전표 입력</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "전표 입력 상태가 초안인 전표는 보관 처리할 수 없습니다.\n"
+#~ "\n"
+#~ "계속하려면 다음을 참고하세요:\n"
+#~ "1/ 전표 양식의 오른쪽 상단에 있는 '전표 입력'을 클릭하세요.\n"
+#~ "2/ 그 다음 필터를 '미결'로 설정하세요.\n"
+#~ "3/ 전체 선택 후 활동 메뉴를 통해 발행 또는 삭제하세요."
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "특정 품목에만 세금을 적용합니다."
