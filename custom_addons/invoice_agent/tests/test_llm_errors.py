@@ -87,10 +87,13 @@ class TestLlmHttpErrorChain(TransactionCase):
         self.assertIn("17", ctx.exception.args[0])
 
     def test_401_maps_to_user_error(self):
-        with patch(
-            "requests.post",
-            return_value=_FakeResponse(401, _error_body("E4011", "bad token")),
-        ), patch.object(svc._logger, "error"):
+        with (
+            patch(
+                "requests.post",
+                return_value=_FakeResponse(401, _error_body("E4011", "bad token")),
+            ),
+            patch.object(svc._logger, "error"),
+        ):
             with self.assertRaises(UserError) as ctx:
                 self.service.extract_invoice("invoice text")
         self.assertIn("401", ctx.exception.args[0])
@@ -114,10 +117,13 @@ class TestLlmHttpErrorChain(TransactionCase):
         self.assertIn("E4221", ctx.exception.args[0])
 
     def test_500_maps_to_aiservice_unavailable(self):
-        with patch(
-            "requests.post",
-            return_value=_FakeResponse(502, _error_body("E5031", "bad gateway")),
-        ), patch.object(svc._logger, "error"):
+        with (
+            patch(
+                "requests.post",
+                return_value=_FakeResponse(502, _error_body("E5031", "bad gateway")),
+            ),
+            patch.object(svc._logger, "error"),
+        ):
             with self.assertRaises(svc.AIServiceUnavailable):
                 self.service.extract_invoice("invoice text")
 
