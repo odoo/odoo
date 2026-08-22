@@ -58,15 +58,15 @@ class VoyageReranker:
 
     def __init__(
         self,
-        client=None,
+        client: Any | None = None,
         api_key: str | None = None,
         model: str = RERANK_MODEL,
-    ):
-        self._client = client
+    ) -> None:
+        self._client: Any | None = client
         self._api_key = api_key
         self._model = model
 
-    def _ensure_client(self):
+    def _ensure_client(self) -> Any:
         """Lazily build the voyageai client on the first real rerank."""
         if self._client is None:
             import voyageai
@@ -122,7 +122,7 @@ class VoyageReranker:
         ) from last_error
 
     @staticmethod
-    def _normalize(result, documents: list[str]) -> list[dict[str, Any]]:
+    def _normalize(result: Any, documents: list[str]) -> list[dict[str, Any]]:
         """Extract and validate rerank results into a uniform dict list."""
         raw_results = getattr(result, "results", None)
         if raw_results is None:

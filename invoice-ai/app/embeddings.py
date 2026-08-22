@@ -37,6 +37,7 @@ from __future__ import annotations
 import logging
 import time
 from collections.abc import Iterable
+from typing import Any
 
 from .config import settings
 
@@ -64,7 +65,7 @@ class VoyageEmbedder:
 
     def __init__(
         self,
-        client=None,
+        client: Any = None,
         api_key: str | None = None,
         model: str = VOYAGE_MODEL,
     ):
@@ -72,7 +73,7 @@ class VoyageEmbedder:
         self._api_key = api_key
         self._model = model
 
-    def _ensure_client(self):
+    def _ensure_client(self) -> Any:
         """Lazily build the voyageai client on the first real embed.
 
         Tests inject a fake ``client`` so the SDK is never imported; a
@@ -140,7 +141,7 @@ class VoyageEmbedder:
         ) from last_error
 
     @staticmethod
-    def _normalize(result, *, expected: int) -> list[list[float]]:
+    def _normalize(result: Any, *, expected: int) -> list[list[float]]:
         """Extract and validate vectors from a voyageai Client.embed result.
 
         ``result.embeddings`` is a list of ``Embedding`` objects; each has a
@@ -157,6 +158,8 @@ class VoyageEmbedder:
                 values = item.get("float_list") or item.get("embedding")
             if values is None and isinstance(item, (list, tuple)):
                 values = item
+            if values is None:
+                raise VoyageEmbeddingError("voyage item contained no vector values")
             extracted.append([float(value) for value in values])
 
         if len(extracted) != expected:

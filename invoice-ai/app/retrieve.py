@@ -37,7 +37,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-import asyncpg
+import asyncpg  # type: ignore[import-untyped]
 
 from .config import settings
 from .embeddings import VoyageEmbedder
@@ -59,7 +59,7 @@ async def get_pool() -> asyncpg.Pool:
     ``postgresql://odoo:odoo@localhost:5432/odoo``).
     """
     global _pool  # noqa: PLW0603
-    if _pool is None or getattr(_pool, "_closed", False):  # type: ignore[union-attr]
+    if _pool is None or getattr(_pool, "_closed", True):
         dsn = settings.database_url
         if not dsn:
             raise RuntimeError(
@@ -77,7 +77,7 @@ async def get_pool() -> asyncpg.Pool:
 async def close_pool() -> None:
     """Shut down the pool gracefully (call on app shutdown)."""
     global _pool  # noqa: PLW0603
-    if _pool is not None and not _pool._closed:  # type: ignore[union-attr]
+    if _pool is not None and not getattr(_pool, "_closed", True):
         await _pool.close()
         _logger.info("retrieve: asyncpg pool closed")
     _pool = None

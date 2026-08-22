@@ -56,7 +56,7 @@ from collections.abc import Callable
 from typing import Any
 
 import aio_pika
-from aio_pika.abc import AbstractChannel, AbstractIncomingMessage
+from aio_pika.abc import AbstractChannel, AbstractExchange, AbstractIncomingMessage
 
 from .amqp import (
     DLX_EXCHANGE,
@@ -78,7 +78,12 @@ from .metrics import (
 )
 from .result_signing import sign_result
 from .retrieve import retrieve_vendor_context
-from .retry import DEAD_ROUTING_KEY, attempt_from_body, classify_failure
+from .retry import (
+    DEAD_ROUTING_KEY,
+    RetryDecision,
+    attempt_from_body,
+    classify_failure,
+)
 from .schemas import InvoiceExtraction
 from .validate import validate_extraction
 
@@ -163,8 +168,8 @@ class InvoiceConsumer:
         self,
         channel: AbstractChannel,
         message: AbstractIncomingMessage,
-        topic_exchange,
-        dlx,
+        topic_exchange: AbstractExchange,
+        dlx: AbstractExchange,
     ) -> None:
         async with message.process(requeue=False):
             try:
@@ -286,9 +291,11 @@ class InvoiceConsumer:
                         move_id,
                         validation_verdict.get("account_id"),
                         validation_verdict.get("account_confidence", 0),
-                        validation_usage.get("cache_read_input_tokens")
-                        if validation_usage
-                        else None,
+                        (
+                            validation_usage.get("cache_read_input_tokens")
+                            if validation_usage
+                            else None
+                        ),
                     )
             except Exception:
                 _logger.exception(
@@ -325,7 +332,12 @@ class InvoiceConsumer:
                 job_elapsed,
             )
 
-    async def _publish_started(self, topic_exchange, job_uuid: str, move_id: int) -> None:
+    async def _publish_started(
+        self,
+        topic_exchange: AbstractExchange,
+        job_uuid: str,
+        move_id: int,
+    ) -> None:
         """Publish ``extract.started`` on the topic exchange (live UI state)."""
         await topic_exchange.publish(
             aio_pika.Message(
@@ -342,7 +354,11 @@ class InvoiceConsumer:
             routing_key=ROUTING_KEY_STARTED,
         )
 
-    async def _publish_result(self, topic_exchange, payload: dict) -> None:
+    async def _publish_result(
+        self,
+        topic_exchange: AbstractExchange,
+        payload: dict,
+    ) -> None:
         """Publish the JWT-signed ``extract.done`` result on the topic exchange."""
         token = self._sign(payload)
         await topic_exchange.publish(
@@ -356,10 +372,10 @@ class InvoiceConsumer:
 
     async def _route_failure(
         self,
-        dlx,
+        dlx: AbstractExchange,
         message: AbstractIncomingMessage,
-        decision,
-        topic_exchange=None,
+        decision: RetryDecision,
+        topic_exchange: AbstractExchange | None = None,
     ) -> None:
         """Route a failed job to the retry ladder or the dead queue.
 
@@ -391,10 +407,10 @@ class InvoiceConsumer:
 
     async def _dead_letter(
         self,
-        dlx,
+        dlx: AbstractExchange,
         message: AbstractIncomingMessage,
-        reason,
-        topic_exchange=None,
+        reason: Any,
+        topic_exchange: AbstractExchange | None = None,
     ) -> None:
         """Publish to the poison queue and let the original ack.
 
@@ -436,7 +452,7 @@ class InvoiceConsumer:
 
     async def _publish_to_dlx(
         self,
-        dlx,
+        dlx: AbstractExchange,
         routing_key: str,
         body: bytes,
         headers: dict | None = None,
