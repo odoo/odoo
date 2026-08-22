@@ -6,6 +6,10 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field string="Lead Time" name="produce_delay"/>
+                <field name="days_to_prepare_mo" optional="hide"/>
+            </field>
             <field name="uom_id" position="after">
                 <field name="show_set_bom_button" column_invisible="True"/>
                 <button name="action_set_bom_on_orderpoint" type="object" string="Set as Bill of Materials" class="btn btn-link" invisible="not show_set_bom_button"/>

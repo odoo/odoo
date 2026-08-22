@@ -3,7 +3,9 @@
 
         <!-- Resource: stock.warehouse.orderpoint -->
 
+        <!--[FURN_8888] Office Lamp-->
         <record id="stock_warehouse_orderpoint_1" model="stock.warehouse.orderpoint">
+            <field name="daily_demand">1</field>
             <field name="product_max_qty">10.0</field>
             <field name="product_min_qty">5.0</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -12,8 +14,10 @@
             <field name="location_id" model="stock.location"
                 eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
+        <!--[FURN_9001] Flipover-->
         <record id="stock_warehouse_orderpoint_2" model="stock.warehouse.orderpoint">
-            <field name="product_max_qty">12.0</field>
+            <field name="daily_demand">1.5</field>
+            <field name="product_max_qty">28.0</field>
             <field name="product_min_qty">5.0</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
@@ -21,7 +25,9 @@
             <field name="location_id" model="stock.location"
                 eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
+        <!--[FURN_7777] Office Chair-->
         <record id="stock_warehouse_orderpoint_5" model="stock.warehouse.orderpoint">
+            <field name="daily_demand">0.5</field>
             <field name="product_max_qty">5.0</field>
             <field name="product_min_qty">3.0</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
@@ -30,6 +36,30 @@
             <field name="location_id" model="stock.location"
                 eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-
+        <!--[FURN_6667] Acoustic Bloc Screens (Black)-->
+        <record id="stock_warehouse_orderpoint_6" model="stock.warehouse.orderpoint">
+            <field name="min_max_based_on">custom</field>
+            <field name="daily_demand">1</field>
+            <field name="product_max_qty">24</field>
+            <field name="product_min_qty">9</field>
+            <field name="trigger">manual</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
+            <field name="product_id" ref="product.product_product_acoustic_bloc_screens_black"/>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <!--[FURN_0001] Desk Organizer-->
+        <record id="stock_warehouse_orderpoint_7" model="stock.warehouse.orderpoint">
+            <field name="daily_demand">5</field>
+            <field name="product_max_qty">225</field>
+            <field name="product_min_qty">75</field>
+            <field name="trigger">manual</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
+            <field name="product_id" ref="product.desk_organizer"/>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
     </data>
 </odoo>

@@ -3,7 +3,6 @@
 
 from datetime import date, datetime, timedelta
 from freezegun import freeze_time
-from json import loads
 
 from odoo.fields import Command
 from odoo.tests import tagged, Form, TransactionCase
@@ -879,68 +878,6 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint_0.deadline_date, delivery_date_0.date())
         self.assertEqual(orderpoint_1.deadline_date, False)
         self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())
-
-    @freeze_time('2025-08-14 10:00:00')
-    def test_orderpoint_wizard_graph(self):
-        """ Test that the graph data is correctly computed. """
-        self.product.is_storable = True
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({
-            'product_id': self.product.id,
-            'product_min_qty': 10,
-            'product_max_qty': 50,
-        })
-
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
-        out_move = self.env['stock.move'].create({
-            'product_id': self.product.id,
-            'uom_id': self.uom_unit.id,
-            'product_uom_qty': 15.0,
-            'location_id': warehouse.lot_stock_id.id,
-            'location_dest_id': self.ref('stock.stock_location_customers'),
-        })
-        out_move._action_confirm()
-        out_move._action_assign()
-        out_move.quantity = 15
-        out_move.picked = True
-        out_move._action_done()
-
-        info = self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id})
-        graph_data = loads(info.json_replenishment_graph)
-        self.assertEqual(graph_data['daily_demand'], 0.48)
-        self.assertEqual(graph_data['average_stock'], 30.0)
-        self.assertEqual(graph_data['ordering_period'], 82.0)
-        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 82 days', 'In 164 days', 'In 246 days'])
-        self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [50, 10, 50, 10, 50, 10])
-
-        info.write({
-            'based_on': 'one_week',
-            'percent_factor': 200,
-            'product_min_qty': 20,
-            'product_max_qty': 40,
-        })
-        graph_data = loads(info.json_replenishment_graph)
-        self.assertEqual(graph_data['daily_demand'], 4.29)
-        self.assertEqual(graph_data['average_stock'], 30.0)
-        self.assertEqual(graph_data['ordering_period'], 4.0)
-        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 4 days', 'In 8 days', 'In 12 days'])
-        self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
-
-        late_out_move = self.env['stock.move'].create({
-            'product_id': self.product.id,
-            'uom_id': self.uom_unit.id,
-            'product_uom_qty': 15.0,
-            'location_id': warehouse.lot_stock_id.id,
-            'location_dest_id': self.ref('stock.stock_location_customers'),
-            'date': datetime.today() - timedelta(days=5),
-        })
-        late_out_move._action_confirm()
-        info._compute_json_replenishment_graph()
-        graph_data = loads(info.json_replenishment_graph)
-        self.assertEqual(graph_data['daily_demand'], 8.57)
-        self.assertEqual(graph_data['average_stock'], 30.0)
-        self.assertEqual(graph_data['ordering_period'], 2.0)
-        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 days', 'In 4 days', 'In 6 days'])
-        self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
     def test_get_rules_from_location_preserves_route(self):
         """_get_rules_from_location should keep the selected route across chained rules."""

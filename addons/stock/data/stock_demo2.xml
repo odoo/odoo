@@ -190,8 +190,198 @@
             })]"/>
         </record>
 
+        <record id="outgoing_shipment_main_warehouse7" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_acoustic_bloc_screens_black'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 60.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse8" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=60)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_acoustic_bloc_screens_black'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 400.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse9" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.desk_organizer'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 300.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse10" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=60)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.desk_organizer'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 350.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse11" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_delivery_01'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 30.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse12" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=60)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_delivery_01'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 62.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse13" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_20'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 60.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse14" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=60)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_20'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 80.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse15" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=20)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_delivery_02'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 30.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
+        <record id="outgoing_shipment_main_warehouse16" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today() - timedelta(days=60)"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_delivery_02'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 160.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+
         <!-- Create STOCK_PICKING for IN -->
-        <record id="incomming_shipment" model="stock.picking">
+        <record id="incoming_shipment" model="stock.picking">
             <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
@@ -207,7 +397,7 @@
             })]"/>
         </record>
 
-        <record id="incomming_shipment1" model="stock.picking">
+        <record id="incoming_shipment1" model="stock.picking">
             <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -225,7 +415,7 @@
             })]"/>
         </record>
 
-        <record id="incomming_shipment2" model="stock.picking">
+        <record id="incoming_shipment2" model="stock.picking">
             <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -242,7 +432,7 @@
             })]"/>
         </record>
 
-        <record id="incomming_shipment3" model="stock.picking">
+        <record id="incoming_shipment3" model="stock.picking">
             <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -259,7 +449,7 @@
             })]"/>
         </record>
 
-        <record id="incomming_shipment4" model="stock.picking">
+        <record id="incoming_shipment4" model="stock.picking">
             <field name="user_id"></field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -276,6 +466,40 @@
             })]"/>
         </record>
 
+        <record id="incoming_shipment5" model="stock.picking">
+            <field name="user_id"></field>
+            <field name="picking_type_id" ref="stock.picking_type_in"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_acoustic_bloc_screens_black'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 460.0,
+                'picking_type_id': ref('stock.picking_type_in'),
+                'location_id': ref('stock.stock_location_suppliers'),
+                'location_dest_id': ref('stock.stock_location_stock'),
+            })]"/>
+        </record>
+
+        <record id="incoming_shipment6" model="stock.picking">
+            <field name="user_id"></field>
+            <field name="picking_type_id" ref="stock.picking_type_in"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="state">draft</field>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.desk_organizer'),
+                'uom_id': ref('uom.product_uom_unit'),
+                'product_uom_qty': 650.0,
+                'picking_type_id': ref('stock.picking_type_in'),
+                'location_id': ref('stock.stock_location_suppliers'),
+                'location_dest_id': ref('stock.stock_location_stock'),
+            })]"/>
+        </record>
+
         <function model="stock.picking" name="action_confirm">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse').id,
@@ -283,9 +507,22 @@
                 obj().env.ref('stock.outgoing_shipment_main_warehouse4').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
-                obj().env.ref('stock.incomming_shipment1').id,
-                obj().env.ref('stock.incomming_shipment2').id,
-                obj().env.ref('stock.incomming_shipment3').id,]"/>
+                obj().env.ref('stock.outgoing_shipment_main_warehouse7').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse8').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse9').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse10').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse11').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse12').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse13').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse14').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse15').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse16').id,
+                obj().env.ref('stock.incoming_shipment1').id,
+                obj().env.ref('stock.incoming_shipment2').id,
+                obj().env.ref('stock.incoming_shipment3').id,
+                obj().env.ref('stock.incoming_shipment5').id,
+                obj().env.ref('stock.incoming_shipment6').id,
+            ]"/>
         </function>
 
         <function model="stock.picking" name="action_assign">
@@ -293,6 +530,16 @@
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse7').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse8').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse9').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse10').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse11').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse12').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse13').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse14').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse15').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse16').id,
             ]"/>
         </function>
 
@@ -309,12 +556,63 @@
             <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse6'))]"/>
             <value eval="{'quantity': 50}"/>
         </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse7'))]"/>
+            <value eval="{'quantity': 60}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse8'))]"/>
+            <value eval="{'quantity': 400}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse9'))]"/>
+            <value eval="{'quantity': 300}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse10'))]"/>
+            <value eval="{'quantity': 350}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse11'))]"/>
+            <value eval="{'quantity': 30}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse12'))]"/>
+            <value eval="{'quantity': 62}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse13'))]"/>
+            <value eval="{'quantity': 60}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse14'))]"/>
+            <value eval="{'quantity': 80}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse15'))]"/>
+            <value eval="{'quantity': 30}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse16'))]"/>
+            <value eval="{'quantity': 160}"/>
+        </function>
 
         <function model="stock.picking" name="_action_done">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
                 obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
-                obj().env.ref('stock.outgoing_shipment_main_warehouse6').id]"/>
+                obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse7').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse8').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse9').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse10').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse11').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse12').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse13').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse14').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse15').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse16').id,
+            ]"/>
         </function>
 
         <record id="stock.outgoing_shipment_main_warehouse5" model="stock.picking">
@@ -323,6 +621,46 @@
 
         <record id="stock.outgoing_shipment_main_warehouse6" model="stock.picking">
             <field name="date_done" eval="DateTime.today() - timedelta(days=7)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse7" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=20)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse8" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=60)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse9" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=20)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse10" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=60)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse11" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=20)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse12" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=60)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse13" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=20)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse14" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=60)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse15" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=20)"/>
+        </record>
+
+        <record id="stock.outgoing_shipment_main_warehouse16" model="stock.picking">
+            <field name="date_done" eval="DateTime.today() - timedelta(days=60)"/>
         </record>
 
         <function model="stock.move" name="write">
@@ -338,6 +676,56 @@
         <function model="stock.move" name="write">
             <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse6'))]"/>
             <value eval="{'date': DateTime.today() - timedelta(days=7)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse7'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=20)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse8'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=60)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse9'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=20)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse10'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=60)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse11'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=20)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse12'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=60)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse13'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=20)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse14'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=60)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse15'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=20)}"/>
+        </function>
+
+        <function model="stock.move" name="write">
+            <value model="stock.move" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse16'))]"/>
+            <value eval="{'date': DateTime.today() - timedelta(days=60)}"/>
         </function>
 
     </data>

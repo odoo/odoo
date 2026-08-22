@@ -95,7 +95,7 @@
             <field name="barcode">10133785575283</field>
         </record>
         <record id="stock_warehouse_orderpoint_table" model="stock.warehouse.orderpoint">
-            <field name="product_max_qty">0.0</field>
+            <field name="product_max_qty">5.0</field>
             <field name="product_min_qty">0.0</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="company_id" ref="base.main_company"/>
@@ -237,6 +237,7 @@
             <field name="product_tmpl_id" ref="product_product_computer_desk_product_template"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">3</field>
+            <field name="produce_delay">3</field>
             <field name="days_to_prepare_mo">3</field>
         </record>
         <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">

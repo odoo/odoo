@@ -100,34 +100,6 @@ class StockReplenishmentInfo(models.TransientModel):
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
 
-    def _prepare_graph_data(self):
-        self.ensure_one()
-        if self.daily_demand == 0:
-            ordering_period = 0
-            x_axis_vals = ['', ' ']
-            curve_line_vals = []
-        else:
-            qty_diff = self.product_max_qty - self.product_min_qty or 1
-            ordering_period = max(1, int(qty_diff / self.daily_demand))
-            x_axis_vals = ['']
-            curve_line_vals = [{'x': '', 'y': self.product_max_qty}]
-            for i in range(1, 4):
-                date_string = _("In %s days", int(i * ordering_period))
-                x_axis_vals.append(date_string)
-                curve_line_vals.append({'x': date_string, 'y': self.product_min_qty})
-                curve_line_vals.append({'x': date_string, 'y': self.product_max_qty})
-            curve_line_vals.pop()   # we pop the last value since it would result in an ascending line that we don't need
-
-        max_line_vals = [{'x': date, 'y': self.product_max_qty} for date in x_axis_vals]
-        min_line_vals = [{'x': date, 'y': self.product_min_qty} for date in x_axis_vals]
-        graph_data = {
-            'x_axis_vals': x_axis_vals,
-            'max_line_vals': max_line_vals,
-            'min_line_vals': min_line_vals,
-            'curve_line_vals': curve_line_vals,
-        }
-        return ordering_period, graph_data
-
     def _inverse_based_on(self):
         for report in self:
             if report.orderpoint_id.min_max_based_on != report.based_on:
@@ -196,33 +168,9 @@ class StockReplenishmentInfo(models.TransientModel):
         lead_days, _ = self._get_lead_days_and_description()
         return lead_days.get('total_delay', 0)
 
-    @api.depends('orderpoint_id', 'based_on', 'percent_factor', 'product_min_qty', 'product_max_qty', 'daily_demand')
+    # TODO: remove json_replenishment_graph field
     def _compute_json_replenishment_graph(self):
-        for replenishment_report in self:
-            if not replenishment_report.product_id or not replenishment_report.orderpoint_id.location_id:
-                continue
-            lead_days, _ = replenishment_report._get_lead_days_and_description()
-
-            if replenishment_report.product_max_qty < replenishment_report.product_min_qty:
-                replenishment_report.product_max_qty = replenishment_report.product_min_qty
-            average_stock = replenishment_report.product_min_qty + ((replenishment_report.product_max_qty - replenishment_report.product_min_qty) / 2)
-            lead_time = lead_days.get('total_delay', 0)
-
-            ordering_period, graph_data = replenishment_report._prepare_graph_data()
-            replenishment_report.json_replenishment_graph = dumps({
-                'product_uom_name': replenishment_report.product_uom_name,
-                'product_max_qty': replenishment_report.product_max_qty,
-                'product_min_qty': replenishment_report.product_min_qty,
-                'qty_on_hand': replenishment_report.orderpoint_id.qty_on_hand,
-                'lead_time': lead_time,
-                'daily_demand': replenishment_report.product_id.uom_id.round(replenishment_report.daily_demand),
-                'average_stock': replenishment_report.product_id.uom_id.round(average_stock),
-                'ordering_period': float_round(ordering_period, precision_rounding=1),
-                'x_axis_vals': graph_data["x_axis_vals"],
-                'max_line_vals': graph_data["max_line_vals"],
-                'min_line_vals': graph_data["min_line_vals"],
-                'curve_line_vals': graph_data["curve_line_vals"],
-            })
+        self.json_replenishment_graph = ''
 
     def get_daily_demand(self, period=None, ratio=None):
         self.ensure_one()
