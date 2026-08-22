@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 03:16+0000\n"
+"PO-Revision-Date: 2026-08-18 03:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "event/ja/>\n"
@@ -3327,7 +3327,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Close"
-msgstr ""
+msgstr "終了"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -3648,7 +3648,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit Ticket"
-msgstr ""
+msgstr "チケットを編集"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -3675,6 +3675,9 @@ msgid ""
 "- Set to 0 or 1 to disable.\n"
 "- Enter 2 or more to define the maximum number of allowed entries."
 msgstr ""
+"複数回入場可能なチケットを有効にします\n"
+"- 無効にする場合は 0 または 1 に設定してください。\n"
+"- 許可される最大入場回数を指定するには、2 以上を入力してください。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
@@ -3714,7 +3717,7 @@ msgstr "建築ビジネスを強化し、専門スキルを向上させましょ
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__entry_limit
 msgid "Entry Limit"
-msgstr ""
+msgstr "入場制限"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
@@ -4444,7 +4447,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__ticket_entry_limit
 msgid "Initial Entry Limit"
-msgstr ""
+msgstr "初期入場制限"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4751,7 +4754,7 @@ msgstr "メールスロット"
 #: model:ir.model.fields,field_description:event.field_event_registration__main_registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Main Registration"
-msgstr ""
+msgstr "メイン登録"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4901,6 +4904,8 @@ msgid ""
 "New attendance by this attendee created at %(attendance_datetime)s, see %"
 "(attendance_link)s"
 msgstr ""
+"この参加者による新しい出席データが%(attendance_datetime)s に作成されました。"
+"詳細は %(attendance_link)s をご覧ください"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -5381,7 +5386,7 @@ msgstr "登録開始"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #: model:ir.model.fields,field_description:event.field_event_registration__remaining_entries
 msgid "Remaining Entries"
-msgstr ""
+msgstr "残りの入場数"
 
 #. module: event
 #. odoo-python
@@ -5506,7 +5511,7 @@ msgstr "参加者を選択"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
 msgid "Select days to add slots"
-msgstr ""
+msgstr "スロットを追加する日を選択"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -5816,7 +5821,7 @@ msgstr "テキスト解答"
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0."
-msgstr ""
+msgstr "イベントチケット%(ticket_names)s の参加人数制限は、0未満に設定できません。"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -5926,6 +5931,8 @@ msgid ""
 "The offer may have expired or you may have reached the maximum number of "
 "entries allowed."
 msgstr ""
+"このオファーは期限切れになっているか、または応募可能回数の上限に達している可"
+"能性があります。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -5991,7 +5998,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This Card/Ticket is currently unavailable."
-msgstr ""
+msgstr "このカード/チケットは現在利用できません。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -6118,7 +6125,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "チケットが最初にスキャンされた日時："
 
 #. module: event
 #. odoo-python
@@ -6202,7 +6209,7 @@ msgstr "トレーニング"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Transaction"
-msgstr ""
+msgstr "取引"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
@@ -6274,7 +6281,7 @@ msgstr "様々なモジュールを理解する；"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "戻す"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -6301,7 +6308,7 @@ msgstr "今後 / 実施中"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Update Event"
-msgstr ""
+msgstr "イベントを更新"
 
 #. module: event
 #. odoo-python
@@ -6440,6 +6447,8 @@ msgid ""
 "(registration_id)s. Please try again from the original registration of this "
 "attendee."
 msgstr ""
+"ID: %(registration_id)s のサブ登録の最後の出席をキャンセルすることはできませ"
+"ん。この参加者の元の登録からやり直してください。"
 
 #. module: event
 #. odoo-python

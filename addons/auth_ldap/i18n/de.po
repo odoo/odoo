@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-08-14 07:19+0000\n"
+"PO-Revision-Date: 2026-08-18 14:10+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "auth_ldap/de/>\n"
@@ -47,7 +47,7 @@ msgstr ""
 "    Filter für die Suche nach Benutzerkonten in der LDAP-Datenbank. Es ist "
 "ein beliebiger LDAP-Filter in Zeichenkettendarstellung. Jeder `%s`-"
 "Platzhalter wird durch die vom Benutzer angegebene Anmeldung (Kennung) "
-"ersetzt, der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
+"ersetzt. Der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
 "\n"
 "Der Filter muss genau ein (1) Ergebnis liefern, andernfalls wird die "
 "Anmeldung als ungültig betrachtet.\n"
@@ -74,14 +74,14 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Erstelle automatisch Benutzerkonten für neue Benutzer, die sich mit LDAP "
-"anmelden"
+"Erstellen Sie automatisch Benutzerkonten für neue Benutzer, die sich über "
+"LDAP anmelden"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Cannot contact LDAP server at %(server)s:%(port)d"
-msgstr "LDAP-Server unter %(server)s:%(port)d nicht erreichbar"
+msgstr "LDAP-Server %(server)s:%(port)d nicht erreichbar"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -92,7 +92,7 @@ msgstr "Unternehmen"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr "Firmen LDAP Konfiguration"
+msgstr "LDAP-Konfiguration des Unternehmens"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -120,7 +120,7 @@ msgstr "Verbindung zum LDAP-Server %(server)s:%(port)d abgelaufen"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr "Benutzer/in anlegen"
+msgstr "Benutzer erstellen"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -193,22 +193,22 @@ msgstr "LDAP-Server-Port"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "LDAP-Basis"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP binddn"
+msgstr "binddn für LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr "LDAP Filter"
+msgstr "LDAP-Filter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr "LDAP Passwort"
+msgstr "LDAP-Passwort"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
@@ -223,15 +223,15 @@ msgstr "Zuletzt aktualisiert am"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Login Information"
+msgstr "Anmelde-Informationen"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
-"Kein lokaler Benutzer für die LDAP-Anmeldung gefunden und nicht zum "
-"Erstellen eines Benutzers konfiguriert"
+"Für die LDAP-Anmeldung wurde kein lokaler Benutzer gefunden und es kann "
+"keiner erstellt werden"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -268,7 +268,7 @@ msgstr "Einrichtung Ihres LDAP-Servers"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
-msgstr "Erfolgreiche Verbindung zum LDAP-Server unter %(server)s:%(port)d"
+msgstr "Erfolgreiche Verbindung zum LDAP-Server %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -285,7 +285,9 @@ msgstr "Verbindung testen"
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
-msgstr "Das Passwort des Benutzers, der die LDAP Anfragen durchführt"
+msgstr ""
+"Das Passwort des Benutzerkontos auf dem LDAP-Server, das für die Abfrage des "
+"Verzeichnisses verwendet wird."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn

@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-07-21 18:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-18 18:09+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-4/product/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -98,7 +98,7 @@ msgstr "%s (cópia)"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label4x7
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label_dymo
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
@@ -293,7 +293,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Em mãos</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -565,7 +565,7 @@ msgstr "Todas as categorias"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "All Companies"
-msgstr ""
+msgstr "Todas as empresas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
@@ -621,12 +621,12 @@ msgstr "Permitir que os clientes definam seu próprio valor"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__allowed_uom_ids
 #: model:ir.model.fields,field_description:product.field_product_uom__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "UM permitida"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__alternative
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "Alternativa (2.00\" x 1.00\")"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
@@ -672,7 +672,7 @@ msgstr "Arquivado"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Archived Products"
-msgstr ""
+msgstr "Produtos arquivados"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
@@ -683,7 +683,7 @@ msgstr "Ariel"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Assigned Pricelist"
-msgstr ""
+msgstr "Lista de preços atribuída"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -788,6 +788,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Quantidade disponível (calculada como Quantidade em estoque - quantidade "
+"reservada - quantidade a ser removida)\n"
+"Em um contexto com um único Local de estoque, isso inclui mercadorias "
+"armazenadas nesse local ou em qualquer um de seus sublocais.\n"
+"Em um contexto com um único Depósito, isso inclui mercadorias armazenadas no "
+"Local de estoque desse Depósito ou em qualquer um de seus sublocais.\n"
+"Caso contrário, isso inclui mercadorias armazenadas em qualquer Local de "
+"estoque do tipo “interno”."
 
 #. module: product
 #. odoo-javascript
@@ -837,28 +845,28 @@ msgstr "Códigos de barras"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
 msgid "Barcodes can be configured on"
-msgstr ""
+msgstr "Os códigos de barras podem ser configurados em"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_label_base
 msgid "Base Product Label Report"
-msgstr ""
+msgstr "Relatório de rotulagem do produto base"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "Nome da unidade de base"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr ""
+msgstr "Preço da unidade de base"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.base_unit_action
 msgid "Base Units"
-msgstr ""
+msgstr "Unidades de base"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -1339,7 +1347,7 @@ msgstr "Personalizado"
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_id
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_id
 msgid "Custom Unit of Measure"
-msgstr ""
+msgstr "Unidade de medida personalizada"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
@@ -1411,6 +1419,8 @@ msgstr "Unidade de medida padrão usada em todas as operações de estoque."
 #: model:ir.model.fields,help:product.field_product_template__base_unit_id
 msgid "Define a custom unit to display in the price per unit of measure field."
 msgstr ""
+"Defina uma unidade personalizada para exibir no campo de preço por unidade "
+"de medida."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -1564,7 +1574,7 @@ msgstr "Tipo de exibição"
 #: model:ir.model.fields,help:product.field_product_product__base_unit_count
 #: model:ir.model.fields,help:product.field_product_template__base_unit_count
 msgid "Display base unit price. Set to 0 to hide it for this product."
-msgstr ""
+msgstr "Exibir preço unitário base. Defina como 0 para ocultá-lo neste produto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__base_unit_name
@@ -1573,6 +1583,8 @@ msgid ""
 "Displays the custom unit for the products if defined or the selected unit of "
 "measure otherwise."
 msgstr ""
+"Se definido, exibe a unidade personalizada para os produtos, caso contrário, "
+"exibe a unidade de medida selecionada."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1674,6 +1686,8 @@ msgid ""
 "End date can't be earlier than the start date. Please check dates for vendor "
 "pricelist: %s"
 msgstr ""
+"A data de término não pode ser anterior à data de início. Verifique as datas "
+"na tabela de preços do fornecedor: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
@@ -1729,7 +1743,7 @@ msgstr "Taxa extra"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__extra_uom_ids
 msgid "Extra Packagings"
-msgstr ""
+msgstr "Embalagens adicionais"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
@@ -1881,12 +1895,12 @@ msgstr "Mesa para quatro pessoas"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__free_qty
 msgid "Free To Use"
-msgstr ""
+msgstr "De uso livre"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr ""
+msgstr "Quantidade livre para uso "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
@@ -2269,7 +2283,7 @@ msgstr "Está na seção selecionada do pedido"
 #: model:ir.model.fields,field_description:product.field_res_partner__is_pricelist_manually_set
 #: model:ir.model.fields,field_description:product.field_res_users__is_pricelist_manually_set
 msgid "Is Pricelist Manually Set"
-msgstr ""
+msgstr "Lista de preços definida manualmente"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_pricelist_required
@@ -2307,7 +2321,7 @@ msgstr "Não é possível importar valores diferentes para o mesmo atributo: %s"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__jewelry
 msgid "Jewelry (2.20\" x 0.50\")"
-msgstr ""
+msgstr "Joia (2.20\" x 0.50\")"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -2529,7 +2543,7 @@ msgstr "Marrom"
 #. module: product
 #: model:product.attribute,name:product.pa_material
 msgid "Material"
-msgstr ""
+msgstr "Material"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2739,13 +2753,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No products could be found."
-msgstr ""
+msgstr "Nenhum produto encontrado."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "Nenhum produto encontrado no relatório"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2766,12 +2780,12 @@ msgstr "Painéis de redução de ruído para espaços abertos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__normal
 msgid "Normal (2.25\" x 1.25\")"
-msgstr ""
+msgstr "Normal (2.25\" x 1.25\")"
 
 #. module: product
 #. odoo-python
@@ -2785,6 +2799,8 @@ msgstr "Nota:"
 #: code:addons/product/models/product_product.py:0
 msgid "Note: Some products may be hidden due to access restrictions."
 msgstr ""
+"Observação: Alguns produtos podem estar ocultos devido a restrições de "
+"acesso."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
@@ -2959,7 +2975,7 @@ msgstr "Prateleiras suspensas"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__uom_id
 msgid "Packaging"
-msgstr ""
+msgstr "Embalagem"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_action_view_list
@@ -2992,7 +3008,7 @@ msgstr "Pantene"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Parent"
-msgstr ""
+msgstr "Principal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -3007,7 +3023,7 @@ msgstr "Caminho primário"
 #. module: product
 #: model:product.attribute,name:product.pa_pattern
 msgid "Pattern"
-msgstr ""
+msgstr "Padrão"
 
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
@@ -3112,7 +3128,7 @@ msgstr "Desconto"
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_price
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_price
 msgid "Price Per Unit"
-msgstr ""
+msgstr "Preço por unidade"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
@@ -3222,7 +3238,7 @@ msgstr "Imprimir etiquetas"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__with_price
 msgid "Print With Price"
-msgstr ""
+msgstr "Imprimir com preço"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
@@ -3335,7 +3351,7 @@ msgstr "Etiqueta do produto (PDF)"
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_zpl
 msgid "Product Label (ZPL)"
-msgstr ""
+msgstr "Etiqueta do produto (ZPL)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
@@ -3375,7 +3391,7 @@ msgstr "Relatório da etiqueta do produto 2x7"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_zpl
 msgid "Product Label Report ZPL"
-msgstr ""
+msgstr "Relatório de etiqueta de produto ZPL"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
@@ -3385,7 +3401,7 @@ msgstr "Nome do produto"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_packagingbarcode
 msgid "Product Packaging Barcode Report"
-msgstr ""
+msgstr "Relatório de códigos de Barras de embalagens de produtos"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -3565,7 +3581,7 @@ msgstr "Roxo"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Quantities"
-msgstr ""
+msgstr "Quantidades"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -3636,7 +3652,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template__free_qty
 msgid "Quantity on hand minus outgoing quantity."
-msgstr ""
+msgstr "Quantidade disponível menos a quantidade enviada."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -3674,7 +3690,7 @@ msgstr "Referência"
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:product.field_product_template__base_unit_count
 msgid "Reference Unit"
-msgstr ""
+msgstr "Unidade de referência"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -3704,7 +3720,7 @@ msgstr "Anexo relacionado"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "Remover"
 
 #. module: product
 #. odoo-javascript
@@ -3715,12 +3731,12 @@ msgstr "Remover quantidade"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_access_read
 msgid "Res Access Read"
-msgstr ""
+msgstr "Res Acesso Leitura"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_access_write
 msgid "Res Access Write"
-msgstr ""
+msgstr "Res Acesso Gravação"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
@@ -3920,7 +3936,7 @@ msgstr "Mostrar separadamente o preço extra para este valor de atributo."
 #. module: product
 #: model:product.attribute,name:product.pa_sides
 msgid "Sides"
-msgstr ""
+msgstr "Acompanhamento"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver
@@ -3935,7 +3951,7 @@ msgstr "Tamanho"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__small
 msgid "Small (1.25\" x 1.00\")"
-msgstr ""
+msgstr "Pequeno (1.25\" x 1.00\")"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
@@ -3998,7 +4014,7 @@ msgstr "Especifique a quantidade mínima de margem sobre o preço de base."
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Specify unit"
-msgstr ""
+msgstr "Especificar unidade"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
@@ -4098,19 +4114,19 @@ msgstr "Valores do modelo"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Template for Pricelists"
-msgstr ""
+msgstr "Modelo para listas de preços"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "Modelo para produtos"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 msgid "Template for Vendor Pricelists"
-msgstr ""
+msgstr "Modelo para listas de preços de fornecedores"
 
 #. module: product
 #. odoo-python
@@ -4289,6 +4305,8 @@ msgid ""
 "The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
 "per unit on this product."
 msgstr ""
+"O valor da contagem da unidade de base deve ser maior que 0. Use 0 para "
+"esconder o preço por unidade neste produto."
 
 #. module: product
 #. odoo-python
@@ -4388,7 +4406,7 @@ msgstr "Total previsto"
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Total Free To Use"
-msgstr ""
+msgstr "Total livre para uso"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -4435,7 +4453,7 @@ msgstr "UM"
 #. module: product
 #: model:res.groups,name:product.group_show_uom_price
 msgid "UOM price display"
-msgstr ""
+msgstr "Exibição de preço com unidade de medida"
 
 #. module: product
 #. odoo-python
@@ -4509,7 +4527,7 @@ msgstr "Preço unitário"
 #. module: product
 #: model:ir.model,name:product.model_product_base_unit
 msgid "Unit of Measure for price per unit on products."
-msgstr ""
+msgstr "Unidade de medida para o preço unitário dos produtos."
 
 #. module: product
 #. odoo-javascript
@@ -4563,7 +4581,7 @@ msgstr "Atualizar o preço extra em produtos existentes"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "Carregar"
 
 #. module: product
 #. odoo-python
@@ -4740,6 +4758,8 @@ msgid ""
 "Variant-specific additional packagings for this product which can be used "
 "for sales"
 msgstr ""
+"Embalagens adicionais específicas para variantes deste produto que podem ser "
+"utilizadas para Vendas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -4988,7 +5008,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "Não é possível editar esse produto no catálogo."
 
 #. module: product
 #. odoo-python
@@ -5039,6 +5059,8 @@ msgid ""
 "You cannot change the company of %(categories)s as they hold products shared "
 "between companies or belonging to other companies."
 msgstr ""
+"Não é possível alterar a empresa de %(categories)s, pois ela possui produtos "
+"compartilhados entre empresas ou pertencentes a outras empresas."
 
 #. module: product
 #. odoo-python
@@ -5047,6 +5069,8 @@ msgid ""
 "You cannot change the company of %(category)s as it holds products shared "
 "between companies or belonging to other companies."
 msgstr ""
+"Não é possível alterar a empresa de %(category)s, pois ela contém produtos "
+"compartilhados entre empresas ou pertencentes a outras empresas."
 
 #. module: product
 #. odoo-python
@@ -5134,6 +5158,8 @@ msgid ""
 "                            whether it's a storable product, a consumable or "
 "a service."
 msgstr ""
+"Você deve definir um produto para tudo o que vende ou compra, seja um "
+"produto armazenável, um consumível ou um serviço."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -5176,17 +5202,17 @@ msgstr "Você precisa definir uma quantidade positiva."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__zpl
 msgid "ZPL Labels"
-msgstr ""
+msgstr "Etiquetas ZPL"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__zpl_preview
 msgid "ZPL Preview"
-msgstr ""
+msgstr "Pré-visualização ZPL"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__zpl_template
 msgid "ZPL Template"
-msgstr ""
+msgstr "Modelo ZPL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_zara
@@ -5196,52 +5222,52 @@ msgstr "Zara"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FO150,165 ^A0N,25^FH ^FD"
-msgstr ""
+msgstr "^FO150,165 ^A0N,25^FH ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FO150,210 ^A0N,25^FH ^FD("
-msgstr ""
+msgstr "^FO150,210 ^A0N,25^FH ^FD("
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 msgid "^FO160,185 ^A0N,18^FH ^FD("
-msgstr ""
+msgstr "^FO160,185 ^A0N,18^FH ^FD("
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 msgid "^FO290,165 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,165 ^A0N,30^FH ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
 msgid "^FO290,50 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,50 ^A0N,30^FH ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr ""
+msgstr "^FO300,200 ^A0N,40^FH ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
 msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
@@ -5249,7 +5275,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
@@ -5257,6 +5283,8 @@ msgid ""
 "^FS\n"
 "^FT35,48^A0N,15^FD"
 msgstr ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
@@ -5264,26 +5292,28 @@ msgid ""
 "^FS\n"
 "^FT35,65^A0N,20^FD"
 msgstr ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.jewelry_zpl_label
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.small_zpl_label
 msgid "^FT35,30^A0N,15^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,15^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.alternative_zpl_label
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.normal_zpl_label
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: product
 #. odoo-python
@@ -5348,7 +5378,7 @@ msgstr "ex.: Varejistas BRL"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
 msgid "each variant"
-msgstr ""
+msgstr "cada variante"
 
 #. module: product
 #. odoo-python

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-14 07:26+0000\n"
+"PO-Revision-Date: 2026-08-19 13:47+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/de/>\n"
@@ -53,7 +53,7 @@ msgstr " (vor Rabatt)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
-msgstr "% Rab."
+msgstr "% Rabatt"
 
 #. module: point_of_sale
 #. odoo-python
@@ -75,13 +75,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
-msgstr "%(old_pm)s wurde auf %(new_pm)s für %(old_amount)s"
+msgstr "%(old_pm)s wurde für %(old_amount)s auf %(new_pm)s geändert"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "%(payment_method)s Kassenzahlung von %(partner)s in %(session)s"
+msgstr "Kassenzahlung mit %(payment_method)s von %(partner)s in %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -128,7 +128,7 @@ msgstr "%s hat bald kein Papier mehr."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 msgid "%s customer(s) found for \"%s\"."
-msgstr "%s Kunde(n) gefunden für „%s“."
+msgstr "%s Kunde(n) für „%s“ gefunden."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -142,7 +142,7 @@ msgstr "Noch %s Tage"
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order?"
 msgstr ""
-"%s hat einen Gesamtbetrag von %s, sind Sie sicher, dass Sie diesen Auftrag "
+"%s hat einen Gesamtbetrag von %s. Sind Sie sicher, dass Sie diesen Auftrag "
 "stornieren möchten?"
 
 #. module: point_of_sale
@@ -284,7 +284,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_template_blue_denim_jeans_slim
 msgid "5-pocket jeans in cotton denim.."
-msgstr "Jeans aus Baumwoll-Denim mit 5 Taschen"
+msgstr "Jeans aus Baumwoll-Denim mit 5 Taschen."
 
 #. module: point_of_sale
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
@@ -335,7 +335,7 @@ msgstr ""
 "                        <t t-else=\"\">Guten Tag,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Vielen Dank für Ihren Einkauf bei <t t-"
+"                    <div>vielen Dank für Ihren Einkauf bei <t t-"
 "out=\"store_name\">Name des Shops</t>!</div>\n"
 "                    <div>Im Anhang finden Sie Ihren Beleg für den Einkauf "
 "vom <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
@@ -614,8 +614,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Eine weltweit einzigartige Identifikation dieser Kassensystem-Konfiguration, "
-"die dazu verwendet wird, Konflikte in Kundendaten vorzubeugen."
+"Eine globale einzigartige Kennung dieser Kassensystem-Konfiguration, die "
+"dazu verwendet wird, Konflikte in Kundendaten vorzubeugen."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_note_name_unique
@@ -677,13 +677,13 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
 msgstr ""
-"Ein kurzer Text, der als Fußzeile in die gedruckte Quittung eingefügt wird."
+"Ein kurzer Text, der als Fußzeile in den gedruckten Beleg eingefügt wird."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
 msgstr ""
-"Ein kurzer Text, der als Kopfzeile in die gedruckte Quittung eingefügt wird."
+"Ein kurzer Text, der als Kopfzeile in den gedruckten Beleg eingefügt wird."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_cash_move_receipt
@@ -704,7 +704,8 @@ msgstr "Akzeptieren Sie Zahlungen mit Mercado Pago auf einem Terminal."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva.com on a terminal or tap on phone"
 msgstr ""
-"Akzeptieren Sie Zahlungen mit Viva.com auf einem Terminal oder „Tap to phone“"
+"Akzeptieren Sie Zahlungen mit Viva.com auf einem Terminal oder per „Tap to "
+"phone“."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -962,7 +963,7 @@ msgid ""
 "sale price"
 msgstr ""
 "Fügen Sie einen Referenzpreis pro Maßeinheit auf Produkten (z. B. €/kg) "
-"hinzu, zusätzlich zum Verkaufspreis"
+"hinzu, zusätzlich zum Verkaufspreis."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2428,7 +2429,7 @@ msgstr "Klassischer Ledergürtel, ein Must-Have für jeden Kleiderschrank."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Click here to close the session"
-msgstr "Klicken Sie hier, um die Sitzung zu schließen"
+msgstr "Klicken Sie hier, um die Sitzung zu schließen."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__client
@@ -2759,7 +2760,7 @@ msgstr "USB-Waage anschließen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect a compatible scale directly via USB to this device"
-msgstr "Schließen Sie eine kompatible Waage direkt über USB an dieses Gerät an"
+msgstr "Schließen Sie eine kompatible Waage direkt über USB an dieses Gerät an."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__preparation_devices
@@ -2785,7 +2786,7 @@ msgstr "Verbinden Sie den Drucker mit dem Internet (Ethernet-Kabel empfohlen)"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect printers to your PoS"
-msgstr "Verbinden Sie Drucker mit Ihrem Kassensystem"
+msgstr "Verbinden Sie Drucker mit Ihrem Kassensystem."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -4420,7 +4421,7 @@ msgstr "Hat Bild"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_message
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__has_message
 msgid "Has Message"
-msgstr "Hat eine Nachricht"
+msgstr "Hat Nachricht"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
@@ -9275,7 +9276,7 @@ msgstr "Mürbeteig mit einer Füllung aus Sauerkirschen."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Shortcut to skip payment screen"
-msgstr "Tastenkürzel zum Überspringen des Zahlungsbildschirms"
+msgstr "Schnellzugriff zum Überspringen des Zahlungsbildschirms"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
@@ -9327,7 +9328,7 @@ msgstr "Margen & Kosten anzeigen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs on product information"
-msgstr "Zeigen Sie Margen & Kosten auf der Produktinformation an"
+msgstr "Zeigen Sie Margen & Kosten in den Produktinformationen an."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -11304,7 +11305,7 @@ msgstr "Eine Preisliste verwenden."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use automatic taxes mapping with Avatax"
-msgstr "Verwenden Sie automatische Steuerzuordnung mit Avatax"
+msgstr "Verwenden Sie die automatische Steuerzuordnung mit Avatax."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_avatax
@@ -11315,7 +11316,7 @@ msgstr "Verwenden Sie automatische Steuerzuordnung mit Avatax im Kassensystem"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr "Verwenden Sie Barcodes, um Produkte, Kundenkarten usw. zu scannen"
+msgstr "Verwenden Sie Barcodes, um Produkte, Kundenkarten usw. zu scannen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -11498,7 +11499,7 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in "
 "accounting separately."
 msgstr ""
-"Immer, wenn Sie eine Sitzung schließen, wird ein Eintrag für alle nicht in "
+"Immer, wenn Sie eine Sitzung schließen, wird eine Buchung für alle nicht in "
 "Rechnung gestellten Aufträge im folgenden Buchungsjournal generiert. "
 "Rechnungen werden in der Buchhaltung gesondert erfasst."
 
