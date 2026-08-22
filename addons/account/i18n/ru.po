@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
 "PO-Revision-Date: 2026-06-12 00:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -983,14 +983,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Выставлено счетов</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Журнальные записи</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Бухгалтерская проводка</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14278,6 +14278,16 @@ msgid "Selected Payment Method Codes"
 msgstr "Коды выбранных способов оплаты"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
@@ -18497,17 +18507,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Вы не можете архивировать журнал, содержащий черновые записи.\n"
-"\n"
-"Для продолжения:\n"
-"1/ нажмите кнопку \"Записи журнала\" в правом верхнем углу этой формы "
-"журнала\n"
-"2/ затем отфильтруйте записи по статусу \"Черновик\"\n"
-"3/ выберите их все и проведите или удалите через меню действий"
 
 #. module: account
 #. odoo-python
@@ -19936,6 +19939,26 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Квитанция об оплате (Ссылка {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Журнальные записи</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Вы не можете архивировать журнал, содержащий черновые записи.\n"
+#~ "\n"
+#~ "Для продолжения:\n"
+#~ "1/ нажмите кнопку \"Записи журнала\" в правом верхнем углу этой формы "
+#~ "журнала\n"
+#~ "2/ затем отфильтруйте записи по статусу \"Черновик\"\n"
+#~ "3/ выберите их все и проведите или удалите через меню действий"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Ограничить использование налогов определенным типом продукта."

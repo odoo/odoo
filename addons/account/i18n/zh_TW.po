@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
 "PO-Revision-Date: 2026-07-30 06:09+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -1019,14 +1019,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">已開發票</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">日記賬記項</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">流水賬記項</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13977,6 +13977,16 @@ msgid "Selected Payment Method Codes"
 msgstr "選定的付款方式代碼"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr "使用不同計量單位或包裝單位，去銷售及採購產品"
@@ -17958,16 +17968,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"您不能存檔包含草稿日記帳分錄的日記帳.\n"
-"\n"
-"繼續:\n"
-"1) 點選此日記帳表格右上角的\"日記帳分錄\"按鈕\n"
-"2) 然後篩選\"草稿\"分錄\n"
-"3) 全選並通過操作功能來過帳或刪除它們"
 
 #. module: account
 #. odoo-python
@@ -19268,6 +19272,25 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 付款收據(編號 {{ object.name 或 'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">日記賬記項</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "您不能存檔包含草稿日記帳分錄的日記帳.\n"
+#~ "\n"
+#~ "繼續:\n"
+#~ "1) 點選此日記帳表格右上角的\"日記帳分錄\"按鈕\n"
+#~ "2) 然後篩選\"草稿\"分錄\n"
+#~ "3) 全選並通過操作功能來過帳或刪除它們"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "限制該稅金設定使用在某種產品類型."

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-08-14 08:09+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
+"PO-Revision-Date: 2026-08-19 16:22+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-4/account/"
 "nl/>\n"
@@ -1043,14 +1043,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Gefactureerd</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Boekingen</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Boeking</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2772,7 +2772,7 @@ msgstr "Voeg een notitie toe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR-code to your invoices"
-msgstr "Voeg een betaal QR-code toe aan je facturen"
+msgstr "Voeg een QR-code voor betaling toe aan je facturen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
@@ -3013,7 +3013,7 @@ msgstr "Sta beheer kassa afronding toe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Sta toe om btw's te configureren op kasstelsel methode"
+msgstr "Sta toe om btw's te configureren met de kasstelsel-methode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
@@ -6893,7 +6893,7 @@ msgstr "Toon QR-code"
 #: model:ir.model.fields,field_description:account.field_base_document_layout__qr_code
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 msgid "Display QR-code on invoices"
-msgstr "Voeg een betaal QR-code toe aan je facturen"
+msgstr "QR-code weergeven op facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
@@ -6930,7 +6930,7 @@ msgstr "Voorbeeldknop weergeven"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Display the total amount of an invoice in letters"
-msgstr "Toon het totaal bedrag van een factuur voluit"
+msgstr "Toon het totaalbedrag van een factuur in letters"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
@@ -12465,7 +12465,7 @@ msgstr "Kredietwaarschuwing partner"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Grootboek partner"
+msgstr "Saldilijsten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
@@ -13383,7 +13383,7 @@ msgstr "QR-code-URL"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QR Codes"
-msgstr "QR codes"
+msgstr "QR-codes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
@@ -13507,7 +13507,7 @@ msgstr "Ontvang facturen"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr "Ontvangende bank"
+msgstr "Bankrekening begunstigde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -14478,13 +14478,23 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Selecteer dit als de btw-kasstelsel moet gebruiken. Dit maakt een boeking "
-"aan bij het afletteren."
+"Selecteer dit als btw het kasstelsel moet gebruiken. Dit maakt een boeking "
+"voor die belastingen aan bij het afletteren."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
 msgid "Selected Payment Method Codes"
 msgstr "Geselecteerde betaalmethode codes"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17648,7 +17658,7 @@ msgstr "Totaal bedrag voluit: <br/>"
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_amount_total_words
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_invoice_amount_total_words
 msgid "Total amount of invoice in letters"
-msgstr "Totaal bedrag van de factuur voluit"
+msgstr "Totaalbedrag van factuur voluit schrijven"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -18727,16 +18737,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Je kunt een dagboek met concept boekingen niet archiveren.\n"
-"\n"
-"Verder gaan:\n"
-"1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
-"2/ filter vervolgens op regels in 'Concept'\n"
-"3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
 
 #. module: account
 #. odoo-python
@@ -20160,6 +20164,25 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Betaalbewijs (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Boekingen</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Je kunt een dagboek met concept boekingen niet archiveren.\n"
+#~ "\n"
+#~ "Verder gaan:\n"
+#~ "1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
+#~ "2/ filter vervolgens op regels in 'Concept'\n"
+#~ "3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Beperk het gebruik van btw tot een soort product."

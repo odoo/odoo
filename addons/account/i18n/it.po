@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
 "PO-Revision-Date: 2026-07-13 08:11+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -1049,14 +1049,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Fatturato</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Registrazioni contabili</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Registrazione contabile</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14527,6 +14527,16 @@ msgid "Selected Payment Method Codes"
 msgstr "Codici dei metodi di pagamento selezionati"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr "Vendi e acquista prodotti con varie unità di misura e imballaggi"
@@ -18772,18 +18782,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Impossibile archiviare un registro che contiene registrazioni contabili in "
-"bozza.\n"
-"\n"
-"Per procedere:\n"
-"1/ fare clic sul pulsante \"Registrazioni contabili\" in alto a destra della "
-"scheda\n"
-"2/ filtrare quindi le registrazioni in \"Bozza\"\n"
-"3/ selezionarle tutte e, attraverso il menù azione, confermare o eliminarle"
 
 #. module: account
 #. odoo-python
@@ -20212,6 +20214,28 @@ msgid ""
 msgstr ""
 "Ricevuta di pagamento {{ object.company_id.name }} (rif. {{ object.name or "
 "'n/d' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Registrazioni contabili</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Impossibile archiviare un registro che contiene registrazioni contabili "
+#~ "in bozza.\n"
+#~ "\n"
+#~ "Per procedere:\n"
+#~ "1/ fare clic sul pulsante \"Registrazioni contabili\" in alto a destra "
+#~ "della scheda\n"
+#~ "2/ filtrare quindi le registrazioni in \"Bozza\"\n"
+#~ "3/ selezionarle tutte e, attraverso il menù azione, confermare o "
+#~ "eliminarle"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Limita l'utilizzo delle imposte a una tipologia di prodotto."

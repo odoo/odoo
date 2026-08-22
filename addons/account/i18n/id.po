@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
 "PO-Revision-Date: 2026-08-14 10:12+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -1042,14 +1042,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Ditagih</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Entri Jurnal</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Entri Jurnal</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14448,6 +14448,16 @@ msgid "Selected Payment Method Codes"
 msgstr "Kode Metode Pembayaran yang Dipilih"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
@@ -18669,16 +18679,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Anda tidak daapt mengarsipkan jurnal yang memiliki entri jurnal draft.\n"
-"\n"
-"Untuk melanjutkan::\n"
-"1/ klik pada tombol atas-kanan 'Entri Jurnal' dari formulir jurnal ini\n"
-"2/ lalu filter pada entri 'Draft'\n"
-"3/ pilih semuanya dan post atau delete mereka melalui menu action."
 
 #. module: account
 #. odoo-python
@@ -20111,6 +20115,25 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Resi Pembayaran (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Entri Jurnal</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "Anda tidak daapt mengarsipkan jurnal yang memiliki entri jurnal draft.\n"
+#~ "\n"
+#~ "Untuk melanjutkan::\n"
+#~ "1/ klik pada tombol atas-kanan 'Entri Jurnal' dari formulir jurnal ini\n"
+#~ "2/ lalu filter pada entri 'Draft'\n"
+#~ "3/ pilih semuanya dan post atau delete mereka melalui menu action."
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Batasi penggunaan pajak ke tipe produk."

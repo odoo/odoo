@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-23 14:23+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
+"PO-Revision-Date: 2026-08-21 13:27+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/es/>\n"
@@ -955,8 +955,8 @@ msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
 msgstr ""
-"<span class=\"figure-caption\">Nunca perderá un plazo con nuestros estados y "
-"alertas automatizadas</span>"
+"<span class=\"figure-caption\">Gracias a los estados y alertas "
+"automatizadas, no se le pasará ningún plazo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1049,14 +1049,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Facturado</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Asientos contables</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Asiento contable</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4087,7 +4087,7 @@ msgstr "Base sobre la que se aplicará el factor."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__repartition_type
 msgid "Based On"
-msgstr "Basado en"
+msgstr "En función de"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__partner
@@ -14537,6 +14537,16 @@ msgid "Selected Payment Method Codes"
 msgstr "Códigos de métodos de pago seleccionados"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr "Venda y compre productos en diferentes unidades de medida o embalajes"
@@ -17761,7 +17771,7 @@ msgstr "%s comercial"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
 msgid "Transaction Details"
-msgstr "Detalles de transacción"
+msgstr "Detalles de la transacción"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -18794,18 +18804,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"No puede archivar un diario que contiene asientos contables en estado de "
-"borrador.\n"
-"\n"
-"Para continuar:\n"
-"1. Haga clic en el botón \"asientos contables\" en la parte superior derecha "
-"en el formulario del diario.\n"
-"2. Filtre los asientos en estado de borrador.\n"
-"3. Seleccione todos y publique o elimínelos a través del menú de acción."
 
 #. module: account
 #. odoo-python
@@ -20233,6 +20235,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comprobante de pago (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">Asientos contables</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "No puede archivar un diario que contiene asientos contables en estado de "
+#~ "borrador.\n"
+#~ "\n"
+#~ "Para continuar:\n"
+#~ "1. Haga clic en el botón \"asientos contables\" en la parte superior "
+#~ "derecha en el formulario del diario.\n"
+#~ "2. Filtre los asientos en estado de borrador.\n"
+#~ "3. Seleccione todos y publique o elimínelos a través del menú de acción."
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "Restrinja el uso de impuestos a un tipo de producto."

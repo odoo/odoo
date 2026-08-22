@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-21 17:37+0000\n"
 "PO-Revision-Date: 2026-07-16 11:06+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/account/"
@@ -1020,14 +1020,14 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">แจ้งหนี้แล้ว</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">รายการสมุดรายวัน</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">รายการสมุดรายวัน</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14018,6 +14018,16 @@ msgid "Selected Payment Method Codes"
 msgstr "รหัสวิธีการชำระเงินที่เลือก"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Self Billing Credit Note"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr "ขายและซื้อสินค้าในหน่วยวัดหรือบรรจุภัณฑ์ที่แตกต่างกัน"
@@ -18044,16 +18054,10 @@ msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"คุณไม่สามารถเก็บถาวรสมุดรายวันที่มีรายการฉบับร่างได้\n"
-"\n"
-"เพื่อดำเนินการต่อ:\n"
-"1/ คลิกที่ปุ่มขวาบน 'รายการสมุดรายวัน' จากแบบฟอร์มบันทึกนี้\n"
-"2/ จากนั้นกรองรายการ 'ฉบับร่าง'\n"
-"3/ เลือกทั้งหมดแล้วผ่านรายการหรือลบผ่านเมนูการทำงาน"
 
 #. module: account
 #. odoo-python
@@ -19377,6 +19381,25 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} ใบเสร็จการชำระเงิน (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">รายการสมุดรายวัน</span>"
+
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "คุณไม่สามารถเก็บถาวรสมุดรายวันที่มีรายการฉบับร่างได้\n"
+#~ "\n"
+#~ "เพื่อดำเนินการต่อ:\n"
+#~ "1/ คลิกที่ปุ่มขวาบน 'รายการสมุดรายวัน' จากแบบฟอร์มบันทึกนี้\n"
+#~ "2/ จากนั้นกรองรายการ 'ฉบับร่าง'\n"
+#~ "3/ เลือกทั้งหมดแล้วผ่านรายการหรือลบผ่านเมนูการทำงาน"
 
 #~ msgid "Restrict the use of taxes to a type of product."
 #~ msgstr "จำกัดการใช้ภาษีเฉพาะสินค้าประเภทหนึ่ง"
