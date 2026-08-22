@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1+e\n"
+"Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:17+0000\n"
-"PO-Revision-Date: 2026-06-19 18:17+0000\n"
+"POT-Creation-Date: 2026-08-21 18:20+0000\n"
+"PO-Revision-Date: 2026-08-21 18:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,22 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_us_account
+#. odoo-python
+#: code:addons/l10n_us_account/models/account_tax.py:0
+msgid "A tax cannot be its own exempt or nontaxable tax."
+msgstr ""
+
+#. module: l10n_us_account
 #: model:ir.model,name:l10n_us_account.model_account_chart_template
 msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_us_account
+#. odoo-python
+#: code:addons/l10n_us_account/models/account_tax.py:0
+msgid ""
+"An exempt or nontaxable tax cannot have exempt or nontaxable taxes of its "
+"own."
 msgstr ""
 
 #. module: l10n_us_account
@@ -34,15 +48,43 @@ msgid "Bank Account"
 msgstr ""
 
 #. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_city_id
+#: model:ir.model.fields.selection,name:l10n_us_account.selection__account_tax__l10n_us_jurisdiction_type__city
+msgid "City"
+msgstr ""
+
+#. module: l10n_us_account
 #: model:ir.model,name:l10n_us_account.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_county_id
+#: model:ir.model.fields.selection,name:l10n_us_account.selection__account_tax__l10n_us_jurisdiction_type__county
+msgid "County"
+msgstr ""
+
+#. module: l10n_us_account
 #: model:ir.model.fields,field_description:l10n_us_account.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_partner_bank__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_us_account
+#: model:ir.model,name:l10n_us_account.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_exempt_parent_tax_id
+msgid "Exempt For"
+msgstr ""
+
+#. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_exempt_tax_ids
+msgid "Exempt Tax"
 msgstr ""
 
 #. module: l10n_us_account
@@ -53,6 +95,7 @@ msgstr ""
 
 #. module: l10n_us_account
 #: model:ir.model.fields,field_description:l10n_us_account.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_partner_bank__id
 msgid "ID"
@@ -70,8 +113,18 @@ msgid "Intermediary SWIFT"
 msgstr ""
 
 #. module: l10n_us_account
-#: model:account.report.column,name:l10n_us_account.column_net
-msgid "Net"
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_jurisdiction_type
+msgid "Jurisdiction Type"
+msgstr ""
+
+#. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_nontaxable_parent_tax_id
+msgid "Nontaxable For"
+msgstr ""
+
+#. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_nontaxable_tax_ids
+msgid "Nontaxable Tax"
 msgstr ""
 
 #. module: l10n_us_account
@@ -86,6 +139,17 @@ msgid "Show Intermediary Bank Bic"
 msgstr ""
 
 #. module: l10n_us_account
+#: model:ir.model.fields.selection,name:l10n_us_account.selection__account_tax__l10n_us_jurisdiction_type__special
+msgid "Special"
+msgstr ""
+
+#. module: l10n_us_account
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_tax__l10n_us_state_id
+#: model:ir.model.fields.selection,name:l10n_us_account.selection__account_tax__l10n_us_jurisdiction_type__state
+msgid "State"
+msgstr ""
+
+#. module: l10n_us_account
 #: model:account.report.column,name:l10n_us_account.column_tax
 msgid "Tax"
 msgstr ""
@@ -96,9 +160,19 @@ msgid "Tax Report"
 msgstr ""
 
 #. module: l10n_us_account
+#: model:account.report.column,name:l10n_us_account.column_net
+msgid "Total Sales"
+msgstr ""
+
+#. module: l10n_us_account
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_config_settings__module_l10n_us_direct_deposit
 #: model_terms:ir.ui.view,arch_db:l10n_us_account.res_config_settings_view_form
 msgid "U.S. Direct Deposit (via Wise)"
+msgstr ""
+
+#. module: l10n_us_account
+#: model_terms:ir.ui.view,arch_db:l10n_us_account.view_tax_form
+msgid "US"
 msgstr ""
 
 #. module: l10n_us_account

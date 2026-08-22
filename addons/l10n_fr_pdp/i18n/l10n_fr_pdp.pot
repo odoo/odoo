@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 18:19+0000\n"
-"PO-Revision-Date: 2026-08-14 18:19+0000\n"
+"POT-Creation-Date: 2026-08-21 18:16+0000\n"
+"PO-Revision-Date: 2026-08-21 18:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -227,6 +227,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_l10n_fr_pdp_annuaire_line
+msgid "Annuaire Line"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_company__l10n_fr_pdp_annuaire_start_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_config_settings__l10n_fr_pdp_annuaire_start_date
 msgid "Annuaire Start Date"
@@ -300,6 +305,11 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__pdp_kyc_status
 msgid "Authentication status"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__available_annuaire_line_ids
+msgid "Available Annuaire Lines"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -386,6 +396,11 @@ msgid "Click \"Send anyway\" to submit without them."
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.view_l10n_fr_pdp_partner_lookup_form
+msgid "Close"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__l10n_fr_pdp_reports_flow__period_status__closed
 msgid "Closed"
 msgstr ""
@@ -458,6 +473,8 @@ msgid "Create, send and receive e-invoices for free."
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__create_uid
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__create_uid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__create_uid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_send_wizard__create_uid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__create_uid
@@ -466,6 +483,8 @@ msgid "Created by"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__create_date
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__create_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__create_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_send_wizard__create_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__create_date
@@ -539,6 +558,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_peppol_response__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__display_name
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_flow_10_xml_builder__display_name
@@ -929,6 +950,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_peppol_response__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_ir_attachment__id
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__id
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_flow_10_xml_builder__id
@@ -951,6 +974,7 @@ msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__identifier
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_registration_form
 msgid "Identifier"
 msgstr ""
@@ -1143,6 +1167,8 @@ msgid "Last PDP Flow"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__write_uid
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__write_uid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__write_uid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_send_wizard__write_uid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__write_uid
@@ -1151,6 +1177,8 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__write_date
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__write_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__write_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_send_wizard__write_date
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__write_date
@@ -1275,6 +1303,11 @@ msgid "Name"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__nature
+msgid "Nature"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr ""
@@ -1298,6 +1331,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 msgid "No active PDP proxy user is configured for company %(company)s."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/res_partner.py:0
+msgid "No annuaire lines found for that identifier"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1510,6 +1549,17 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model,name:l10n_fr_pdp.model_l10n_fr_pdp_partner_lookup
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.view_l10n_fr_pdp_partner_lookup_form
+msgid "Partner Lookup"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_partner__pdp_verification_display_state__pdp_not_valid_format
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_partner__pdp_verification_display_state__peppol_not_valid_format
 msgid "Partner cannot receive format"
@@ -1655,6 +1705,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_config_settings__l10n_fr_pdp_pilot_phase
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_registration_form
 msgid "Pilot Phase"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_annuaire_line__platform_id
+msgid "Platform"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1856,8 +1911,23 @@ msgid "Sales"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.view_l10n_fr_pdp_partner_lookup_form
+msgid "Save"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_search
 msgid "Search EDI exports"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_partner_form_l10n_fr_pdp
+msgid "Search endpoint"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_partner_lookup__selected_line_id
+msgid "Selected Line"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1938,6 +2008,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_bank_statement_line__l10n_fr_pdp_sent_in_flow_ids
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_account_move__l10n_fr_pdp_sent_in_flow_ids
 msgid "Sent in PDP Flows"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/res_partner.py:0
+msgid "Set up your routing endpoint to enable the lookup"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2433,14 +2509,6 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_move.py:0
-msgid ""
-"You cannot reset an invoice to draft if it was already sent to PDP. Create a"
-" credit note and issue a new invoice instead or cancel this invoice."
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 msgid "You need to have a valid siren number to authenticate."
 msgstr ""
@@ -2502,6 +2570,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_users__invoice_edi_format
 msgid "eInvoice format"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/models/res_partner.py:0
+msgid ""
+"endpoint must be 9 or 14 characters long and they must be numbers to enable "
+"the lookup (ie: siren, siret)"
 msgstr ""
 
 #. module: l10n_fr_pdp
