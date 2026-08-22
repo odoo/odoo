@@ -22,7 +22,7 @@ class PortalShare(models.TransientModel):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
     res_model = fields.Char('Related Document Model', required=True)
-    res_id = fields.Integer('Related Document ID', required=True)
+    res_id = fields.Integer('Related Document ID', required=True, bigint=True)
     resource_ref = fields.Reference('_selection_target_model', 'Related Document', compute='_compute_resource_ref')
     partner_ids = fields.Many2many('res.partner', string="Recipients", required=True)
     note = fields.Text(help="Add extra content to display in the email")

@@ -13,7 +13,7 @@ class PurchaseBillLineMatch(models.Model):
     _order = 'matching_id desc, aml_id desc, product_id'
 
     pol_id = fields.Many2one(comodel_name='purchase.order.line', readonly=True)
-    matching_id = fields.Integer(string="Matching", readonly=True)
+    matching_id = fields.Integer(string="Matching", readonly=True, bigint=True)
     aml_id = fields.Many2one(comodel_name='account.move.line', readonly=True)
     company_id = fields.Many2one(comodel_name='res.company', readonly=True)
     partner_id = fields.Many2one(comodel_name='res.partner', readonly=True)

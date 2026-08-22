@@ -324,7 +324,7 @@ class HrExpense(models.Model):
     can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
 
     # Legacy sheet field, allow grouping of expenses to keep the grouping mechanic data and allow it to be re-used when re-implemented
-    former_sheet_id = fields.Integer(string='Former Report')
+    former_sheet_id = fields.Integer(string='Former Report', bigint=True)
 
     # --------------------------------------------
     # Constraints

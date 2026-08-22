@@ -216,14 +216,14 @@ class AccountJournal(models.Model):
                               has_entries.val
                          FROM account_journal j
             LEFT JOIN LATERAL (
-                                  SELECT bool(m.id) as val
+                                  SELECT m.id IS NOT NULL as val
                                     FROM account_move m
                                    WHERE m.journal_id = j.id
                                      AND m.state = 'posted'
                                    LIMIT 1
                               ) AS has_posted_entries ON true
             LEFT JOIN LATERAL (
-                                  SELECT bool(m.id) as val
+                                  SELECT m.id IS NOT NULL as val
                                     FROM account_move m
                                    WHERE m.journal_id = j.id
                                    LIMIT 1

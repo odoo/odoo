@@ -175,7 +175,7 @@ class ProductPublicCategory(models.Model):
             Domain("product_tmpl_ids", "any", published_products_domain), bypass_access=True
         )
         parents_and_self_have_published_products = SQL(
-            "SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::integer FROM %s c",
+            "SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::bigint FROM %s c",
             subquery.subselect(subquery.table.parent_path),
         )
 

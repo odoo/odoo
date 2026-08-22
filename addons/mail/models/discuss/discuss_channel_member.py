@@ -43,7 +43,7 @@ class DiscussChannelMember(models.Model):
     # state
     is_favorite = fields.Boolean("Favorite")
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
-    new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
+    new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True, bigint=True)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
     is_unread = fields.Boolean(
         "Has unread messages",

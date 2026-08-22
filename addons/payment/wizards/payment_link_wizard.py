@@ -22,7 +22,7 @@ class PaymentLinkWizard(models.TransientModel):
         return res
 
     res_model = fields.Char(string="Related Document Model", required=True)
-    res_id = fields.Integer(string="Related Document ID", required=True)
+    res_id = fields.Integer(string="Related Document ID", required=True, bigint=True)
     amount = fields.Monetary(currency_field="currency_id", required=True)
     amount_max = fields.Monetary(currency_field="currency_id")
     currency_id = fields.Many2one(comodel_name="res.currency")

@@ -136,7 +136,7 @@ class IrSequence(models.Model):
     active = fields.Boolean(default=True)
     prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
     suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
-    number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
+    number_next = fields.Integer(string='Next Number', required=True, default=1, bigint=True, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
                                         string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "
@@ -343,7 +343,7 @@ class IrSequenceDate_Range(models.Model):
     date_from = fields.Date(string='From', required=True)
     date_to = fields.Date(string='To', required=True)
     sequence_id = fields.Many2one("ir.sequence", string='Main Sequence', required=True, ondelete='cascade')
-    number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
+    number_next = fields.Integer(string='Next Number', required=True, default=1, bigint=True, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
                                         string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "

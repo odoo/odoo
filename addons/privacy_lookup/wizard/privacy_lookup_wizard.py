@@ -224,7 +224,7 @@ class PrivacyLookupWizardLine(models.TransientModel):
     wizard_id = fields.Many2one('privacy.lookup.wizard')
     res_id = fields.Integer(
         string="Resource ID",
-        required=True)
+        required=True, bigint=True)
     res_name = fields.Char(
         string='Resource name',
         compute='_compute_res_name',

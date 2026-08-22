@@ -1286,8 +1286,8 @@ class AccountMove(models.Model):
                         ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
                         COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
                             FILTER (WHERE counterpart_move.origin_payment_id IS NOT NULL), TRUE) AS all_payments_matched,
-                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
-                        BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
+                        BOOL_OR(pay.id IS NOT NULL) as has_payment,
+                        BOOL_OR(counterpart_move.statement_line_id IS NOT NULL) as has_st_line
                     FROM account_partial_reconcile part
                     JOIN account_move_line source_line ON source_line.id = part.%s
                     JOIN account_account account ON account.id = source_line.account_id
@@ -4889,7 +4889,7 @@ class AccountMove(models.Model):
 
         self.flush_model(['date', 'auto_post_origin_id'])
         values = SQL(', ').join(
-            SQL('(%s::int4, %s::int4, %s::date)', move.id, move.auto_post_origin_id.id, next_date)
+            SQL('(%s::int8, %s::int8, %s::date)', move.id, move.auto_post_origin_id.id, next_date)
             for move, next_date in moves_next_dates
         )
         recurrence_exists = dict(self.env.execute_query(SQL(

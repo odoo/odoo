@@ -84,7 +84,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                        (t.duration_tracking - 'd' - 's') || jsonb_build_object(t.duration_tracking->>'s',
                         (EXTRACT(EPOCH FROM (now() - (t.duration_tracking->>'d')::timestamptz)) / 60)::int + coalesce(t.duration_tracking->>(t.duration_tracking->>'s'), '0')::int
                        )) AS step(stage_id, duration)
-             LEFT JOIN project_task_type s ON s.id=step.stage_id::int
+             LEFT JOIN project_task_type s ON s.id=step.stage_id::bigint
                  WHERE t.active=true AND t.id IN (SELECT id from task_ids)
                   AND t.duration_tracking IS NOT NULL
                   AND t.duration_tracking ? 's'

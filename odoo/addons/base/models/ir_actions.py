@@ -294,7 +294,7 @@ class IrActionsAct_Window(models.Model):
                          help="Optional domain filtering of the destination data, as a Python expression")
     context = fields.Char(string='Context Value', default={}, required=True,
                           help="Context dictionary as Python expression, empty by default (Default: {})")
-    res_id = fields.Integer(string='Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only")
+    res_id = fields.Integer(string='Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only", bigint=True)
     res_model = fields.Char(string='Destination Model', required=True,
                             help="Model name of the object to open in the view window")
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')

@@ -19,9 +19,9 @@ class IrLogging(models.Model):
     #   on res_users, preventing the ir_logging INSERT to be processed, hence the ongoing module
     #   install/update will hang forever as the orm is blocked by the ir_logging query that will
     #   never occur.
-    create_uid = fields.Integer(string='Created by', readonly=True)
+    create_uid = fields.Integer(string='Created by', readonly=True, bigint=True)
     create_date = fields.Datetime(string='Created on', readonly=True)
-    write_uid = fields.Integer(string='Last Updated by', readonly=True)
+    write_uid = fields.Integer(string='Last Updated by', readonly=True, bigint=True)
     write_date = fields.Datetime(string='Last Updated on', readonly=True)
 
     name = fields.Char(required=True)
