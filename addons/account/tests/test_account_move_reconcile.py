@@ -4849,7 +4849,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         test_country = self.env['res.country'].create({
             'name': "Bretonnia",
-            'code': 'wh',
+            'code': 'WH',
         })
 
         foreign_vat_fpos = self.env['account.fiscal.position'].create({

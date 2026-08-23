@@ -59,7 +59,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         def _decorator(function):
             @wraps(function)
             def wrapper(self):
-                self.country_code = country_code.upper()
+                self.country_code = country_code[:2].upper()
                 function(self)
             return wrapper
 

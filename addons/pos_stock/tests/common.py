@@ -37,7 +37,7 @@ class TestPosStockCommon(TestPoSCommon, ValuationReconciliationTestCommon):
             'point_of_sale_update_stock_quantities': 'real',
             'country_id': cls.env['res.country'].create({
                 'name': 'PoS Land',
-                'code': 'WOW',
+                'code': 'WO',
             }),
         })
 

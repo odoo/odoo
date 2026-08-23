@@ -60,7 +60,8 @@ class ResCountry(models.CachedModel):
     name = fields.Char(
         string='Country Name', required=True, translate=True)
     code = fields.Char(
-        string='Country Code', size=2,
+        string='Country Code',
+        size=2,
         required=True,
         help='The ISO country code in two chars. \nYou can use this field for quick search.')
     address_format = fields.Text(string="Layout in Reports",
@@ -106,6 +107,10 @@ class ResCountry(models.CachedModel):
     _code_uniq = models.Constraint(
         'unique (code)',
         "The code of the country must be unique!",
+    )
+    _code_check = models.Constraint(
+        'check (length(code) = 2 and upper(code) = code)',
+        "The code of the country must be 2 letters and uppercase.",
     )
 
     @api.model
