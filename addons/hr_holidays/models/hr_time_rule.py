@@ -74,15 +74,16 @@ class HrTimeRule(models.Model):
     def _resolve_output_intervals(self, intervals):
         """Resolve output intervals, then merge consecutive slices sharing a merge key."""
         resolved = super()._resolve_output_intervals(intervals)
+        # each element: (_OutIv, merge_key)
         merged = []
-        for seg_s, seg_e, rule, pp, effective_wet in resolved:
-            mk = rule._get_output_leave_merge_key(accumulated_pp=pp)
-            if merged and merged[-1][1] == seg_s and merged[-1][4] == mk:
-                merged[-1][1] = seg_e
-                merged[-1][3] |= pp
+        for iv in resolved:
+            mk = iv.rule._get_output_leave_merge_key(accumulated_pp=iv.pp)
+            if merged and merged[-1][0].end == iv.start and merged[-1][1] == mk:
+                prev, _ = merged[-1]
+                merged[-1] = (prev._replace(end=iv.end, pp=prev.pp | iv.pp), mk)
             else:
-                merged.append([seg_s, seg_e, rule, pp, mk, effective_wet])
-        return [(s, e, r, pp, ew) for s, e, r, pp, _mk, ew in merged]
+                merged.append((iv, mk))
+        return [iv for iv, _mk in merged]
 
     def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, accumulated_pp=frozenset()):
         tz = ZoneInfo(employee._get_tz())

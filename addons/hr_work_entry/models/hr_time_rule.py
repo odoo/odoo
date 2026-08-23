@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from datetime import UTC, datetime, time, timedelta
 from itertools import pairwise
 from zoneinfo import ZoneInfo
@@ -17,6 +17,12 @@ from odoo.tools.float_utils import float_compare
 from odoo.tools.intervals import Intervals, invert_intervals
 
 _logger = logging.getLogger(__name__)
+
+# single interval shape used throughout the pipeline, excess, and output stages.
+# pp starts empty and is filled in by _resolve_output_intervals; source is the record
+# being classified (hr.leave or hr.attendance) and doubles as the excess dict key.
+_Iv = namedtuple('_Iv', 'start end wet source rule acc pp',
+                 defaults=(None, None, frozenset(), frozenset()))
 
 
 def resolve_intervals_by_sequence(intervals):
@@ -75,27 +81,26 @@ def _from_utc(dt, tz):
 
 
 def _split_by_window(intervals, window):
-    """Partition pipeline 6-tuples (s, e, wet, src, cls_rule, alloc_acc) by a rule window.
+    """Partition _Iv pipeline intervals by a rule window.
 
-    Returns (inside, outside)
-    portions that fall within / outside window.
+    Returns (inside, outside): portions that fall within / outside window.
     The window is an Intervals object (sorted, non-overlapping segments).
     """
     inside = []
     outside = []
     win_segs = [(ws, we) for ws, we, _ in window]
-    for s, e, w, src, cls_rule, alloc_acc in intervals:
-        prev = s
+    for iv in intervals:
+        prev = iv.start
         for ws, we in win_segs:
-            cs = max(s, ws)
-            ce = min(e, we)
+            cs = max(iv.start, ws)
+            ce = min(iv.end, we)
             if cs < ce:
                 if prev < cs:
-                    outside.append((prev, cs, w, src, cls_rule, alloc_acc))
-                inside.append((cs, ce, w, src, cls_rule, alloc_acc))
+                    outside.append(iv._replace(start=prev, end=cs))
+                inside.append(iv._replace(start=cs, end=ce))
                 prev = ce
-        if prev < e:
-            outside.append((prev, e, w, src, cls_rule, alloc_acc))
+        if prev < iv.end:
+            outside.append(iv._replace(start=prev, end=iv.end))
     return inside, outside
 
 
@@ -515,24 +520,20 @@ class HrTimeRule(models.Model):
         return {}
 
     def _resolve_output_intervals(self, intervals):
-        """Map each excess interval to its output 5-tuple.
+        """Resolve each excess _Iv to its output form.
 
-        intervals: iterable of (start, stop, wet, cls_rule, alloc_acc) 5-tuples.
-        Per-source excess intervals are always non-overlapping by pipeline construction,
-        so no sequence resolution is needed — only a time-order sort.
-        wet is the pipeline WET, used as effective output type when cls_rule has no
-        work_entry_type_id (allocate-only rules that leave the source WET unchanged).
-        Returns a list of (start, stop, rule, pp, effective_wet) 5-tuples.
-        pp is derived from alloc_acc | {cls_rule}: the full history of classifiers.
+        Filters zero-duration and unresolvable intervals, computes wet (the effective output WET:
+        rule.work_entry_type_id or the source wet) and pp (union of all classifiers' pp frozensets,
+        derived from acc | {rule}), then returns the updated _Iv list via _replace.
         Subclasses may merge consecutive slices (e.g. by merge key for leaves).
         """
         result = []
-        for s, e, wet, r, acc in sorted(intervals, key=lambda iv: iv[0]):
-            effective_wet = r.work_entry_type_id or wet
-            if not effective_wet or e <= s:
+        for iv in sorted(intervals, key=lambda iv: iv.start):
+            effective_wet = iv.rule.work_entry_type_id or iv.wet
+            if not effective_wet or iv.end <= iv.start:
                 continue
-            pp = frozenset().union(*(rule._get_pp_frozenset() for rule in acc | {r}))
-            result.append((s, e, r, pp, effective_wet))
+            pp = frozenset().union(*(rule._get_pp_frozenset() for rule in iv.acc | {iv.rule}))
+            result.append(iv._replace(wet=effective_wet, pp=pp))
         return result
 
     def _apply_output(self, excess, deficit, active_iv=None):
@@ -591,12 +592,12 @@ class HrTimeRule(models.Model):
             for source, intervals in by_source.items():
                 all_source_ids.add(source.id)
 
-                # credit displaced rules (alloc_acc) that had their classification overwritten.
+                # credit displaced rules (acc) that had their classification overwritten.
                 # they produced no output record but still earn allocation for the hours they claimed.
-                for seg_s, seg_e, _wet, _cls_rule, alloc_acc in intervals:
-                    if seg_e > seg_s:
-                        hours = (seg_e - seg_s).total_seconds() / 3600
-                        for prev_rule in alloc_acc:
+                for iv in intervals:
+                    if iv.end > iv.start:
+                        hours = (iv.end - iv.start).total_seconds() / 3600
+                        for prev_rule in iv.acc:
                             excess_alloc.append((employee, prev_rule, hours))
 
                 output_intervals = self._resolve_output_intervals(intervals)
@@ -606,13 +607,13 @@ class HrTimeRule(models.Model):
                 # pp-only rules (no rule WET): all intervals retain the source WET.
                 # just accumulate pp across all intervals and write to source, no splitting.
                 # still record excess hours so callers with allocation_type_id can allocate them.
-                if all(not r.work_entry_type_id for _, _, r, _, _ in output_intervals):
-                    all_pp = frozenset().union(*(pp for _, _, _, pp, _ in output_intervals))
-                    extra_vals = output_intervals[0][2]._get_output_in_place_extra_vals(accumulated_pp=all_pp)
+                if all(not iv.rule.work_entry_type_id for iv in output_intervals):
+                    all_pp = frozenset().union(*(iv.pp for iv in output_intervals))
+                    extra_vals = output_intervals[0].rule._get_output_in_place_extra_vals(accumulated_pp=all_pp)
                     if extra_vals:
                         source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
-                    for iv_start, iv_end, rule, _pp, _fw in output_intervals:
-                        excess_alloc.append((employee, rule, (iv_end - iv_start).total_seconds() / 3600))
+                    for iv in output_intervals:
+                        excess_alloc.append((employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600))
                     continue
 
                 start_field = source._time_rule_span_start_field
@@ -628,22 +629,22 @@ class HrTimeRule(models.Model):
                 )
                 remainder_segments = list(src_iv - out_union)
 
-                min_out_start_utc = min(_to_utc(seg_s, tz) for seg_s, *_ in output_intervals)
+                min_out_start_utc = min(_to_utc(iv.start, tz) for iv in output_intervals)
                 src_start_utc = source[start_field]
 
                 if min_out_start_utc <= src_start_utc:
-                    first_s, first_e, first_rule, first_pp, first_wet = output_intervals[0]
-                    first_end_utc = _to_utc(first_e, tz)
-                    extra_vals = first_rule._get_output_in_place_extra_vals(accumulated_pp=first_pp)
+                    first = output_intervals[0]
+                    first_end_utc = _to_utc(first.end, tz)
+                    extra_vals = first.rule._get_output_in_place_extra_vals(accumulated_pp=first.pp)
                     if not (
-                        source.work_entry_type_id == first_wet
-                        and source.time_rule_id == first_rule
+                        source.work_entry_type_id == first.wet
+                        and source.time_rule_id == first.rule
                         and source[source._time_rule_span_end_field] == first_end_utc
                     ):
                         source.sudo().with_context(**source._time_rule_write_ctx).write({
-                            'work_entry_type_id': first_wet.id,
-                            'time_rule_id': first_rule.id,
-                            **source._get_time_rule_end_write_vals(first_end_utc, first_e),
+                            'work_entry_type_id': first.wet.id,
+                            'time_rule_id': first.rule.id,
+                            **source._get_time_rule_end_write_vals(first_end_utc, first.end),
                             **extra_vals,
                         })
                     elif extra_vals:
@@ -653,10 +654,10 @@ class HrTimeRule(models.Model):
                         create_vals.append(source._get_time_rule_remainder_vals(_to_utc(seg_s, tz), _to_utc(seg_e, tz))
                                            | {'work_entry_type_id': source_wet_id})
                     # in-place first interval: count its hours for allocation
-                    excess_alloc.append((employee, first_rule, (first_e - first_s).total_seconds() / 3600))
+                    excess_alloc.append((employee, first.rule, (first.end - first.start).total_seconds() / 3600))
                     subsequent = output_intervals[1:]
                 else:
-                    min_out_start_local = min(seg_s for seg_s, *_ in output_intervals)
+                    min_out_start_local = min(iv.start for iv in output_intervals)
                     source.sudo().with_context(**source._time_rule_write_ctx).write(
                         source._get_time_rule_end_write_vals(min_out_start_utc, min_out_start_local)
                     )
@@ -665,9 +666,9 @@ class HrTimeRule(models.Model):
                                            | {'work_entry_type_id': source_wet_id})
                     subsequent = output_intervals
 
-                for seg_s, seg_e, rule, acc_pp, _ in subsequent:
-                    create_vals.append(source._get_time_rule_output_vals(rule, _to_utc(seg_s, tz), _to_utc(seg_e, tz), acc_pp))
-                    excess_alloc.append((employee, rule, (seg_e - seg_s).total_seconds() / 3600))
+                for iv in subsequent:
+                    create_vals.append(source._get_time_rule_output_vals(iv.rule, _to_utc(iv.start, tz), _to_utc(iv.end, tz), iv.pp))
+                    excess_alloc.append((employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600))
 
         any_source = next(
             (src for by_source in excess.values() for src in by_source),
@@ -782,10 +783,8 @@ class HrTimeRule(models.Model):
 
         Each rule fires in sequence order and sees all current pipeline intervals —
         both original and those classified by prior rules. Returns (excess, deficit, active_iv)
-        keyed by employee then source record. excess values are 5-tuples (s, e, wet, cls_rule,
-        alloc_acc); deficit values are 3-tuples (s, e, rule). wet is the pipeline WET at the
-        interval (used as effective WET for allocate-only rules). alloc_acc holds rules displaced
-        during reclassification; together with cls_rule they define pp and allocation credit.
+        keyed by employee then source record. excess values are _Iv instances (pp still frozenset();
+        filled in by _resolve_output_intervals). deficit values are 3-tuples (s, e, rule).
         active_iv carries the union of pipeline segments per source for remainder computation.
         """
         excess = defaultdict(lambda: defaultdict(list))
@@ -839,7 +838,7 @@ class HrTimeRule(models.Model):
             for seg_start, seg_stop in segs:
                 active_iv[record.employee_id][record] |= Intervals([(seg_start, seg_stop, dummy)])
                 pipeline_by_emp[record.employee_id].append(
-                    (seg_start, seg_stop, record.work_entry_type_id, record, None, frozenset())
+                    _Iv(seg_start, seg_stop, record.work_entry_type_id, record, None, frozenset())
                 )
 
         for rule in applicable_rules:
@@ -855,14 +854,14 @@ class HrTimeRule(models.Model):
                 # filter by condition time type (single pass)
                 matching, non_matching = [], []
                 for iv in emp_pipeline:
-                    (matching if iv[2] in condition_wets else non_matching).append(iv)
+                    (matching if iv.wet in condition_wets else non_matching).append(iv)
                 if not matching:
                     _logger.warning(
                         "rule '%s' (id=%d) skipped for %s: no pipeline intervals match "
                         "condition WETs %s (pipeline WETs: %s)",
                         rule.name, rule.id, employee.name,
                         condition_wets.mapped('name'),
-                        list({iv[2].name for iv in emp_pipeline}),
+                        list({iv.wet.name for iv in emp_pipeline}),
                     )
                     continue
 
@@ -877,10 +876,10 @@ class HrTimeRule(models.Model):
                     continue
 
                 if not rule.work_entry_type_id and not has_threshold:
-                    # stack any displaced cls_rule into alloc_acc so its pp and allocation are credited.
+                    # stack any displaced rule into acc so its pp and allocation are credited.
                     pipeline_by_emp[employee] = non_matching + outside + [
-                        (s, e, wet, src, rule, alloc_acc if cr is None else alloc_acc | {cr})
-                        for s, e, wet, src, cr, alloc_acc in inside
+                        iv._replace(rule=rule, acc=iv.acc if iv.rule is None else iv.acc | {iv.rule})
+                        for iv in inside
                     ]
                     continue
 
@@ -893,8 +892,8 @@ class HrTimeRule(models.Model):
                 period = rule.quantity_period or 'day'
 
                 by_period = defaultdict(list)
-                for s, e, _wet, src, _cr, _alloc_acc in inside:
-                    day = s.date()
+                for iv in inside:
+                    day = iv.start.date()
                     if period == 'week':
                         week_start_int = int(rule.week_start or '0')
                         end_weekday = (week_start_int - 1) % 7
@@ -902,7 +901,7 @@ class HrTimeRule(models.Model):
                         period_key = day + relativedelta(days=days_to_end)
                     else:
                         period_key = day
-                    by_period[period_key].append((s, e, src))
+                    by_period[period_key].append((iv.start, iv.end, iv.source))
 
                 all_excess = defaultdict(list)
                 for period_date, period_items in sorted(by_period.items()):
@@ -939,33 +938,31 @@ class HrTimeRule(models.Model):
 
                 # split inside intervals at excess boundaries, reclassifying the excess portions
                 new_inside = []
-                for iv_start, iv_end, wet, source, cls_rule, alloc_acc in inside:
-                    if source not in all_excess:
-                        new_inside.append((iv_start, iv_end, wet, source, cls_rule, alloc_acc))
+                for iv in inside:
+                    if iv.source not in all_excess:
+                        new_inside.append(iv)
                         continue
-                    cursor = iv_start
-                    for exc_start, exc_end, exc_rule in all_excess[source]:
+                    cursor = iv.start
+                    for exc_start, exc_end, exc_rule in all_excess[iv.source]:
                         clip_start = max(cursor, exc_start)
-                        clip_end = min(iv_end, exc_end)
+                        clip_end = min(iv.end, exc_end)
                         if cursor < clip_start:
-                            new_inside.append((cursor, clip_start, wet, source, cls_rule, alloc_acc))
+                            new_inside.append(iv._replace(start=cursor, end=clip_start))
                         if clip_start < clip_end:
                             # preserve source WET when the rule has no output type (allocate-only rules)
-                            new_wet = exc_rule.work_entry_type_id or wet
-                            # stack the displaced rule into alloc_acc: it contributes pp and alloc credit
-                            new_alloc_acc = alloc_acc if cls_rule is None else alloc_acc | {cls_rule}
-                            new_inside.append((clip_start, clip_end, new_wet, source, exc_rule, new_alloc_acc))
+                            new_wet = exc_rule.work_entry_type_id or iv.wet
+                            # stack the displaced rule into acc: it contributes pp and alloc credit
+                            new_acc = iv.acc if iv.rule is None else iv.acc | {iv.rule}
+                            new_inside.append(iv._replace(start=clip_start, end=clip_end, wet=new_wet, rule=exc_rule, acc=new_acc))
                         cursor = max(cursor, clip_end)
-                    if cursor < iv_end:
-                        new_inside.append((cursor, iv_end, wet, source, cls_rule, alloc_acc))
+                    if cursor < iv.end:
+                        new_inside.append(iv._replace(start=cursor))
                 pipeline_by_emp[employee] = non_matching + outside + new_inside
 
         # extract final excess: pipeline intervals where a rule has classified them.
-        # excess tuples carry the full (wet, cls_rule, alloc_acc) so _apply_output can derive
-        # pp and allocation credit without any separate sentinel entries.
         for employee, emp_pipeline in pipeline_by_emp.items():
-            for iv_start, iv_end, wet, source, cls_rule, alloc_acc in emp_pipeline:
-                if cls_rule is not None and iv_end > iv_start:
-                    excess[employee][source].append((iv_start, iv_end, wet, cls_rule, alloc_acc))
+            for iv in emp_pipeline:
+                if iv.rule is not None and iv.end > iv.start:
+                    excess[employee][iv.source].append(iv)
 
         return excess, deficit, active_iv
