@@ -31,7 +31,7 @@ class TestUI(HttpCase):
         with patch.object(AutoCompleteController, '_perform_complete_place_search',
                           lambda controller, *args, **kwargs: {
                               'country': [self.env['res.country'].search([('code', '=', 'USA')]).id, 'United States'],
-                              'state': [self.env['res.country.state'].search([('country_id.code', '=', 'USA')])[0].id, 'Alabama'],
+                              'state': [self.env['res.country.state'].search([('country_id.code', '=', 'US')])[0].id, 'Alabama'],
                               'zip': '12345',
                               'city': 'A Fictional City',
                               'street': 'A fictional Street',

@@ -28,7 +28,7 @@ class TestLinkTracker(common.TestMassMailCommon):
         click = self.env['link.tracker.click'].sudo().add_click(
             code,
             ip='100.00.00.01',
-            country_code='BEL'
+            country_code='BE',
         )
         self.assertEqual(click.ip, '100.00.00.01')
         self.assertEqual(click.country_id, self.env.ref('base.be'))
