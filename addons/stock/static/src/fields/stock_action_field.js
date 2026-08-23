@@ -20,6 +20,7 @@ class StockActionField extends Component {
         actionName: t.string(),
         actionContext: t.string().optional(),
         disabled: t.string().optional(),
+        muteEmpty: t.boolean().optional(),
     });
     static components = {
         FloatField,
@@ -35,7 +36,7 @@ class StockActionField extends Component {
     }
     
     extractProps () {
-        const keysToRemove = ["actionName", "actionContext", "disabled"];
+        const keysToRemove = ["actionName", "actionContext", "disabled", "muteEmpty"];
         return Object.fromEntries(
          Object.entries(this.props).filter(([prop]) => !keysToRemove.includes(prop))
        );
@@ -84,6 +85,7 @@ const stockActionField = {
         const action_props = {
             actionName: options.action_name,
             disabled: options.disabled,
+            muteEmpty: options.mute_empty,
             actionContext: context,
         }
         let props = {...action_props}
