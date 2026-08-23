@@ -1185,7 +1185,7 @@ class AccountTax(models.Model):
         return res
 
     @api.model
-    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None):
+    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None, move=None):
         """ Compute the tax totals details for the business documents.
         :param base_lines:  A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
         :param currency:    The currency set on the business document.
@@ -1229,46 +1229,74 @@ class AccountTax(models.Model):
             }
         """
 
-        # ==== Compute the taxes ====
+        if move and move.state == 'posted':
+            # We will collect base/tax amounts and also the type of each tax to determine 'hide_base_amount'
+            tax_group_vals_map = defaultdict(lambda: {
+                'base_amount': 0.0,
+                'tax_amount': 0.0,
+                'tax_amount_types': [],
+            })
+            sign = move.direction_sign
 
-        to_process = []
-        for base_line in base_lines:
-            to_update_vals, tax_values_list = self._compute_taxes_for_single_line(base_line)
-            to_process.append((base_line, to_update_vals, tax_values_list))
+            # Use the move's lines to gather tax information
+            for line in move.line_ids.filtered(lambda line: line.display_type == 'tax'):
+                tax_group = line.tax_group_id
+                tax_group_vals_map[tax_group]['base_amount'] += line.tax_base_amount
+                tax_group_vals_map[tax_group]['tax_amount'] += sign * (line.debit - line.credit)
+                tax_group_vals_map[tax_group]['tax_amount_types'].append(line.tax_line_id.amount_type)
 
-        def grouping_key_generator(base_line, tax_values):
-            source_tax = tax_values['tax_repartition_line'].tax_id
-            return {'tax_group': source_tax.tax_group_id}
+            tax_group_vals_list = []
+            for tax_group, values in tax_group_vals_map.items():
+                hide_base_amount = all(atype == 'fixed' for atype in values['tax_amount_types'])
+                tax_group_vals_list.append({
+                    'tax_group': tax_group,
+                    'base_amount': values['base_amount'],
+                    'tax_amount': values['tax_amount'],
+                    'hide_base_amount': hide_base_amount,
+                })
 
-        global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
+            tax_group_vals_list = sorted(tax_group_vals_list, key=lambda x: (x['tax_group'].sequence, x['tax_group'].id))
+            amount_untaxed = move.amount_untaxed
 
-        tax_group_vals_list = []
-        for tax_detail in global_tax_details['tax_details'].values():
-            tax_group_vals = {
-                'tax_group': tax_detail['tax_group'],
-                'base_amount': tax_detail['base_amount_currency'],
-                'tax_amount': tax_detail['tax_amount_currency'],
-                'hide_base_amount': all(x['tax_repartition_line'].tax_id.amount_type == 'fixed' for x in tax_detail['group_tax_details']),
-            }
+        else:
+            # ==== Compute the taxes ====
 
-            # Handle a manual edition of tax lines.
-            if tax_lines is not None:
-                matched_tax_lines = [
-                    x
-                    for x in tax_lines
-                    if x['tax_repartition_line'].tax_id.tax_group_id == tax_detail['tax_group']
-                ]
-                if matched_tax_lines:
-                    tax_group_vals['tax_amount'] = sum(x['tax_amount'] for x in matched_tax_lines)
+            to_process = []
+            for base_line in base_lines:
+                to_update_vals, tax_values_list = self._compute_taxes_for_single_line(base_line)
+                to_process.append((base_line, to_update_vals, tax_values_list))
 
-            tax_group_vals_list.append(tax_group_vals)
+            def grouping_key_generator(base_line, tax_values):
+                source_tax = tax_values['tax_repartition_line'].tax_id
+                return {'tax_group': source_tax.tax_group_id}
 
-        tax_group_vals_list = sorted(tax_group_vals_list, key=lambda x: (x['tax_group'].sequence, x['tax_group'].id))
+            global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
+            amount_untaxed = global_tax_details['base_amount_currency']
+
+            tax_group_vals_list = []
+            for tax_detail in global_tax_details['tax_details'].values():
+                tax_group_vals = {
+                    'tax_group': tax_detail['tax_group'],
+                    'base_amount': tax_detail['base_amount_currency'],
+                    'tax_amount': tax_detail['tax_amount_currency'],
+                    'hide_base_amount': all(x['tax_repartition_line'].tax_id.amount_type == 'fixed' for x in tax_detail['group_tax_details']),
+                }
+
+                # Handle a manual edition of tax lines.
+                if tax_lines is not None:
+                    matched_tax_lines = [
+                        x
+                        for x in tax_lines
+                        if x['tax_repartition_line'].tax_id.tax_group_id == tax_detail['tax_group']
+                    ]
+                    if matched_tax_lines:
+                        tax_group_vals['tax_amount'] = sum(x['tax_amount'] for x in matched_tax_lines)
+
+                tax_group_vals_list.append(tax_group_vals)
+
+            tax_group_vals_list = sorted(tax_group_vals_list, key=lambda x: (x['tax_group'].sequence, x['tax_group'].id))
 
         # ==== Partition the tax group values by subtotals ====
-
-        amount_untaxed = global_tax_details['base_amount_currency']
-        amount_tax = 0.0
 
         subtotal_order = {}
         groups_by_subtotal = defaultdict(list)
@@ -1291,8 +1319,8 @@ class AccountTax(models.Model):
             })
 
         # ==== Build the final result ====
-
         subtotals = []
+        amount_tax = 0.0
         for subtotal_title in sorted(subtotal_order.keys(), key=lambda k: subtotal_order[k]):
             amount_total = amount_untaxed + amount_tax
             subtotals.append({
@@ -1303,10 +1331,8 @@ class AccountTax(models.Model):
             amount_tax += sum(x['tax_group_amount'] for x in groups_by_subtotal[subtotal_title])
 
         amount_total = amount_untaxed + amount_tax
-
-        display_tax_base = (len(global_tax_details['tax_details']) == 1 and currency.compare_amounts(tax_group_vals_list[0]['base_amount'], amount_untaxed) != 0)\
-                           or len(global_tax_details['tax_details']) > 1
-
+        display_tax_base = (len(tax_group_vals_list) == 1 and currency.compare_amounts(tax_group_vals_list[0]['base_amount'], amount_untaxed) != 0) \
+                           or len(tax_group_vals_list) > 1
         return {
             'amount_untaxed': currency.round(amount_untaxed) if currency else amount_untaxed,
             'amount_total': currency.round(amount_total) if currency else amount_total,
