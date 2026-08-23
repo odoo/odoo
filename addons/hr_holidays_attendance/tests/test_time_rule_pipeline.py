@@ -2477,9 +2477,11 @@ class TestTimeRuleCronBehavior(TransactionCase):
 
         cls.day_ot_type = cls.env['hr.work.entry.type'].create({
             'name': 'Daily OT (cron)', 'code': 'CRNDAYOT', 'requires_allocation': False,
+            'request_unit': 'hour',
         })
         cls.week_ot_type = cls.env['hr.work.entry.type'].create({
             'name': 'Weekly OT (cron)', 'code': 'CRNWKOT', 'requires_allocation': False,
+            'request_unit': 'hour',
         })
 
         cls.emp = cls.env['hr.employee'].create({
@@ -2622,10 +2624,12 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         cls.src_type = cls.env['hr.work.entry.type'].create({
             'name': 'Leave Src (pipeline)', 'code': 'LVSRC',
             'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+            'request_unit': 'hour',
         })
         cls.out_type = cls.env['hr.work.entry.type'].create({
             'name': 'Leave Out (pipeline)', 'code': 'LVOUT',
             'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+            'request_unit': 'hour',
         })
 
         cls.emp = cls.env['hr.employee'].create({
@@ -3302,6 +3306,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
 
         src_wet = self.env['hr.work.entry.type'].create({
             'name': 'Att Src (day/week indep)', 'code': 'ATSRCINDEP', 'requires_allocation': False,
+            'request_unit': 'hour',
         })
         day_out_type = self.env['hr.work.entry.type'].create({
             'name': 'Att Day Out (indep)', 'code': 'ATDAYINDEP', 'requires_allocation': False,

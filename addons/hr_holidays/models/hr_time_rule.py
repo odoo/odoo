@@ -3,18 +3,63 @@
 from datetime import UTC
 from zoneinfo import ZoneInfo
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
     condition_work_entry_type_ids = fields.Many2many(
-        domain="[('id', 'in', country_work_entry_type_ids), ('request_unit', '=', 'hour')]",
+        domain="[('id', 'in', country_work_entry_type_ids)]",
     )
     work_entry_type_id = fields.Many2one(
-        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False), ('request_unit', '=', 'hour')]",
+        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
     )
+    condition_is_hourly = fields.Boolean(
+        compute='_compute_condition_is_hourly',
+        help="True when all selected condition time types are hourly (request_unit='hour').",
+    )
+
+    @api.constrains('condition_work_entry_type_ids')
+    def _check_condition_units_uniform(self):
+        for rule in self:
+            units = rule.condition_work_entry_type_ids.mapped('request_unit')
+            if len(set(units)) > 1:
+                raise ValidationError(self.env._(
+                    "Rule '%(name)s': all condition time types must share the same "
+                    "request unit (hour, day, or half-day). Mixed units are not supported.",
+                    name=rule.name,
+                ))
+
+    @api.depends('condition_work_entry_type_ids.request_unit')
+    def _compute_condition_is_hourly(self):
+        for rule in self:
+            types = rule.condition_work_entry_type_ids
+            rule.condition_is_hourly = not types or all(t.request_unit == 'hour' for t in types)
+
+    def _is_hourly(self):
+        types = self.condition_work_entry_type_ids
+        return not types or all(t.request_unit == 'hour' for t in types)
+
+    @api.depends('condition_work_entry_type_ids.request_unit', 'working_hours_mode')
+    def _compute_calendar_source(self):
+        non_hourly = self.filtered(lambda r: not r._is_hourly())
+        non_hourly.calendar_source = False
+        super(HrTimeRule, self - non_hourly)._compute_calendar_source()
+
+    @api.depends('condition_work_entry_type_ids.request_unit', 'working_hours_mode')
+    def _compute_expected_hours(self):
+        non_hourly = self.filtered(lambda r: not r._is_hourly())
+        non_hourly.expected_hours = 0
+        super(HrTimeRule, self - non_hourly)._compute_expected_hours()
+
+    @api.depends('condition_work_entry_type_ids.request_unit', 'working_hours_mode')
+    def _compute_quantity_period(self):
+        non_hourly = self.filtered(lambda r: not r._is_hourly())
+        non_hourly.quantity_period = 'day'
+        super(HrTimeRule, self - non_hourly)._compute_quantity_period()
+
     leave_compensation_rate = fields.Float(
         "Allocate %",
         default=0.0,

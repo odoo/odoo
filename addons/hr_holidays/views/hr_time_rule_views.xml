@@ -31,9 +31,40 @@
         <field name="model">hr.time.rule</field>
         <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[contains(@style,'row-gap: 12px')]" position="inside">
-                <span class="o_form_label" invisible="threshold_operator == 'less_than'">Allocate <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can grant time to the employee, with the rate of your choice (100% means 1:1), allowing him to take leave in compensation.">?</sup></span>
-                <span class="o_form_label" invisible="threshold_operator != 'less_than'">Take <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can take time from the employee, with the rate of your choice (100% means 1:1).">?</sup></span>
+            <!-- expose computed flag used throughout for invisible conditions -->
+            <xpath expr="//field[@name='country_work_entry_type_ids']" position="after">
+                <field name="condition_is_hourly" invisible="1"/>
+            </xpath>
+
+            <!-- hide "Working Hours" threshold row for day/half-day condition types -->
+            <xpath expr="//label[@for='working_hours_mode']" position="attributes">
+                <attribute name="invisible">not condition_is_hourly</attribute>
+            </xpath>
+            <xpath expr="//field[@name='working_hours_mode']/ancestor::div[1]" position="attributes">
+                <attribute name="invisible">not condition_is_hourly</attribute>
+            </xpath>
+
+            <!-- hide timing window row for day/half-day condition types -->
+            <xpath expr="//field[@name='timing_start']/.." position="attributes">
+                <attribute name="invisible">not condition_is_hourly</attribute>
+            </xpath>
+
+            <!-- replace "Set Excess/Deficit to" with "Reclassify to" for day/half-day types -->
+            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Excess')]" position="attributes">
+                <attribute name="invisible">threshold_operator == 'less_than' or not condition_is_hourly</attribute>
+            </xpath>
+            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]" position="attributes">
+                <attribute name="invisible">threshold_operator != 'less_than' or not condition_is_hourly</attribute>
+            </xpath>
+            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]" position="after">
+                <span class="o_form_label" invisible="condition_is_hourly">Reclassify to</span>
+            </xpath>
+
+            <!-- allocation row appended after the output WET div -->
+            <xpath expr="//field[@name='work_entry_type_id']/.." position="after">
+                <span class="o_form_label" invisible="threshold_operator == 'less_than' or not condition_is_hourly">Allocate <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can grant time to the employee, with the rate of your choice (100% means 1:1), allowing him to take leave in compensation.">?</sup></span>
+                <span class="o_form_label" invisible="threshold_operator != 'less_than' or not condition_is_hourly">Take <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can take time from the employee, with the rate of your choice (100% means 1:1).">?</sup></span>
+                <span class="o_form_label" invisible="condition_is_hourly">Allocate <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can grant time to the employee in compensation for each matching record.">?</sup></span>
                 <div class="d-flex gap-3 align-items-baseline">
                     <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:6ch"/>
                     <span class="text-muted" invisible="not leave_compensation_rate">to</span>
