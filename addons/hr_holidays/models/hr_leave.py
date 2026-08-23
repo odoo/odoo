@@ -2278,10 +2278,6 @@ class HrLeave(models.Model):
                 self.date_from.astimezone(UTC), self.date_to.astimezone(UTC), resources_per_tz=self.employee_id.resource_id._get_resources_per_tz(),
                 domain=domain, compute_leaves=not self.work_entry_type_id.include_public_holidays_in_duration,
             )[self.employee_id.resource_id.id]
-            compined_intervals = {}
-            for start, stop, _ in work_intervals:
-                compined_intervals[start.date()] = 1
-            days_data = sorted(compined_intervals.items())
 
         for work_entry_type, nbr_days in leave_split:
             full_days = floor(nbr_days)
@@ -2290,11 +2286,7 @@ class HrLeave(models.Model):
             remaining_days -= nbr_days
 
             if use_worked_days:
-                if half_days:
-                    new_request_date_to, new_request_date_to_period = current_leave._get_request_date_to_with_period(nbr_days, work_intervals)
-                else:
-                    new_request_date_to = current_leave._get_request_date_to(nbr_days, days_data)
-                    new_request_date_to_period = 'pm'
+                new_request_date_to, new_request_date_to_period = current_leave._get_request_date_to_with_period(nbr_days, work_intervals)
             else:
                 new_request_date_to = current_leave.request_date_from + relativedelta(days=full_days - 1)
                 if half_days:
@@ -2338,20 +2330,11 @@ class HrLeave(models.Model):
     def _get_extra_default_leave_values_for_split(self):
         return {}
 
-    def _get_request_date_to(self, number_of_days, days_data):
-        self.ensure_one()
-        for day, duration in days_data:
-            if day < self.request_date_from:
-                continue
-            number_of_days -= 1
-            if number_of_days == 0:
-                return day
-        return False
-
     def _get_request_date_to_with_period(self, number_of_days, work_intervals):
         self.ensure_one()
         for interval in work_intervals:
-            if interval[1].date() < self.request_date_from:
+            if (interval[1].date() < self.request_date_from) or (interval[1].date() == self.request_date_from and self.request_date_from_period == 'pm'
+                    and interval[2].day_period == 'morning'):
                 continue
             interval_days = self.resource_calendar_id._get_attendance_intervals_days_data([interval])['days']
             if number_of_days < interval_days:
