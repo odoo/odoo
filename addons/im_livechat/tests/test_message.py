@@ -182,7 +182,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     },
                 ),
                 "mail.message.subtype": [
-                    {"description": False, "id": self.env.ref("mail.mt_note").id}
+                    {"id": self.env.ref("mail.mt_note").id}
                 ],
                 "mail.thread": self._filter_threads_fields(
                     {
@@ -275,7 +275,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                 },
                             ),
                             "mail.message.subtype": [
-                                {"description": False, "id": self.env.ref("mail.mt_comment").id},
+                                {"id": self.env.ref("mail.mt_comment").id},
                             ],
                             "mail.thread": self._filter_threads_fields(
                                 {

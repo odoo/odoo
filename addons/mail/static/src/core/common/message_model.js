@@ -416,7 +416,6 @@ export class Message extends Record {
         return (
             this.isBodyEmpty &&
             this.attachment_ids.length === 0 &&
-            !this.subtype_id?.description &&
             !this.poll &&
             !this.subject
         );
@@ -552,7 +551,7 @@ export class Message extends Record {
         compute() {
             let messageBody = "";
             if (!this.hasOnlyAttachments) {
-                return this.inlineBody || this.subtype_id?.description;
+                return this.inlineBody;
             }
             const attachments = this.attachment_ids;
             switch (attachments.length) {

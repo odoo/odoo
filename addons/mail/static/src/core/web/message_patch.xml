@@ -4,11 +4,6 @@
         <xpath expr="//t[@name='bodyAsNotification']" position="replace">
             <t t-if="['notification', 'tracking'].includes(this.message.message_type) or this.message.is_transient" name="hasTrackingValue">
                 <div>
-                    <t t-if="this.message.subtype_id?.description">
-                        <p class="mb-0">
-                            <t t-out="this.props.messageSearch?.highlight(this.message.subtype_id.description) ?? this.message.subtype_id.description"/>
-                        </p>
-                    </t>
                     <div t-if="!this.message.isEmpty and this.message.richBody">
                         <t t-call="mail.Message.bodyAsNotification"/>
                     </div>

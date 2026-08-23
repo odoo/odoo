@@ -160,7 +160,6 @@ class TestMessageValues(MailCommon):
         """ Test that message is correctly considered as empty (see `_filter_empty()`).
         Message considered as empty if:
             - no body or empty body
-            - AND no subtype or no subtype description
             - AND no tracking values
             - AND no attachment
 
@@ -204,20 +203,12 @@ class TestMessageValues(MailCommon):
         self.assertTrue(is_html_empty(message.body))
         self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
 
-        # Subtype content
-        note_subtype.sudo().write({'description': 'Very important discussions'})
-        record._message_update_content(message, body="", attachment_ids=[])
-        self.assertFalse(message.attachment_ids)
-        self.assertEqual(message.notified_partner_ids, self.partner_admin)
-        self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)
-        self.assertFalse(message.sudo()._filter_empty(), 'Subtype with description')
-
         # Completely emptied now
-        note_subtype.sudo().write({'description': ''})
-        self.assertEqual(message.sudo()._filter_empty(), message)
-        record._message_update_content(message.sudo(), body="", attachment_ids=[])
+        record._message_update_content(message.sudo(), body="", attachment_ids=[])  # sudo needed for preview link cascade (to fix?)
+        self.assertFalse(message.attachment_ids)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
         self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)  # bookmarked messages stay (albeit content is removed)
+        self.assertEqual(message.sudo()._filter_empty(), message)
 
         # test tracking values model only (no body content)
         record.write({'user_id': self.user_admin.id})

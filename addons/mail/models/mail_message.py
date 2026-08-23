@@ -975,7 +975,6 @@ class MailMessage(models.Model):
                 [("author_guest_id", "in", self.env["mail.guest"].sudo()._search([("name", "ilike", search_term)]))],
                 [("body", "ilike", search_term)],
                 [("subject", "ilike", search_term)],
-                [("subtype_id.description", "ilike", search_term)],
             ])
             domain &= message_domain
         if search_term or is_notification is not None:
@@ -1215,8 +1214,7 @@ class MailMessage(models.Model):
         )
         res.many("ended_poll_ids", "_store_poll_fields", predicate=lambda m: m.has_poll, sudo=True)
         res.attr("subject")
-        # sudo: mail.message.subtype - reading subtype on accessible message is allowed
-        res.one("subtype_id", ["description"], sudo=True)
+        res.one("subtype_id", ["id"])
         res.attr("write_date")
         self._store_linked_messages_fields(res)
         self._store_message_link_previews_fields(res)
@@ -1447,7 +1445,6 @@ class MailMessage(models.Model):
             )
             & Domain("ended_poll_ids", "=", False)
             & Domain("started_poll_ids", "=", False)
-            & Domain("subtype_id.description", "=", False)
         )
 
     @api.model

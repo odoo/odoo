@@ -12,7 +12,6 @@ import { MessageReactions } from "@mail/core/common/message_reactions";
 import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { Component, computed, proxy, signal, t, untrack, useApp, useProps } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
@@ -337,7 +336,6 @@ export class Message extends Component {
         return (
             !this.message.linkPreviewSquash &&
             (this.message.hasTextContent ||
-                this.message.subtype_id?.description ||
                 this.message.isEmpty)
         );
     }
@@ -365,14 +363,6 @@ export class Message extends Component {
             return 1;
         }
         return 2;
-    }
-
-    get showSubtypeDescription() {
-        return (
-            this.message.subtype_id?.description &&
-            this.message.subtype_id.description.toLowerCase() !==
-                htmlToTextContentInline(this.message.body || "").toLowerCase()
-        );
     }
 
     get messageTypeText() {

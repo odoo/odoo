@@ -159,7 +159,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                             ),
                             "mail.message.subtype": [
                                 {
-                                    "description": False,
                                     "id": self.env.ref("mail.mt_comment").id,
                                 },
                             ],

@@ -5061,23 +5061,9 @@ class MailThread(models.AbstractModel):
             msg_vals["parent_id"] = new_parent_message.id
         generic_messages.sudo().write(msg_vals)
 
-        messages_with_description = MailMessage
-
         if self._name != new_thread._name:
             msg_vals["subtype_id"] = None
-
-            messages_with_description = non_generic_messages.filtered(
-                lambda msg: msg.subtype_id.description
-            )
-            for message in messages_with_description:
-                body = append_content_to_html(
-                    message.subtype_id.description,
-                    message.body,
-                )
-                # only admin can modify model and res_id, so use sudo
-                message.sudo().write({**msg_vals, "body": body})
-
-        (non_generic_messages - messages_with_description).sudo().write(msg_vals)
+        non_generic_messages.sudo().write(msg_vals)
         return True
 
     def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None,
