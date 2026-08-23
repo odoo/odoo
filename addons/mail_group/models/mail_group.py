@@ -459,7 +459,7 @@ class MailGroup(models.Model):
                 }
                 footer = self.env['ir.qweb']._render('mail_group.mail_group_footer', template_values, minimal_qcontext=True)
                 member_body = tools.append_content_to_html(body, footer, plaintext=False)
-
+                member_body = self.env['mail.render.mixin']._replace_local_links(member_body)
                 mail_values.append({
                     'auto_delete': True,
                     'attachment_ids': message.attachment_ids.ids,
