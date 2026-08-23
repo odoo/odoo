@@ -368,8 +368,12 @@ class HrTimeRule(models.Model):
                 period = Intervals([(p_dt_start.replace(tzinfo=None), p_dt_end.replace(tzinfo=None), version)])
 
                 if version.is_fully_flexible:
+                    # mark the employee as fully flexible for this period
                     result['fully_flexible'][emp] |= period
-                    continue
+                    if not schedule_calendar:
+                        # no reference calendar provided: the employee's own (absent)
+                        # schedule would be the baseline -> nothing to compare against.
+                        continue
 
                 sched_cal = schedule_calendar or version.resource_calendar_id
                 leave_cal = version.resource_calendar_id
@@ -390,9 +394,10 @@ class HrTimeRule(models.Model):
                 result['schedule'][emp] |= att_intervals & period
                 result['public_leave'][emp] |= ph_intervals & period
 
-                leave_requests[leave_cal.id, p_dt_start, p_dt_end].append(
-                    (emp, rid, tz, leave_cal, period)
-                )
+                if leave_cal:
+                    leave_requests[leave_cal.id, p_dt_start, p_dt_end].append(
+                        (emp, rid, tz, leave_cal, period)
+                    )
 
         for (_, p_dt_start, p_dt_end), items in leave_requests.items():
             leave_cal = items[0][3]

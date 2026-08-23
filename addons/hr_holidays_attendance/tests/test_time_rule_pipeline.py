@@ -1302,6 +1302,45 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts,
                          "10h worked < 12h reference baseline -> no overtime output")
 
+    def test_reference_calendar_fires_for_fully_flexible_employee(self):
+        """calendar_source='reference' must fire even for employees with no own schedule.
+        """
+        ref_calendar = self.env['resource.calendar'].create({
+            'name': '8h Reference',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': wd, 'hour_from': h, 'hour_to': h + 4})
+                for wd in ['0', '1', '2', '3', '4']
+                for h in [8, 13]
+            ],
+        })
+        self.time_rule.active = False
+        ot_type = self.env['hr.work.entry.type'].create({
+            'name': 'Flex OT', 'code': 'FLXOT',
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Reference Rule for Flex Emp',
+            'calendar_source': 'reference',
+            'resource_calendar_id': ref_calendar.id,
+            'quantity_period': 'day',
+            'work_entry_type_id': ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # flex_emp has no own schedule; works 10h — 2h above the 8h reference baseline.
+        self.env['hr.attendance'].create({
+            'employee_id': self.flex_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),  # 10h
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.flex_emp.id),
+            ('work_entry_type_id', '=', ot_type.id),
+        ])
+        self.assertTrue(output_atts,
+                        "reference-calendar rule must fire for fully-flexible employee")
+        total_ot = sum((a.check_out - a.check_in).total_seconds() / 3600 for a in output_atts)
+        self.assertAlmostEqual(total_ot, 2.0, places=4,
+                               msg="2h excess above 8h reference baseline expected")
+
     def test_sequential_rules_second_rule_finds_no_excess(self):
         """Sequential pipeline: R2 with the same threshold sees 0h excess after R1 already claimed it."""
         second_ot_type = self.env['hr.work.entry.type'].create({
@@ -1517,6 +1556,78 @@ class TestTimeRulePipeline(TransactionCase):
             ('is_time_rule_output', '=', True),
         ])
         self.assertFalse(output_atts, "0.5h deficit < 1h employee_tolerance -> no output")
+
+    def test_employer_tolerance_expected_hours(self):
+        """employer_tolerance applies to expected_hours rules (no calendar_source).
+        """
+        self.time_rule.active = False
+        ot_type = self.env['hr.work.entry.type'].create({
+            'name': 'OT Tol EH', 'code': 'OTTOLEH',
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Expected Hours Tolerance Exceed',
+            'working_hours_mode': 'day',
+            'expected_hours': 8.0,
+            'employer_tolerance': 0.5,
+            'work_entry_type_id': ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+
+        def _ot_atts(check_in, check_out):
+            return self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': check_in,
+                'check_out': check_out,
+            })
+
+        # 8.3h worked: 0.3h excess < 0.5h employer_tolerance → no overtime
+        att1 = _ot_atts(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 16, 18))
+        output1 = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', ot_type.id),
+        ])
+        self.assertFalse(output1, "0.3h excess < 0.5h employer_tolerance → no overtime")
+
+        att1.with_context(skip_time_rules=True).unlink()
+
+        # 9h worked: 1h excess > 0.5h employer_tolerance → overtime created
+        _ot_atts(datetime(2022, 12, 19, 8), datetime(2022, 12, 19, 17))
+        output2 = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', ot_type.id),
+        ])
+        self.assertTrue(output2, "1h excess > 0.5h employer_tolerance → overtime expected")
+        rule.active = False
+
+    def test_employee_tolerance_expected_hours(self):
+        """employee_tolerance applies to expected_hours rules (no calendar_source).
+        """
+        self.time_rule.active = False
+        gap_type = self.env['hr.work.entry.type'].create({
+            'name': 'Gap Tol EH', 'code': 'GAPTOLEH', 'count_as': 'absence',
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Expected Hours Tolerance Deficit',
+            'working_hours_mode': 'day',
+            'expected_hours': 8.0,
+            'employee_tolerance': 0.5,
+            'threshold_operator': 'less_than',
+            'work_entry_type_id': gap_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+
+        # 7.7h worked: 0.3h deficit < 0.5h employee_tolerance → no output
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 15, 42),  # 7h42m
+        })
+        output = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', gap_type.id),
+        ])
+        self.assertFalse(output, "0.3h deficit < 0.5h employee_tolerance → no output")
+        rule.active = False
 
     def test_timing_window_creates_remainder_attendance(self):
         """Lunch window cut from the middle: source shrunk to head [8:00-12:00], tail [13:00-20:00] becomes remainder child."""
@@ -3526,7 +3637,8 @@ class TestTimeRulePipelineLeaves(TransactionCase):
           - rule1 credited via alloc_acc loop  → excess_alloc gets (emp, rule1, 6h)
           - rule2 credited via pp-only branch  → excess_alloc gets (emp, rule2, 6h)
 
-        Both entries create / add to the same allocation, so number_of_days == 2x.
+        Both rules target the same allocation type, so the days are accumulated into a
+        single allocation record (2x credit) rather than two separate records.
         """
         comp_type = self.env['hr.work.entry.type'].create({
             'name': 'PP Stack Comp',
@@ -3559,8 +3671,8 @@ class TestTimeRulePipelineLeaves(TransactionCase):
 
             # each rule must earn allocation credit for the full 6h interval:
             # rule1 via alloc_acc credit loop, rule2 via pp-only excess branch -> 2 credits total.
-            # the two excess_alloc entries both go through alloc_create_vals (the second search
-            # runs before the first allocation is committed) → two separate allocation records.
+            # both excess_alloc entries target the same allocation type so the days are
+            # accumulated into one allocation record with 2× the per-rule credit.
             allocations = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', leave.employee_id.id),
                 ('work_entry_type_id', '=', comp_type.id),
