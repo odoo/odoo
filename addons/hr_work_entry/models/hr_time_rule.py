@@ -614,7 +614,12 @@ class HrTimeRule(models.Model):
                 # still record excess hours so callers with allocation_type_id can allocate them.
                 if all(not iv.rule.work_entry_type_id for iv in output_intervals):
                     all_pp = frozenset().union(*(iv.pp for iv in output_intervals))
-                    extra_vals = output_intervals[0].rule._get_output_in_place_extra_vals(accumulated_pp=all_pp)
+                    # collect extra_vals from every distinct classifying rule so that
+                    # future overrides of _get_output_in_place_extra_vals that inspect
+                    # self are all called, not just the first interval's rule.
+                    extra_vals = {}
+                    for rule in dict.fromkeys(iv.rule for iv in output_intervals):
+                        extra_vals |= rule._get_output_in_place_extra_vals(accumulated_pp=all_pp)
                     if extra_vals:
                         source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
                     for iv in output_intervals:
@@ -720,7 +725,7 @@ class HrTimeRule(models.Model):
 
         if self.threshold_operator == 'less_than':
             deficit_amount = -excess_amount
-            tolerance = self.employee_tolerance if self.calendar_source else 0
+            tolerance = self.employee_tolerance
             _logger.warning(
                 "rule '%s' (id=%d) period %s→%s: worked=%.4fh expected=%.4fh "
                 "deficit=%.4fh tolerance=%.4fh → %s",
@@ -749,7 +754,7 @@ class HrTimeRule(models.Model):
                     gap = _trim_hours_from_start(gap, trim)
                 return {}, {last_source: [(s, e, self) for s, e, _ in gap]}
 
-        tolerance = self.employer_tolerance if self.calendar_source else 0
+        tolerance = self.employer_tolerance
         _logger.warning(
             "rule '%s' (id=%d) period %s→%s: worked=%.4fh expected=%.4fh "
             "excess=%.4fh tolerance=%.4fh → %s",
@@ -850,7 +855,10 @@ class HrTimeRule(models.Model):
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
             rule_window_by_emp = rule._build_rule_day_intervals(start_dt, end_dt, employees, work_intervals)
             condition_wets = rule.condition_work_entry_type_ids
-            has_threshold = bool(rule.calendar_source or rule.expected_hours)
+            # true when threshold evaluation requires schedule data (calendar_source set or
+            # explicit expected_hours > 0); false means any matching interval is implicitly
+            # "excess" and we can skip _evaluate_period entirely for pp/alloc-only rules.
+            uses_schedule = bool(rule.calendar_source or rule.expected_hours)
 
             for employee in rule._get_applicable_employees(employees):
                 emp_pipeline = pipeline_by_emp[employee]
@@ -880,7 +888,9 @@ class HrTimeRule(models.Model):
                     )
                     continue
 
-                if not rule.work_entry_type_id and not has_threshold:
+                if not rule.work_entry_type_id and not uses_schedule:
+                    # pp/alloc-only rule with no schedule threshold: tag all matching intervals
+                    # directly as excess without loading schedule data.
                     # stack any displaced rule into acc so its pp and allocation are credited.
                     pipeline_by_emp[employee] = non_matching + outside + [
                         iv._replace(rule=rule, acc=iv.acc if iv.rule is None else iv.acc | {iv.rule})
@@ -917,7 +927,7 @@ class HrTimeRule(models.Model):
                         datetime.combine(period_date, datetime.min.time())
                     )
                     period_window_iv = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
-                    if rule.calendar_source and not (period_window_iv - fully_flex):
+                    if rule.calendar_source == 'employee' and not (period_window_iv - fully_flex):
                         continue
                     schedule_in_window = schedule & rule_window & period_window_iv
                     ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)
