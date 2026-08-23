@@ -1321,11 +1321,10 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
-        merge_extra = self.env.context.get('merge_extra')
         state = self._get_relevant_state_among_moves()
         origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
-            'product_uom_qty': sum(self.mapped('product_uom_qty')) if not merge_extra else self[0].product_uom_qty,
+            'product_uom_qty': sum(self.mapped('product_uom_qty')),
             'date': min(self.mapped('date')) if all(p.move_type == 'direct' for p in self.picking_id) else max(self.mapped('date')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
             'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
@@ -1342,8 +1341,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         ]
         if self.env['ir.config_parameter'].sudo().get_bool('stock.merge_only_same_date'):
             fields.append('date')
-        if self.env.context.get('merge_extra'):
-            fields.pop(fields.index('procure_method'))
         if not self.env['ir.config_parameter'].sudo().get_bool('stock.merge_ignore_date_deadline'):
             fields.append('date_deadline')
         return fields
@@ -1422,8 +1419,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                     # link all move lines to record 0 (the one we will keep).
                     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
                     # merge move data
-                    merge_extra = self.env.context.get('merge_extra') and bool(merge_into)
-                    moves[0].write(moves.with_context(merge_extra=merge_extra)._merge_moves_fields())
+                    moves[0].write(moves._merge_moves_fields())
                     # update merged moves dicts
                     moves_to_unlink |= moves[1:]
                     merged_moves |= moves[0]
