@@ -11,7 +11,7 @@ from odoo.tools.image import image_data_uri
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.checkout.address import Address
 
 
 class Cart(PaymentPortal):
@@ -276,10 +276,10 @@ class Cart(PaymentPortal):
             ),
             "merchant_name": self.env.website.name,
             "transaction_route": f"/shop/payment/transaction/{order.id}",
-            "express_checkout_route": WebsiteSale._express_checkout_route,
+            "express_checkout_route": Address._express_checkout_route,
             "landing_route": "/shop/payment/validate",
             "shipping_info_required": order._has_deliverable_products(),
-            "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
+            "shipping_address_update_route": Address._express_checkout_delivery_route,
         })
         provider_sudo = payment_form_values["providers_sudo"][:1]
         if provider_sudo:
