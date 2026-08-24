@@ -14,7 +14,7 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
         return func(self, endpoint, params=params)
 
     endpoint = endpoint.rsplit('/', 1)[-1]
-    if endpoint not in ('register_receiver', 'cancel_pdp_registration', 'get_all_ppf_documents', 'get_ppf_document', 'pilot_phase', 'send_response'):
+    if endpoint not in ('register_receiver', 'cancel_pdp_registration', 'get_all_ppf_documents', 'get_ppf_document', 'send_response'):
         return func(self, endpoint, params=params)
 
     return {
@@ -55,10 +55,7 @@ def _mock_pdp_register_receiver(func, self):
     if self.proxy_type != 'pdp':
         return
     self.company_id.account_peppol_proxy_state = 'receiver'
-    if self.company_id.l10n_fr_pdp_pilot_phase:
-        self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
-    else:
-        self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date('2026-09-01')
+    self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
 
 
 def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
@@ -76,14 +73,6 @@ def _mock_get_peppol_verification_state(func, self, peppol_endpoint, peppol_eas,
     return 'valid'
 
 
-def _mock_l10n_fr_pdp_update_pilot_phase(func, self, value):
-    self.sudo().l10n_fr_pdp_pilot_phase = value
-    if value:
-        self.sudo().l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
-    else:
-        self.sudo().l10n_fr_pdp_annuaire_start_date = fields.Date.to_date('2026-09-01')
-
-
 def _mock_button_trigger_authentication(func, self):
     self.pdp_kyc_status = 'success'
     return self._action_open_pdp_form()
@@ -95,7 +84,6 @@ _demo_behaviour = {
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_pdp_annuaire_lookup_participant': _mock_pdp_annuaire_lookup_participant,  # res.partner
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
-    '_l10n_fr_pdp_update_pilot_phase': _mock_l10n_fr_pdp_update_pilot_phase,  # res.company
     'button_trigger_authentication': _mock_button_trigger_authentication,  # pdp.registration
 }
 
