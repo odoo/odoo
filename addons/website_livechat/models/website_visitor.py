@@ -129,7 +129,9 @@ class WebsiteVisitor(models.Model):
             visitor_sudo = self.sudo().browse(visitor_id)
             if guest := self.env["mail.guest"]._get_guest_from_context():
                 # sudo: mail.guest - guest can access their own channels and link them to newly created visitor.
-                guest_livechats = guest.sudo().channel_ids.filtered(lambda c: c.channel_type == "livechat")
+                guest_livechats = guest.sudo().channel_ids.filtered(
+                    lambda channel: channel.channel_type == "livechat" and not channel.livechat_visitor_id,
+                )
                 guest_livechats.livechat_visitor_id = visitor_sudo.id
                 guest_livechats.country_id = visitor_sudo.country_id
         return visitor_id, upsert

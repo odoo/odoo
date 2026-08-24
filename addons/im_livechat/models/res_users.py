@@ -1,8 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
-from odoo.addons.mail.tools.discuss import Store
+from markupsafe import Markup
+
+from odoo import api, fields, models
 from odoo.fields import Command
+from odoo.http import request
+
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsers(models.Model):
@@ -148,6 +152,49 @@ class ResUsers(models.Model):
                     .write({"user_ids": [Command.unlink(operator.id) for operator in lost_operators]})
                 return result
         return super().write(vals)
+
+    def _after_session_login(self):
+        super()._after_session_login()
+        if request:
+            token = request.cookies.get(self.env["mail.guest"]._cookie_name, "")
+            guest = self.env["mail.guest"]._get_guest_from_token(token)
+            if guest and not self._is_public():
+                self.with_context(guest=guest)._join_livechat_sessions_from_guest(guest)
+
+    def _join_livechat_sessions_from_guest(self, guest):
+        self.ensure_one()
+        # using guest env to find livechat channels the guest has access to
+        guest_access_env = self.env(user=self.env.ref("base.public_user"))
+        guest_members = guest_access_env["discuss.channel.member"].search_fetch(
+            [
+                ("channel_id.channel_type", "=", "livechat"),
+                ("is_self", "=", True),
+            ],
+            limit=100,
+            order="id DESC",
+        )
+        if not guest_members:
+            return
+        # sudo: discuss.channel - the authenticated user is taking over livechat
+        # sessions that belonged to their guest, so adding them as member is legitimate.
+        new_members = guest_members.channel_id.with_env(self.env).sudo()._add_members(
+            users=self,
+            create_member_params={"livechat_member_type": "visitor"},
+            post_joined_message=False,
+        )
+        guest_members.unlink()
+        notif = self.env._(
+            "%(visitor)s authenticated as %(user)s.",
+            # sudo: mail.guest - reading the name for a notification message is acceptable
+            visitor=guest.sudo().name,
+            user=self.partner_id.name or self.partner_id.display_name,
+        )
+        for channel in new_members.channel_id.filtered(lambda c: not c.livechat_end_dt):
+            channel.message_post(
+                body=Markup('<div class="o_mail_notification" data-oe-type="o_mail_notification">%s</div>') % notif,
+                message_type="notification",
+                subtype_xmlid="mail.mt_comment",
+            )
 
     def _store_init_global_fields(self, res: Store.FieldList):
         super()._store_init_global_fields(res)

@@ -207,7 +207,7 @@ class ImLivechatChannelMemberHistory(models.Model):
             end = history.channel_id.livechat_end_dt or last_msg_dt_by_channel_id.get(
                 history.channel_id.id, fields.Datetime.now()
             )
-            history.session_duration_hour = (end - history.create_date).total_seconds() / 3600
+            history.session_duration_hour = max((end - history.create_date).total_seconds() / 3600, 0)
 
     @api.model
     def action_open_discuss_channel_view(self, domain=()):

@@ -294,6 +294,14 @@ export class Message extends Record {
         return _t("Last edited %(editedDate)s", { editedDate: this.editedDatetimeMedium });
     }
 
+    /** @type {import("models").Store["selvesBySequence"]} */
+    selvesBySequence = fields.Attr(undefined, {
+        /** @this {import("models").Message} */
+        compute() {
+            return this.thread?.selvesBySequence ?? this.store.selvesBySequence;
+        },
+    });
+
     /**
      * Get the effective persona performing actions on this message.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
@@ -301,7 +309,7 @@ export class Message extends Record {
      * @returns {import("models").Persona}
      */
     get effectiveSelf() {
-        return this.thread?.effectiveSelf ?? this.store.self;
+        return this.selvesBySequence[0]?.self;
     }
 
     get datetimeMedium() {
@@ -309,14 +317,18 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this.effectiveSelf.in(this.partner_ids);
+        return this.partner_ids.some((partner) =>
+            this.selvesBySequence.some(({ self }) => partner.eq(self))
+        );
     }
 
     get isHighlightedFromMention() {
         return this.isSelfMentioned && Boolean(this.thread?.channel);
     }
 
-    isSelfAuthored = this.computed(() => Boolean(this.author?.eq(this.effectiveSelf)));
+    isSelfAuthored = this.computed(() =>
+        this.selvesBySequence.some(({ self }) => this.author?.eq(self))
+    );
 
     isPending = false;
 

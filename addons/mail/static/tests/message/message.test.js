@@ -2792,3 +2792,33 @@ test("show actions of 'tracking' in message header", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-header .o-mail-Message-actions");
 });
+
+test("self-user sees self-guest messages as self-authored", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Batman" });
+    pyEnv["mail.message"].create([
+        {
+            author_guest_id: guestId,
+            body: "Guest",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "Partner",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+    ]);
+    pyEnv.cookie.set("dgid", guestId);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message.o-selfAuthored:eq(0) .o-mail-Message-body:text(Guest)");
+    await contains(".o-mail-Message.o-selfAuthored:eq(1) .o-mail-Message-body:text(Partner)");
+});
