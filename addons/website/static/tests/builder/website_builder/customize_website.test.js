@@ -582,10 +582,16 @@ test("discard restores the theme customizations made during the edition", async 
     class WebEditorAssets extends models.Model {
         _name = "web_editor.assets";
         make_scss_customization(location, changes) {
+            const previousValues = {};
             for (const [key, value] of Object.entries(changes)) {
+                previousValues[key] = iframeRootStyle().getPropertyValue(`--${key}`);
                 iframeRootStyle().setProperty(`--${key}`, String(value));
             }
             expect.step(JSON.stringify(changes));
+            return previousValues;
+        }
+        restore_scss_customizations(customizations) {
+            expect.step(JSON.stringify(customizations));
         }
     }
 
@@ -621,5 +627,7 @@ test("discard restores the theme customizations made during the edition", async 
 
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".o_dialog .btn-primary").click();
-    expect.verifySteps([`{"test-variable":"10px"}`]);
+    expect.verifySteps([
+        `{"/website/static/src/scss/options/user_values.scss":{"test-variable":"10px"}}`,
+    ]);
 });

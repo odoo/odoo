@@ -28,6 +28,10 @@ class Web_EditorAssets(models.AbstractModel):
                 key,value mapping to integrate in the file's map (containing the
                 word hook). If a key is already in the file's map, its value is
                 overridden.
+
+        Returns:
+            dict: the value each given key had before the customization, so
+                that it can be restored (see `restore_scss_customizations`).
         """
         IrAttachment = self.env['ir.attachment']
         if 'color-palettes-name' in values:
@@ -123,6 +127,7 @@ class Web_EditorAssets(models.AbstractModel):
         custom_url = self._make_custom_asset_url(url, 'web.assets_frontend')
         updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
+        previous_values = {}
         for name, value in values.items():
             # Protect variable names so they cannot be computed as numbers
             # on SCSS compilation (e.g. var(--700) => var(700)).
@@ -132,14 +137,31 @@ class Web_EditorAssets(models.AbstractModel):
                     lambda matchobj: "var(--#{" + matchobj.group(1) + "})",
                     value)
             pattern = "'%s': %%s,\n" % name
-            regex = re.compile(pattern % ".+")
+            regex = re.compile(pattern % "(.+)")
             replacement = pattern % value
-            if regex.search(updatedFileContent):
+            match = regex.search(updatedFileContent)
+            previous_values[name] = match.group(1) if match else 'null'
+            if match:
                 updatedFileContent = re.sub(regex, replacement, updatedFileContent)
             else:
                 updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
 
         self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+        return previous_values
+
+    @api.model
+    def restore_scss_customizations(self, customizations):
+        """
+        Writes back in the scss maps the values they held before the
+        customizations made since they were read, in a single call.
+
+        Params:
+            customizations (dict):
+                the URL of each scss file to restore, mapped to the key,value
+                pairs to write back in its map
+        """
+        for url, changes in customizations.items():
+            self.make_scss_customization(url, changes)
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):
