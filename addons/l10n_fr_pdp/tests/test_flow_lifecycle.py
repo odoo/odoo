@@ -26,7 +26,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'email': 'info@company.frexample.com',
             'l10n_fr_pdp_annuaire_start_date': '2025-01-01',
             'l10n_fr_pdp_periodicity': 'normal_monthly',
-            'l10n_fr_pdp_pilot_phase': True,
             'l10n_fr_pdp_send_to_ppf': True,
             'name': 'NOM MATELAS',
             'siret': '34057796400024',
@@ -2096,6 +2095,5 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             tax_ids=self._get_tax_on_payment_20(),
             post=True,
         )
-        branch.l10n_fr_pdp_pilot_phase = True
         self.assertTrue(branch.l10n_fr_f10_enable_reporting)
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)

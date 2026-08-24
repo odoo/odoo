@@ -4,6 +4,7 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    # DEPRECATED - was for the pre-prod phase
     l10n_fr_pdp_pilot_phase = fields.Boolean(
         compute='_compute_l10n_fr_pdp_pilot_phase',
         inverse='_inverse_l10n_fr_pdp_pilot_phase',
@@ -52,9 +53,7 @@ class ResConfigSettings(models.TransientModel):
             record.l10n_fr_pdp_pilot_phase = record.company_id.l10n_fr_pdp_pilot_phase
 
     def _inverse_l10n_fr_pdp_pilot_phase(self):
-        for record in self:
-            if record.l10n_fr_pdp_pilot_phase != record.company_id.l10n_fr_pdp_pilot_phase:
-                record.company_id._l10n_fr_pdp_update_pilot_phase(record.l10n_fr_pdp_pilot_phase)
+        pass
 
     # TODO: remove in master
     @api.model
