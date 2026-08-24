@@ -457,6 +457,9 @@ export function useMagicColumnWidths(tableRef, canUseMagicColumnWidths, getState
      * Unsets the widths. After next patch, ideal widths will be recomputed.
      */
     function unsetWidths() {
+        if (!tableRef()) {
+            return;
+        }
         columnWidths = null;
         // Unset widths that might have been set on the table by resizing a column
         tableRef().style.width = null;

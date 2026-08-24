@@ -6,7 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -97,7 +97,12 @@ export class StatusBarField extends Component {
             forceRecomputeItems = false;
         });
 
-        useListener(window, "resize", throttleForAnimation(adjust));
+        const throttledRenderAndAdapt = useThrottleForAnimation(() => {
+            if (this.rootRef()) {
+                adjust();
+            }
+        });
+        useListener(window, "resize", throttledRenderAndAdapt);
 
         // Special data
         if (this.field.type === "many2one") {
