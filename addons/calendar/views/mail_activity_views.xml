@@ -33,15 +33,15 @@
             <xpath expr="//div[hasclass('o_outlined')][.//field[@name='note']]" position="before">
                 <div invisible="activity_category != 'meeting'" class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="oi oi-filled" data-icon="calendar_today" title="Calendar"/>
-                    <button string="Schedule"
+                    <span class="text-muted">Pick a date and time</span>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_close_dialog']" position="before">
+                <button string="Schedule Meeting"
                         invisible="activity_category != 'meeting'"
                         name="action_create_calendar_event"
                         type="object"
-                        class="btn-link"
-                    >
-                        Schedule a meeting
-                    </button>
-                </div>
+                        class="btn-primary"/>
             </xpath>
         </field>
     </record>

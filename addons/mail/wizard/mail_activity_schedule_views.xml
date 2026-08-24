@@ -46,8 +46,8 @@
                                 </div>
                             </div>
                             <div class="col-lg-7">
-                                <label for="plan_schedule_line_ids" string="Plan Summary" class="o_form_label mb-1" colspan="2"/>
-                                <field name="plan_schedule_line_ids" nolabel="1" colspan="2">
+                                <label for="plan_schedule_line_ids" string="Plan Summary" class="text-body fw-bold mb-1"/>
+                                <field name="plan_schedule_line_ids" nolabel="1">
                                     <kanban create="false" can_open="false" class="o_mail_activity_schedule_kanban">
                                         <field name="responsible_user_id"/>
                                         <field name="role_id"/>
@@ -78,7 +78,7 @@
                                                 <div class="col-4 text-muted small text-truncate pe-2">
                                                     <field name="line_description"/>
                                                 </div>
-                                                <div class="col-2 text-end text-muted small">
+                                                <div class="col-2 text-end text-muted small pe-2">
                                                     <field name="line_date_deadline"/>
                                                 </div>
                                             </div>
