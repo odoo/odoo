@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionList } from "@mail/core/common/action_list";
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { Priority } from "@mail/core/common/priority";
@@ -42,6 +43,7 @@ export class MessagingMenuItem extends Component {
             useSubEnv({ [DROPDOWN_NESTING]: boundary });
         }
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.message = useProps.static(
             "message",
             types.instanceOf(this.store["mail.message"]).optional()
@@ -56,7 +58,6 @@ export class MessagingMenuItem extends Component {
         });
         this.messageDropdownState = useDropdownState();
         this.ui = useService("ui");
-        useSubEnv({ inMessagingMenu: true });
         if (isMobileOS()) {
             useLongPress(this.root, {
                 action: () => {

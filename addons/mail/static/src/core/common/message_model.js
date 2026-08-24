@@ -777,10 +777,12 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
+     * @param {ReturnType<import("@mail/core/common/ancestors_hook").useAncestors>} owner.ancestors
      */
     onShowDeleteConfirm(owner) {
-        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
+        this.remove({
+            removeFromThread: this.shouldHideFromMessageListOnDelete(owner.ancestors),
+        });
     }
 
     /**
@@ -891,7 +893,7 @@ export class Message extends Record {
         ]);
     }
 
-    shouldHideFromMessageListOnDelete(env) {
+    shouldHideFromMessageListOnDelete(ancestors) {
         return false;
     }
 
@@ -899,10 +901,10 @@ export class Message extends Record {
         await this.store.fetchStoreData("add_bookmark", { message_id: this.id });
     }
 
-    /** @param {import("@web/env").OdooEnv} env */
-    async removeBookmark(env) {
+    /** @param {ReturnType<import("@mail/core/common/ancestors_hook").useAncestors>} ancestors */
+    async removeBookmark(ancestors) {
         await this.store.fetchStoreData("remove_bookmark", { message_id: this.id });
-        if (!env.inMessagingMenu) {
+        if (!ancestors?.has("MessagingMenuItem")) {
             return;
         }
         this.closeNotificationFn?.();

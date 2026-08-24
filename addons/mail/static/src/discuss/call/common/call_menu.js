@@ -1,6 +1,6 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Component, signal } from "@odoo/owl";
 
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionList } from "@mail/core/common/action_list";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
@@ -19,8 +19,8 @@ export class CallMenu extends Component {
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
+        this.ancestors = useAncestors();
         this.callActions = useCallActions({ channel: () => this.rtc.channel });
-        useSubEnv({ inCallMenu: true });
         this.dropdownState = useDropdownState();
         this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }

@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
@@ -21,6 +22,7 @@ export class SubChannelPreview extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
         this.class = propComputed("class", t.string().optional());
         this.onClick = useProps.static(

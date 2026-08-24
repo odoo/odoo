@@ -4,19 +4,19 @@
     <t t-name="mail.AttachmentList">
         <div class="o-mail-AttachmentList overflow-y-auto d-flex flex-column mt-1"
             t-att-class="{
-                'o-inComposer': this.env.inComposer,
+                'o-inComposer': this.ancestors.has('Composer'),
                 'o-inChatWindow': this.env.inChatWindow,
             }"
             t-ref="this.rootRef"
         >
-            <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.env.inComposer}" role="menu" >
+            <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.ancestors.has('Composer')}" role="menu" >
                 <div t-foreach="this.props.attachments" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
                      class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
                      t-att-title="attachment.name ? attachment.name : undefined"
                      t-att-class="{
-                        'o-inMessage': this.env.inMessage,
-                        'o-inChatter': this.env.inChatter,
+                        'o-inMessage': this.ancestors.has('Message'),
+                        'o-inChatter': this.ancestors.has('Chatter'),
                         'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
                         'o-viewable': attachment.isViewable,
@@ -34,21 +34,21 @@
                         alt="attachment.name"
                         class="this.attClassObjectToString({
                             'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
-                            'o-inMessage': this.env.inMessage,
-                            'o-inChatter object-fit-scale': this.env.inChatter,
-                            'object-fit-contain': !this.env.inChatter and this.env.inMessage,
-                            'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
+                            'o-inMessage': this.ancestors.has('Message'),
+                            'o-inChatter object-fit-scale': this.ancestors.has('Chatter'),
+                            'object-fit-contain': !this.ancestors.has('Chatter') and this.ancestors.has('Message'),
+                            'object-fit-cover': !this.ancestors.has('Chatter') and !this.ancestors.has('Message'),
                         })"
                     />
                     <img
                         t-elif="attachment.isImage"
                         class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
                         t-att-class="{
-                            'o-inComposer': this.env.inComposer,
-                            'o-inMessage': this.env.inMessage,
-                            'o-inChatter object-fit-scale': this.env.inChatter,
-                            'object-fit-contain': !this.env.inChatter and this.env.inMessage,
-                            'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
+                            'o-inComposer': this.ancestors.has('Composer'),
+                            'o-inMessage': this.ancestors.has('Message'),
+                            'o-inChatter object-fit-scale': this.ancestors.has('Chatter'),
+                            'object-fit-contain': !this.ancestors.has('Chatter') and this.ancestors.has('Message'),
+                            'object-fit-cover': !this.ancestors.has('Chatter') and !this.ancestors.has('Message'),
                         }"
                         t-att-src="this.getImageUrl(attachment)"
                         t-att-alt="attachment.name"
@@ -90,7 +90,7 @@
                             <button t-elif="this.canDownload(attachment)" class="btn btn-secondary" t-on-click.stop="() => this.onClickDownload(attachment)" title="Download">
                                 <i class="oi" data-icon="download" role="img" aria-label="Download"/>
                             </button>
-                            <button t-if="this.showDelete(attachment)" class="o-mail-Attachment-unlink btn btn-secondary" t-att-class="{ 'o-inComposer': this.env.inComposer }" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
+                            <button t-if="this.showDelete(attachment)" class="o-mail-Attachment-unlink btn btn-secondary" t-att-class="{ 'o-inComposer': this.ancestors.has('Composer') }" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
                                 <i class="oi oi-filled" data-icon="delete" role="img" aria-label="Remove"/>
                             </button>
                         </div>

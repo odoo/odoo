@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
@@ -55,6 +56,7 @@ export class ChannelMemberList extends Component {
             close: t.function([]).optional(),
         });
         this.dialogService = useService("dialog");
+        this.ancestors = useAncestors();
         this.openChannelInvitationDialog = openChannelInvitationDialog;
         this.search = useSearch({
             fetch: async (term) => {

@@ -1,4 +1,5 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
@@ -72,6 +73,7 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             compact: t.boolean().optional(),
@@ -105,7 +107,6 @@ export class Call extends Component {
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
         useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
-        useSubEnv({ inDiscussCallView: true });
     }
 
     get isAnyonePresenting() {

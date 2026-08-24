@@ -1,11 +1,12 @@
 import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
@@ -20,7 +21,7 @@ export class WelcomePage extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
-        useSubEnv({ inWelcomePage: true });
+        this.ancestors = useAncestors();
         this.state = proxy({
             userName: this.store.discuss.thread.getPersonaName(this.store.self) ?? "",
             activateCamera: 0,

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelInvitation">
-        <ActionPanel t-if="this.props.channel" close="this.props.close" title="this.inviteTitle" resizable="!!this.env.inMeetingView" minWidth="this.env.inMeetingView ? 300 : undefined" initialWidth="this.env.inMeetingView ? 400 : undefined" icon="'person_add'">
+        <ActionPanel t-if="this.props.channel" close="this.props.close" title="this.inviteTitle" resizable="!!this.ancestors.has('Meeting')" minWidth="this.ancestors.has('Meeting') ? 300 : undefined" initialWidth="this.ancestors.has('Meeting') ? 400 : undefined" icon="'person_add'">
             <t t-call="discuss.ChannelInvitation.main"/>
         </ActionPanel>
         <t t-else="" t-call="discuss.ChannelInvitation.main"/>

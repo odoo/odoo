@@ -79,7 +79,7 @@
             Write a review
         </button>
         <div
-            t-elif="this.env.inFrontendPortalChatter"
+            t-elif="this.ancestors.has('PortalChatter')"
             class="alert alert-light d-flex align-items-center gap-2 mb-1 py-2"
         >
             <a

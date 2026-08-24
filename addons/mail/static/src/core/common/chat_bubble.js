@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
@@ -43,6 +43,7 @@ export class ChatBubble extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             chatWindow: types.instanceOf(this.store.ChatWindow),
         });
@@ -74,7 +75,6 @@ export class ChatBubble extends Component {
         this.bouncing = signal(false);
         const isImportant = computed(() => Boolean(this.channel?.importantCounter));
         useEffect(() => this.bouncing.set(isImportant));
-        useSubEnv({ inChatBubble: true });
     }
 
     /** @returns {import("models").Channel} */

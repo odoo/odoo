@@ -1,5 +1,6 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
 
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList, openReactionMenuType } from "@mail/core/common/message_reaction_list";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
@@ -17,6 +18,7 @@ export class MessageReactions extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
         this.isReadOnly = propSignal("isReadOnly", t.boolean().optional(false));
         this.openReactionMenu = useProps.static(

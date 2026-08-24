@@ -9,7 +9,9 @@ patch(Message.prototype, {
         }
         return result;
     },
-    shouldHideFromMessageListOnDelete(env) {
-        return env.inFrontendPortalChatter || super.shouldHideFromMessageListOnDelete(...arguments);
+    shouldHideFromMessageListOnDelete(ancestors) {
+        return (
+            ancestors?.has("PortalChatter") || super.shouldHideFromMessageListOnDelete(...arguments)
+        );
     },
 });

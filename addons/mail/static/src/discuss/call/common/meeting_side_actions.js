@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionList } from "@mail/core/common/action_list";
 import { UseThreadActions } from "@mail/core/common/thread_actions";
 import { attClassObjectToString } from "@mail/utils/common/format";
@@ -18,6 +19,7 @@ export class MeetingSideActions extends Component {
             threadActions: types.instanceOf(UseThreadActions),
         });
         this.ui = useService("ui");
+        this.ancestors = useAncestors();
     }
 
     get callActionsParams() {
@@ -53,7 +55,7 @@ export class MeetingSideActions extends Component {
                     ...partitionedActions.group,
                 ],
                 dropdownMenuClass: attClassObjectToString({
-                    "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                    "o-discuss-CallActionList-menu": this.ancestors.has("Meeting"),
                 }),
             })
         );

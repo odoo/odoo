@@ -1,11 +1,21 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
+import { MeetingPlugin } from "@mail/discuss/call/common/meeting_plugin";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, signal, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    providePlugins,
+    signal,
+    types,
+    useProps,
+} from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { user } from "@web/core/user";
@@ -47,16 +57,14 @@ export class Meeting extends Component {
             this.datetimeNow.set(DateTime.now());
             return 60_000 - (Date.now() % 60_000);
         });
-        useSubEnv({
-            inDiscussCallView: true,
-            inMeetingView: {
-                openChat: () =>
-                    this.threadActions.actions
-                        .find((action) => action.id === "meeting-chat")
-                        ?.actionPanelOpen(),
-            },
-        });
+        this.ancestors = useAncestors();
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
+        providePlugins([MeetingPlugin], {
+            openChat: () =>
+                this.threadActions.actions
+                    .find((action) => action.id === "meeting-chat")
+                    ?.actionPanelOpen(),
+        });
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
         useSubEnv({

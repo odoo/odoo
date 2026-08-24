@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -24,6 +24,7 @@ export class CallInvitation extends Component {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),
         });
@@ -35,7 +36,6 @@ export class CallInvitation extends Component {
             hasCamera: false,
             hasMicrophone: this.rtc.microphonePermission === "granted",
         });
-        useSubEnv({ inCallInvitation: true });
     }
 
     async joinCall() {

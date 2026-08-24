@@ -20,10 +20,10 @@
         <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
         <t t-set="small" t-value="templateParams.small"/>
         <span t-if="livechatThread.channel.channel_type === 'livechat' and (livechatThread.channel.livechat_status === 'need_help' or livechatThread.channel.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.channel.livechatStatusLabel" t-att-class="{
-            'position-absolute top-0 start-0': this.env.inChatBubble or this.env.inNotificationItem,
-            'd-flex z-1 bg-opacity-100': this.env.inChatBubble or this.env.inNotificationItem,
-            'mx-n1': this.env.inChatBubble,
-            'mx-n2 my-n1': this.env.inNotificationItem,
+            'position-absolute top-0 start-0': this.ancestors.has('ChatBubble') or this.ancestors.has('NotificationItem'),
+            'd-flex z-1 bg-opacity-100': this.ancestors.has('ChatBubble') or this.ancestors.has('NotificationItem'),
+            'mx-n1': this.ancestors.has('ChatBubble'),
+            'mx-n2 my-n1': this.ancestors.has('NotificationItem'),
             'o-help': livechatThread.channel.livechat_status === 'need_help',
         }">
             <t t-set="livechatStatusButton" t-value="this.store.livechatStatusButtons.find(btn => btn.status === livechatThread.channel.livechat_status)"/>

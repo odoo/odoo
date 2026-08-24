@@ -25,7 +25,7 @@ registerComposerAction("add-gif", {
     },
     condition: ({ composer, owner, store }) =>
         (store.hasGifPickerFeature || store.self_user?.is_admin) &&
-        !owner.env.inChatter &&
+        !owner.ancestors?.has("Chatter") &&
         !composer.message,
     icon: "gif_box",
     name: _t("Send GIF"),
@@ -41,6 +41,6 @@ registerComposerAction("add-gif", {
             onClose: () => this.actionPanelClose(),
         });
     },
-    sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 15 : undefined),
+    sequence: ({ owner }) => (!owner.ancestors?.has("Discuss") ? 40 : undefined),
+    sequenceQuick: ({ owner }) => (owner.ancestors?.has("Discuss") ? 15 : undefined),
 });

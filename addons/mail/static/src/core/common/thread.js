@@ -1,4 +1,5 @@
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -49,6 +50,7 @@ export class Thread extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.escape = escape;
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
@@ -195,7 +197,7 @@ export class Thread extends Component {
             () => [this.state.mountedAndLoaded]
         );
         onMounted(() => {
-            if (!this.env.inChatter) {
+            if (!this.ancestors.has("Chatter")) {
                 this.fetchInitialMessages();
             }
         });
@@ -247,7 +249,7 @@ export class Thread extends Component {
             () => [this.props.thread],
             (thread) => {
                 this.lastJumpPresent = this.props.jumpPresent;
-                if (!this.env.inChatter) {
+                if (!this.ancestors.has("Chatter")) {
                     thread.fetchNewMessages();
                 }
             },
@@ -278,9 +280,9 @@ export class Thread extends Component {
         const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
         const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
         this.jumpPresentRef().style.transform = `translate(${
-            this.env.inChatter ? 22 : width - ps - pe - 22
+            this.ancestors.has("Chatter") ? 22 : width - ps - pe - 22
         }px, ${
-            this.env.inChatter && !this.env.inChatter.aside
+            this.ancestors.has("Chatter") && !this.env.inChatter?.aside
                 ? -22
                 : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
         }px)`;
@@ -621,7 +623,7 @@ export class Thread extends Component {
     }
 
     isSquashed(msg, prevMsg) {
-        if (!prevMsg || prevMsg.message_type === "notification" || this.env.inChatter) {
+        if (!prevMsg || prevMsg.message_type === "notification" || this.ancestors.has("Chatter")) {
             return false;
         }
 

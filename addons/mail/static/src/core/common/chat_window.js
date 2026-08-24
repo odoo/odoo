@@ -1,4 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -50,6 +51,7 @@ export class ChatWindow extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             chatWindow: t.instanceOf(this.store.ChatWindow),
             right: t.number().optional(),

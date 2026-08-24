@@ -134,7 +134,7 @@ const chatterPatch = {
                 },
             },
             () =>
-                (!this.store.meetingViewOpened || this.env.inMeetingView) &&
+                (!this.store.meetingViewOpened || this.ancestors.has("Meeting")) &&
                 (this.thread()?.isTransient || this.thread()?.canPostMessage) &&
                 !this.thread()?.messageInEdition?.composer?.isEditComposerVisible
         );

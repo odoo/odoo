@@ -1,4 +1,5 @@
 import { Component, signal, t, useProps, xml } from "@odoo/owl";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -33,6 +34,7 @@ export class NotificationSettings extends Component {
         });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
+        this.ancestors = useAncestors();
         this.DROPDOWN_NESTING = DROPDOWN_NESTING;
         this.muteConversationDropdownState = useDropdownState();
         this.muteConversationHover = useHover([this.muteButtonRef, this.muteMenuRef], {

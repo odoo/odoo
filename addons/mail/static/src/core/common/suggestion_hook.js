@@ -61,11 +61,11 @@ export class UseSuggestion {
     suggestionService = useService("mail.suggestion");
 
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {ReturnType<import("@mail/core/common/ancestors_hook").useAncestors>} ancestors
      * @param {import("@odoo/owl").ReactiveValue<import("@html_editor/editor").Editor>} editor
      */
-    constructor(env, editor) {
-        this.env = env;
+    constructor(ancestors, editor) {
+        this.ancestors = ancestors;
         this.editor = editor;
         this.detection = proxy({
             /** @type {SuggestionDelimiter|undefined} */
@@ -159,7 +159,7 @@ export class UseSuggestion {
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
             this.thread,
-            this.env
+            this.ancestors
         );
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {

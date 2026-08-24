@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
@@ -17,6 +18,7 @@ export class MessagingMenuInDropdown extends Component {
     setup() {
         super.setup();
         this.discussSystray = useDiscussSystray();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.dropdown = useDropdownState();

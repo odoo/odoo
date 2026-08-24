@@ -28,7 +28,8 @@ export function messageActionOpenFullComposer(title, context, component) {
 }
 
 registerMessageAction("reply-all", {
-    condition: ({ message, owner }) => !owner.env.inMessagingMenu && message.canReplyAll,
+    condition: ({ message, owner }) =>
+        !owner.ancestors?.has("MessagingMenuItem") && message.canReplyAll,
     icon: "reply",
     name: _t("Reply All"),
     onSelected: async ({ message, owner, thread }) => {
@@ -70,7 +71,8 @@ registerMessageAction("reply-all", {
     sequence: ({ message }) => (message.isSelfAuthored ? 55 : 20),
 });
 registerMessageAction("forward", {
-    condition: ({ message, owner }) => !owner.env.inMessagingMenu && message.canForward,
+    condition: ({ message, owner }) =>
+        !owner.ancestors?.has("MessagingMenuItem") && message.canForward,
     icon: "share",
     name: _t("Forward"),
     onSelected: async ({ message, owner, store, thread }) => {

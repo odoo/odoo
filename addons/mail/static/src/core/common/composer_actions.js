@@ -45,7 +45,7 @@ registerComposerAction("send-message", {
     btnClass: ({ action }) => (action.isActive ? "o-sendMessageActive o-text-white shadow-sm" : ""),
     condition: ({ composer, owner, store }) =>
         (store.env.services.ui.isSmall && composer.message) ||
-        (!owner.env.inChatter && !composer.message),
+        (!owner.ancestors?.has("Chatter") && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     icon: "send",
     isActive: ({ owner }) => !owner.isSendButtonDisabled,
@@ -110,7 +110,7 @@ registerComposerAction("open-full-composer", {
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
-        !owner.env.inFrontendPortalChatter,
+        !owner.ancestors?.has("PortalChatter"),
     hasBtnBg: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     hotkey: "shift+c",

@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -10,6 +10,7 @@ export class ActionPanel extends Component {
     static components = { ResizablePanel };
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.props = useProps({
             close: t.function([]).optional(),
             contentPadding: t.boolean().optional(true),
@@ -27,7 +28,6 @@ export class ActionPanel extends Component {
         );
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useSubEnv({ inDiscussActionPanel: true });
         useBackButton(
             () => this.props.close(),
             () => this.props.close
@@ -43,9 +43,9 @@ export class ActionPanel extends Component {
     get classNames() {
         return attClassObjectToString({
             "o-mail-ActionPanel overflow-auto o-scrollbar-thin d-flex flex-column flex-shrink-0 position-relative py-2 pt-0 h-100 bg-inherit": true,
-            "o-mail-ActionPanel-chatter": this.env.inChatter,
+            "o-mail-ActionPanel-chatter": this.ancestors.has("Chatter"),
             "o-chatWindow": this.env.inChatWindow,
-            "px-2": !this.env.inChatter && !this.env.inMeetingChat,
+            "px-2": !this.ancestors.has("Chatter") && !this.ancestors.has("MeetingChat"),
             rounded: !this.props.resizable,
         });
     }

@@ -37,13 +37,14 @@ export const muteAction = {
         store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning,
     badgeIcon: "priority_high",
     condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
+        channel?.isSelfInCall &&
+        (owner.ancestors?.has("CallMenu") || !store.rtc.selfSession?.is_deaf),
     disabledCondition: ({ store }) => store.rtc.showMicrophoneSilentWarning,
     name: ({ store }) => (store.rtc.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
     icon: ({ action, owner, store }) =>
         action.isActive
-            ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
+            ? store.rtc.selfSession?.is_deaf && !owner.ancestors?.has("CallMenu")
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
             : "mic",
@@ -84,11 +85,11 @@ export const muteAction = {
 registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ owner, channel }) => !owner.ancestors?.has("CallMenu") && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
+        owner.ancestors?.has("Meeting")
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
@@ -100,7 +101,8 @@ export const quickActionSettings = {
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
     condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
+        channel?.isSelfInCall &&
+        (owner.ancestors?.has("CallMenu") || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "headphones"),
@@ -116,7 +118,7 @@ registerCallAction("deafen", {
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
     badge: ({ owner, store, channel }) =>
-        !owner.env.inCallMenu &&
+        !owner.ancestors?.has("CallMenu") &&
         channel?.default_display_mode === "video_full_screen" &&
         store.rtc.cameraPermission !== "granted",
     badgeIcon: "priority_high",
@@ -151,11 +153,11 @@ export const cameraOnAction = {
 registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ owner, channel }) => !owner.ancestors?.has("CallMenu") && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
+        owner.ancestors?.has("Meeting")
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
@@ -270,7 +272,7 @@ registerCallAction("picture-in-picture", {
 });
 registerCallAction("change-layout", {
     condition: ({ channel, owner }) =>
-        channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
+        channel?.isSelfInCall && !owner.ancestors?.has("CallMenu") && !owner.env.pipWindow,
     name: _t("Change Layout"),
     icon: "view_module",
     onSelected: ({ channel, store }) =>
@@ -296,13 +298,13 @@ registerCallAction("join-back", {
     btnClass: ({ owner }) =>
         attClassObjectToString({
             "text-nowrap pe-2 rounded-pill": true,
-            "mx-1": !owner.env.inCallInvitation,
+            "mx-1": !owner.ancestors?.has("CallInvitation"),
         }),
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "videocam" : "phone"),
-    inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
+    inlineName: ({ owner }) => (owner.ancestors?.has("CallInvitation") ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
@@ -349,13 +351,15 @@ export const rejectAction = {
     btnClass: ({ owner, channel }) =>
         attClassObjectToString({
             "pe-2 rounded-pill": typeof channel?.useCameraByDefault === "boolean",
-            "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
+            "mx-1":
+                !owner.ancestors?.has("CallInvitation") &&
+                typeof channel?.useCameraByDefault === "boolean",
         }),
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",
     inlineName: ({ owner, channel }) =>
-        !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
+        !owner.ancestors?.has("CallInvitation") && typeof channel?.useCameraByDefault === "boolean"
             ? _t("Reject")
             : undefined,
     name: _t("Reject"),

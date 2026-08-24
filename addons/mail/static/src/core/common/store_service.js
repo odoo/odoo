@@ -119,12 +119,13 @@ export class Store extends BaseStore {
 
     shouldSimulateDarkTheme(ctx) {
         return (
-            (ctx?.env?.inDiscussCallView ||
-                ctx?.env?.inCallInvitation ||
+            (ctx?.ancestors?.has("Call") ||
+                ctx?.ancestors?.has("Meeting") ||
+                ctx?.ancestors?.has("CallInvitation") ||
                 ctx?.env.isDiscussPipBanner ||
-                ctx?.env?.inWelcomePage) &&
+                ctx?.ancestors?.has("WelcomePage")) &&
             this.isOdooWhiteTheme &&
-            !ctx?.env.inDiscussActionPanel
+            !ctx?.ancestors?.has("ActionPanel")
         );
     }
 

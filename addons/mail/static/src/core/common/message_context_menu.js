@@ -1,6 +1,7 @@
 import { ActionList } from "./action_list";
 import { useMessageActions } from "./message_actions";
 
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { propSignal } from "@mail/utils/common/hooks";
 
 import { Component, computed, t, useProps } from "@odoo/owl";
@@ -16,6 +17,7 @@ export class MessageContextMenu extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             dropdownState: t.instanceOf(DropdownState),
             message: t.instanceOf(this.store["mail.message"]),

@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
@@ -45,6 +46,7 @@ export class AttachmentList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             attachments: t.array(t.instanceOf(this.store["ir.attachment"])),
@@ -74,7 +76,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     canDownload(attachment) {
-        return !attachment.uploading && !this.env.inComposer;
+        return !attachment.uploading && !this.ancestors.has("Composer");
     }
 
     /**
@@ -95,7 +97,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     onClickUnlink(attachment) {
-        if (this.env.inComposer) {
+        if (this.ancestors.has("Composer")) {
             this.props.unlinkAttachment(attachment);
             return true;
         }
@@ -169,7 +171,7 @@ export class AttachmentList extends Component {
 
     showDelete(attachment) {
         // in the composer they should all be implicitly deletable
-        if (this.env.inComposer) {
+        if (this.ancestors.has("Composer")) {
             return true;
         }
         if (!attachment.isDeletable) {
@@ -187,6 +189,6 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     showUploaded(attachment) {
-        return !attachment.isImage && !attachment.uploading && this.env.inComposer;
+        return !attachment.isImage && !attachment.uploading && this.ancestors.has("Composer");
     }
 }
