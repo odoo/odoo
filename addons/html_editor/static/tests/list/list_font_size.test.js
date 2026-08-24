@@ -172,11 +172,12 @@ test("should carry list item font-size to new list item (2)", async () => {
     });
 });
 
-test("should carry font-size of paragraph to list item", async () => {
+test("should carry font-size of paragraph to list item while preserving font family", async () => {
     await testEditor({
-        contentBefore: '<p><span style="font-size: 18px;">[]abc</span></p>',
+        contentBefore: '<p><span style="font-size: 18px; font-family: Roboto;">[]abc</span></p>',
         stepFunction: toggleUnorderedList,
-        contentAfter: '<ul><li style="font-size: 18px;">[]abc</li></ul>',
+        contentAfter:
+            '<ul><li style="font-size: 18px;"><span style="font-family: Roboto;">[]abc</span></li></ul>',
     });
 });
 
