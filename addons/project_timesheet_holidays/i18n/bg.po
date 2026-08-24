@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
+# * project_timesheet_holidays
 #
 # Translators:
 # KeyVillage, 2023
@@ -9,14 +9,14 @@
 # Георги Пехливанов <sonaris@gmail.com>, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Petko Karamotchev, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-07 04:54+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 14:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "project_timesheet_holidays/bg/>\n"
 "Language: bg\n"
@@ -75,7 +75,7 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr ""
+msgstr "Глобална почивка"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -94,7 +94,7 @@ msgstr "Вътрешни"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Internal Project"
-msgstr ""
+msgstr "Вътрешен проект"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__is_timeoff_task
@@ -117,7 +117,7 @@ msgstr "Проект"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Детайл за отпуск на ресурс"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
@@ -134,6 +134,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Проектът по подразбиране, който се използва при автоматично генериране на "
+"отчети за време чрез заявки за отсъствие. Можете да зададете друг проект за "
+"всеки тип отсъствие поотделно."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -141,6 +144,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Задачата по подразбиране, която се използва при автоматично генериране на "
+"отчети за време чрез заявки за отсъствие. Можете да зададете друга задача за "
+"всеки тип отсъствие поотделно."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -163,23 +169,23 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
 msgid "Time Off Request"
-msgstr ""
+msgstr "Заявка за отпуска"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Задача за отсъствие"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Тип отпуск"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Брой типове отсъствия"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -191,7 +197,7 @@ msgstr "Графици"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "Преглед на отпуск"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -201,6 +207,9 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Не можете да създавате отчети за време за задача, която е свързана с тип "
+"отсъствие. Вместо това използвайте приложението „Отсъствия“, за да заявите "
+"ново отсъствие."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -217,6 +226,8 @@ msgstr ""
 #, python-format
 msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
+"Не можете да изтривате отчети за време, които са свързани с глобално "
+"отсъствие."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -226,6 +237,9 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Не можете да изтривате отчети за време, които са свързани със заявки за "
+"отсъствие. Вместо това отменете заявката си за отсъствие от приложението „"
+"Отсъствия“."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -235,3 +249,6 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Не можете да променяте отчети за време, които са свързани със заявки за "
+"отсъствие. Вместо това използвайте приложението „Отсъствия“, за да промените "
+"заявките си за отсъствие."

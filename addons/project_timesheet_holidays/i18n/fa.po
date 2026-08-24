@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
+# * project_timesheet_holidays
 #
 # Translators:
 # Hamid Ahmadimoghaddam, 2023
@@ -11,14 +11,14 @@
 # F Hariri <fhari1234@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-08 07:47+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 14:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
 "project_timesheet_holidays/fa/>\n"
 "Language: fa\n"
@@ -141,6 +141,8 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"پروژه پیش‌فرض که هنگام تولید خودکار ساعات کارکرد از طریق درخواست‌های مرخصی "
+"استفاده می‌شود. می‌توانید برای هر نوع مرخصی به طور جداگانه یک پروژه مشخص کنید."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -148,6 +150,8 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"وظیفه پیش‌فرض که هنگام تولید خودکار ساعات کارکرد از طریق درخواست‌های مرخصی "
+"استفاده می‌شود. می‌توانید برای هر نوع مرخصی به طور جداگانه یک وظیفه مشخص کنید."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -176,7 +180,7 @@ msgstr "درخواست‌های مرخصی"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "وظیفه مرخصی"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -186,7 +190,7 @@ msgstr "نوع مرخصی"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "تعداد نوع مرخصی"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -198,7 +202,7 @@ msgstr "برگه ساعت کارکرد"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "نمایش مرخصی"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -208,6 +212,8 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"نمی‌توانید برای وظیفه‌ای که به یک نوع مرخصی متصل است، ساعات کارکرد ایجاد کنید. "
+"لطفاً برای درخواست مرخصی جدید از برنامه مرخصی استفاده کنید."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -223,7 +229,7 @@ msgstr ""
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "You cannot delete timesheets that are linked to global time off."
-msgstr ""
+msgstr "امکان حذف ساعات کارکردی که به مرخصی عمومی لینک شده است وجود ندارد."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -233,6 +239,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"نمی‌توانید ساعات کارکردی که به درخواست‌های مرخصی متصل هستند را حذف کنید. در "
+"عوض درخواست مرخصی را از مرخصی لغو کنید."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -242,3 +250,5 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"نمی‌توانید ساعات کارکردی که به درخواست‌های مرخصی متصل هستند را ویرایش کنید. در "
+"عوض از برنامه مرخصی درخواست مرخصی را ویرایش کنید."

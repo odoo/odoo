@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 18:52+0000\n"
+"PO-Revision-Date: 2026-08-13 13:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/fa/>\n"
@@ -40,7 +40,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "گروه‌بندی (یا لغو آن) بر مبنای مالیات"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -488,7 +488,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
-msgstr ""
+msgstr "م"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -502,7 +502,7 @@ msgstr "یک پرداخت %s تشخیص داده شد."
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A rounding amount of %s was detected."
-msgstr ""
+msgstr "مبلغ گرد شده %s شناسایی شد."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -580,7 +580,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Cannot find the origin file, try by importing it again"
-msgstr ""
+msgstr "فایل مبدأ یافت نشد، دوباره آن را ایمپورت کنید"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -722,7 +722,7 @@ msgstr "خطاهای رخ داده هنگام ایجاد سند EDI (قالب: %
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Exempt from tax"
-msgstr ""
+msgstr "معاف از مالیات"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -783,7 +783,7 @@ msgstr "ایجاد قالب Peppol به صورت پیشفرض"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "سطرهای گروه‌بندی شده بر مبنای مالیات"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -977,7 +977,7 @@ msgstr "پیشوند کد مالیات بر ارزش افزوده‌ی %s بای
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The bank account couldn't be fetched: %s"
-msgstr ""
+msgstr "حساب بانکی قابل دریافت نبود: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1076,7 +1076,7 @@ msgstr "UBL/CII File"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "سطرها از %s از گروه‌بندی خارج شدند"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1093,7 +1093,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Unknown partner"
-msgstr ""
+msgstr "طرف همکار ناشناخته است"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1131,6 +1131,7 @@ msgstr "XRechnung CIUS"
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
 msgstr ""
+"فقط می‌توانید سطرهای فاکتور پیش‌نویس را گروه‌بندی (یا لغو گروه‌بندی) کنید"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1139,13 +1140,15 @@ msgstr ""
 msgid ""
 "You can only (un)group lines of an invoice not linked to a purchase order"
 msgstr ""
+"فقط می‌توانید سطرهای فاکتوری را گروه‌بندی (یا حذف گروه‌بندی) کنید که به سفارش "
+"خرید لینک نشده باشند"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only group lines of an invoice"
-msgstr ""
+msgstr "فقط می‌توانید سطرهای یک فاکتور را گروه‌بندی کنید"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

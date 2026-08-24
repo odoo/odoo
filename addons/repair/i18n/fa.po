@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* repair
+# * repair
 #
 # Translators:
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
@@ -16,14 +16,14 @@
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 16:40+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-20 12:57+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/repair/"
 "fa/>\n"
 "Language: fa\n"
@@ -36,12 +36,12 @@ msgstr ""
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
-msgstr ""
+msgstr "('سفارش تعمیر - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Recycle</i>)"
-msgstr ""
+msgstr "(<i>بازیافت</i>)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -58,6 +58,12 @@ msgid ""
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* وضعیت «جدید» زمانی استفاده می‌شود که کاربر در حال کدگذاری یک سفارش تعمیر "
+"جدید و تأیید نشده باشد.\n"
+"* وضعیت «تأیید شده» زمانی استفاده می‌شود که کاربر سفارش تعمیر را تأیید کند.\n"
+"* وضعیت «در حال تعمیر» زمانی استفاده می‌شود که تعمیر در حال انجام است.\n"
+"* وضعیت «تعمیر شده» زمانی تنظیم می‌شود که تعمیر به پایان برسد.\n"
+"* وضعیت «لغو شده» زمانی استفاده می‌شود که کاربر سفارش تعمیر را لغو کند."
 
 #. module: repair
 #. odoo-python
@@ -74,12 +80,12 @@ msgstr "<i>(افزودن)</i>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Done:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">انجام شده:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repair Parts:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">قطعه تعمیری:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -89,7 +95,7 @@ msgstr "1 سفارش فروش 1"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">To Do:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">برای انجام:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -104,22 +110,22 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>مشتری:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial:</strong>"
-msgstr ""
+msgstr "<strong>سری ساخت/شماره سریال:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product:</strong>"
-msgstr ""
+msgstr "<strong>محصول:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>مسئول:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -174,7 +180,7 @@ msgstr "افزودن یادداشت های داحلی"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
 msgid "Added Parts Destination Location"
-msgstr ""
+msgstr "مکان مقصد محصولات اضافه شده"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -184,7 +190,7 @@ msgstr "همه"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_available
 msgid "All Parts are available"
-msgstr ""
+msgstr "همه قطعات موجود هستند"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
@@ -199,7 +205,7 @@ msgstr "مجاز به لغو رزرو تولید"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
 msgid "Any Part is late"
-msgstr ""
+msgstr "قطعه‌ای تأخیر دارد"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -290,7 +296,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Quotation"
-msgstr ""
+msgstr "ایجاد پیش‌فاکتور"
 
 #. module: repair
 #. odoo-python
@@ -299,7 +305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_product_template__create_repair
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "ایجاد تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
@@ -495,6 +501,8 @@ msgid ""
 "If ticked, the sales price will be set to 0 for all products transferred "
 "from the repair order."
 msgstr ""
+"در صورت فعال بودن، قیمت فروش تمام محصولاتی که از سفارش تعمیر منتقل شده‌اند بر "
+"روی 0 تنظیم خواهد شد."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__is_repairable
@@ -516,7 +524,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__in_repair_count
 msgid "In repair count"
-msgstr ""
+msgstr "تعداد در حال تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -546,7 +554,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Jane Smith"
-msgstr ""
+msgstr "دلاور دادفر"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -596,6 +604,8 @@ msgid ""
 "Latest parts availability status for this RO. If green, then the RO's "
 "readiness status is ready."
 msgstr ""
+"آخرین وضعیت دسترسی قطعات برای این سفارش تعمیر. در صورت سبز بودن، سفارش تعمیر "
+"در حالت آماده قرار دارد."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
@@ -684,7 +694,7 @@ msgstr "در دسترس نیست"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "توجه داشته باشید که انبارهای محصولات مرجوعی و تعمیر با هم یکی نیستند!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -694,17 +704,17 @@ msgstr "تعداد اقدامات"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_confirmed
 msgid "Number of Repair Orders Confirmed"
-msgstr ""
+msgstr "تعداد سفارش‌های تعمیر تأیید شده"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_under_repair
 msgid "Number of Repair Orders Under Repair"
-msgstr ""
+msgstr "تعداد سفارش‌های تعمیر تحت تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
 msgid "Number of Repair Orders to Process"
-msgstr ""
+msgstr "تعداد سفارش‌های تعمیر برای پردازش"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -724,7 +734,7 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "تعداد تعمیرات لینک شده به این برداشت"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_id
@@ -751,7 +761,7 @@ msgstr "قطعه‌ها"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability_state
 msgid "Parts Availability State"
-msgstr ""
+msgstr "وضعیت در دسترس بودن قطعات"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -761,7 +771,7 @@ msgstr "معلق"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_product_ids
 msgid "Picking Product"
-msgstr ""
+msgstr "محصول برداشت"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking_type
@@ -794,7 +804,7 @@ msgstr "محصول A"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Product B"
-msgstr ""
+msgstr "محصول B"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -867,12 +877,12 @@ msgstr "آماده"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__recycle
 msgid "Recycle"
-msgstr ""
+msgstr "بازیافت"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
-msgstr ""
+msgstr "مکان مقصد قطعات بازیافت شده"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
@@ -882,7 +892,7 @@ msgstr "حذف"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
 msgid "Removed Parts Destination Location"
-msgstr ""
+msgstr "مکان مقصد قطعات حذف شده"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
@@ -902,7 +912,7 @@ msgstr "یادداشت های تعمیر"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
 msgid "Repair Operation Type"
-msgstr ""
+msgstr "نوع عملیات تعمیر"
 
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
@@ -916,7 +926,7 @@ msgstr "سفارش تعمیر"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
 msgid "Repair Order(s)"
-msgstr ""
+msgstr "سفارش(های) تعمیر"
 
 #. module: repair
 #. odoo-python
@@ -949,7 +959,7 @@ msgstr "مرجع تعمیر"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_request
 msgid "Repair Request"
-msgstr ""
+msgstr "درخواست تعمیر"
 
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
@@ -979,7 +989,7 @@ msgstr "سفارشات تعمیر از %s"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repair_part_count
 msgid "Repair part count"
-msgstr ""
+msgstr "تعداد قطعات تعمیری"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
@@ -990,7 +1000,7 @@ msgstr "تعمیر شده"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_lot__repaired_count
 msgid "Repaired count"
-msgstr ""
+msgstr "تعداد تعمیر شده"
 
 #. module: repair
 #. odoo-python
@@ -1065,17 +1075,17 @@ msgstr "سطر سفارش‌فروش"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__repair_request
 msgid "Sale Order Line Description."
-msgstr ""
+msgstr "توضیح سطر سفارش فروش."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_line_id
 msgid "Sale Order Line from which the Repair Order comes from."
-msgstr ""
+msgstr "سطر سفارش فروشی که سفارش تعمیر از آن نشأت می‌گیرد."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the Repair Order comes from."
-msgstr ""
+msgstr "سفارش فروشی که سفارش تعمیر از آن نشأت می‌گیرد."
 
 #. module: repair
 #: model:ir.model,name:repair.model_sale_order
@@ -1109,7 +1119,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for product to repair : %s"
-msgstr ""
+msgstr "برای تعمیر محصول %s شماره سریال لازم است"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1207,7 +1217,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "This is a repair note."
-msgstr ""
+msgstr "این یادداشت برای تعمیر است."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1215,6 +1225,8 @@ msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
 msgstr ""
+"هرگاه یک سفارش تعمیر با این نوع عملیات ایجاد می‌کنید، مکان مقصد بازیافت "
+"پیش‌فرض این خواهد بود."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
@@ -1222,6 +1234,8 @@ msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
 msgstr ""
+"هرگاه یک سفارش تعمیر با این نوع عملیات ایجاد می‌کنید، مکان مقصد حذف پیش‌فرض "
+"این خواهد بود."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1232,12 +1246,12 @@ msgstr "این مکانی است که محصول مورد نظر برای تعم
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
 #: model:ir.model.fields,help:repair.field_repair_order__recycle_location_id
 msgid "This is the location where the repair parts are located."
-msgstr ""
+msgstr "محصولات تعمیر در این مکان قرار می‌گیرند."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_dest_id
 msgid "This is the location where the repaired product is located."
-msgstr ""
+msgstr "محصول تعمیر شده در این مکان قرار می‌گیرد."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -1299,7 +1313,7 @@ msgstr "تحت تعمیر"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "تحت ضمانت"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
@@ -1377,7 +1391,7 @@ msgstr "شما نمی توانید مقادیر منفی را وارد کنید.
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr ""
+msgstr "امکان حذف سفارش تعمیری که قبلاً کامل شده است وجود ندارد"
 
 #. module: repair
 #. odoo-python

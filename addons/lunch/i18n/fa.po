@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* lunch
+# * lunch
 #
 # Translators:
 # fardin mardani <fmardani0@gmail.com>, 2023
@@ -17,14 +17,14 @@
 # Abbas Ebadian, 2024
 # Hanna Kheradroosta, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:36+0000\n"
-"PO-Revision-Date: 2026-08-04 17:39+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-13 14:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/lunch/"
 "fa/>\n"
 "Language: fa\n"
@@ -83,6 +83,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
 "title=\"Send notification\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"ارسال اعلان\" "
+"title=\"ارسال اعلان\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
@@ -107,6 +109,8 @@ msgid ""
 "<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
 "title=\"Send button\"/>"
 msgstr ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"دکمه ارسال\" "
+"title=\"دکمه ارسال\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -315,12 +319,15 @@ msgid ""
 "            An expense is automatically created at the order receipt.<br>\n"
 "            A payment represents the employee reimbursement to the company."
 msgstr ""
+"جابجایی نقدی می‌تواند هزینه یا پرداخت باشد.\n"
+"                هزینه‌ای به طور خودکار در رسید سفارش ایجاد می‌شود.\n"
+"                پرداخت نیز معادل بازپرداخت کارمند به شرکت است."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "A product is defined by its name, category, price and vendor."
-msgstr ""
+msgstr "محصول بر اساس نام، دسته‌بندی، قیمت و تأمین‌کننده‌اش تعریف می‌شود."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
@@ -428,7 +435,7 @@ msgstr "بایگانی شده"
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_2
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_3
 msgid "Are extras available for this product"
-msgstr ""
+msgstr "برای این محصول آیتم‌های افزودنی موجود است"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
@@ -438,7 +445,7 @@ msgstr "تعداد پیوست ها"
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
 msgid "Automatic Email Sending Time should be between 0 and 12"
-msgstr ""
+msgstr "زمان ارسال خودکار ایمیل باید بین 0 تا 12 باشد"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -448,22 +455,22 @@ msgstr "دسترسی"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Available Today"
-msgstr ""
+msgstr "امروز در دسترس است"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
 msgid "Available Toppings 1"
-msgstr ""
+msgstr "چاشنی موجود ۱"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_2
 msgid "Available Toppings 2"
-msgstr ""
+msgstr "چاشنی موجود ۲"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_3
 msgid "Available Toppings 3"
-msgstr ""
+msgstr "چاشنی موجود ۳"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_bacon
@@ -526,18 +533,18 @@ msgstr "لغو شد"
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "Cannot send an email to this supplier!"
-msgstr ""
+msgstr "امکان ارسال ایمیل به تأمین‌کننده وجود ندارد!"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
-msgstr ""
+msgstr "انتقال‌های نقدی"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
 msgid "Cashmoves report"
-msgstr ""
+msgstr "گزارش اعتبارات نقدی"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -552,7 +559,7 @@ msgstr "دسته بندی"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__chat
 msgid "Chat notification"
-msgstr ""
+msgstr "اعلان پیام‌رسان"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_cheese_ham
@@ -598,6 +605,12 @@ msgid ""
 "title=\"Cancel button\"></span> red X to announce that the order isn't "
 "available."
 msgstr ""
+"برای اعلان ثبت شدن سفارش روی <span class=\"fa fa-phone text-success\" "
+"title=\"دکمه سفارش\"></span> کلیک کنید.<br>\n"
+"            برای اعلان دریافن شدن سفارش روی <span class=\"fa fa-check text-"
+"success\" title=\"دکمه دریافت\"></span> کلیک کنید.<br>\n"
+"            برای اعلان عدم موجودی سفارش روی <span class=\"fa fa-times-circle "
+"text-danger\" title=\"لغو سفارش\"></span> کلیک کنید."
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
@@ -650,7 +663,7 @@ msgstr "تایید کردن"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "تأیید سفارش‌ها"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -719,7 +732,7 @@ msgstr "ایجادشده در"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
 msgid "Cron"
-msgstr ""
+msgstr "کرون"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
@@ -735,7 +748,7 @@ msgstr "ارز"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 msgid "Currently inactive"
-msgstr ""
+msgstr "در حال حاضر غیرفعال است"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__date
@@ -783,7 +796,7 @@ msgstr "نام نمایش داده شده"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
 msgid "Display Reorder Button"
-msgstr ""
+msgstr "نمایش دکمه سفارش مجدد"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_drinks
@@ -827,62 +840,62 @@ msgstr "همگان"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_1
 msgid "Extra 1 Label"
-msgstr ""
+msgstr "برچسب افزودنی 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_1
 msgid "Extra 1 Quantity"
-msgstr ""
+msgstr "تعداد افزودنی 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_2
 msgid "Extra 2 Label"
-msgstr ""
+msgstr "برچسب افزودنی 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_2
 msgid "Extra 2 Quantity"
-msgstr ""
+msgstr "تعداد افزودنی 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_3
 msgid "Extra 3 Label"
-msgstr ""
+msgstr "برچسب افزودنی 3"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_3
 msgid "Extra 3 Quantity"
-msgstr ""
+msgstr "تعداد افزودنی 3"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_toppings
 msgid "Extras"
-msgstr ""
+msgstr "افزودنی‌ها"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_1
 msgid "Extras 1"
-msgstr ""
+msgstr "آیتم افزودنی 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_2
 msgid "Extras 2"
-msgstr ""
+msgstr "آیتم افزودنی 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_3
 msgid "Extras 3"
-msgstr ""
+msgstr "آیتم افزودنی 3"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
 msgid "Favorite Lunch Product"
-msgstr ""
+msgstr "محصول ناهار مورد علاقه"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__favorite_user_ids
@@ -907,7 +920,7 @@ msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr ""
+msgstr "فرمت آدرس ایمیل \"Name <email@domain>\""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
@@ -964,11 +977,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
 msgstr ""
+"در اینجا می‌توانید به همه دسته‌بندی‌های محصولات ناهار دسترسی داشته باشید."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
 msgstr ""
+"در اینجا می‌توانید سفارش‌های امروز را با گروه‌بندی بر مبنای تأمین‌کنندگان ببینید."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
@@ -978,6 +993,10 @@ msgid ""
 "            An expense is automatically created when an order is received "
 "while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"در اینجا می‌توانید انتقال‌های نقدی خود را ببینید.<br>انتقال نقدی می‌تواند هزینه "
+"یا پرداخت باشد.\n"
+"            هرگاه سفارشی دریافت می‌شود، هزینه به صورت خودکار ایجاد می‌شود، ولی "
+"بازپرداخت به شرکتی انجام می‌شود که مدیر آن را کدگذاری کرده باشد."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -1052,12 +1071,12 @@ msgstr "تصویر 512"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Information, allergens, ..."
-msgstr ""
+msgstr "اطلاعات، مواد حساسیت‌زا، ..."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__available_today
 msgid "Is Displayed Today"
-msgstr ""
+msgstr "امروز نمایش داده می‌شود"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
@@ -1072,7 +1091,7 @@ msgstr "آیا دنبال می کند"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
 msgid "Is New"
-msgstr ""
+msgstr "جدید است"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
@@ -1148,17 +1167,17 @@ msgstr "هشدارهای ناهار"
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "انتقال نقدی ناهار"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_topping
 msgid "Lunch Extras"
-msgstr ""
+msgstr "آیتم‌های دیگر ناهار"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__lunch_location_id
 msgid "Lunch Location"
-msgstr ""
+msgstr "مکان ناهار"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_location_action
@@ -1174,12 +1193,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
-msgstr ""
+msgstr "حداقل آستانه ناهار"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
 msgid "Lunch Notify Message"
-msgstr ""
+msgstr "پیام اعلان نهار"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
@@ -1189,17 +1208,17 @@ msgstr "سفارش ناهار"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Lunch Overdraft"
-msgstr ""
+msgstr "اضافه برداشت ناهار"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "محصول ناهار"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
-msgstr ""
+msgstr "دسته‌بندی محصول ناهار"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_salmon
@@ -1221,12 +1240,12 @@ msgstr ""
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Lunch notification"
-msgstr ""
+msgstr "اعلان برای نهار"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
 msgid "Lunch notification message"
-msgstr ""
+msgstr "پیام اعلان نهار"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
@@ -1241,12 +1260,12 @@ msgstr "ناهار: دریافت وعده"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
-msgstr ""
+msgstr "ناهار: ارسال اعلان"
 
 #. module: lunch
 #: model:mail.template,name:lunch.lunch_order_mail_supplier
 msgid "Lunch: Supplier Order"
-msgstr ""
+msgstr "برنامه ناهار: سفارش تأمین‌کننده"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_219
@@ -1291,12 +1310,12 @@ msgstr "مدیر"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
 msgid "Maximum Allowed Overdraft"
-msgstr ""
+msgstr "حداکثر اضافه برداشت مجاز"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Maximum overdraft that your employees can reach"
-msgstr ""
+msgstr "حداکثر مقدار اضافه برداشت کارکنان"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
@@ -1316,7 +1335,7 @@ msgstr "پیام ها"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
 msgid "Moment"
-msgstr ""
+msgstr "لحظه‌ای"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
@@ -1353,7 +1372,7 @@ msgstr "تاریخچه حساب من"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "حساب گروه‌بندی شده من"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__my_activity_date_deadline
@@ -1430,38 +1449,38 @@ msgstr "عدم تحویل"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "انتقال نقدی وجود ندارد"
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 #, python-format
 msgid "No location found"
-msgstr ""
+msgstr "مکان یافت نشد"
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "No lunch location available."
-msgstr ""
+msgstr "مکان ناهاری در دسترس نیست."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "سفارش ناهاری وجود ندارد"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
 msgid "No previous order found"
-msgstr ""
+msgstr "سفارش قبلی یافت نشد"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__0_more
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__0_more
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__0_more
 msgid "None or More"
-msgstr ""
+msgstr "هیچ یا بیشتر"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -1481,7 +1500,7 @@ msgstr "امروز چیزی برای سفارش نیست"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
 msgid "Notification Moment"
-msgstr ""
+msgstr "لحظه اعلان"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
@@ -1496,7 +1515,7 @@ msgstr "زمان اعلان باید بین 0 تا 12 باشد"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "اطلاع‌رسانی شده"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1547,7 +1566,7 @@ msgstr "تاریخ سفارش"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
 msgid "Order Deadline Passed"
-msgstr ""
+msgstr "مهلت سفارش تمام شد"
 
 #. module: lunch
 #. odoo-javascript
@@ -1653,7 +1672,7 @@ msgstr "پیتزا گیاهی"
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 #, python-format
 msgid "Please create a location to start ordering."
-msgstr ""
+msgstr "برای شروع سفارش ابتدا مکانی را انتخاب کنید."
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1688,7 +1707,7 @@ msgstr "دسته بندی محصولات"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Categories Form"
-msgstr ""
+msgstr "فرم دسته‌بندی محصولات"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
@@ -1738,7 +1757,7 @@ msgstr "محصولات"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 msgid "Products Form"
-msgstr ""
+msgstr "فرم محصولات"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
@@ -1775,7 +1794,7 @@ msgstr "دریافت شده"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Reception notification"
-msgstr ""
+msgstr "اعلان دریافت"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recipients
@@ -1843,17 +1862,17 @@ msgstr "ارسال اطلاعیه"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
 msgid "Send Order By"
-msgstr ""
+msgstr "روش ارسال سفارش"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Orders"
-msgstr ""
+msgstr "ارسال سفارش‌ها"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Send this message to your users when their order has been delivered."
-msgstr ""
+msgstr "پس از تحویل شدن سفارش‌های کاربران، این پیام را به آنها ارسال کنید."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
@@ -1863,7 +1882,7 @@ msgstr "ارسال"
 #. module: lunch
 #: model:mail.template,description:lunch.lunch_order_mail_supplier
 msgid "Sent to vendor with the order of the day"
-msgstr ""
+msgstr "ارسال شده برای تأمین‌کننده با سفارش روز"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
@@ -1874,17 +1893,17 @@ msgstr "تنظیمات"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
 msgid "Show Confirm Button"
-msgstr ""
+msgstr "نمایش دکمه تأیید"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
 msgid "Show Order Button"
-msgstr ""
+msgstr "نمایش دکمه سفارش"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
-msgstr ""
+msgstr "نمایش تا"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_spicy_tuna
@@ -1939,6 +1958,7 @@ msgstr "آدرس۲"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
 msgstr ""
+"خلاصه‌ای از تمام سفارش‌های ناهار، گروه‌بندی شده بر مبنای فروشنده و تاریخ."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sun
@@ -1954,7 +1974,7 @@ msgstr "1‌شنبه"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
-msgstr ""
+msgstr "تأمین‌کننده"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sushi
@@ -1980,6 +2000,9 @@ msgid ""
 "the categories or change the category of the product.\n"
 "%s"
 msgstr ""
+"دسته‌بندی‌های زیر بایگانی شده‌اند. دسته‌بندی‌ها را از حالت بایگانی خارج کنید یا "
+"دسته‌بندی محصول را تغییر دهید.\n"
+"%s"
 
 #. module: lunch
 #. odoo-python
@@ -1990,30 +2013,33 @@ msgid ""
 "suppliers or change the supplier of the product.\n"
 "%s"
 msgstr ""
+"تأمین‌کنندگان زیر بایگانی شده‌اند. یا باید تأمین‌کنندگان را از حالت بایگانی "
+"خارج کنید یا تأمین‌کننده محصول را تغییر دهید.\n"
+"%s"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
 msgid "The number of products related to this category"
-msgstr ""
+msgstr "تعداد محصولات مربوط به این دسته‌بندی"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "The orders for this vendor have already been sent."
-msgstr ""
+msgstr "سفارش‌های این تأمین‌کننده قبلاً ارسال شده است."
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been confirmed!"
-msgstr ""
+msgstr "سفارش‌ها تأیید شدند!"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been sent!"
-msgstr ""
+msgstr "سفارش‌ها ارسال شدند!"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
@@ -2021,13 +2047,15 @@ msgid ""
 "The responsible is the person that will order lunch for everyone. It will be "
 "used as the 'from' when sending the automatic email."
 msgstr ""
+"مسئول کسی است که برای همه ناهار سفارش خواهد داد. هنگام ارسال ایمیل خودکار "
+"این شخص در فیلد «از» قرار خواهد گرفت."
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "The vendor related to this order is not available today."
-msgstr ""
+msgstr "تأمین‌کننده این سفارش امروز در دسترس نیست."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
@@ -2035,22 +2063,24 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a "
 "new lunch order."
 msgstr ""
+"قبلاً سفارشی ثبت نشده است. ابتدا بر روی «ناهار من» کلیک کنید و سپس سفارش جدیدی "
+"برای ناهار ایجاد کنید."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
 msgid "There is no product available today"
-msgstr ""
+msgstr "امروز محصولی در دسترس نیست"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
 msgid "This field is used in order to "
-msgstr ""
+msgstr "این فیلد برای تعیین تاریخ پایان برنامه استفاده می‌شود."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
 msgid "This is True when if the supplier is available today"
-msgstr ""
+msgstr "اگر تأمین‌کننده امروز در دسترس باشد، وضعیت صحیح (True) خواهد بود"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
@@ -2085,11 +2115,12 @@ msgstr "قابل پرداخت"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
 msgstr ""
+"برای افزودن مقداری پول به کیف پول خود، لطفاً با مدیریت ناهار تماس بگیرید."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
 msgid "To see some locations, create one using the create button"
-msgstr ""
+msgstr "برای مشاهده مکان‌ها، با استفاده از دکمه ایجاد یک مکان ایجاد کنید"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -2097,6 +2128,8 @@ msgid ""
 "To see some products, check if your vendors are available today and that you "
 "have configured some products"
 msgstr ""
+"برای دیدن محصولات، بررسی کنید که آیا امروز تأمین‌کنندگان در دسترس هستند یا خیر "
+"و چند محصول پیکربندی کرده باشید"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -2138,22 +2171,22 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
-msgstr ""
+msgstr "دسته‌بندی چاشنی‌ها"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_1
 msgid "Topping Ids 1"
-msgstr ""
+msgstr "شناسه‌های چاشنی ۱"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_2
 msgid "Topping Ids 2"
-msgstr ""
+msgstr "شناسه‌های چاشنی ۲"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_3
 msgid "Topping Ids 3"
-msgstr ""
+msgstr "شناسه‌های چاشنی ۳"
 
 #. module: lunch
 #. odoo-javascript
@@ -2214,7 +2247,7 @@ msgstr "کاربر"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_user
 msgid "User : Order your meal"
-msgstr ""
+msgstr "کاربر: غذای خود را سفارش دهید"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
@@ -2229,7 +2262,7 @@ msgstr "فروشنده"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "سفارش‌های تأمین‌کننده بر اساس تاریخ"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_vendors_action
@@ -2257,20 +2290,22 @@ msgid ""
 "You are trying to impersonate another user, but this can only be done by a "
 "lunch manager"
 msgstr ""
+"شما می‌خواهید از هویت کاربر دیگری استفاده، اما این کار فقط توسط مدیر ناهار "
+"قابل انجام است"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You have to order one and only one %s"
-msgstr ""
+msgstr "باید یک و فقط یک %s سفارش دهید"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You should order at least one %s"
-msgstr ""
+msgstr "باید حداقل یک %s سفارش دهید"
 
 #. module: lunch
 #. odoo-javascript
@@ -2284,14 +2319,14 @@ msgstr "حساب شما"
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Cart ("
-msgstr ""
+msgstr "سبد خرید شما ("
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_alert.py:0
 #, python-format
 msgid "Your Lunch Order"
-msgstr ""
+msgstr "سفارش ناهار"
 
 #. module: lunch
 #. odoo-javascript
@@ -2308,6 +2343,8 @@ msgid ""
 "Your wallet does not contain enough money to order that. To add some money "
 "to your wallet, please contact your lunch manager."
 msgstr ""
+"کیف پول شما حاوی پول کافی برای سفارش نیست. برای افزودن مقداری پول به کیف پول "
+"با مدیر ناهار تماس بگیرید."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -2322,13 +2359,13 @@ msgstr "کدپستی"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "alert form"
-msgstr ""
+msgstr "فرم هشدار"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "فرم تخصیص اعتبار نقدی"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
@@ -2340,23 +2377,23 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "e.g. Order before 11am"
-msgstr ""
+msgstr "مثال: قبل از ساعت 11 سفارش دهید"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "e.g. The Pizzeria Inn"
-msgstr ""
+msgstr "مثال: مسافرخانه ایران"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "انتقال نقدی ناهار"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "پرداخت ناهار کارمند"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban

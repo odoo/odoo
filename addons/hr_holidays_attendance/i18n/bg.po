@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_holidays_attendance
+# * hr_holidays_attendance
 #
 # Translators:
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
@@ -11,14 +11,14 @@
 # aleksandar ivanov, 2023
 # Petko Karamotchev, 2024
 # Emil Krastev, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-04 14:58+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-19 14:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays_attendance/bg/>\n"
 "Language: bg\n"
@@ -33,12 +33,12 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s налични часа"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr ""
+msgstr "Ниво на план за натрупване"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
@@ -84,7 +84,7 @@ msgstr "Дни"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "Приспадане на допълнителни часове"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -102,7 +102,7 @@ msgstr "Допълнителни часове"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "Налични допълнителни часове"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
@@ -134,7 +134,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "Заявка за ново разпределение"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
@@ -142,6 +142,8 @@ msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be "
 "deducted."
 msgstr ""
+"След като отпуск от този тип бъде одобрен, допълнителните часове в "
+"присъствията ще бъдат приспаднати."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -151,12 +153,14 @@ msgid ""
 "Only an Officer or Administrator is allowed to edit the allocation duration "
 "in this status."
 msgstr ""
+"Само служител по човешки ресурси или администратор има право да редактира "
+"продължителността на разпределението в този статус."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "Приспадаем извънреден труд"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
@@ -194,6 +198,7 @@ msgstr ""
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr ""
+"Служителят няма достатъчно допълнителни часове, за да заяви този отпуск."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -201,6 +206,7 @@ msgstr ""
 #, python-format
 msgid "The employee does not have enough overtime hours to request this leave."
 msgstr ""
+"Служителят няма достатъчно часове извънреден труд, за да заяви този отпуск."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -210,12 +216,12 @@ msgstr "Почивка"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr ""
+msgstr "Разпределение на отпуск"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Тип отпуск"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
@@ -233,4 +239,4 @@ msgstr "Потребител"
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
-msgstr ""
+msgstr "Нямате достатъчно допълнителни часове, за да заявите този отпуск"

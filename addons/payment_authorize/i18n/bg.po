@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_authorize
+# * payment_authorize
 #
 # Translators:
 # KeyVillage, 2023
@@ -9,14 +9,14 @@
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
 # Turhan Aydin <taydin@unionproject.eu>, 2024
 # Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-08 04:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-18 13:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "payment_authorize/bg/>\n"
 "Language: bg\n"
@@ -38,26 +38,35 @@ msgid ""
 "Checking</option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">"
+"\n"
+"                        <option value=\"checking\">Лична разплащателна "
+"сметка</option>\n"
+"                        <option value=\"savings\">Лична спестовна сметка</"
+"option>\n"
+"                        <option value=\"businessChecking\">Фирмена "
+"разплащателна сметка</option>\n"
+"                    </select>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "ABA рутиращ номер"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API клиентски ключ"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "API Login ID"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API ключ за подпис"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
@@ -77,12 +86,12 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "Authorize.Net Profile ID"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "Тип на банковата сметка"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -92,7 +101,7 @@ msgstr "Bank Name"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Card Code"
-msgstr ""
+msgstr "Код на картата"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -112,6 +121,8 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"Не може да бъдат извлечени данните за търговеца:\n"
+"%s"
 
 #. module: payment_authorize
 #. odoo-python
@@ -135,26 +146,28 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"Неуспешно удостоверяване.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr ""
+msgstr "Генериране на клиентски ключ"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Как да получавате плащания с Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr ""
+msgstr "MM"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "Име по сметката"
 
 #. module: payment_authorize
 #. odoo-python
@@ -168,7 +181,7 @@ msgstr "Не е открита транзакция, съответстваща 
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "За Authorize.Net акаунт може да бъде избрана само една валута."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -190,7 +203,7 @@ msgstr "Платежна транзакция"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Обработката на плащането е неуспешна"
 
 #. module: payment_authorize
 #. odoo-python
@@ -205,17 +218,19 @@ msgstr ""
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Получени са подправени данни за заявка за плащане."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "Задаване на валута на акаунта"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
 msgstr ""
+"Идентификаторът, използван единствено за идентифициране на акаунта в "
+"Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -223,11 +238,13 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"Публичният клиентски ключ. Генерира се директно от Odoo или от бекенда на "
+"Authorize.Net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Техническият код на този доставчик на разплащания."
 
 #. module: payment_authorize
 #. odoo-python
@@ -250,6 +267,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"Уникалната референция за комбинацията партньор/токен в бекенда на "
+"Authorize.net."
 
 #. module: payment_authorize
 #. odoo-python
@@ -257,8 +276,9 @@ msgstr ""
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
 msgstr ""
+"Това действие не може да бъде изпълнено, докато доставчикът е деактивиран."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "ГГ"

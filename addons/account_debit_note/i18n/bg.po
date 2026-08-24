@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 07:32+0000\n"
+"PO-Revision-Date: 2026-08-10 14:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "account_debit_note/bg/>\n"
@@ -33,7 +33,7 @@ msgstr "<span class=\"o_stat_text\">Дебитни известия</span>"
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr ""
+msgstr "Помощник за добавяне на дебитно известие"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -43,7 +43,7 @@ msgstr "Отказ"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr ""
+msgstr "Копиране на редовете"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
@@ -105,6 +105,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
+"Ако е празно, използва дневника на счетоводния запис, който ще бъде "
+"дебитиран."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -112,6 +114,8 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"В случай че трябва да правите корекции за всеки ред, може да е удобно да ги "
+"копирате. Няма да ги копираме за дебитни известия от кредитни известия. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -121,7 +125,7 @@ msgstr "Записи в Дневника"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr ""
+msgstr "Тип на дневника"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
@@ -141,7 +145,7 @@ msgstr "Движение"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
 msgid "Move Type"
-msgstr ""
+msgstr "Тип движение"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
@@ -155,7 +159,7 @@ msgstr "Номера на Дебитни известия"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr ""
+msgstr "Дебитирана оригинална фактура"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -183,7 +187,7 @@ msgstr "Дебитни известия за тази фактура"
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from: %s"
-msgstr ""
+msgstr "Това дебитно известие е създадено от: %s"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
@@ -206,7 +210,7 @@ msgstr ""
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
-msgstr ""
+msgstr "Можете да дебитирате само осчетоводени документи."
 
 #. module: account_debit_note
 #. odoo-python
@@ -216,3 +220,5 @@ msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit "
 "note."
 msgstr ""
+"Не можете да създадете дебитно известие за фактура, която вече е свързана с "
+"дебитно известие."

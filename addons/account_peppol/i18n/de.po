@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:38+0000\n"
-"PO-Revision-Date: 2026-08-05 04:13+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"PO-Revision-Date: 2026-08-19 14:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/de/>\n"
 "Language: de\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "%(proxy_type)s document has been received successfully"
-msgstr ""
+msgstr "Das Dokument %(proxy_type)s wurde erfolgreich empfangen"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -108,6 +108,9 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"Eine Steuer von 0 % kann nicht die Steuerkategorie „S“ (Standard) verwenden. "
+"Bitte aktualisieren Sie die Steuerkategorie in den erweiterten Optionen der "
+"Steuerkonfiguration."
 
 #. module: account_peppol
 #. odoo-python
@@ -403,6 +406,9 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"Für Steuer(n) %(taxes)s: Die Steuerkategorie „O“ muss verwendet werden, wenn "
+"der Code für den Befreiungsgrund „VATEX-EU-O“ lautet. Sie können dies in den "
+"erweiterten Optionen der Steuerkonfiguration ändern."
 
 #. module: account_peppol
 #. odoo-python
@@ -412,6 +418,9 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"Wenn Sie nicht umsatzsteuerpflichtig sind, sollten Sie keine USt-IdNr. in "
+"Ihren Unternehmens- bzw. Kontakten angeben, und Ihre Kunden sollten "
+"ebenfalls keine haben."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -444,6 +453,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"Rechnungszeilen mit der Steuerkategorie „O“ können keine prozentuale Steuer "
+"verwenden. Bitte aktualisieren Sie die Steuerart in den erweiterten Optionen."
 
 #. module: account_peppol
 #. odoo-python
@@ -453,6 +464,9 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Rechnungszeilen mit der Steuerkategorie „USt.-befreit“ müssen einen "
+"Steuersatz von 0 haben. Sie können dies in den erweiterten Optionen der "
+"Steuerkonfiguration ändern."
 
 #. module: account_peppol
 #. odoo-python
@@ -462,6 +476,9 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Rechnungszeilen mit der Steuerkategorie „Umkehrung der Steuerschuldnerschaft"
+"“ müssen einen Steuersatz von 0 haben. Sie können dies in den erweiterten "
+"Optionen der Steuerkonfiguration ändern."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
@@ -510,6 +527,8 @@ msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
 msgstr ""
+"Land des Käufers fehlt. Bitte fügen Sie den Ländercode zu den Kontakten des "
+"Kunden hinzu."
 
 #. module: account_peppol
 #. odoo-python
@@ -519,6 +538,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Der USt.-Kategoriecode für den Rechnungsartikel fehlt. Erforderliche "
+"Maßnahme: Installieren Sie das Modul account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -537,6 +558,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"USt.-Kategoriecode fehlt. Aktion erforderlich: Installieren Sie das Modul "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -720,7 +743,7 @@ msgstr "Peppol E-Adresse (EAS)"
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 #, python-format
 msgid "Peppol error:"
-msgstr ""
+msgstr "Peppol-Fehler:"
 
 #. module: account_peppol
 #. odoo-python
@@ -958,6 +981,9 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"Der Peppol-Endpunkt fehlt in der XML-Datei. Aktion erforderlich: "
+"Aktualisieren Sie die Module account und account_edi_ubl_cii, um dieses "
+"Problem zu beheben."
 
 #. module: account_peppol
 #. odoo-python
@@ -974,6 +1000,9 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Die Steuerkategorie muss „AE“ lauten, wenn der Befreiungsgrundcode „VATEX-EU-"
+"AE“ verwendet wird. Sie können dies in den erweiterten Optionen der "
+"Steuerkonfiguration ändern."
 
 #. module: account_peppol
 #. odoo-python
@@ -994,6 +1023,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Der Code für den Befreiungsgrund ist ungültig. Aktion erforderlich: "
+"Installieren Sie das Modul account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -1262,6 +1293,8 @@ msgid ""
 "You will not be able to send documents via the Odoo Approved Platform "
 "anymore. Are you sure you want to proceed?"
 msgstr ""
+"Sie können keine Dokumente mehr über die zugelassene Odoo-Plattform "
+"versenden. Möchten Sie wirklich fortfahren?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1282,6 +1315,8 @@ msgid ""
 "You will not be able to send or receive documents via the Odoo Approved "
 "Platform anymore. Are you sure you want to proceed?"
 msgstr ""
+"Sie können über die zugelassene Odoo-Plattform keine Dokumente mehr senden "
+"oder empfangen. Möchten Sie wirklich fortfahren?"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
