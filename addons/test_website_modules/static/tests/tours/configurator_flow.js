@@ -75,6 +75,11 @@ registry.category("web_tour.tours").add("configurator_flow", {
         {
             content: "Loader should be shown",
             trigger: ".o_website_loader_container",
+        },
+        {
+            content: "Wait for the website to be built",
+            trigger: ".o_website_loader_container:not(:has([data-icon='autorenew']))",
+            timeout: 60000,
             expectUnloadPage: true,
         },
         {
