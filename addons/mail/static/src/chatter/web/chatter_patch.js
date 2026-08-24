@@ -3,6 +3,7 @@ import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
+import { CHATTER_PANEL } from "@mail/core/common/chatter_state_plugin";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageCardList } from "@mail/core/common/message_card_list";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
@@ -25,13 +26,6 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@web/model/relational_model/record";
 import { FileUploader } from "@web/views/fields/file_handler";
-
-const CHATTER_PANEL = Object.freeze({
-    ATTACHMENT: "ATTACHMENT",
-    NONE: "NONE",
-    PINNED_MESSAGES: "PINNED_MESSAGES",
-    SEARCH: "SEARCH",
-});
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -72,6 +66,8 @@ const chatterPatch = {
             record: t.instanceOf(Record).optional(),
             saveRecord: t.function([]).optional(),
         });
+        assignGetter(this.state, { aside: () => this.webChatterProps.isChatterAside });
+        Object.assign(this.state, { toggleComposer: this.toggleComposer.bind(this) });
         // When there's no highlight in the URL (e.g. the record was opened in a new
         // window from the messaging menu), fall back to the one carried by the action
         // context.
@@ -86,19 +82,15 @@ const chatterPatch = {
             }
             untrack(() => this.updateRecipients(record));
         });
-        this.attachmentPopout = usePopoutAttachment({ thread: this.thread });
+        this.attachmentPopout = usePopoutAttachment({ thread: this.state.thread });
         this.CHATTER_PANEL = CHATTER_PANEL;
-        Object.assign(this.state, {
-            activePanel: this.webChatterProps.isAttachmentBoxVisibleInitially
+        this.state.activePanel.set(
+            this.webChatterProps.isAttachmentBoxVisibleInitially
                 ? CHATTER_PANEL.ATTACHMENT
-                : CHATTER_PANEL.NONE,
-            composerType: false,
-            showActivities: true,
-            showAttachmentLoading: false,
-            showScheduledMessages: true,
-        });
+                : CHATTER_PANEL.NONE
+        );
         this.messageSearch = useMessageSearch();
-        this.attachmentUploader = useAttachmentUploader(this.thread);
+        this.attachmentUploader = useAttachmentUploader(this.state.thread);
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
@@ -111,12 +103,12 @@ const chatterPatch = {
                 extraClass: "o-mail-Chatter-dropzone",
                 /** @param {Event} ev */
                 onDrop: async (ev) => {
-                    if (this.state.composerType) {
+                    if (this.state.composerType() !== "closed") {
                         return;
                     }
                     if (isDragSourceExternalFile(ev.dataTransfer)) {
                         const files = [...ev.dataTransfer.files];
-                        if (!this.state.thread.id) {
+                        if (!this.state.thread().id) {
                             const saved = await this.webChatterProps.saveRecord?.();
                             if (!saved) {
                                 return;
@@ -129,17 +121,17 @@ const chatterPatch = {
                                 this.reloadParentView();
                             }
                         });
-                        this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
+                        this.state.activePanel.set(CHATTER_PANEL.ATTACHMENT);
                     }
                 },
             },
             () =>
                 (!this.store.meetingViewOpened || this.env.inMeetingView) &&
-                (this.thread()?.isTransient || this.thread()?.canPostMessage) &&
-                !this.thread()?.messageInEdition?.composer?.isEditComposerVisible
+                (this.state.thread()?.isTransient || this.state.thread()?.canPostMessage) &&
+                !this.state.thread()?.messageInEdition?.composer?.isEditComposerVisible
         );
         useOnChange(
-            () => [this.thread(), this.thread()?.isLoadingAttachments],
+            () => [this.state.thread(), this.state.thread()?.isLoadingAttachments],
             (thread) => {
                 if (!thread) {
                     return;
@@ -147,49 +139,50 @@ const chatterPatch = {
                 browser.clearTimeout(this.loadingAttachmentTimeout);
                 if (thread.isLoadingAttachments) {
                     this.loadingAttachmentTimeout = browser.setTimeout(
-                        () => (this.state.showAttachmentLoading = true),
+                        () => this.state.showAttachmentLoading.set(true),
                         DELAY_FOR_SPINNER
                     );
                 } else {
-                    this.state.showAttachmentLoading = false;
+                    this.state.showAttachmentLoading.set(false);
                     if (
-                        this.state.activePanel !== CHATTER_PANEL.ATTACHMENT &&
+                        this.state.activePanel() !== CHATTER_PANEL.ATTACHMENT &&
                         this.webChatterProps.isAttachmentBoxVisibleInitially &&
                         this.attachments.length > 0
                     ) {
-                        this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
+                        this.state.activePanel.set(CHATTER_PANEL.ATTACHMENT);
                     }
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             }
         );
         useOnChange(
-            () => [this.thread()?.status, this.attachments.length],
+            () => [this.state.thread()?.status, this.attachments.length],
             (status, attachmentsLength) => {
                 if (
                     !["new", "loading"].includes(status) &&
                     attachmentsLength === 0 &&
-                    this.state.activePanel === CHATTER_PANEL.ATTACHMENT
+                    this.state.activePanel() === CHATTER_PANEL.ATTACHMENT
                 ) {
-                    this.state.activePanel = CHATTER_PANEL.NONE;
+                    this.state.activePanel.set(CHATTER_PANEL.NONE);
                 }
             }
         );
     },
 
-    async updateRecipients(record, mode = this.state.composerType) {
+    async updateRecipients(record, mode = this.state.composerType()) {
         if (!record) {
             return;
         }
+        const thread = this.state.thread();
         const partnerIds = []; // Ensure that we don't have duplicates
         let email;
-        (this.state.thread?.partner_fields ?? []).forEach((field) => {
+        (thread?.partner_fields ?? []).forEach((field) => {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
                 partnerIds.push(value.id);
             }
         });
-        const field = this.state.thread?.primary_email_field;
+        const field = thread?.primary_email_field;
         if (field) {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
@@ -201,28 +194,27 @@ const chatterPatch = {
         }
         const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
             rpc("/mail/thread/recipients/get_suggested_recipients", {
-                thread_model: this.thread().model,
-                thread_id: this.thread().id,
+                thread_model: thread.model,
+                thread_id: thread.id,
                 partner_ids: partnerIds,
                 main_email: email,
             })
         );
-        if (status(this) === "destroyed" && !this.state.thread) {
+        if (status(this) === "destroyed" && !thread) {
             return;
         }
-        this.state.thread.suggestedRecipients = recipients.map((result) => ({
+        thread.suggestedRecipients = recipients.map((result) => ({
             display_name: result.display_name,
             email: result.email,
             partner_id: result.partner_id,
             name: result.name || result.email,
             recipient_type: result.recipient_type,
         }));
-        this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
-            (additionalRecipient) =>
-                this.state.thread.suggestedRecipients.every(
-                    (suggestedRecipient) =>
-                        suggestedRecipient.partner_id !== additionalRecipient.partner_id
-                )
+        thread.additionalRecipients = thread.additionalRecipients.filter((additionalRecipient) =>
+            thread.suggestedRecipients.every(
+                (suggestedRecipient) =>
+                    suggestedRecipient.partner_id !== additionalRecipient.partner_id
+            )
         );
     },
 
@@ -230,7 +222,7 @@ const chatterPatch = {
      * @returns {import("models").Activity[]}
      */
     get activities() {
-        return this.state.thread?.sortedActivities ?? [];
+        return this.state.thread()?.sortedActivities ?? [];
     },
 
     get afterPostRequestList() {
@@ -244,14 +236,7 @@ const chatterPatch = {
     },
 
     get attachments() {
-        return this.state.thread?.sortedAttachments ?? [];
-    },
-
-    get subEnv() {
-        const res = super.subEnv;
-        assignGetter(res.inChatter, { aside: () => this.webChatterProps.isChatterAside });
-        Object.assign(res.inChatter, { toggleComposer: this.toggleComposer.bind(this) });
-        return res;
+        return this.state.thread()?.sortedAttachments ?? [];
     },
 
     get followerButtonLabel() {
@@ -263,14 +248,15 @@ const chatterPatch = {
     },
     get hasPinnedMessages() {
         return (
-            this.state.thread?.has_pinned_messages || this.state.thread?.pinnedMessages?.length > 0
+            this.state.thread()?.has_pinned_messages ||
+            this.state.thread()?.pinnedMessages?.length > 0
         );
     },
     /**
      * @returns {boolean}
      */
     get isDisabled() {
-        return !this.state.thread.id || !this.state.thread?.hasReadAccess;
+        return !this.state.thread().id || !this.state.thread()?.hasReadAccess;
     },
 
     get requestList() {
@@ -290,33 +276,33 @@ const chatterPatch = {
     },
 
     get scheduledMessages() {
-        return this.state.thread?.sortedScheduledMessages ?? [];
+        return this.state.thread()?.sortedScheduledMessages ?? [];
     },
 
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
         if (threadId === false) {
-            this.state.composerType = false;
+            this.state.composerType.set("closed");
         } else {
-            this.onThreadCreated?.(this.state.thread);
+            this.onThreadCreated?.(this.state.thread());
             this.onThreadCreated = null;
-            this.messageSearch.thread = this.state.thread;
+            this.messageSearch.thread = this.state.thread();
             this.closeSearch();
         }
     },
 
     closeSearch() {
-        if (this.state.activePanel !== CHATTER_PANEL.SEARCH) {
+        if (this.state.activePanel() !== CHATTER_PANEL.SEARCH) {
             return;
         }
         this.messageSearch.reset();
-        this.state.activePanel = CHATTER_PANEL.NONE;
+        this.state.activePanel.set(CHATTER_PANEL.NONE);
     },
 
     /** @override */
     async load(thread, requestList) {
         await super.load(...arguments);
-        if (!thread?.id || !this.state.thread?.eq(thread)) {
+        if (!thread?.id || !this.state.thread()?.eq(thread)) {
             return;
         }
         this.updateRecipients(this.webChatterProps.record);
@@ -330,7 +316,7 @@ const chatterPatch = {
     },
 
     onAddFollowers() {
-        this.load(this.state.thread, ["followers", "suggestedRecipients"]);
+        this.load(this.state.thread(), ["followers", "suggestedRecipients"]);
         if (this.webChatterProps.hasParentReloadOnFollowersUpdate) {
             this.reloadParentView();
         }
@@ -341,16 +327,16 @@ const chatterPatch = {
         if (this.attachments.length === 0) {
             return;
         }
-        const isOpening = this.state.activePanel !== CHATTER_PANEL.ATTACHMENT;
-        this.state.activePanel = isOpening ? CHATTER_PANEL.ATTACHMENT : CHATTER_PANEL.NONE;
+        const isOpening = this.state.activePanel() !== CHATTER_PANEL.ATTACHMENT;
+        this.state.activePanel.set(isOpening ? CHATTER_PANEL.ATTACHMENT : CHATTER_PANEL.NONE);
         if (isOpening) {
             this.rootRef().scrollTop = 0;
-            this.state.thread.scrollTop = "bottom";
+            this.state.thread().scrollTop = "bottom";
         }
     },
 
     async onClickAttachFile(ev) {
-        if (this.state.thread.id) {
+        if (this.state.thread().id) {
             return;
         }
         const saved = await this.webChatterProps.saveRecord?.();
@@ -360,18 +346,19 @@ const chatterPatch = {
     },
     onClickPinnedMessages() {
         this.closeSearch();
-        const isOpening = this.state.activePanel !== CHATTER_PANEL.PINNED_MESSAGES;
-        this.state.activePanel = isOpening ? CHATTER_PANEL.PINNED_MESSAGES : CHATTER_PANEL.NONE;
+        const isOpening = this.state.activePanel() !== CHATTER_PANEL.PINNED_MESSAGES;
+        this.state.activePanel.set(isOpening ? CHATTER_PANEL.PINNED_MESSAGES : CHATTER_PANEL.NONE);
         if (isOpening) {
-            this.state.thread?.fetchPinnedMessages();
+            this.state.thread()?.fetchPinnedMessages();
         }
     },
     onClickSearch() {
-        this.state.activePanel =
-            this.state.activePanel === CHATTER_PANEL.SEARCH
+        this.state.activePanel.set(
+            this.state.activePanel() === CHATTER_PANEL.SEARCH
                 ? CHATTER_PANEL.NONE
-                : CHATTER_PANEL.SEARCH;
-        this.state.composerType = false;
+                : CHATTER_PANEL.SEARCH
+        );
+        this.state.composerType.set("closed");
     },
 
     onCloseFullComposerCallback(isDiscard) {
@@ -385,7 +372,7 @@ const chatterPatch = {
     /** @param {import("models").Thread} thread */
     onFollowerChanged(thread) {
         document.body.click(); // hack to close dropdown
-        if (thread?.eq(this.state.thread)) {
+        if (thread?.eq(this.state.thread())) {
             this.reloadParentView();
         }
     },
@@ -418,17 +405,17 @@ const chatterPatch = {
             this.uploadHandlers.set(threadLocalId, async function handleUpload(data) {
                 try {
                     await self.attachmentUploader.uploadData(data, { thread });
-                    if (!thread.eq(self.state.thread)) {
+                    if (!thread.eq(self.state.thread())) {
                         return;
                     }
                     if (self.hasParentReloadOnAttachmentsChanged) {
                         self.reloadParentView();
                     }
-                    self.state.activePanel = CHATTER_PANEL.ATTACHMENT;
+                    self.state.activePanel.set(CHATTER_PANEL.ATTACHMENT);
                     if (self.rootRef()) {
                         self.rootRef().scrollTop = 0;
                     }
-                    self.state.thread.scrollTop = "bottom";
+                    self.state.thread().scrollTop = "bottom";
                 } finally {
                     self.uploadHandlers.delete(threadLocalId);
                 }
@@ -453,8 +440,8 @@ const chatterPatch = {
                 await this.reloadParentView();
             }
         };
-        if (this.state.thread.id) {
-            schedule(this.state.thread);
+        if (this.state.thread().id) {
+            schedule(this.state.thread());
         } else {
             this.onThreadCreated = schedule;
             this.webChatterProps.saveRecord?.();
@@ -462,22 +449,25 @@ const chatterPatch = {
     },
 
     toggleActivities() {
-        this.state.showActivities = !this.state.showActivities;
+        this.state.showActivities.set(!this.state.showActivities());
     },
 
-    toggleComposer(mode = false, { force = false } = {}) {
+    /**
+     * @param {"message"|"note"|"closed"} composerType
+     */
+    toggleComposer(composerType = "closed", { force = false } = {}) {
         this.closeSearch();
         const toggle = async () => {
-            if (!force && this.state.composerType === mode) {
-                this.state.composerType = false;
+            if (!force && this.state.composerType() === composerType) {
+                this.state.composerType.set("closed");
             } else {
-                if (mode === "message") {
-                    await this.updateRecipients(this.webChatterProps.record, mode);
+                if (composerType === "message") {
+                    await this.updateRecipients(this.webChatterProps.record, composerType);
                 }
-                this.state.composerType = mode;
+                this.state.composerType.set(composerType);
             }
         };
-        if (this.state.thread.id) {
+        if (this.state.thread().id) {
             toggle();
         } else {
             this.onThreadCreated = toggle;
@@ -486,7 +476,7 @@ const chatterPatch = {
     },
 
     toggleScheduledMessages() {
-        this.state.showScheduledMessages = !this.state.showScheduledMessages;
+        this.state.showScheduledMessages.set(!this.state.showScheduledMessages());
     },
 
     async unlinkAttachment(attachment) {

@@ -12,12 +12,10 @@ patch(Chatter.prototype, {
             isFollower: t.boolean(),
             projectSharingId: t.number().optional(),
         });
-        Object.assign(this.state, {
-            isFollower: this.projectSharingProps.isFollower,
-        });
         this.orm = useService("orm");
         providePlugins([ProjectSharingPlugin]);
         this.projectSharingPlugin = usePlugin(ProjectSharingPlugin);
+        this.projectSharingPlugin.isFollower.set(this.projectSharingProps.isFollower);
         this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);
     },
 
@@ -26,14 +24,14 @@ patch(Chatter.prototype, {
     },
 
     async toggleIsFollower() {
-        this.state.isFollower = await this.orm.call(
-            this.thread().model,
-            "project_sharing_toggle_is_follower",
-            [this.thread().id]
+        this.projectSharingPlugin.isFollower.set(
+            await this.orm.call(this.state.thread().model, "project_sharing_toggle_is_follower", [
+                this.state.thread().id,
+            ])
         );
     },
     onPostCallback() {
         super.onPostCallback();
-        this.state.isFollower = true;
+        this.projectSharingPlugin.isFollower.set(true);
     },
 });

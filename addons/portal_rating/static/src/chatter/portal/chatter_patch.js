@@ -2,12 +2,13 @@ import { browser } from "@web/core/browser/browser";
 import { PortalRatingPlugin } from "@portal_rating/chatter/portal/portal_rating_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
+import { signal, t } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 
 const chatterPatch = {
     setup() {
         super.setup(...arguments);
-        this.state.showReviewComposer = false;
+        this.showReviewComposer = signal(false, { type: t.boolean() });
         this.portalRating = useMaybePlugin(PortalRatingPlugin);
     },
 
@@ -24,9 +25,9 @@ const chatterPatch = {
 
     changeThread() {
         super.changeThread(...arguments);
-        if (this.displayRating && this.state.thread) {
-            this.state.thread.ratingChatter = true;
-            this.state.thread.reviewChatter = this.reviewChatter;
+        if (this.displayRating && this.state.thread()) {
+            this.state.thread().ratingChatter = true;
+            this.state.thread().reviewChatter = this.reviewChatter;
         }
     },
 
@@ -35,26 +36,26 @@ const chatterPatch = {
     },
 
     onReviewPostCallback() {
-        this.state.showReviewComposer = false;
-        const { thread } = this.state;
+        this.showReviewComposer.set(false);
+        const thread = this.state.thread();
         thread.selectedRating = false;
         this.reloadReviews(thread);
     },
 
     onClickStarDomain(star) {
-        const { thread } = this.state;
+        const thread = this.state.thread();
         thread.selectedRating = star;
         this.reloadReviews(thread);
     },
 
     onClickStarDomainReset() {
-        const { thread } = this.state;
+        const thread = this.state.thread();
         thread.selectedRating = false;
         this.reloadReviews(thread);
     },
 
     get ratingStats() {
-        return this.state.thread?.rating_stats;
+        return this.state.thread()?.rating_stats;
     },
 
     get threadShowDates() {

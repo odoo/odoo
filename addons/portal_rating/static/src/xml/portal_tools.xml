@@ -74,7 +74,7 @@
         <button
             t-if="this.props.composer"
             class="btn btn-primary"
-            t-on-click="() => this.state.showReviewComposer = true"
+            t-on-click="() => this.showReviewComposer.set(true)"
         >
             Write a review
         </button>
