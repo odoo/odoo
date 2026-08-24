@@ -1,15 +1,16 @@
-import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { FormArchParser } from "@web/views/form/form_arch_parser";
-import { parseXML } from "@web/core/utils/xml";
+import { Plugin, types as t, useConfig, whenReady } from "@odoo/owl";
 import { ResourceCalendarAttendancePopover } from "@resource/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover";
-import { config, types as t, Plugin, whenReady } from "@odoo/owl";
+import { parseXML } from "@web/core/utils/xml";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { useEnv } from "@web/owl2/utils";
+import { FormArchParser } from "@web/views/form/form_arch_parser";
 
 export class ResourceCalendarAttendancePopoverLoader extends Plugin {
     component = ResourceCalendarAttendancePopover;
 
     setup() {
-        this.meta = config("meta", t.object());
-        this.env = config("env", t.object());
+        this.meta = useConfig("meta", t.object());
+        this.env = useEnv();
         this.viewService = this.env.services.view;
         whenReady(() => this.loadPopoverView(this.component.additionalFieldsToFetch));
     }
