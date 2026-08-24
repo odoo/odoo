@@ -3,7 +3,8 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 export class AttendanceActionHelper extends Component {
     static template = "hr_attendance.AttendanceActionHelper";
@@ -18,7 +19,7 @@ export class AttendanceActionHelper extends Component {
         this.state = proxy({
             hasDemoData: true,
         });
-        const lazySession = useService("lazy_session");
+        const lazySession = usePlugin(LazySessionPlugin);
         onWillStart(async () => {
             [this.isHrUser, this.hasAttendanceRight] = await Promise.all([
                 user.hasGroup("hr.group_hr_user"),
