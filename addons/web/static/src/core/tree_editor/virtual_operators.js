@@ -324,6 +324,8 @@ export function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fi
  */
 export function makeRelativeRange(path, diff, smartUnit, fieldType) {
     if (smartUnit === "quarter") {
+        // The smart date DSL has no quarter anchor, so unlike the units below
+        // these bounds are a context_today() expression, resolved client side.
         const quarterStart = "month=(context_today().month-1)//3*3+1, day=1";
         const bound = (months) =>
             getRelativeDateExpr(

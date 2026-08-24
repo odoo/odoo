@@ -85,6 +85,14 @@ export const BACKEND_INTERVAL_OPTIONS = {
 //-------------------------------------------------------------------------
 
 /**
+ * Joins a period description (Aug) and its year respecting localization.
+ */
+function joinWithYear(description, year) {
+    const isRTL = localization.direction === "rtl";
+    return isRTL ? `${year} ${description}` : `${description} ${year}`;
+}
+
+/**
  * Constructs the string representation of a domain and its description. The
  * domain is of the form:
  *      ['|', d_1 ,..., '|', d_n]
@@ -174,15 +182,13 @@ export function constructDateRange(params) {
     }
     const domain = new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
     // compute description
-    const descriptions = [date.toFormat("yyyy")];
-    const method = localization.direction === "rtl" ? "push" : "unshift";
+    const year = date.toFormat("yyyy");
+    let description = year;
     if (granularity === "month") {
-        descriptions[method](date.toFormat("MMMM"));
+        description = joinWithYear(date.toFormat("MMMM"), year);
     } else if (granularity === "quarter") {
-        const quarter = date.quarter;
-        descriptions[method](QUARTERS[quarter].description.toString());
+        description = joinWithYear(QUARTERS[date.quarter].description.toString(), year);
     }
-    const description = descriptions.join(" ");
     return { domain, description };
 }
 
@@ -392,14 +398,11 @@ export function getRelativeDateLabel(referenceMoment, option, offset) {
                 isCurrentYear(date) ? { month: "long" } : { month: "long", year: "numeric" }
             );
         case "quarter": {
-            // Intl has no quarter, so the year is appended by hand (@see constructDateRange).
             const { description } = QUARTERS[date.quarter];
             if (isCurrentYear(date)) {
                 return description.toString();
             }
-            return localization.direction === "rtl"
-                ? `${date.year} ${description}`
-                : `${description} ${date.year}`;
+            return joinWithYear(description.toString(), String(date.year));
         }
         case "year":
             return String(date.year);

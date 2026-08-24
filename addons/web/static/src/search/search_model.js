@@ -1139,6 +1139,9 @@ export class SearchModel extends EventBus {
 
     shiftRelativeFilter(groupId, delta) {
         const filter = this.query.find((q) => this.searchItems[q.searchItemId].groupId === groupId);
+        if (!filter) {
+            throw new Error(`shiftRelativeFilter: no active search item in group ${groupId}`);
+        }
         filter.offset = (filter.offset || 0) + delta;
         this._notify();
     }
@@ -2027,7 +2030,7 @@ export class SearchModel extends EventBus {
                     )}`,
                 ];
             case "relativeFilter": {
-                const option = searchItem.options.find((o) => o.id === activeItem.optionId);
+                const option = this._getRelativeFilterOption(searchItem, activeItem.optionId);
                 const label = getRelativeDateLabel(this.referenceMoment, option, activeItem.offset);
                 return [`${description}: ${label}`];
             }
@@ -2185,8 +2188,8 @@ export class SearchModel extends EventBus {
         const groupBy = groupBys.length
             ? groupBys
             : this.globalGroupBy.length
-              ? this.globalGroupBy.slice()
-              : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
+            ? this.globalGroupBy.slice()
+            : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
         return typeof groupBy === "string" ? [groupBy] : groupBy;
     }
 
@@ -2487,8 +2490,21 @@ export class SearchModel extends EventBus {
     }
 
     _getRelativeFilterDomain(searchItem, optionId, offset) {
-        const option = searchItem.options.find((o) => o.id === optionId);
+        const option = this._getRelativeFilterOption(searchItem, optionId);
         return constructRelativeDateDomain(searchItem, option, offset);
+    }
+
+    /**
+     * @param {Object} searchItem a search item of type "relativeFilter"
+     * @param {string} optionId
+     * @returns {Object} the option of searchItem with the given id
+     */
+    _getRelativeFilterOption(searchItem, optionId) {
+        const option = searchItem.options.find((o) => o.id === optionId);
+        if (!option) {
+            throw new Error(`unknown option "${optionId}" on field "${searchItem.fieldName}"`);
+        }
+        return option;
     }
 
     _getSearchItemGroupBys(activeItem) {
