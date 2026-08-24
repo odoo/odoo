@@ -224,6 +224,9 @@ export class EmbeddedComponentPlugin extends Plugin {
         const onComponentInserted = this.extractOnComponentInserted(host);
         const { root } = mountComponent(this.app, Component, host, props, env, {
             onBeforeComplete: () => {
+                if (this.isDestroyed) {
+                    return false;
+                }
                 if (!getEditableDescendants) {
                     return;
                 }
