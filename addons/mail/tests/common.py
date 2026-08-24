@@ -834,7 +834,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         a dict for fields. Allows to hide a lot of assertEqual under a simple
         call with a dictionary of expected values. """
         for fname, fvalue in fields_values.items():
-            with self.subTest(fname=fname, fvalue=fvalue):
+            with self.subTest(fname=fname, fvalue=str(fvalue)):
                 # email_{cc, to} are lists, hence order is not important
                 if fname in {'incoming_email_cc', 'incoming_email_to'}:
                     self.assertEqual(
