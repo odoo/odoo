@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 from odoo.fields import Command, Domain
 from odoo.tests import tagged, warmup, TransactionCase
@@ -1645,6 +1647,67 @@ class TestSearchAny(TransactionCase):
             ORDER BY "test_orm_related"."id"
         """]):
             model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+
+@tagged('at_install', '-post_install')
+class TestAnyDomainSearchContext(TransactionCase):
+    """A plain (field, 'in', ids) condition in the outer search domain
+    should narrow the comodel scan of a nested `any` domain (e.g. an ir.rule
+    like ('attachment_id.res_access_write', '=', True)), instead of falling
+    back to scanning every candidate record.
+
+    This needs a real ir.rule (not a plain `.search([(..., 'any', ...)])`
+    call) because `search_domain` - the context key that carries the outer
+    domain down to the `any` optimizer - is only ever populated in
+    `BaseModel._search` while optimizing `sec_domain`, the security domain
+    built from the model's ir.rule records.
+    """
+
+    def test_any_domain_search_context_narrows_scan(self):
+        partner = self.env.ref('base.main_partner')
+        decoys = self.env['ir.attachment'].create([
+            {'name': f'decoy{i}', 'res_model': 'res.partner', 'res_id': partner.id, 'raw': b'x'}
+            for i in range(5)
+        ])
+        target = self.env['ir.attachment'].create({
+            'name': 'target', 'res_model': 'res.partner', 'res_id': partner.id, 'raw': b'x',
+        })
+        link = self.env['test_orm.attachment_link'].create({'attachment_id': target.id})
+
+        # dotted path -> decomposed into ('attachment_id', 'any', [...]),
+        # exercising the code path described in the class docstring.
+        self.env['ir.rule'].create({
+            'name': 'test any domain search context',
+            'model_id': self.env['ir.model']._get('test_orm.attachment_link').id,
+            'domain_force': "[('attachment_id.res_access_read', '=', True)]",
+            'groups': [Command.set([self.env.ref('base.group_user').id])],
+        })
+
+        restricted_user = self.env['res.users'].create({
+            'name': 'Restricted user',
+            'login': 'test_any_domain_search_context_user',
+            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
+        })
+
+        Attachment = self.registry['ir.attachment']
+        original_search_fetch = Attachment.search_fetch
+        seen_ids = set()
+
+        def spy(self, domain, *args, **kwargs):
+            result = original_search_fetch(self, domain, *args, **kwargs)
+            seen_ids.update(result.ids)
+            return result
+
+        with patch.object(Attachment, 'search_fetch', spy):
+            result = self.env['test_orm.attachment_link'].with_user(restricted_user).search(
+                [('attachment_id', 'in', [target.id])]
+            )
+
+        self.assertEqual(result, link)
+        self.assertFalse(
+            seen_ids & set(decoys.ids),
+            "the fallback scan should never look at attachments unrelated to the search",
+        )
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
