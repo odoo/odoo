@@ -91,6 +91,56 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.assertEqual(sale_order.picking_ids[1].move_ids.product_qty, 300)
         self.assertEqual(sale_order.picking_ids[1].move_ids.quantity, 300)  # 1 delivered => 300 * 2 = 600
 
+    def _create_partially_delivered_sale_order(self, ordered_qty, delivered_qty):
+        product = self.env['product.product'].create({
+            'name': 'Delivered Product',
+            'available_in_pos': True,
+            'is_storable': True,
+        })
+        self.env['stock.quant']._update_available_quantity(
+            product, self.main_pos_config.picking_type_id.default_location_src_id, ordered_qty
+        )
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': product.id, 'product_uom_qty': ordered_qty})
+            ],
+        })
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids._set_quantity_done(delivered_qty)
+        action = picking.button_validate()
+        if isinstance(action, dict):  # Backorder confirmation, on a partial delivery.
+            Form.from_action(self.env, action).save().process()
+        self.assertEqual(sale_order.order_line.qty_delivered, delivered_qty)
+        return sale_order
+
+    def test_settle_partially_delivered_order_only_ships_the_remainder(self):
+        """Settling in the PoS collects the whole balance but only ships what is left to deliver."""
+        sale_order = self._create_partially_delivered_sale_order(5, 2)
+
+        self.main_pos_config.open_ui()
+        pos_order = self._settle_in_pos(sale_order)
+
+        self.assertEqual(pos_order.lines.qty, 5, "The whole balance is collected")
+        self.assertEqual(pos_order.picking_ids.move_ids.quantity, 3)
+        self.assertEqual(
+            sale_order.order_line.qty_delivered,
+            5,
+            "The 2 quantities shipped by the warehouse must not be delivered again",
+        )
+
+    def test_settle_fully_delivered_order_ships_nothing(self):
+        """A fully delivered order can still be paid in the PoS, without shipping anything."""
+        sale_order = self._create_partially_delivered_sale_order(5, 5)
+
+        self.main_pos_config.open_ui()
+        pos_order = self._settle_in_pos(sale_order)
+
+        self.assertEqual(pos_order.lines.qty, 5, "The whole balance is collected")
+        self.assertFalse(pos_order.picking_ids, "Nothing is left to deliver")
+        self.assertEqual(sale_order.order_line.qty_delivered, 5)
+
     def test_settle_order_with_different_product(self):
         """This test create an order and settle it in the PoS. But only one of the product is delivered.
             And we need to make sure the quantity are correctly updated on the sale order.

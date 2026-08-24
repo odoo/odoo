@@ -127,7 +127,21 @@ class PoSSaleSyncCommon:
             })
         return self._sync_paid_pos_order(
             down_payment_lines, partner=sale_order.partner_id, to_invoice=to_invoice)
-
+        
+    def _settle_in_pos(self, sale_order):
+        pos_order_id = self._sync_paid_pos_order(
+            [{
+                'product': line.product_id,
+                'qty': line.product_uom_qty,
+                'price_unit': line.price_unit,
+                'extra_values': {
+                    'sale_order_line_id': line.id,
+                    'sale_order_origin_id': sale_order.id,
+                },
+            } for line in sale_order.order_line], 
+            partner=sale_order.partner_id,
+        )
+        return self.env['pos.order'].browse(pos_order_id)
 
 class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups

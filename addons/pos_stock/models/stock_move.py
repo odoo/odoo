@@ -103,8 +103,12 @@ class StockMove(models.Model):
             for move in moves_remaining:
                 move.move_line_ids.unlink()
                 for line in lines_data[move.product_id.id]['order_lines']:
+                    qty_left_to_move = abs(line._get_qty_to_move())
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
-                        qty = self._get_lot_line_qty(line, move, lines_data)
+                        if line.product_id.uom_id.is_zero(qty_left_to_move):
+                            break
+                        qty = min(self._get_lot_line_qty(line, move, lines_data), qty_left_to_move)
+                        qty_left_to_move -= qty
                         if existing_lots:
                             existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
                             quants = self.env['stock.quant']
@@ -140,8 +144,12 @@ class StockMove(models.Model):
         else:
             for move in moves_remaining:
                 for line in lines_data[move.product_id.id]['order_lines']:
+                    qty_left_to_move = abs(line._get_qty_to_move())
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
-                        qty = self._get_lot_line_qty(line, move, lines_data)
+                        if line.product_id.uom_id.is_zero(qty_left_to_move):
+                            break
+                        qty = min(self._get_lot_line_qty(line, move, lines_data), qty_left_to_move)
+                        qty_left_to_move -= qty
                         if existing_lots:
                             existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
                             if existing_lot:
