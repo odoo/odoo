@@ -39,6 +39,8 @@ TICARIFATURA_ANSWER_TO_FIELD_VALUE_MAP = {
     "documentAnsweredAutomatically": "commercial_answered_automatically",
 }
 
+SUCCESSFUL_SEND_STATUSES = {'succeed', 'commercial_approved', 'commercial_answered_automatically'}
+
 UNSYNCED_COMMERCIAL_MOVE_DOMAIN = [
     ("move_type", "in", ["out_invoice", "in_invoice"]),
     ("l10n_tr_gib_invoice_scenario", "=", "TICARIFATURA"),
@@ -730,6 +732,10 @@ class AccountMove(models.Model):
 
     def l10n_tr_nilvera_fetch_move_status(self):
         self._l10n_tr_nilvera_get_submitted_document_status()
+        if successful_moves := self.filtered(
+            lambda move: move.l10n_tr_nilvera_send_status in SUCCESSFUL_SEND_STATUSES and not move.l10n_tr_nilvera_pdf_id
+        ):
+            successful_moves.l10n_tr_nilvera_get_pdf()
 
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
         with _get_nilvera_client(self.env._, self.env.company) as client:
@@ -950,7 +956,7 @@ class AccountMove(models.Model):
             ):
                 continue
             status = invoice.l10n_tr_nilvera_send_status
-            if status in {'succeed', 'draft_sent'}:
+            if status in SUCCESSFUL_SEND_STATUSES | {'draft_sent'}:
                 successful_and_draft_invoice_ids.append(invoice.id)
             elif status in {'sent', 'waiting'}:
                 pending_invoices_ids.append(invoice.id)
@@ -962,7 +968,7 @@ class AccountMove(models.Model):
         # Update pending invoices to catch any that succeeded since the last check.
         if pending_invoices:
             pending_invoices._l10n_tr_nilvera_get_submitted_document_status()
-            newly_succeed = pending_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status == 'succeed')
+            newly_succeed = pending_invoices.filtered(lambda i: i.l10n_tr_nilvera_send_status in SUCCESSFUL_SEND_STATUSES)
             successful_and_draft_invoices |= newly_succeed
             failed_invoices |= pending_invoices - newly_succeed
 
