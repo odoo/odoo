@@ -1,5 +1,5 @@
-import { Component, onMounted, onWillStart, useProps, xml } from "@odoo/owl";
-import { expect, test } from "@odoo/hoot";
+import { Component, onMounted, onWillStart, Plugin, useProps, usePlugin, xml } from "@odoo/owl";
+import { after, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     getService,
@@ -9,8 +9,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { WebClient } from "@web/webclient/webclient";
-import { useService } from "@web/core/utils/hooks";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 test("Only call once session info data when services calls lazy session", async () => {
     patchWithCleanup(WebClient.prototype, {
@@ -24,29 +25,32 @@ test("Only call once session info data when services calls lazy session", async 
         return { a: "a", b: "b" };
     });
 
-    const serviceRegistry = registry.category("services");
-    serviceRegistry.add("fake_a", {
-        dependencies: ["lazy_session"],
-        start(env, { lazy_session }) {
+    class FakeAPlugin extends Plugin {
+        lazySession = usePlugin(LazySessionPlugin);
+        setup() {
             expect.step("service_a_before");
-            lazy_session.getValue("a", (value) => {
+            this.lazySession.getValue("a", (value) => {
                 expect(value).toBe("a");
                 expect.step("session_a_after_lazy");
             });
             expect.step("service_a_after");
-        },
-    });
-    serviceRegistry.add("fake_b", {
-        dependencies: ["lazy_session"],
-        start(env, { lazy_session }) {
+        }
+    }
+    services.add(FakeAPlugin);
+    after(() => services.delete(FakeAPlugin));
+    class FakeBPlugin extends Plugin {
+        lazySession = usePlugin(LazySessionPlugin);
+        setup() {
             expect.step("service_b_before");
-            lazy_session.getValue("b", (value) => {
+            this.lazySession.getValue("b", (value) => {
                 expect(value).toBe("b");
                 expect.step("session_b_after_lazy");
             });
             expect.step("service_b_after");
-        },
-    });
+        }
+    }
+    services.add(FakeBPlugin);
+    after(() => services.delete(FakeBPlugin));
 
     await mountWithCleanup(WebClient);
     await animationFrame();
@@ -79,7 +83,7 @@ test("Only call once lazy session info data on action", async () => {
         props = useProps();
         setup() {
             expect.step("myaction_before");
-            this.lazySession = useService("lazy_session");
+            this.lazySession = usePlugin(LazySessionPlugin);
             onWillStart(() => {
                 expect.step("myaction_on_will_start");
                 this.lazySession.getValue("a", (value) => {
@@ -126,25 +130,26 @@ test("Call lazy session info after webclient init with action and service", asyn
         expect.step("load_session_info");
         return { a: "a", b: "b" };
     });
-    const serviceRegistry = registry.category("services");
-    serviceRegistry.add("fake_a", {
-        dependencies: ["lazy_session"],
-        start(env, { lazy_session }) {
+    class FakeAPlugin extends Plugin {
+        lazySession = usePlugin(LazySessionPlugin);
+        setup() {
             expect.step("service_before");
-            lazy_session.getValue("a", (value) => {
+            this.lazySession.getValue("a", (value) => {
                 expect(value).toBe("a");
                 expect.step("session_after_lazy");
             });
             expect.step("service_after");
-        },
-    });
+        }
+    }
+    services.add(FakeAPlugin);
+    after(() => services.delete(FakeAPlugin));
     const actionRegistry = registry.category("actions");
     class TestClientAction extends Component {
         static template = xml`<div/>`;
         props = useProps();
         setup() {
             expect.step("myaction_before");
-            this.lazySession = useService("lazy_session");
+            this.lazySession = usePlugin(LazySessionPlugin);
             onWillStart(() => {
                 expect.step("myaction_on_will_start");
                 this.lazySession.getValue("b", (value) => {

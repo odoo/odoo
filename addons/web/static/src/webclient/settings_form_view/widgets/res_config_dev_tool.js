@@ -3,9 +3,10 @@ import { useService } from "@web/core/utils/hooks";
 import { SettingsBlock } from "../settings/settings_block";
 import { Setting } from "../../../views/form/setting/setting";
 
-import { Component, proxy, useProps } from "@odoo/owl";
+import { Component, proxy, usePlugin, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { router } from "@web/core/browser/router";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 /**
  * Widget in the settings that handles the "Developer Tools" section.
@@ -29,7 +30,10 @@ export class ResConfigDevTool extends Component {
 
         this.action = useService("action");
         this.isDemoDataActive = proxy({ value: true });
-        useService("lazy_session").getValue("is_demo", (v) => (this.isDemoDataActive.value = !!v));
+        usePlugin(LazySessionPlugin).getValue(
+            "is_demo",
+            (v) => (this.isDemoDataActive.value = !!v)
+        );
     }
 
     activateDebug(value) {
