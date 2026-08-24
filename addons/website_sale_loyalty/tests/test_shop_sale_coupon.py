@@ -6,6 +6,7 @@ from odoo import fields, http
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
+from odoo.tools import SQL
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
@@ -348,13 +349,13 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         ICP = self.env["ir.config_parameter"].sudo()
         ICP.set_int("website_sale_coupon.abandonned_coupon_validity", 5)
         self.env.flush_all()
-        query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
         self.env.cr.execute(
-            query,
-            (
+            SQL(
+                "UPDATE %s SET write_date = %s WHERE id = %s",
+                SQL.identifier(order._table),
                 fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=4, hours=2)),
                 order.id,
-            ),
+            )
         )
         order._gc_abandoned_coupons()
 

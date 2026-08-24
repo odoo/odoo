@@ -58,7 +58,9 @@ class ProductTemplate(models.Model):
         As we don't resequence the whole tree (as `sequence` does), this field
         might have negative value.
         """
-        self.env.cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
+        self.env.cr.execute(
+            SQL("SELECT MAX(website_sequence) FROM %s", SQL.identifier(self._table))
+        )
         max_sequence = self.env.cr.fetchone()[0]
         if max_sequence is None:
             return 10000
