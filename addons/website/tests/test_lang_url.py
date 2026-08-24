@@ -132,6 +132,62 @@ class TestLangUrl(TestLangUrlCommon):
 
 
 @tagged('-at_install', 'post_install')
+class TestLangRedirectBots(TestLangUrlCommon):
+    HUMAN_UA = 'Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0'
+    BOT_UAS = [
+        'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+        'Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)',
+        'GoogleOther',
+        'meta-externalagent/1.1 (+https://developers.facebook.com/docs/sharing/webmasters/crawler)',
+        'meta-webindexer/1.1 (+/documentation/sharing/webmasters/web-crawlers)',
+        'Claude-User/1.0; +Claude-User@anthropic.com',
+        'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Perplexity-User/1.0; +https://perplexity.ai/perplexity-user)',
+        'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot',
+    ]
+
+    def assertPageLang(self, response, lang):
+        if f'lang="{lang}"' not in response.text:
+            doc = lxml.html.document_fromstring(response.text)
+            self.assertEqual(doc.get('lang'), lang)
+
+    def test_human_accept_language_redirects(self):
+        """ A browser with a preferred language available on the website but
+        different from the default one is redirected to that language. """
+        r = self.url_open('/contactus', headers={
+            'User-Agent': self.HUMAN_UA,
+            'Accept-Language': 'fr-FR,fr;q=0.9',
+        }, allow_redirects=False)
+        self.assertEqual(r.status_code, 303)
+        self.assertURLEqual(r.headers.get('Location'), '/fr/contactus')
+        self.assertEqual(r.cookies.get('frontend_lang'), 'fr_FR')
+
+    def test_bots_not_redirected_by_accept_language(self):
+        """ Crawlers and LLM fetchers now send an Accept-Language header (e.g.
+        "en-US,en;q=0.9"). They should never be redirected to another language,
+        otherwise they fail to index the default language pages. """
+        for user_agent in self.BOT_UAS:
+            with self.subTest(user_agent=user_agent):
+                self.opener.cookies.clear()  # fresh visitor, no session/lang cookie
+                r = self.url_open('/contactus', headers={
+                    'User-Agent': user_agent,
+                    'Accept-Language': 'fr-FR,fr;q=0.9',
+                }, allow_redirects=False)
+                self.assertEqual(r.status_code, 200)
+                self.assertNotIn('Location', r.headers)
+                self.assertPageLang(r, 'en-US')
+
+    def test_bot_can_fetch_alternate_lang_url(self):
+        """ Crawlers must still be able to index every language at its own
+        URL. """
+        r = self.url_open('/fr/contactus', headers={
+            'User-Agent': 'Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)',
+            'Accept-Language': 'en-US,en;q=0.9',
+        }, allow_redirects=False)
+        self.assertEqual(r.status_code, 200)
+        self.assertPageLang(r, 'fr-FR')
+
+
+@tagged('-at_install', 'post_install')
 class TestControllerRedirect(TestLangUrlCommon):
     def setUp(self):
         self.page = self.env['website.page'].create({
