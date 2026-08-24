@@ -37,6 +37,7 @@ class AccountAnalyticLine(models.Model):
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable."
     )
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
+    product_id = fields.Many2one(compute='_compute_product_id', store=True, readonly=False)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     sale_order_state = fields.Selection(related='order_id.state')
 
@@ -89,6 +90,14 @@ class AccountAnalyticLine(models.Model):
         # compute only for timesheets
         for timesheet in self.filtered('project_id'):
             timesheet.order_id = timesheet.so_line.order_id
+
+    @api.depends('so_line.product_id')
+    def _compute_product_id(self):
+        for timesheet in self.filtered(lambda t: t.project_id and t.so_line):
+            timesheet.product_id = timesheet.so_line.product_id
+
+    def _compute_product_uom_id(self):
+        super(AccountAnalyticLine, self.filtered(lambda t: not t.project_id))._compute_product_uom_id()
 
     @api.depends('reinvoice_move_id.state')
     def _compute_partner_id(self):
