@@ -223,3 +223,49 @@ class TestFlexibleResourceCalendar(TransactionCase):
             },
             "Employee should have unusual days on 4th, 5th and 6th February",
         )
+
+    def test_flexible_resource_work_intervals_with_public_holiday(self):
+        leave_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Hourly Time Off',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'code': 'LEAVE018',
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Test Public Holiday',
+            'calendar_id': False,
+            'date_from': datetime(2026, 8, 14, 0),
+            'date_to': datetime(2026, 8, 15, 0),
+            'work_entry_type_id': leave_type.id,
+        })
+
+        # Leave is automatically approved during creation.
+        self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create({
+            'name': 'Test Hourly Time Off',
+            'work_entry_type_id': leave_type.id,
+            'employee_id': self.flex_employee.id,
+            'request_date_from': date(2026, 8, 10),
+            'request_date_to': date(2026, 8, 15),
+            'request_hour_from': 8.0,
+            'request_hour_to': 17.0,
+        })
+
+        start = datetime(2026, 8, 13, tzinfo=UTC)
+        end = datetime(2026, 8, 16, tzinfo=UTC)
+
+        # Overlapping employee leave and public holiday raise an Expected singleton without the fix.
+        # After the fix, _format_leave() correctly filters the employee leave and returns the remaining work interval.
+        work_intervals, _, _ = (
+            self.flex_resource._get_flexible_resource_valid_work_intervals(
+                start,
+                end,
+            )
+        )
+
+        intervals = list(work_intervals[self.flex_resource.id])
+
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2],
+            (datetime(2026, 8, 15, 17, 0, tzinfo=UTC), datetime(2026, 8, 15, 23, 59, 59, 999999, tzinfo=UTC))
+        )
