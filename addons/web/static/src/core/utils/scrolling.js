@@ -1,14 +1,73 @@
-export function isScrollableX(el) {
-    if (el.scrollWidth > el.clientWidth && el.clientWidth > 0) {
-        return couldBeScrollableX(el);
+import { getParentFrame } from "./ui";
+
+/**
+ * @typedef {{
+ *  crossFrames?: boolean;
+ * }} ClosestScrollableOptions
+ */
+
+const R_OVERFLOW_SCROLL = /\bauto\b|\bscroll\b/;
+
+/**
+ * Get the closest horizontally scrollable parent for a given element.
+ *
+ * @param {HTMLElement} element
+ * @param {ClosestScrollableOptions} [options]
+ * @returns {HTMLElement | null}
+ */
+export function closestScrollableX(element, options) {
+    if (!element) {
+        return null;
     }
-    return false;
+    while (element) {
+        if (isScrollableX(element)) {
+            return element;
+        }
+        const parent = element.parentElement;
+        if (!parent && options?.crossFrames) {
+            element = getParentFrame(element);
+        } else {
+            element = parent;
+        }
+    }
+    return element;
 }
 
-export function couldBeScrollableX(el) {
-    if (el) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow-x");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
+/**
+ * Get the closest vertically scrollable parent for a given element.
+ *
+ * @param {HTMLElement} element
+ * @param {ClosestScrollableOptions} [options]
+ * @returns {HTMLElement | null}
+ */
+export function closestScrollableY(element, options) {
+    if (!element) {
+        return null;
+    }
+    while (element) {
+        if (isScrollableY(element)) {
+            return element;
+        }
+        const parent = element.parentElement;
+        if (!parent && options?.crossFrames) {
+            element = getParentFrame(element);
+        } else {
+            element = parent;
+        }
+    }
+    return element;
+}
+
+/**
+ * @param {HTMLElement} element
+ */
+export function couldBeScrollableX(element) {
+    if (element) {
+        const overflow = getComputedStyle(element).getPropertyValue("overflow-x");
+        if (R_OVERFLOW_SCROLL.test(overflow)) {
+            return true;
+        }
+        if (element.tagName === "HTML" && getParentFrame(element)) {
             return true;
         }
     }
@@ -16,32 +75,15 @@ export function couldBeScrollableX(el) {
 }
 
 /**
- * Get the closest horizontally scrollable for a given element.
- *
- * @param {HTMLElement} el
- * @returns {HTMLElement | null}
+ * @param {HTMLElement} element
  */
-export function closestScrollableX(el) {
-    if (!el) {
-        return null;
-    }
-    if (isScrollableX(el)) {
-        return el;
-    }
-    return closestScrollableX(el.parentElement);
-}
-
-export function isScrollableY(el) {
-    if (el && el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
-        return couldBeScrollableY(el);
-    }
-    return false;
-}
-
-export function couldBeScrollableY(el) {
-    if (el) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
+export function couldBeScrollableY(element) {
+    if (element) {
+        const overflow = getComputedStyle(element).getPropertyValue("overflow-y");
+        if (R_OVERFLOW_SCROLL.test(overflow)) {
+            return true;
+        }
+        if (element.tagName === "HTML" && getParentFrame(element)) {
             return true;
         }
     }
@@ -49,19 +91,23 @@ export function couldBeScrollableY(el) {
 }
 
 /**
- * Get the closest vertically scrollable for a given element.
- *
- * @param {HTMLElement} el
- * @returns {HTMLElement | null}
+ * @param {HTMLElement} element
  */
-export function closestScrollableY(el) {
-    if (!el) {
-        return null;
+export function isScrollableX(element) {
+    if (element.scrollWidth > element.clientWidth && element.clientWidth > 0) {
+        return couldBeScrollableX(element);
     }
-    if (isScrollableY(el)) {
-        return el;
+    return false;
+}
+
+/**
+ * @param {HTMLElement} element
+ */
+export function isScrollableY(element) {
+    if (element && element.scrollHeight > element.clientHeight && element.clientHeight > 0) {
+        return couldBeScrollableY(element);
     }
-    return closestScrollableY(el.parentElement);
+    return false;
 }
 
 /**
