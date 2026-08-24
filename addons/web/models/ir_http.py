@@ -11,7 +11,12 @@ from odoo.tools.misc import hmac, str2bool
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram", "google-pagerenderer", "preview"]
+    bots = [
+        "bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit",
+        "whatsapp", "trendsmapresolver", "pinterest", "instagram",
+        "google-pagerenderer", "preview", "google-inspectiontool", "googleother",
+        "meta-external", "meta-webindexer", "chatgpt-user", "claude-user", "perplexity-user",
+    ]
 
     @classmethod
     def is_a_bot(cls):
