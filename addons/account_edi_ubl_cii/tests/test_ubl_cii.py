@@ -438,6 +438,31 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         self.assertEqual(start_date.text, '20241201')
         self.assertEqual(end_date.text, '20241231')
 
+    def test_unit_price_keeps_its_decimals_in_cii_xml(self):
+        """ The Factur-X unit price keeps the Product Price decimals. """
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1).digits = 4
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 400.0,
+                'price_unit': 0.487,
+            })],
+        })
+        invoice.action_post()
+
+        xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        line = xml_tree.find('.//ram:IncludedSupplyChainTradeLineItem', self.namespaces)
+        net_price = line.find('.//ram:NetPriceProductTradePrice/ram:ChargeAmount', self.namespaces)
+        quantity = line.find('.//ram:BilledQuantity', self.namespaces)
+        line_total = line.find('.//ram:SpecifiedTradeSettlementLineMonetarySummation/ram:LineTotalAmount', self.namespaces)
+
+        self.assertEqual(net_price.text, '0.487')
+        # The billed quantity times the net unit price gives the line total back.
+        self.assertEqual(round(float(quantity.text) * float(net_price.text), 2), float(line_total.text))
+
     def test_export_import_billing_dates(self):
         if self.env.ref('base.module_account_accountant').state != 'installed':
             self.skipTest("payment_custom module is not installed")

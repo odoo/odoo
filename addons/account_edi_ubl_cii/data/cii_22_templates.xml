@@ -38,19 +38,19 @@
                         if price_unit = 100 and tax 10% price_include -> then the gross_price_unit is 91
                         -->
                         <ram:GrossPriceProductTradePrice>
-                            <ram:ChargeAmount t-out="format_monetary(line_vals['gross_price_total_unit'], 2)"/>
+                            <ram:ChargeAmount t-out="format_unit_price(line_vals['gross_price_total_unit'])"/>
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
                                 <ram:ChargeIndicator>
                                     <udt:Indicator t-translation="off">false</udt:Indicator>
                                 </ram:ChargeIndicator>
-                                <ram:ActualAmount t-out="format_monetary(line_vals['price_discount_unit'], 2)"/>
+                                <ram:ActualAmount t-out="format_unit_price(line_vals['price_discount_unit'])"/>
                             </ram:AppliedTradeAllowanceCharge>
                         </ram:GrossPriceProductTradePrice>
                         <!-- Line unit price, with discount applied -->
                         <ram:NetPriceProductTradePrice>
                             <ram:ChargeAmount
-                                t-out="format_monetary(line_vals['price_subtotal_unit'], 2)"/>
+                                t-out="format_unit_price(line_vals['price_subtotal_unit'])"/>
                         </ram:NetPriceProductTradePrice>
                     </ram:SpecifiedLineTradeAgreement>
 

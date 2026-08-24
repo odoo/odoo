@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty, html2plaintext, cleanup_xml_node
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from lxml import etree
 
 from datetime import datetime
@@ -123,9 +124,15 @@ class AccountEdiXmlCII(models.AbstractModel):
             dt = dt or datetime.now()
             return dt.strftime(DEFAULT_FACTURX_DATE_FORMAT)
 
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
+
         def format_monetary(number, decimal_places=2):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)
+
+        def format_unit_price(number):
+            # Unit prices keep the 'Product Price' precision instead of the 2 decimals of the amounts
+            return str(FloatFmt(number, 2, max(2, product_price_dp)))
 
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
@@ -171,6 +178,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'tax_details': tax_details,
             'format_date': format_date,
             'format_monetary': format_monetary,
+            'format_unit_price': format_unit_price,
             'is_html_empty': is_html_empty,
             'scheduled_delivery_time': self._get_scheduled_delivery_time(invoice),
             'intracom_delivery': False,
@@ -233,6 +241,11 @@ class AccountEdiXmlCII(models.AbstractModel):
             line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
 
             line_vals['quantity'] = line_vals['line'].quantity #/!\ The quantity is the line.quantity since we keep the unece_uom_code!
+
+            # The unit prices are taken from the line subtotal to keep all their decimals
+            if line_vals['line'].quantity:
+                line_vals['price_subtotal_unit'] = line_vals['line'].price_subtotal / line_vals['line'].quantity
+                line_vals['gross_price_total_unit'] = line_vals['price_subtotal_before_discount'] / line_vals['line'].quantity
 
             # Invert the quantity and the gross_price_total_unit if a line has a negative price total
             if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
