@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
+    fillEmpty,
     removeClass,
     removeEmptyTextNodes,
     removeStyle,
@@ -19,6 +20,7 @@ import {
     isProtected,
     isProtecting,
     isShrunkBlock,
+    isTextNode,
     isVisibleTextNode,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
@@ -1131,6 +1133,8 @@ export class ListPlugin extends Plugin {
         if (!listItems.size || (mode !== "color" && color) || isColorGradient(color)) {
             return;
         }
+        const selection = this.dependencies.selection.getEditableSelection();
+        let zws;
         const cursors = this.dependencies.selection.preserveSelection();
         for (const listItem of listItems) {
             // Remove empty text nodes without breaking the current selection.
@@ -1169,22 +1173,53 @@ export class ListPlugin extends Plugin {
                 (listItem.style.color ||
                     [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
             ) {
-                const textNodes = targetedNodes.filter(
-                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
-                );
-                // Remove inline color from partial selection by
-                // wrapping in font with default color.
-                for (const node of textNodes) {
+                if (selection.isCollapsed) {
+                    // A collapsed selection targets no content: insert an empty
+                    // default colored font at the cursor position, so that only
+                    // the text typed there is uncolored. Filling it makes it
+                    // selectable, and removable if nothing gets typed in it.
                     const font = this.document.createElement("font");
                     font.classList.add("o_default_color");
-                    node.before(font);
-                    cursors.update(callbacksForCursorUpdate.before(node, font));
-                    font.append(node);
-                    cursors.update(callbacksForCursorUpdate.append(font, node));
+                    const { anchorNode, anchorOffset } = selection;
+                    if (isTextNode(anchorNode)) {
+                        // splitSelection() left the cursor at a text boundary.
+                        if (anchorOffset) {
+                            anchorNode.after(font);
+                        } else {
+                            anchorNode.before(font);
+                        }
+                    } else {
+                        anchorNode.insertBefore(font, childNodes(anchorNode)[anchorOffset]);
+                    }
+                    zws = fillEmpty(font).zws;
+                } else {
+                    const textNodes = targetedNodes.filter(
+                        (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
+                    );
+                    // Remove inline color from partial selection by
+                    // wrapping in font with default color.
+                    for (const node of textNodes) {
+                        let font = closestElement(node, "font");
+                        if (font) {
+                            font = this.dependencies.split.splitAroundUntil(node, font);
+                            this.dependencies.color.colorElement(font, "", mode);
+                        } else {
+                            font = this.document.createElement("font");
+                            node.before(font);
+                            cursors.update(callbacksForCursorUpdate.before(node, font));
+                            font.append(node);
+                            cursors.update(callbacksForCursorUpdate.append(font, node));
+                        }
+                        font.classList.add("o_default_color");
+                    }
                 }
             }
         }
-        cursors.restore();
+        if (zws) {
+            this.dependencies.selection.setCursorEnd(zws);
+        } else {
+            cursors.restore();
+        }
     }
 
     applyFormatToListItem(formatName, { formatProps, applyStyle } = {}) {
