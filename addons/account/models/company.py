@@ -1238,7 +1238,7 @@ class ResCompany(models.Model):
 
         return account_move._get_records_action(name=_("Journal Items"))
 
-    def get_inventory_value(self, accounts_by_product=None, at_date=None):
+    def get_inventory_value(self, at_date=None):
         """ Current inventory value, i.e. what the products physically on hand are worth.
 
         Simple approximation used when the stock module isn't installed: quantity on hand
@@ -1248,8 +1248,7 @@ class ResCompany(models.Model):
         Overridden by `stock_account` to use the real valuation computed from stock moves/quants.
         """
         self.ensure_one()
-        if not accounts_by_product:
-            accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product()
+        accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product(at_date)
 
         qty_variation_by_product = defaultdict(float)
         if at_date:
@@ -1282,10 +1281,9 @@ class ResCompany(models.Model):
             value_by_account[account] += qty * product.standard_price
         return value_by_account
 
-    def get_inventory_accounting_value(self, accounts_by_product=None, at_date=None):
+    def get_inventory_accounting_value(self, at_date=None):
         self.ensure_one()
-        if not accounts_by_product:
-            accounts_by_product = self._get_accounts_by_product()
+        accounts_by_product = self._get_accounts_by_product(at_date)
         stock_valuation_accounts_ids = {accounts['valuation'].id for accounts in accounts_by_product.values() if accounts['valuation']}
         stock_valuation_accounts = self.env['account.account'].browse(stock_valuation_accounts_ids)
         domain = Domain([
@@ -1299,13 +1297,12 @@ class ResCompany(models.Model):
 
     def _action_close_stock_valuation(self, at_date=None):
         aml_vals_list = self._get_extra_closing_aml_vals(at_date)
-        accounts_by_product = self._get_accounts_by_product()
 
-        vals_list = self._get_stock_valuation_account_vals(accounts_by_product, at_date, aml_vals_list)
+        vals_list = self._get_stock_valuation_account_vals(at_date, aml_vals_list)
         if vals_list:
             aml_vals_list += vals_list
 
-        vals_list = self._get_continental_realtime_variation_vals(accounts_by_product, at_date, aml_vals_list)
+        vals_list = self._get_continental_realtime_variation_vals(at_date, aml_vals_list)
         if vals_list:
             aml_vals_list += vals_list
         return aml_vals_list
@@ -1332,9 +1329,8 @@ class ResCompany(models.Model):
             self._get_inventory_valuation_products_domain()
         )
 
-    def _get_accounts_by_product(self, products=None):
-        if not products:
-            products = self._get_inventory_valuation_products(False)
+    def _get_accounts_by_product(self, at_date=None):
+        products = self._get_inventory_valuation_products(at_date)
 
         accounts_by_product = {}
         for product in products:
@@ -1354,19 +1350,16 @@ class ResCompany(models.Model):
             extra_balance[vals['account_id']] += vals['balance']
         return extra_balance
 
-    def _get_stock_valuation_account_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
-        amls_vals_list = []
-        if not accounts_by_product:
-            return amls_vals_list
-
+    def _get_stock_valuation_account_vals(self, at_date=None, extra_aml_vals_list=None):
         extra_balance = self._get_extra_balance(extra_aml_vals_list)
 
         if 'inventory_data' in self.env.context:
             inventory_data = self.env.context.get('inventory_data')
         else:
-            inventory_data = self.get_inventory_value(accounts_by_product, at_date)
-        accounting_data = self.get_inventory_accounting_value(accounts_by_product, at_date)
+            inventory_data = self.get_inventory_value(at_date)
+        accounting_data = self.get_inventory_accounting_value(at_date)
 
+        amls_vals_list = []
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
             account_variation = account.account_stock_variation_id
@@ -1390,7 +1383,7 @@ class ResCompany(models.Model):
 
         return amls_vals_list
 
-    def _get_continental_realtime_variation_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
+    def _get_continental_realtime_variation_vals(self, at_date=None, extra_aml_vals_list=None):
         """ In continental perpetual the inventory variation is never posted.
         This method compute the variation for a period and post it.
         """
@@ -1399,8 +1392,8 @@ class ResCompany(models.Model):
         fiscal_year_date_from = self.compute_fiscalyear_dates(fields.Date.context_today(self))['date_from']
 
         amls_vals_list = []
-        accounting_data_today = self.get_inventory_accounting_value(accounts_by_product)
-        accounting_data_last_period = self.get_inventory_accounting_value(accounts_by_product, at_date=fiscal_year_date_from)
+        accounting_data_today = self.get_inventory_accounting_value()
+        accounting_data_last_period = self.get_inventory_accounting_value(at_date=fiscal_year_date_from)
 
         accounts = [
             account for account in accounting_data_today.keys() | accounting_data_last_period.keys()

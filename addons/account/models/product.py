@@ -123,9 +123,18 @@ class ProductTemplate(models.Model):
     )
 
     def _get_product_accounts(self):
+        # Cached for the transaction: this is called once per product for every product involved
+        # in a valuation report/closing, and doesn't account for account/category changes made
+        # within the same transaction.
+        cache = self.env.cr.cache.setdefault('account_product_accounts', {})
+        key = (self.id, self.env.company.id)
+        if key in cache:
+            # Copy: some overrides mutate the returned dict in place (e.g. `mrp_account`, `l10n_de`).
+            return dict(cache[key])
+
         stock_valuation = self._get_category_account('property_stock_valuation_account_id')\
             or (self.company_id or self.env.company).account_stock_valuation_id
-        return {
+        cache[key] = {
             'income': (
                 self.property_account_income_id
                 or self._get_category_account('property_account_income_categ_id')
@@ -137,6 +146,7 @@ class ProductTemplate(models.Model):
             ), 'stock_valuation': stock_valuation,
             'stock_variation': stock_valuation.account_stock_variation_id,
         }
+        return dict(cache[key])
 
     def _get_category_account(self, field_name):
         """
