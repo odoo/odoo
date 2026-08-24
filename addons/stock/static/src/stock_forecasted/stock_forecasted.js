@@ -3,12 +3,11 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
-import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
-import { ForecastedProductVariantFilter } from "./forecasted_product_variant_filter";
 import { Component, markup, onWillStart, proxy, useProps } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
@@ -16,9 +15,8 @@ export class StockForecasted extends Component {
     static template = "stock.Forecasted";
     static components = {
         ControlPanel,
+        Dropdown,
         ForecastedButtons,
-        ForecastedWarehouseFilter,
-        ForecastedProductVariantFilter,
         ForecastedHeader,
         View,
         ForecastedDetails,
@@ -30,14 +28,12 @@ export class StockForecasted extends Component {
 
         this.context = proxy(this.props.action.context);
         this.productId = this.context.active_id;
-        this.resModel = this.variantId ? "product.product" : this.context.active_model;
+        this.resModel = this.context.active_model;
         this.title = this.props.action.name || _t("Forecasted Report");
         if(!this.context.active_id){
             this.context.active_id = this.props.action.params.active_id;
             this.reloadReport();
         }
-        this.warehouses = proxy([]);
-        this.variants = proxy([]);
 
         onWillStart(this._getReportValues);
     }
@@ -46,13 +42,9 @@ export class StockForecasted extends Component {
         await this._getResModel();
         const isTemplate = !this.resModel || this.resModel === 'product.template';
         this.reportModelName = `stock.forecasted_product_${isTemplate ? "template" : "product"}`;
-        await this._loadWarehouses();
-        if (this.context.has_variants) {
-            await this._loadVariants();
-        }
         const reportValues = await this.orm.call(this.reportModelName, "get_report_values", [], {
             context: this.context,
-            docids: [this.variantId || this.productId],
+            docids: [this.productId],
         });
         this.docs = {
             ...reportValues.docs,
@@ -85,47 +77,12 @@ export class StockForecasted extends Component {
         }
     }
 
-    async _loadWarehouses() {
-        const warehouses = await this.orm.searchRead("stock.warehouse", [], ["id", "name"]);
-        this.warehouses =
-            warehouses.length > 1
-                ? [{ id: 0, name: _t("All Warehouses") }, ...warehouses]
-                : warehouses;
-
-        // If no warehouse is selected by the user, set a default.
-        if (this.warehouseId === undefined) {
-            this.updateWarehouse(this.warehouses[0].id);
-        }
+    updateWarehouse(id) {
+        this.context.warehouse_id = id
     }
 
-    async _loadVariants() {
-        const variants = await this.orm.searchRead(
-            "product.product",
-            [["product_tmpl_id", "=", this.productId]],
-            ["id", "display_name"]
-        );
-        this.variants = [{ id: 0, display_name: _t("All Variants") }, ...variants];
-
-        // If no variant is selected by the user, set a default.
-        if (this.variantId === undefined) {
-            this.updateVariant(this.variants[0].id);
-        }
-    }
-
-    async updateWarehouse(id) {
-        const hasPreviousValue = this.warehouseId !== undefined;
-        this.context.warehouse_id = id;
-        if (hasPreviousValue) {
-            await this.reloadReport();
-        }
-    }
-
-    async updateVariant(id) {
-        const hasPreviousValue = this.variantId !== undefined;
+    updateVariant(id) {
         this.context.variant_id = id;
-        if (hasPreviousValue) {
-            await this.reloadReport();
-        }
     }
 
     async reloadReport() {
@@ -141,33 +98,92 @@ export class StockForecasted extends Component {
     }
 
     get warehouseId() {
-        return this.context.warehouse_id;
+        return this.context.warehouse_id || 0;
     }
 
     get variantId() {
-        return this.context.variant_id;
+        return this.context.variant_id || 0;
     }
 
     get selectedWarehouseIds() {
         return this.warehouseId === 0
-            ? this.warehouses.filter(({ id }) => id > 0).map(({ id }) => id)
+            ? this.docs.warehouses.map(({ id }) => id)
             : [this.warehouseId];
+    }
+
+    get warehousesItems() {
+        return [
+            { id: 0, display_name: "All Warehouses" },
+            ...this.docs.warehouses,
+        ].map((warehouse) => ({
+            id: warehouse.id,
+            label: warehouse.display_name,
+            class: {selected: warehouse.id === this.warehouseId},
+            onSelected: () => this.updateWarehouse(warehouse.id),
+        }));
+    }
+
+    get variantItems() {
+        return [
+            { id: 0, display_name: _t("All Variants") },
+            ...this.docs.product_variants,
+        ].map((variant) => ({
+            id: variant.id,
+            label: variant.display_name,
+            class: {selected: variant.id === this.variantId},
+            onSelected: () => this.updateVariant(variant.id),
+        }));
+    }
+
+    get activeWarehouseName() {
+        return this.warehouseId === 0
+            ? _t("All Warehouses")
+            : this.docs.warehouses.find(
+                (warehouse) =>
+                    warehouse.id === this.warehouseId
+            )?.display_name;
+    }
+
+    get activeVariantName() {
+        return this.variantId === 0
+            ? _t("All Variants")
+            : this.docs.product_variants.find(
+                (variant) => variant.id === this.variantId
+            )?.display_name;
+    }
+
+    get filteredDocs() {
+        const { variant_id: variant, warehouse_id: warehouse } = this.context;
+
+        if (!variant && !warehouse) {
+            return this.docs;
+        }
+        const filteredDocs = {
+            ...this.docs,
+            lines: this.docs.lines.filter((l) => (!variant || l.product.id === variant) && (!warehouse || l.warehouse_id === warehouse)),
+            product: Object.fromEntries(
+                Object.entries(this.docs.product).filter(([key]) => {
+                    const[productId, warehouseId] = key.split("_").map(Number);
+                    return (
+                        (!variant || productId === variant) &&
+                        (!warehouse || warehouseId === warehouse)
+                    );
+                })
+            ),
+            multiple_product: !variant,
+            multiple_warehouses: !warehouse,
+            warehouse_ids: warehouse ? [warehouse] : this.docs.warehouse_ids,
+            product_variants_ids : variant ? [variant] : this.docs.product_variants_ids,
+        };
+        return filteredDocs;
     }
 
     get graphDomain() {
         const domain = [
             ["state", "=", "forecast"],
-            ["warehouse_id", "in", this.selectedWarehouseIds],
+            ["warehouse_id", "in", this.filteredDocs.warehouse_ids],
+            ["product_id", "in", this.filteredDocs.product_variants_ids],
         ];
-        if (this.resModel === "product.template") {
-            domain.push(["product_tmpl_id", "=", this.productId]);
-        } else if (this.resModel === "product.product") {
-            domain.push([
-                "product_id",
-                "=",
-                this.context.active_model === "product.template" ? this.variantId : this.productId,
-            ]);
-        }
         return domain;
     }
 

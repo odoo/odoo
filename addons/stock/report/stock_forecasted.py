@@ -104,10 +104,10 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 leadtime = rule._get_lead_days(product)
                 if not leadtime:
                     leadtime = [{'total_delay': 0}, {}]
-            res['product'][f'{product.id}_{warehouse.id}']['leadtime'] = {
-                'total_delay': leadtime[0].get('total_delay', 0),
-                'details': leadtime[1],
-            }
+                res['product'][f'{product.id}_{warehouse.id}']['leadtime'] = {
+                    'total_delay': leadtime[0].get('total_delay', 0),
+                    'details': leadtime[1],
+                }
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         # Get the products we're working, fill the rendering context with some of their attributes.
@@ -115,22 +115,19 @@ class StockForecasted_Product_Product(models.AbstractModel):
         if product_template_ids:
             products = self.env['product.template'].browse(product_template_ids)
             res.update({
-                'product_templates' : products.read(fields=['id', 'display_name']),
-                'product_templates_ids' : products.ids,
-                'product_variants' : [{
-                        'id' : pv.id,
-                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
-                    } for pv in products.product_variant_ids],
-                'product_variants_ids' : products.product_variant_ids.ids,
-                'multiple_product' : len(products.product_variant_ids) > 1,
+                'product_templates': products.read(fields=['id', 'display_name']),
+                'product_templates_ids': products.ids,
+                'product_variants': products.product_variant_ids.read(fields=['id', 'display_name']),
+                'product_variants_ids': products.product_variant_ids.ids,
+                'multiple_product': len(products.product_variant_ids) > 1,
             })
         elif product_ids:
             products = self.env['product.product'].browse(product_ids)
             res.update({
-                'product_templates' : False,
-                'product_variants' : products.read(fields=['id', 'display_name']),
-                'product_variants_ids' : products.ids,
-                'multiple_product' : len(products) > 1,
+                'product_templates': False,
+                'product_variants': products.read(fields=['id', 'display_name']),
+                'product_variants_ids': products.ids,
+                'multiple_product': len(products) > 1,
             })
 
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
@@ -166,29 +163,36 @@ class StockForecasted_Product_Product(models.AbstractModel):
         }
 
     def _get_warehouses(self):
-        if warehouse_id := self.env.context.get('warehouse_id'):
-            return self.env['stock.warehouse'].browse(warehouse_id)
-        else:
-            return self.env['stock.warehouse'].search_fetch([('company_id', 'in', self.env.companies.ids)], ['lot_stock_id', 'view_location_id'])
+        return self.env['stock.warehouse'].search_fetch([('company_id', 'in', self.env.companies.ids)], ['lot_stock_id', 'view_location_id'])
 
     def _get_report_data(self, product_template_ids=False, product_ids=False):
         assert product_template_ids or product_ids
         res = {}
 
         warehouses = self._get_warehouses()
+        res["warehouses"] = warehouses.read(fields=["id", "display_name"])
+        res["warehouse_ids"] = warehouses.ids
         res['multiple_warehouses'] = len(warehouses) > 1
 
-        wh_location_ids = self.env['stock.location'].search_fetch([('id', 'child_of', warehouses.view_location_id.ids)], ['warehouse_id'])
-        warehouse_by_location = {
-            location.id: location.warehouse_id.id
-            for location in wh_location_ids
-        }
+        wh_locations = self.env['stock.location'].search_fetch([('id', 'child_of', warehouses.view_location_id.ids)], ['warehouse_id'])
 
         # any quantities in this location will be considered free stock, others are free stock in transit
-        wh_stock_locations = warehouses.lot_stock_id
-        res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids.ids))
+        lines = []
+        for warehouse in warehouses:
+            warehouse_location_ids = wh_locations.filtered(
+                lambda location: location.warehouse_id == warehouse
+            ).ids
 
-        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids.ids, wh_stock_locations, warehouse_by_location)
+            lines += self._get_report_lines(
+                product_template_ids,
+                product_ids,
+                warehouse_location_ids,
+                warehouse.lot_stock_id,
+                {location_id: warehouse.id for location_id in warehouse_location_ids},
+            )
+        res.update(self._get_report_header(product_template_ids, product_ids, wh_locations.ids))
+
+        res['lines'] = lines
         res['user_can_edit_pickings'] = self.env.user.has_group('stock.group_stock_user')
         return res
 

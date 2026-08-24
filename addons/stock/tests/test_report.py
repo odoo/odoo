@@ -45,20 +45,31 @@ class TestReportsCommon(TransactionCase):
         })
         cls.allocation_report = cls.env['stock.allocation.report']
 
-    def get_report_forecast(self, product_template_ids=False, product_variant_ids=False, context=False):
+    def get_report_forecast(self, product_template_ids=False, product_variant_ids=False, context={}):
         if product_template_ids:
             report = self.env['stock.forecasted_product_template']
             product_ids = product_template_ids
         else:
             report = self.env['stock.forecasted_product_product']
             product_ids = product_variant_ids
-        report = report.with_context({
-            "warehouse_id": self.env.ref("stock.warehouse0").id,
-            **(context or {}),
-        })
+        if context:
+            report = report.with_context(context)
+        warehouse_id = context.get(
+            'warehouse_id',
+            self.env.ref('stock.warehouse0').id,
+        )
         report_values = report.get_report_values(docids=product_ids)
         docs = report_values['docs']
-        lines = docs['lines']
+        lines = [
+            line for line in docs['lines']
+            if line['warehouse_id'] == warehouse_id
+        ]
+
+        docs['product'] = {
+            key: value
+            for key, value in docs['product'].items()
+            if int(key.rsplit('_', 1)[1]) == warehouse_id
+        }
         return report_values, docs, lines
 
     def sum_dicts(self, dicts, key):

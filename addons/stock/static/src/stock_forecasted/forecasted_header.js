@@ -6,7 +6,7 @@ export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
     props = useProps({
         docs: t.object(),
-        openView: t.function, selectedWarehouseIds: Array(),
+        openView: t.function(),
     });
 
     setup(){
@@ -21,7 +21,7 @@ export class ForecastedHeader extends Component {
         const action = await this.orm.call('product.product', 'action_open_quants', [productIds]);
         action.domain = [
             ...(action.domain || []),
-            ["warehouse_id", "in", this.props.selectedWarehouseIds],
+            ["warehouse_id", "in", this.props.docs.warehouse_ids],
         ];
         if (action.help) {
             action.help = markup(action.help);
@@ -37,7 +37,7 @@ export class ForecastedHeader extends Component {
         action.domain = [
             ["product_id", "in", this.props.docs.product_variants_ids],
             ["state", "not in", ["draft", "done", "cancel"]],
-            ["picking_type_id.warehouse_id", "in", this.props.selectedWarehouseIds],
+            ["picking_type_id.warehouse_id", "in", this.props.docs.warehouse_ids],
         ];
         if (action.help) {
             action.help = markup(action.help);
