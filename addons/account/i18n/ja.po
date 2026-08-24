@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-14 08:06+0000\n"
+"PO-Revision-Date: 2026-08-24 03:12+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/account/"
 "ja/>\n"
@@ -188,7 +188,7 @@ msgstr "%(label)s : %(currency_amount)s"
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr "%(label)s : %(currency_amount)s (ドラフト)"
+msgstr "%(label)s : %(currency_amount)s (下書き)"
 
 #. module: account
 #. odoo-python
@@ -1379,8 +1379,7 @@ msgstr "<span class=\"text-warning\">中リスク</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"name or name_placeholder or quick_edit_mode\">ドラフト</"
-"span>"
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">下書き</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1531,7 +1530,7 @@ msgstr "<span>値引率％</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span>Draft</span>"
-msgstr "<span>ドラフト</span>"
+msgstr "<span>下書き</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -3131,8 +3130,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"勘定科目: auto_postを有効にし、記帳日を「今日まで」と設定して、仕訳ドラフトを"
-"記入します"
+"勘定科目: auto_postを有効にし、記帳日を「今日まで」と設定して、仕訳下書きを記"
+"入します"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_accounting
@@ -7976,26 +7975,26 @@ msgstr "この勘定科目で記帳された前受金は、税務申告の締め
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Draft"
-msgstr "ドラフト"
+msgstr "下書き"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr "ドラフト (%(currency_amount)s)"
+msgstr "下書き (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Bill"
-msgstr "ドラフト仕入先請求書"
+msgstr "下書き仕入先請求書"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Credit Note"
-msgstr "クレジットノート ドラフト"
+msgstr "クレジットノート 下書き"
 
 #. module: account
 #. odoo-python
@@ -8003,14 +8002,14 @@ msgstr "クレジットノート ドラフト"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
 msgid "Draft Entries"
-msgstr "ドラフト仕訳"
+msgstr "下書き仕訳"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
-msgstr "ドラフト仕訳"
+msgstr "下書き仕訳"
 
 #. module: account
 #. odoo-python
@@ -8029,35 +8028,35 @@ msgstr "請求書(下書き)"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Draft Payment"
-msgstr "ドラフトの支払"
+msgstr "下書きの支払"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr "ドラフト仮クレジットノート"
+msgstr "下書き仮クレジットノート"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Invoice"
-msgstr "ドラフト仮請求書"
+msgstr "下書き仮請求書"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Purchase Receipt"
-msgstr "仕入先領収書(ドラフト)"
+msgstr "仕入先領収書(下書き)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Sales Receipt"
-msgstr "売上領収書(ドラフト)"
+msgstr "売上領収書(下書き)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Vendor Credit Note"
-msgstr "ドラフト仕入先クレジットノート"
+msgstr "下書き仕入先クレジットノート"
 
 #. module: account
 #. odoo-javascript
@@ -11049,8 +11048,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
-"最終ロック日以降のシーケンス番号の仕入先請求書のキャンセルまたは削除された"
-"ドラフトによる不正。"
+"最終ロック日以降のシーケンス番号の仕入先請求書のキャンセルまたは削除された下"
+"書きによる不正。"
 
 #. module: account
 #. odoo-python
@@ -11059,8 +11058,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
-"最終ロック日以降のシーケンス番号の顧客請求書の、キャンセルまたは削除された"
-"ドラフトによる不正。"
+"最終ロック日以降のシーケンス番号の顧客請求書の、キャンセルまたは削除された下"
+"書きによる不正。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -11159,7 +11158,7 @@ msgstr "返金です"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__is_register_payment_on_draft
 msgid "Is Register Payment On Draft"
-msgstr "ドラフトでの支払登録か"
+msgstr "下書きでの支払登録か"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
@@ -13318,7 +13317,7 @@ msgstr "管理者のみがチャートのテンプレートをインストール
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only draft journal entries can be cancelled."
-msgstr "ドラフトの記帳仕訳のみキャンセルできます。"
+msgstr "下書きの記帳仕訳のみキャンセルできます。"
 
 #. module: account
 #. odoo-python
@@ -13336,7 +13335,7 @@ msgstr "請求ごとではなく、取引先（銀行）ごとに支払が作成
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr "記帳済/キャンセル済の記帳のみドラフトにリセットできます。"
+msgstr "記帳済/キャンセル済の記帳のみ下書きにリセットできます。"
 
 #. module: account
 #. odoo-python
@@ -15346,7 +15345,7 @@ msgstr "請求書の日付に基づいて為替レートをデフォルトにリ
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset to Draft"
-msgstr "ドラフトにリセット"
+msgstr "下書きにリセット"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -16492,7 +16491,7 @@ msgstr "価格を表示"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
 #: model:ir.model.fields,field_description:account.field_account_move__show_reset_to_draft_button
 msgid "Show Reset To Draft Button"
-msgstr "ドラフトボタンにリセットを表示"
+msgstr "下書きボタンにリセットを表示"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_taxable_supply_date
@@ -16527,7 +16526,7 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show draft entries"
-msgstr "ドラフト仕訳を表示"
+msgstr "下書き仕訳を表示"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -18071,7 +18070,7 @@ msgstr "請求書を生成した文書。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr "仕訳%(name)s (id %(id)s) はドラフトである必要があります。"
+msgstr "仕訳%(name)s (id %(id)s) は下書きである必要があります。"
 
 #. module: account
 #. odoo-python
@@ -18673,7 +18672,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "There are no journal items in the draft state to post."
-msgstr "記入できるドラフトステータスの仕訳明細はありません。"
+msgstr "記入できる下書きステータスの仕訳明細はありません。"
 
 #. module: account
 #. odoo-python
@@ -18685,7 +18684,7 @@ msgstr "支払手続き中です。二重払いにならないよう注意して
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
-msgstr "選択した日付より前のドラフト仕訳がまだ残っています。"
+msgstr "選択した日付より前の下書き仕訳がまだ残っています。"
 
 #. module: account
 #. odoo-python
@@ -18694,8 +18693,8 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
-"確定ロックしたい期間に、まだドラフト仕訳が残っています。記帳するか、削除して"
-"下さい。"
+"確定ロックしたい期間に、まだ下書き仕訳が残っています。記帳するか、削除して下"
+"さい。"
 
 #. module: account
 #. odoo-python
@@ -20120,7 +20119,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
 msgid "Values that created the draft cash-basis entry"
-msgstr "ドラフトの現金主義仕訳を作成した値"
+msgstr "下書きの現金主義仕訳を作成した値"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -20250,7 +20249,7 @@ msgid ""
 msgstr ""
 "仕入先請求書は、購買オーダまたは入荷伝票に\n"
 "                基づいて事前に作成することができます。これにより、\n"
-"                Odoo内のドラフトドキュメントに従って\n"
+"                Odoo内の下書きドキュメントに従って\n"
 "仕入先から受け取る請求書を、\n"
 "                管理することができます。"
 
@@ -20521,12 +20520,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"ドラフトの仕訳を含む仕訳をアーカイブすることはできません。\n"
+"下書きの仕訳を含む仕訳をアーカイブすることはできません。\n"
 "\n"
 "続けるには：\n"
 "1 /この仕訳帳フォームの右上のボタン「仕訳」をクリックします\n"
-"2 /次に「ドラフト」仕訳でフィルターしてください\n"
-"3 /ドラフトの仕訳をすべて選択し、アクションメニューから投稿または削除します"
+"2 /次に「下書き」仕訳でフィルターしてください\n"
+"3 /下書きの仕訳をすべて選択し、アクションメニューから投稿または削除します"
 
 #. module: account
 #. odoo-python
@@ -20665,8 +20664,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"計上した仕訳明細を削除することはできません。仕訳をドラフトに戻してから削除し"
-"て下さい。"
+"計上した仕訳明細を削除することはできません。仕訳を下書きに戻してから削除して"
+"下さい。"
 
 #. module: account
 #. odoo-python
@@ -20733,8 +20732,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"仕訳をドラフトにリセットすることはできません。キャンセルを申請する必要があり"
-"ます。"
+"仕訳を下書きにリセットすることはできません。キャンセルを申請する必要がありま"
+"す。"
 
 #. module: account
 #. odoo-python
@@ -20806,8 +20805,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
-"投稿済ステータスの移動を作成することはできません。ドラフトを作成して、後で投"
-"稿してください。"
+"投稿済ステータスの移動を作成することはできません。下書きを作成して、後で投稿"
+"してください。"
 
 #. module: account
 #. odoo-python
@@ -20970,8 +20969,8 @@ msgid ""
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
 "開始仕訳(%s)がすでに計上されている場合は、 \"openning_balance\"をインポートす"
-"ることはできません。 どうしても勘定科目開始残高を変更したい場合は、仕訳を"
-"ドラフトにリセットして下さい。"
+"ることはできません。 どうしても勘定科目開始残高を変更したい場合は、仕訳を下書"
+"きにリセットして下さい。"
 
 #. module: account
 #. odoo-python
@@ -21009,7 +21008,7 @@ msgid ""
 "reset the journal entry to draft to do so."
 msgstr ""
 "転記された仕訳に関連する税金を変更することはできません。変更するには、仕訳を"
-"ドラフトにリセットする必要があります。"
+"下書きにリセットする必要があります。"
 
 #. module: account
 #. odoo-python
@@ -21094,19 +21093,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr "ロック済の仕訳をドラフトに戻すことはできません。"
+msgstr "ロック済の仕訳を下書きに戻すことはできません。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "現金基準税仕訳帳をドラフトに戻すことはできません。"
+msgstr "現金基準税仕訳帳を下書きに戻すことはできません。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr "為替差仕訳をドラフトに戻すことはできません。"
+msgstr "為替差仕訳を下書きに戻すことはできません。"
 
 #. module: account
 #. odoo-python
