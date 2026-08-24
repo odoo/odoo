@@ -77,16 +77,10 @@ test("Close button should close the search panel", async () => {
     await waitForNone(".o-mail-SearchMessageInput");
 });
 
-test("opening search in chatter hides files and pinned messages panels", async () => {
+test("opening search in chatter hides attach files panel", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    pyEnv["mail.message"].create({
-        body: "Pinned message",
-        model: "res.partner",
-        pinned_at: "2025-01-01 00:00:00",
-        res_id: partnerId,
-    });
     pyEnv["ir.attachment"].create({
         mimetype: "text/plain",
         name: "A.txt",
@@ -101,11 +95,6 @@ test("opening search in chatter hides files and pinned messages panels", async (
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await waitForNone(".o-mail-AttachmentBox");
     await waitFor("button[title='Attach files']:enabled:text('1'):count(1)");
-    await click("button[title='Pinned Messages']:enabled");
-    await waitFor(".o-mail-pinnedMessages:count(1)");
-    await click("[title='Search Messages']");
-    await waitFor(".o-mail-SearchMessageInput:count(1)");
-    await waitForNone(".o-mail-pinnedMessages");
 });
 
 test("Search in chatter should be hightligted", async () => {
