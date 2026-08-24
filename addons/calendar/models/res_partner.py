@@ -105,9 +105,12 @@ class ResPartner(models.Model):
 
     def _get_busy_calendar_events(self, start_datetime, end_datetime):
         """Get a mapping from partner id to attended events intersecting with the time interval.
+        The events are retrieved as sudo-ed recordsets to ensure we can read the private 'partner_ids' field.
 
         :rtype: dict[int, <calendar.event>]
         """
+        # Sudo is used to ensure that we get the 'partner_ids' field even on private events, otherwise
+        # they would be ignored in the loop below.
         events = self.env['calendar.event'].search([
             ('stop', '>=', start_datetime.replace(tzinfo=None)),
             ('start', '<=', end_datetime.replace(tzinfo=None)),
@@ -116,7 +119,7 @@ class ResPartner(models.Model):
         ])
 
         event_by_partner_id = defaultdict(lambda: self.env['calendar.event'])
-        for event in events:
+        for event in events.sudo():
             for partner in event.partner_ids:
                 event_by_partner_id[partner.id] |= event
         return dict(event_by_partner_id)
