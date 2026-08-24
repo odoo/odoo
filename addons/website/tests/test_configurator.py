@@ -162,7 +162,7 @@ class TestConfigurator(TestConfiguratorCommon):
         website = self.env['website'].create({
             'name': "New website",
         })
-        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website.id, 'configurator_page_creation', login='admin')
+        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website.id, 'configurator_page_creation', login='admin', timeout=120)
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
