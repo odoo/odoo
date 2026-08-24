@@ -33,7 +33,6 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             'email': 'pos-company@example.com',
             'l10n_fr_pdp_annuaire_start_date': '2025-01-01',
             'l10n_fr_pdp_periodicity': 'normal_monthly',
-            'l10n_fr_pdp_pilot_phase': True,
             'l10n_fr_pdp_send_to_ppf': True,
             'name': 'PDP POS Company',
             'company_registry': '34057796400024',
