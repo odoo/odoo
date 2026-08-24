@@ -1965,3 +1965,39 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
     await contains(editor.editable.querySelector("i.fa-hashtag"), { count: 0 });
     await contains(editor.editable, { textContent: "" });
 });
+
+test("discard stale mention when replacing it with a longer partner mention", async () => {
+    const pyEnv = await startServer();
+    const johnId = pyEnv["res.partner"].create({
+        email: "john@odoo.com",
+        name: "John",
+    });
+    const johnDoeId = pyEnv["res.partner"].create({
+        email: "john.doe@odoo.com",
+        name: "John Doe",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: johnId }),
+            Command.create({ partner_id: johnDoeId }),
+        ],
+    });
+
+    await start();
+    await openDiscuss(channelId);
+
+    await insertText(".o-mail-Composer-input", "@John");
+    await click(".o-mail-Composer-suggestion strong", { text: "John" });
+    await contains(".o-mail-Composer-input", { value: "@John " });
+    // Continue typing to replace the initially selected mention.
+    await press("Backspace");
+    await insertText(".o-mail-Composer-input", " Doe");
+    await click(".o-mail-Composer-suggestion strong", { text: "John Doe" });
+    await contains(".o-mail-Composer-input", { value: "@John Doe " });
+
+    await press("Enter");
+
+    await contains(".o-mail-Message a", { text: "@John Doe" });
+});
