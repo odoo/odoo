@@ -1220,6 +1220,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             ),
             'vat_label': request.env._("VAT"),
+            'company_registry_label': self._get_company_registry_label(country_sudo),
         }
 
     @route(
@@ -2154,6 +2155,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         field_names |= set(self._get_mandatory_fields())
         return field_names
 
+    def _get_company_registry_label(self, country_sudo):
+        """ Return the label of the company registry field for the given country.
+
+        :param res.country country_sudo: The country to use to get the label.
+        :return: The label to display, or an empty string to hide the field.
+        :rtype: str
+        """
+        return {'FR': request.env._("SIREN")}.get(country_sudo.code, '')
+
     def _get_mandatory_address_fields(self, country_sudo):
         """ Return the set of common mandatory address fields.
 
@@ -2268,6 +2278,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
             'phone_code': country.phone_code,
             'required_fields': list(required_fields),
+            'company_registry_label': self._get_company_registry_label(country),
         }
 
     # --------------------------------------------------------------------------

@@ -2623,6 +2623,12 @@
                                                 </t>
                                             </select>
                                         </div>
+                                        <div t-if="website._display_partner_b2b_fields() and show_vat"
+                                             id="div_company_registry" class="col-lg-6 mb-2"
+                                             t-att-style="not company_registry_label and 'display: none'">
+                                            <label class="col-form-label label-optional" for="o_company_registry" t-out="company_registry_label"/>
+                                            <input id="o_company_registry" type="text" name="company_registry" class="form-control" t-att-value="partner_sudo.company_registry"/>
+                                        </div>
                                     </div>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="address_type" t-att-value="address_type"/>
