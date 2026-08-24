@@ -96,6 +96,23 @@ export class AccountLabelTextField extends ListTextField {
         return true;
     }
 
+    get labelParts() {
+        const value = this.props.record.data[this.props.name];
+
+        if (!this.product) {
+            return {
+                productName: "",
+                description: value,
+            };
+        }
+
+        const [productName, ...descriptionLines] = value.split("\n");
+        return {
+            productName: productName,
+            description: descriptionLines.join("\n"),
+        };
+    }
+
     async onMany2XUpdate(records) {
         const rec = records?.[0];
         if (!rec) {
