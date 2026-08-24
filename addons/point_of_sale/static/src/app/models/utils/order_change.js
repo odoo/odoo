@@ -29,7 +29,7 @@ export const getStrNotes = (note) => {
     return "";
 };
 
-export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models) => {
+export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models, opts = {}) => {
     const matchesCategories = (change) => {
         const product = models["product.product"].get(change["product_id"]);
         const categoryIds = product.parentPosCategIds;
@@ -55,6 +55,13 @@ export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, mod
         );
     };
 
+    if (opts.forcePrint) {
+        return {
+            new: currentOrderChange["new"],
+            cancelled: currentOrderChange["cancelled"],
+            noteUpdate: currentOrderChange["noteUpdate"],
+        };
+    }
     return {
         new: filterChanges(currentOrderChange["new"]),
         cancelled: filterChanges(currentOrderChange["cancelled"]),
