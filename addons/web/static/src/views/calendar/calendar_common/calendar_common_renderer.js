@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -14,7 +13,7 @@ import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component, signal, t, untrack, useProps } from "@odoo/owl";
+import { Component, signal, t, useOnChange, useProps } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -91,12 +90,15 @@ export class CalendarCommonRenderer extends Component {
             trailing: true,
         });
         const fullCalendarResizeObserver = new ResizeObserver(fullCalendarRenderDebounced);
-        useLayoutEffect(
+        useOnChange(
+            () => [this.ref()],
             (el) => {
+                if (!el) {
+                    return;
+                }
                 fullCalendarResizeObserver.observe(el);
                 return () => fullCalendarResizeObserver.unobserve(el);
-            },
-            () => [untrack(this.ref)]
+            }
         );
 
         useSquareSelection(this.ref);
@@ -524,7 +526,9 @@ export class CalendarCommonRenderer extends Component {
         // when rendering months, FullCalendar uses a date w/out tz
         // so use UTC instead of local tz when converting to DateTime
         const options = scale === "month" ? { zone: "UTC" } : {};
-        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date, options).plus({ hour: 1 });
+        const { weekdayShort, weekdayLong, day } = DateTime.fromJSDate(date, options).plus({
+            hour: 1,
+        });
         return {
             weekdayShort,
             weekdayLong,

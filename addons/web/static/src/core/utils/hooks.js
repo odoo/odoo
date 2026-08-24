@@ -1,4 +1,14 @@
-import { onMounted, onPatched, onWillUnmount, proxy, t, toRaw, untrack, useScope } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    proxy,
+    t,
+    toRaw,
+    untrack,
+    useOnChange,
+    useScope,
+} from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { useEnv, useLayoutEffect } from "@web/owl2/utils";
@@ -187,7 +197,8 @@ export function useSpellCheck({ ref } = {}) {
     function toggleSpellcheck(ev) {
         ev.target.spellcheck = document.activeElement === ev.target;
     }
-    useLayoutEffect(
+    useOnChange(
+        () => [ref()],
         (el) => {
             if (el) {
                 const inputs =
@@ -208,8 +219,7 @@ export function useSpellCheck({ ref } = {}) {
                     input.removeEventListener("blur", toggleSpellcheck);
                 });
             };
-        },
-        () => [untrack(ref)]
+        }
     );
 }
 
