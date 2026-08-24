@@ -1406,7 +1406,6 @@ class StockPicking(models.Model):
 
     def _create_return(self):
         self.ensure_one()
-        self.move_ids.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
         new_picking = self.copy(self._prepare_return_picking_default_values())
 
         new_picking.message_post_with_source(
