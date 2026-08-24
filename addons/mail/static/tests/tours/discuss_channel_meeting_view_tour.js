@@ -77,11 +77,12 @@ function getMeetingViewTourSteps({ isPublicPage = false } = {}) {
     ];
     if (isPublicPage) {
         steps.unshift(
-            { trigger: "input[name='guest_name']", run: "edit Guest" },
             {
-                trigger: ".modal .btn-close",
+                trigger:
+                    ".modal:has(:text('Do you want people to see you in the meeting?')) .btn-close",
                 run: "click",
             },
+            { trigger: "input[name='guest_name']", run: "edit Guest" },
             { trigger: "[title='Join Channel']", run: "click" },
             {
                 trigger: ".o-mail-Meeting",

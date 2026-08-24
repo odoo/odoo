@@ -1,11 +1,11 @@
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 
 export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
@@ -16,7 +16,7 @@ export class WelcomePage extends Component {
     setup() {
         super.setup();
         this.props = useProps({ proceed: types.function([]).optional() });
-        this.description = signal();
+        this.description = signal.ref();
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
@@ -27,10 +27,10 @@ export class WelcomePage extends Component {
             activateMicrophone: 0,
             hasMicrophone: undefined,
             hasCamera: undefined,
-            isDescriptionLong: false,
             isDescriptionUnfolded: false,
         });
-        useLayoutEffect(
+        useOnChange(
+            () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission],
             (showCallPreview, cameraPermission, microphonePermission) => {
                 if (!showCallPreview) {
                     return;
@@ -45,19 +45,16 @@ export class WelcomePage extends Component {
                     this.state.activateMicrophone++;
                 }
                 this.cameraPermissionOnMountChecked = Boolean(cameraPermission);
-            },
-            () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission]
+            }
         );
-        useLayoutEffect(
-            (isDescriptionUnfolded, description) => {
-                const descriptionEl = this.description();
-                this.state.isDescriptionLong =
-                    !isDescriptionUnfolded &&
-                    description &&
-                    descriptionEl?.scrollWidth > descriptionEl?.clientWidth;
-            },
-            () => [this.state.isDescriptionUnfolded, this.channel.description]
-        );
+        this.isDescriptionLong = computed(() => {
+            const descriptionEl = this.description();
+            return Boolean(
+                !this.state.isDescriptionUnfolded &&
+                    this.channel.description &&
+                    descriptionEl?.scrollWidth > descriptionEl?.clientWidth
+            );
+        });
     }
 
     onKeydownInput(ev) {
@@ -97,10 +94,6 @@ export class WelcomePage extends Component {
 
     get showCallPreview() {
         return this.channel.default_display_mode === "video_full_screen";
-    }
-
-    get shouldShowMoreDescription() {
-        return this.state.isDescriptionLong;
     }
 
     /** @param {{ microphone?: boolean, camera?: boolean }} settings */
