@@ -61,6 +61,16 @@ test("formatLocalWeekRange", async () => {
     expect(weekRange("2027-03-01")).toBe("Week 9, Mar 1 - Mar 7 2027");
 });
 
+test("formatLocalWeekRange with different numbering system", async () => {
+    mockDate("2026-08-07T13:00:00");
+    patchWithCleanup(localization, { weekStart: 1 });
+    patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+    const weekRange = (isoDate) => formatLocalWeekRange(DateTime.fromISO(isoDate).setLocale("en"));
+
+    expect(weekRange("2026-08-07")).toBe("Week ٣٢, Aug ٣ - Aug ٩");
+    expect(weekRange("2027-03-01")).toBe("Week ٩, Mar ١ - Mar ٧ ٢٠٢٧");
+});
+
 test("formatDate/formatDateTime specs", async () => {
     patchWithCleanup(localization, {
         dateFormat: "MM/dd/yyyy",

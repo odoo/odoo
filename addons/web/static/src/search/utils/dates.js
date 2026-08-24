@@ -406,10 +406,10 @@ export function getRelativeDateLabel(referenceMoment, option, offset) {
             if (isCurrentYear(date)) {
                 return description.toString();
             }
-            return joinWithYear(description.toString(), String(date.year));
+            return joinWithYear(description.toString(), date.toFormat("yyyy"));
         }
         case "year":
-            return String(date.year);
+            return date.toFormat("yyyy");
         case "day":
         default:
             return toLocaleDateString(date);

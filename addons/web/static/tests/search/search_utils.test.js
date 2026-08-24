@@ -344,6 +344,25 @@ test("relative filter labels: the year shows up as soon as we leave the current 
     expect(label("this_year", -1)).toBe("2025");
 });
 
+test("relative filter labels: digits follow the active numbering system", () => {
+    mockDate("2026-08-07T13:00:00"); // Friday
+    patchWithCleanup(localization, { weekStart: 7 }); // Sunday
+    patchWithCleanup(luxon.Settings, { defaultNumberingSystem: "arab" });
+    const referenceMoment = luxon.DateTime.local().setLocale("en");
+    const label = (optionId, offset) =>
+        getRelativeDateLabel(referenceMoment, RELATIVE_FILTER_OPTIONS[optionId], offset);
+
+    expect(label("today", 0)).toBe("Aug ٧");
+    expect(label("this_week", 0)).toBe("Week ٣٢, Aug ٢ - Aug ٨");
+    expect(label("this_month", 0)).toBe("August");
+    expect(label("this_year", 0)).toBe("٢٠٢٦");
+
+    // and the year, wherever it shows up, uses them too
+    expect(label("this_month", 5)).toBe("January ٢٠٢٧");
+    expect(label("this_quarter", 2)).toBe("Q1 ٢٠٢٧");
+    expect(label("this_year", -1)).toBe("٢٠٢٥");
+});
+
 test("relative filter labels: quarter of another year, right to left", () => {
     mockDate("2026-08-07T13:00:00");
     patchWithCleanup(localization, { direction: "rtl" });
