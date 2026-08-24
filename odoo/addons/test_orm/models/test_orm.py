@@ -2418,3 +2418,10 @@ class TestOrmOnchangeOrderLine(models.Model):
     def _compute_subtotal(self):
         for line in self:
             line.subtotal = line.order_id.base * line.price
+
+
+class TestOrmAttachmentLink(models.Model):
+    _name = 'test_orm.attachment_link'
+    _description = 'Test ORM Attachment Link'
+
+    attachment_id = fields.Many2one('ir.attachment', ondelete='cascade')
