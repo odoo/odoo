@@ -3,7 +3,8 @@ import { useService } from "@web/core/utils/hooks";
 import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, usePlugin } from "@odoo/owl";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 export class BillGuide extends Component {
     static template = "account.BillGuide";
@@ -14,7 +15,7 @@ export class BillGuide extends Component {
     static props = ["*"];  // could contain view_widget props
 
     setup() {
-        this.lazySession = useService("lazy_session");
+        this.lazySession = usePlugin(LazySessionPlugin);
         this.action = useService("action");
         this.ui = useService("ui");
 

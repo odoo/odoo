@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -10,6 +10,7 @@ import { formatFloatTime, formatDateTime } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown, DropdownItem, AttendanceVideoStream };
@@ -18,7 +19,7 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useService("ui");
-        this.lazySession = useService("lazy_session");
+        this.lazySession = usePlugin(LazySessionPlugin);
         this.notification = useService("notification");
         this.dialogService = useService("dialog");
         this.employee = false;
