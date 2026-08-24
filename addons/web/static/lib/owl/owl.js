@@ -472,8 +472,8 @@ var owl = (() => {
     }
     return atom;
   }
-  function onReadTargetKey(target, key, atom) {
-    onReadAtom(atom ?? getTargetKeyAtom(target, key));
+  function onReadTargetKey(target, key) {
+    onReadAtom(getTargetKeyAtom(target, key));
   }
   function onWriteTargetKey(target, key) {
     const keyToAtomItem = targetToKeysToAtomItem.get(target);
@@ -484,6 +484,18 @@ var owl = (() => {
       return;
     }
     onWriteAtom(keyToAtomItem.get(key));
+  }
+  function onWriteDroppedIndices(target, newLength) {
+    const keyToAtomItem = targetToKeysToAtomItem.get(target);
+    if (!keyToAtomItem) {
+      return;
+    }
+    const droppedKeys = [...keyToAtomItem.keys()].filter(
+      (key) => typeof key === "string" && Number(key) >= newLength && String(Number(key)) === key
+    );
+    for (const key of droppedKeys) {
+      onWriteTargetKey(target, key);
+    }
   }
   var targets = /* @__PURE__ */ new WeakMap();
   var proxyCache = /* @__PURE__ */ new WeakMap();
@@ -522,7 +534,7 @@ var owl = (() => {
   function basicProxyHandler(atom) {
     return {
       get(target, key, receiver) {
-        onReadTargetKey(target, key, atom);
+        onReadTargetKey(target, key);
         const value = Reflect.get(target, key, receiver);
         if (atom || typeof value !== "object" || value === null) {
           return value;
@@ -542,36 +554,32 @@ var owl = (() => {
         const ret = Reflect.set(target, key, toRaw(value), receiver);
         const keyCreated = !hadKey && objectHasOwnProperty.call(target, key);
         const valueChanged = originalValue !== Reflect.get(target, key, receiver);
-        if (atom) {
-          if (keyCreated || valueChanged) {
-            onWriteAtom(atom);
-          }
-        } else {
-          if (keyCreated) {
+        if (keyCreated) {
+          onWriteTargetKey(target, KEYCHANGES);
+        }
+        if (key === "length" && Array.isArray(target)) {
+          onWriteTargetKey(target, key);
+          if (target.length < originalValue) {
             onWriteTargetKey(target, KEYCHANGES);
+            onWriteDroppedIndices(target, target.length);
           }
-          if (valueChanged || key === "length" && Array.isArray(target)) {
-            onWriteTargetKey(target, key);
-          }
+        } else if (valueChanged) {
+          onWriteTargetKey(target, key);
         }
         return ret;
       },
       deleteProperty(target, key) {
         const ret = Reflect.deleteProperty(target, key);
-        if (atom) {
-          onWriteAtom(atom);
-        } else {
-          onWriteTargetKey(target, KEYCHANGES);
-          onWriteTargetKey(target, key);
-        }
+        onWriteTargetKey(target, KEYCHANGES);
+        onWriteTargetKey(target, key);
         return ret;
       },
       ownKeys(target) {
-        onReadTargetKey(target, KEYCHANGES, atom);
+        onReadTargetKey(target, KEYCHANGES);
         return Reflect.ownKeys(target);
       },
       has(target, key) {
-        onReadTargetKey(target, KEYCHANGES, atom);
+        onReadTargetKey(target, KEYCHANGES);
         return Reflect.has(target, key);
       }
     };
@@ -579,26 +587,26 @@ var owl = (() => {
   function makeKeyObserver(methodName, target, atom) {
     return (key) => {
       key = toRaw(key);
-      onReadTargetKey(target, key, null);
+      onReadTargetKey(target, key);
       return possiblyReactive(target[methodName](key), atom);
     };
   }
   function makeIteratorObserver(methodName, target, atom) {
     return function* () {
-      onReadTargetKey(target, KEYCHANGES, null);
+      onReadTargetKey(target, KEYCHANGES);
       const keys = target.keys();
       for (const item of target[methodName]()) {
         const key = keys.next().value;
-        onReadTargetKey(target, key, null);
+        onReadTargetKey(target, key);
         yield possiblyReactive(item, atom);
       }
     };
   }
   function makeForEachObserver(target, atom) {
     return function forEach(forEachCb, thisArg) {
-      onReadTargetKey(target, KEYCHANGES, null);
+      onReadTargetKey(target, KEYCHANGES);
       target.forEach(function(val, key, targetObj) {
-        onReadTargetKey(target, key, null);
+        onReadTargetKey(target, key);
         forEachCb.call(
           thisArg,
           possiblyReactive(val, atom),
@@ -646,7 +654,7 @@ var owl = (() => {
       forEach: makeForEachObserver(target, atom),
       clear: makeClearNotifier(target),
       get size() {
-        onReadTargetKey(target, KEYCHANGES, null);
+        onReadTargetKey(target, KEYCHANGES);
         return target.size;
       }
     }),
@@ -662,7 +670,7 @@ var owl = (() => {
       forEach: makeForEachObserver(target, atom),
       clear: makeClearNotifier(target),
       get size() {
-        onReadTargetKey(target, KEYCHANGES, null);
+        onReadTargetKey(target, KEYCHANGES);
         return target.size;
       }
     }),
@@ -681,7 +689,7 @@ var owl = (() => {
         if (objectHasOwnProperty.call(specialHandlers, key)) {
           return specialHandlers[key];
         }
-        onReadTargetKey(target2, key, atom);
+        onReadTargetKey(target2, key);
         return possiblyReactive(target2[key], atom);
       }
     });
@@ -1741,7 +1749,7 @@ ${issueStrings}`);
   var config = useConfig;
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.46";
+  var version = "3.0.0-alpha.47";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -3157,7 +3165,7 @@ ${issueStrings}`);
     }
     firstNode() {
       const child = this.children[0];
-      return child ? child.firstNode() : void 0;
+      return child ? child.firstNode() : this.anchor;
     }
     toString() {
       return this.children.map((c) => c.toString()).join("");
@@ -3406,6 +3414,10 @@ ${issueStrings}`);
   function throwOnRender() {
     throw new OwlError("Attempted to render cancelled fiber");
   }
+  var subRootHosts = /* @__PURE__ */ new WeakMap();
+  function above(node) {
+    return node.parent || (node.status === STATUS.MOUNTED ? subRootHosts.get(node) || null : null);
+  }
   function cancelFibers(fibers) {
     let result = 0;
     for (let fiber of fibers) {
@@ -3459,11 +3471,11 @@ ${issueStrings}`);
       const scheduler = this.root.node.app.scheduler;
       if (scheduler.tasks.size > 1) {
         let prev = this.root.node;
-        let current = prev.parent;
+        let current = above(prev);
         while (current) {
           if (current.fiber) {
             let root2 = current.fiber.root;
-            if (root2.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
+            if (root2.counter === 0 && (!prev.parent || prev.parentKey in current.fiber.childrenMap)) {
               current = root2.node;
             } else {
               scheduler.delayedRenders.push(this);
@@ -3471,7 +3483,7 @@ ${issueStrings}`);
             }
           }
           prev = current;
-          current = current.parent;
+          current = above(current);
         }
       }
       const node = this.node;
@@ -4468,6 +4480,9 @@ ${issueStrings}`);
         if (subConfig.onError) {
           nodeErrorHandlers.set(node, [subConfig.onError]);
         }
+        if (subConfig.host) {
+          subRootHosts.set(node, subConfig.host);
+        }
       } catch (e) {
         error = e;
         reject(e);
@@ -4808,7 +4823,11 @@ ${issueStrings}`);
           // chain so consumer `onError` handlers still catch them. Without this,
           // sub-root errors would propagate to app._handleError and tear down
           // the whole app.
-          onError: forwardErrorToParent(portalNode)
+          onError: forwardErrorToParent(portalNode),
+          // Let the scheduler see through the sub-root boundary, so renders of
+          // the portaled content yield to in-flight ancestor renders (e.g. a
+          // t-if about to remove this Portal).
+          host: portalNode
         });
         root.mount(target);
         return tearDown;
@@ -4852,7 +4871,11 @@ ${issueStrings}`);
         pluginManager: suspenseNode.pluginManager,
         // Route errors from the sub-root back into Suspense's parent chain so
         // consumer `onError` handlers still catch descendant failures.
-        onError: forwardErrorToParent(suspenseNode)
+        onError: forwardErrorToParent(suspenseNode),
+        // Let the scheduler see through the sub-root boundary, so renders of
+        // the default slot yield to in-flight ancestor renders (e.g. a t-if
+        // about to remove this Suspense).
+        host: suspenseNode
       });
       root.prepare().then(() => this.prepared.set(true));
       if (root.prepared) {
@@ -4898,8 +4921,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-08-18T07:36:37.778Z",
-    hash: "066cd716",
+    date: "2026-08-24T09:17:57.949Z",
+    hash: "738b81a7",
     url: "https://github.com/odoo/owl"
   };
 
