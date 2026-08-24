@@ -68,14 +68,25 @@ export class SearchBarMenu extends Component {
         return this.env.searchModel.getSearchItems((item) => show.includes(item.type));
     }
 
-    /** Filter out top level items that are only shown nested. */
+    /**
+     * Filter out top level items that are only shown nested (eg. relative filters)
+     * (It was a hard and debatable design decision to model relative filters as top
+     * level items even though they are only shown nested, to avoid much refactoring)
+     */
     get displayedFilterItems() {
-        return this.filterItems.filter((item) => item.type !== "relativeFilter"); // A relative filter is modeled as top-level search item, but shown nested.
-    }
-
-    /** Get associated relative filter, that are modeled as top level items */
-    getRelativeItem(item) {
-        return this.filterItems.find((i) => i.id === item.relativeFilterId) ?? null;
+        const relativeItems = new Map();
+        const displayed = [];
+        for (const item of this.filterItems) {
+            if (item.type === "relativeFilter") {
+                relativeItems.set(item.id, item);
+            } else {
+                displayed.push(item);
+            }
+        }
+        for (const item of displayed) {
+            item.relativeItem = relativeItems.get(item.relativeFilterId) ?? null;
+        }
+        return displayed;
     }
 
     onAddCustomFilterClick() {

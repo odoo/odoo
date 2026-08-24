@@ -25,7 +25,7 @@
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
                         <t t-foreach="this.displayedFilterItems" t-as="item" t-key="item.id">
-                            <t t-set="relativeItem" t-value="this.getRelativeItem(item)"/>
+                            <t t-set="relativeItem" t-value="item.relativeItem"/>
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                                 <div class="dropdown-divider" role="separator"/>
                             </t>

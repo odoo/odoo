@@ -96,7 +96,6 @@
             </xpath>
             <xpath expr="//filter[@name='my_transfers']" position="after">
                 <filter name="scheduled_date" date="scheduled_date" string="Scheduled Date"/>
-                <filter string="Today" name="filter_today" domain="[('scheduled_date', '&gt;=', 'today'), ('scheduled_date', '&lt;', 'today +1d')]"/>
                 <filter string="Tomorrow" name="filter_tomorrow" domain="[('scheduled_date','&gt;=', 'today +1d')]" /><!-- wrong -->
                 <filter string="Next 7 Days" name="filter_next_7_days" domain="[('scheduled_date','&gt;=', 'today +7d')]"/><!-- wrong -->
             </xpath>
