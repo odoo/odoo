@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy, useProps, t } from "@odoo/owl";
+import { Component, proxy, useProps, t, usePlugin } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -7,6 +7,7 @@ import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { isValidEmail, isValidPhone } from "@point_of_sale/utils";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 export class SendReceiptPopup extends Component {
     static template = "point_of_sale.SendReceiptPopup";
@@ -20,6 +21,7 @@ export class SendReceiptPopup extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
+        this.notification = usePlugin(NotificationPlugin);
         const partner = this.order.getPartner();
         const email = partner?.invoice_emails || partner?.email || "";
         this.state = proxy({
@@ -35,6 +37,10 @@ export class SendReceiptPopup extends Component {
             destination: this.state.email,
             name: "Email",
         });
+    }
+
+    get title() {
+        return _t("Send receipt");
     }
 
     get order() {
@@ -60,7 +66,22 @@ export class SendReceiptPopup extends Component {
             });
             return Promise.reject();
         }
-        await this.pos.data.call("pos.order", action, [[this.order.id], destination]);
+
+        try {
+            await this.pos.data.call("pos.order", action, [[this.order.id], destination]);
+
+            const successMessage = this.order.is_singly_invoiced
+                ? _t("Receipt and invoice sent successfully")
+                : _t("Receipt sent successfully");
+
+            this.notification.add(successMessage, { type: "success" });
+            this.props.close();
+        } catch (error) {
+            this.notification.add(_t("Sending failed. Please try again."), {
+                type: "danger",
+            });
+            throw error;
+        }
     }
 
     get sendList() {
