@@ -50,11 +50,17 @@ function runConfiguratorFlow(industrySearchText) {
             id: "loader",
             content: "Loader should be shown",
             trigger: ".o_website_loader_container",
+        },
+        {
+            content: "Wait for the website to be built",
+            trigger: ".o_website_loader_container:not(:has([data-icon='autorenew']))",
+            timeout: 60000,
             expectUnloadPage: true,
         },
         {
             content: "Wait for the editor to load after redirect",
             trigger: ":iframe [data-view-xmlid='website.homepage']",
+            timeout: 30000,
         },
         {
             content: "Check that the editor, not translation mode, is opened",
