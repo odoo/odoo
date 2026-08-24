@@ -367,10 +367,10 @@ class HrEmployee(models.Model):
                 if not calendar:
                     full_schedule_by_employee['fully_flexible'][employee] |= interval
                     continue
-                employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
-                full_schedule_by_employee['leave'][employee] |= employee_leaves & interval
                 employee_attendances = attendance_intervals_by_cal[calendar]
                 full_schedule_by_employee['schedule'][employee]['work'] |= employee_attendances & interval
+                employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
+                full_schedule_by_employee['leave'][employee] |= employee_leaves & interval & employee_attendances
                 employee_lunches = lunch_intervals_by_cal[calendar]
                 full_schedule_by_employee['schedule'][employee]['lunch'] |= employee_lunches & interval
 
