@@ -234,7 +234,6 @@ export class ListPlugin extends Plugin {
             }
         },
         can_hold_selection_after_insertion_predicates: isListPredicate,
-        should_unwrap_edge_block_to_insert_predicates: (_, parent) => isListPredicate(parent),
         is_parent_compatible_for_insertion_predicates: (parent, blockToInsert) => {
             if (
                 isListItemElement(parent) &&
