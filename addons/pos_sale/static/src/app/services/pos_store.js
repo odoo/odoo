@@ -91,10 +91,7 @@ patch(PosStore.prototype, {
         ) {
             return convertedLine.qty_to_invoice;
         } else {
-            return (
-                convertedLine.product_uom_qty -
-                Math.max(convertedLine.qty_delivered, convertedLine.qty_invoiced)
-            );
+            return convertedLine.product_uom_qty - convertedLine.qty_invoiced;
         }
     },
     async settleSO(sale_order, orderFiscalPos) {

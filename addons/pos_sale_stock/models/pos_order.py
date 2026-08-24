@@ -30,7 +30,7 @@ class PosOrder(models.Model):
                     def get_expected_qty_to_ship_later():
                         pos_pickings = so_line.pos_order_line_ids.order_id.picking_ids
                         if pos_pickings and all(pos_picking.state in ['confirmed', 'assigned'] for pos_picking in pos_pickings):
-                            return sum((so_line._convert_qty(so_line, pos_line.qty, 'p2s') for pos_line in
+                            return sum((so_line._convert_qty(so_line, pos_line._get_qty_to_move(), 'p2s') for pos_line in
                                         so_line.pos_order_line_ids if so_line.product_id.type != 'service'), 0)
                         return 0
 

@@ -105,9 +105,9 @@ test("test_quantity_updated_settle: settling twice only loads the remaining quan
     await Utils.clickValidatePayment();
     await Utils.clickNextOrder();
 
-    // The delivered quantity of the sale order line is updated by the backend
-    // once the settled order is paid.
-    MockServer.env["sale.order.line"].write([12], { qty_delivered: 2 });
+    // The delivered and invoiced quantities of the sale order line are updated by the
+    // backend once the settled order is paid.
+    MockServer.env["sale.order.line"].write([12], { qty_delivered: 2, qty_invoiced: 2 });
 
     await Utils.settleSaleOrder("S00009");
     const secondOrder = store.getOrder();
