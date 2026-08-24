@@ -1465,6 +1465,24 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
         if comodel_domain.is_false() and not search_domain.is_false():
             # we don't know the condition, accept all
             comodel_domain = Domain.TRUE
+            # but try to be more specific
+            if level > OptimizationLevel.BASIC and field.type == 'many2one' and (field.store or field.compute_sql):
+                # search_domain doesn't constrain condition.field_expr, so
+                # give the comodel a lazy subquery of records reachable from
+                # search_domain, instead of accepting all records. It's only
+                # executed if a comodel-side search method reads it.
+                #
+                # TODO(master): `search_domain` can leak from an unrelated
+                # model here; tag it with the model it applies to instead of
+                # relying on try/except.
+                try:
+                    sub_query = model.sudo().with_context(search_domain=None)._search(
+                        search_domain, active_test=False, bypass_access=True)
+                    subquery_sql = sub_query.subselect(SQL.identifier(condition.field_expr))
+                    comodel_domain = Domain.custom(to_sql=lambda table: SQL("%s IN %s", table.id, subquery_sql))
+                except ValueError:
+                    # search_domain didn't actually apply to model
+                    comodel_domain = Domain.TRUE
         comodel = comodel.with_context(search_domain=comodel_domain)
 
     domain = domain._optimize(comodel, level)

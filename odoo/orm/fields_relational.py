@@ -857,13 +857,13 @@ class _RelationalMulti(_Relational):
                 # ('id', 'any!', Query), so we can just use the query
                 query = domain.value
             else:
-                comodel = comodel.with_context(**self.context)
+                comodel = comodel.with_context(**self.context, search_domain=None)
                 query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
         if isinstance(value, Query):
             # add the field_domain to the query
-            domain = field_domain.optimize_full(comodel)
+            domain = field_domain.optimize_full(comodel.with_context(search_domain=None))
             if not domain.is_true():
                 # TODO should clone/copy Query value
                 value.add_where(domain._to_sql(value.table._with_model(comodel)))

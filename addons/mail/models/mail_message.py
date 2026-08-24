@@ -491,7 +491,7 @@ class MailMessage(models.Model):
 
         # search by model and res_id
         model_codomains = Domain.FALSE  # (model = a & res_id in ...) | (model = b & ...)
-        env = self.with_context(active_test=False).env
+        env = self.with_context(active_test=False, search_domain=None).env
         for res_model_name in res_model_names:
             if res_model_name not in env:
                 continue

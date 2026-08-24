@@ -464,7 +464,7 @@ class MailActivity(models.Model):
 
         # search by model and res_id
         sec_domain = Domain.FALSE
-        env = self.with_context(active_test=False).env
+        env = self.with_context(active_test=False, search_domain=None).env
         for res_model_name in res_model_names:
             if res_model_name not in env:
                 continue

@@ -624,7 +624,7 @@ class IrAttachment(models.Model):
         # - res_field != False needs to check field access on the res_model
         res_model_names = condition_values(self, 'res_model', domain)
         if 0 < len(res_model_names or ()) <= MAX_COMODELS_FOR_DOMAIN:
-            env = self.with_context(active_test=False).env
+            env = self.with_context(active_test=False, search_domain=None).env
             check_res_fields = not self.env.is_system() and tuple(condition_values(self, 'res_field', domain) or ()) != (False,)
             for res_model_name in res_model_names:
                 comodel = env.get(res_model_name)
