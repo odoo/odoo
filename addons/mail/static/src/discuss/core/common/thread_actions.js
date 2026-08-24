@@ -116,9 +116,9 @@ registerThreadAction("notification-settings", {
         }
     },
     actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
-    dropdown: ({ owner }) => !owner.isDiscussContent,
     dropdownComponent: NotificationSettings,
     dropdownComponentProps: ({ channel }) => ({ channel }),
+    dropdownTrigger: ({ owner }) => !owner.isDiscussContent,
     condition: ({ channel, owner, store }) =>
         channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     setup({ owner }) {

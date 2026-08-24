@@ -65,7 +65,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {(params: ActionParams_T) => Component<Props, Env>} [componentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
- * @property {boolean} [dropdown]
+ * @property {boolean|(params: ActionParams_T) => boolean} [dropdownTrigger]
  * @property {Component|(params: ActionParams_T) => Component} [dropdownComponent]
  * @property {Object|(params: ActionParams_T) => Object} [dropdownComponentProps]
  * @property {string|(params: ActionParams_T) => string} [dropdownMenuClass]
@@ -367,20 +367,20 @@ export class Action {
     }
 
     /** @param {Action} action @returns {boolean|undefined} */
-    _dropdown(action) {}
+    _dropdownTrigger(action) {}
     /** Determines whether this action opens a dropdown on selection. */
-    get dropdown() {
+    get dropdownTrigger() {
         return (
-            this._dropdown(this.params) ??
-            (typeof this.definition.dropdown === "function"
-                ? this.definition.dropdown.call(this, this.params)
-                : this.definition.dropdown)
+            this._dropdownTrigger(this.params) ??
+            (typeof this.definition.dropdownTrigger === "function"
+                ? this.definition.dropdownTrigger.call(this, this.params)
+                : this.definition.dropdownTrigger)
         );
     }
 
     /** @param {Action} action @returns {Component|undefined} */
     _dropdownComponent(action) {}
-    /** When action is a dropdown @see dropdown, this determines an optional component to use for the content slot */
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional component to use for the content slot */
     get dropdownComponent() {
         return (
             this._dropdownComponent(this.params) ??
@@ -393,7 +393,7 @@ export class Action {
 
     /** @param {Action} action @returns {Object|undefined} */
     _dropdownComponentProps(action) {}
-    /** When action is a dropdown @see dropdown, this determines optional props to pass to component of the content slot of dropdown. */
+    /** When action is a dropdown @see dropdownTrigger, this determines optional props to pass to component of the content slot of dropdown. */
     get dropdownComponentProps() {
         return (
             this._dropdownComponentProps(this.params) ??
@@ -405,7 +405,7 @@ export class Action {
 
     /** @param {Action} action @returns {string|undefined} */
     _dropdownMenuClass(action) {}
-    /** When action is a dropdown @see dropdown, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
     get dropdownMenuClass() {
         return (
             this._dropdownMenuClass(this.params) ??
@@ -417,7 +417,7 @@ export class Action {
 
     /** @param {Action} action @returns {string|undefined} */
     _dropdownPosition(action) {}
-    /** When action is a dropdown @see dropdown, this determines the preferred position of the dropdown */
+    /** When action is a dropdown @see dropdownTrigger, this determines the preferred position of the dropdown */
     get dropdownPosition() {
         return (
             this._dropdownPosition(this.params) ??
@@ -429,7 +429,7 @@ export class Action {
 
     /** @param {Action} action @returns {DropdownState|undefined} */
     _dropdownState(action) {}
-    /** When action is a dropdown @see dropdown, this determines the preferred position of the dropdown */
+    /** When action is a dropdown @see dropdownTrigger, this determines the preferred position of the dropdown */
     get dropdownState() {
         return (
             this._dropdownState(this.params) ??
@@ -441,7 +441,7 @@ export class Action {
 
     /** @param {Action} action @returns {string|undefined} */
     _dropdownTemplate(action) {}
-    /** When action is a dropdown @see dropdown, this determines an optional template to use for the content slot */
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional template to use for the content slot */
     get dropdownTemplate() {
         return (
             this._dropdownTemplate(this.params) ??
@@ -454,7 +454,7 @@ export class Action {
     /** @param {Action} action @returns {Object|undefined} */
     _dropdownTemplateParams(action) {}
     /**
-     * When action is a dropdown @see dropdown, this determines optional params to pass to template of the content slot of dropdown.
+     * When action is a dropdown @see dropdownTrigger, this determines optional params to pass to template of the content slot of dropdown.
      * The params are provided to template in object `templateParams` with named parameters as given by explicit definition.
      * For example: `{ myParam1: 1 }` is retrieved in template with `templateParams.myParam1`.
      */
@@ -735,8 +735,8 @@ export class UseActions extends Reactive {
                     // a reused more-action gets its list swapped in place
                     actionsSignal: signal(data.actions),
                     btnAttrs: { "data-available-offline": true },
-                    dropdown: true,
                     dropdownState: new DropdownState(),
+                    dropdownTrigger: true,
                     icon: data?.icon ?? "more_vert",
                     isActive: ({ action }) => action.dropdownState.isOpen,
                     isMoreAction: true,
