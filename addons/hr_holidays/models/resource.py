@@ -192,7 +192,7 @@ class ResourceResource(models.Model):
 
     def _format_leave(self, leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale):
         leave_start = leave[0]
-        leave_record = leave[2]
+        leave_record = leave[2].filtered('holiday_id')
         holiday_id = leave_record.holiday_id
         tz = pytz.timezone(self.tz or self.env.user.tz)
 
