@@ -276,6 +276,26 @@ test("simple rendering", async () => {
     expect(".o_group_info_button").toHaveCount(0); // not displayed in non debug mode
 });
 
+test("rendering with an empty group hierarchy", async () => {
+    ResUsers._records[0].view_group_hierarchy = false;
+
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids]").toHaveCount(1);
+    expect(".o_field_widget[name=group_ids] input").toHaveCount(0);
+    expect(".o_field_widget[name=group_ids] .o_form_label").toHaveCount(0);
+});
+
 test("simple rendering in readonly", async () => {
     await mountView({
         type: "form",
