@@ -371,7 +371,7 @@ class HrLeave(models.Model):
             if contracts:
                 # If there are more than one contract they should all have the
                 # same calendar, otherwise a constraint is violated.
-                calendar = contracts[:1].resource_calendar_id or calendar  # resource_calendar_id is not required on version
+                calendar = contracts[:1].resource_calendar_id
             leave.resource_calendar_id = calendar
 
     def _get_overlapping_contracts(self):
