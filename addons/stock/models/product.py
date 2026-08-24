@@ -408,6 +408,14 @@ class ProductProduct(models.Model):
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
         elif locations:
+            # Postgres estimates recursive unions based on the recursive term, O(locations * stock_location)
+            # rows here, while the real result is a set of location ids and so cannot exceed
+            # stock_location. Once the estimate exceeds work_mem * hash_mem_multiplier, the SubPlan
+            # built for these conditions is no longer hashed and every candidate row linearly scans
+            # the descendant list.
+            # A constant LIMIT caps plan_rows at the cardinality of stock_location without changing
+            # the result, which is enough to keep the SubPlan hashed.
+            max_descendants = locations.sudo().with_context(active_test=False).search_count([])
             descendants_query = Query(
                 locations.env,
                 'descendants',
@@ -426,10 +434,11 @@ class ProductProduct(models.Model):
                             JOIN descendants d
                                 ON sl.location_id = d.id
                         )
-                        SELECT id FROM descendants
+                        SELECT id FROM descendants LIMIT %s
                     )
                     """,
                     tuple(locations.ids),
+                    max_descendants,
                 ),
             )
             loc_domain = Domain('location_id', 'in', descendants_query)
