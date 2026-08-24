@@ -157,7 +157,7 @@ patch(PosOrder.prototype, {
             result.loyaltyStats = this.getLoyaltyPoints();
             result.partner = this.get_partner();
         }
-        result.new_coupon_info = this.new_coupon_info;
+        result.new_coupon_info = this.new_coupon_info ?? this.raw.new_coupon_info;
         return result;
     },
     //@override
