@@ -70,7 +70,6 @@ export class Notification extends Record {
      * when it corresponds to a failure type
      * that is automatically cancelled before sending.
      *
-     * @returns {string}
      */
     get autoCanceledFailureType() {
         switch (this.failure_type) {

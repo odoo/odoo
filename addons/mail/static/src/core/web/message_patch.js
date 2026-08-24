@@ -68,9 +68,7 @@ patch(Message.prototype, {
         }
     },
 
-    /**
-     * @returns {string}
-     */
+    /** @returns {TranslatedString} */
     formatTracking(trackingFieldInfo, trackingValue) {
         switch (trackingFieldInfo.fieldType) {
             case "boolean":
@@ -109,9 +107,7 @@ patch(Message.prototype, {
         }
     },
 
-    /**
-     * @returns {string}
-     */
+    /** @returns {TranslatedString} */
     formatTrackingOrNone(trackingFieldInfo, trackingValue) {
         const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue);
         return formattedValue

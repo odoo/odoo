@@ -48,8 +48,8 @@ const FUZZY_NAMESPACES = ["default"];
  * @typedef {{
  *  categories: string[];
  *  debounceDelay: number;
- *  emptyMessage: string;
- *  placeholder: string;
+ *  emptyMessage: TranslatedString;
+ *  placeholder: TranslatedString;
  * }} NamespaceConfig
  */
 

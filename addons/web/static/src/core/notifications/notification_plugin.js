@@ -48,7 +48,7 @@ export class NotificationPlugin extends Plugin {
     });
 
     /**
-     * @param {string} message
+     * @param {TranslatedString} message
      * @param {NotificationOptionSchema} [options]
      */
     add(message, options = {}) {

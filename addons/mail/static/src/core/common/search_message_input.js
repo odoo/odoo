@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} SearchFilter
  * @property {string} label
- * @property {string} name
+ * @property {TranslatedString} name
  * @property {true|false|undefined} [is_notification]
  */
 

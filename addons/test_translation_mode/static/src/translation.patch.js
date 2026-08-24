@@ -1,4 +1,4 @@
-import { TranslatedString } from "@web/core/l10n/translation";
+import { LazyTranslatedString } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 /**
@@ -90,14 +90,13 @@ const TRANSLATION_MODE_ADDON_NAME = "test_translation_mode";
 const decoder = new TextDecoder("utf-8");
 const encoder = new TextEncoder();
 
-patch(TranslatedString.prototype, {
-    valueOf() {
-        const translation = super.valueOf();
-        if (isTranslationModeEnabled()) {
+patch(LazyTranslatedString.prototype, {
+    translate() {
+        const translation = super.translate();
+        if (isTranslationModeEnabled() && typeof translation === "string") {
             return contextualizeTranslation(this.context, translation);
-        } else {
-            return translation;
         }
+        return translation;
     },
 });
 

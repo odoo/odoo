@@ -62,7 +62,7 @@ export class CallContextMenu extends Component {
         return this.props.rtcSession.isLocallyMuted;
     }
 
-    /** @returns {string} label for the volume-icon mute toggle, reflecting the current state. */
+    /** @returns label for the volume-icon mute toggle, reflecting the current state. */
     get muteLabel() {
         return this.isLocallyMuted ? _t("Unmute") : _t("Mute");
     }
@@ -115,7 +115,7 @@ export class CallContextMenu extends Component {
 
     /**
      * @param {string} candidateType
-     * @returns {string} a formatted string that describes the connection type e.g: "prflx (STUN)"
+     * @returns a formatted string that describes the connection type e.g: "prflx (STUN)"
      */
     formatProtocol(candidateType) {
         if (!candidateType) {
