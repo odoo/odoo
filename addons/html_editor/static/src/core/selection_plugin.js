@@ -2,7 +2,6 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
-    isEditionBoundary,
     isEmptyTextNode,
     isMediaElement,
     isProtected,
@@ -28,7 +27,6 @@ import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     getCursorDirection,
-    normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
     normalizeNotEditableNode,
@@ -176,7 +174,6 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
  * @property { SelectionPlugin['areNodeContentsFullySelected'] } areNodeContentsFullySelected
  * @property { SelectionPlugin['resetSelection'] } resetSelection
- * @property { SelectionPlugin['setSelectionAfter'] } setSelectionAfter
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
  * @property { SelectionPlugin['setCursorStart'] } setCursorStart
  * @property { SelectionPlugin['setSelection'] } setSelection
@@ -213,7 +210,6 @@ export class SelectionPlugin extends Plugin {
         "setSelection",
         "setCursorStart",
         "setCursorEnd",
-        "setSelectionAfter",
         "extractContent",
         "preserveSelection",
         "resetSelection",
@@ -866,21 +862,6 @@ export class SelectionPlugin extends Plugin {
      */
     setCursorEnd(node) {
         return this.setSelection({ anchorNode: node, anchorOffset: nodeSize(node) });
-    }
-
-    /**
-     * Set the selection after the given node.
-     * @param {Node} node
-     * @param {{ normalize: boolean }} [options = {}]
-     */
-    setSelectionAfter(node, { normalize } = {}) {
-        let position = rightPos(node);
-        position = normalizeCursorPosition(position[0], position[1], "right");
-        if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
-            // Correct the position if it happens to be in the editable root.
-            position = getDeepestEditablePosition(...position);
-        }
-        this.setSelection({ anchorNode: position[0], anchorOffset: position[1] }, { normalize });
     }
 
     /**
