@@ -199,6 +199,29 @@ class PosOrder(models.Model):
             'coupon_report': coupon_per_report,
         }
 
+    def get_ticket_screen_order_data(self):
+        data = super().get_ticket_screen_order_data()
+
+        histories = self.env['loyalty.history'].search([
+            ('order_model', '=', 'pos.order'),
+            ('card_id.source_pos_order_id', 'in', self.ids),
+            ('card_id.program_id.program_type', '=', 'next_order_coupons'),
+        ])
+        if not histories:
+            return data
+
+        coupon_data = defaultdict(list)
+        for history in histories:
+            coupon_data[history.card_id.source_pos_order_id.id].append({
+                'program_name': history.card_id.program_id.name,
+                'expiration_date': history.card_id.expiration_date,
+                'code': history.card_id.code,
+            })
+        for order in data["pos.order"]:
+            order["new_coupon_info"] = coupon_data.get(order["id"], [])
+
+        return data
+
     def _check_existing_loyalty_cards(self, coupon_data):
         coupon_key_to_modify = []
         for coupon_id, coupon_vals in coupon_data.items():
