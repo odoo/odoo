@@ -75,7 +75,6 @@ PAYMENT_TYPE_CODES = MappingProxyType({
 DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_fr_pdp demo utils
     'pilot_phase': lambda params: {
         'annuaire_line_start_date': fields.Date.today(),
-        'pilot_phase': params['pdp_pilot_phase'],
     },
     'participant_status': lambda params: {},
     'send_document': lambda params: {
@@ -142,14 +141,6 @@ class AccountEdiProxyClientUser(models.Model):
             scheme = dict(self.env["res.partner"]._fields['peppol_eas']._description_selection(self.env))["0225"]
             raise UserError(self.env._("Please fill the Peppol Endpoint field with scheme '%s' on the company partner.", scheme))
         return f'0225:{company.pdp_identifier}'
-
-    def _get_company_details(self):
-        self.ensure_one()
-        result = super()._get_company_details()
-        if self.proxy_type != 'pdp':
-            return result
-        result['pdp_pilot_phase'] = self.company_id.l10n_fr_pdp_pilot_phase
-        return result
 
     @handle_demo
     def _register_proxy_user(self, company, proxy_type, edi_mode):
@@ -220,8 +211,6 @@ class AccountEdiProxyClientUser(models.Model):
             company = self.sudo().company_id
             company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
             company._force_update_l10n_fr_f10_moves()
-        if 'pilot_phase' in proxy_user:
-            self.sudo().company_id.l10n_fr_pdp_pilot_phase = proxy_user['pilot_phase']
 
     def _peppol_get_new_documents(self):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
