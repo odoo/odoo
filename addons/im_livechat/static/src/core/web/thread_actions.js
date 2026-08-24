@@ -35,10 +35,10 @@ registerThreadAction("livechat-status", {
         store.has_access_livechat &&
         !channel.livechat_end_dt &&
         !owner.isDiscussContent,
-    dropdown: true,
     dropdownMenuClass: "p-0",
     dropdownTemplate: "im_livechat.LivechatStatusSelection",
     dropdownTemplateParams: ({ thread }) => ({ livechatThread: thread }),
+    dropdownTrigger: true,
     icon: ({ channel, store }) => {
         const btn = store.livechatStatusButtons.find(
             (btn) => btn.status === channel.livechat_status
