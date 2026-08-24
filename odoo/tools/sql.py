@@ -20,7 +20,7 @@ import psycopg2
 from psycopg2.extensions import quote_ident
 
 from .func import deprecated
-from .misc import named_to_positional_printf
+from .misc import freehash, named_to_positional_printf
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -103,7 +103,7 @@ class SQL(metaclass=_SQLMeta):
         return self._sql_tuple[:2] == other._sql_tuple[:2]
 
     def __hash__(self):
-        return hash(self._sql_tuple[:2])
+        return freehash(self._sql_tuple[:2])
 
     def __bool__(self):
         return bool(self._sql_tuple[0])
