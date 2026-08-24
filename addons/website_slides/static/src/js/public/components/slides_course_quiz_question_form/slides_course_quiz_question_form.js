@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, props, signal, t } from "@odoo/owl";
+import { Component, proxy, props, signal, t, useListener } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -51,19 +50,11 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
 
         useAutofocus({ ref: this.inputRef });
 
-        useLayoutEffect(
-            (update) => {
-                if (!update) {
-                    return;
-                }
-                const questionsReorderHandler = this.onQuestionsReordered.bind(this);
-                this.bus.addEventListener("questions_reordered", questionsReorderHandler);
-                return () => {
-                    this.bus.removeEventListener("questions_reordered", questionsReorderHandler);
-                };
-            },
-            () => [this.props.update]
-        );
+        useListener(this.bus, "questions_reordered", () => {
+            if (this.props.update) {
+                this.onQuestionsReordered();
+            }
+        });
     }
 
     onQuestionsReordered() {

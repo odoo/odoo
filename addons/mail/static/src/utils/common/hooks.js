@@ -243,22 +243,17 @@ export function useScrollState(ref) {
             state.canScrollAfter = false;
         }
     }
-    useLayoutEffect(
-        (el) => {
-            if (!el) {
-                return;
-            }
-            computeState();
-            el.addEventListener("scroll", computeState);
-            const resizeObserver = new ResizeObserver(computeState);
-            resizeObserver.observe(el);
-            return () => {
-                el.removeEventListener("scroll", computeState);
-                resizeObserver.disconnect();
-            };
-        },
-        () => [untrack(ref)]
-    );
+    useListener(ref, "scroll", computeState);
+    useEffect(() => {
+        const el = ref();
+        if (!el) {
+            return;
+        }
+        computeState();
+        const resizeObserver = new ResizeObserver(computeState);
+        resizeObserver.observe(el);
+        return () => resizeObserver.disconnect();
+    });
     return state;
 }
 
