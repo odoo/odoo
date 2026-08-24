@@ -27,7 +27,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
     def _get_tax_details(self, fallback=False, extra_domain=None):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
-        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
+        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(domain)
         self.env['account.move.line'].flush_model()
         self.cr.execute(tax_details_query)
         tax_details_res = self.cr.dictfetchall()
@@ -49,7 +49,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             tax_amount = sum(lines.mapped('balance'))
             tax_details_amount = sum(x['tax_amount']
                                      for x in tax_details
-                                     if (x['group_tax_id'] or x['tax_id']) == tax.id)
+                                     if (x['effective_tax_id']) == tax.id)
             self.assertAlmostEqual(tax_amount, tax_details_amount)
 
     def test_affect_base_amount_1(self):

@@ -38,6 +38,8 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, expenses.with_context(force_price_include=True))._compute_totals()
         super(AccountMoveLine, self - expenses)._compute_totals()
 
-    def _get_extra_query_base_tax_line_mapping(self) -> SQL:
-        query = super()._get_extra_query_base_tax_line_mapping()
-        return SQL("%s AND (base_line.expense_id IS NULL OR account_move_line.expense_id = base_line.expense_id)", query)
+    def _get_tax_query_extra_clauses(self) -> tuple[SQL, SQL]:
+        aml_select_clause, td_where_clause = super()._get_tax_query_extra_clauses()
+        aml_select_clause = SQL("%s, account_move_line.expense_id AS expense_id", aml_select_clause)
+        td_where_clause = SQL("%s AND (base_line.expense_id IS NULL OR tax_line.expense_id = base_line.expense_id)", td_where_clause)
+        return aml_select_clause, td_where_clause

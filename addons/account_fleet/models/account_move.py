@@ -64,15 +64,17 @@ class AccountMoveLine(models.Model):
             line.need_vehicle = line.account_id.is_vehicle_account
 
     @api.model
-    def _get_extra_query_base_tax_line_mapping(self) -> SQL:
+    def _get_tax_query_extra_clauses(self) -> tuple[SQL, SQL]:
         """Override to add vehicle_id matching condition for tax details query.
         This ensures that tax lines are matched with base lines having the same vehicle_id when
         both are set, while allowing the match when either side has no vehicle_id. This avoids
         inconsistencies when a single tax line is shared across base lines with mixed vehicle
         assignments (one set, one NULL).
         """
-        query = super()._get_extra_query_base_tax_line_mapping()
-        return SQL("%s AND (base_line.vehicle_id = account_move_line.vehicle_id OR account_move_line.vehicle_id IS NULL)", query)
+        aml_select_clause, td_where_clause = super()._get_tax_query_extra_clauses()
+        aml_select_clause = SQL("%s, account_move_line.vehicle_id AS vehicle_id", aml_select_clause)
+        td_where_clause = SQL("%s AND (base_line.vehicle_id = tax_line.vehicle_id OR tax_line.vehicle_id IS NULL)", td_where_clause)
+        return aml_select_clause, td_where_clause
 
     def _prepare_fleet_log_service(self):
         vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
