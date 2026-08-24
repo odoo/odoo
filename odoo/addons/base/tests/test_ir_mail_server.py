@@ -290,6 +290,25 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter='random.domain',
         )
 
+    @patch.dict(config.options, {'smtp_user': 'config-user', 'smtp_password': 'config-password', 'smtp_server': 'config-host.com'})
+    def test_mail_server_send_email_explicit_host(self):
+        # use the CLI server
+        with self.subTest("Use CLI server"), self.mock_smtplib_connection(), patch.object(self.testing_smtp_session, 'login') as login:
+            message = self._build_email(mail_from='specific_user@test.com')
+            self.env['ir.mail_server'].send_email(message, smtp_server='config-host.com')
+            login.assert_called_once_with('config-user', 'config-password')
+
+        # don't use the CLI server
+        for user in (None, 'explicit-user'):
+            with self.subTest(user=user), self.mock_smtplib_connection(), patch.object(self.testing_smtp_session, 'login') as login:
+                message = self._build_email(mail_from='specific_user@test.com')
+                self.env['ir.mail_server'].send_email(message, smtp_server='example.com', smtp_user=user)
+                if user:
+                    login.assert_called_once_with(user, '')
+                else:
+                    login.assert_not_called()
+                self.assertEqual(len(self.emails), 1)
+
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_smtp_session(self):
         """Test all the cases when we provide the SMTP session.
