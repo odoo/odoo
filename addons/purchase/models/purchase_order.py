@@ -963,7 +963,7 @@ class PurchaseOrder(models.Model):
         return (
             self.company_id.po_double_validation == 'one_step'
             or (self.company_id.po_double_validation == 'two_step'
-                and self.amount_total < self.env.company.currency_id._convert(
+                and self.amount_total < self.company_id.currency_id._convert(
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
             or self.user_has_groups('purchase.group_purchase_manager'))
