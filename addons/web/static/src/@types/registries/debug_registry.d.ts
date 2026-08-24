@@ -38,7 +38,7 @@ declare module "registries" {
     export type DebugRegistryCategories = Record<string, DebugRegistryItemShape>;
 
     export interface DebugSectionRegistryItemShape {
-        label: string;
+        label: Translation;
         sequence: number;
     };
 

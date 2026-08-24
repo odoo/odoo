@@ -197,7 +197,7 @@ export class AttachmentList extends Component {
      *
      * @param {import("models").Attachment} attachment - The representative attachment for the actions.
      * @param {import("models").Attachment[]} [duplicates] - Array of duplicate attachments the action may operate on.
-     * @returns {{label: string, icon: string, icon_class?: string, onSelect: function}[]} Array of action descriptors.
+     * @returns {{label: Translation, icon: string, icon_class?: string, onSelect: function}[]} Array of action descriptors.
      */
     getActions(attachment, duplicates = [attachment]) {
         const res = [];

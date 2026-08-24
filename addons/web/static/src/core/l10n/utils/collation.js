@@ -25,8 +25,8 @@ try {
  * this behavior can be overridden by calling `localeCompare` with the option
  * `emptyLast: false`.
  *
- * @param {string} a
- * @param {string} b
+ * @param {Translation | null | undefined} a
+ * @param {Translation | null | undefined} b
  * @param {Object} [options={}]
  * @param {boolean} [options.emptyLast=true] If true, falsy values (such as
  * empty strings, null, or undefined) will be sorted after truthy values.
@@ -42,8 +42,8 @@ try {
  */
 export function localeCompare(a, b, { emptyLast = true } = {}) {
     // prevent values like undefined to be coerced to "undefined" (string)
-    a ||= "";
-    b ||= "";
+    a = a ? String(a) : "";
+    b = b ? String(b) : "";
     if (emptyLast) {
         if (a && !b) {
             return -1;

@@ -15,7 +15,7 @@ const SEARCH_RESULT_LIMIT = 100;
  * @typedef {Object} MemberCategory
  * @property {number} sequence sort key; lower is rendered first.
  * @property {(channel: import("models").DiscussChannel) => import("models").ChannelMember[]} getMembers
- * @property {string} label
+ * @property {Translation} label
  * @property {boolean} [showCount=true] whether to append the member count to the label.
  * @property {number} [sequenceGroup] categories sharing this key are rendered inside a common container.
  * @property {string} [icon] class of an icon shown before the section label.

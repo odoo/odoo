@@ -336,17 +336,18 @@ formatInteger.extractOptions = ({ attrs, options }) => ({
  * @returns {string}
  */
 export function formatMany2one(value, options) {
+    let name;
     if (!value) {
-        value = "";
+        name = "";
     } else if ("display_name" in value ? value.display_name : value[1]) {
-        value = "display_name" in value ? value.display_name : value[1];
+        name = "display_name" in value ? value.display_name : value[1];
     } else {
-        value = _t("Unnamed");
+        name = String(_t("Unnamed"));
     }
     if (options && options.escape) {
-        value = encodeURIComponent(value);
+        name = encodeURIComponent(name);
     }
-    return value;
+    return name;
 }
 
 /**
@@ -355,7 +356,7 @@ export function formatMany2one(value, options) {
  * then be the count of ids in the given value in the form "x record(s)".
  *
  * @param {number[] | false} value
- * @returns {string}
+ * @returns {Translation}
  */
 export function formatX2many(value) {
     const count = value.currentIds.length;

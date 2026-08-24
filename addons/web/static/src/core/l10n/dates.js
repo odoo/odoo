@@ -245,7 +245,7 @@ function formatLocalNumber(value) {
  * As in toLocaleDateString, the year is left out while it is the current one.
  *
  * @param {Date | DateTime} date
- * @returns {string}
+ * @returns {Translation}
  */
 export function formatLocalWeekRange(date) {
     const { year, week, startDate } = getLocalYearAndWeek(date);

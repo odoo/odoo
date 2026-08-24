@@ -9,7 +9,7 @@ export function resolveTimeZoneName(tz) {
  * @param {string} partnerTz resolved, and different from the current user one
  * @param {string} currentUserTz resolved
  * @param {import("luxon").DateTime<true>} now
- * @returns {string} the local time of the partner, translated
+ * @returns {Translation} the local time of the partner, translated
  */
 export function formatLocalDateTime(partnerTz, currentUserTz, now) {
     const partnerDateTime = now.setZone(partnerTz);

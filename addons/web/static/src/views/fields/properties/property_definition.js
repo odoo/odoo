@@ -152,6 +152,7 @@ export class PropertyDefinition extends Component {
             propertyDefinition: propertyDefinition,
             typeLabel: PROPERTIES_INFO[propertyDefinition.type].label,
             resModel: "",
+            /** @type {Translation} */
             resModelDescription: "",
             matchingRecordsCount: undefined,
         });

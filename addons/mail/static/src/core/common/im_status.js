@@ -111,8 +111,11 @@ export class ImStatus extends Component {
     }
 
     get title() {
-        const data = this.activeImStatusData;
-        return data.title[this.persona.imStatusUI] || data.title.default || data.title;
+        const { title } = this.activeImStatusData;
+        if (typeof title === "string" || title instanceof String) {
+            return title;
+        }
+        return title[this.persona.imStatusUI] || title.default;
     }
 
     get colorClass() {

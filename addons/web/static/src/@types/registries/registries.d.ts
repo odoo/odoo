@@ -52,7 +52,7 @@ declare module "registries" {
         props: object;
     }
     export interface GroupConfigItemsRegistryItemShape {
-        label: String;
+        label: Translation;
         method: string | (() => {});
         isVisible: boolean | ((params: KanbanHeaderConfigItemsFnParams) => boolean);
         class: string | ((params: KanbanHeaderConfigItemsFnParams) => (string | string[] | { [key: string]: boolean }));

@@ -77,7 +77,7 @@ export class MessagingMenuTab extends Record {
      * Drives what is displayed when a tab is empty.
      *
      * @type {{
-     *  title?: string,
+     *  title?: Translation,
      *  subtitle?: string,
      *  component?: typeof import("@odoo/owl").Component,
      *  action?: { text: string, onClick: () => void }

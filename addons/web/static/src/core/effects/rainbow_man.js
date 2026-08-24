@@ -12,7 +12,7 @@ import { Component, onMounted, onWillUnmount, proxy, t, useListener, useProps } 
  * @property {string} [imgUrl] URL of the image to be displayed
  *
  * @typedef Simple
- * @property {string} message Message to be displayed on rainbowman card
+ * @property {Translation} message Message to be displayed on rainbowman card
  *
  * @typedef Custom
  * @property {typeof import("@odoo/owl").Component} Component

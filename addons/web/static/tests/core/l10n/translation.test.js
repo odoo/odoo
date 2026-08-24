@@ -446,4 +446,15 @@ describe("_t with markups", () => {
             "&lt;script&gt;document.write(&#x27;pizza hawai&#x27;)&lt;/script&gt; <blink>Mario Kart</blink>"
         );
     });
+    test("a lazy term with a markup value converts to a string", () => {
+        translatedTerms[translationLoaded] = false;
+        const translatedStr = _t("I love %s", markup`<blink>Mario Kart</blink>`);
+        patchTranslations({
+            web: {
+                "I love %s": "Vive %s",
+            },
+        });
+        expect(String(translatedStr)).toBe("Vive <blink>Mario Kart</blink>");
+        expect(`${translatedStr}`).toBe("Vive <blink>Mario Kart</blink>");
+    });
 });

@@ -172,7 +172,7 @@ export class Message extends Record {
     pinned_at = fields.Datetime();
     /** @type {string} */
     subject;
-    /** @type {string|undefined} */
+    /** @type {Translation|undefined} */
     translationValue;
     /** @type {string|undefined} */
     translationSource;
@@ -428,6 +428,7 @@ export class Message extends Record {
 
     inlineBody = this.computed(() => {
         if (this.poll) {
+            /** @type {Translation | undefined} */
             let text = this.poll.poll_question;
             if (this.ended_poll_ids.length) {
                 text = this.poll.pollClosedText;
@@ -513,6 +514,7 @@ export class Message extends Record {
     }
 
     bodyPreview = this.computed(() => {
+        /** @type {Translation} */
         let messageBody = "";
         if (!this.hasOnlyAttachments) {
             return this.inlineBody || this.subtype_id?.description;

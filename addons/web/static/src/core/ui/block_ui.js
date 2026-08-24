@@ -42,7 +42,9 @@ export class BlockUI extends Component {
         this.BLOCK_STATES = { UNBLOCKED: 0, BLOCKED: 1, VISIBLY_BLOCKED: 2 };
         this.state = proxy({
             blockState: this.BLOCK_STATES.UNBLOCKED,
+            /** @type {Translation} */
             line1: "",
+            /** @type {Translation} */
             line2: "",
         });
 

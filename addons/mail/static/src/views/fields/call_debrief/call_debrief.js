@@ -44,6 +44,7 @@ export class CallDebrief extends Component {
             currentTime: 0,
             mediaSegments: [],
             currentSegment: undefined,
+            /** @type {Translation} */
             error: "",
             isPlaying: false,
             isFullscreen: false,

@@ -225,7 +225,7 @@ export class RtcSession extends Record {
     }
 
     /**
-     * @returns {string}
+     * @returns {Translation}
      */
     get name() {
         return this.channel_member_id?.name;

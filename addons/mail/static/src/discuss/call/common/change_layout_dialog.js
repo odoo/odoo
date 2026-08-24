@@ -11,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} LayoutOption
  * @property {CallLayout} value layout identifier.
- * @property {string} label translated display name.
+ * @property {Translation} label translated display name.
  */
 
 /**

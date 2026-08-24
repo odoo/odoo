@@ -91,13 +91,12 @@ const decoder = new TextDecoder("utf-8");
 const encoder = new TextEncoder();
 
 patch(TranslatedString.prototype, {
-    valueOf() {
-        const translation = super.valueOf();
-        if (isTranslationModeEnabled()) {
+    translate() {
+        const translation = super.translate();
+        if (isTranslationModeEnabled() && typeof translation === "string") {
             return contextualizeTranslation(this.context, translation);
-        } else {
-            return translation;
         }
+        return translation;
     },
 });
 

@@ -4,7 +4,7 @@ import { htmlSprintf, isMarkup } from "@web/core/utils/html";
 import { mapSubstitutions, sprintf } from "@web/core/utils/strings";
 
 /**
- * @typedef {ReturnType<markup>} Markup
+ * @typedef {ReturnType<typeof import("@odoo/owl").markup>} Markup
  */
 
 /**
@@ -28,7 +28,7 @@ function isNotBlank(value) {
  *
  * @param {string} str
  * @param {Substitutions} substitutions
- * @returns {string | Markup | TranslatedString}
+ * @returns {string | Markup}
  */
 function translationSprintf(str, substitutions) {
     let hasMarkup = false;
@@ -89,7 +89,6 @@ const R_BLANK = /^[\s\u200B]*$/;
  *
  * @param {string} source
  * @param {Substitutions} substitutions
- * @returns {string | Markup | TranslatedString}
  */
 export function _t(source, ...substitutions) {
     return appTranslateFn(source, odoo.translationContext, ...substitutions);
@@ -104,14 +103,17 @@ export function _t(source, ...substitutions) {
  * the table of a restaurant (POS module) vs. a spreadsheet table.
  *
  * @param {string} source The term to translate
- * @param {string} moduleName The name of the module, used as a context key to
+ * @param {string} [moduleName] The name of the module, used as a context key to
  * retrieve the translation.
  * @param  {Substitutions} substitutions The other arguments passed to _t.
- * @returns {string | Markup | TranslatedString}
+ * @returns {Translation}
  */
 export function appTranslateFn(source, moduleName, ...substitutions) {
+    if (!isNotBlank(source)) {
+        return String(source);
+    }
     const string = new TranslatedString(source, substitutions, moduleName);
-    return string.lazy ? string : string.valueOf();
+    return string.lazy ? string : string.translate();
 }
 
 /**
@@ -130,6 +132,9 @@ export async function loadLanguages(orm) {
     return loadLanguages.installedLanguages;
 }
 
+/** @type {[string, string][] | false | undefined} */
+loadLanguages.installedLanguages = undefined;
+
 export class TranslatedString extends String {
     /** @type {string} */
     context;
@@ -146,10 +151,6 @@ export class TranslatedString extends String {
     constructor(value, substitutions, context) {
         super(value);
 
-        if (!isNotBlank(value)) {
-            return new String(value);
-        }
-
         this.lazy = !translatedTerms[translationLoaded];
         this.substitutions = substitutions;
         this.context = context || DEFAULT_MODULE;
@@ -160,6 +161,13 @@ export class TranslatedString extends String {
     }
 
     valueOf() {
+        return String(this.translate());
+    }
+
+    /**
+     * @returns {Translation}
+     */
+    translate() {
         const source = super.valueOf();
         if (this.lazy && !translatedTerms[translationLoaded]) {
             // Evaluate lazy translated string while translations are not loaded
@@ -177,7 +185,7 @@ export class TranslatedString extends String {
 }
 
 export const translationLoaded = Symbol("translationLoaded");
-/** @type {Record<string, string>} */
+/** @type {Record<string, Record<string, string>> & Record<typeof translationLoaded, boolean>} */
 export const translatedTerms = {
     [translationLoaded]: false,
 };
@@ -185,6 +193,8 @@ export const translatedTerms = {
  * Contains all the translated terms. Unlike "translatedTerms", there is no
  * "namespacing" by module. It is used as a fallback when no translation is
  * found within the module's context, or when the context is not known.
+ *
+ * @type {Record<string, string>}
  */
 export const translatedTermsGlobal = Object.create(null);
 export const translationResolvers = Promise.withResolvers();

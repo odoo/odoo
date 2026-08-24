@@ -388,7 +388,7 @@ export function constructRelativeDateDomain(searchItem, option, offset) {
  * @param {import("luxon").DateTime} referenceMoment
  * @param {Object} option a relative filter option, @see RELATIVE_FILTER_OPTIONS
  * @param {number} offset number of periods to shift, negative for the past
- * @returns {string}
+ * @returns {Translation}
  */
 export function getRelativeDateLabel(referenceMoment, option, offset) {
     const { granularity } = option;

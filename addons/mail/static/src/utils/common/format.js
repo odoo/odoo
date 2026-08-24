@@ -208,7 +208,7 @@ export function addLink(node, transformChildren) {
  * @param {string} [param0.className] CSS class name for the mention element
  * @param {number} [param0.id] Record ID of the mentioned entity
  * @param {string} [param0.model] Model name of the mentioned entity
- * @param {string} [param0.text] Display text for the mention
+ * @param {Translation} [param0.text] Display text for the mention
  * @param {boolean} [param0.readonly] If true, returns a non-clickable span; if false, returns a clickable link
  * @returns {HTMLElement} Either an HTMLSpanElement(readonly) or HTMLAnchorElement(clickable)
  */
@@ -221,7 +221,7 @@ export function generateMentionElement({ className, id, model, text, readonly })
             "data-oe-model": model,
             contenteditable: "false",
         });
-        span.textContent = text;
+        span.textContent = String(text);
         return span;
     }
     const link = document.createElement("a");
@@ -233,7 +233,7 @@ export function generateMentionElement({ className, id, model, text, readonly })
         target: "_blank",
         contenteditable: "false",
     });
-    link.textContent = text;
+    link.textContent = String(text);
     return link;
 }
 
