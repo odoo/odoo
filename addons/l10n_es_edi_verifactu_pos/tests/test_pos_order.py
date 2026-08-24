@@ -285,7 +285,36 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             with self._mock_zeep_registration_operation_certificate_issue():
                 order._generate_pos_order_invoice()
                 self.assertEqual(len(order.l10n_es_edi_verifactu_document_ids), 2)
-                self.assertRecordValues(order.l10n_es_edi_verifactu_document_ids[1], [{
-                    'document_type': 'cancellation',
-                    'errors': False,
-                }])
+                self.assertEqual(len(order.account_move.l10n_es_edi_verifactu_document_ids), 1)
+                order_submission_document = order.l10n_es_edi_verifactu_document_ids[0]
+                order_cancellation_document = order.l10n_es_edi_verifactu_document_ids[1]
+                invoice_document = order.account_move.l10n_es_edi_verifactu_document_ids
+
+                self.assertRecordValues(order_submission_document, [
+                    {
+                        'pos_order_id': order.id,
+                        'move_id': False,
+                        'document_type': 'submission',
+                    }
+                ])
+
+                self.assertRecordValues((order_cancellation_document + invoice_document), [
+                    {
+                        'pos_order_id': order.id,
+                        'move_id': False,
+                        'document_type': 'cancellation',
+                        'errors': False,
+                    },
+                    {
+                        'pos_order_id': False,
+                        'move_id': order.account_move.id,
+                        'document_type': 'submission',
+                        'errors': False,
+                    }
+                ])
+                order_submission_invoice_number = order_submission_document._get_document_dict()['RegistroAlta']['IDFactura']['NumSerieFactura']
+                order_cancellation_invoice_number = order_cancellation_document._get_document_dict()['RegistroAnulacion']['IDFactura']['NumSerieFacturaAnulada']
+                invoice_invoice_number = invoice_document._get_document_dict()['RegistroAlta']['IDFactura']['NumSerieFactura']
+
+                self.assertEqual(order_submission_invoice_number, order_cancellation_invoice_number)
+                self.assertNotEqual(order_cancellation_invoice_number, invoice_invoice_number)
