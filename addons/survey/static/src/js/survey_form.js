@@ -55,6 +55,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
             self.imgZoomer = false;
+            self.submitValue = false;
+            self.isLastWithoutOwnConditionals = undefined;
 
             // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
             if (!cookie.get('survey_' + self.options.surveyToken)) {
@@ -170,9 +172,44 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      *
      * @param event
      */
-    _onChangeChoiceItem: function (event) {
+    _onChangeChoiceItem: async function (event) {
         const $target = $(event.currentTarget);
         const $choiceItemGroup = $target.closest('.o_survey_form_choice');
+
+        if (this.options.questionsLayout !== "one_page") {
+            // Update survey button to "submit" if the current page/question is the last (without accounting for
+            // its own conditional questions) and not a single selected answer is triggering a following question.
+            const formData = Object.fromEntries(new FormData(document.querySelector("form")));
+            const submitButton = document.querySelector("button[type=submit]");
+            if (this.isLastWithoutOwnConditionals === undefined) {
+                this.isLastWithoutOwnConditionals = await this.rpc(
+                    `/survey/check_last/${this.options.surveyToken}/${this.options.answerToken}/${formData.page_id || formData.question_id}`,
+                );
+            }
+            if (!this.submitValue) {
+                this.submitValue = submitButton.value;
+            }
+            const currentSelectedAnswers = Array.from(document.querySelectorAll(`
+                .o_survey_form_choice[data-question-type='simple_choice_radio'] input:checked,
+                .o_survey_form_choice[data-question-type='multiple_choice'] input:checked
+            `)).map((input) => input.value);
+            if (
+                submitButton.value !== "finish" &&
+                this.isLastWithoutOwnConditionals &&
+                currentSelectedAnswers.length &&
+                !currentSelectedAnswers.some((answerId) => Object.keys(this.options.triggeredQuestionsByAnswer).includes(answerId))
+            ) {
+                // Update button to "submit"
+                submitButton.value = "finish";
+                submitButton.textContent = _t("Submit");
+                submitButton.classList.replace("btn-primary", "btn-secondary");
+            } else if (this.submitValue !== submitButton.value) {
+                // Reset button to its default value
+                submitButton.value = this.submitValue;
+                submitButton.textContent = this.submitValue === "next_skipped" ? _t("Next Skipped") : _t("Continue");
+                submitButton.classList.replace("btn-secondary", "btn-primary");
+            }
+        }
 
         this._applyCommentAreaVisibility($choiceItemGroup);
         const isQuestionComplete = this._checkConditionalQuestionsConfiguration($target, $choiceItemGroup);
@@ -477,6 +514,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     _onNextScreenDone: function (options) {
         var self = this;
         var result = this.nextScreenResult;
+        this.submitValue = false;
+        this.isLastWithoutOwnConditionals = undefined;
 
         if ((!(options && options.isFinish) || result.has_skipped_questions)
             && !this.options.sessionInProgress) {
