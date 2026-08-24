@@ -3,16 +3,24 @@
 
     <t t-name="account.AccountLabelTextField">
         <t t-if="this.props.readonly">
+            <t t-set="labelParts" t-value="this.labelParts"/>
             <div
                 name="account_label_text_readonly"
                 class="d-flex align-items-start justify-content-between gap-1"
             >
-                <span
-                    class="flex-grow-1"
-                    t-att-class="{'o_has_product': this.product}"
-                    style="white-space: pre-wrap"
-                    t-out="this.props.record.data[this.props.name] or ''"
-                />
+                <div class="d-flex flex-column flex-grow-1">
+                    <span
+                        t-if="labelParts.productName"
+                        class="o_has_product"
+                        style="white-space: pre-wrap"
+                        t-out="labelParts.productName"
+                    />
+                    <span
+                        t-att-class="{'fst-italic': labelParts.productName}"
+                        style="white-space: pre-wrap"
+                        t-out="labelParts.description"
+                    />
+                </div>
             </div>
         </t>
         <t t-else="">
