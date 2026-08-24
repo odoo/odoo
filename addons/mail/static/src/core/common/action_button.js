@@ -1,6 +1,5 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, t, useProps } from "@odoo/owl";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
@@ -13,20 +12,16 @@ export const actionButtonPropsSchema = {
 };
 
 /**
- * Renders the button/dropdown-item chrome for every action: core button
- * classes, icon/name content, badge, hotkey wiring. This is the single
- * generic renderer used by {@link Action} for every context - every button
- * looks the same regardless of where it's used or what the action is. The
- * only styling variation left is structural, not contextual: whether it
- * renders inline or as a block, and whether it renders as a plain button or
- * a dropdown item. An action that needs genuinely bespoke rendering instead
- * reaches for
- * `action.component` (@see Action in "@mail/core/common/action"), which
- * bypasses this chrome entirely.
+ * Renders the button chrome for an action: core button classes, icon/name
+ * content, badge, hotkey wiring. This is the generic renderer used by
+ * {@link Action} for actions not shown inside another dropdown's menu.
+ * @see ActionDropdown for the same chrome rendered as a `DropdownItem`,
+ * used when `props.dropdown` is set. An action that needs genuinely bespoke
+ * rendering instead reaches for `action.component` (@see Action in
+ * "@mail/core/common/action"), which bypasses this chrome entirely.
  */
 export class ActionButton extends Component {
     static template = "mail.ActionButton";
-    static components = { DropdownItem };
 
     setup() {
         super.setup();

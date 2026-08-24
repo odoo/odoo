@@ -4,6 +4,7 @@ import {
     actionButtonProps,
     actionButtonPropsSchema,
 } from "@mail/core/common/action_button";
+import { ActionDropdown } from "@mail/core/common/action_dropdown";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -17,7 +18,7 @@ const actionListPropsSchema = actionButtonPropsSchema;
  * its optional own dropdown, e.g. a "more actions" overflow menu.
  */
 class Action extends Component {
-    static components = { ActionButton };
+    static components = { ActionButton, ActionDropdown };
     static template = "mail.Action";
 
     get ActionList() {

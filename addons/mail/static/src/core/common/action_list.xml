@@ -26,7 +26,7 @@
 <t t-name="mail.Action">
     <t t-if="this.action.dropdownTrigger">
         <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this)" position="this.action.dropdownPosition" state="this.action.dropdownState">
-            <ActionButton t-props="this.props"/>
+            <t t-call="mail.Action.toggler"/>
             <t t-set-slot="content">
                 <t t-if="this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="this.action.dropdownComponentProps"/>
                 <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}"
@@ -38,7 +38,12 @@
             </t>
         </t>
     </t>
-    <ActionButton t-props="this.props" t-else=""/>
+    <t t-else="" t-call="mail.Action.toggler"/>
+</t>
+
+<t t-name="mail.Action.toggler">
+    <ActionDropdown t-if="this.props.dropdown" t-props="this.props"/>
+    <ActionButton t-else="" t-props="this.props"/>
 </t>
 
 </templates>
