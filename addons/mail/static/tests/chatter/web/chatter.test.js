@@ -86,7 +86,7 @@ test("simple chatter on a record", async () => {
                     "contact_fields",
                     "defaultSubject",
                     "followers",
-                    "has_pinned_messages",
+                    "pinned_message_count",
                     "scheduledMessages",
                     "showSubjectInSmallComposer",
                     "suggestedRecipients",
@@ -312,18 +312,11 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     await waitFor(".o-mail-Attachment iframe:count(1)");
 });
 
-test("chatter: dropping attachments should close pinned messages and search panels", async () => {
+test("chatter: dropping attachments should close search panel", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
-    pyEnv["mail.message"].create({
-        body: "Pinned message",
-        model: "res.partner",
-        pinned_at: "2025-01-01 00:00:00",
-        res_id: partnerId,
-    });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']:count(1)").click();
@@ -334,17 +327,6 @@ test("chatter: dropping attachments should close pinned messages and search pane
         ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt')):count(1)"
     );
     await waitForNone(".o-mail-SearchMessageInput");
-    await contains("button[title='Pinned Messages']:count(1)").click();
-    await waitFor(".o-mail-pinnedMessages:count(1)");
-    await dragenterFiles(".o-mail-Chatter", [text2]);
-    await dropFiles(".o-Dropzone", [text2]);
-    await waitFor(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt')):count(1)"
-    );
-    await waitFor(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text2.txt')):count(1)"
-    );
-    await waitForNone(".o-mail-pinnedMessages");
 });
 
 test("chatter: drop attachment while editing a message", async () => {
@@ -1056,4 +1038,42 @@ test("Can log a note with a pasted mention of a partner not mentioned through su
     await waitFor(
         ".o-mail-Message .o-mail-Message-body.o-note:has(:text('@Other Partner')):count(1)"
     );
+});
+
+test("chatter: pinned messages can be expanded and collapsed", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create([
+        {
+            body: "First pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId,
+        },
+        {
+            body: "Second pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-02 00:00:00",
+            res_id: partnerId,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    listenStoreFetch("mail.thread", { logParams: ["mail.thread"] });
+    await click(".o-mail-pinnedMessages > .cursor-pointer .badge:text('2')");
+    await waitStoreFetch([
+        [
+            "mail.thread",
+            {
+                thread_id: partnerId,
+                thread_model: "res.partner",
+                request_list: ["pinnedMessages"],
+            },
+        ],
+    ]);
+    await waitForNone(".o-mail-pinnedMessages > .cursor-pointer .badge");
+    await waitFor(".o-mail-pinnedMessages .o-mail-MessageCardList .o-mail-Message:count(2)");
+    await click(".o-mail-pinnedMessages > .cursor-pointer");
+    await waitFor(".o-mail-pinnedMessages > .cursor-pointer .badge:text('2'):count(1)");
+    await waitForNone(".o-mail-pinnedMessages .o-mail-MessageCardList .o-mail-Message");
 });
