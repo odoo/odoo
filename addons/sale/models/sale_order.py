@@ -826,18 +826,20 @@ class SaleOrder(models.Model):
                 if len(value) == 1:
                     return falsy_domain
             self.env.cr.execute(
-                """
-                SELECT array_agg(so.id)
-                    FROM sale_order so
-                    JOIN sale_order_line sol ON sol.order_id = so.id
-                    JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
-                    JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
-                    JOIN account_move am ON am.id = aml.move_id
-                WHERE
-                    am.move_type in ('out_invoice', 'out_refund') AND
-                    am.id = ANY(%s)
-            """,
-                (list(value),),
+                SQL(
+                    """
+                    SELECT array_agg(so.id)
+                        FROM sale_order so
+                        JOIN sale_order_line sol ON sol.order_id = so.id
+                        JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
+                        JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
+                        JOIN account_move am ON am.id = aml.move_id
+                    WHERE
+                        am.move_type in ('out_invoice', 'out_refund') AND
+                        am.id = ANY(%s)
+                    """,
+                    list(value),
+                )
             )
             so_ids = self.env.cr.fetchone()[0] or []
             return [("id", "in", so_ids)] + falsy_domain

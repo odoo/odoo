@@ -437,8 +437,11 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         now = datetime.now()
         for i, product in enumerate(products):
             self.env.cr.execute(
-                "UPDATE product_product SET create_date = %s WHERE id = %s",
-                (fields.Datetime.to_string(now + timedelta(seconds=i)), product.id),
+                SQL(
+                    "UPDATE product_product SET create_date = %s WHERE id = %s",
+                    fields.Datetime.to_string(now + timedelta(seconds=i)),
+                    product.id,
+                )
             )
         self.assert_snippet_filters_route_public_access(dyn_filter, products.sorted(reverse=True))
 

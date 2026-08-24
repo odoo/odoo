@@ -8,7 +8,7 @@ from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase, get_db_name
-from odoo.tools import mute_logger
+from odoo.tools import SQL, mute_logger
 
 
 @tagged("-standard", "-at_install", "post_install", "database_breaking")
@@ -82,23 +82,23 @@ class TestConcurrencyPromoCode(BaseCase):
 
             with cls.registry.cursor() as cr:
                 cr.execute(
-                    """
-                    DELETE FROM loyalty_card WHERE program_id = %(program_id)s;
-                    DELETE FROM loyalty_rule WHERE program_id = %(program_id)s;
-                    DELETE FROM loyalty_reward WHERE program_id = %(program_id)s;
-                    DELETE FROM loyalty_program WHERE id = %(program_id)s;
-                    DELETE FROM sale_order_line WHERE id IN %(sol_ids)s;
-                    DELETE FROM sale_order WHERE id IN %(so_ids)s;
-                    DELETE FROM res_partner WHERE id IN %(partner_ids)s;
-                    DELETE FROM product_product WHERE id = %(product_id)s;
-                """,
-                    {
-                        "program_id": cls.promo_code_program.id,
-                        "sol_ids": tuple(cls.order_lines.ids),
-                        "so_ids": (cls.order_partner_1.id, cls.order_partner_2.id),
-                        "partner_ids": (cls.partner_1.id, cls.partner_2.id),
-                        "product_id": cls.product.id,
-                    },
+                    SQL(
+                        """
+                        DELETE FROM loyalty_card WHERE program_id = %(program_id)s;
+                        DELETE FROM loyalty_rule WHERE program_id = %(program_id)s;
+                        DELETE FROM loyalty_reward WHERE program_id = %(program_id)s;
+                        DELETE FROM loyalty_program WHERE id = %(program_id)s;
+                        DELETE FROM sale_order_line WHERE id IN %(sol_ids)s;
+                        DELETE FROM sale_order WHERE id IN %(so_ids)s;
+                        DELETE FROM res_partner WHERE id IN %(partner_ids)s;
+                        DELETE FROM product_product WHERE id = %(product_id)s;
+                        """,
+                        program_id=cls.promo_code_program.id,
+                        sol_ids=tuple(cls.order_lines.ids),
+                        so_ids=(cls.order_partner_1.id, cls.order_partner_2.id),
+                        partner_ids=(cls.partner_1.id, cls.partner_2.id),
+                        product_id=cls.product.id,
+                    )
                 )
 
         cls.addClassCleanup(reset)
@@ -110,7 +110,7 @@ class TestConcurrencyPromoCode(BaseCase):
         start_barrier = threading.Barrier(2)
 
         def run(env, order_id):
-            env.cr.execute("SELECT id FROM loyalty_rule WHERE code = %s", (self.promo_code,))
+            env.cr.execute(SQL("SELECT id FROM loyalty_rule WHERE code = %s", self.promo_code))
             self.assertTrue(env.cr.fetchone())
             order = env["sale.order"].browse(order_id)
 

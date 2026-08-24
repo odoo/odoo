@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
-from odoo.tools import mute_logger
+from odoo.tools import SQL, mute_logger
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -52,8 +52,7 @@ class TestPaymentToken(PaymentCommon):
         """Test that the display name is still built for token without payment details."""
         token = self._create_token(payment_details="")
         self.env.cr.execute(
-            "UPDATE payment_token SET create_date = %s WHERE id = %s",
-            params=(date.today(), token.id),
+            SQL("UPDATE payment_token SET create_date = %s WHERE id = %s", date.today(), token.id)
         )
         token.invalidate_recordset(fnames=["create_date"])
         self.assertEqual(

@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_round, lazy
+from odoo.tools import SQL, float_round, lazy
 
 
 def _generate_random_reward_code():
@@ -1768,10 +1768,7 @@ class SaleOrder(models.Model):
         # serialization error when the processes don't have the lock and thus,
         # trigger a retry of the transaction.
         self.env.cr.execute(
-            """
-            SELECT id FROM loyalty_program WHERE id=%s FOR UPDATE NOWAIT
-        """,
-            (program.id,),
+            SQL("SELECT id FROM loyalty_program WHERE id = %s FOR UPDATE NOWAIT", program.id)
         )
 
         if program.limit_usage and program.total_order_count >= program.max_usage:
