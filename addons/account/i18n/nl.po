@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-07-30 14:10+0000\n"
+"PO-Revision-Date: 2026-08-19 15:12+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/account/"
 "nl/>\n"
@@ -3570,7 +3570,7 @@ msgstr "Voeg een notitie toe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR-code to your invoices"
-msgstr "Voeg een betaal QR-code toe aan je facturen"
+msgstr "Voeg een QR-code voor betaling toe aan je facturen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
@@ -3876,7 +3876,7 @@ msgstr "Sta beheer kassa afronding toe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Sta toe om btw's te configureren op kasstelsel methode"
+msgstr "Sta toe om btw's te configureren met de kasstelsel-methode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__allowed_uom_ids
@@ -5000,7 +5000,8 @@ msgid ""
 "the final reconciliation allowing finding the right account."
 msgstr ""
 "Transacties van rekeningafschriften worden op de tussenrekening geboekt tot "
-"de laatste aflettering waardoor de juiste rekening kan worden gevonden."
+"de uiteindelijke aflettering plaatsvindt, waarbij de boeking verplaatst "
+"wordt naar de juiste rekening."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5042,9 +5043,8 @@ msgstr "Ontvangen btw grondslagrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_active
-#, fuzzy
 msgid "Base Tax Received Account Active"
-msgstr "Rekening ontvangen basisbelasting actief"
+msgstr "Basisrekening ontvangen belasting actief"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -5899,8 +5899,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "credit notes made from this journal"
 msgstr ""
-"Vink dit vakje aan, als je niet dezelfde reeks wil delen voor facturen en "
-"creditfacturen vanuit dit dagboek"
+"Vink dit vakje aan als je niet dezelfde reeksnummering wilt delen voor "
+"facturen en creditfacturen vanuit dit dagboek"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
@@ -6508,12 +6508,12 @@ msgstr "Kon geen bestanden uploaden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
 msgid "Count Reconciled Lines"
-msgstr ""
+msgstr "Aantal afgeletterde regels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
 msgid "Count Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Aantal afgeletterde regels exclusief wisselkoersverschillen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -7560,7 +7560,7 @@ msgstr "Aparte reeksnummering voor creditfacturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
 msgid "Dedicated Payment Sequence"
-msgstr "Specifiek betalingsreeksnummer"
+msgstr "Specifieke betalingsreeks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_percentage
@@ -7751,7 +7751,7 @@ msgstr "Bepaal je boekjaar & btw-aangifteperiode."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Definieert hoe rekeningafschriften geregistreerd worden"
+msgstr "Bepaalt hoe rekeningafschriften geregistreerd worden"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__display_account_prefix
@@ -8229,7 +8229,7 @@ msgstr "Toon QR-code"
 #: model:ir.model.fields,field_description:account.field_base_document_layout__qr_code
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 msgid "Display QR-code on invoices"
-msgstr "Voeg een betaal QR-code toe aan je facturen"
+msgstr "QR-code weergeven op facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
@@ -8266,7 +8266,7 @@ msgstr "Voorbeeldknop weergeven"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Display the total amount of an invoice in letters"
-msgstr "Toon het totaal bedrag van een factuur voluit"
+msgstr "Toon het totaalbedrag van een factuur in letters"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_disposal_fees
@@ -8738,7 +8738,7 @@ msgstr "Electronic Data Interchange"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Elektronische facturatie"
 
 #. module: account
 #. odoo-python
@@ -9432,12 +9432,12 @@ msgstr "Eerste nieuwe reeks"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
 msgid "First Reconciled Lines"
-msgstr ""
+msgstr "Eerste afgeletterde regels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
 msgid "First Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Eerste afgeletterde regels exclusief wisselkoersverschillen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -10750,10 +10750,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
-"Als aangevinkt, wanneer een boeking wordt geplaatst, hashen we met "
-"terugwerkende kracht alle boekingen in de reeks vanaf de huidige boeking tot "
+"Als dit is aangevinkt, hashen we bij het plaatsen van een boeking alle "
+"boekingen in de reeks met terugwerkende kracht vanaf de huidige boeking tot "
 "aan de laatste gehashte boeking. De hash kan ook op aanvraag worden "
-"uitgevoerd via de Secure Entries-wizard."
+"uitgevoerd via de wizard 'Boekingen beveiligen'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11838,7 +11838,7 @@ msgstr "Is restitutie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__is_register_payment_on_draft
 msgid "Is Register Payment On Draft"
-msgstr "Is Registerbetaling op afschrift"
+msgstr "Is Betaling registreren als Ontwerp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
@@ -14708,7 +14708,7 @@ msgstr "Kredietwaarschuwing partner"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Grootboek partner"
+msgstr "Saldilijsten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
@@ -15705,7 +15705,7 @@ msgstr "Resultaatverwerking"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
+msgstr "Winstgevendheid"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -15865,7 +15865,7 @@ msgstr "QR-code-URL"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QR Codes"
-msgstr "QR codes"
+msgstr "QR-codes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
@@ -15991,7 +15991,7 @@ msgstr "Ontvang facturen"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr "Ontvangende bank"
+msgstr "Bankrekening begunstigde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -17020,8 +17020,8 @@ msgstr "Beveiligd"
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
-"Als je deze items vastlegt, worden ook de items na de geselecteerde datum "
-"vastgelegd."
+"Als je deze items beveiligt, worden ook de items na de geselecteerde datum "
+"beveiligd."
 
 #. module: account
 #. odoo-python
@@ -17108,8 +17108,8 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Selecteer dit als de btw-kasstelsel moet gebruiken. Dit maakt een boeking "
-"aan bij het afletteren."
+"Selecteer dit als btw het kasstelsel moet gebruiken. Dit maakt een boeking "
+"voor die belastingen aan bij het afletteren."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -17378,7 +17378,7 @@ msgstr "Reeks overschrijf Regex"
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Sequence Prefix"
-msgstr "Reeks voorvoegsel"
+msgstr "Reeksvoorvoegsel"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__service
@@ -19698,8 +19698,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
-"De registerbetalingswizard mag alleen worden aangeroepen op account.move of "
-"account.move.line records."
+"De wizard 'Betaling registreren' mag alleen worden aangeroepen op "
+"account.move of account.move.line records."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
@@ -21009,7 +21009,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Niet gecategoriseerd"
 
 #. module: account
 #. odoo-python
@@ -21364,8 +21364,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Gebruikt om verlies te registreren wanneer de eindsaldo van een kasregister "
-"verschilt van wat het systeem berekend"
+"Gebruikt om verlies te registreren wanneer het eindsaldo van een kassa "
+"verschilt van wat het systeem had berekend"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
@@ -21373,8 +21373,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Gebruikt om winst te registreren wanneer de eindsaldo van een kasregister "
-"verschilt van wat het systeem berekend"
+"Gebruikt om winst te registreren wanneer het eindsaldo van een kassa "
+"verschilt van wat het systeem had berekend"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__user_id
@@ -22044,6 +22044,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_users__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
 msgstr ""
+"Je kunt '/' gebruiken om aan te geven dat de klant geen btw-nummer heeft."
 
 #. module: account
 #. odoo-python
@@ -22513,7 +22514,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You cannot register payments for blocked invoices."
-msgstr ""
+msgstr "Je kunt geen betalingen registreren voor geblokkeerde facturen."
 
 #. module: account
 #. odoo-python

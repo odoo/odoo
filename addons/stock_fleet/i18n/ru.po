@@ -4,15 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-06-30 17:55+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 11:43+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_fleet/ru/>\n"
 "Language: ru\n"
@@ -63,6 +63,9 @@ msgid ""
 "                        <span class=\"fw-bold\" invisible=\"code "
 "=='outgoing'\">To</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">От</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">До</span>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
@@ -82,7 +85,7 @@ msgstr "<strong>Транспортное средство:</strong>"
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
 msgid "Allowed Docks"
-msgstr ""
+msgstr "Разрешенные погрузочные зоны"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
@@ -109,7 +112,7 @@ msgstr "Категория модели"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
 msgid "Dispatch Management"
-msgstr ""
+msgstr "Управление отправкой"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
@@ -117,15 +120,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
-#, fuzzy
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое название"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
 msgid "Dock"
-msgstr ""
+msgstr "Погрузочная зона"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -140,7 +142,7 @@ msgstr "Локация дока"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Dock Locations"
-msgstr ""
+msgstr "Расположение погрузочной зоны"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
@@ -154,6 +156,8 @@ msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
 msgstr ""
+"Позволяет отображать данные диспетчеризации при комплектации по партиям и "
+"волновой комплектации, а также на канбан-доске операций."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
@@ -211,7 +215,6 @@ msgstr "Собственный автопарк"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_type
-#, fuzzy
 msgid "Picking Type"
 msgstr "Тип комплектации"
 
@@ -320,7 +323,6 @@ msgstr "Метка единицы измерения объема"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_warehouse
-#, fuzzy
 msgid "Warehouse"
 msgstr "Склад"
 

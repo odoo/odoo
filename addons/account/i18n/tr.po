@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-08-06 07:48+0000\n"
+"PO-Revision-Date: 2026-08-20 14:09+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/tr/>\n"
@@ -723,7 +723,6 @@ msgstr ""
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -812,16 +811,16 @@ msgstr ""
 "        <t t-out=\"object.company_id.name or ''\">YourCompany</t> "
 "firmasından adınıza düzenlenen\n"
 "        <t t-if=\"object.name\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">INV/2021/05/0005</span> numaralı\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"INV/2021/05/0005</span> numaralı\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (<t t-out=\"object.invoice_origin or ''\">SUB003</t> "
-"referanslı)\n"
+"            (<t t-out=\"object.invoice_origin or ''\">SUB003</t> referanslı)"
+"\n"
 "        </t>\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span> tutarındaki\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span> "
+"tutarındaki\n"
 "        faturanız aşağıdadır.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Bu fatura zaten ödenmiştir.\n"
@@ -833,8 +832,8 @@ msgstr ""
 "                Lütfen ödemeniz için aşağıdaki referansı kullanın: <strong t-"
 "out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
-"                    <strong t-out=\"object.partner_bank_id.acc_number\"/> "
-"numaralı hesaba\n"
+"                    <strong t-"
+"out=\"object.partner_bank_id.account_number\"/> numaralı hesaba\n"
 "                </t>\n"
 "                .\n"
 "            </t>\n"
@@ -842,18 +841,16 @@ msgstr ""
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            Not: Çalışma Çizelgelerinizi <a t-att-href=\"'/my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\">portaldan "
+"            Not: Çalışma Çizelgelerinizi <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">portaldan "
 "inceleyebilirsiniz.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Herhangi bir sorunuz olursa bizimle iletişime geçmekten çekinmeyin.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
-"o-mail-quote-container=\"1\">\n"
+"       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">>\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\"><br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -2635,7 +2632,6 @@ msgstr "Hesap Planı Şablonu"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_code_mapping.py:0
-#, fuzzy
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
@@ -8424,7 +8420,7 @@ msgstr "Vergide ayarlanabilen etiket için kullanılan dinamik alan"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "EAN/GLN"
-msgstr ""
+msgstr "EAN/GLN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -9376,7 +9372,7 @@ msgstr "Yuvarlama Miktarı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__foldability
 msgid "Foldability"
-msgstr ""
+msgstr "Katlanabilirlik"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__foldability__foldable
@@ -18679,7 +18675,6 @@ msgstr "Kesin Kilit Tarihi silinemez."
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
-#, fuzzy
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s\n"
@@ -18919,6 +18914,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Bu faturaya bağlı şirket banka hesabı (%(account_number)s) güvenilir değil. "
+"Banka Ayarları'na gidin, hesabın size ait olduğunu iki kez kontrol edin veya "
+"numarayı düzeltin ve \"Para Gönder\" seçeneğine tıklayarak hesabı güvenilir "
+"olarak işaretleyin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18942,6 +18941,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"Yabancı vergi kimlik numarasının ait olduğu ülke tespit edilemedi. Lütfen "
+"mali pozisyona bir ülke atayın."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -22024,6 +22025,9 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
+"Bir günlük girdisi bir kez yayınlandıktan sonra, adı kaldırılmadıkça veya \"/"
+"\" olarak ayarlanmadıkça düzenlenemez. Bu durum, sıralamada bir boşluk "
+"oluşmasına neden olabilir."
 
 #. module: account
 #. odoo-python
@@ -22033,6 +22037,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
+"Sıra numarası atanmış bir günlük girişinin adını silmedikçe veya \"/\" "
+"olarak ayarlamadıkça, bu girişi düzenleyemezsiniz. Bu, sıra numarası "
+"dizisinde bir boşluk yaratabilir."
 
 #. module: account
 #. odoo-python

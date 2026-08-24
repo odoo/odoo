@@ -4,13 +4,14 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-07-01 23:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 11:40+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_management/ru/>\n"
 "Language: ru\n"
@@ -57,7 +58,7 @@ msgstr "Все продажи"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Допустимые ед. изм."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -289,7 +290,7 @@ msgstr "Онлайн-подпись"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_optional
 msgid "Optional Line"
-msgstr ""
+msgstr "Дополнительная строка"
 
 #. module: sale_management
 #. odoo-python
@@ -306,7 +307,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Строка родительского раздела"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
@@ -476,7 +477,7 @@ msgstr "Последовательность"
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
 msgid "Set Optional"
-msgstr ""
+msgstr "Сделать дополнительным"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -505,7 +506,7 @@ msgstr ""
 #: code:addons/sale_management/models/sale_order_template.py:0
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Подраздел"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
@@ -576,14 +577,14 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Единица"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
 msgid "Unset Optional"
-msgstr ""
+msgstr "Убрать из дополнительных"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -603,7 +604,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Видно всем"
 
 #. module: sale_management
 #. odoo-python
@@ -631,6 +632,9 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Ваш шаблон принадлежит компании %(template_company)s, но содержит товары "
+"компании %(product_company)s, недоступные для %(template_company)s.\n"
+"Пожалуйста, измените компанию в шаблоне или удалите товары других компаний."
 
 #. module: sale_management
 #. odoo-python
@@ -642,6 +646,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Ваш шаблон принадлежит компании %(template_company)s, но содержит товары "
+"других компаний (%(product_company)s), недоступные для %(template_company)"
+"s.\n"
+"Пожалуйста, измените компанию в шаблоне или удалите товары других компаний."
 
 #. module: sale_management
 #. odoo-python
@@ -651,6 +659,9 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Шаблон не может содержать товары конкретных компаний, если он используется "
+"несколькими компаниями. Пожалуйста, ограничьте доступ к шаблону или удалите "
+"эти товары."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
