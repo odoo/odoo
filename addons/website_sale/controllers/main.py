@@ -24,6 +24,11 @@ from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 
+# Label of the company registry field on the checkout address form, by country code.
+COMPANY_REGISTRY_LABELS = {
+    'FR': 'SIREN',
+}
+
 
 class TableCompute:
 
@@ -1230,6 +1235,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             ),
             'vat_label': request.env._("VAT"),
+            'company_registry_label': self._get_company_registry_label(country_sudo),
         }
 
     @route(
@@ -1490,6 +1496,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 error_messages.append(_(
                     "Changing VAT number is not allowed once document(s) have been issued for your"
                     " account. Please contact us directly for this operation."
+                ))
+            # Prevent changing the company registry if invoices have been issued. Same rule as the
+            # VAT: company_registry is a commercial field, locked once documents are issued.
+            if (
+                'company_registry' in address_values
+                and address_values['company_registry'] != (partner_sudo.company_registry or '')
+                and not partner_sudo.can_edit_vat()
+            ):
+                invalid_fields.add('company_registry')
+                error_messages.append(_(
+                    "Changing company registry is not allowed once document(s) have been issued for"
+                    " your account. Please contact us directly for this operation."
                 ))
 
         # Validate the email.
@@ -2190,6 +2208,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         field_names |= set(self._get_mandatory_fields())
         return field_names
 
+    def _get_company_registry_label(self, country_sudo):
+        """ Return the label of the company registry field for the given country.
+
+        :param res.country country_sudo: The country to use to get the label.
+        :return: The label to display, or an empty string to hide the field.
+        :rtype: str
+        """
+        group = request.env.ref('website_sale.country_group_company_registry', raise_if_not_found=False)
+        if not group or country_sudo not in group.country_ids:
+            return ''
+        return COMPANY_REGISTRY_LABELS.get(country_sudo.code) or request.env._("Company ID")
+
     def _get_mandatory_address_fields(self, country_sudo):
         """ Return the set of common mandatory address fields.
 
@@ -2304,6 +2334,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
             'phone_code': country.phone_code,
             'required_fields': list(required_fields),
+            'company_registry_label': self._get_company_registry_label(country),
         }
 
     # --------------------------------------------------------------------------

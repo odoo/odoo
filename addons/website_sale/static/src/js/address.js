@@ -78,6 +78,12 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             {address_type: this.addressType},
         );
 
+        const companyRegistryEl = this.addressForm.querySelector("#div_company_registry");
+        if (companyRegistryEl) {
+            companyRegistryEl.querySelector("label").textContent = data.company_registry_label;
+            companyRegistryEl.style.display = data.company_registry_label ? "" : "none";
+        }
+
         if (data.phone_code !== 0) {
             this.addressForm.phone.placeholder = '+' + data.phone_code;
         } else {
