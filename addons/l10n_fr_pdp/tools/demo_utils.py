@@ -42,23 +42,12 @@ def _mock_peppol_register_receiver(func, self):
         return
     func(self)
     self.company_id.account_peppol_proxy_state = 'active'
-    if self.company_id.l10n_fr_pdp_pilot_phase:
-        self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
-    else:
-        self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date('2026-09-01')
+    self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
 
 
 def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
     peppol_eas = edi_identification.partition(":")[0]
     return {'in_annuaire': peppol_eas == '0225'}
-
-
-def _mock_l10n_fr_pdp_update_pilot_phase(func, self, value):
-    self.sudo().l10n_fr_pdp_pilot_phase = value
-    if value:
-        self.sudo().l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
-    else:
-        self.sudo().l10n_fr_pdp_annuaire_start_date = fields.Date.to_date('2026-09-01')
 
 
 def _mock_button_trigger_authentication(func, self):
@@ -71,7 +60,6 @@ _demo_behaviour = {
     '_peppol_register_receiver': _mock_peppol_register_receiver,  # account_edi_proxy_client.user
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_pdp_annuaire_lookup_participant': _mock_pdp_annuaire_lookup_participant,  # res.partner
-    '_l10n_fr_pdp_update_pilot_phase': _mock_l10n_fr_pdp_update_pilot_phase,  # res.company
     'button_trigger_authentication': _mock_button_trigger_authentication,  # pdp.registration
 }
 

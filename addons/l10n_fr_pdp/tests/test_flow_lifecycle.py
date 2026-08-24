@@ -27,7 +27,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'email': 'info@company.frexample.com',
             'l10n_fr_pdp_annuaire_start_date': '2025-01-01',
             'l10n_fr_pdp_periodicity': 'normal_monthly',
-            'l10n_fr_pdp_pilot_phase': True,
             'l10n_fr_pdp_send_to_ppf': True,
             'name': 'NOM MATELAS',
             'siret': '34057796400024',
