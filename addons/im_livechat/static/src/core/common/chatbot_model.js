@@ -58,8 +58,8 @@ export class Chatbot extends Record {
         if (this.completed) {
             return;
         }
-        if (this.channel_id.isLastMessageFromCustomer) {
-            await this.processAnswer(this.channel_id.newestPersistentOfAllMessage);
+        if (this.channel_id.isLastCommentFromVisitor) {
+            await this.processAnswer(this.channel_id.newestPersistentCommentOfAllMessages);
         }
         if (!this.currentStep?.expectAnswer || this.currentStep?.completed) {
             this._runUntilUserInputStep();

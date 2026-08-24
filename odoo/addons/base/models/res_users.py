@@ -863,6 +863,9 @@ class ResUsers(models.Model):
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return auth_info
 
+    def _after_session_login(self):
+        """Hook called after the user's HTTP session is fully authenticated."""
+
     @api.model
     @api.ormcache('uid', 'passwd')
     def _check_uid_passwd(self, uid, passwd):

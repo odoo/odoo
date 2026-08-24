@@ -55,7 +55,8 @@ export class ResUsers extends webModels.ResUsers {
                 res.one("self_user", "_store_init_fields", {
                     value: ResUsers.browse(this.env.user.id),
                 });
-            } else if (this.env.cookie.get("dgid")) {
+            }
+            if (this.env.cookie.get("dgid")) {
                 res.one(
                     "self_guest",
                     (r) => {

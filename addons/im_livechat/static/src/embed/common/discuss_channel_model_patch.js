@@ -85,8 +85,8 @@ const discussChannelPatch = {
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot;
     },
-    get isLastMessageFromCustomer() {
-        return this.newestPersistentOfAllMessage?.isSelfAuthored;
+    get isLastCommentFromVisitor() {
+        return this.newestPersistentCommentOfAllMessages?.isSelfAuthored;
     },
     _onDeleteChatWindow() {
         if (this.isTransient && this.channel_type === "livechat") {

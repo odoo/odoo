@@ -2,12 +2,14 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread.prototype, {
-    get effectiveSelf() {
-        if (this.portal_partner && !this.store.self_user?.partner_id) {
-            return this.portal_partner;
+/** @type {import("models").Thread} */
+const threadPatch = {
+    computeSelvesBySequence() {
+        const result = super.computeSelvesBySequence();
+        if (this.portal_partner) {
+            result.push({ self: this.portal_partner, sequence: 20 });
         }
-        return super.effectiveSelf;
+        return result;
     },
     get rpcParams() {
         return {
@@ -17,4 +19,5 @@ patch(Thread.prototype, {
             ...(this.pid ? { pid: this.pid } : {}),
         };
     },
-});
+};
+patch(Thread.prototype, threadPatch);
