@@ -24,7 +24,7 @@
 </t>
 
 <t t-name="mail.Action">
-    <t t-if="this.action.dropdown">
+    <t t-if="this.action.dropdownTrigger">
         <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this)" position="this.action.dropdownPosition" state="this.action.dropdownState">
             <ActionButton t-props="this.props"/>
             <t t-set-slot="content">
