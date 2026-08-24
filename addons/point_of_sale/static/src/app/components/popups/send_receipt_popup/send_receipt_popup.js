@@ -20,6 +20,7 @@ export class SendReceiptPopup extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
+        this.notificationService = useService("notification");
         const partner = this.order.getPartner();
         const email = partner?.invoice_emails || partner?.email || "";
         this.state = proxy({
@@ -35,6 +36,10 @@ export class SendReceiptPopup extends Component {
             destination: this.state.email,
             name: "Email",
         });
+    }
+
+    get title() {
+        return _t("Send receipt");
     }
 
     get order() {
@@ -60,7 +65,22 @@ export class SendReceiptPopup extends Component {
             });
             return Promise.reject();
         }
-        await this.pos.data.call("pos.order", action, [[this.order.id], destination]);
+
+        try {
+            await this.pos.data.call("pos.order", action, [[this.order.id], destination]);
+
+            const successMessage = this.order.is_singly_invoiced
+                ? _t("Receipt and invoice sent successfully")
+                : _t("Receipt sent successfully");
+
+            this.notificationService.add(successMessage, { type: "success" });
+            this.props.close();
+        } catch (error) {
+            this.notificationService.add(_t("Sending failed. Please try again."), {
+                type: "danger",
+            });
+            throw error;
+        }
     }
 
     get sendList() {
