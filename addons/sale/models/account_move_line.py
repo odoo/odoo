@@ -73,6 +73,14 @@ class AccountMoveLine(models.Model):
                 if sale_line:
                     values["so_line"] = sale_line.id
 
+        if self.sale_line_ids:
+            for values in values_list:
+                # Only revenue is linked to the invoiced sale order item: a negative amount (credit
+                # note, discount line) would be counted as a delivered quantity, see
+                # sale.order.line._get_delivered_quantity_by_analytic_domain().
+                if values["amount"] > 0.0 and values["unit_amount"] >= 0.0:
+                    values.setdefault("so_line", self.sale_line_ids[0].id)
+
         return values_list
 
     def _sale_can_be_reinvoice(self):

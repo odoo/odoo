@@ -2804,6 +2804,14 @@
             <field name="status">at_risk</field>
         </record>
 
+        <!-- Invoice the sales order of the AGR project -->
+        <function model="sale.order" name="_create_invoices" eval="[[ref('sale_timesheet.sale_order_1')]]"/>
+        <function model="account.move" name="action_post">
+            <value model="account.move"
+                eval="obj().env['sale.order'].browse(ref('sale_timesheet.sale_order_1')).invoice_ids.ids"
+            />
+        </function>
+
         <!-- Change task creation notifications date -->
         <function model="mail.message" name="write">
            <value model="mail.message"
