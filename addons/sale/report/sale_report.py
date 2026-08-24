@@ -23,8 +23,11 @@ class SaleReport(models.Model):
     def _selection_target_model(self):
         return [
             (model.model, model.name)
-            for model in self.env["ir.model"].sudo().search([])
-            if not self.env[model.model].is_transient()
+            for model
+            in self.env['ir.model'].sudo().search_fetch(
+                [('transient', '=', False)], ['model', 'name']
+            )
+            if model.model in self.env
         ]
 
     # sale.order fields
