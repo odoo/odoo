@@ -5,13 +5,12 @@ import {
     proxy,
     t,
     toRaw,
-    untrack,
     useOnChange,
     useScope,
 } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
-import { useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 
 /**
  * This file contains various custom hooks.
@@ -47,19 +46,13 @@ export const autofocusParamsType = t.object({
  * Focus an element referenced by a t-ref="autofocus" in the active component
  * as soon as it appears in the DOM and if it was not displayed before.
  * If it is an input/textarea, set the selection at the end.
- * @param {Object} [params]
- * @param {import("@odoo/owl").Signal<HTMLElement>} [params.ref] the ref to focus
+ * @param {Object} params
+ * @param {import("@odoo/owl").Signal<HTMLElement>} params.ref the ref to focus
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @param {boolean} [params.mobile] if true, will force autofocus on touch devices.
- * @returns {import("@odoo/owl").Signal<HTMLElement> | undefined} the element reference
+ * @returns {import("@odoo/owl").Signal<HTMLElement>} the element reference
  */
-export function useAutofocus({ ref, selectAll, mobile } = {}) {
-    // The read is untracked: getEl() is called in the layout-effect deps (run
-    // during the render phase), so a tracked read would subscribe the component
-    // to the ref signal, and setting the ref on mount would schedule a spurious
-    // re-render that can reset an input bound with t-att-value (e.g. calendar
-    // quick-create title).
-    const getEl = () => (ref ? untrack(ref) : undefined);
+export function useAutofocus({ ref, selectAll, mobile }) {
     const uiService = useService("ui");
 
     // Prevent autofocus on touch devices to avoid the virtual keyboard from popping up unexpectedly
@@ -80,8 +73,16 @@ export function useAutofocus({ ref, selectAll, mobile } = {}) {
         const rootNode = el.getRootNode();
         return rootNode instanceof ShadowRoot && uiService.activeElement.contains(rootNode.host);
     }
-    // LEGACY
-    useLayoutEffect(
+    // `useOnChange` tracks the dependencies in a computation of its own, so the
+    // ref read subscribes to the ref and to nothing else: the element is focused
+    // no matter which render writes it (e.g. a <Dialog> rendering its slot
+    // content), and this component is never subscribed, as its re-render would
+    // reset an input bound with t-att-value (e.g. calendar quick-create title).
+    // The callback itself is untracked: `el.focus()` synchronously runs the
+    // focus handlers, and the signals they read must not become dependencies,
+    // or any later change to them would steal the focus back.
+    useOnChange(
+        () => [ref()],
         (el) => {
             if (isFocusable(el)) {
                 el.focus();
@@ -90,8 +91,7 @@ export function useAutofocus({ ref, selectAll, mobile } = {}) {
                     el.selectionStart = selectAll ? 0 : el.value.length;
                 }
             }
-        },
-        () => [getEl()]
+        }
     );
     return ref;
 }

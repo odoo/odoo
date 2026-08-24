@@ -34,7 +34,6 @@ class BasicHookParent extends Component {
     containerRef = signal.ref();
 
     setup() {
-        useAutofocus({ ref: this.outsideRef });
         this.navigation = useNavigation(this.containerRef, this.navOptions);
         onMounted(() => this.navigation.items[0]?.setActive());
     }
@@ -146,6 +145,13 @@ test("navigation with virtual focus", async () => {
             virtualFocus: true,
             isNavigationAvailable: () => true,
         };
+
+        setup() {
+            super.setup();
+            // Real focus is expected to stay on this unrelated, autofocused
+            // button throughout: virtual focus never touches real DOM focus.
+            useAutofocus({ ref: this.outsideRef });
+        }
 
         onClick(id) {
             expect.step(id);

@@ -3,7 +3,6 @@ import {
     click,
     contains,
     defineMailModels,
-    focus,
     insertText,
     openDiscuss,
     openFormView,
@@ -18,7 +17,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { getService, onRpc, patchWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
-import { animationFrame, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -303,10 +302,10 @@ test("Pause GIF when thread is not focused", async () => {
     await click("button[title='Send GIF']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click("img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0)");
-    await contains(".o-mail-LinkPreviewImage");
-    queryFirst(".o-mail-Thread").blur();
+    await contains(".o-mail-LinkPreviewImage img:not([data-paused])");
+    await click("button[title='Send GIF']");
     await contains(".o-mail-LinkPreviewImage img[data-paused]");
-    await focus(".o-mail-Thread");
+    await click(".o-mail-Composer-input");
     await contains(".o-mail-LinkPreviewImage img:not([data-paused])");
 });
 
