@@ -1126,8 +1126,6 @@ registry
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
                 FeedbackScreen.isShown(),
-                Dialog.confirm(),
-                FeedbackScreen.clickNextOrder(),
                 ProductScreen.isShown(),
             ].flat(),
     });
