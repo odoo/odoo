@@ -327,7 +327,7 @@ export function makeActionManager(env, router = _router) {
             const { onClose, remove } = dialog;
             await onClose?.(closeParams);
             dialog = null;
-            // Remove the dialog from the dialog_service.
+            // Remove the dialog from the dialog_plugin.
             // The code is well enough designed to avoid falling in a function call loop.
             remove();
         }

@@ -4,12 +4,12 @@ import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot
 import { Component, proxy, useProps, xml } from "@odoo/owl";
 import {
     assignTestEnv,
-    mockService,
     mountWithCleanup,
+    patchWithCleanup,
     registerTemplate,
 } from "@web/../tests/web_test_helpers";
 
-import { popoverService } from "@web/core/popover/popover_service";
+import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
 
 test.tags("desktop");
@@ -117,19 +117,16 @@ test("rendering with several tooltips", async () => {
 
 test.tags("desktop");
 test("positioning", async () => {
-    mockService("popover", (...kargs) => {
-        const popover = popoverService.start(...kargs);
-        return {
-            add(...args) {
-                const { position } = args[3];
-                if (position) {
-                    expect.step(`popover added with position: ${position}`);
-                } else {
-                    expect.step(`popover added with default positioning`);
-                }
-                return popover.add(...args);
-            },
-        };
+    patchWithCleanup(PopoverPlugin.prototype, {
+        add(target, component, props, options) {
+            const { position } = options;
+            if (position) {
+                expect.step(`popover added with position: ${position}`);
+            } else {
+                expect.step(`popover added with default positioning`);
+            }
+            return super.add(target, component, props, options);
+        },
     });
 
     class MyComponent extends Component {

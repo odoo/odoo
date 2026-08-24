@@ -2,8 +2,8 @@ import { onWillUnmount, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
- * @typedef {import("@web/core/popover/popover_service").PopoverServiceAddFunction} PopoverServiceAddFunction
- * @typedef {import("@web/core/popover/popover_service").PopoverServiceAddOptions} PopoverServiceAddOptions
+ * @typedef {import("@web/core/popover/popover_plugin").PopoverPlugin["add"]} PopoverServiceAddFunction
+ * @typedef {import("@web/core/popover/popover_plugin").PopoverOptionSchema} PopoverServiceAddOptions
  */
 
 /**
@@ -71,7 +71,7 @@ export function usePopover(component, options = {}) {
             }
         };
     }
-    const popover = makePopover(service.add, component, newOptions);
+    const popover = makePopover(service.add.bind(service), component, newOptions);
     onWillUnmount(popover.close);
     return popover;
 }

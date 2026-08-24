@@ -470,7 +470,7 @@ export class EmojiPicker extends Component {
  * @param {() => {}} [props.onSelect] function that is invoked when an item in picker has been selected.
  *   When explicit value `false` is returned, this will keep the picker open (= it won't auto-close it)
  * @param {() => {}} [props.onClose]
- * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
+ * @param {import("@web/core/popover/popover_plugin").PopoverOptionSchema} [options]
  */
 export function usePicker(PickerComponent, ref, props, options = {}) {
     const app = useApp();

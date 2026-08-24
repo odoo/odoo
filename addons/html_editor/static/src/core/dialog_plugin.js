@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 
 /**
  * @typedef {typeof import("@odoo/owl").Component} Component
- * @typedef {import("@web/core/dialog/dialog_service").DialogServiceInterfaceAddOptions} DialogServiceInterfaceAddOptions
+ * @typedef {import("@web/core/dialog/dialog_plugin").DialogOptionSchema} DialogOptionSchema
  */
 
 /**
@@ -18,7 +18,7 @@ export class DialogPlugin extends Plugin {
     /**
      * @param {Component} DialogClass
      * @param {Object} props
-     * @param {DialogServiceInterfaceAddOptions} options
+     * @param {DialogOptionSchema} options
      * @returns {Promise<void>}
      */
     addDialog(DialogClass, props, options = {}) {
