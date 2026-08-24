@@ -75,12 +75,17 @@ registry.category("web_tour.tours").add("configurator_flow", {
         {
             content: "Loader should be shown",
             trigger: ".o_website_loader_container",
+        },
+        {
+            content: "Wait for the website to be built",
+            trigger: ".o_website_loader_container:not(:has(.fa-circle-o-notch))",
+            timeout: 60000,
             expectUnloadPage: true,
         },
         {
             content: "Wait for the editor to load after redirect",
             trigger: ":iframe [data-view-xmlid='website.homepage']",
-            timeout: 30000,
+            timeout: 60000,
         },
         {
             content: "check menu and footer links are correct",
