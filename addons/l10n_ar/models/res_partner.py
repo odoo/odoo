@@ -160,3 +160,8 @@ class ResPartner(models.Model):
         else:
             res = re.sub(r'[^0-9a-zA-Z]', '', self.vat)
         return res
+
+    def _get_vat_country_type(self):
+        """ Si no tiene tipo de identificación o la que tiene es tipo "is_vat" consideramos que es emprea
+        Siempre en contexto de operaciones con el exterior."""
+        return 'legal' if (not self.l10n_latam_identification_type_id or self.l10n_latam_identification_type_id.is_vat) else 'natural'
