@@ -274,7 +274,7 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     # Task Dependencies fields
-    allow_task_dependencies = fields.Boolean(compute='_compute_allow_task_dependencies', export_string_translation=False)
+    allow_task_dependencies = fields.Boolean(compute='_compute_allow_task_dependencies', compute_sudo=True, export_string_translation=False)
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
@@ -292,7 +292,7 @@ class ProjectTask(models.Model):
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
-    allow_recurring_tasks = fields.Boolean(compute='_compute_allow_recurring_tasks', export_string_translation=False)
+    allow_recurring_tasks = fields.Boolean(compute='_compute_allow_recurring_tasks', compute_sudo=True, export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
