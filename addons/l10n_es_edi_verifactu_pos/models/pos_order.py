@@ -153,7 +153,7 @@ class PosOrder(models.Model):
         else:
             refunded_document = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
 
-        name = self.l10n_es_edi_verifactu_get_invoice_name()
+        name = self._l10n_es_edi_verifactu_get_simplified_invoice_name()
         is_simplified = not refunded_order or self.l10n_es_invoice_type == 'R5'
         vals.update({
             'rejected_before': rejected_before,
@@ -265,10 +265,13 @@ class PosOrder(models.Model):
 
         return res
 
+    def _l10n_es_edi_verifactu_get_simplified_invoice_name(self):
+        return str(self.config_id.id) + '/' + str(self.sequence_number).zfill(6)
+
     def l10n_es_edi_verifactu_get_invoice_name(self):
         if self.account_move:
             return self.account_move.name
-        return str(self.config_id.id) + '/' + str(self.sequence_number).zfill(6)
+        return self._l10n_es_edi_verifactu_get_simplified_invoice_name()
 
     def _update_sequence_number(self, session, values):
         """ Override: do not allow updating the sequence number for Spanish pos orders"""
