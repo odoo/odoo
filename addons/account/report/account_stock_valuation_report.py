@@ -25,10 +25,8 @@ class StockValuationReport(models.AbstractModel):
         company = self.env.company
         date = self._normalize_report_date(date)
 
-        valued_products = company._get_inventory_valuation_products(date)
-        accounts_by_product = company._get_accounts_by_product(products=valued_products)
-        inventory_data = company.get_inventory_value(accounts_by_product, at_date=date)
-        accounting_data = company.get_inventory_accounting_value(accounts_by_product, at_date=date)
+        inventory_data = company.get_inventory_value(at_date=date)
+        accounting_data = company.get_inventory_accounting_value(at_date=date)
 
         accounts = inventory_data.keys() | accounting_data.keys()
         account_ids = {acc.id for acc in accounts}
@@ -60,7 +58,7 @@ class StockValuationReport(models.AbstractModel):
 
         extra_aml_vals_list = self._get_extra_stock_valuation_aml_vals(date)
         stock_valuation_account_vals = company.with_context(inventory_data=inventory_data)._get_stock_valuation_account_vals(
-            accounts_by_product, date, extra_aml_vals_list)
+            date, extra_aml_vals_list)
 
         report_data = {
             'company_id': company.id,

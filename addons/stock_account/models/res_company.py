@@ -29,15 +29,16 @@ class ResCompany(models.Model):
             products._correct_inventory_valuation(last_closing_date)
         return res
 
-    def get_inventory_value(self, accounts_by_product=None, at_date=None):
+    def get_inventory_value(self, at_date=None):
         # OVERRIDE: use the real valuation computed from stock moves/quants instead of the
         # `qty_available * standard_price` approximation used when stock isn't installed.
         self.ensure_one()
         value_by_account: dict = defaultdict(float)
-        if not accounts_by_product:
-            accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product()
+        accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product(at_date)
         for product, accounts in accounts_by_product.items():
             account = accounts['valuation']
+            if not account:
+                continue
             product_value = product.with_context(to_date=at_date).total_value
             value_by_account[account] += product_value
         return value_by_account
