@@ -16,29 +16,9 @@
         background-position: 0 0, 12px 12px;
 
         .o_configurator_background_inner {
-            @keyframes revealDots {
-                0% {
-                    background-position: 0% 0%;
-                }
-                25% {
-                    background-position: 70% 100%;
-                    background-size: 100% 100%;
-                }
-                50% {
-                    background-position: 25% 75%;
-                    background-size: 170% 130%;
-                }
-                75% {
-                    background-position: 100% 25%;
-                    background-size: 170% 250%;
-                }
-                100% {
-                    background-position: 0% 0%;
-                }
-            }
             background: radial-gradient(ellipse 50vh 50vw, transparent 0%, $o-webclient-background-color 90%);
-            background-size: 200% 200%;
-            animation: revealDots 10s infinite ease-in-out;
+            background-position: 70% 100%;
+            background-size: 100% 100%;
         }
     }
 
