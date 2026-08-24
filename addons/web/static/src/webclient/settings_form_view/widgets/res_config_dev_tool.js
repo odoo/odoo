@@ -1,6 +1,7 @@
 import { Component, proxy, usePlugin, useProps } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Setting } from "@web/views/form/setting/setting";
@@ -27,7 +28,10 @@ export class ResConfigDevTool extends Component {
     setup() {
         this.action = useService("action");
         this.isDemoDataActive = proxy({ value: true });
-        useService("lazy_session").getValue("is_demo", (v) => (this.isDemoDataActive.value = !!v));
+        usePlugin(LazySessionPlugin).getValue(
+            "is_demo",
+            (v) => (this.isDemoDataActive.value = !!v)
+        );
     }
 
     activateDebug(value) {

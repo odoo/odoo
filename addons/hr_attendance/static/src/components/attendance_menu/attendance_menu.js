@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -14,6 +14,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useSubEnv } from "@web/owl2/utils";
 import { AttendanceInlineForm } from "@hr_attendance/components/attendance_inline_form/attendance_inline_form";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 const { DateTime } = luxon;
 
@@ -33,7 +34,7 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useService("ui");
-        this.lazySession = useService("lazy_session");
+        this.lazySession = usePlugin(LazySessionPlugin);
         this.notification = useService("notification");
         this.dialogService = useService("dialog");
         const { services } = this.env;
