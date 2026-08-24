@@ -24,6 +24,14 @@ class AccountEdiProxyClientUser(models.Model):
         )
         return duplicate_message_uuids | super()._peppol_get_duplicate_message_uuids(message_uuids)
 
+    def _peppol_get_new_response_vals(self, record, message, status):
+        return {
+            'peppol_message_uuid': message['message_uuid'],
+            'response_code': status,
+            'peppol_state': 'processing',
+            'move_id': record.id,
+        }
+
     def _peppol_send_response(self, reference_moves, status, clarifications=None):
         self.ensure_one()
         clarifications = clarifications or []
@@ -58,18 +66,13 @@ class AccountEdiProxyClientUser(models.Model):
                 bodies={move.id: log_message for move in reference_moves},
             )
         else:
-            responses = self.env['account.peppol.response'].create([{
-                    'peppol_message_uuid': message['message_uuid'],
-                    'response_code': status,
-                    'peppol_state': 'processing',
-                    'move_id': move.id,
-                }
-                for message, move in zip(response.get('messages'), reference_moves)
+            responses = self.env['account.peppol.response'].create([
+                self._peppol_get_new_response_vals(record, message, status)
+                for message, record in zip(response.get('messages'), reference_moves)
                 if message.get('message_uuid')
             ])
 
-            sent_moves = responses.move_id
-            unsent_moves = reference_moves - sent_moves
+            unsent_records_ids = set(reference_moves.ids).difference({resp._get_linked_record().id for resp in responses})
 
             status_string = (
                 self.env._('received') if status == 'AB'
@@ -84,11 +87,8 @@ class AccountEdiProxyClientUser(models.Model):
                 "A Peppol response declaring you %(status)s this document could not be sent to the Peppol Access Point.",
                 status=status_string,
             )
-            message_bodies = {
-                **{move.id: sent_message for move in sent_moves},
-                **{move.id: unsent_message for move in unsent_moves},
-            }
-            reference_moves._message_log_batch(bodies=message_bodies)
+            responses._log_message(sent_message)
+            reference_moves._message_log_batch(bodies={record_id: unsent_message for record_id in unsent_records_ids})
 
     @api.model
     def _peppol_extract_response_info(self, document):
@@ -219,8 +219,8 @@ class AccountEdiProxyClientUser(models.Model):
                     peppol_response.peppol_state = 'not_serviced'
                 else:
                     peppol_response.peppol_state = 'error'
-                    peppol_response.move_id._message_log(
-                        body=self.env._("Peppol business response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
+                    peppol_response._log_message(
+                        message=self.env._("Peppol business response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
                     )
                 processed_message_uuids.append(uuid)
                 continue
@@ -245,7 +245,7 @@ class AccountEdiProxyClientUser(models.Model):
         }
         failed = False
         for receiver in receivers:
-            document_identifiers = supported_identifiers if receiver.company_id.peppol_purchase_journal_id else supported_identifiers_wo_responses
+            document_identifiers = supported_identifiers if receiver.company_id._peppol_can_handle_responses() else supported_identifiers_wo_responses
             try:
                 iap_stored_services = receiver._call_peppol_proxy(
                     receiver._get_peppol_proxy_endpoint('2/get_services'),

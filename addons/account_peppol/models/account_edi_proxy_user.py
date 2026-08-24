@@ -281,7 +281,7 @@ class AccountEdiProxyClientUser(models.Model):
                 params={'message_uuids': message_uuids},
             )
 
-            processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
+            processed_uuids, records = edi_user._peppol_process_new_messages(all_messages)
 
             if not tools.config['test_enable']:
                 self.env.cr.commit()
@@ -290,7 +290,7 @@ class AccountEdiProxyClientUser(models.Model):
                     endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
                     params={'message_uuids': processed_uuids},
                 )
-                edi_user._peppol_post_process_new_messages(moves)
+                edi_user._peppol_post_process_new_messages(records)
 
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_new_documents')._trigger()
@@ -312,10 +312,13 @@ class AccountEdiProxyClientUser(models.Model):
             limit=1,
         )
 
+    def _peppol_get_import_invoice_model(self):
+        return self.env['account.move']
+
     def _peppol_process_new_messages(self, messages):
         self.ensure_one()
         processed_uuids = []
-        moves = self.env['account.move']
+        imported_records = self._peppol_get_import_invoice_model()
         for uuid, content in messages.items():
             fileextension, mimetype = self._peppol_get_filetype(content)
             filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
@@ -327,12 +330,11 @@ class AccountEdiProxyClientUser(models.Model):
                     "mimetype": mimetype,
                 }
             )
-            if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
+            if imported_record := self._peppol_import_invoice(attachment, None, content['state'], uuid):
                 # Only acknowledge when we saved the document somewhere
                 processed_uuids.append(uuid)
-                if not isinstance(move, bool):
-                    moves += move
-        return processed_uuids, moves
+                imported_records += imported_record
+        return processed_uuids, imported_records
 
     def _peppol_post_process_new_messages(self, moves):
         self.ensure_one()
