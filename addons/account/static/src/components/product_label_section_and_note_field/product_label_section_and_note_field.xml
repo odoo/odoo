@@ -33,7 +33,7 @@
                 <div
                     t-if="this.props.readonly"
                     class="o_input d-print-none border-0 fst-italic"
-                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !(this.columnIsProductAndLabel.value and this.label) }"
+                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !(this.columnIsProductAndLabel and this.label) }"
                     t-out="this.label"
                 />
                 <textarea
@@ -42,7 +42,7 @@
                     placeholder="Enter a description"
                     rows="1"
                     type="text"
-                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !this.columnIsProductAndLabel.value }"
+                    t-att-class="{ ...this.sectionAndNoteClasses, 'd-none': !this.columnIsProductAndLabel }"
                     t-att-value="this.label"
                     t-ref="this.labelNode"
                 />
