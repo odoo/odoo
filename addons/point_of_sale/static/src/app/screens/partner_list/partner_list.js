@@ -3,6 +3,7 @@ import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ResPartner } from "@point_of_sale/app/models/res_partner";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
+import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -17,6 +18,7 @@ export class PartnerList extends Component {
         partner: t.or([t.instanceOf(ResPartner), t.literal(null)]).optional(),
         getPayload: t.function(),
         close: t.function(),
+        order: t.instanceOf(PosOrder).optional(),
     });
 
     setup() {
