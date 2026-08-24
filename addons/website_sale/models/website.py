@@ -840,7 +840,16 @@ class Website(models.Model):
                 limit=1,
             )
             if abandoned_cart_sudo:
-                if not self.env.cr.readonly:
+                # Do not resurrect an abandoned cart if a payment transaction is currently in
+                # progress or paid. Canceled/errored transactions are excluded so the user
+                # can still recover the cart after a failed attempt.
+                if abandoned_cart_sudo.get_portal_last_transaction().state in {
+                    "pending",
+                    "authorized",
+                    "done",
+                }:
+                    abandoned_cart_sudo = SaleOrderSudo
+                elif not self.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
                     # an abandoned cart
                     abandoned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
