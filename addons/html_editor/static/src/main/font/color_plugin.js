@@ -260,7 +260,6 @@ export class ColorPlugin extends Plugin {
      * @param {boolean} [previewMode=false] true - apply color in preview mode
      */
     applyColor(color, mode, previewMode = false) {
-        this.dependencies.selection.selectAroundNonEditable();
         if (mode === "backgroundColor") {
             color = this.processThrough("apply_background_color_processors", color, mode);
         }

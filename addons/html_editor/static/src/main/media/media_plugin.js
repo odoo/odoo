@@ -108,6 +108,13 @@ export class MediaPlugin extends Plugin {
             }
         },
         is_node_editable_predicates: this.isEditableMediaElement.bind(this),
+        is_selectable_on_click_predicates: (el) => {
+            // Clicking an icon puts the cursor inside of it, where there is
+            // nothing to edit: select the icon itself instead.
+            if (isIconElement(el)) {
+                return true;
+            }
+        },
         is_functional_empty_node_predicates: (node) => {
             if (isMediaElement(node)) {
                 return true;

@@ -1,5 +1,5 @@
 import { describe, expect, press, test } from "@odoo/hoot";
-import { click, queryAll, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -271,25 +271,23 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
 });
 
 describe("selection", () => {
-    test("selection inside icon gets expanded to its outer boundaries", async () => {
+    test("clicking an icon selects it", async () => {
         const { el } = await setupEditor(
             `<p>abc<span class="oi" data-icon="local_bar"></span>def</p>`
         );
-        const icon = el.querySelector("span[data-icon='local_bar']");
-        setSelection({ anchorNode: icon, anchorOffset: 0 });
-        await tick();
+        await click("span[data-icon='local_bar']");
+        await animationFrame();
         expect(getContent(el)).toBe(
             `<p>abc\ufeff[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>]\ufeffdef</p>`
         );
     });
 
-    test("selection inside icon gets expanded around it, but not around its contenteditable=false ancestor", async () => {
+    test("clicking an icon selects it, but not its contenteditable=false ancestor", async () => {
         const { el } = await setupEditor(
             `<p contenteditable="false">abc<span class="oi" data-icon="local_bar"></span>def</p>`
         );
-        const icon = el.querySelector("span[data-icon='local_bar']");
-        setSelection({ anchorNode: icon, anchorOffset: 0 });
-        await tick();
+        await click("span[data-icon='local_bar']");
+        await animationFrame();
         expect(getContent(el)).toBe(
             '<p data-selection-placeholder=""><br></p>' +
                 '<p contenteditable="false">abc[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>]def</p>' +
