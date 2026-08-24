@@ -47,9 +47,9 @@ export class ImagePositionOverlay extends Component {
         useListener(editableDocument, "pointerdown", this.discard.bind(this));
         useListener(document, "pointerdown", this.discard.bind(this));
 
-        useListener(window, "resize", this._dimensionOverlay.bind(this));
-        useListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay.bind(this));
-        useListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay.bind(this));
+        useListener(window, "resize", this._dimensionOverlay);
+        useListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay);
+        useListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay);
 
         onWillStart(async () => {
             const position = this.props
@@ -78,6 +78,7 @@ export class ImagePositionOverlay extends Component {
             }
         });
 
+        this.reloadSavePoint = () => {};
         onMounted(() => {
             this.reloadSavePoint = this.props.history?.makeSavePoint() ?? (() => {});
             this.dimensionOverlay();
