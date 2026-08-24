@@ -154,11 +154,22 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         # OVERRIDE
-        if any(move.country_code == "SA" and move.l10n_sa_chain_index and move.company_id.l10n_sa_edi_is_production for move in self):
+        sa_moves = self.filtered(lambda move: move.country_code == "SA")
+        sa_documents = sa_moves.l10n_sa_edi_document_id
+        # The reset should be refused while a submission is in flight, otherwise it applies once that
+        # submission committed and leaves the move in draft with a document accepted by ZATCA:
+        # - The moves are locked first, as this is what the send hook checks before submitting.
+        # - The documents are locked as well, for the submissions that do not go through that hook.
+        self.env['res.company']._with_locked_records(sa_moves)
+        self.env['res.company']._with_locked_records(sa_documents)
+        # A submission that committed after this transaction started is not in the snapshot it reads.
+        sa_documents.invalidate_recordset(['l10n_sa_chain_index'])
+
+        if any(document.l10n_sa_chain_index and document.company_id.l10n_sa_edi_is_production for document in sa_documents):
             raise UserError(self.env._("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
 
         res = super().button_draft()
-        self.filtered(lambda move: move.country_code == "SA").l10n_sa_edi_document_id.write({
+        sa_documents.write({
             'state': 'to_send',
             'l10n_sa_chain_index': False,
         })
