@@ -490,6 +490,25 @@
 
     &__bulk-actions { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; }
 
+    &__select-all {
+        padding: 0.65rem 1rem;
+        border-bottom: 1px solid #b8cff2;
+        color: #294e86;
+        background: #edf4ff;
+        font-size: 0.78rem;
+        text-align: center;
+
+        button {
+            padding: 0;
+            border: 0;
+            color: #1e5cae;
+            background: transparent;
+            font: inherit;
+            font-weight: 750;
+            text-decoration: underline;
+        }
+    }
+
     &__table--workbench {
         width: 100%;
         min-width: 1350px;
@@ -503,6 +522,43 @@
         td { max-width: 240px; background: #fff; }
         tbody tr.is-selected td { background: #eaf2ff; }
         tbody tr:hover td { background: #f6f9fe; }
+    }
+
+    &__sort-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        color: inherit;
+        background: transparent;
+        font: inherit;
+        font-weight: inherit;
+        letter-spacing: inherit;
+        text-align: left;
+        text-transform: inherit;
+        white-space: nowrap;
+
+        &:hover,
+        &:focus-visible {
+            color: #fff;
+        }
+
+        &:focus-visible {
+            outline: 2px solid #9bc2ff;
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+    }
+
+    &__sort-icon {
+        color: #9ba9bd;
+        font-size: 0.72rem;
+
+        &.is-active {
+            color: #fff;
+        }
     }
 
     &__check { width: 42px; text-align: center !important; }

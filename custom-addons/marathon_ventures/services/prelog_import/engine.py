@@ -193,17 +193,20 @@ class PrelogImportEngine:
         transformed = self._transform_value(field_name, value)
         return transformed if transformed not in ("", None) else False
 
-    @staticmethod
-    def _sanitize_stored_schedule_time(*, parsed_value, raw_value):
-        if parsed_value not in (None, False, ""):
-            if isinstance(parsed_value, str) and parsed_value.upper().endswith("XM"):
-                return f"{parsed_value[:-2]}AM"
-            return parsed_value
-
-        raw_text = normalize_text(raw_value)
-        if raw_text and "XM" in raw_text.upper():
-            return normalize_time_value(raw_text) or raw_text.replace("XM", "AM").replace("xm", "AM")
-        return parsed_value
+    @classmethod
+    def _sanitize_stored_schedule_time(cls, *, parsed_value, raw_value):
+        value = parsed_value
+        if value in (None, False, ""):
+            raw_text = normalize_text(raw_value)
+            if raw_text and "XM" in raw_text.upper():
+                value = (
+                    normalize_time_value(raw_text)
+                    or raw_text.replace("XM", "AM").replace("xm", "AM")
+                )
+        parsed_time = cls._parse_time(value)
+        if parsed_time:
+            return parsed_time.strftime("%I:%M:%S %p").lstrip("0")
+        return value
 
     def _safe_optional_value(self, field_name, value, errors):
         if value in (None, ""):

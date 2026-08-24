@@ -292,6 +292,36 @@ class TestPrelogFuzzyMatching(TransactionCase):
         self.assertFalse(in_window)
         self.assertEqual(distance, 150)
 
+    def test_prelog_upload_stores_air_time_in_standard_time(self):
+        engine = PrelogImportEngine(
+            self.env,
+            program=self.program,
+            upload_file=False,
+            upload_filename='',
+        )
+        base_row = {
+            'airdate': self.week,
+            'network_deal_number': 'FZY-100',
+            'broadcast_network': 'tCn',
+            'rate': 100.0,
+            'schedulelength': '30',
+        }
+        military_values = engine.build_row_vals(
+            {**base_row, 'scheduletime': '16:46:37'},
+            self.week,
+            33,
+            2,
+        )
+        standard_values = engine.build_row_vals(
+            {**base_row, 'scheduletime': '04:46:37 PM'},
+            self.week,
+            33,
+            3,
+        )
+
+        self.assertEqual(military_values['scheduletime'], '4:46:37 PM')
+        self.assertEqual(standard_values['scheduletime'], '4:46:37 PM')
+
     def test_upload_time_window_includes_rotation_boundaries(self):
         engine = PrelogImportEngine(
             self.env,
@@ -425,6 +455,7 @@ class TestPrelogFuzzyMatching(TransactionCase):
         self.assertEqual(result['counts'], {
             'all': 3,
             'matched': 1,
+            'unmatched': 2,
             'suggestions': 1,
             'no_suggestion': 1,
             'removed': 1,
@@ -453,6 +484,246 @@ class TestPrelogFuzzyMatching(TransactionCase):
         self.assertIn(matched.id, [row['id'] for row in refreshed['rows']])
         self.assertIn(suggested.id, [row['id'] for row in refreshed['rows']])
         self.assertFalse(no_suggestion.schedule)
+
+        unmatched = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, self.week.isoformat(), 8, 0, 200, 'unmatched',
+        )
+        self.assertEqual(unmatched['total'], 3)
+        self.assertEqual(
+            {row['id'] for row in unmatched['rows']},
+            {matched.id, suggested.id, no_suggestion.id},
+        )
+        self.assertEqual(
+            {row['status'] for row in unmatched['rows']},
+            {'suggestion', 'no_suggestion'},
+        )
+
+    def test_workbench_filters_are_independently_optional(self):
+        other_week = date(2026, 8, 3)
+        program_week_v20 = self._create_prelog(version=20)
+        program_other_week_v20 = self._create_prelog(
+            version=20,
+            import_week_value=other_week,
+            airdate=other_week,
+        )
+        other_program_week_v20 = self._create_prelog(
+            import_program=self.other_program.id,
+            network=self.other_program.display_name,
+            broadcast_network='Other Test Network',
+            version=20,
+        )
+        program_week_v21 = self._create_prelog(version=21)
+
+        program_only = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, False, False,
+        )
+        self.assertEqual(program_only['total'], 3)
+        self.assertEqual(
+            {row['id'] for row in program_only['rows']},
+            {program_week_v20.id, program_other_week_v20.id, program_week_v21.id},
+        )
+
+        week_only = self.env['mv.prelog_data'].fuzzy_match_search(
+            False, self.week.isoformat(), False,
+        )
+        self.assertEqual(week_only['total'], 3)
+        self.assertEqual(
+            {row['id'] for row in week_only['rows']},
+            {program_week_v20.id, other_program_week_v20.id, program_week_v21.id},
+        )
+
+        version_only = self.env['mv.prelog_data'].fuzzy_match_search(
+            False, False, 20,
+        )
+        self.assertEqual(version_only['total'], 3)
+        all_rows = self.env['mv.prelog_data'].fuzzy_match_search(
+            False, False, False,
+        )
+        self.assertGreaterEqual(all_rows['total'], 4)
+
+        options = self.env['mv.prelog_data'].fuzzy_match_get_options(
+            self.program.id, False,
+        )
+        self.assertEqual(options['versions'], [20, 21])
+
+    def test_workbench_single_column_sorting(self):
+        rows = [
+            {
+                'id': 1,
+                'status': 'matched',
+                'status_label': 'Matched',
+                'name': 'Prelog 10',
+                'network': 'Zeta Network',
+                'air_date': '2026-08-18',
+                'air_time': '10:00:00 PM',
+                'length': '120',
+                'rate': 50.0,
+                'deal_number': 'TCN-10',
+                'advertiser_product': 'Zebra Product',
+                'attached': {'name': 'Schedule 10'},
+                'suggested': False,
+                'reason': '',
+                'time_mismatch': False,
+                'length_mismatch': False,
+                'ambiguous_count': 0,
+            },
+            {
+                'id': 2,
+                'status': 'suggestion',
+                'status_label': 'Fuzzy Suggestion',
+                'name': 'Prelog 2',
+                'network': 'Alpha Network',
+                'air_date': '2026-08-18',
+                'air_time': '2:00:00 AM',
+                'length': '30',
+                'rate': 150.0,
+                'deal_number': 'TCN-2',
+                'advertiser_product': 'Alpha Product',
+                'attached': False,
+                'suggested': {'name': 'Schedule 2'},
+                'reason': 'Out of Rotation',
+                'time_mismatch': True,
+                'length_mismatch': False,
+                'ambiguous_count': 0,
+            },
+            {
+                'id': 3,
+                'status': 'matched',
+                'status_label': 'Matched',
+                'name': 'Prelog 3',
+                'network': 'Beta Network',
+                'air_date': '2026-08-17',
+                'air_time': '11:00:00 AM',
+                'length': '60',
+                'rate': 100.0,
+                'deal_number': 'TCN-3',
+                'advertiser_product': 'Beta Product',
+                'attached': {'name': 'Schedule 3'},
+                'suggested': False,
+                'reason': '',
+                'time_mismatch': False,
+                'length_mismatch': False,
+                'ambiguous_count': 0,
+            },
+        ]
+        service = self.env['mv.prelog_data']
+
+        expected_ascending = {
+            'status': [2, 3, 1],
+            'name': [2, 3, 1],
+            'network': [2, 3, 1],
+            'air_date': [3, 2, 1],
+            'length': [2, 3, 1],
+            'rate': [1, 3, 2],
+            'deal_number': [2, 3, 1],
+            'advertiser_product': [2, 3, 1],
+            'schedule': [2, 3, 1],
+            'reason': [2, 3, 1],
+        }
+        for column, expected_ids in expected_ascending.items():
+            sorted_rows = service._fuzzy_filter_workbench_rows(
+                rows,
+                sort_by=column,
+                sort_direction='asc',
+            )
+            self.assertEqual(
+                [row['id'] for row in sorted_rows],
+                expected_ids,
+                'Ascending sort failed for %s' % column,
+            )
+
+        descending = service._fuzzy_filter_workbench_rows(
+            rows,
+            sort_by='air_date',
+            sort_direction='desc',
+        )
+        self.assertEqual([row['id'] for row in descending], [1, 2, 3])
+
+    def test_bulk_all_matching_spans_pages_and_honors_exclusions(self):
+        prelogs = self.env['mv.prelog_data'].create([
+            {
+                'import_program': self.program.id,
+                'import_week_value': self.week,
+                'version': 30,
+                'network': self.program.display_name,
+                'broadcast_network': 'tCn',
+                'network_deal_number': 'FZY-100',
+                'airdate': self.week,
+                'scheduletime': '09:30:00 AM',
+                'schedulelength': '30',
+                'rate': 100.0,
+                'advertiserproduct': 'Bulk %s' % index,
+                'import_match_status': 'created_without_schedule',
+            }
+            for index in range(205)
+        ])
+        page = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, self.week.isoformat(), 30,
+        )
+        self.assertEqual(page['total'], 205)
+        self.assertEqual(len(page['rows']), 200)
+
+        excluded = prelogs[-1]
+        removed = self.env['mv.prelog_data'].fuzzy_workbench_bulk_action(
+            'remove',
+            {'all_matching': True, 'excluded_ids': [excluded.id]},
+            self.program.id,
+            self.week.isoformat(),
+            30,
+        )
+        self.assertEqual(removed['updated'], 204)
+        self.assertEqual(len(prelogs.filtered('removed')), 204)
+        self.assertFalse(excluded.removed)
+
+        deleted = self.env['mv.prelog_data'].fuzzy_workbench_bulk_action(
+            'delete',
+            {'all_matching': True, 'excluded_ids': []},
+            self.program.id,
+            self.week.isoformat(),
+            30,
+            'removed',
+        )
+        self.assertEqual(deleted['deleted'], 204)
+        self.assertEqual(self.env['mv.prelog_data'].search_count([
+            ('version', '=', 30),
+        ]), 1)
+
+    def test_bulk_attach_suggestions_skips_non_attachable_rows(self):
+        attachable = self._create_prelog(version=31)
+        no_suggestion = self._create_prelog(
+            version=31,
+            network_deal_number='NOT-FOUND',
+        )
+        result = self.env['mv.prelog_data'].fuzzy_workbench_bulk_action(
+            'attach',
+            {'all_matching': True, 'excluded_ids': []},
+            self.program.id,
+            self.week.isoformat(),
+            31,
+            'unmatched',
+        )
+        self.assertEqual(result['attached'], 1)
+        self.assertEqual(result['skipped'], 1)
+        self.assertEqual(attachable.schedule, self.schedule)
+        self.assertFalse(no_suggestion.schedule)
+
+    def test_bulk_fuzzy_attach_requires_confirmation_before_writing(self):
+        prelog = self._create_prelog(version=32, scheduletime='11:00:00 AM')
+        selection = {'all_matching': False, 'ids': [prelog.id]}
+        preview = self.env['mv.prelog_data'].fuzzy_workbench_bulk_action(
+            'attach', selection, self.program.id, self.week.isoformat(), 32,
+            'suggestions', confirmed_fuzzy=False,
+        )
+        self.assertTrue(preview['requires_confirmation'])
+        self.assertEqual(preview['fuzzy'], 1)
+        self.assertFalse(prelog.schedule)
+
+        applied = self.env['mv.prelog_data'].fuzzy_workbench_bulk_action(
+            'attach', selection, self.program.id, self.week.isoformat(), 32,
+            'suggestions', confirmed_fuzzy=True,
+        )
+        self.assertEqual(applied['attached'], 1)
+        self.assertEqual(prelog.schedule, self.schedule)
 
     def test_buffer_only_suggestion_is_fuzzy_not_exact(self):
         prelog = self._create_prelog(version=9, scheduletime='11:00:00 AM')
