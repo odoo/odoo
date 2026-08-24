@@ -9,6 +9,7 @@ export class MathPlugin extends Plugin {
     static id = "math";
     static shared = [
         "areRectEqual",
+        "closestValue",
         "computeRect",
         "pixelTolerance",
         "isNegativeZero",

@@ -6,20 +6,7 @@ import { EmailHtmlConverter } from "@mail/convert_inline/email_html_converter";
 import { loadIframeBundles, loadIframe } from "@mail/convert_inline/iframe_utils";
 import { useService } from "@web/core/utils/hooks";
 import { Mutex } from "@web/core/utils/concurrency";
-
-export const DIMENSIONS = {
-    DESKTOP: Object.freeze({
-        width: 1320,
-        height: 1000,
-    }),
-    MOBILE: Object.freeze({
-        width: 360,
-        height: 1000,
-    }),
-    DESKTOP_MOBILE_BREAKPOINT: Object.freeze({
-        width: 768,
-    }),
-};
+import { DIMENSIONS } from "./core/utils";
 
 /**
  * Hook to handle email HTML conversion in a mail HtmlField.

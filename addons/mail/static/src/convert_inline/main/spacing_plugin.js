@@ -4,7 +4,6 @@ import {
     isPhrasingContent,
     paragraphRelatedElements,
 } from "@html_editor/utils/dom_info";
-import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
@@ -12,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 import { SpacingNode } from "./spacing_models";
 import { withSequence } from "@html_editor/utils/resource";
-import { DIRECTION_VARIANTS } from "../core/utils";
+import { DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
 
 const { DESKTOP } = DIMENSIONS;
 

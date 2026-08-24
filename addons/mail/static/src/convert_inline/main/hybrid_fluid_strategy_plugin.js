@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
-import { DIMENSIONS } from "../hooks";
 import { Analysis, EmailNode } from "../core/render_models";
 import {
     HybridFluidCell,
@@ -15,6 +14,7 @@ import { isAllowedContent } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { EmptyCellLayout } from "./table_models";
+import { ALLOWED_MOBILE_MARGINS_SIZES, DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -99,13 +99,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (emailNode.analysis.facts.acceptTableOuterSpacing) {
             this.addTableOuterSpacingFacts(layout, { emailNode });
         }
-        // apply cell margin bottom
-        // - identify that the node is a tableLayout cell or a hybridTableLayout cell
-        // - add the hardcoded mass_mailing_mail.css class for the closest equivalent margin
-        // DONE
-        if (emailNode.analysis.facts.acceptCellMobileMarginBottom) {
-            this.applyCellMobileMarginBottom(layout, { emailNode });
-        }
         if (emailNode.analysis.facts.acceptCellNewWidth) {
             this.applyFluidCellNewWidth(layout, { emailNode });
         }
@@ -113,22 +106,24 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     applyFluidCellNewWidth(layout, { emailNode }) {
-        // WORKING HERE
         this.applyCellNewWidth(layout, { emailNode });
-        // TODO EGGMAIL: identify which case need a horizontal margin, not
-        // all of them do.
 
-        // layout.setAttributes({
-        //     classNames: "o-ci-m-horizontal-margin-16",
-        // });
-    }
-
-    applyCellMobileMarginBottom(layout, { emailNode }) {
-        // WORKING HERE
-        // TODO EGGMAIL: can be improved by hardcoding multiple values and
-        // defining a heuristic to choose the closest one
-        // some cases need margin-bottom 0, so we need to do something here
-        // layout.setAttributes({ classNames: "o-ci-m-margin-bottom-16" });
+        // mobile margin handling
+        const { referenceRect, marginRect } = emailNode.analysis.facts.tableStrategyReport.spacing;
+        const paddingRect = this.containerPadding(marginRect, referenceRect);
+        for (const side of DIRECTION_VARIANTS) {
+            if (
+                emailNode.analysis.facts.acceptCellMobileMargin?.[side] &&
+                !this.isZero(paddingRect[side])
+            ) {
+                layout.setAttributes({
+                    classNames: `o-ci-m-margin-${side}-${this.closestValue(
+                        paddingRect[side],
+                        ALLOWED_MOBILE_MARGINS_SIZES
+                    )}`,
+                });
+            }
+        }
     }
 
     analyzeElementLayout(defaultEmailNodeArguments, { referenceNode }) {

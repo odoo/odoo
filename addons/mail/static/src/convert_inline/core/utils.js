@@ -33,6 +33,22 @@ export const DIRECTION_VARIANTS = ["top", "right", "bottom", "left"];
 export const FONT_VARIANTS = ["family", "size", "style", "weight"];
 export const DOM_RECT_PROPERTIES = ["x", "y", "width", "height", "top", "right", "bottom", "left"];
 
+export const DIMENSIONS = {
+    DESKTOP: Object.freeze({
+        width: 1320,
+        height: 1000,
+    }),
+    MOBILE: Object.freeze({
+        width: 360,
+        height: 1000,
+    }),
+    DESKTOP_MOBILE_BREAKPOINT: Object.freeze({
+        width: 768,
+    }),
+};
+
+export const ALLOWED_MOBILE_MARGINS_SIZES = [8, 16, 32];
+
 /**
  * @param {string} propertyName shorthand property e.g. "border"
  * @param {Array<Array<string>>} suffixArrays e.g. [["top", "right"], ["width", "color"]]

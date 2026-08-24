@@ -130,7 +130,6 @@ export class RulesPlugin extends Plugin {
     /**
      * Return a new styleInfo instance filtered with rules
      */
-    // WORKING HERE, (good idea)
     // TODO EGGMAIL: allow providing callbacks to do extra processing during
     // processData -> this would be necessary for eg image_strategy_plugin neutralization
     // => then, we could use border_plugin neutralizeBorders with callbacks

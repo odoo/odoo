@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
-import { DIMENSIONS } from "../hooks";
 import { CellLayout, EmptyCellLayout, TableRowLayout } from "./table_models";
 import { Analysis, ElementLayout, EmailNode } from "../core/render_models";
 import { withSequence } from "@html_editor/utils/resource";
@@ -10,6 +9,7 @@ import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
+import { DIMENSIONS } from "../core/utils";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -213,6 +213,8 @@ export class TableStrategyPlugin extends Plugin {
         if (emailNode.analysis.facts.acceptCellNewWidth) {
             this.applyCellNewWidth(layout, { emailNode });
         }
+        // TODO EGGMAIL: identify why we don't need to handle
+        // cellMobileMarginBottom/Top in this case
         return layout;
     }
 
@@ -752,6 +754,7 @@ export class TableStrategyPlugin extends Plugin {
                 const measures = {
                     contextStyleInfo,
                     needsZoomCorrection,
+                    isFirst: true,
                     isLast,
                     cluster: prevCluster,
                     width: prevCluster.rect.width,
@@ -837,7 +840,7 @@ export class TableStrategyPlugin extends Plugin {
 
     buildCell(
         { cell, strategy },
-        { contextStyleInfo, cluster, widthRatio, verticalAlign, isLast },
+        { contextStyleInfo, cluster, widthRatio, verticalAlign, isLast, isFirst },
         containerEmailNode
     ) {
         const clusterEmailNodes = this.getClusterEmailNodes(containerEmailNode, cluster);
@@ -857,12 +860,17 @@ export class TableStrategyPlugin extends Plugin {
         analysis.facts.isCell = true;
         const cellEmailNode = new EmailNode({ layout, analysis });
         if (!verticalAlign) {
-            if (!isLast) {
-                cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
-            }
-            cellEmailNode.analysis.facts.acceptCellNewWidth = true;
-            cellEmailNode.analysis.facts.acceptDescendantBackground = true;
-            cellEmailNode.analysis.facts.acceptDescendantBorder = true;
+            Object.assign(cellEmailNode.analysis.facts, {
+                acceptCellMobileMargin: {
+                    top: !isFirst,
+                    right: true,
+                    bottom: !isLast,
+                    left: true,
+                },
+                acceptCellNewWidth: true,
+                acceptDescendantBackground: true,
+                acceptDescendantBorder: true,
+            });
         }
         cellEmailNode.analysis.facts[strategy] = true;
         for (const child of clusterEmailNodes) {

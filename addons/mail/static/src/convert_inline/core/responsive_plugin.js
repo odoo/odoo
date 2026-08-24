@@ -1,6 +1,6 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { DIMENSIONS } from "../hooks";
+import { DIMENSIONS } from "./utils";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 

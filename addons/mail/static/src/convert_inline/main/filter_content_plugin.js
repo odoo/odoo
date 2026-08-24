@@ -1,12 +1,12 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
-import { DIMENSIONS } from "../hooks";
 import { isTableCell } from "@html_editor/utils/dom_info";
 import {
     ALLOWED_CSS_DISPLAY_VALUES,
     BLOCKED_CSS_POSITION_VALUES,
     BLOCKED_PSEUDO_CLASSES,
+    DIMENSIONS,
     INDIRECT_CSS_PROPERTY_VALUES,
 } from "../core/utils";
 
