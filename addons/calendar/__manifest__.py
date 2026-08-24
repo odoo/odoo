@@ -53,6 +53,9 @@ If you need to manage your meetings, you should install the CRM module.
         'web.assets_tests': [
             'calendar/static/tests/tours/**/*',
         ],
+        'im_livechat.embed_assets_unit_tests_setup': [
+            'calendar/static/tests/mock_server/**/*',
+        ],
         'mail.assets_public': [
             'calendar/static/src/core/common/**/*',
         ],

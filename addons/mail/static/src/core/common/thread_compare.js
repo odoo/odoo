@@ -8,6 +8,22 @@ import { registry } from "@web/core/registry";
  */
 export const threadCompareRegistry = registry.category("mail.thread_compare");
 
+/**
+ * Runs the registered comparators in sequence, the first one having an opinion decides.
+ *
+ * @param {import("models").Thread} thread1
+ * @param {import("models").Thread} thread2
+ */
+export function compareThreads(thread1, thread2) {
+    for (const fn of threadCompareRegistry.getAll()) {
+        const result = fn(thread1, thread2);
+        if (result !== undefined) {
+            return result;
+        }
+    }
+    return 0;
+}
+
 threadCompareRegistry.add(
     "mail.message-datetime",
     /**

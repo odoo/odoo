@@ -7,12 +7,17 @@
         <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1 overflow-hidden min-h-0 min-w-0">
             <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2 px-2 pt-2 pb-1">
                 <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
-                    <button t-foreach="this.activeTab().actions" t-as="action" t-key="action.id" class="btn btn-sm btn-primary rounded-2 flex-shrink-0 py-1 d-flex align-items-center justify-content-center" t-att-disabled="action.isDisabled?.()" t-on-click="() => this.onClickAction(action)"  t-att-title="action.title">
-                        <span t-if="action.icon" class="d-flex align-items-center opacity-75" t-att-class="{'me-1': action.text}">
-                            <i class="oi" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
-                        </span>
-                        <t t-out="action.text"/>
-                    </button>
+                    <t t-foreach="this.activeTab().actions" t-as="action" t-key="action.id">
+                        <div t-if="action.subActions?.length" class="flex-shrink-0">
+                            <Dropdown
+                                items="action.subActions.map(subAction => ({ id: subAction.id, label: subAction.text, onSelected: () => this.onClickAction(subAction) }))"
+                                menuClass="'o-mail-MessagingMenu-dropdownMenu'"
+                            >
+                                <t t-call="mail.MessagingMenu-action"/>
+                            </Dropdown>
+                        </div>
+                        <t t-else="" t-call="mail.MessagingMenu-action"/>
+                    </t>
                     <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" searchTerm="this.searchTerm"/>
                 </div>
                 <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
@@ -24,7 +29,7 @@
                         data-available-offline=""
                     >All</button>
                     <button
-                        t-foreach="this.activeTab().filters"
+                        t-foreach="this.activeTab().sortedFilters"
                         t-as="filter"
                         t-key="filter.id"
                         class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill px-3 flex-shrink-0"
@@ -73,6 +78,23 @@
             </div>
         </div>
     </div>
+</t>
+
+<t t-name="mail.MessagingMenu-action">
+    <t t-set="togglesDropdown" t-value="action.subActions?.length"/>
+    <button
+        class="btn btn-sm btn-primary rounded-2 py-1 d-flex align-items-center justify-content-center"
+        t-att-class="togglesDropdown ? 'w-100 position-relative pe-4' : 'flex-shrink-0'"
+        t-att-disabled="action.isDisabled?.()"
+        t-att-title="action.title"
+        t-on-click="() => togglesDropdown ? undefined : this.onClickAction(action)"
+    >
+        <span t-if="action.icon" class="d-flex align-items-center opacity-75 flex-shrink-0" t-att-class="{'me-1': action.text}">
+            <i class="oi" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
+        </span>
+        <span t-if="action.text" class="text-truncate" t-out="action.text"/>
+        <span t-if="togglesDropdown" class="oi position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
+    </button>
 </t>
 
 <t t-name="mail.MessagingMenu-navigation">

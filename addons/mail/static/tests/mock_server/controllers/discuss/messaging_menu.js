@@ -72,6 +72,11 @@ export const messagingMenuHelpers = {
         if (tab_id === "channel" && filter_id === "channel_thread") {
             return [["parent_channel_id", "!=", false]];
         }
+        if (tab_id === "meeting" && filter_id === "meeting_today") {
+            /** @type {import("mock_models").DiscussChannel} */
+            const DiscussChannel = env["discuss.channel"];
+            return [["id", "in", DiscussChannel._get_meeting_today_ids()]];
+        }
         if (tab_id === "meeting" && filter_id === "meeting_unread") {
             return [["self_member_id.is_unread", "=", true]];
         }
@@ -81,6 +86,11 @@ export const messagingMenuHelpers = {
         return null;
     },
     _get_menu_tab_priority_domain(env, tab_id) {
+        if (tab_id === "meeting") {
+            /** @type {import("mock_models").DiscussChannel} */
+            const DiscussChannel = env["discuss.channel"];
+            return [["id", "in", DiscussChannel._get_meeting_ongoing_ids()]];
+        }
         return null;
     },
 };

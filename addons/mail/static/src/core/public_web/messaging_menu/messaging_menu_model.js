@@ -116,6 +116,15 @@ export class MessagingMenu extends Record {
         return this.visibleTabs.reduce((sum, t) => sum + (t.important ? t.counter ?? 0 : 0), 0);
     }
 
+    /**
+     * Extra actions appended to a tab by the bundles extending it.
+     *
+     * @param {import("menu_tabs").MenuTabs[keyof import("menu_tabs").MenuTabs]} tabId
+     */
+    extraTabActions(tabId) {
+        return [];
+    }
+
     /** Extra membership predicate ANDed into the notification tab. Extended by the
      * /discuss/ bundle to exclude channels from the notification messages. */
     notificationMatchesExtra() {

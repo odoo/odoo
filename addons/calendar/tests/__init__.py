@@ -8,6 +8,7 @@ from . import test_calendar_controller
 from . import test_calendar_event_time_extraction
 from . import test_calendar_recurrent_event_case2
 from . import test_calendar_tour
+from . import test_discuss_meetings
 from . import test_event_recurrence
 from . import test_event_notifications
 from . import test_mail_activity_mixin

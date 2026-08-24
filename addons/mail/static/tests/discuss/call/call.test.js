@@ -429,6 +429,7 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await contains(".o-mail-Message");
     await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
     await click("button:text('Meeting')");
+    await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-MessagingMenuItem:has(:text('Meeting, Jan 1'))");
     await contains(".o-discuss-Call");
     await contains(".o-mail-MeetingReadyBanner");
@@ -555,6 +556,7 @@ test("'New Meeting' in mobile", async () => {
     await contains("button[title*='Close Chat Window']");
     await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
     await click("button:text('Meeting')");
+    await click(".o-dropdown-item:text('Start Now')");
     await click(".o-mail-MeetingReadyBanner button:text('Add Others')");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Partner 2'))");
     await click("button:not([disabled]):text('Invite to Meeting')");
@@ -588,6 +590,7 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
     await contains(".o-mail-Message", { count: 2 });
     await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
     await click("button:text('Meeting')");
+    await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-Meeting.o-fullscreen");
     await click(".o-mail-Meeting button[title='Chat']");
     await contains(".o-mail-Meeting.o-fullscreen .o-mail-ActionPanel .o-mail-Thread");
@@ -1314,6 +1317,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await contains(".o-mail-DiscussContent-threadName[title='General']");
     await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
     await click("button:text('Meeting')");
+    await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-Meeting");
     await contains("button[title='Turn camera off']");
     await contains("button[title='Turn camera off'].o-tag-DANGER");
@@ -1632,6 +1636,7 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     const rtc = getService("discuss.rtc");
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await click("[title='New Meeting']");
+    await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-MeetingReadyBanner");
     await press("escape");
     await contains(".o-mail-Thread:has(:text('Meeting, Jan 1'))");
@@ -1729,6 +1734,7 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await click("button:text(Meeting)");
+    await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-MeetingReadyBanner");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:has(:text('In call messages'))");

@@ -313,12 +313,10 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertTrue(self.partner_demo in event.attendee_ids.mapped('partner_id'))
         self.assertTrue(self.env.user.partner_id in event.attendee_ids.mapped('partner_id'))
 
+    @freezegun.freeze_time('2011-04-29 10:00:00')
     def test_discuss_videocall(self):
         self.event_tech_presentation._set_discuss_videocall_location()
-        self.assertFalse(self.event_tech_presentation.videocall_channel_id.id, 'No channel should be set before the route is accessed')
-        # create the first channel
-        self.event_tech_presentation._create_videocall_channel()
-        self.assertNotEqual(self.event_tech_presentation.videocall_channel_id.id, False)
+        self.assertTrue(self.event_tech_presentation.videocall_channel_id)
 
         partner1 = self.env['res.partner'].create({'name': 'Bob', 'email': u'bob@gm.co'})
         partner2 = self.env['res.partner'].create({'name': 'Jack', 'email': u'jack@gm.co'})

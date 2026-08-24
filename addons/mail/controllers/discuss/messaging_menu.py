@@ -54,6 +54,8 @@ class DiscussMessagingMenuController(WebclientController):
                 return Domain("self_member_id.is_unread", "=", True)
             case ("channel", "channel_thread"):
                 return Domain("parent_channel_id", "!=", False)
+            case ("meeting", "meeting_today"):
+                return self.env["discuss.channel"]._get_meeting_today_domain()
             case ("meeting", "meeting_unread"):
                 return Domain("self_member_id.is_unread", "=", True)
             case ("meeting", "meeting_thread"):
@@ -63,6 +65,8 @@ class DiscussMessagingMenuController(WebclientController):
     def _get_menu_tab_priority_domain(self, tab_id):
         """Optional domain whose matching records are fetched first by the load more
         route."""
+        if tab_id == "meeting":
+            return self.env["discuss.channel"]._get_meeting_ongoing_domain()
         return
 
     def store_messaging_menu_initialize_counters(

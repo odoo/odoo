@@ -11,7 +11,7 @@ import {
     models,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDateTime, today } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -438,6 +438,8 @@ export class DiscussChannel extends models.ServerModel {
         const bus_last_id = BusBus.lastBusNotificationId;
         const isChannel = (channel) => channel.channel_type === "channel";
         const isChannelOrGroup = (channel) => ["channel", "group"].includes(channel.channel_type);
+        const isVideocall = (channel) => channel.default_display_mode === "video_full_screen";
+        const isMeeting = (channel) => isVideocall(channel) || Boolean(channel.parent_channel_id);
         // mock: keep the relational computes fresh, mirroring `self.fetch(["self_member_id"])`.
         this._compute_self_member_id();
         this._compute_invited_member_ids();
@@ -447,10 +449,7 @@ export class DiscussChannel extends models.ServerModel {
         res.one("discuss_category_id", "_store_category_fields", { sudo: true });
         res.attr("channel_type");
         res.attr("create_uid");
-        res.attr("create_date", undefined, {
-            predicate: (channel) =>
-                channel.default_display_mode === "video_full_screen" || channel.parent_channel_id,
-        });
+        res.attr("create_date", undefined, { predicate: isMeeting });
         res.many("channel_member_ids", "_store_member_fields", {
             only_data: true,
             sort: "id",
@@ -463,9 +462,19 @@ export class DiscussChannel extends models.ServerModel {
         // sudo: we are reading only the ids (comodel is inaccessible)
         res.many("group_ids", [], { predicate: isChannel, sudo: true });
         res.one("group_public_id", ["full_name"], { predicate: isChannel });
+        const todayIds = this._get_meeting_today_ids();
+        res.attr("has_meeting_today", (channel) => todayIds.includes(channel.id), {
+            predicate: isVideocall,
+        });
         res.many("invited_member_ids", "_store_avatar_card_fields", { mode: "ADD" });
         res.attr("is_readonly", undefined, { predicate: isChannel });
         res.attr("last_interest_dt");
+        res.attr("meeting_start_dt", (channel) => this._meeting_dt(channel, "start"), {
+            predicate: isMeeting,
+        });
+        res.attr("meeting_stop_dt", (channel) => this._meeting_dt(channel, "stop"), {
+            predicate: isMeeting,
+        });
         res.attr("member_count", (channel) =>
             DiscussChannelMember.search_count([["channel_id", "=", channel.id]])
         );
@@ -552,6 +561,40 @@ export class DiscussChannel extends models.ServerModel {
 
     _member_based_naming_channel_types() {
         return ["group"];
+    }
+
+    /**
+     * When the meeting hosted by a video call channel starts or stops (`field`), mirroring
+     * `_compute_meeting_dt`: an ad-hoc meeting ("Start Now") starts when its channel is created.
+     * The mock has no call history, so it also stops then instead of when its call ended.
+     */
+    _meeting_dt(channel, field) {
+        // `this` only holds the channels being stored, the parent of a thread may not be one
+        const [meeting] = channel.parent_channel_id
+            ? this.env["discuss.channel"].browse(channel.parent_channel_id)
+            : [channel];
+        return meeting.default_display_mode === "video_full_screen" ? meeting.create_date : false;
+    }
+
+    /** Ids of the channels hosting a meeting that takes place today. */
+    _get_meeting_today_ids() {
+        const now = luxon.DateTime.now();
+        return this._filter([["default_display_mode", "=", "video_full_screen"]])
+            .filter((channel) => {
+                const createDate = deserializeDateTime(channel.create_date);
+                return createDate >= now.startOf("day") && createDate <= now.endOf("day");
+            })
+            .map((channel) => channel.id);
+    }
+
+    /**
+     * Ids of the channels whose meeting is not over yet. The mock has no call history, so an
+     * ad-hoc meeting lasts as long as someone is in its call.
+     */
+    _get_meeting_ongoing_ids() {
+        return this._filter([["default_display_mode", "=", "video_full_screen"]])
+            .filter((channel) => channel.rtc_session_ids.length)
+            .map((channel) => channel.id);
     }
 
     _lazy_load_members_channel_types() {

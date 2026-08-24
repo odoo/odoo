@@ -283,6 +283,7 @@ export class DiscussChannel extends Record {
         return text;
     }
     group_ids = fields.Many("res.groups");
+    has_meeting_today = false;
     get memberListTypes() {
         return ["channel", "group"];
     }
@@ -303,6 +304,8 @@ export class DiscussChannel extends Record {
         return Boolean(this.self_member_id);
     }
     last_interest_dt = fields.Datetime();
+    meeting_start_dt = fields.Datetime();
+    meeting_stop_dt = fields.Datetime();
     lastInterestDt = fields.Datetime({
         /** @this {import("models").Thread} */
         compute() {

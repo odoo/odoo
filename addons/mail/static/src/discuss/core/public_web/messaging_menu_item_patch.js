@@ -6,9 +6,12 @@ import { useLongPress } from "@mail/utils/common/hooks";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 import { types, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
+
+const { DateTime } = luxon;
 
 Object.assign(MessagingMenuItem.components, { CountryFlag });
 
@@ -65,6 +68,12 @@ const messagingMenuItemPatch = {
     },
     get itemPreviewThread() {
         return super.itemPreviewThread || this.channel?.thread;
+    },
+    /** The time the meeting of the channel starts at, shown next to its name. */
+    get meetingStartText() {
+        return this.channel?.meeting_start_dt?.toLocaleString(DateTime.TIME_SIMPLE, {
+            locale: user.lang,
+        });
     },
     get notificationItemProps() {
         if (!this.channel) {
