@@ -21,7 +21,7 @@ class SaleReport(models.Model):
         return [
             (model.model, model.name)
             for model in self.env["ir.model"].sudo().search([])
-            if not self.env[model.model].is_transient()
+            if model.model in self.env and not self.env[model.model].is_transient()
         ]
 
     # sale.order fields
