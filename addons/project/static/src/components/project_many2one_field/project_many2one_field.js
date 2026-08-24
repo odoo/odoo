@@ -38,5 +38,5 @@ export class ProjectMany2OneField extends Component {
 
 registry.category("fields").add("project", {
     ...buildM2OFieldDescription(ProjectMany2OneField),
-    relatedFields: [{ name: "is_template", type: "boolean" }],
+    fieldDependencies: [{ name: "is_template", type: "boolean" }],
 });
