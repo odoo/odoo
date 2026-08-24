@@ -1,4 +1,4 @@
-import { Component, proxy, signal, t, untrack, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ResPartner } from "@point_of_sale/app/models/res_partner";
@@ -9,7 +9,6 @@ import { _t } from "@web/core/l10n/translation";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
@@ -26,7 +25,7 @@ export class PartnerList extends Component {
         this.notification = useService("notification");
         this.dialog = useService("dialog");
         this.modalRef = signal.ref();
-        this.modalContent = null;
+        this.modalContent = computed(() => this.modalRef()?.querySelector(".modal-body") ?? null);
         this.searchInputRef = signal.ref();
         this.state = proxy({
             initialPartners: this.pos.models["res.partner"].filter((p) => {
@@ -43,33 +42,19 @@ export class PartnerList extends Component {
         });
         this.onScroll = debounce(this.onScroll.bind(this), 200);
 
-        useLayoutEffect(
-            () => {
-                if (this.state.loading || !this.modalRef()) {
-                    return;
-                } else if (!this.modalContent) {
-                    this.modalContent = this.modalRef().querySelector(".modal-body");
-                }
-
-                const scrollMethod = this.onScroll.bind(this);
-                this.modalContent.addEventListener("scroll", scrollMethod);
-                return () => {
-                    this.modalContent.removeEventListener("scroll", scrollMethod);
-                };
-            },
-            () => [untrack(this.modalRef)]
-        );
+        useListener(this.modalContent, "scroll", this.onScroll);
     }
     get globalState() {
         return this.pos.screenState.partnerList;
     }
     onScroll(ev) {
-        if (this.state.loading || !this.modalContent) {
+        const modalContent = this.modalContent();
+        if (this.state.loading || !modalContent) {
             return;
         }
-        const height = this.modalContent.offsetHeight;
-        const scrollTop = this.modalContent.scrollTop;
-        const scrollHeight = this.modalContent.scrollHeight;
+        const height = modalContent.offsetHeight;
+        const scrollTop = modalContent.scrollTop;
+        const scrollHeight = modalContent.scrollHeight;
 
         if (scrollTop + height >= scrollHeight * 0.8) {
             this.getNewPartners();
