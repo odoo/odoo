@@ -1,11 +1,8 @@
-import { config, Plugin, signal, types as t } from "@odoo/owl";
+import { Plugin, signal, t, useConfig } from "@odoo/owl";
 
 export class ResourceCalendarPlugin extends Plugin {
     newAttendances = signal(false);
-
-    setup() {
-        this.record = config("record", t.record().optional());
-    }
+    record = useConfig("record", t.record().optional());
 
     async reload() {
         if (this.record && this.newAttendances()) {

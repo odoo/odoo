@@ -13,7 +13,6 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
         super.setup();
         providePlugins([ResourceCalendarAttendancePopoverLoader], {
             meta: this.props.model.meta,
-            env: this.env,
         });
         this.resourceCalendarAttendancePopoverLoader = usePlugin(
             ResourceCalendarAttendancePopoverLoader
