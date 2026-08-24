@@ -286,8 +286,8 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
 
     for p in range(old_pdf.getNumPages()):
         page = old_pdf.getPage(p)
-        width = float(abs(page.mediaBox.getWidth()))
-        height = float(abs(page.mediaBox.getHeight()))
+        width = float(abs(page.mediabox.width))
+        height = float(abs(page.mediabox.height))
 
         can.setPageSize((width, height))
         can.translate(width, height)
