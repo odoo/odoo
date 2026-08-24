@@ -38,11 +38,11 @@ class TestEmailParsing(MailCommon):
 
                 self.assertEqual(len(extracted_mail['attachments']), 1)
                 attachment = extracted_mail['attachments'][0]
+                message_id = extracted_mail['message_id']
                 self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
                 self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
                 self.assertEqual(capture.output, [
-                    ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
-                    f"Content-Type '{content_type}', assuming 'application/octet-stream'"),
+                    Like(f"...Message {message_id!r} containing an unexpected Content-Type '{content_type}', assuming 'application/octet-stream'..."),
                 ])
 
     def test_message_parse_body(self):
@@ -101,8 +101,9 @@ class TestEmailParsing(MailCommon):
         mail_with_aliased_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="pdf")
         with self.assertLogs('odoo.addons.mail.models.mail_thread') as log_catcher:
             res_alias = self.env['mail.thread'].message_parse(self.from_string(mail_with_aliased_mime))
+        message_id = res_alias['message_id']
         self.assertEqual(log_catcher.output, [
-                    Like("...Message containing an unexpected Content-Type 'pdf', assuming 'application/octet-stream'..."),
+                    Like(f"...Message {message_id!r} containing an unexpected Content-Type 'pdf', assuming 'application/octet-stream'..."),
                 ])
         self.assertEqual(res_alias['attachments'][0].content, test_mail_data.PDF_PARSED, "Attachment with aliased Content-Type: pdf must parse without error")
 
@@ -128,12 +129,13 @@ class TestEmailParsing(MailCommon):
                     res = self.env['mail.thread'].message_parse(received_mail)
 
                 [attachment] = res['attachments']
+                message_id = res['message_id']
                 self.assertEqual(
                     attachment.content, test_mail_data.PDF_PARSED,
                     f"Attachment with Content-Type: {mime_type} must not be corrupted",
                 )
                 self.assertEqual(log_catcher.output, [
-                    Like(f"...Message containing an unexpected Content-Type '{mime_type}', assuming 'application/octet-stream'..."),
+                    Like(f"...Message {message_id!r} containing an unexpected Content-Type '{mime_type}', assuming 'application/octet-stream'..."),
                 ])
 
     def test_message_parse_bugs(self):
@@ -196,6 +198,24 @@ class TestEmailParsing(MailCommon):
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to=f'generic@{self.alias_domain}')
         res = self.env['mail.thread'].message_parse(self.from_string(mail))
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', res['body'])
+
+    def test_message_parse_without_content_type(self):
+        received_mail = self.from_string(
+            self.format(
+                test_mail_data.MAIL_TEMPLATE_WITHOUT_CONTENT_TYPE,
+                email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
+                to=f'generic@{self.alias_domain}',
+            ),
+        )
+        with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as log_catcher:
+            res = self.env['mail.thread'].message_parse(received_mail)
+
+        [attachment] = res['attachments']
+        message_id = res['message_id']
+        self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
+        self.assertEqual(log_catcher.output, [
+            Like(f"...Message {message_id!r} has no Content-Type, assuming 'application/octet-stream'"),
+        ])
 
     def test_message_parse_xhtml(self):
         # Test that the parsing of XHTML mails does not fail
