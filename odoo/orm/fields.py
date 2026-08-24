@@ -963,6 +963,8 @@ class Field[T]:
             return True
 
         model = env[self.model_name]
+        if self.relational and getattr(env[self.comodel_name], '_access_domain_heavy', False):
+            return False
         query = model._as_query(ordered=False)
         try:
             model._order_field_to_sql(query.table, self.name, SQL(), SQL())
@@ -982,6 +984,8 @@ class Field[T]:
             return False
 
         model = env[self.model_name]
+        if self.relational and getattr(env[self.comodel_name], '_access_domain_heavy', False):
+            return False
         groupby = self.name if self.type not in ('date', 'datetime') else f"{self.name}:month"
         try:
             model._read_group_groupby(Query(model).table, groupby)
@@ -1001,6 +1005,8 @@ class Field[T]:
             return False
 
         model = env[self.model_name]
+        if self.relational and getattr(env[self.comodel_name], '_access_domain_heavy', False):
+            return None
         query = model._as_query(ordered=False)
         try:
             model._read_group_select(query.table, f"{self.name}:{self.aggregator}")
