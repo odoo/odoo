@@ -601,11 +601,23 @@ export class Store extends BaseStore {
                 : `#${thread.displayName}`;
             return segments.some((segment) => segment.includes(mention));
         });
-        validMentions.partners = mentionedPartners.filter((partner) =>
-            segments.some((segment) =>
-                segment.includes(`@${thread?.getPersonaName?.(partner) ?? partner.name}`)
-            )
+        // Longest mention text first, so e.g. "@John" inside "@John Doe" isn't kept.
+        const mentionText = (partner) => `@${thread?.getPersonaName?.(partner) ?? partner.name}`;
+        const remaining = [...segments];
+        const kept = new Set(
+            [...mentionedPartners]
+                .sort((p1, p2) => mentionText(p2).length - mentionText(p1).length)
+                .filter((partner) => {
+                    const text = mentionText(partner);
+                    const i = remaining.findIndex((s) => s.includes(text));
+                    if (i === -1) {
+                        return false;
+                    }
+                    remaining[i] = remaining[i].replace(text, " ".repeat(text.length));
+                    return true;
+                })
         );
+        validMentions.partners = mentionedPartners.filter((partner) => kept.has(partner));
         validMentions.roles = mentionedRoles.filter((role) =>
             segments.some((segment) => segment.includes(`@${role.name}`))
         );
