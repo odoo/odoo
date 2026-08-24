@@ -13,7 +13,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
-from .common import FAKE_UUID, FILE_PATH, TestL10nFrPdpCommon
+from .common import FAKE_UUID, TestL10nFrPdpCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -48,8 +48,8 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             FAKE_UUID[1]: {
                 'accounting_supplier_party': '0184:16356706',
                 'filename': 'test_incoming',
-                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
-                'document': b64encode(file_open(f'{FILE_PATH}/document', mode='rb').read()),
+                'enc_key': file_open(f'{cls.peppol_invoice_document_path}/enc_key', mode='rb').read(),
+                'document': b64encode(file_open(f'{cls.peppol_invoice_document_path}/document', mode='rb').read()),
                 'state': 'done' if not error else 'error',
                 'direction': 'incoming',
                 'document_type': 'Invoice',
@@ -976,8 +976,8 @@ class TestPdpMessageFacturX(TestPdpMessage):
             FAKE_UUID[0]: {
                 'accounting_supplier_party': '0184:16356706',
                 'filename': 'test_incoming',
-                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
-                'document': b64encode(file_open(f'{FILE_PATH}/document_factur_x_self_bill', mode='rb').read()),
+                'enc_key': file_open(f'{cls.peppol_invoice_document_path}/enc_key', mode='rb').read(),
+                'document': b64encode(file_open(f'{cls.peppol_invoice_document_path}/document_factur_x_self_bill', mode='rb').read()),
                 'state': 'done' if not error else 'error',
                 'direction': 'incoming',
                 'document_type': 'Factur-X',
