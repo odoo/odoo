@@ -85,13 +85,13 @@ registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
-    dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: ({ owner }) =>
         owner.env.inMeetingView
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
+    dropdownTrigger: true,
     icon: "keyboard_arrow_up",
     name: _t("Voice Settings"),
     sequence: 15,
@@ -152,13 +152,13 @@ registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
-    dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: ({ owner }) =>
         owner.env.inMeetingView
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
+    dropdownTrigger: true,
     icon: "keyboard_arrow_up",
     name: _t("Video Settings"),
     sequence: 15,
