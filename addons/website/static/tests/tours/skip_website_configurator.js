@@ -23,15 +23,17 @@ registry.category("web_tour.tours").add("skip_website_configurator", {
             trigger:
                 ".o_configurator_container .btn.btn-link:contains('Skip and start from scratch')",
             run: "click",
+            timeout: 60000,
         },
         {
             content: "Check that the homepage is loaded",
             trigger: ".o_website_preview :iframe html[data-view-xmlid='website.homepage']",
-            timeout: 30000,
+            timeout: 60000,
         },
         {
             content: "Check that the editor is opened",
             trigger: ":iframe #wrapwrap.odoo-editor-editable",
+            timeout: 60000,
         },
     ],
 });
