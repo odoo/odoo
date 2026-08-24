@@ -555,10 +555,22 @@ export class CallDebrief extends Component {
         if (!media) {
             return;
         }
-        if (this.state.currentTime >= this.callDurationSeconds - 0.5) {
-            this.showVideoFeedback(_t("End of Media"));
+
+        // If playback at the end of all media, next click should reply from the very beginning
+        const lastSegment = this.state.mediaSegments.at(-1);
+        const isAtEndOfTimeline = this.state.currentTime >= this.callDurationSeconds - 0.5;
+        const isAtEndOfLastSegment = lastSegment && this.state.currentTime >= lastSegment.endSec - 0.5;
+        const isEffectivelyAtEnd = isAtEndOfTimeline || isAtEndOfLastSegment;
+        if (!this.state.isPlaying && isEffectivelyAtEnd) {
+            const firstSegment = this.state.mediaSegments[0];
+            this.setPlaybackTime({
+                timestamp: firstSegment.startSec,
+                artifactId: firstSegment.id,
+                play: true,
+            });
             return;
         }
+
         if (this.state.isPlaying) {
             this._pause();
         } else {
