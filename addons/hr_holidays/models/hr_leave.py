@@ -1259,7 +1259,7 @@ class HrLeave(models.Model):
                     )
                 if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                     if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-                        leave.display_name = self.env._("%(work_entry_type)s %(duration)s",
+                        leave.display_name = self.env._("%(duration)s %(work_entry_type)s",
                             work_entry_type=time_off_type_display,
                             duration=custom_duration,
                         )

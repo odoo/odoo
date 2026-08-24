@@ -1392,7 +1392,7 @@
 
     <function model="hr.work.entry.type" name="write">
         <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'in', ['WORK100'])]).ids"/>
-        <value eval="{'request_unit': 'hour', 'time_off_selectable': False}"/>
+        <value eval="{'request_unit': 'hour', 'time_off_selectable': False, 'requires_allocation': False}"/>
     </function>
 
     <function model="hr.work.entry.type" name="write">
