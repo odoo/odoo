@@ -789,6 +789,7 @@
                                     <field
                                         name="qty_delivered"
                                         string="Delivered"
+                                        invisible="display_type"
                                         decoration-info="(not display_type and invoice_status == 'to invoice')"
                                         decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                         decoration-danger="qty_overage and qty_delivered &gt; qty_invoiced"
@@ -798,6 +799,7 @@
                                     <field
                                         name="qty_delivered_percent"
                                         widget="labeled_percentage_field"
+                                        invisible="display_type"
                                         decoration-info="(not display_type and invoice_status == 'to invoice')"
                                         decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                         readonly="qty_delivered_method != 'manual' or is_downpayment or product_uom_qty == 0"
@@ -824,7 +826,7 @@
                                     require duplicating this definition.
                                 -->
                                 <column name="price_unit">
-                                    <field name="price_unit" readonly="qty_invoiced &gt; 0"/>
+                                    <field name="price_unit" invisible="display_type" readonly="qty_invoiced &gt; 0"/>
                                 </column>
                                 <field
                                     name="tax_ids"
