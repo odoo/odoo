@@ -864,7 +864,7 @@ class StockPicking(models.Model):
     def _cron_nilvera_get_edispatch_purchase_pdf(self, batch_size=100):
         """ Fetches the Nilvera generated PDFs for the sales generated on Odoo. """
         pickings_to_fetch_pdf = self.env['stock.picking'].search([
-            ('l10n_tr_nilvera_edispatch_xml_file', '=', True),
+            ('l10n_tr_nilvera_edispatch_xml_file', '!=', False),
             ('l10n_tr_nilvera_edispatch_pdf_file', '=', False),
             ('l10n_tr_nilvera_send_status', '=', 'pdf_not_fetched'),
         ], limit=batch_size)
