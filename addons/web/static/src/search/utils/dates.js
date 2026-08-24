@@ -357,14 +357,18 @@ export function yearSelected(selectedOptionIds) {
  * the syntax <filter ... date="invoice_date">, that can be toggled in the
  * search bar itself, changing their domain dynamically (eg. with filter
  * "Today", clicking `>` will change the domain to tomorrow)
+ *
+ * Their ids are part of the public arch API: they can be used in the
+ * `default_period` attribute of a date filter or as a `search_default_...`
+ * context value, just like the period option ids (`month`, `year-1`, ...).
  */
 
 export const RELATIVE_FILTER_OPTIONS = {
     today: { description: _t("Today"), granularity: "day" },
-    thisWeek: { description: _t("This Week"), granularity: "week" },
-    thisMonth: { description: _t("This Month"), granularity: "month" },
-    thisQuarter: { description: _t("This Quarter"), granularity: "quarter" },
-    thisYear: { description: _t("This Year"), granularity: "year" },
+    this_week: { description: _t("This Week"), granularity: "week" },
+    this_month: { description: _t("This Month"), granularity: "month" },
+    this_quarter: { description: _t("This Quarter"), granularity: "quarter" },
+    this_year: { description: _t("This Year"), granularity: "year" },
 };
 
 export function getRelativeFilterOptions() {

@@ -462,6 +462,95 @@ for (const contextValue of ["True", "1"]) {
     });
 }
 
+test("date filter with a relative option set as default_period", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field" default_period="today"/>
+            </search>
+        `,
+        context: { search_default_date_field: true },
+    });
+    await toggleSearchBarMenu();
+
+    // The relative option is active, and no period option was activated alongside it.
+    expect(isOptionSelected("Date", "Today")).toBe(true);
+    expect(isOptionSelected("Date", "March")).toBe(false);
+    expect(isOptionSelected("Date", "2017")).toBe(false);
+    expect(getFacetTexts()).toEqual(["Date: Mar 22"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["date_field", ">=", "today"],
+        ["date_field", "<", "today +1d"],
+    ]);
+});
+
+test("date filter with a relative option as search_default value in the context", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field"/>
+            </search>
+        `,
+        context: { search_default_date_field: "this_week" },
+    });
+    await toggleSearchBarMenu();
+
+    expect(isOptionSelected("Date", "This Week")).toBe(true);
+    expect(isOptionSelected("Date", "March")).toBe(false);
+    expect(getFacetTexts()).toEqual(["Date: Week 12, Mar 19 - Mar 25"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["date_field", ">=", "today =week_start"],
+        ["date_field", "<", "today =week_start +1w"],
+    ]);
+
+    // Should also be able to navigate
+    await contains(`.o_searchview_facet [aria-label="Previous period"]`).click();
+    expect(getFacetTexts()).toEqual(["Date: Week 11, Mar 12 - Mar 18"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["date_field", ">=", "today =week_start -1w"],
+        ["date_field", "<", "today =week_start"],
+    ]);
+});
+
+test("relative option wins over the period options declared with it", async () => {
+    mockDate("2017-03-22T01:00:00"); // Wednesday
+
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field"/>
+            </search>
+        `,
+        context: { search_default_date_field: "year-1,this_month" },
+    });
+    await toggleSearchBarMenu();
+
+    expect(isOptionSelected("Date", "This Month")).toBe(true);
+    expect(isOptionSelected("Date", "2016")).toBe(false);
+    expect(getFacetTexts()).toEqual(["Date: March"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["date_field", ">=", "today =1d"],
+        ["date_field", "<", "today =1d +1m"],
+    ]);
+});
+
 test("filter by a date field using relative smart dates works", async () => {
     mockDate("2017-03-22T01:00:00"); // Wednesday
 

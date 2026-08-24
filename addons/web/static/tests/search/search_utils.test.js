@@ -317,16 +317,16 @@ test("relative filter labels: the period covered, current year left implicit", (
     expect(label("today", -1)).toBe("Aug 6");
     expect(label("today", 2)).toBe("Aug 9");
 
-    expect(label("thisWeek", 0)).toBe("Week 32, Aug 2 - Aug 8");
-    expect(label("thisWeek", -1)).toBe("Week 31, Jul 26 - Aug 1");
+    expect(label("this_week", 0)).toBe("Week 32, Aug 2 - Aug 8");
+    expect(label("this_week", -1)).toBe("Week 31, Jul 26 - Aug 1");
 
-    expect(label("thisMonth", 0)).toBe("August");
-    expect(label("thisMonth", -2)).toBe("June");
+    expect(label("this_month", 0)).toBe("August");
+    expect(label("this_month", -2)).toBe("June");
 
-    expect(label("thisQuarter", 0)).toBe("Q3");
-    expect(label("thisQuarter", -1)).toBe("Q2");
+    expect(label("this_quarter", 0)).toBe("Q3");
+    expect(label("this_quarter", -1)).toBe("Q2");
 
-    expect(label("thisYear", 0)).toBe("2026");
+    expect(label("this_year", 0)).toBe("2026");
 });
 
 test("relative filter labels: the year shows up as soon as we leave the current one", () => {
@@ -337,11 +337,11 @@ test("relative filter labels: the year shows up as soon as we leave the current 
         getRelativeDateLabel(referenceMoment, RELATIVE_FILTER_OPTIONS[optionId], offset);
 
     expect(label("today", -220)).toBe("Dec 30, 2025");
-    expect(label("thisWeek", 21)).toBe("Week 53, Dec 27 - Jan 2"); // still a week of 2026
-    expect(label("thisWeek", 30)).toBe("Week 9, Feb 28 - Mar 6 2027");
-    expect(label("thisMonth", 5)).toBe("January 2027");
-    expect(label("thisQuarter", 2)).toBe("Q1 2027");
-    expect(label("thisYear", -1)).toBe("2025");
+    expect(label("this_week", 21)).toBe("Week 53, Dec 27 - Jan 2"); // still a week of 2026
+    expect(label("this_week", 30)).toBe("Week 9, Feb 28 - Mar 6 2027");
+    expect(label("this_month", 5)).toBe("January 2027");
+    expect(label("this_quarter", 2)).toBe("Q1 2027");
+    expect(label("this_year", -1)).toBe("2025");
 });
 
 test("relative filter labels: quarter of another year, right to left", () => {
@@ -350,7 +350,7 @@ test("relative filter labels: quarter of another year, right to left", () => {
     const referenceMoment = luxon.DateTime.local().setLocale("en");
 
     const label = (offset) =>
-        getRelativeDateLabel(referenceMoment, RELATIVE_FILTER_OPTIONS.thisQuarter, offset);
+        getRelativeDateLabel(referenceMoment, RELATIVE_FILTER_OPTIONS.this_quarter, offset);
     expect(label(0)).toBe("Q3");
     expect(label(2)).toBe("2027 Q1");
 });

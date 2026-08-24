@@ -33,6 +33,13 @@ _logger = logging.getLogger(__name__)
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 VIEW_MODIFIERS = ('column_invisible', 'invisible', 'readonly', 'required')
 
+# Period options of a date filter that are not month/year offsets, and relative
+# ("smart date") options of its companion relative filter. Both can be used in
+# the `default_period` attribute.
+# @see web/static/src/search/utils/dates.js
+QUARTER_PERIODS = {'first_quarter', 'second_quarter', 'third_quarter', 'fourth_quarter'}
+RELATIVE_PERIODS = {'today', 'this_week', 'this_month', 'this_quarter', 'this_year'}
+
 # Some views have a js compiler that generates an owl template from the arch. In that template,
 # `__comp__` is a reserved keyword giving access to the component instance (e.g. the form renderer
 # or the kanban record). However, we don't want to see implementation details leaking in archs, so
@@ -2012,7 +2019,7 @@ actual arch.
             custom_options = {f'custom_{child.attrib["name"]}' for child in node.getchildren()}
             for default_period in default_periods.split(","):
                 if not re.fullmatch(r"(year|month)((-|\+)[1-9]\d*)?", default_period)\
-                    and default_period not in custom_options | {"first_quarter", "second_quarter", "third_quarter", "fourth_quarter"}:
+                    and default_period not in custom_options | QUARTER_PERIODS | RELATIVE_PERIODS:
                     msg = _(
                         "Invalid default period %(default_period)s for date filter",
                         default_period=default_period,
