@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, time, timedelta, UTC
 from hashlib import sha512
 from secrets import choice
 
@@ -51,6 +51,24 @@ def is_channel(channel):
     :rtype: bool
     """
     return channel.channel_type == "channel"
+
+
+def is_videocall(channel):
+    """Predicate to filter the channels hosting a video call meeting.
+
+    :returns: Whether the channel is displayed as a full screen video call.
+    :rtype: bool
+    """
+    return channel.default_display_mode == "video_full_screen"
+
+
+def is_meeting(channel):
+    """Predicate to filter the channels a meeting takes place in, its threads included.
+
+    :returns: Whether the channel hosts a video call meeting or is a thread of one.
+    :rtype: bool
+    """
+    return is_videocall(channel) or bool(channel.parent_channel_id)
 
 
 def is_channel_or_group(channel):
@@ -121,6 +139,8 @@ class DiscussChannel(models.Model):
     can_self_edit_readonly_channel = fields.Boolean(compute="_compute_can_self_edit_readonly_channel")
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
+    meeting_start_dt = fields.Datetime("Meeting Start", compute="_compute_meeting_dt")
+    meeting_stop_dt = fields.Datetime("Meeting End", compute="_compute_meeting_dt")
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
     message_count = fields.Integer("# Messages", readonly=True, compute="_compute_message_count")
     last_interest_dt = fields.Datetime(
@@ -422,6 +442,20 @@ class DiscussChannel(models.Model):
         }
         for channel in self:
             channel.invited_member_ids = members_by_channel.get(channel)
+
+    @api.depends("call_history_ids.end_dt", "create_date", "default_display_mode", "parent_channel_id")
+    def _compute_meeting_dt(self):
+        """When the meeting hosted by a video call channel takes place. An ad-hoc meeting
+        ("Start Now") starts when its channel is created and lasts as long as the call it was
+        started for, and a thread of a meeting takes place along with the meeting it belongs to."""
+        # sudo: discuss.call.history - when the call of an accessible channel ended is not private
+        calls_by_meeting = (self | self.parent_channel_id).sudo().call_history_ids.grouped("channel_id")
+        for channel in self:
+            meeting = channel.parent_channel_id or channel
+            is_meeting = meeting.default_display_mode == "video_full_screen"
+            last_call = calls_by_meeting.get(meeting, self.env["discuss.call.history"])[:1]
+            channel.meeting_start_dt = is_meeting and meeting.create_date
+            channel.meeting_stop_dt = is_meeting and (last_call.end_dt or meeting.create_date)
 
     @api.depends('channel_member_ids')
     def _compute_member_count(self):
@@ -1058,6 +1092,31 @@ class DiscussChannel(models.Model):
     # RTC
     # ------------------------------------------------------------
 
+    def _get_today_bounds(self):
+        """Start and end of the current day of the user asking, in UTC."""
+        today = fields.Date.context_today(self)
+        return tuple(
+            datetime.combine(today, bound, tzinfo=self.env.tz).astimezone(UTC).replace(tzinfo=None)
+            for bound in (time.min, time.max)
+        )
+
+    def _get_meeting_today_domain(self):
+        """Channels hosting a meeting that takes place today. An ad-hoc meeting ("Start Now")
+        takes place the day its channel is created."""
+        start_of_day, end_of_day = self._get_today_bounds()
+        return (
+            Domain("default_display_mode", "=", "video_full_screen")
+            & Domain("create_date", ">=", start_of_day)
+            & Domain("create_date", "<=", end_of_day)
+        )
+
+    def _get_meeting_ongoing_domain(self):
+        """Channels whose meeting is not over yet. An ad-hoc meeting ("Start Now") lasts as
+        long as the call it was started for."""
+        return Domain("default_display_mode", "=", "video_full_screen") & Domain(
+            "call_history_ids", "any", [("end_dt", "=", False)]
+        )
+
     def _get_call_notification_tag(self):
         self.ensure_one()
         return f"call_{self.id}"
@@ -1555,7 +1614,7 @@ class DiscussChannel(models.Model):
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
         res.attr("channel_type")
         res.attr("create_uid")
-        res.attr("create_date", predicate=lambda channel: channel.default_display_mode == "video_full_screen" or channel.parent_channel_id)
+        res.attr("create_date", predicate=is_meeting)
         res.many(
             "channel_member_ids",
             "_store_member_fields",
@@ -1569,9 +1628,19 @@ class DiscussChannel(models.Model):
         # sudo: we are reading only the ids (comodel is inaccessible)
         res.many("group_ids", [], predicate=is_channel, sudo=True)
         res.one("group_public_id", ["full_name"], predicate=is_channel)
+        videocalls = self.filtered(is_videocall)
+        today_meetings = self.browse()
+        if videocalls:
+            # sudo: discuss.channel: when an accessible video call takes place is not private
+            today_meetings = videocalls.sudo().search(
+                Domain("id", "in", videocalls.ids) & self._get_meeting_today_domain()
+            )
+        res.attr("has_meeting_today", lambda channel: channel in today_meetings, predicate=is_videocall)
         res.many("invited_member_ids", "_store_avatar_card_fields", mode="ADD")
         res.attr("is_readonly", predicate=is_channel)
         res.attr("last_interest_dt")
+        res.attr("meeting_start_dt", predicate=is_meeting)
+        res.attr("meeting_stop_dt", predicate=is_meeting)
         res.attr("member_count")
         res.attr("message_count", predicate=lambda c: c.parent_channel_id)
         res.attr("name")

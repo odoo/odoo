@@ -11,11 +11,11 @@ const messagingMenuPatch = {
     setup() {
         super.setup(...arguments);
         this.filteredChannels = computed(() => {
-            const channels = this.state().activeTab.sortedChannels;
-            if (!this.state().selectedFilter?.includesChannel) {
-                return channels;
-            }
-            return channels.filter((c) => this.state().selectedFilter.includesChannel(c));
+            const { activeTab, selectedFilter } = this.state();
+            const channels = selectedFilter?.includesChannel
+                ? activeTab.channels.filter((c) => selectedFilter.includesChannel(c))
+                : activeTab.channels;
+            return activeTab.getSortedChannels(selectedFilter, channels);
         });
         this.channels = computed(() => {
             if (this.searchTerm()) {

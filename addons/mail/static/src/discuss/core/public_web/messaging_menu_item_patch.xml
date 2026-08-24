@@ -13,6 +13,9 @@
         </div>
         <t t-else="">$0</t>
     </xpath>
+    <xpath expr="//t[@name='itemName']" position="after">
+        <span t-if="this.meetingStartText" class="o-mail-MessagingMenuItem-meetingStart flex-shrink-0 align-self-baseline fw-normal text-muted smaller ms-1">@ <t t-out="this.meetingStartText"/></span>
+    </xpath>
     <xpath expr="//t[@t-set-slot='icon']" position="inside">
         <CountryFlag t-if="this.channel?.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
     </xpath>

@@ -272,6 +272,7 @@ test("create new meeting from meeting tab", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.MEETING);
     await click("button:text(Meeting)");
+    await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-Meeting");
 });
 

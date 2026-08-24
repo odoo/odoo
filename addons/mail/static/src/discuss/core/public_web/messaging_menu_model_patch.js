@@ -4,6 +4,7 @@ import {
     MessagingMenu,
 } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { MessagingMenuEmptyChannel } from "@mail/discuss/core/public_web/messaging_menu_empty_channel";
+import { compareChannels, compareMeetings } from "@mail/discuss/core/public_web/meeting_compare";
 import { fields } from "@mail/model/export";
 import { markup } from "@odoo/owl";
 
@@ -120,6 +121,7 @@ const messagingMenuPatch = {
                         c.channel_type === "group" &&
                         c.self_member_id?.is_pinned &&
                         c.isMeetingOrMeetingChild,
+                    compareChannels: compareMeetings,
                     icon: "videocam",
                     iconClass: "oi-filled",
                     sequence: 45,
@@ -132,14 +134,25 @@ const messagingMenuPatch = {
                     },
                     filters: [
                         {
+                            id: "meeting_today",
+                            text: _t("Today"),
+                            includesChannel: (c) => c.has_meeting_today,
+                            isDefault: true,
+                            sequence: 10,
+                        },
+                        {
                             id: "meeting_unread",
                             text: _t("Unread"),
+                            compareChannels,
                             includesChannel: (c) => c.isUnread,
+                            sequence: 20,
                         },
                         {
                             id: "meeting_thread",
                             text: _t("Thread"),
+                            compareChannels,
                             includesChannel: (c) => Boolean(c.parent_channel_id),
+                            sequence: 30,
                         },
                     ],
                     actions:
@@ -151,7 +164,14 @@ const messagingMenuPatch = {
                                       iconClass: "oi-filled",
                                       text: _t("Meeting"),
                                       title: _t("New Meeting"),
-                                      onClick: () => this.store.requestStartMeeting(),
+                                      subActions: [
+                                          {
+                                              id: "start_now",
+                                              text: _t("Start Now"),
+                                              onClick: () => this.store.requestStartMeeting(),
+                                          },
+                                          ...this.extraTabActions(MENU_TABS.MEETING),
+                                      ],
                                   },
                               ]
                             : [],

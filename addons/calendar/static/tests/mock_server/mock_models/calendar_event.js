@@ -1,4 +1,17 @@
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { getOrigin } from "@web/core/utils/urls";
+
 import { models, fields, serverState } from "@web/../tests/web_test_helpers";
+
+const { DateTime } = luxon;
+
+export function todayMeetingDomain() {
+    const today = DateTime.now();
+    return [
+        ["start", "<=", serializeDateTime(today.endOf("day"))],
+        ["stop", ">=", serializeDateTime(today.startOf("day"))],
+    ];
+}
 
 export class CalendarEvent extends models.ServerModel {
     _name = "calendar.event";
@@ -15,6 +28,10 @@ export class CalendarEvent extends models.ServerModel {
 
     get_default_duration() {
         return 3.25;
+    }
+
+    get_discuss_videocall_location() {
+        return `${getOrigin()}/calendar/join_videocall/testtoken`;
     }
 
     _store_calendar_event_fields(res) {

@@ -10,10 +10,30 @@ import { _t } from "@web/core/l10n/translation";
  *   includesMessage?: (message: import("models").Message) => boolean,
  *   includesChannel?: (channel: import("models").DiscussChannel) => boolean,
  *   isDefault?: boolean,
+ *   sequence?: number,
+ *   compareChannels?: (c1: import("models").DiscussChannel, c2: import("models").DiscussChannel) => number,
  * }} MessagingMenuTabFilter
+ *
+ * The channels of a tab are ordered by the comparator of the active filter, falling back to the
+ * one of the tab, then to the default order of the messaging menu.
  */
 
-/** @typedef {{id: string, text: string, icon?: string, iconClass?: string, isDisabled?: () => boolean, onClick: () => void, preventDropdownClose?: boolean}} MessagingMenuTabAction */
+/**
+ * A button shown next to the search bar. An action carrying `subActions` is rendered as a
+ * dropdown offering them instead: clicking it only opens the menu, so such an action has no
+ * `onClick` of its own.
+ *
+ * @typedef {{
+ *   id: string,
+ *   text: string,
+ *   icon?: string,
+ *   iconClass?: string,
+ *   isDisabled?: () => boolean,
+ *   onClick?: () => void,
+ *   preventDropdownClose?: boolean,
+ *   subActions?: MessagingMenuTabAction[],
+ * }} MessagingMenuTabAction
+ */
 
 /**
  * Defines a messaging menu tab with:
@@ -175,6 +195,11 @@ export class MessagingMenuTab extends Record {
     /** The filter selected by default when this tab is opened, if any. */
     get defaultFilter() {
         return this.filters.find((f) => f.isDefault);
+    }
+
+    /** Filters in the order they are shown, right after the "All" one. */
+    get sortedFilters() {
+        return [...this.filters].sort((f1, f2) => (f1.sequence ?? 0) - (f2.sequence ?? 0));
     }
 
     /**

@@ -13,6 +13,7 @@ from . import test_discuss_channel_last_interest
 from . import test_discuss_channel_member
 from . import test_discuss_channel_readonly
 from . import test_discuss_mail_presence
+from . import test_discuss_meetings
 from . import test_discuss_mention_suggestions
 from . import test_discuss_message_update_controller
 from . import test_discuss_reaction_controller

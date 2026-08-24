@@ -8,12 +8,19 @@ import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenu extends Component {
-    static components = { DiscussSearch, MessagingMenuItem, MessagingMenuEmpty, NotificationItem };
+    static components = {
+        DiscussSearch,
+        Dropdown,
+        MessagingMenuItem,
+        MessagingMenuEmpty,
+        NotificationItem,
+    };
     static template = "mail.MessagingMenu";
 
     isIosPwa = isIOS() && isDisplayStandalone();
