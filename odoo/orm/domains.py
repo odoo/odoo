@@ -1457,10 +1457,16 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     if isinstance(search_domain := model.env.context.get('search_domain'), Domain):
         # model with search_domain like (field, 'any', comodel_domain)
         # => comodel with comodel_domain
+        # a plain (field, 'in', ids) condition on the same field is just as
+        # informative: it directly constrains the comodel's own 'id'.
+        # '=' is not checked: it's always normalized to 'in' by the time a
+        # domain is fully optimized (see _operator_equal_as_in), so it can
+        # never survive here.
         comodel_domain = Domain.OR(
-            c.value
+            c.value if isinstance(c.value, Domain) else DomainCondition('id', c.operator, c.value)
             for c in search_domain.iter_conditions()
-            if c.is_condition(condition.field_expr, value=Domain)
+            if c.is_condition(condition.field_expr)
+            and (isinstance(c.value, Domain) or c.operator == 'in')
         )
         if comodel_domain.is_false() and not search_domain.is_false():
             # we don't know the condition, accept all
