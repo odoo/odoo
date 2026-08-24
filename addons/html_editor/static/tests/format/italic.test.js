@@ -48,7 +48,7 @@ test("should make two paragraphs not italic", async () => {
 
 test("should make qweb tag italic", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
+        contentBefore: `<div>[<p t-out="'Test'" contenteditable="false">Test</p>]</div>`,
         stepFunction: italic,
         contentAfter: `<div>[<p t-out="'Test'" style="font-style: italic;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
