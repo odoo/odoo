@@ -386,6 +386,38 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet1.reinvoice_move_id, "The timesheet1 should not be linked to the invoice, even after invoice validation")
         self.assertFalse(timesheet2.reinvoice_move_id, "The timesheet2 should not be linked to the invoice, even after invoice validation")
 
+    def test_billable_type_of_project_billed_manually(self):
+        """ A billable project whose billing type is 'manually' flags its timesheets as
+            billable even when they have no sales order item set.
+        """
+        project = self.env['project.project'].create({
+            'name': 'Training',
+            'allow_timesheets': True,
+            'allow_billable': True,
+            'partner_id': self.partner_a.id,
+        })
+        self.assertEqual(project.billing_type, 'not_billable', "The default billing type is 'not_billable'")
+
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': project.id,
+            'unit_amount': 3,
+            'employee_id': self.employee_user.id,
+        })
+        self.assertFalse(timesheet.so_line)
+        self.assertEqual(timesheet.billable_type, '09_non_billable')
+
+        project.billing_type = 'manually'
+        self.assertEqual(
+            timesheet.billable_type, '08_billable_manual',
+            "The timesheet should be billable manually even without any sales order item")
+
+        project.allow_billable = False
+        self.assertEqual(
+            project.billing_type, 'not_billable',
+            "A project which is not billable cannot be billed manually")
+        self.assertEqual(timesheet.billable_type, '09_non_billable')
+
     def test_timesheet_invoice(self):
         """ Test to create invoices for the sale order with timesheets
 
