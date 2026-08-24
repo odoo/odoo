@@ -5,13 +5,14 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-22 17:43+0000\n"
-"PO-Revision-Date: 2026-06-30 03:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 11:32+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/"
 "website_event_sale/ru/>\n"
 "Language: ru\n"
@@ -25,13 +26,11 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-#, fuzzy
 msgid "<b>End</b>"
 msgstr "<b>Конец</b>"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-#, fuzzy
 msgid "<b>Start</b>"
 msgstr "<b>Начало</b>"
 
@@ -88,9 +87,8 @@ msgstr "Подзаголовок события"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_event_ticket
-#, fuzzy
 msgid "Event Ticket"
-msgstr "Билет на событие"
+msgstr "Билет на мероприятие"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -125,7 +123,6 @@ msgstr "Перейти к оплате"
 #: model:ir.model.fields,field_description:website_event_sale.field_product_template__id
 #: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
 #: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
@@ -173,6 +170,8 @@ msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
 "ticket for the %(event)s event%(slot)s."
 msgstr ""
+"К сожалению, осталось всего %(remaining_seats)d мест по билету «%(ticket)s» "
+"на мероприятие «%(event)s»%(slot)s."
 
 #. module: website_event_sale
 #. odoo-python
@@ -184,7 +183,7 @@ msgstr "Указанный билет не существует"
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid "The provided ticket slot doesn't exist"
-msgstr ""
+msgstr "Указанный временной слот для билета не существует"
 
 #. module: website_event_sale
 #. odoo-python

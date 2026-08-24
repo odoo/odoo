@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 11:01+0000\n"
-"PO-Revision-Date: 2026-08-07 07:57+0000\n"
+"PO-Revision-Date: 2026-08-14 08:59+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/base/"
 "ja/>\n"
@@ -522,8 +522,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"これは複数の会社による問題のようですが、いずれにせよレコードにアクセスするた"
-"めの適切な会社へのアクセス権がありません。"
+"これはマルチカンパニーに起因する問題のようですが、いずれにせよ、このレコード"
+"にアクセスするための適切な会社へのアクセス権がありません。"
 
 #. module: base
 #. odoo-python
@@ -536,8 +536,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"これは複数の会社による問題のようです。会社を切替えることでレコードにアクセス"
-"できるかもしれません: %s."
+"これはマルチカンパニーに起因する問題のようです。会社を「%s」に切り替えると、"
+"このレコードにアクセスできる可能性があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_imin
@@ -746,7 +746,7 @@ msgid ""
 "European Union."
 msgstr ""
 "\n"
-"統計内レポートに在庫管理を追加するモジュール。\n"
+"Intrastatレポートに在庫管理を追加するモジュール。\n"
 "================================================== ==========\n"
 "\n"
 "このモジュールは、欧州連合の国間で取引される商品の詳細を提供します。"
@@ -7013,9 +7013,9 @@ msgid ""
 "VAT in the Intrastat XML report.\n"
 msgstr ""
 "\n"
-"申告用のイントラスタットXMLレポートを作成します。\n"
-"イントラスタットXMLレポートに、商品の原産国およびパートナーVATを指定する可能"
-"性を追加しました。\n"
+"申告用のintrastat XMLレポートを作成します。\n"
+"intrastat XMLレポートに、商品の原産国およびパートナーVATを指定する可能性を追"
+"加しました。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_intrastat
@@ -27360,7 +27360,7 @@ msgstr "エストニア - 会計レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ee_intrastat
 msgid "Estonia Intrastat Declaration"
-msgstr "エストニアイントラスタット申告"
+msgstr "エストニアintrastat 申告"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -29361,7 +29361,7 @@ msgstr "フランス領ギアナ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_intrastat
 msgid "French Intrastat Declaration"
-msgstr "フランスイントラスタット申告"
+msgstr "フランスintrastat 申告"
 
 #. module: base
 #: model:res.country,name:base.pf
@@ -29671,7 +29671,7 @@ msgstr "ジョージア"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_intrastat
 msgid "German Intrastat Declaration"
-msgstr "ドイツイントラスタット申告"
+msgstr "ドイツintrastat 申告"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -33830,7 +33830,7 @@ msgstr "リトアニア - SAF-T インポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_intrastat
 msgid "Lithuanian Intrastat Declaration"
-msgstr "リトアニアイントラスタット申告"
+msgstr "リトアニアintrastat 申告"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
@@ -36025,7 +36025,7 @@ msgstr "オランダ - 会計の給与"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
 msgid "Netherlands Intrastat Declaration"
-msgstr "オランダイントラスタット申告"
+msgstr "オランダintrastat 申告"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -37945,7 +37945,7 @@ msgstr ""
 "て適切な制御方法を選択してください。\n"
 "\n"
 "手間をかけずに仕入先の請求書を管理できます。\n"
-"購買オーダ、プロダクトの入荷に基づいてドラフト請求書を事前に生成し、手動で請"
+"購買オーダ、プロダクトの入荷に基づいて請求書(下書き)を事前に生成し、手動で請"
 "求書を作成し、オーダから明細をインポートするなど、必要に応じて適切な方法を選"
 "択しましょう。\n"
 "\n"
@@ -40878,7 +40878,7 @@ msgstr "POS - 計画"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_stock
 msgid "PoS - Stock"
-msgstr "POS - ストック"
+msgstr "POS - 在庫"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
@@ -46591,7 +46591,7 @@ msgstr "テスト香港給与"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_l10n
 msgid "Test Localization"
-msgstr "ローカライゼーションテスト"
+msgstr "ローカリゼーションテスト"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
@@ -49578,7 +49578,7 @@ msgstr "不明"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown database error: '%s'"
-msgstr "未知のデータベースエラー: '%s'"
+msgstr "不明なデータベースエラー: '%s'"
 
 #. module: base
 #. odoo-python

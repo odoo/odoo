@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:37+0000\n"
-"PO-Revision-Date: 2026-06-30 18:59+0000\n"
+"PO-Revision-Date: 2026-08-20 07:02+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/event/th/"
-">\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/event/"
+"th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,7 @@ msgstr "%(slot_name)s (ขายหมดแล้ว)"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: ขาดที่นั่ง %(count)s ที่นั่ง"
 
 #. module: event
 #. odoo-python
@@ -258,11 +258,15 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>หากคุณต้องการนำเสนอ โปรดส่งข้อเสนอหัวข้อของคุณโดยเร็วที่สุดเพื่อขออนุมัติไปยังคุณ Famke "
+"Jenssens ที่ ngh [at] yourcompany [dot] com การนำเสนอควรเป็นในรูปแบบนี้ ตัวอย่างเช่น ก"
+"ารนำเสนอโมดูลชุมชน กรณีศึกษา ข้อเสนอแนะเกี่ยวกับวิธีการ เทคนิค และอื่นๆ การนำเสนอแต่ละรายกา"
+"รต้องเป็นภาษาอังกฤษ</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -272,7 +276,7 @@ msgstr "<i class=\"fa fa-building\" title=\"บริษัทผู้เข้
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -331,6 +335,9 @@ msgid ""
 "                                    Attendee answers\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    คำตอบของผู้เข้าร่วม\n"
+"                               </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2721,7 +2728,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_question_check_default_question_is_reusable
 msgid "A default question must be reusable."
-msgstr ""
+msgstr "คำถามแบบค่าเริ่มต้นต้องสามารถใช้ซ้ำได้"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -2740,6 +2747,11 @@ msgid ""
 "(event_end_time)s\n"
 "Slot:\t%(slot_name)s"
 msgstr ""
+"ไม่สามารถกำหนดเวลาสำหรับสล็อตนอกช่วงเวลางานได้\n"
+"\n"
+"อีเวนต์:\t%(event_start_date)s, %(event_start_time)s - %(event_end_date)s, %"
+"(event_end_time)s\n"
+"สล็อต:\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -2748,12 +2760,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"เวลาสิ้นสุดของสล็อตต้องช้ากว่าเวลาเริ่มต้นของสล็อตนั้น\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "เวลาในสล็อตต้องอยู่ระหว่าง 0:00 ถึง 23:59"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -2787,7 +2801,7 @@ msgstr "กิจกรรม"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Activities of"
-msgstr ""
+msgstr "กิจกรรมของ"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
@@ -2804,7 +2818,7 @@ msgstr "การตกแต่งข้อยกเว้นกิจกรร
 #: model:ir.model.fields,field_description:event.field_event_event__activity_plans_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "แผนกิจกรรม"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -2826,7 +2840,7 @@ msgstr "ประเภทกิจกรรม"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description that will appear as a tooltip for this stage"
-msgstr ""
+msgstr "เพิ่มคำบรรยายที่จะแสดงเป็นข้อความเพื่อขั้นตอนนี้"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2858,6 +2872,10 @@ msgid ""
 "From:\t%(start)s - %(end)s\n"
 "To:\t\t%(new_start)s - %(new_end)s\n"
 msgstr ""
+"การเพิ่มช่องเวลาเหล่านี้จะปรับช่วงเวลางานให้รวมช่องเวลาดังกล่าวโดยอัตโนมัติ\n"
+"\n"
+"จาก:\t%(start)s - %(end)s\n"
+"ถึง:\t\t%(new_start)s - %(new_end)s\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -2884,13 +2902,13 @@ msgstr "หลังจากการลงทะเบียนแต่ละ
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "หลังจากอีเวนต์จบลง"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "หลังจากที่อีเวนต์เริ่มแล้ว"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2926,6 +2944,8 @@ msgid ""
 "Allow this question to be selected and reused for any future event. Always "
 "true for default questions."
 msgstr ""
+"อนุญาตให้คำถามนี้ถูกเลือกและใช้ซ้ำสำหรับกิจกรรมในอนาคตได้เสมอ สำหรับคำถามค่าเริ่มต้นจะเป็นจริงเ"
+"สมอ"
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -3044,7 +3064,7 @@ msgstr "วันที่เข้าร่วม"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "เข้าร่วมเมื่อวันที่ %(attended_date)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -3099,6 +3119,9 @@ msgid ""
 "                                    <span invisible=\"not is_multi_slots\"> "
 "per slot</span>"
 msgstr ""
+"ผู้เข้าร่วม\n"
+"                                   <span invisible=\"not is_multi_slots\">ต่อส"
+"ล็อต</span>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -3167,13 +3190,13 @@ msgstr "บาร์โค้ดต้องไม่ซ้ำกัน"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "ก่อนที่อีเวนต์จะจบลง"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "ก่อนที่อีเวนต์จะเริ่ม"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__blocked
@@ -3273,6 +3296,7 @@ msgid ""
 "Check this for order-level questions (e.g., 'Company Name') where the answer "
 "is the same for everyone."
 msgstr ""
+"ตรวจสอบข้อนี้สำหรับคำถามระดับคำสั่ง (เช่น 'ชื่อบริษัท') ที่คำตอบเป็นเหมือนกันสำหรับทุกคน"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_type_id
@@ -3316,6 +3340,7 @@ msgstr "การติดต่อสื่อสาร"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"การประชาสัมพันธ์สำหรับ %(event_name)s ที่กำหนดไว้ %(scheduled_date)s ล้มเหลว"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -3375,13 +3400,13 @@ msgstr "การกำหนดค่า"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "ยืนยันการเข้าร่วมไหม?"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Confirmation"
-msgstr ""
+msgstr "การยืนยัน"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -3495,12 +3520,12 @@ msgstr "วัน"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Default Questions"
-msgstr ""
+msgstr "คำถามเริ่มต้น"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_default
 msgid "Default question"
-msgstr ""
+msgstr "คำถามเริ่มต้น"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -3528,7 +3553,7 @@ msgstr "งานออกแบบ Los Angeles"
 #. module: event
 #: model:ir.model,name:event.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "สรุปย่อ"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
@@ -3583,7 +3608,7 @@ msgstr "แสดงลำดับ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "ดาวน์โหลดตั๋ว"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -3615,7 +3640,7 @@ msgstr "อีเมล"
 #. module: event
 #: model:ir.model,name:event.model_mail_template
 msgid "Email Template"
-msgstr ""
+msgstr "เทมเพลตอีเมล"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3760,7 +3785,7 @@ msgstr "คำถามคำตอบอีเวนต์"
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
 msgid "Event Questions"
-msgstr ""
+msgstr "คำถามเกี่ยวกับอีเวนต์"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -3789,12 +3814,12 @@ msgstr "รับผิดชอบงานอีเวนต์"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
 msgid "Event Share URL"
-msgstr ""
+msgstr "URL สำหรับแชร์อีเวนต์"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "สล็อตอีเวนต์"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -3882,7 +3907,7 @@ msgstr "ประเภทอีเวนต์"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "ประเภทอีเวนต์"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -3983,9 +4008,9 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
-"ทุกปีเราเชิญชุมชน พาร์ทเนอร์ และผู้ใช้ปลายทางมาพบกับเรา! "
-"นี้เป็นงานในอุดมคติที่เราจะมารวมตัวกันและนำเสนอฟีเจอร์ใหม่ๆ แผนงานของเวอร์ชันในอนาคต "
-"ความสำเร็จของซอฟต์แวร์ เวิร์กช็อป เซสชันการฝึกอบรม  และอื่น ๆ"
+"ทุกปีเราเชิญชุมชน พาร์ทเนอร์ และผู้ใช้ปลายทางมาพบกับเรา! นี้เป็นงานในอุดมคติที่เราจะมารวมตัวกันแ"
+"ละนำเสนอฟีเจอร์ใหม่ๆ แผนงานของเวอร์ชันในอนาคต ความสำเร็จของซอฟต์แวร์ เวิร์กช็อป เซสชันการ"
+"ฝึกอบรม และอื่น ๆ"
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -4001,7 +4026,7 @@ msgstr "สัมผัสประสบการณ์ดนตรีสด �
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "แสดงตามเขตเวลาของอีเวนต์"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -4040,6 +4065,8 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"หากต้องการข้อมูลเพิ่มเติม โปรดติดต่อเราที่ <a class=\"o_translate_inline\" "
+"href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4048,6 +4075,8 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"หากต้องการข้อมูลเพิ่มเติม โปรดติดต่อเราที่ <a class=\"o_translate_inline\" "
+"href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4059,11 +4088,13 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"หากต้องการข้อมูลเพิ่มเติม โปรดติดต่อเราที่ <a class=\"o_translate_inline\" "
+"href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "สำหรับผู้เข้าร่วมแต่ละคน"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -4225,7 +4256,7 @@ msgstr "หน้าแรก"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "ช่วงเวลา (ชั่วโมง)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -4352,7 +4383,7 @@ msgstr "กำลังดำเนินการ"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "รวมไว้เป็นค่าเริ่มต้นในอีเวนต์ใหม่"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -4397,7 +4428,7 @@ msgstr "บทนำ, CRM, การบริหารการขาย"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "การเลือกอีเวนต์/สล็อตไม่ถูกต้อง"
 
 #. module: event
 #. odoo-python
@@ -4419,7 +4450,7 @@ msgstr "พร้อม"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "อีเวนต์นี้มีหลายสล็อตหรือไม่"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -4440,7 +4471,7 @@ msgstr "เป็นผู้ติดตาม"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "มีหลายสล็อต"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -4455,13 +4486,13 @@ msgstr "ต่อเนื่อง"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "สามารถใช้ซ้ำได้"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "ล้มเหลวด้วยข้อผิดพลาด%(error)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -4481,7 +4512,7 @@ msgstr "John Doe"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "รูปโปรไฟล์ของ John Doe"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4513,7 +4544,7 @@ msgstr "คีย์"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
 msgid "Kpi Nbr Of Registrations Value"
-msgstr ""
+msgstr "ตัวเลข Kpi สำหรับค่าการลงทะเบียน"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
@@ -4534,7 +4565,7 @@ msgstr "ผู้เข้าร่วมครั้งสุดท้าย"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "ข้อผิดพลาดสุดท้าย"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4605,12 +4636,12 @@ msgstr "จำกัดการลงทะเบียน"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "จำกัดจำนวนต่อคำสั่งซื้อ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "ลิงก์ไปยังเว็บไซต์ที่จะจัดอีเวนต์ออนไลน์"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4670,7 +4701,7 @@ msgstr "ส่งเมลแล้ว"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "ช่องรับจดหมาย"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4729,11 +4760,13 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"จำนวนสูงสุดของสินค้านี้ต่อคำสั่งซื้อ\n"
+"ตั้งเป็น 0 เพื่อไม่ใช้กฎนี้"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "จำนวนสูงสุดต่อสล็อต"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -4762,7 +4795,7 @@ msgstr "เดือน"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "หลายสล็อต"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -4809,7 +4842,7 @@ msgstr "ใหม่"
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 #: code:addons/event/static/src/views/event_slot/list/event_slot_list_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "สล็อตใหม่"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4856,7 +4889,7 @@ msgstr "ยังไม่มีผู้เข้าร่วม!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "ยังไม่มีคำถาม! โปรดสร้างคำถาม"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4866,12 +4899,12 @@ msgstr "การตีความ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "ไม่สามารถใช้ซ้ำได้"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "ไม่บังคับ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -4889,7 +4922,7 @@ msgstr "โน้ต"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Notes & Documents"
-msgstr ""
+msgstr "โน้ตและเอกสาร"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4969,7 +5002,7 @@ msgstr "หนึ่งครั้งต่อการสั่งซื้อ
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "หนึ่งครั้งต่อการสั่งซื้อ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -4990,7 +5023,7 @@ msgstr "กิจกรรมออนไลน์"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
 msgid "Online Event URL"
-msgstr ""
+msgstr "URL ของอีเวนต์ออนไลน์"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -5078,7 +5111,7 @@ msgstr "โปรดป้อนรหัสลับ base64 ที่ถูก�
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "กรุณาป้อน URL ของอีเวนต์ที่ถูกต้อง"
 
 #. module: event
 #. odoo-javascript
@@ -5273,6 +5306,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"เปิดการลงทะเบียนหาก:\n"
+"- อีเวนต์ยังไม่สิ้นสุดหรือยังไม่ถูกยกเลิก\n"
+"- ยังมีที่นั่งว่างในอีเวนต์\n"
+"- ตั๋วสามารถขายได้ (หากใช้ระบบขายตั๋ว)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5283,7 +5320,7 @@ msgstr "เริ่มลงทะเบียน"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "การประมวลผลเทมเพลตล้มเหลวด้วยข้อผิดพลาด: %(error)s"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -5316,7 +5353,7 @@ msgstr "ตั๋วเต็มหน้า Html ที่ตอบสนอง
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "สามารถใช้ซ้ำได้"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5378,7 +5415,7 @@ msgstr "อีเมลผู้จัดกำหนดการ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "ค้นหาคำถามเกี่ยวกับอีเวนต์"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5400,7 +5437,7 @@ msgstr "การเลือกผู้เข้าร่วม"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
 msgid "Select days to add slots"
-msgstr ""
+msgstr "เลือกวันเพื่อเพิ่มสล็อต"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -5507,23 +5544,23 @@ msgstr "สล็อต"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "ตัวกำหนดตารางเวลาส่งจดหมายสล็อต"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "การเลือกสล็อตเป็นข้อบังคับสำหรับอีเวนต์ที่มีหลายสล็อต"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "สล็อต"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "การสื่อสารแบบช่องสล็อต"
 
 #. module: event
 #. odoo-python
@@ -5534,12 +5571,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "สล็อต"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "จำนวนสล็อต"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -5759,6 +5796,8 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"สล็อตต่อไปนี้ไม่สามารถลบได้ในขณะที่มีการลงทะเบียนอย่างน้อยหนึ่งรายการที่เชื่อมโยงกัน:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -5778,6 +5817,8 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"จำนวนสูงสุดต่อคำสั่งซื้อไม่สามารถเกิน%(limit_orderable)s ได้ โปรดตรวจสอบตั๋ว%"
+"(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5786,13 +5827,14 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"จำนวนสูงสุดต่อคำสั่งซื้อต้องไม่เกินจำนวนที่นั่งสูงสุด โปรดตรวจสอบตั๋ว%(ticket_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
-msgstr ""
+msgstr "ค่าจำกัดต่อคำสั่งซื้อต้องเป็นค่าบวก โปรดตรวจสอบตั๋ว%(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -5814,6 +5856,7 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"มีผู้สมัครมากกว่าขีดจำกัดนี้ อีเวนต์จะขายหมด และผู้สมัครเพิ่มเติมจะยังคงอยู่"
 
 #. module: event
 #. odoo-python
@@ -5822,6 +5865,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"ไม่มีที่นั่งเพียงพอสำหรับ%(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -5829,7 +5874,7 @@ msgstr ""
 msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
-msgstr ""
+msgstr "มีปัญหากับช่องกรอกแบบไดนามิก ข้อผิดพลาดที่รับคือ:%(error)s"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -5843,6 +5888,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"อีเวนต์เหล่านี้ไม่สามารถกำหนดช่วงเวลาจัดกิจกรรมนอกช่วงเวลากำหนดได้:\n"
+"%(event_names)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -5875,7 +5922,7 @@ msgstr "ข้อมูลนี้จะถูกพิมพ์ลงบนท
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "นี่เป็นผลจากข้อผิดพลาดในเทมเพลต%(template_link)s"
 
 #. module: event
 #. odoo-javascript
@@ -5905,12 +5952,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "สามารถเชื่อมโยงกับเทมเพลต%(template_link)s ได้"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "คำถามนี้ถูกใช้โดย"
 
 #. module: event
 #. odoo-javascript
@@ -5972,7 +6019,7 @@ msgstr "ประเภททิกเก็ตช่วยให้คุณแ
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "ตั๋วถูกสแกนครั้งแรกเมื่อวันที่"
 
 #. module: event
 #. odoo-python
@@ -6036,7 +6083,7 @@ msgstr "ผู้เข้าร่วมทั้งหมด"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "จำนวนการลงทะเบียนทั้งหมด"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -6122,7 +6169,7 @@ msgstr "ทำความเข้าใจกับโมดูลต่าง
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "เลิกทำ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -6149,13 +6196,13 @@ msgstr "กำลังจะเกิดขึ้น/กำลังดำเ�
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Update Event"
-msgstr ""
+msgstr "อัปเดตอีเวนต์"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "อัปเดตขีดจำกัดการลงทะเบียน?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -6285,7 +6332,7 @@ msgstr "ไม่ว่าจะไม่มีที่นั่งว่าง
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "ว่าตั๋วสำหรับช่วงเวลาดังกล่าวขายหมดแล้วหรือไม่"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -6303,7 +6350,7 @@ msgstr "คุณไม่สามารถเปลี่ยนประเภ
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "คุณไม่สามารถลบคำถามที่เป็นค่าเริ่มต้นได้"
 
 #. module: event
 #. odoo-python
@@ -6312,6 +6359,7 @@ msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
 msgstr ""
+"คุณไม่สามารถลบคำถามที่ผู้เข้าร่วมได้ตอบไปแล้วได้ แต่สามารถเก็บคำถามนั้นไว้ในคลังแทนได้"
 
 #. module: event
 #. odoo-python
@@ -6358,7 +6406,7 @@ msgstr "เช่น “การโปรโมต”"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "เช่น \"https://www.odoo.com\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -6386,7 +6434,7 @@ msgstr "เช่น ทิกเก็ต VIP"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
