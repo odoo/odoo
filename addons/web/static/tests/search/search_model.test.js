@@ -219,6 +219,36 @@ test("parsing one filter tag with default_period date attribute", async () => {
     ]);
 });
 
+test("parsing one filter tag with a relative option as default_period", async () => {
+    const model = await createSearchModel({
+        searchViewArch: `
+            <search>
+                <filter name="date_filter" string="Date" date="date_field" default_period="year-1,this_month"/>
+            </search>
+        `,
+    });
+    // The relative option is extracted from the declared periods: it is the
+    // companion relative filter that must be activated, not a period option.
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
+        {
+            defaultGeneratorIds: [],
+            defaultRelativeOptionId: "this_month",
+            description: "Date",
+            domain: "[]",
+            fieldName: "date_field",
+            fieldType: "date",
+            type: "dateFilter",
+            name: "date_filter",
+            optionsParams: {
+                customOptions: [],
+            },
+        },
+    ]);
+    expect(
+        sanitizeSearchItems(model).find((i) => i.type === "relativeFilter").defaultOptionId
+    ).toBe("this_month");
+});
+
 test("parsing date filter with custom options", async () => {
     const model = await createSearchModel({
         searchViewArch: `

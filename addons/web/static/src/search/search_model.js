@@ -1480,6 +1480,8 @@ export class SearchModel extends EventBus {
                 .forEach((f) => {
                     if (f.type === "dateFilter" || f.type === "parentFilter") {
                         this.toggleParentFilter(f.id);
+                    } else if (f.type === "relativeFilter") {
+                        this.toggleRelativeFilter(f.id, f.defaultOptionId);
                     } else if (f.type === "dateGroupBy") {
                         this.toggleDateGroupBy(f.id);
                     } else if (f.type === "field") {
@@ -1670,6 +1672,18 @@ export class SearchModel extends EventBus {
                 id: this.nextId,
                 dateFilterId: dateFilterItem.id,
             };
+            if (dateFilterItem.defaultRelativeOptionId) {
+                relativeFilterItem.defaultOptionId = dateFilterItem.defaultRelativeOptionId;
+                if (dateFilterItem.isDefault) {
+                    // The default targets a relative option: it is the relative
+                    // filter that must be activated, not a period of the date
+                    // filter (they are mutually exclusive).
+                    relativeFilterItem.isDefault = true;
+                    relativeFilterItem.defaultRank = dateFilterItem.defaultRank;
+                    delete dateFilterItem.isDefault;
+                    delete dateFilterItem.defaultRank;
+                }
+            }
             dateFilterItem.relativeFilterId = this.nextId;
             this.searchItems[this.nextId] = relativeFilterItem;
             this.nextId++;
