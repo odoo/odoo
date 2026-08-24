@@ -224,6 +224,7 @@ patch(PosStore.prototype, {
             partner_id: so.partner_id,
             product_id: soLine.product_id,
             extra_tax_data: soLine.extra_tax_data,
+            document_tax_mode: so.document_tax_mode,
         };
     },
 
@@ -376,6 +377,7 @@ patch(PosStore.prototype, {
                 price_unit: baseLine.price_unit,
                 price_type: "automatic",
                 sale_order_origin_id: saleOrder,
+                document_tax_mode: saleOrder.document_tax_mode,
                 down_payment_details: matchedSaleOrderLines.map((saleOrderLine) => ({
                     product_name: saleOrderLine.product_id.display_name,
                     product_uom_qty: saleOrderLine.product_uom_qty,
