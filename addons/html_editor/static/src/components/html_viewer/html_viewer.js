@@ -11,11 +11,12 @@ import {
     onWillUnmount,
     proxy,
     signal,
+    status,
     t,
     untrack,
     useApp,
     useEffect,
-    useProps
+    useProps,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
@@ -296,7 +297,13 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const { root, mountPromise } = mountComponent(this.app, Component, host, props, env);
+        const { root, mountPromise } = mountComponent(this.app, Component, host, props, env, {
+            onBeforeComplete: () => {
+                if (status(this) === "destroyed") {
+                    return false;
+                }
+            },
+        });
         // Don't show mounting errors as they will happen often when the host
         // is disconnected from the DOM because of a patch
         mountPromise.catch();
