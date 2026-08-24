@@ -283,14 +283,41 @@ class MvDealBundlePaperwork(models.Model):
             self.write(vals)
         # Chatter log so the action is auditable even before the
         # per-workflow logic is filled in.
+        action_label = dict(
+            self._fields['bundle_action'].selection or []
+        ).get(action_code, action_code or '')
+        # Update the EXISTING Excel attachment (don't create a new one).
+        # If somehow no Excel exists yet (user hit a bundle action
+        # before Generate Paperwork), fall through to a fresh generate
+        # so the flow doesn't dead-end.
+        Attachment = self.env['ir.attachment']
+        excel_atts = Attachment.search([
+            ('res_model', '=', 'mv.deal'),
+            ('res_id', '=', self.id),
+            ('mv_bundle_paperwork_kind', '=', 'excel'),
+        ], order='create_date desc, id desc')
+        if excel_atts:
+            self._bundle_paperwork_update_excel(
+                excel_atts[0], action_label, bundle_start_week,
+            )
+        else:
+            self.bundle_paperwork_generate()
+            # After generate, tag the new Excel with the current action.
+            excel_atts = Attachment.search([
+                ('res_model', '=', 'mv.deal'),
+                ('res_id', '=', self.id),
+                ('mv_bundle_paperwork_kind', '=', 'excel'),
+            ], order='create_date desc, id desc', limit=1)
+            if excel_atts:
+                self._bundle_paperwork_update_excel(
+                    excel_atts[0], action_label, bundle_start_week,
+                )
+        # Chatter note.
         if hasattr(self, 'message_post'):
-            action_label = dict(
-                self._fields['bundle_action'].selection or []
-            ).get(action_code, action_code or '')
             try:
                 self.message_post(body=_(
                     "Bundle Action <b>%(action)s</b> triggered with "
-                    "Start Week <b>%(week)s</b>."
+                    "Start Week <b>%(week)s</b>. Existing Excel updated."
                 ) % {
                     'action': action_label,
                     'week': bundle_start_week or '',
@@ -301,6 +328,63 @@ class MvDealBundlePaperwork(models.Model):
                     "for deal id=%s", self.id,
                 )
         return self.bundle_paperwork_state()
+
+    def _bundle_paperwork_update_excel(self, attachment, action_label, week):
+        """Open the given Excel attachment, rewrite the bundle-action
+        label everywhere it appears (row 3 col E on Order + every
+        Action cell in the group data rows), and save the bytes back
+        to the SAME attachment. Filename is renamed to reflect the
+        current action while keeping the deal / brand identifier."""
+        import base64
+        import io
+        from openpyxl import load_workbook
+        try:
+            raw = base64.b64decode(attachment.datas or b'')
+            if not raw:
+                return
+            wb = load_workbook(io.BytesIO(raw))
+        except Exception:
+            _logger.exception(
+                "bundle_paperwork_update_excel: could not load "
+                "existing Excel attachment id=%s", attachment.id,
+            )
+            return
+        if 'Order' not in wb.sheetnames:
+            return
+        order = wb['Order']
+        # Row 3 col E = action label. Everywhere else where the
+        # previous action label appears in col B (the Action column
+        # inside each group's data rows) gets rewritten too.
+        try:
+            prev = order['E3'].value or ''
+        except Exception:
+            prev = ''
+        order['E3'] = action_label
+        if prev and prev != action_label:
+            for row in order.iter_rows(min_col=2, max_col=2):
+                cell = row[0]
+                if cell.value == prev:
+                    cell.value = action_label
+        buf = io.BytesIO()
+        wb.save(buf)
+        buf.seek(0)
+        # Rename to reflect the new action but keep the rest of the
+        # filename intact.
+        new_name = attachment.name or ''
+        if new_name:
+            for token in (
+                'NEW BUY', 'ADD TO SCHEDULE', 'CANCELED',
+                'FREQUENCY REVISION', 'TRAFFIC REVISION ONLY',
+                'CANCEL BEFORE START', 'FREQUENCY ADJUSTMENT/CANCEL',
+                'FREQUENCY REVISION/TRAFFIC CHANGE',
+            ):
+                if token in new_name:
+                    new_name = new_name.replace(token, action_label)
+                    break
+        attachment.write({
+            'datas': base64.b64encode(buf.getvalue()),
+            'name': new_name or attachment.name,
+        })
 
 
 # =====================================================================
@@ -801,7 +885,7 @@ class MvBundlePaperworkWizard(models.TransientModel):
     #                    from today.
     #   * Stations     - unique station call letters.
     # ================================================================
-    def _generate_excel(self, deal, chunks, stations):
+    def _generate_excel(self, deal, chunks, stations, action_label='NEW BUY'):
         from datetime import date, timedelta
         from openpyxl import Workbook
         from openpyxl.styles import Font, Alignment, PatternFill
@@ -816,23 +900,64 @@ class MvBundlePaperworkWizard(models.TransientModel):
         group_label_map = dict(group_selection)
 
         # Group codes present on this deal, in the order the group
-        # selection defines them (Group 1, Group 2, ...). We only emit
-        # a block for groups that actually have Bundle Pricing rows.
-        groups_present = []
+        # selection defines them (Group 1, Group 2, ...). Group them
+        # once - we need both the list of groups AND the list of
+        # distinct time periods per group (so the Order sheet emits
+        # exactly N data rows per group, matching the sample where
+        # each station carries 3 rows in Station List, one per period).
+        groups_present = []          # [(group_code, group_label)]
+        periods_per_group = {}       # group_code -> list of (start_end_str, telecast_days)
         for group_code, group_label in group_selection:
+            seen = []
             for st in stations.values():
-                if any((bp.group == group_code) for bp in st.pricing_list):
-                    groups_present.append((group_code, group_label))
-                    break
-        # Fallback - if no group codes matched (unusual), emit one
-        # anonymous block using whatever groups the pricing has.
+                for bp in st.pricing_list:
+                    if bp.group != group_code:
+                        continue
+                    period = '%s-%s' % (
+                        _time_label(bp.start_time, time_map),
+                        _time_label(bp.end_time, time_map),
+                    )
+                    telecast = 'MTWTFSS'
+                    if hasattr(bp, 'days') and bp.days:
+                        # 'MTWTFSS'-like short label; fall back to full week
+                        try:
+                            names = list(bp.days.mapped('name') or [])
+                            initials = {'Mon': 'M', 'Tue': 'T', 'Wed': 'W',
+                                        'Thu': 'T', 'Fri': 'F',
+                                        'Sat': 'S', 'Sun': 'S'}
+                            telecast = ''.join(initials.get(n, '') for n in names) or 'MTWTFSS'
+                        except Exception:
+                            telecast = 'MTWTFSS'
+                    entry = (period, telecast)
+                    if entry not in seen:
+                        seen.append(entry)
+            if seen:
+                groups_present.append((group_code, group_label))
+                periods_per_group[group_code] = seen
         if not groups_present:
             groups_present = [('group_1', 'Group 1')]
+            periods_per_group['group_1'] = [
+                ('09:00A-12:00A', 'MTWTFSS'),
+                ('12:00A-04:00A', 'MTWTFSS'),
+                ('04:00A-09:00A', 'MTWTFSS'),
+            ]
 
         program = deal.program
         bundle_name = (program.bundle_name if program else '') or (
             program.name if program else ''
         )
+        # Bundle "family" title shown in row 3 col A - Gray / Tegna /
+        # Hearst / etc. Pulled off program.name; fall back to bundle_name.
+        family = ''
+        prog_name = (program.name if program else '') or ''
+        upper = prog_name.upper()
+        for kw in ('GRAY', 'TEGNA', 'HEARST', 'UNIVISION', 'UNIMAS',
+                   'AMERICAN SPIRIT', 'BOUNCE', 'PRIMARY'):
+            if kw in upper:
+                family = kw
+                break
+        family = family or (bundle_name or '').upper() or 'BUNDLE'
+
         logs_contact = program.logs_contact if program else None
         logs_name = (logs_contact.name if logs_contact else '') or ''
         logs_phone = (
@@ -845,16 +970,15 @@ class MvBundlePaperworkWizard(models.TransientModel):
         ) or ''
 
         wb = Workbook()
-        # Openpyxl gives us one active sheet - rename to Order and
-        # create the rest in the order the sample uses.
+        # Sheet order matches the sample: Order, Schedule, Sheet2,
+        # Station List, RB Market List, Quarter Set.
         order = wb.active
         order.title = 'Order'
+        sch = wb.create_sheet('Schedule')
         sh2 = wb.create_sheet('Sheet2')
         sl = wb.create_sheet('Station List')
-        sch = wb.create_sheet('Schedule')
-        sh1 = wb.create_sheet('Sheet1')
+        rb = wb.create_sheet('RB Market List')
         qs = wb.create_sheet('Quarter Set')
-        stations_sheet = wb.create_sheet('Stations')
 
         # -------------------- styles --------------------
         bold = Font(bold=True)
@@ -868,70 +992,89 @@ class MvBundlePaperworkWizard(models.TransientModel):
         # ================================================================
         # Order sheet
         # ================================================================
-        # ---- Header block (rows 3-10) ----------------------------
-        order['E3'] = 'NEW BUY'
-        order['E3'].font = title_font
-        order['A3'] = bundle_name
+        # ---- Header block (rows 3-11) ---------------------------------
+        # Row 3: family (col A) + bundle-action label (col E).
+        order['A3'] = family
         order['A3'].font = title_font
+        order['E3'] = action_label
+        order['E3'].font = title_font
 
-        order['A5'] = 'Network:';        order['A5'].font = bold
+        # Row 5: Network / Name
+        order['A5'] = 'Network:';         order['A5'].font = bold
         order['B5'] = bundle_name
-        order['K5'] = 'Name:';           order['K5'].font = bold
-        order['L5'] = logs_name
+        order['L5'] = 'Name:';            order['L5'].font = bold
+        order['M5'] = logs_name
 
+        # Row 6: No. of Stations (formula) / Phone
         order['A6'] = 'No. of Stations:'; order['A6'].font = bold
-        order['B6'] = len(stations)
-        order['K6'] = 'Phone:';          order['K6'].font = bold
-        order['L6'] = logs_phone
+        # Sum the group No.-of-Stations cells from each block. Populated
+        # once we know the block start rows further down.
+        order['L6'] = 'Phone:';           order['L6'].font = bold
+        order['M6'] = logs_phone
 
-        order['A7'] = 'Agency:';         order['A7'].font = bold
+        # Row 7: Agency / Email
+        order['A7'] = 'Agency:';          order['A7'].font = bold
         order['B7'] = deal.contactaccount or ''
-        order['K7'] = 'Email:';          order['K7'].font = bold
-        order['L7'] = logs_email
+        order['L7'] = 'Email:';           order['L7'].font = bold
+        order['M7'] = logs_email
 
-        order['A8'] = 'Advertiser:';     order['A8'].font = bold
+        # Row 8: Advertiser / Date
+        order['A8'] = 'Advertiser:';      order['A8'].font = bold
         order['B8'] = deal.advertiser or ''
-        order['K8'] = 'Date:';           order['K8'].font = bold
-        order['L8'] = _iso_date(fields.Date.context_today(self))
+        order['L8'] = 'Date:';            order['L8'].font = bold
+        order['M8'] = _iso_date(fields.Date.context_today(self))
 
-        order['A9'] = 'Product:';        order['A9'].font = bold
+        # Row 9: Product
+        order['A9'] = 'Product:';         order['A9'].font = bold
         order['B9'] = deal.brands.name if deal.brands else ''
 
-        order['A10'] = 'Deal:';          order['A10'].font = bold
-        order['B10'] = deal.name or ''
+        # Row 10: Access Code
+        order['A10'] = 'Access Code:';    order['A10'].font = bold
+        order['B10'] = deal.access_code or ''
 
-        # ---- Group blocks -----------------------------------------
-        # Each block spans 8 rows:
-        #   +0 group heading            (A: "Group N")
-        #   +1 header row               (col headers + 14 week-date formulas K..X)
-        #   +2 data row 1 (Daytime)     (formulas for rate, units, weekly cells)
-        #   +3 data row 2 (Early AM)    (also holds the No. of Stations formula in A)
-        #   +4 blank
-        #   +5 blank
-        #   +6 Station Grand Total row  (H: label, I: SUMPRODUCT)
-        #   +7 Group   Grand Total row  (H: label, I: SUMPRODUCT)
-        #
-        # Blocks start at row 12 and every subsequent block starts
-        # (previous_start + 9) to leave one blank row between them.
-        block_start_rows = []
-        BLOCK_HEIGHT = 8
-        BLOCK_GAP = 1
+        # Row 11: Deal
+        order['A11'] = 'Deal:';           order['A11'].font = bold
+        order['B11'] = deal.name or ''
 
-        cur_row = 12
+        # ---- Group blocks -------------------------------------------
+        # Layout PER GROUP (matches the sample workbook):
+        #   +0 heading (col A: "GROUP N", uppercase)
+        #   +1 column headers (No. of Stations, Action, Time Period, ...)
+        #        + K-X: 14 successive-Monday formulas
+        #        (no Z/AA helper columns - K..X read Sheet2 directly)
+        #   +2 .. +2+N-1 : one data row per distinct time period in
+        #        this group's Bundle Pricing
+        #   +N+2 blank
+        #   +N+3 Comments (col B), Station Total (col I,J)
+        #   +N+4 Group Total (col I,J)
+        # Blocks are separated by one blank row.
+        length_num = (deal.length or '').lstrip('v_') or '30'
+        try:
+            length_int = int(length_num)
+        except ValueError:
+            length_int = 30
+
+        block_no_of_stations_cells = []   # 'A15', 'A24', ... for row 6 SUM
+        cur_row = 13
         for group_code, group_label in groups_present:
-            block_start_rows.append(cur_row)
-            r_head       = cur_row               # A: "Group N"
-            r_columns    = cur_row + 1           # column headers
-            r_data1      = cur_row + 2           # daytime data
-            r_data2      = cur_row + 3           # early-morning data
-            r_totals_stn = cur_row + 6           # Station Grand Total
-            r_totals_grp = cur_row + 7           # Group Grand Total
+            periods = periods_per_group.get(group_code) or [
+                ('09:00A-12:00A', 'MTWTFSS'),
+            ]
+            n_periods = len(periods)
 
-            order.cell(row=r_head, column=1, value=group_label).font = heading_font
+            r_head       = cur_row                # "GROUP N"
+            r_columns    = cur_row + 1            # column headers
+            r_data_first = cur_row + 2            # first data row
+            r_data_last  = r_data_first + n_periods - 1  # last data row
+            r_blank      = r_data_last + 1
+            r_totals_stn = r_blank + 1
+            r_totals_grp = r_totals_stn + 1
 
-            # Column headers: labels A..J, then K..X are formulas that
-            # compute successive Monday dates starting from the deal's
-            # bundle_start_week (via the Quarter Set lookup).
+            # Heading uppercased ("GROUP 1")
+            order.cell(row=r_head, column=1,
+                       value=group_label.upper()).font = heading_font
+
+            # Column headers row
             col_headers = [
                 'No. of Stations', 'Action', 'Time Period', 'Telecast Days',
                 'Len', 'Max/Day', 'Station Rate', 'Group Rate',
@@ -942,118 +1085,165 @@ class MvBundlePaperworkWizard(models.TransientModel):
                 cell.font = bold
                 cell.fill = header_fill
                 cell.alignment = center
-            # K = first-Monday-of-quarter formula from Schedule sheet.
+            # K = Bundle Start Week as a real date (populated in Python
+            # so the header row always renders even when the Schedule
+            # sheet's Week column can't be resolved via DATEVALUE +
+            # Quarter Set VLOOKUP). L..X = previous + 7.
+            first_monday = deal.bundle_start_week or fields.Date.context_today(self)
             order.cell(
-                row=r_columns, column=11,
-                value=(
-                    "=VLOOKUP(DATEVALUE(Schedule!C2),"
-                    "'Quarter Set'!$A$2:$B$1000,2,FALSE)"
-                ),
+                row=r_columns, column=11, value=first_monday,
             ).font = bold
-            # L..X = previous + 7 days (13 more weekly columns).
+            order.cell(row=r_columns, column=11).number_format = 'm/d/yyyy'
             for offset in range(1, 14):
-                col = 11 + offset      # L=12 ... X=24
+                col = 11 + offset
                 prev = get_column_letter(col - 1)
-                order.cell(
+                cell = order.cell(
                     row=r_columns, column=col,
                     value='=%s%d+7' % (prev, r_columns),
-                ).font = bold
-
-            # AA header labels
-            order.cell(row=r_columns, column=26, value='Concat').font = bold
-            order.cell(row=r_columns, column=27, value='Multiplier').font = bold
-
-            # Data rows - two time periods per group.
-            for data_row, time_period, telecast in (
-                (r_data1, '09:00A-12:00A', 'MTWTFSS'),
-                (r_data2, '04:00A-09:00A', 'MTWTFSS'),
-            ):
-                order.cell(row=data_row, column=2, value='NEW BUY')
-                order.cell(row=data_row, column=3, value=time_period)
+                )
+                cell.font = bold
+                cell.number_format = 'm/d/yyyy'
+            # Data rows - one per distinct time period. K-X show the
+            # raw units-per-week straight from Sheet2 (no station-tier
+            # multiplier); Station Rate is the per-30 rate scaled to
+            # the row's length. Every value formula is wrapped in
+            # IFERROR so an empty Station List / missing schedule
+            # data renders as a blank cell instead of #DIV/0! / #N/A.
+            for i, (period, telecast) in enumerate(periods):
+                data_row = r_data_first + i
+                order.cell(row=data_row, column=2, value=action_label)
+                order.cell(row=data_row, column=3, value=period)
                 order.cell(row=data_row, column=4, value=telecast)
-                order.cell(row=data_row, column=5, value=30)
-                # G: Station Rate =
-                #   (SUMIF('Station List'!$A$2:$A$5000, $Z<row>,
-                #          'Station List'!$G$2:$G$5000) * (E<row>/30))
-                #   / A<r_data2>
+                order.cell(row=data_row, column=5, value=length_int)
+                # G: Station Rate = SUMIF(rate) * (E/30) / A<stations>
+                # Uses the row's Time Period text to match the Station
+                # List's Start/End Time column directly (no Concat/
+                # Multiplier round-trip).
                 order.cell(
                     row=data_row, column=7,
                     value=(
-                        "=(SUMIF('Station List'!$A$2:$A$5000,$Z%(r)d,"
-                        "'Station List'!$G$2:$G$5000)*(E%(r)d/30))/A%(bot)d"
-                        % {'r': data_row, 'bot': r_data2}
+                        "=IFERROR((SUMIF('Station List'!E2:E500,C%(r)d,"
+                        "'Station List'!G2:G500)*(E%(r)d/30))/A%(stations)d,0)"
+                        % {'r': data_row, 'stations': r_data_first}
                     ),
                 )
-                # H: Group Rate = G<row> * A<r_data2>
+                # H: Group Rate = G * <No. of Stations>
                 order.cell(
                     row=data_row, column=8,
-                    value='=G%d*A%d' % (data_row, r_data2),
+                    value='=IFERROR(G%d*A%d,0)' % (data_row, r_data_first),
                 )
-                # I: No. Wks = COUNTIF(K:X > 0)
                 order.cell(
                     row=data_row, column=9,
-                    value='=COUNTIF(K%d:X%d,">0")' % (data_row, data_row),
+                    value='=IFERROR(COUNTIF(K%d:X%d,">0"),0)' % (
+                        data_row, data_row,
+                    ),
                 )
-                # J: No. Units = SUM(K:X)
                 order.cell(
                     row=data_row, column=10,
-                    value='=SUM(K%d:X%d)' % (data_row, data_row),
+                    value='=IFERROR(SUM(K%d:X%d),0)' % (data_row, data_row),
                 )
-                # K..X weekly-units formulas
+                # K..X: raw units-per-week from Sheet2. No multiplier.
                 for col in range(11, 25):
                     col_letter = get_column_letter(col)
                     order.cell(
                         row=data_row, column=col,
                         value=(
-                            "=SUMIF(Sheet2!$A:$A,%s$%d,Sheet2!$M:$M)*AA%d"
-                            % (col_letter, r_columns, data_row)
+                            "=IFERROR(SUMIF(Sheet2!$A:$A,%s$%d,"
+                            "Sheet2!$M:$M),0)"
+                            % (col_letter, r_columns)
                         ),
                     )
-                # Z: Concat = CONCATENATE($A$<r_head>, C<row>)
-                order.cell(
-                    row=data_row, column=26,
-                    value='=CONCATENATE($A$%d,C%d)' % (r_head, data_row),
-                )
-                # AA: Multiplier = VLOOKUP(Z<row>, 'Station List'!A:G, 6, FALSE)
-                order.cell(
-                    row=data_row, column=27,
-                    value=(
-                        "=VLOOKUP(Z%d,'Station List'!A:G,6,FALSE)"
-                        % data_row
-                    ),
-                )
 
-            # A (r_data2) = No. of Stations = COUNTIF('Station List'!$B:$B, A<r_head>) / 2
+            # Col A first-data-row = No. of Stations. IFERROR keeps
+            # divide-by-zero out of the header SUM when the Station
+            # List is empty.
             order.cell(
-                row=r_data2, column=1,
+                row=r_data_first, column=1,
                 value=(
-                    "=COUNTIF('Station List'!$B:$B,Order!A%d)/2" % r_head
+                    "=IFERROR(ROUND(COUNTIF("
+                    "'Station List'!B2:B500,\"%s\")/%d,0),0)"
+                    % (group_label, n_periods)
                 ),
             ).font = bold
+            block_no_of_stations_cells.append('A%d' % r_data_first)
 
-            # Grand totals
-            order.cell(row=r_totals_stn, column=1, value='Comments:').font = bold
-            order.cell(row=r_totals_stn, column=8, value='Station Grand Total').font = bold
+            # Comments (col B) + Station Total (col I,J)
+            order.cell(row=r_totals_stn, column=2, value='Comments:').font = bold
+            order.cell(row=r_totals_stn, column=9, value='Station Total').font = bold
             order.cell(
-                row=r_totals_stn, column=9,
-                value='=SUMPRODUCT(G%d:G%d,J%d:J%d)' % (
-                    r_data1, r_data2, r_data1, r_data2,
+                row=r_totals_stn, column=10,
+                value='=IFERROR(SUMPRODUCT(G%d:G%d,J%d:J%d),0)' % (
+                    r_data_first, r_data_last, r_data_first, r_data_last,
                 ),
             )
-            order.cell(row=r_totals_grp, column=8, value='Group Grand Total').font = bold
+            order.cell(row=r_totals_grp, column=9, value='Group Total').font = bold
             order.cell(
-                row=r_totals_grp, column=9,
-                value='=SUMPRODUCT(H%d:H%d,J%d:J%d)' % (
-                    r_data1, r_data2, r_data1, r_data2,
-                ),
+                row=r_totals_grp, column=10,
+                value='=IFERROR(A%d*J%d,0)' % (r_data_first, r_totals_stn),
             )
 
-            cur_row = cur_row + BLOCK_HEIGHT + BLOCK_GAP
+            cur_row = r_totals_grp + 2   # one blank row between blocks
 
-        # Order sheet column widths
+        # Row 6 col B: No. of Stations = SUM(A15, A24, ...)
+        if block_no_of_stations_cells:
+            order['B6'] = '=SUM(%s)' % ','.join(block_no_of_stations_cells)
+        else:
+            order['B6'] = len(stations)
+
+        # ---- Footer: "*All times ..." + Traffic Instructions --------
+        r_note = cur_row
+        order.cell(row=r_note, column=1,
+                   value='*All times noted above are in Eastern Time').font = bold
+
+        r_traffic_hdr = r_note + 1
+        order.cell(row=r_traffic_hdr, column=1,
+                   value='Traffic Instructions:').font = bold
+
+        r_columns_traf = r_traffic_hdr + 1
+        # Column headers - Flight Week (A), Toll Free # (B), Spot 1 (C),
+        # Spot 2 (I). Uses the same 8-col grouping as the sample.
+        order.cell(row=r_columns_traf, column=1, value='Flight Week').font = bold
+        order.cell(row=r_columns_traf, column=2, value='Toll Free #').font = bold
+        order.cell(row=r_columns_traf, column=3, value='Spot 1').font = bold
+        order.cell(row=r_columns_traf, column=9, value='Spot 2').font = bold
+
+        toll_free = ''
+        if program and hasattr(program, 'toll_free'):
+            toll_free = program.toll_free or ''
+
+        r_traf = r_columns_traf + 1
+        for ch in chunks:
+            for sc in ch.schedules:
+                week_iso = sc.week.strftime('%m/%d/%Y') if sc.week else ''
+                order.cell(row=r_traf, column=1, value=week_iso)
+                order.cell(row=r_traf, column=2, value=toll_free)
+                # Spot 1: parse "ISCI1/ISCI2" from AE column - split on slash.
+                order.cell(
+                    row=r_traf, column=3,
+                    value=(
+                        '=IF(AE%d="","",IF(ISERROR(SEARCH("/",AE%d)),AE%d,'
+                        'LEFT(AE%d,SEARCH("/",AE%d)-1)))'
+                        % (r_traf, r_traf, r_traf, r_traf, r_traf)
+                    ),
+                )
+                # Spot 2: right side of slash if present.
+                order.cell(
+                    row=r_traf, column=9,
+                    value=(
+                        '=IF(ISERROR(SEARCH("/",AE%d)),"",'
+                        'MID(AE%d,SEARCH("/",AE%d)+1,'
+                        'LEN(AE%d)-SEARCH("/",AE%d)))'
+                        % (r_traf, r_traf, r_traf, r_traf, r_traf)
+                    ),
+                )
+                # ISCI raw value on col AE (col 31).
+                order.cell(row=r_traf, column=31, value=sc.isci_code or '')
+                r_traf += 1
+
+        # Column widths
         for col_letter, width in zip(
-            ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-            [18, 20, 14, 14, 6, 8, 12, 12, 8, 10],
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'L', 'M'],
+            [18, 20, 14, 14, 6, 8, 12, 12, 8, 10, 8, 30],
         ):
             order.column_dimensions[col_letter].width = width
         for wk_col in range(11, 25):
@@ -1120,10 +1310,10 @@ class MvBundlePaperworkWizard(models.TransientModel):
                 r += 1
 
         # ================================================================
-        # Schedule sheet (metadata)
+        # Schedule sheet (metadata) - 14 cols, includes Status
         # ================================================================
         sch_headers = [
-            'ContactAccount', 'DealBrand', 'Week', 'Days Allowed',
+            'ContactAccount', 'DealBrand', 'Status', 'Week', 'Days Allowed',
             'UnitLength', 'Units Available', 'Rate', 'Total Dollars',
             'Schedule: Schedule Name', 'Start Time', 'End Time',
             'StartEnd', 'Max/Day',
@@ -1132,11 +1322,9 @@ class MvBundlePaperworkWizard(models.TransientModel):
             cell = sch.cell(row=1, column=c, value=h)
             cell.font = bold
             cell.fill = header_fill
-        length_num = (deal.length or '').lstrip('v_') or '30'
-        try:
-            length_int = int(length_num)
-        except ValueError:
-            length_int = 30
+        status_map = dict(
+            self.env['mv.schedules']._fields['status'].selection or []
+        )
         r = 2
         for ch in chunks:
             for sc in ch.schedules:
@@ -1149,36 +1337,44 @@ class MvBundlePaperworkWizard(models.TransientModel):
                 sch.cell(row=r, column=1, value=deal.contactaccount or '')
                 sch.cell(row=r, column=2,
                          value=deal.brands.name if deal.brands else '')
-                sch.cell(row=r, column=3, value=sc.week)
-                sch.cell(row=r, column=4, value=days_allowed)
-                sch.cell(row=r, column=5, value=length_int)
-                sch.cell(row=r, column=6, value=int(sc.units_available or 0))
-                sch.cell(row=r, column=7, value=float(sc.rate or 0.0))
-                sch.cell(row=r, column=8, value=total_dollars)
-                sch.cell(row=r, column=9, value=sc.name or '')
-                sch.cell(row=r, column=10,
-                         value=_time_label(sc.start_time, time_map))
+                sch.cell(row=r, column=3,
+                         value=status_map.get(sc.status, sc.status or 'Sold'))
+                sch.cell(row=r, column=4,
+                         value=sc.week.strftime('%m/%d/%Y') if sc.week else '')
+                sch.cell(row=r, column=5, value=days_allowed)
+                sch.cell(row=r, column=6, value=length_int)
+                sch.cell(row=r, column=7, value=int(sc.units_available or 0))
+                sch.cell(row=r, column=8, value=float(sc.rate or 0.0))
+                sch.cell(row=r, column=9, value=total_dollars)
+                sch.cell(row=r, column=10, value=sc.name or '')
                 sch.cell(row=r, column=11,
-                         value=_time_label(sc.end_time, time_map))
+                         value=_time_label(sc.start_time, time_map))
                 sch.cell(row=r, column=12,
+                         value=_time_label(sc.end_time, time_map))
+                sch.cell(row=r, column=13,
                          value='%s-%s' % (
                              _time_label(sc.start_time, time_map),
                              _time_label(sc.end_time, time_map),
                          ))
-                sch.cell(row=r, column=13, value=int(sc.max_per_day or 0))
+                sch.cell(row=r, column=14, value=int(sc.max_per_day or 0))
                 r += 1
 
         # ================================================================
-        # Sheet1 (blank scratch sheet, kept for parity with the sample)
+        # RB Market List - static reference; header row + notice.
         # ================================================================
-        sh1.cell(row=1, column=1, value=None)
+        rb.cell(row=1, column=2, value='RAYCOM').font = bold
+        rb.cell(row=8, column=1, value='RANK').font = bold
+        rb.cell(row=8, column=2, value='MARKET').font = bold
+        rb.cell(row=8, column=3, value='%US').font = bold
+        rb.cell(row=8, column=4, value='PRIMARY STATION').font = bold
+        rb.cell(row=8, column=5, value='SECONDARY STATION').font = bold
+        rb.cell(row=8, column=6, value='TV HOMES').font = bold
+        # Groups + market rows would be populated per-program from a
+        # curated reference table; not modeled in Odoo yet, so this
+        # sheet ships with only the header structure.
 
         # ================================================================
         # Quarter Set (13-week broadcast quarters, Monday keys)
-        # ------------------------------------------------------------
-        # Anchor: 2016-03-28 is the first Monday of a broadcast quarter
-        # in the sample. Every 13th Monday starts a new quarter.
-        # We cover 2016-03-28 through today + 5 years.
         # ================================================================
         qs.cell(row=1, column=1, value='Week').font = bold
         qs.cell(row=1, column=2, value='Quarter Start').font = bold
@@ -1194,15 +1390,6 @@ class MvBundlePaperworkWizard(models.TransientModel):
             qs.cell(row=2 + i, column=2, value=quarter_start)
         qs.column_dimensions['A'].width = 14
         qs.column_dimensions['B'].width = 16
-
-        # ================================================================
-        # Stations (unique call letters)
-        # ================================================================
-        stations_sheet.cell(row=1, column=1, value='Stations').font = bold
-        r = 2
-        for call in stations.keys():
-            stations_sheet.cell(row=r, column=1, value=call)
-            r += 1
 
         buf = io.BytesIO()
         wb.save(buf)
