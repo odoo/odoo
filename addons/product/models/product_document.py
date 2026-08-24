@@ -12,6 +12,7 @@ class ProductDocument(models.Model):
         'ir.attachment': 'ir_attachment_id',
     }
     _order = 'sequence, name'
+    _access_domain_heavy = True
 
     ir_attachment_id = fields.Many2one(
         'ir.attachment',
