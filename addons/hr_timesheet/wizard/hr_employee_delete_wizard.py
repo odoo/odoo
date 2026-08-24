@@ -19,13 +19,12 @@ class HrEmployeeDeleteWizard(models.TransientModel):
         )
         timesheet_employee_map = {employee.id for [employee] in timesheet_read_group}
         for wizard in self:
-            wizard.has_timesheet = timesheet_employee_map & set(wizard.employee_ids.ids)
+            wizard.has_timesheet = bool(timesheet_employee_map & set(wizard.employee_ids.ids))
 
     @api.depends('employee_ids')
     def _compute_has_active_employee(self):
-        unarchived_employees = self.env['hr.employee'].search([('id', '=', self.employee_ids.ids)])
         for wizard in self:
-            wizard.has_active_employee = any(emp in wizard.employee_ids for emp in unarchived_employees)
+            wizard.has_active_employee = bool(wizard.employee_ids.filtered('active'))
 
     def action_archive(self):
         self.ensure_one()
