@@ -237,9 +237,6 @@ export class RtcSession extends Record {
         };
     }
 
-    /**
-     * @returns {string}
-     */
     get name() {
         return this.channel_member_id?.name;
     }

@@ -611,7 +611,6 @@ function getAggregatesFromGroupData(groupData, fields) {
 /**
  * @param {import("./datapoint").Field} field
  * @param {any} rawValue
- * @returns {string}
  */
 function getDisplayNameFromGroupData(field, rawValue) {
     switch (field.type) {

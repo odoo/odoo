@@ -58,4 +58,5 @@ declare const odoo: {
     debug: string;
     define: OdooModuleLoader["define"];
     loader: OdooModuleLoader;
+    translationContext?: string;
 };

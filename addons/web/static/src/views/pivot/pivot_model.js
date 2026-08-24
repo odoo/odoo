@@ -920,7 +920,7 @@ export class PivotModel extends Model {
      * @param {Object} group
      * @param {string[]} groupBys
      * @param {Config} config
-     * @returns {string[]}
+     * @returns {TranslatedString[]}
      */
     _getGroupLabels(group, groupBys, config) {
         return groupBys.map((gb) => {
@@ -1451,7 +1451,7 @@ export class PivotModel extends Model {
      * @param {any} value
      * @param {string} groupBy
      * @param {Config} config
-     * @returns {string}
+     * @returns {TranslatedString}
      */
     _sanitizeLabel(value, groupBy, config) {
         const { metaData } = config;

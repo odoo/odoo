@@ -3,7 +3,7 @@ declare module "registries" {
     import { Provider } from "@web/core/commands/command_palette";
 
     export interface CommandCategoriesRegistryItemShape {
-        name?: string;
+        name?: TranslatedString;
         namespace?: string;
     }
 
@@ -11,9 +11,9 @@ declare module "registries" {
 
     export interface CommandSetupRegistryItemShape {
         debounceDelay?: number,
-        emptyMessage: string,
-        name: string;
-        placeholder: string,
+        emptyMessage: TranslatedString,
+        name: TranslatedString;
+        placeholder: TranslatedString,
     }
 
     interface GlobalRegistryCategories {

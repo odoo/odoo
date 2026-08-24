@@ -1,7 +1,7 @@
 import { _t, translationIsReady } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-// translations need to be loaded to avoid TranslatedString in templates
+// translations need to be loaded to avoid LazyTranslatedString in templates
 translationIsReady.then(() => {
     registry.category("website.form_editor_actions").add("send_mail", {
         formFields: [
