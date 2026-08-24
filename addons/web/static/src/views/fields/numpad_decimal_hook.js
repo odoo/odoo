@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onPatched, onWillUnmount } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { isIOS } from "@web/core/browser/feature_detection";
 
@@ -36,7 +36,9 @@ function onFocus(ev) {
  */
 export function useNumpadDecimal(ref) {
     const isIOSDevice = isIOS();
-    useLayoutEffect(() => {
+    let unbindInputs;
+    const bindInputs = () => {
+        unbindInputs?.();
         let inputs = [];
         const el = ref();
         if (el) {
@@ -47,9 +49,12 @@ export function useNumpadDecimal(ref) {
                 inputs.forEach((input) => input.removeAttribute("inputmode"));
             }
         }
-        return () => {
+        unbindInputs = () => {
             inputs.forEach((input) => input.removeEventListener("keydown", onKeydown));
             inputs.forEach((input) => input.removeEventListener("focus", onFocus));
         };
-    });
+    };
+    onMounted(bindInputs);
+    onPatched(bindInputs);
+    onWillUnmount(() => unbindInputs?.());
 }

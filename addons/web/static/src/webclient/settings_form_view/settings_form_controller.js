@@ -1,4 +1,4 @@
-import { proxy, signal } from "@odoo/owl";
+import { onMounted, onPatched, proxy, signal } from "@odoo/owl";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
@@ -56,11 +56,13 @@ export class SettingsFormController extends formView.Controller {
             },
             () => [this.searchState.value]
         );
-        useLayoutEffect(() => {
+        const removeLocalStateGetter = () => {
             if (this.env.__getLocalState__) {
                 this.env.__getLocalState__.remove(this);
             }
-        });
+        };
+        onMounted(removeLocalStateGetter);
+        onPatched(removeLocalStateGetter);
 
         this.searchBarToggler = useSearchBarToggler();
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";

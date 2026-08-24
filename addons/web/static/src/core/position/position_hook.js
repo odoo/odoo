@@ -1,8 +1,8 @@
-import { EventBus, onWillDestroy } from "@odoo/owl";
+import { EventBus, onMounted, onPatched, onWillDestroy, onWillUnmount } from "@odoo/owl";
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 
 /**
  * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions
@@ -85,7 +85,10 @@ export function usePosition(popperRef, getTarget, options = {}) {
     }
 
     const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
-    useLayoutEffect(() => {
+    let stopListening;
+    const updatePosition = () => {
+        stopListening?.();
+        stopListening = null;
         // Reposition
         bus.trigger("update");
 
@@ -126,7 +129,7 @@ export function usePosition(popperRef, getTarget, options = {}) {
                 document.addEventListener("load", throttledUpdate, { capture: true });
             }
             window.addEventListener("resize", throttledUpdate);
-            return () => {
+            stopListening = () => {
                 for (const document of documents) {
                     document.removeEventListener("scroll", scrollListener, { capture: true });
                     document.removeEventListener("load", throttledUpdate, { capture: true });
@@ -134,7 +137,10 @@ export function usePosition(popperRef, getTarget, options = {}) {
                 window.removeEventListener("resize", throttledUpdate);
             };
         }
-    });
+    };
+    onMounted(updatePosition);
+    onPatched(updatePosition);
+    onWillUnmount(() => stopListening?.());
 
     return {
         lock: () => {
