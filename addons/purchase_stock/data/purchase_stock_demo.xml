@@ -31,7 +31,36 @@
             ]"/>
         </record>
 
+        <record id="purchase_bill_8" model="account.move">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="move_type">in_invoice</field>
+            <field name="invoice_date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="invoice_line_ids" eval="[
+                    (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 286.80, 'quantity': 20.0}),
+                    (0, 0, {'product_id': ref('product.product_product_20'), 'price_unit': 120.00, 'quantity': 10.0}),
+            ]"/>
+        </record>
+        <function model="account.move" name="action_post">
+            <value eval="[ref('purchase_stock.purchase_bill_8')]"/>
+        </function>
+
         <function model="purchase.order" name="button_confirm" eval="[[ref('purchase_order_8')]]"/>
+        <function model="stock.picking" name="action_put_in_pack">
+            <value model="stock.picking" search="[('purchase_id', '=', ref('purchase_stock.purchase_order_8'))]"/>
+        </function>
+        <function model="purchase.order" name="button_confirm" eval="[[ref('purchase.purchase_order_9')]]"/>
+        <record id="purchase_order_9_pallet" model="stock.package">
+            <field name="package_type_id" ref="stock.package_type_01"/>
+        </record>
+        <function model="stock.move.line" name="write">
+            <function eval="[[('move_id', 'in', obj().env.ref('purchase.purchase_order_9').picking_ids.move_ids.ids)]]" model="stock.move.line" name="search"/>
+            <value eval="{'result_package_id':ref('purchase_order_9_pallet')}"/>
+        </function>
+        <!-- confirm and receive the second PO  -->
+        <function model="purchase.order" name="button_confirm" eval="[[ref('purchase.purchase_order_2')]]"/>
+        <function model="stock.picking" name="button_validate">
+            <value model="stock.picking" search="[('purchase_id', '=', ref('purchase.purchase_order_2'))]"/>
+        </function>
 
         <!-- PURCHASE ORDER SUGGEST DEMO DATA -->
         <!-- Generate needed stock. -->

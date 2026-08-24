@@ -9,4 +9,11 @@
     <record id="website_sale.out_of_stock_ribbon" model="product.ribbon">
         <field name="assign">out_of_stock</field>
     </record>
+    <record id="website_sale_order_19_box" model="stock.package">
+        <field name="package_type_id" ref="stock.package_type_02"/>
+    </record>
+    <function model="stock.move.line" name="write">
+        <function eval="[[('picking_id.sale_id', '=', ref('website_sale.website_sale_order_19'))]]" model="stock.move.line" name="search"/>
+        <value eval="{'result_package_id': ref('website_sale_order_19_box')}"/>
+    </function>
 </odoo>
