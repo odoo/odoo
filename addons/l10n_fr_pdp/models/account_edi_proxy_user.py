@@ -73,10 +73,6 @@ PAYMENT_TYPE_CODES = MappingProxyType({
 })
 
 DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_fr_pdp demo utils
-    'pilot_phase': lambda params: {
-        'annuaire_line_start_date': fields.Date.today(),
-        'pilot_phase': params['pdp_pilot_phase'],
-    },
     'participant_status': lambda params: {},
     'send_document': lambda params: {
         'messages': [{'message_uuid': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
@@ -209,8 +205,6 @@ class AccountEdiProxyClientUser(models.Model):
             company = self.sudo().company_id
             company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
             company._force_update_l10n_fr_f10_moves()
-        if 'pilot_phase' in proxy_user:
-            self.sudo().company_id.l10n_fr_pdp_pilot_phase = proxy_user['pilot_phase']
 
     def _peppol_get_new_documents(self, skip_no_journal=False):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
