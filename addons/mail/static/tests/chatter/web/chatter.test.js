@@ -74,7 +74,7 @@ test("simple chatter on a record", async () => {
                     "contact_fields",
                     "defaultSubject",
                     "followers",
-                    "has_pinned_messages",
+                    "pinned_message_count",
                     "scheduledMessages",
                     "showSubjectInSmallComposer",
                     "suggestedRecipients",
@@ -275,18 +275,11 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     await contains(".o-mail-Attachment iframe", { count: 1 });
 });
 
-test("chatter: dropping attachments should close pinned messages and search panels", async () => {
+test("chatter: dropping attachments should close search panel", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
-    pyEnv["mail.message"].create({
-        body: "Pinned message",
-        model: "res.partner",
-        pinned_at: "2025-01-01 00:00:00",
-        res_id: partnerId,
-    });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
@@ -295,13 +288,6 @@ test("chatter: dropping attachments should close pinned messages and search pane
     await dropFiles(".o-Dropzone", [text]);
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt'))");
     await contains(".o-mail-SearchMessageInput", { count: 0 });
-    await click("button[title='Pinned Messages']");
-    await contains(".o-mail-pinnedMessages");
-    await dragenterFiles(".o-mail-Chatter", [text2]);
-    await dropFiles(".o-Dropzone", [text2]);
-    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt'))");
-    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text2.txt'))");
-    await contains(".o-mail-pinnedMessages", { count: 0 });
 });
 
 test("chatter: drop attachment while editing a message", async () => {
@@ -919,4 +905,44 @@ test("Can only mention internal users in Log note", async () => {
     await contains(".o-mail-Message:eq(0) .o-mail-Message-body.o-note");
     await contains(".o-mail-Message:eq(0):has(:text('@External Partner'))");
     await contains(".o-mail-Message:eq(0):not(:has(a.o_mail_redirect))");
+});
+
+test("chatter: pinned messages can be expanded and collapsed", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create([
+        {
+            body: "First pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId,
+        },
+        {
+            body: "Second pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-02 00:00:00",
+            res_id: partnerId,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-pinnedMessages > .cursor-pointer .badge:text('2')");
+    await contains(".o-mail-pinnedMessages .o-mail-MessageCardList", { count: 0 });
+    listenStoreFetch("mail.thread", { logParams: ["mail.thread"] });
+    await click(".o-mail-pinnedMessages > .cursor-pointer");
+    await waitStoreFetch([
+        [
+            "mail.thread",
+            {
+                thread_id: partnerId,
+                thread_model: "res.partner",
+                request_list: ["pinnedMessages"],
+            },
+        ],
+    ]);
+    await contains(".o-mail-pinnedMessages > .cursor-pointer .badge", { count: 0 });
+    await contains(".o-mail-pinnedMessages .o-mail-MessageCardList .o-mail-Message", { count: 2 });
+    await click(".o-mail-pinnedMessages > .cursor-pointer");
+    await contains(".o-mail-pinnedMessages > .cursor-pointer .badge:text('2')");
+    await contains(".o-mail-pinnedMessages .o-mail-MessageCardList", { count: 0 });
 });
