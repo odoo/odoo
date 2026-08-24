@@ -85,7 +85,7 @@ class AccountMove(models.Model):
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.country_code == "LK":
-            return "l10n_lk_invoice.report_invoice_document"
+            return "l10n_lk.report_invoice_document"
         return super()._get_name_invoice_report()
 
     def _l10n_lk_has_taxable_taxes(self):
