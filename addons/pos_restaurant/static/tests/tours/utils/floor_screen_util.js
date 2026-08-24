@@ -20,6 +20,7 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, wait
     };
 }
 export const clickTable = (name, badge) => [
+    Chrome.waitRequest(),
     table({ name, run: "click" }),
     {
         // Should find better way to check we are on the good table
