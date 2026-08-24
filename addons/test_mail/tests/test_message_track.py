@@ -1072,10 +1072,11 @@ class TestTrackingInternals(TestTrackingCommon):
         }
         self.flush_tracking()
 
+        # regex are used to account in differences in formatting between versions of babel
         for lang, test_record, expected_start, expected_end, expected_date in (
-            ('en_US', self.test_tracking_records[0], 'Sep 30, 2025, 11:28 AM (GMT+02:00)', 'Sep 30, 2025, 12:28 PM (GMT+02:00)', 'Sep 30, 2025'),
-            ('fr_BE', self.test_tracking_records[1], '30 sept. 2025, 11:28 (UTC+02:00)', '30 sept. 2025, 12:28 (UTC+02:00)', '30 sept. 2025'),
-            ('vi_VN', self.test_tracking_records[2], '11:28, 30 thg 9, 2025 (GMT+02:00)', '12:28, 30 thg 9, 2025 (GMT+02:00)', '30 thg 9, 2025'),
+            ('en_US', self.test_tracking_records[0], r'Sep 30, 2025, 11:28\sAM \(GMT\+02:00\)', r'Sep 30, 2025, 12:28\sPM \(GMT\+02:00\)', r'Sep 30, 2025'),
+            ('fr_BE', self.test_tracking_records[1], r'30 sept\. 2025, 11:28 \(UTC\+02:00\)', r'30 sept\. 2025, 12:28 \(UTC\+02:00\)', r'30 sept\. 2025'),
+            ('vi_VN', self.test_tracking_records[2], r'11:28,? 30 thg 9, 2025 \(GMT\+02:00\)', r'12:28,? 30 thg 9, 2025 \(GMT\+02:00\)', r'30 thg 9, 2025'),
         ):
             with self.subTest(lang=lang):
                 test_record = test_record.with_env(self.env).with_context(lang=lang)
@@ -1103,16 +1104,15 @@ class TestTrackingInternals(TestTrackingCommon):
                         ],
                     }
                 )
-                self.assertIn(expected_start, new_message.body)
-                self.assertIn(expected_end, new_message.body)
-                self.assertIn(f'None<b>{expected_date}</b><i>Date</i>', new_message.body)
-                self.assertIn(
+                self.assertRegex(new_message.body, f'{expected_start}<b>{expected_end}</b><i>Datetime</i>')
+                self.assertRegex(new_message.body, f'None<b>{expected_date}</b><i>Date</i>')
+                self.assertRegex(
+                    new_message.body,
                     f'{expected_start}<b>None</b><i>Properties: Property Datetime</i>',
-                    new_message.body,
                 )
-                self.assertIn(
-                    f'{expected_date}<b>None</b><i>Properties: Property Date</i>',
+                self.assertRegex(
                     new_message.body,
+                    f'{expected_date}<b>None</b><i>Properties: Property Date</i>',
                 )
 
     @users('employee')
