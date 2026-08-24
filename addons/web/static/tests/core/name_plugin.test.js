@@ -8,7 +8,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-import { ERROR_INACCESSIBLE_OR_MISSING } from "@web/core/name_service";
+import { ERROR_INACCESSIBLE_OR_MISSING, NamePlugin } from "@web/core/name_plugin";
 import { rpcBus } from "@web/core/network/rpc";
 
 class Dev extends models.Model {
@@ -35,7 +35,7 @@ describe.current.tags("headless");
 
 test("single loadDisplayNames", async () => {
     await makeTestApp();
-    const displayNames = await getService("name").loadDisplayNames("dev", [1, 2, 3]);
+    const displayNames = await getService(NamePlugin).loadDisplayNames("dev", [1, 2, 3]);
     expect(displayNames).toEqual({ 1: "Julien", 2: "Pierre", 3: "Paul" });
 });
 
@@ -49,7 +49,7 @@ test("loadDisplayNames is done in silent mode", async () => {
     rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
     after(() => rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest));
 
-    await getService("name").loadDisplayNames("dev", [1]);
+    await getService(NamePlugin).loadDisplayNames("dev", [1]);
     expect.verifySteps(["RPC:REQUEST(silent)"]);
 });
 
@@ -59,8 +59,8 @@ test("single loadDisplayNames following addDisplayNames", async () => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
-    getService("name").addDisplayNames("dev", { 1: "JUM", 2: "PIPU" });
-    const displayNames = await getService("name").loadDisplayNames("dev", [1, 2]);
+    getService(NamePlugin).addDisplayNames("dev", { 1: "JUM", 2: "PIPU" });
+    const displayNames = await getService(NamePlugin).loadDisplayNames("dev", [1, 2]);
     expect(displayNames).toEqual({ 1: "JUM", 2: "PIPU" });
     expect.verifySteps([]);
 });
@@ -71,8 +71,8 @@ test("single loadDisplayNames following addDisplayNames (2)", async () => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
-    getService("name").addDisplayNames("dev", { 1: "JUM" });
-    const displayNames = await getService("name").loadDisplayNames("dev", [1, 2]);
+    getService(NamePlugin).addDisplayNames("dev", { 1: "JUM" });
+    const displayNames = await getService(NamePlugin).loadDisplayNames("dev", [1, 2]);
     expect(displayNames).toEqual({ 1: "JUM", 2: "Pierre" });
     expect.verifySteps(["dev:web_search_read:2"]);
 });
@@ -83,9 +83,9 @@ test("loadDisplayNames in batch", async () => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
-    const loadPromise1 = getService("name").loadDisplayNames("dev", [1]);
+    const loadPromise1 = getService(NamePlugin).loadDisplayNames("dev", [1]);
     expect.verifySteps([]);
-    const loadPromise2 = getService("name").loadDisplayNames("dev", [2]);
+    const loadPromise2 = getService(NamePlugin).loadDisplayNames("dev", [2]);
     expect.verifySteps([]);
 
     const [displayNames1, displayNames2] = await Promise.all([loadPromise1, loadPromise2]);
@@ -100,9 +100,9 @@ test("loadDisplayNames on different models", async () => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
-    const loadPromise1 = getService("name").loadDisplayNames("dev", [1]);
+    const loadPromise1 = getService(NamePlugin).loadDisplayNames("dev", [1]);
     expect.verifySteps([]);
-    const loadPromise2 = getService("name").loadDisplayNames("po", [1]);
+    const loadPromise2 = getService(NamePlugin).loadDisplayNames("po", [1]);
     expect.verifySteps([]);
 
     const [displayNames1, displayNames2] = await Promise.all([loadPromise1, loadPromise2]);
@@ -115,7 +115,7 @@ test("loadDisplayNames on different models", async () => {
 test("invalid id", async () => {
     await makeTestApp();
     try {
-        await getService("name").loadDisplayNames("dev", ["a"]);
+        await getService(NamePlugin).loadDisplayNames("dev", ["a"]);
     } catch (error) {
         expect(error.message).toBe("Invalid ID: a");
     }
@@ -127,7 +127,7 @@ test("inaccessible or missing id", async () => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
-    const displayNames = await getService("name").loadDisplayNames("dev", [4]);
+    const displayNames = await getService(NamePlugin).loadDisplayNames("dev", [4]);
     expect(displayNames).toEqual({ 4: ERROR_INACCESSIBLE_OR_MISSING });
     expect.verifySteps(["dev:web_search_read:4"]);
 });
@@ -138,9 +138,9 @@ test("batch + inaccessible/missing", async () => {
         expect.step(`${model}:${method}:${kwargs.domain[0][2]}`);
     });
 
-    const loadPromise1 = getService("name").loadDisplayNames("dev", [1, 4]);
+    const loadPromise1 = getService(NamePlugin).loadDisplayNames("dev", [1, 4]);
     expect.verifySteps([]);
-    const loadPromise2 = getService("name").loadDisplayNames("dev", [2, 5]);
+    const loadPromise2 = getService(NamePlugin).loadDisplayNames("dev", [2, 5]);
     expect.verifySteps([]);
 
     const [displayNames1, displayNames2] = await Promise.all([loadPromise1, loadPromise2]);
