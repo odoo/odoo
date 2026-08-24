@@ -32,6 +32,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
+import { Dialog } from "@web/core/dialog/dialog";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import {
     useAutofocus,
@@ -130,6 +132,74 @@ describe("useAutofocus", () => {
         await animationFrame();
 
         expect("input").toBeFocused();
+    });
+
+    test.tags("desktop");
+    test("conditional autofocus inside a Dialog's slot content", async () => {
+        await mountWithCleanup(MainComponentsContainer);
+
+        class MyDialog extends Component {
+            static template = xml`
+                <Dialog title="'Test'">
+                    <button t-if="!this.show()" class="show-input" t-on-click="() => this.show.set(true)">show input</button>
+                    <input t-else="" type="text" t-ref="this.autofocusRef" />
+                </Dialog>
+            `;
+            static components = { Dialog };
+            autofocusRef = signal.ref();
+            show = signal(false);
+            setup() {
+                useAutofocus({ ref: this.autofocusRef });
+            }
+        }
+
+        getService("dialog").add(MyDialog);
+        await animationFrame();
+        expect("input").toHaveCount(0);
+
+        await click(".show-input");
+        await animationFrame();
+        expect("input").toBeFocused();
+    });
+
+    test.tags("desktop");
+    test("closing an autofocusing Dialog gives the focus back to its opener", async () => {
+        class DialogContent extends Component {
+            static template = xml`<input type="text" t-ref="this.autofocusRef" />`;
+            autofocusRef = signal.ref();
+            setup() {
+                useAutofocus({ ref: this.autofocusRef });
+            }
+        }
+        class MyDialog extends Component {
+            static template = xml`
+                <Dialog title="'Test'">
+                    <DialogContent />
+                </Dialog>
+            `;
+            static components = { Dialog, DialogContent };
+        }
+        class Parent extends Component {
+            static template = xml`
+                <button class="opener" t-on-click="this.openDialog">open</button>
+                <MainComponentsContainer />
+            `;
+            static components = { MainComponentsContainer };
+            setup() {
+                this.dialog = useService("dialog");
+            }
+            openDialog() {
+                this.dialog.add(MyDialog);
+            }
+        }
+
+        await mountWithCleanup(Parent);
+
+        await contains(".opener").click();
+        expect("input").toBeFocused();
+
+        await contains(".modal .btn-close").click();
+        expect(".opener").toBeFocused();
     });
 
     test("returns also a ref when screen has touch but it does not focus", async () => {
