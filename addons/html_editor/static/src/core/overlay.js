@@ -1,10 +1,20 @@
-import { Component, onWillDestroy, useProps, proxy, signal, t, useListener, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    useProps,
+    proxy,
+    signal,
+    t,
+    useListener,
+    useOnChange,
+    xml,
+} from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
 
 export class EditorOverlay extends Component {
@@ -59,14 +69,17 @@ export class EditorOverlay extends Component {
             const resizeObserver = new ResizeObserver(() => {
                 position.unlock();
             });
-            useLayoutEffect(
+            useOnChange(
+                () => [this.rootRef()],
                 (root) => {
+                    if (!root) {
+                        return;
+                    }
                     resizeObserver.observe(root);
                     return () => {
                         resizeObserver.unobserve(root);
                     };
-                },
-                () => [this.rootRef()]
+                }
             );
         }
 
