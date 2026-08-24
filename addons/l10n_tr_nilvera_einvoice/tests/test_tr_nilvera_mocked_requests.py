@@ -19,8 +19,12 @@ EARCHIVE_PARTNER_VAT = '17291716060'
 SERVER_ERROR_ALIAS = 'server_error_alias'
 UNAUTHORIZED_ALIAS = 'unauthorized_alias'
 UUID_INVALID_STATUS = 'uuid_with_invalid_status_code'
+UUID_UNKNOWN_STATUS = 'uuid_with_unknown_status_code'
 UUID_INVALID_INVOICE = 'uuid_invalid_invoice'
 UUID_VALID_INVOICE = 'uuid_valid_invoice'
+
+STATUS_ENDPOINT = re.compile(r'/(?:einvoice|earchive)/(?:sale|invoices)/([\w-]+)/Status')
+PDF_ENDPOINT = re.compile(r'/(?:einvoice|earchive)/(?:sale|invoices)/([\w-]+)/pdf')
 
 
 def mock_requests_request(method, endpoint, *args, **kwargs):
@@ -53,25 +57,23 @@ def mock_requests_request(method, endpoint, *args, **kwargs):
         elif EARCHIVE_PARTNER_VAT in endpoint:
             response.json.return_value = []
 
-    elif method == 'GET' and (match := re.fullmatch(r'/einvoice/sale/([\w-]+)/Status', endpoint)):
+    elif method == 'GET' and (match := STATUS_ENDPOINT.fullmatch(endpoint)):
+        # e-Invoice sales use the "sale" resource, e-Archive uses "invoices".
         if match.group(1) == UUID_INVALID_STATUS:
-            data = {
-                "InvoiceStatus": {
-                    "Code": "boop",
-                    "Description": "text",
-                    "DetailDescription": "text",
-                },
-            }
-            response.get.side_effect = data.get
+            status_code = "boop"
+        elif match.group(1) == UUID_UNKNOWN_STATUS:
+            # e-Archive invoices stay unknown until GİB generates its report at 20:00 GMT+3.
+            status_code = "unknown"
         else:
-            data = {
-                "InvoiceStatus": {
-                    "Code": "succeed",
-                    "Description": "text",
-                    "DetailDescription": "text",
-                },
-            }
-            response.get.side_effect = data.get
+            status_code = "succeed"
+        data = {
+            "InvoiceStatus": {
+                "Code": status_code,
+                "Description": "text",
+                "DetailDescription": "text",
+            },
+        }
+        response.get.side_effect = data.get
 
     elif method == 'POST' and 'Send/Xml' in endpoint:
         if UNAUTHORIZED_ALIAS in endpoint:
@@ -96,7 +98,7 @@ def mock_requests_request(method, endpoint, *args, **kwargs):
                 "InvoiceNumber": "",
             }
 
-    elif method == 'GET' and re.fullmatch(r'/(einvoice|earchive)/(sale|invoices)/[\w-]+/pdf', endpoint):
+    elif method == 'GET' and PDF_ENDPOINT.fullmatch(endpoint):
         # Outbound PDF retrieval: e-invoice sales use "sale", e-archive uses "invoices".
         with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
             response = b64encode(pdf.read()).decode()
@@ -245,6 +247,61 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         invoice._l10n_tr_nilvera_get_submitted_document_status()
 
         self.assertEqual(invoice.l10n_tr_nilvera_send_status, 'succeed')
+
+    @patch_nilvera_request
+    def test_fetch_status_fetches_pdf(self, mocked_request):
+        # Syncing the status must also bring back the official PDF once the invoice succeeded.
+        _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+
+        invoice.l10n_tr_nilvera_fetch_move_status()
+
+        self.assertEqual(invoice.l10n_tr_nilvera_send_status, 'succeed')
+        mocked_request.assert_any_call(
+            'GET',
+            f'/einvoice/sale/{invoice.l10n_tr_nilvera_uuid}/pdf',
+        )
+        self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)
+
+    @patch_nilvera_request
+    def test_fetch_status_fetches_pdf_earchive(self, mocked_request):
+        _, invoice = self._generate_invoice_xml(self.earchive_partner, include_invoice=True)
+
+        invoice.l10n_tr_nilvera_fetch_move_status()
+
+        self.assertEqual(invoice.l10n_tr_nilvera_send_status, 'succeed')
+        mocked_request.assert_any_call(
+            'GET',
+            f'/earchive/invoices/{invoice.l10n_tr_nilvera_uuid}/pdf',
+        )
+        self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)
+
+    @patch_nilvera_request
+    def test_fetch_status_unknown_no_pdf(self, mocked_request):
+        # e-Archive invoices remain unknown until the GİB report is generated, no PDF to fetch yet.
+        _, invoice = self._generate_invoice_xml(self.earchive_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_uuid = UUID_UNKNOWN_STATUS
+
+        invoice.l10n_tr_nilvera_fetch_move_status()
+
+        self.assertEqual(invoice.l10n_tr_nilvera_send_status, 'unknown')
+        self.assertNotIn(
+            call('GET', f'/earchive/invoices/{UUID_UNKNOWN_STATUS}/pdf'),
+            mocked_request.mock_calls,
+        )
+
+    @patch_nilvera_request
+    def test_fetch_status_skips_existing_pdf(self, mocked_request):
+        _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_fetch_move_status()
+        self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)
+        mocked_request.reset_mock()
+
+        invoice.l10n_tr_nilvera_fetch_move_status()
+
+        self.assertNotIn(
+            call('GET', f'/einvoice/sale/{invoice.l10n_tr_nilvera_uuid}/pdf'),
+            mocked_request.mock_calls,
+        )
 
     @patch_nilvera_request
     def test_get_pdf_earchive(self, mocked_request):
