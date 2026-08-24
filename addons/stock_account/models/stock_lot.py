@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockLot(models.Model):
@@ -85,17 +85,23 @@ class StockLot(models.Model):
         :param new_price: new standard price
         """
         product_values = []
+        now = fields.Datetime.now()
         for lot in self:
-            if lot.product_id.cost_method != 'average' or lot.standard_price == old_price:
-                continue
             product = lot.product_id
+            old_value = old_price.get(lot)
+            value = lot.standard_price
+            if product.cost_method != 'average' or value == old_value:
+                continue
+            quantity = lot.product_qty
             product_values.append({
                 'product_id': product.id,
                 'lot_id': lot.id,
-                'value': lot.standard_price,
+                'quantity': quantity,
+                'old_value': old_value,
+                'value': value,
                 'company_id': product.company_id.id or self.env.company.id,
-                'date': fields.Datetime.now(),
-                'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
-                    lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
+                'date': now,
+                'description': self.env._('%(lot)s price update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s',
+                    lot=lot.name, old_value=old_value, new_value=value, quantity=quantity, user=self.env.user.name)
             })
         self.env['product.value'].sudo().create(product_values)

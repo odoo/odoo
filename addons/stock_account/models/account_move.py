@@ -7,6 +7,7 @@ class AccountMove(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'account_move_id', string='Stock Move')
     inventory_closing = fields.Boolean(string='Inventory Closing', default=False)
     closing_datetime = fields.Datetime(string='Closing Date')
+    product_value_id = fields.One2many('product.value', 'account_move_id')
 
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
@@ -126,3 +127,13 @@ class AccountMove(models.Model):
         for prop in lot_properties:
             prop['value'] = lot.lot_properties.get(prop['name'])
         return {'lot_properties': lot_properties}
+
+    def action_show_product_value(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Product Value"),
+            'res_model': 'product.value',
+            'res_id': self.product_value_id.id,
+            "view_mode": "form",
+        }
