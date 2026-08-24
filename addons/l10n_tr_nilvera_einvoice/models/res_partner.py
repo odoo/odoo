@@ -34,11 +34,9 @@ class ResPartner(models.Model):
                 record.l10n_tr_nilvera_customer_alias_id = False
 
     def _get_tax_office_missing_message(self):
-        # OVERRIDE
         self.ensure_one()
         return _("The Turkish Tax Office field must be filled") if not self.l10n_tr_tax_office_id else None
 
     def _get_tax_office_for_edispatch(self):
-        # OVERRIDE
         self.ensure_one()
         return self.l10n_tr_tax_office_id.name
