@@ -5,6 +5,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tests import Form
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
@@ -456,6 +457,24 @@ class TestAccessRightsInvitedUsers(TestAccessRights):
     @users('admin')
     def test_admin_access_invited_task(self):
         self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place')
+
+    @users('Project user')
+    def test_assignee_access_invited_task(self):
+        self.project_pigs.privacy_visibility = 'followers'
+        self.task.user_ids = self.env.user
+
+        self.assertNotIn(self.env.user.partner_id, self.project_pigs.message_partner_ids)
+        self.env.invalidate_all()
+        task = self.task.with_user(self.env.user)
+        task_form = Form(task)
+        self.assertEqual(task_form.name, self.task.name)
+
+        self.assertEqual(task.allow_task_dependencies, self.task.sudo().allow_task_dependencies)
+        self.assertEqual(task.allow_recurring_tasks, self.task.sudo().allow_recurring_tasks)
+        self.assertEqual(task.is_template, self.task.sudo().is_template)
+
+        with self.assertRaises(AccessError, msg="The assignee is not a follower of the project, they're not supposed to have access to it."):
+            self.project_pigs.with_user(self.env.user).name
 
     @users('Project user', 'Internal user', 'Portal user')
     def test_other_users_access_invited_task(self):
