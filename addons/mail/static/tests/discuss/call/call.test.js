@@ -1779,6 +1779,9 @@ test("Escape closes meeting UI layers sequentially", async () => {
 });
 
 test("Access to Pinned Messages from Meeting Chat", async () => {
+    listenStoreFetch("/discuss/channel/pinned_messages", {
+        logParams: ["/discuss/channel/pinned_messages"],
+    });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await click("button:text(Meeting)");
@@ -1794,7 +1797,32 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await contains(
         ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages'] .badge:text('1')"
     );
+    // Close and reopen Meeting Chat to ensure the pinned message count is fetched again.
+    triggerHotkey("Escape");
+    await click(".o-mail-MeetingSideActions button[title='Chat']");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/pinned_messages",
+            {
+                channel_id: getService("discuss.rtc").channel.id,
+                request_list: ["pinned_message_count"],
+            },
+        ],
+    ]);
+    await contains(
+        ".o-mail-ActionPanel-header:has(:text('In call messages')) button[title='Pinned Messages'] .badge:text('1')"
+    );
+    // Open the pinned messages panel to ensure the full messages are fetched on demand.
     await click(".o-mail-ActionPanel-header button[title='Pinned Messages']");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/pinned_messages",
+            {
+                channel_id: getService("discuss.rtc").channel.id,
+                request_list: ["pinnedMessages"],
+            },
+        ],
+    ]);
     await contains(".o-mail-ActionPanel-header:has(:text('Pinned Messages'))");
 });
 

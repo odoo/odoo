@@ -31,7 +31,6 @@ import { FileUploader } from "@web/views/fields/file_handler";
 const CHATTER_PANEL = Object.freeze({
     ATTACHMENT: "ATTACHMENT",
     NONE: "NONE",
-    PINNED_MESSAGES: "PINNED_MESSAGES",
     SEARCH: "SEARCH",
 });
 
@@ -100,6 +99,7 @@ const chatterPatch = {
             selectedAttachmentIds: [],
             showActivities: true,
             showAttachmentLoading: false,
+            showPinnedMessages: false,
             showScheduledMessages: true,
         });
         this.dialog = useService("dialog");
@@ -285,9 +285,7 @@ const chatterPatch = {
         return _t("Following");
     },
     get hasPinnedMessages() {
-        return (
-            this.state.thread?.has_pinned_messages || this.state.thread?.pinnedMessages?.length > 0
-        );
+        return this.state.thread?.pinnedMessagesCount > 0;
     },
     /**
      * @returns {boolean}
@@ -304,7 +302,7 @@ const chatterPatch = {
             "contact_fields",
             "defaultSubject",
             "followers",
-            "has_pinned_messages",
+            "pinned_message_count",
             "scheduledMessages",
             "showSubjectInSmallComposer",
             "suggestedRecipients",
@@ -328,6 +326,7 @@ const chatterPatch = {
 
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
+        this.state.showPinnedMessages = false;
         this.discardAttachmentSelection();
         if (threadId === false) {
             this.state.composerType = false;
@@ -410,14 +409,6 @@ const chatterPatch = {
                 await this.unlinkAttachments(attachments);
             },
         });
-    },
-    onClickPinnedMessages() {
-        this.closeSearch();
-        const isOpening = this.state.activePanel !== CHATTER_PANEL.PINNED_MESSAGES;
-        this.state.activePanel = isOpening ? CHATTER_PANEL.PINNED_MESSAGES : CHATTER_PANEL.NONE;
-        if (isOpening) {
-            this.state.thread?.fetchPinnedMessages();
-        }
     },
     onClickSearch() {
         this.state.activePanel =
@@ -547,6 +538,13 @@ const chatterPatch = {
         } else {
             this.onThreadCreated = toggle;
             this.webChatterProps.saveRecord?.();
+        }
+    },
+
+    togglePinnedMessages() {
+        this.state.showPinnedMessages = !this.state.showPinnedMessages;
+        if (this.state.showPinnedMessages) {
+            this.state.thread?.fetchPinnedMessages();
         }
     },
 
