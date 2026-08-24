@@ -78,7 +78,7 @@ export class InvoiceButton extends Component {
             if (!_confirmed) {
                 return;
             }
-            partner = await makeAwaitable(this.dialog, PartnerList);
+            partner = await makeAwaitable(this.dialog, PartnerList, { order });
             if (!partner) {
                 return;
             }
