@@ -184,7 +184,7 @@ export class TaxTotalsComponent extends Component {
     get showCashRounding() {
         const move = this.props.record.data;
         return (
-            this.groupCashRounding && move.move_type.startsWith("out_") && move.state === "draft"
+            this.groupCashRounding && move.move_type?.startsWith("out_") && move.state === "draft"
         );
     }
 
