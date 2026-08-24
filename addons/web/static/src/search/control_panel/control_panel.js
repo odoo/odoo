@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { Pager } from "@web/core/pager/pager";
@@ -9,7 +8,17 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    usePlugin,
+    proxy,
+    signal,
+    t,
+    useProps,
+} from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
@@ -67,7 +76,10 @@ export class ControlPanel extends Component {
             );
         }
 
-        useLayoutEffect(() => {
+        let stopWatchingScroll;
+        const watchScroll = () => {
+            stopWatchingScroll?.();
+            stopWatchingScroll = null;
             if (
                 !this.uiService.isSmall ||
                 ("adaptToScroll" in this.display && !this.display.adaptToScroll)
@@ -79,11 +91,14 @@ export class ControlPanel extends Component {
             scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
             this.root().style.top = "0px";
             this.scrollingElementHeight = scrollingEl.scrollHeight;
-            return () => {
+            stopWatchingScroll = () => {
                 this.scrollingElementResizeObserver.unobserve(scrollingEl);
                 scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
             };
-        });
+        };
+        onMounted(watchScroll);
+        onPatched(watchScroll);
+        onWillUnmount(() => stopWatchingScroll?.());
 
         onMounted(() => {
             if (
