@@ -173,7 +173,7 @@ class AccountMove(models.Model):
         "list of available exemption codes based on the selected "
         "GIB Invoice Type or other criteria.",
     )
-    l10n_tr_zero_vat_warning = fields.Binary(compute="_compute_l10n_tr_l10n_tr_zero_vat_warning")
+    l10n_tr_zero_vat_warning = fields.Boolean(compute="_compute_l10n_tr_l10n_tr_zero_vat_warning")
     l10n_tr_nilvera_customer_status = fields.Selection(
         string="Partner Nilvera Status",
         related='partner_id.l10n_tr_nilvera_customer_status',
