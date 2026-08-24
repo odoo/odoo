@@ -1,4 +1,7 @@
-from odoo import fields
+import base64
+from unittest.mock import patch
+
+from odoo import fields, Command
 from odoo.tests import tagged
 from odoo.tools import file_open
 
@@ -99,3 +102,47 @@ class TestTRNilveraEreceiptUpload(TestStockCommon):
                 {'name': 'PL02', 'plate_number_type': 'trailer'},
             ],
         )
+
+    def test_cron_nilvera_get_edispatch_purchase_pdf(self):
+        """Test that the cron fetches the e-Dispatch PDF and stores it on the picking."""
+        self.receipt_partner.write({
+            'state_id': self.env.ref('base.state_tr_01').id,
+            'city': 'Adana',
+            'zip': '321123',
+            'street': '12th dec. street',
+        })
+        self.env.company.write({
+            'vat': '1234567890',
+            'country_id': self.tr_country_id,
+        })
+        warehouse = self.env.user._get_default_warehouse_id()
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'partner_id': self.receipt_partner.id,
+            'move_ids': [Command.create({
+                'product_id': self.move_product.id,
+                'product_uom_qty': 1,
+            })],
+            'l10n_tr_nilvera_carrier_id': self.driver_partner.id,
+        })
+        picking.action_confirm()
+        picking.button_validate()
+        picking.action_generate_l10n_tr_edispatch_xml()
+        picking.l10n_tr_nilvera_send_status = 'pdf_not_fetched'
+
+        self.assertTrue(picking.l10n_tr_nilvera_edispatch_xml_file)
+        self.assertFalse(picking.l10n_tr_nilvera_edispatch_pdf_file)
+
+        # Mock the Nilvera response to avoid making a real HTTP request.
+        with patch(
+            'odoo.addons.l10n_tr_nilvera_edispatch.models.stock_picking._get_nilvera_client'
+        ) as mock_client:
+            mock_response = b'%PDF-1.4\n% Sample PDF'
+            client = mock_client.return_value.__enter__.return_value
+            client.request.return_value = base64.b64encode(mock_response)
+            picking._cron_nilvera_get_edispatch_purchase_pdf()
+
+        self.assertTrue(picking.l10n_tr_nilvera_edispatch_pdf_file)
+        self.assertEqual(picking.l10n_tr_nilvera_send_status, 'succeed')
