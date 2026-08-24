@@ -1,66 +1,38 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo import Command
+from odoo.tests import tagged
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
-from odoo.exceptions import UserError
 
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.env.user.company_id.anglo_saxon_accounting = True
-
-        cls.fifo_product = cls.env['product.product'].create({
-            'name': 'product',
-            'is_storable': True,
-            'categ_id': cls.stock_account_product_categ.id,
-        })
-
-        cls.basic_accountman = cls.env['res.users'].create({
-            'name': 'Basic Accountman',
-            'login': 'basic_accountman',
-            'password': 'basic_accountman',
-            'group_ids': [(6, 0, cls.env.ref('account.group_account_invoice').ids)],
-        })
-
-    def _make_in_move(self, product, quantity=1, unit_cost=None):
-        unit_cost = unit_cost or product.standard_price
-        move = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': product.uom_id.id,
-            'product_uom_qty': quantity,
-            'price_unit': unit_cost,
-            'value_manual': unit_cost * quantity,
-        })
-        move._action_confirm()
-        move.quantity = quantity
-        move.picked = True
-        move._action_done()
-        return move
+class TestAngloSaxonValuation(TestStockValuationCommon):
 
     def test_inv_ro_with_auto_fifo_part(self):
-        self.fifo_product.standard_price = 100
-        self.fifo_product.taxes_id = False
+        self.company.anglo_saxon_accounting = True
+        self.product_fifo_auto.standard_price = 100
+        self.product_fifo_auto.taxes_id = False
 
-        self._make_in_move(self.fifo_product, unit_cost=10)
-        self._make_in_move(self.fifo_product, unit_cost=25)
+        basic_accountman = self._create_new_internal_user(
+            name='Basic Accountman',
+            login='basic_accountman',
+            groups='account.group_account_invoice',
+        )
+
+        self._make_in_move(self.product_fifo_auto, 1, unit_cost=10)
+        self._make_in_move(self.product_fifo_auto, 1, unit_cost=25)
 
         ro = self.env['repair.order'].create({
-            'product_id': self.product_a.id,
-            'partner_id': self.partner_a.id,
-            'move_ids': [(0, 0, {
-                'repair_line_type': 'add',
-                'product_id': self.fifo_product.id,
-                'product_uom_qty': 1,
-            })],
+            'product_id': self.product.id,
+            'partner_id': self.owner.id,
+            'move_ids': [
+                Command.create({
+                    'repair_line_type': 'add',
+                    'product_id': self.product_fifo_auto.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
         })
         ro.action_validate()
         ro.action_repair_start()
@@ -74,18 +46,14 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         invoice = so._create_invoices()
         self.env.invalidate_all()
         self.env.flush_all()
-        invoice.with_user(self.basic_accountman).action_post()
+        invoice.with_user(basic_accountman).action_post()
 
         self.assertRecordValues(invoice.line_ids, [
-            {'debit': 0, 'credit': 1, 'account_id': self.company_data['default_account_revenue'].id},
-            {'debit': 1, 'credit': 0, 'account_id': self.company_data['default_account_receivable'].id},
-            {'debit': 0, 'credit': 10, 'account_id': self.company_data['default_account_stock_valuation'].id},
-            {'debit': 10, 'credit': 0, 'account_id': self.company_data['default_account_expense'].id},
+            {'debit': 0, 'credit': 20, 'account_id': self.account_income.id},
+            {'debit': 20, 'credit': 0, 'account_id': self.account_receivable.id},
+            {'debit': 0, 'credit': 10, 'account_id': self.account_stock_valuation.id},
+            {'debit': 10, 'credit': 0, 'account_id': self.account_expense.id},
         ])
-
-
-@tagged('post_install', '-at_install')
-class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
 
     def test_ro_invoice_double_valuation(self):
         """This test make sure that the valuation entry for a repair is created only once.
@@ -95,22 +63,20 @@ class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
         self.product_fifo_auto.taxes_id = False
         self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.warehouse.lot_stock_id, 5)
 
-        self.account_inventory = self.env['account.account'].create({
-            'name': 'Inventory Account',
-            'code': '100101',
-            'account_type': 'asset_current',
-        })
+        self.account_inventory = self._use_inventory_location_accounting()
         inventory_locations = self.warehouse.repair_type_id.default_location_dest_id
         inventory_locations.valuation_account_id = self.account_inventory.id
 
         ro = self.env['repair.order'].create({
             'product_id': self.product.id,
             'partner_id': self.owner.id,
-            'move_ids': [(0, 0, {
-                'repair_line_type': 'add',
-                'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1,
-            })],
+            'move_ids': [
+                Command.create({
+                    'repair_line_type': 'add',
+                    'product_id': self.product_fifo_auto.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
         })
         ro.action_validate()
         ro.action_repair_start()
