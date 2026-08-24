@@ -1676,12 +1676,26 @@ class MailThread(models.AbstractModel):
 
                 filename = part.get_filename()  # I may not properly handle all charsets
 
-                mimetype, _, content_type_params = part.get('Content-Type').partition(';')
+                content_type = part.get('Content-Type')
+                if not content_type:
+                    _logger.warning(
+                        "Message %r has no Content-Type, assuming 'application/octet-stream'",
+                        message.get('Message-ID'),
+                    )
+                    content_type = 'application/octet-stream'
+                    part['Content-Type'] = content_type
+                mimetype, _, content_type_params = content_type.partition(';')
                 if not all(mimetype.partition('/')) or mimetype in BAD_CONTENT_TYPES:
-                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", mimetype)
+                    _logger.warning(
+                        "Message %r containing an unexpected Content-Type %r, assuming 'application/octet-stream'",
+                        message.get('Message-ID'), mimetype,
+                    )
                     part.replace_header('Content-Type', f'application/octet-stream;{content_type_params}')
                 elif mimetype.startswith('pdf'):
-                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/pdf'", mimetype)
+                    _logger.warning(
+                        "Message %r containing an unexpected Content-Type %r, assuming 'application/pdf'",
+                        message.get('Message-ID'), mimetype,
+                    )
                     part.replace_header('Content-Type', f'application/pdf;{content_type_params}')
 
                 if part.get_content_type().startswith('text/') and not part.get_param('charset'):
