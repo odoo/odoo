@@ -154,10 +154,10 @@ class ResPartner(models.Model):
                 try:
                     return self._run_vat_checks(self.env['res.country'].search([('code', '=', country_code)], limit=1), vat_prefix + vat_number, partner_name, validation)
                 except ValidationError:
-                    msg = self._build_vat_error_message(code_to_check, vat, partner_label)
+                    msg = self._build_vat_error_message(code_to_check, vat_to_return, partner_label)
                     raise ValidationError(msg + "\n\n" + _('If you are trying to input a European number, this is the expected format: ') + _ref_vat[country_code.lower()])
             if validation == 'error':
-                msg = self._build_vat_error_message(code_to_check, vat, partner_label)
+                msg = self._build_vat_error_message(code_to_check, vat_to_return, partner_label)
                 raise ValidationError(msg)
             else:
                 return '', code_to_check
