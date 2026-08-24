@@ -855,7 +855,7 @@
     >
         <div id="add_to_cart_wrap" position="inside">
             <div
-                t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
+                t-attf-class="css_quantity o_prevent_border input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
                 contenteditable="false"
             >
                 <button
@@ -868,7 +868,7 @@
                 </button>
                 <input
                     type="text"
-                    t-attf-class="form-control quantity text-center border-0"
+                    t-attf-class="form-control o_force_shadow quantity text-center border-0"
                     data-min="1"
                     name="add_qty"
                     t-att-value="1"

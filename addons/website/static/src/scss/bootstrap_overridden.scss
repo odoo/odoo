@@ -419,8 +419,10 @@ $offcanvas-horizontal-width: $o-offcanvas-horizontal-width !default;
 $--enable-no-overflow-of-text-columns: false !default;
 
 // A side-specific "form field border width" is only applied if it differs
-// from the global border width that applies to all sides.
-.form-control {
+// from the global border width that applies to all sides. Buttons of an
+// input-group flagged `.o_prevent_border` (e.g. the shop quantity).
+.form-control,
+.input-group:not(.o_prevent_border) > .btn {
     @if $input-border-top-width != $input-border-width {
         border-top-width: $input-border-top-width !important;
     }
