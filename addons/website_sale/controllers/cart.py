@@ -38,7 +38,14 @@ class Cart(PaymentPortal):
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state not in ("draft", "sent"):  # abandoned cart already finished
+            if abandoned_order.state not in (
+                "draft",
+                "sent",
+            ) or abandoned_order.get_portal_last_transaction().state in {
+                "pending",
+                "authorized",
+                "done",
+            }:  # abandoned cart already finished, or has an ongoing/confirmed transaction
                 values.update({"abandoned_proceed": True})
             elif not request.session.get("sale_order_id"):
                 request.session["sale_order_id"] = abandoned_order.id

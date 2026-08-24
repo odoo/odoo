@@ -7,6 +7,7 @@ from odoo.tests.common import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
@@ -83,3 +84,50 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
                 salesperson,
                 "Salesperson should get assigned when sending payment confirmation mail",
             )
+
+    def _create_abandoned_order_with_transaction(self, tx_state):
+        order = self.env["sale.order"].create({
+            "partner_id": self.portal_user.partner_id.id,
+            "website_id": self.website.id,
+            "state": "draft",
+            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 1})],
+        })
+        tx = self._create_transaction(
+            flow="redirect",
+            state=tx_state,
+            partner_id=order.partner_id.id,
+            reference=f"Test Transaction - abandoned - {order.id}",
+        )
+        order.transaction_ids = [Command.set([tx.id])]
+        return order
+
+    def test_abandoned_cart_not_resurrected_implicitly_when_transaction_ongoing(self):
+        """`_get_and_cache_current_cart` must not silently resurrect a draft order as the
+        active cart when its latest transaction is pending, authorized, or done - even if
+        the session cart key was cleared (e.g. by `sale_reset()` after a redirect payment
+        race condition).
+        """
+        abandoned_order = self._create_abandoned_order_with_transaction("done")
+        with self.mock_request(user=self.portal_user) as request:
+            self.assertFalse(request.session.get("sale_order_id"))
+            cart = request.cart
+            self.assertNotEqual(cart, abandoned_order)
+
+    def test_abandoned_cart_not_cancelled_via_recovery_link_when_transaction_ongoing(self):
+        """The `/shop/cart` recovery-link flow (`id` + `access_token`) must not silently
+        merge and cancel a draft order whose latest transaction is pending, authorized, or
+        done, even if a different order is currently active in the session.
+        """
+        abandoned_order = self._create_abandoned_order_with_transaction("done")
+        access_token = abandoned_order._portal_ensure_token()
+        # A different order is already the active session cart.
+        active_order = self.env["sale.order"].create({
+            "partner_id": self.portal_user.partner_id.id,
+            "website_id": self.website.id,
+            "state": "draft",
+        })
+        with self.mock_request(
+            user=self.portal_user, path="/shop/cart", sale_order_id=active_order.id
+        ):
+            Cart().cart(id=abandoned_order.id, access_token=access_token)
+        self.assertEqual(abandoned_order.state, "draft")
