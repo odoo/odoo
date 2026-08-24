@@ -6,6 +6,7 @@ import {
     makeContentsInline,
     removeClass,
     removeStyle,
+    unwrapContents,
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
@@ -160,6 +161,125 @@ export class DomPlugin extends Plugin {
             return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
+        fragment_to_insert_processors: withSequence(Infinity, (fragment) => {
+            const nodes = childNodes(fragment);
+            const sel = this.dependencies.selection.getEditableSelection();
+            const refBlock = closestBlock(sel.anchorNode);
+            const editableContext = closestElement(sel.focusNode, "[contenteditable=true]");
+            const isEditableBlock = isBlock(editableContext);
+            const doesEditableAllowParagraphRelatedElements =
+                allowsParagraphRelatedElements(editableContext);
+            const isSelectionAtStart =
+                firstLeaf(refBlock) === sel.anchorNode && sel.anchorOffset === 0;
+            const isSelectionAtEnd =
+                lastLeaf(refBlock) === sel.focusNode && sel.focusOffset === nodeSize(sel.focusNode);
+
+            let previousWasBlock = false;
+            let previousDidUnwrap = false;
+            this.nodesBeforeWhichToRestoreLineBreak = new Set();
+            for (const [index, node] of nodes.entries()) {
+                const wasBlock = isBlock(node);
+                const isSelectionAtEdge = index === 0 ? isSelectionAtStart : isSelectionAtEnd;
+                let didUnwrap = false;
+                let firstResultNode = node;
+
+                // A. Unwrap the first and last blocks if needed.
+                const isFirstOrLastBlock = wasBlock && (index === 0 || index === nodes.length - 1);
+                // Empty blocks would disappear if unwrapped.
+                let shouldUnwrap = isFirstOrLastBlock && !isEmptyBlock(node);
+                /** Inline content may arrive wrapped in a single base container
+                 * (@see wrapInlinesInBlocks call in { @see prepareClipboardData
+                 * }). In that case the wrapper is not meaningful structure.
+                 * eg, `p(a[]c) + p(b) = p(ab[]c) ≠ p(a)p(b)p(c)` */
+                const isSingleBaseContainer =
+                    nodes.length === 1 &&
+                    this.dependencies.baseContainer.isCandidateForBaseContainer(node);
+                if (shouldUnwrap && !isSingleBaseContainer) {
+                    if (nodes.length > 1 && isSelectionAtEdge) {
+                        // At the edge of a block, the first inserted block has
+                        // no left-side content to merge with.
+                        // eg, `h1([]c) + p(a)p(b) = p(a)h1(bc) ≠ h1(abc)`
+                        // eg, `h1(a[]) + p(b)p(c) = h1(ab)p(c) ≠ h1(abc)`
+                        // Both these cases would end up as `h1(a)h1(b)h1(c)`
+                        // after line break restoration.
+                        shouldUnwrap = false;
+                    } else if (isEditionBoundary(refBlock, this.editable)) {
+                        // A root-anchored selection expresses insertion between
+                        // top-level children. Using its normalized deep
+                        // position would invent a reference block and
+                        // incorrectly merge into that child.
+                        // eg, `p(a)[] + p(b) = p(a)p(b) ≠ p(ab)`
+                        shouldUnwrap = false;
+                    } else if (this.dependencies.split.isUnsplittable(node)) {
+                        // Don't unwrap an unsplittable block.
+                        shouldUnwrap = false;
+                    } else if (isEmptyBlock(refBlock)) {
+                        // There is no surrounding content to absorb the edge
+                        // block in an empty reference block, so unwrapping
+                        // would only erase the pasted block boundary.
+                        shouldUnwrap = false;
+                    } else if (node.nodeName === refBlock.nodeName) {
+                        // Same-tag blocks can merge at the cursor.
+                        // eg, `p(a[]d) + p(b)div(c) = p(ab)div(c)p(d) ≠ p(a)p(b)div(c)p(d)`
+                        shouldUnwrap = true;
+                    } else if (
+                        refBlock.nodeName === "DIV" &&
+                        this.dependencies.split.isUnsplittable(refBlock)
+                    ) {
+                        // An unsplittable DIV cannot be split around the
+                        // inserted block. Unwrapping inserts the edge contents
+                        // without creating a nested block boundary inside the
+                        // atomic container.
+                        shouldUnwrap = true;
+                    } else {
+                        shouldUnwrap =
+                            // Allow other plugins to determine if the block
+                            // should be unwrapped.
+                            this.checkPredicates(
+                                "should_unwrap_edge_block_to_insert_predicates",
+                                node,
+                                refBlock
+                            ) ?? false;
+                    }
+                }
+                if (shouldUnwrap) {
+                    this.processThrough("edge_block_to_unwrap_processors", node, index === 0);
+                    firstResultNode = node.firstChild;
+                    unwrapContents(node);
+                    didUnwrap = true;
+                }
+                // B. Unwrap blocks if we're trying to insert in a context that
+                // doesn't allow them.
+                else if (
+                    wasBlock &&
+                    !isEditableBlock &&
+                    !doesEditableAllowParagraphRelatedElements
+                ) {
+                    if (this.dependencies.split.isUnsplittable(node)) {
+                        node.remove();
+                        firstResultNode = undefined;
+                    } else {
+                        makeContentsInline(node);
+                        firstResultNode = node.firstChild;
+                        unwrapContents(node);
+                        didUnwrap = true;
+                    }
+                }
+
+                // C. Mark the first surviving node after an erased block boundary.
+                const didLoseLineBreak =
+                    index > 0 &&
+                    ((didUnwrap && (previousDidUnwrap || !previousWasBlock)) ||
+                        (previousDidUnwrap && !wasBlock));
+                if (didLoseLineBreak && firstResultNode) {
+                    this.nodesBeforeWhichToRestoreLineBreak.add(firstResultNode);
+                }
+
+                previousWasBlock = wasBlock;
+                previousDidUnwrap = didUnwrap;
+            }
+            return fragment;
+        }),
         /** Predicates */
         is_functional_empty_node_predicates: (node) => {
             if (isSelfClosingElement(node) || isEditorTab(node)) {
@@ -297,6 +417,8 @@ export class DomPlugin extends Plugin {
      * @returns {Node[]} the inserted nodes
      */
     insert(content) {
+        this.dependencies.delete.deleteSelection();
+
         // 1. Process the content to insert.
         // =================================
 
@@ -310,19 +432,10 @@ export class DomPlugin extends Plugin {
         // 2. Insert the content.
         // ======================
 
-        this.dependencies.delete.deleteSelection();
         this.trigger("on_will_insert_handlers", nodes);
-
-        // Initialize.
-        let insertedContent = [];
-        let [didUnwrapPreviousBlock, wasPreviousBlock, isFirst] = [false, false, true];
-        const [last, isOnly] = [nodes.at(-1), nodes.length === 1];
-        const originalNodes = [...nodes];
-        const isUnsplittable = this.dependencies.split.isUnsplittable.bind(this);
 
         // An empty text node may be needed to mark the position of insertion.
         const marker = createMarkerNode(this.document);
-
         // Find the first insertion reference (the node before which to insert).
         let refNode = findInsertionReferenceNode(
             this.dependencies.selection.getEditableSelection(),
@@ -330,66 +443,20 @@ export class DomPlugin extends Plugin {
         );
 
         // Insert the nodes.
-        while (nodes.length) {
-            let node = nodes.shift();
-            const isOriginalNode = originalNodes.includes(node);
-            const refLeaf = firstLeaf(refNode);
+        let insertedContent = [];
+        let isFirst = true;
+        for (const node of nodes) {
+            refNode = this.findNextInsertionReferenceNode(node, firstLeaf(refNode), marker);
 
-            // A. Unwrap the first or last node to insert if needed.
-            // -----------------------------------------------------
-
-            let wasBlock = isBlock(node);
-            let didUnwrap = false;
-            // Inline edges have no wrapper to remove.
-            if (wasBlock) {
-                const isEdge = isFirst || node === last;
-                if (isEdge && this.shouldUnwrapEdgeBlock([node, ...nodes], refLeaf, isOnly)) {
-                    this.processThrough("edge_block_to_unwrap_processors", node, isFirst);
-                    nodes.unshift(...childNodes(node)); // unwrap
-                    node = nodes.shift();
-                    didUnwrap = true;
-                }
-            }
-
-            // B. Find the next reference (adapting the node if needed).
-            // ---------------------------------------------------------
-
-            refNode = this.findNextInsertionReferenceNode(node, refLeaf, marker);
-            if (!this.canInsertBefore(node, refNode) && isUnsplittable(refNode.parentElement)) {
-                if (!isUnsplittable(node)) {
-                    makeContentsInline(node);
-                    wasBlock = isBlock(node);
-                    didUnwrap = true;
-                    nodes.unshift(...childNodes(node)); // unwrap
-                }
-                node = nodes.shift();
-            }
-
-            if (node) {
-                // C. Insert the node.
-                // -------------------
-
+            if (this.canInsertBefore(node, refNode)) {
                 const wasFakeLineBreak = refNode.nodeName === "BR" && isFakeLineBreak(refNode);
                 refNode.before(node);
-                insertedContent.push(node);
+                let insertedNodes = [node];
 
-                // D. Deal with consecutive unwrapped blocks.
-                // ------------------------------------------
-
-                // If unwrapping a node caused us to lose a visual line break
-                // between it and its former sibling, split between them.
-                // eg, `li(a[]d) + p(b)p(c) = li(ab)li(c[]d) ≠ li(abc[]d)`
-                // eg, `li(a[]d) + "b"p(c) = li(ab)li(c[]) ≠ li(abc[])
-                let didLoseLineBreak = false;
-                if (wasBlock && !isFirst) {
-                    didLoseLineBreak = didUnwrap && (didUnwrapPreviousBlock || !wasPreviousBlock);
-                } else if (!isFirst) {
-                    didLoseLineBreak = didUnwrapPreviousBlock && isOriginalNode;
-                }
-                if (didLoseLineBreak) {
+                // Restore lost line breaks.
+                if (this.nodesBeforeWhichToRestoreLineBreak.has(node)) {
                     if (!node.nextSibling) {
                         node.after(marker);
-                        refNode = node.nextSibling;
                     }
                     refNode = node.nextSibling;
                     const [targetNode, targetOffset] = leftPos(node);
@@ -397,31 +464,34 @@ export class DomPlugin extends Plugin {
                         targetNode,
                         targetOffset,
                     });
-                    if (split.type === SPLIT_OPERATION_TYPES.BLOCK) {
-                        const { before, after } = split;
-                        if (!node.isConnected && after) {
-                            const [anchorNode, anchorOffset] = rightPos(before);
-                            after.remove();
-                            refNode = enterSelectionPoint({ anchorNode, anchorOffset }, marker);
-                        } else if (this.isAtBlockEdge(node, "end")) {
-                            insertedContent.pop();
-                            if (node.previousSibling?.nodeName === "BR") {
-                                // We inserted a BR instead of splitting.
-                                insertedContent.push(node.previousSibling, node);
+                    switch (split.type) {
+                        case SPLIT_OPERATION_TYPES.LINE: {
+                            insertedNodes.unshift(...split.lineBreaks);
+                            break;
+                        }
+                        case SPLIT_OPERATION_TYPES.BLOCK: {
+                            if (node.isConnected) {
+                                if (this.isAtBlockEdge(node, "end")) {
+                                    insertedNodes = [split.after];
+                                }
                             } else {
-                                insertedContent.push(after || closestBlock(node));
+                                insertedNodes = [];
+                                const [anchorNode, anchorOffset] = rightPos(split.before);
+                                split.after.remove();
+                                refNode = enterSelectionPoint({ anchorNode, anchorOffset }, marker);
+                            }
+                            break;
+                        }
+                        default: {
+                            if (this.isAtBlockEdge(node, "end")) {
+                                insertedNodes = [closestBlock(node)];
                             }
                         }
                     }
                 }
-                didUnwrapPreviousBlock = wasBlock ? didUnwrap : didUnwrapPreviousBlock;
-                if (isOriginalNode) {
-                    wasPreviousBlock = wasBlock;
-                }
+                insertedContent.push(...insertedNodes);
 
-                // E. Clean up: remove the reference if needed.
-                // --------------------------------------------
-
+                // Clean up: remove the reference if needed.
                 if (
                     // Inserting a phrasing container (even nested) in an empty
                     // block should mean replacing that block.
@@ -435,8 +505,8 @@ export class DomPlugin extends Plugin {
                     node.after(marker);
                     refNode = node.nextSibling;
                 }
-                isFirst = false;
             }
+            isFirst = false;
         }
         marker.remove();
 
@@ -454,70 +524,6 @@ export class DomPlugin extends Plugin {
         }
 
         return insertedContent;
-    }
-
-    /**
-     * Return true if the first node in the given list of nodes to @see insert
-     * before the given reference should be unwrapped.
-     *
-     * @param {Node[]} nodesToInsert
-     * @param {Node} reference
-     * @param {boolean} isOnly true if there was only one node to insert
-     * @returns {boolean}
-     */
-    shouldUnwrapEdgeBlock(nodesToInsert, reference, isOnly) {
-        const node = nodesToInsert[0];
-        // Empty blocks would disappear if unwrapped.
-        if (isEmptyBlock(node)) {
-            return false;
-        }
-        /** Inline content may arrive wrapped in a single base container
-         * (@see wrapInlinesInBlocks call in { @see prepareClipboardData }). In
-         * that case the wrapper is not meaningful structure.
-         * eg, `p(a[]c) + p(b) = p(ab[]c) ≠ p(a)p(b)p(c)` */
-        if (isOnly && this.dependencies.baseContainer.isCandidateForBaseContainer(node)) {
-            return true;
-        }
-        const refBlock = closestBlock(reference);
-        // A root-anchored selection expresses insertion between top-level
-        // children. Using its normalized deep position would invent a reference
-        // block and incorrectly merge into that child.
-        // eg, `p(a)[] + p(b) = p(a)p(b) ≠ p(ab)`
-        if (isEditionBoundary(refBlock, this.editable)) {
-            return false;
-        }
-        // Don't unwrap an unsplittable block.
-        if (this.dependencies.split.isUnsplittable(node)) {
-            return false;
-        }
-        // There is no surrounding content to absorb the edge block in an empty
-        // reference block, so unwrapping would only erase the pasted block
-        // boundary.
-        if (isEmptyBlock(refBlock)) {
-            return false;
-        }
-        // At the start of a block, the first inserted block has no left-side
-        // content to merge with.
-        // eg, `p([]c) + p(a)p(b) ≠ p(ac)p(b)`
-        if (nodesToInsert.length > 1 && this.isAtBlockEdge(reference, "start")) {
-            return false;
-        }
-        // Same-tag blocks can merge at the cursor.
-        // eg, `p(a[]d) + p(b)div(c) = p(ab)div(c)p(d) ≠ p(a)p(b)div(c)p(d)`
-        if (node.nodeName === refBlock.nodeName) {
-            return true;
-        }
-        // An unsplittable DIV cannot be split around the inserted block.
-        // Unwrapping inserts the edge contents without creating a nested block
-        // boundary inside the atomic container.
-        if (refBlock.nodeName === "DIV" && this.dependencies.split.isUnsplittable(refBlock)) {
-            return true;
-        }
-        // Allow other plugins to determine if the block should be unwrapped.
-        return (
-            this.checkPredicates("should_unwrap_edge_block_to_insert_predicates", node, refBlock) ??
-            false
-        );
     }
 
     /**
