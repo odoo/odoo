@@ -139,8 +139,8 @@ class AccountMove(models.Model):
             condition = SQL(
                 "%s AND l10n_latam_document_type_id = %s AND company_id = %s AND move_type IN %s",
                 condition,
-                self.company_id.id or False,
                 self.l10n_latam_document_type_id.id or 0,
+                self.company_id.id or False,
                 (('in_invoice', 'in_refund') if
                     self.l10n_latam_document_type_id._is_doc_type_vendor() else ('out_invoice', 'out_refund')),
             )
