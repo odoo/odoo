@@ -22,7 +22,7 @@ test("should change the font size of a few characters", async () => {
 
 test("should change the font size the qweb tag", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
+        contentBefore: `<div>[<p t-out="'Test'" contenteditable="false">Test</p>]</div>`,
         stepFunction: setFontSize("36px"),
         contentAfter: `<div>[<p t-out="'Test'" style="font-size: 36px;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },

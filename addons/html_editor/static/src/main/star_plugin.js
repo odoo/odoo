@@ -38,6 +38,14 @@ export class StarPlugin extends Plugin {
             },
         ],
         selectors_for_feff_providers: () => ".o_stars",
+
+        /** Predicates */
+        is_selectable_on_click_predicates: (el) => {
+            // Clicking a star sets the rating, it does not select the star.
+            if (el.matches(".o_stars, .o_stars *")) {
+                return false;
+            }
+        },
     };
 
     setup() {
