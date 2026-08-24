@@ -221,6 +221,11 @@ export class EmbeddedComponentPlugin extends Plugin {
         // callbacks, in the same call stack as the DOM insertion.
         const onComponentInserted = this.extractOnComponentInserted(host);
         const { root } = mountComponent(this.app, Component, host, props, env, {
+            onBeforeComplete: () => {
+                if (this.isDestroyed) {
+                    return false;
+                }
+            },
             onAfterComplete: () => {
                 onComponentInserted?.();
                 this.trigger("on_component_mounted_handlers");

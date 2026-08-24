@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, computed, props, proxy, signal, t, useApp, useEffect } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, status, t, useApp, useEffect } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
@@ -548,6 +548,9 @@ export class Message extends Component {
                 this.env,
                 {
                     onBeforeComplete: () => {
+                        if (status(this) === "destroyed") {
+                            return false;
+                        }
                         if (!el.isConnected) {
                             return false;
                         }
