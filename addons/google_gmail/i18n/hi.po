@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 06:40+0000\n"
+"PO-Revision-Date: 2026-08-10 14:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/"
 "google_gmail/hi/>\n"
@@ -32,6 +32,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Gmail account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        अपना Gmail अकाउंट कनेक्ट करें"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -70,14 +72,14 @@ msgstr ""
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process."
-msgstr ""
+msgstr "प्रमाणीकरण प्रक्रिया के दौरान एक गड़बड़ी हुई।"
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "ऐक्सेस टोकन लेते समय एक गड़बड़ी हुई।"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -89,7 +91,7 @@ msgstr "के साथ प्रमाणित करें"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "ऑथराइज़ेशन कोड"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
@@ -105,6 +107,8 @@ msgid ""
 "You will be redirected to the Gmail login page where you will need to accept "
 "the permission."
 msgstr ""
+"OAuth प्रमाणीकरण प्रक्रिया के साथ अपना Gmail अकाउंट कनेक्ट करें. \n"
+"आपको Gmail लॉगिन पेज पर रीडायरेक्ट किया जाएगा जहां आपको अनुमति स्वीकार करनी होगी।"
 
 #. module: google_gmail
 #. odoo-python
@@ -116,27 +120,30 @@ msgid ""
 "this server. To extend its use, you should set a \"mail.default.from\" "
 "system parameter."
 msgstr ""
+"अपने Gmail अकाउंट को OAuth ऑथेंटिकेशन प्रोसेस से कनेक्ट करें. \n"
+"डिफ़ॉल्ट रूप से, सिर्फ़ मैचिंग ईमेल पते वाला यूज़र ही इस सर्वर का उपयोग कर सकेगा. इसका "
+"उपयोग बढ़ाने के लिए, आपको \"mail.default.from\" सिस्टम पैरामीटर सेट करना चाहिए।"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "Gmail क्लाइंट आईडी"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Gmail क्लाइंट सीक्रेट"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "Gmail OAuth प्रमाणीकरण"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google Gmail मिक्सिन"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -146,7 +153,7 @@ msgstr "आईडी"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "आपके Google ऐप्लिकेशन की आईडी"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
@@ -172,14 +179,14 @@ msgstr "मेल सर्वर"
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "सिर्फ़ एडमिन ही एक Gmail मेल सर्वर लिंक कर सकता है।"
 
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "कृपया अपने Gmail क्रेडेंशियल कॉन्फ़िगर करें।"
 
 #. module: google_gmail
 #. odoo-python
@@ -190,6 +197,8 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"कृपया \"यूज़रनेम\" फ़ील्ड में अपना Gmail यूज़रनेम ( ईमेल का पता) भरें. यह वही अकाउंट होना "
+"चाहिए जिसका उपयोग Gmail OAuthentication टोकन के लिए किया गया था।"
 
 #. module: google_gmail
 #. odoo-python
@@ -220,7 +229,7 @@ msgstr "सीक्रेट"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "आपके Google ऐप का सीक्रेट"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
@@ -234,13 +243,14 @@ msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
 msgstr ""
+"Gmail अकाउंट को लिंक करने के लिए सामान्य सेटिंग में अपने Gmail एपीआई क्रेडेंशियल सेटअप करें।"
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "Google से ऑथराइज़ेशन कोड जनरेट करने का यूआरएल"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

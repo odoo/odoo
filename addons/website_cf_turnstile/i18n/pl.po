@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-04 02:34+0000\n"
+"PO-Revision-Date: 2026-08-17 12:10+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "website_cf_turnstile/pl/>\n"
@@ -50,7 +50,7 @@ msgstr "Klucz witryny CF"
 #: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
 #, python-format
 msgid "Cloudflare Turnstile Error"
-msgstr ""
+msgstr "Błąd Cloudflare Turnstile"
 
 #. module: website_cf_turnstile
 #: model:ir.model,name:website_cf_turnstile.model_res_config_settings
@@ -67,14 +67,14 @@ msgstr "Wytyczanie HTTP"
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 #, python-format
 msgid "The CloudFlare human validation failed."
-msgstr ""
+msgstr "Weryfikacja przez operatora CloudFlare nie powiodła się."
 
 #. module: website_cf_turnstile
 #. odoo-python
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 #, python-format
 msgid "The Cloudflare turnstile private key is invalid."
-msgstr ""
+msgstr "Prywatny klucz turnstile Cloudflare jest nieprawidłowy."
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -94,6 +94,11 @@ msgid ""
 "You can find more information about this error code here: https://"
 "developers.cloudflare.com/turnstile/reference/errors."
 msgstr ""
+"Wystąpił błąd w systemie captcha Cloudflare Turnstile.\n"
+"Upewnij się, że dane logowania do tej usługi są prawidłowo skonfigurowane.\n"
+"Kod błędu to: %s.\n"
+"Więcej informacji na temat tego kodu błędu znajdziesz tutaj: https://"
+"developers.cloudflare.com/turnstile/reference/errors."
 
 #. module: website_cf_turnstile
 #. odoo-python

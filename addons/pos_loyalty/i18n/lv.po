@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-08 07:54+0000\n"
+"PO-Revision-Date: 2026-08-11 14:15+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Latvian <https://translate.odoo.com/projects/odoo-17/"
 "pos_loyalty/lv/>\n"
@@ -62,7 +62,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "A reward could not be loaded"
-msgstr ""
+msgstr "Neizdevās ielādēt atlīdzību"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -89,6 +89,8 @@ msgid ""
 "Are you sure you want to remove %s from this order?\n"
 " You will still be able to claim it through the reward button."
 msgstr ""
+"Vai tiešām vēlaties noņemt %s no šī pasūtījuma?\n"
+" Jūs joprojām varēsiet to pievienot, izmantojot atlīdzību pogu."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -159,7 +161,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
 #, python-format
 msgid "Deactivating reward"
-msgstr ""
+msgstr "Atlīdzības deaktivizēšana"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_config__gift_card_settings
@@ -200,7 +202,7 @@ msgstr "Kļūda"
 #: code:addons/pos_loyalty/static/src/overrides/components/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Error validating rewards"
-msgstr ""
+msgstr "Kļūda, pārbaudot atlīdzības"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
@@ -250,7 +252,7 @@ msgstr "Dāvanu kartes un e-maks"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
 msgid "How many point this reward cost on the coupon."
-msgstr ""
+msgstr "Punktu skaits, kas nepieciešams šīs atlīdzības saņemšanai ar kuponu."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -258,6 +260,8 @@ msgstr ""
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
 msgstr ""
+"Nederīga dāvanu kartes programmas atlīdzība. Izmantojiet atlaidi ar "
+"attiecību 1 valūtas vienība par 1 punktu."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -271,7 +275,7 @@ msgstr ""
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program. More than one reward."
-msgstr ""
+msgstr "Nederīga dāvanu kartes programma: atrasta vairāk nekā viena atlīdzība."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -283,7 +287,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
-msgstr ""
+msgstr "Vai ir atlīdzības rinda"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -309,7 +313,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr ""
+msgstr "Lojalitātes atlīdzība"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_rule
@@ -335,7 +339,7 @@ msgstr "Numurs"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "No reward can be claimed with this coupon."
-msgstr ""
+msgstr "No reward can be claimed with this coupon."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -349,7 +353,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.js:0
 #, python-format
 msgid "Please select a product for this reward"
-msgstr ""
+msgstr "Lūdzu, izvēlieties produktu šai atlīdzībai"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -448,7 +452,7 @@ msgstr ""
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
-msgstr ""
+msgstr "Programma: %(name)s, atlīdzības produkts: %(reward_product)s"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -472,6 +476,8 @@ msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
 msgstr ""
+"Nav atļauts atmaksāt e-maka vai dāvanu kartes programmas papildinājumu vai "
+"atlīdzības produktu."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -491,12 +497,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
 #, python-format
 msgid "Reward"
-msgstr ""
+msgstr "Atlīdzība"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr ""
+msgstr "Atlīdzības identifikācijas kods"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
@@ -574,7 +580,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
 msgid "The coupon used to claim that reward."
-msgstr ""
+msgstr "Kupons, kas izmantots šīs atlīdzības saņemšanai."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -601,18 +607,19 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
+"Atlīdzībai \"%s\" ir kļūda tās domain. Domain jābūt saderīgam ar PoS klientu"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
 msgid "The reward associated with this line."
-msgstr ""
+msgstr "Ar šo rindu saistītā atlīdzība."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "The reward could not be applied."
-msgstr ""
+msgstr "Atlīdzību neizdevās piemērot."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -626,14 +633,14 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
+msgstr "Kuponā nav pietiekami daudz punktu, lai saņemtu šo atlīdzību."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
+msgstr "Grozā nav pietiekami daudz produktu, lai saņemtu šo atlīdzību."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -701,6 +708,8 @@ msgid ""
 "This gift card is not linked to any order. Do you really want to apply its "
 "reward?"
 msgstr ""
+"Šī dāvanu karte nav saistīta ne ar vienu pasūtījumu. Vai tiešām vēlaties "
+"piemērot tās atlīdzību?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
@@ -714,6 +723,7 @@ msgstr ""
 msgid ""
 "To continue, make the following reward products available in Point of Sale."
 msgstr ""
+"Lai turpinātu, padariet šādus atlīdzības produktus pieejamus Point of Sale."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -763,7 +773,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Whether this line is part of a reward or not."
-msgstr ""
+msgstr "Norāda, vai šī rinda ir atlīdzības daļa."
 
 #. module: pos_loyalty
 #. odoo-javascript

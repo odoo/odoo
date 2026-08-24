@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:36+0000\n"
-"PO-Revision-Date: 2026-08-08 01:16+0000\n"
+"PO-Revision-Date: 2026-08-14 15:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-17/mail/ru/>"
 "\n"
@@ -901,6 +901,9 @@ msgid ""
 "GIF API key (service shutdown on June 30, 2026), please replace it here with "
 "a Klipy GIF API key"
 msgstr ""
+"Добавьте ключ API Klipy GIF, чтобы включить поддержку GIF-файлов. Если вы "
+"использовали ключ API Tenor GIF (сервис будет закрыт 30 июня 2026 года), "
+"пожалуйста, замените его здесь на ключ API Klipy GIF"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -910,6 +913,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Добавьте ключ API Klipy GIF, чтобы включить поддержку GIF-файлов. https://"
+"docs.klipy.com/getting-started\n"
+"Если вы использовали ключ API Tenor GIF (сервис будет закрыт 30 июня 2026 "
+"года), пожалуйста, замените его здесь на ключ API Klipy GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -3777,6 +3784,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Ошибка обработки шаблона QWeb для %(template_label)s\n"
+"Целевая модель: %(model_name)s\n"
+"Языковой контекст: %(lang_context)s\n"
+"Ошибка: %(error_details)s\n"
+"\n"
+"Фрагмент исходного кода шаблона:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -4719,6 +4733,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Если вы использовали ключ API Tenor, пожалуйста, замените его на ключ API "
+"Klipy в разделе «Общие настройки»."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5290,12 +5306,12 @@ msgstr "С наилучшими пожеланиями"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Ключ API Klipy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Klipy GIF API key"
-msgstr ""
+msgstr "Ключ API Klipy GIF"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5942,7 +5958,7 @@ msgstr "Отметить как выполненное"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Шаблон массовой рассылки: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -8434,7 +8450,7 @@ msgstr "Поиск серверов входящей почты"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Search Klipy"
-msgstr ""
+msgstr "Поиск в Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -11756,7 +11772,7 @@ msgstr "«%(member_name)s» в «%(channel_name)s»"
 #: code:addons/mail/static/src/core/web/activity.js:0
 #, python-format
 msgid "“%s”"
-msgstr ""
+msgstr "«%s»"
 
 #, python-format
 #~ msgid "Search for a GIF"

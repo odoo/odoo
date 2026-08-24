@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-04 02:13+0000\n"
+"PO-Revision-Date: 2026-08-12 14:17+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "project_todo/bg/>\n"
@@ -37,6 +37,8 @@ msgid ""
 "&amp;#128075; <br/>\n"
 "    Welcome to the To-do app!"
 msgstr ""
+"&amp;#128075; <br/>\n"
+"    Добре дошли в приложението за задачи!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -46,6 +48,10 @@ msgid ""
 "                    (/<span style=\"font-style: italic;\">checklist</span>)\n"
 "                </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"                    Добавете чеклист\n"
+"                    (/<span style=\"font-style: italic;\">checklist</span>)\n"
+"                </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -55,6 +61,10 @@ msgid ""
 "                    (/<span style=\"font-style: italic;\">separator</span>)\n"
 "                </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"                    Добавете разделител\n"
+"                    (/<span style=\"font-style: italic;\">separator</span>)\n"
+"                </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -65,6 +75,11 @@ msgid ""
 "                    to convert a text into a title\n"
 "                </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"                    Използвайте\n"
+"                    /<span style=\"font-style: italic;\">heading</span>\n"
+"                    за да преобразувате текст в заглавие\n"
+"                </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -79,6 +94,15 @@ msgid ""
 "            \"<span style=\"font-weight: bolder;\">/</span>\"\n"
 "        </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"            Под този списък изпробвайте\n"
+"            <span style=\"font-weight: bolder;\">команди</span>\n"
+"            като\n"
+"            <span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">напишете</font>\n"
+"            </span>\n"
+"            \"<span style=\"font-weight: bolder;\">/</span>\"\n"
+"        </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -94,6 +118,16 @@ msgid ""
 "underline;\">it</span>\n"
 "        </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"            Изберете текст, за да го\n"
+"            <font class=\"bg-o-color-2\">осветите</font>,\n"
+"            <span style=\"text-decoration-line: line-through;\">зачеркнете</"
+"span>\n"
+"            или\n"
+"            <span style=\"font-weight: bolder;\">стилизирате</span>\n"
+"            <span style=\"font-style: italic; text-decoration-line: "
+"underline;\">го</span>\n"
+"        </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -164,12 +198,16 @@ msgstr ""
 msgid ""
 "<span style=\"font-size: 14px;\">Check this box to indicate it's done</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Отметнете това поле, за да укажете, че е "
+"готово</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid ""
 "<span style=\"font-size: 14px;\">Click anywhere, and just start typing</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Кликнете където и да е и просто започнете "
+"да пишете</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -184,11 +222,15 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Тази частна задача е за вас, за да "
+"поекспериментирате.</span>\n"
+"    <br/>\n"
+"    <span style=\"font-size: 14px;\">Готови ли сте да я изпробвате?</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "<span style=\"font-size: 14px;\">Try the following</span>"
-msgstr ""
+msgstr "<span style=\"font-size: 14px;\">Опитайте следното</span>"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_type__category
@@ -213,19 +255,19 @@ msgstr "Вид дейност"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add To-Do"
-msgstr ""
+msgstr "Добавяне на задача"
 
 #. module: project_todo
 #. odoo-javascript
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
 #, python-format
 msgid "Add a To-Do"
-msgstr ""
+msgstr "Добави задача за изпълнение"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add details about your to-do..."
-msgstr ""
+msgstr "Добавете подробности за вашата задача..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
@@ -247,17 +289,17 @@ msgstr "Изпълнители"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By assigned tags"
-msgstr ""
+msgstr "По присвоени тагове"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By personal stages"
-msgstr ""
+msgstr "По лични етапи"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 msgid "Choose tags from the selected project"
-msgstr ""
+msgstr "Изберете етикети от избрания проект"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -276,7 +318,7 @@ msgstr "Затворено на"
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 #, python-format
 msgid "Convert to Task"
-msgstr ""
+msgstr "Преобразуване в задача"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -286,7 +328,7 @@ msgstr ""
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_mail_activity_todo_create
 msgid "Create activity and todo at the same time"
-msgstr ""
+msgstr "Създаване на дейност и задача за изпълнение едновременно"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__create_uid
@@ -332,7 +374,7 @@ msgstr "Групиране по"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Hey"
-msgstr ""
+msgstr "Здравей"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__id
@@ -346,6 +388,10 @@ msgid ""
 "                Your to-do items are private by default, but you can choose "
 "to share them with others by adding them as assignees."
 msgstr ""
+"Поддържайте работата си организирана, като използвате бележки и списъци със "
+"задачи.\n"
+"                Вашите задачи са частни по подразбиране, но можете да "
+"изберете да ги споделите с други, като ги добавите като изпълнители."
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_uid
@@ -372,7 +418,7 @@ msgstr "Маркирайте като готово"
 #. module: project_todo
 #: model_terms:ir.actions.act_window,help:project_todo.project_task_action_todo
 msgid "No to-do found. Let's create one!"
-msgstr ""
+msgstr "Не е намерена задача за изпълнение. Нека създадем една!"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__note
@@ -398,7 +444,7 @@ msgstr "Напомняне"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Reminder to..."
-msgstr ""
+msgstr "Напомняне до..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
@@ -437,19 +483,19 @@ msgstr "Задача"
 #: model:ir.ui.menu,name:project_todo.menu_todo_todos
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 msgid "To-do"
-msgstr ""
+msgstr "Задача"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "To-do Title"
-msgstr ""
+msgstr "Заглавие на задачата"
 
 #. module: project_todo
 #: model:ir.actions.act_window,name:project_todo.project_task_action_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_activity
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_tree
 msgid "To-dos"
-msgstr ""
+msgstr "Задачи"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -459,7 +505,7 @@ msgstr "Днешни дейности"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Todos"
-msgstr ""
+msgstr "Задачи"
 
 #. module: project_todo
 #. odoo-javascript
@@ -468,24 +514,24 @@ msgstr ""
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
 msgid "Untitled to-do"
-msgstr ""
+msgstr "Задача без заглавие"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Using the editor"
-msgstr ""
+msgstr "Използване на редактора"
 
 #. module: project_todo
 #. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #, python-format
 msgid "Welcome %s!"
-msgstr ""
+msgstr "Добре дошли %s!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Who has access to what?"
-msgstr ""
+msgstr "Кой има достъп до какво?"
 
 #. module: project_todo
 #. odoo-python
@@ -497,7 +543,7 @@ msgstr "Вашата задача беше успешно добавена къ�
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "напр. Изпрати покани"
 
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_sale
+# * pos_sale
 #
 # Translators:
 # aleksandar ivanov, 2023
@@ -16,14 +16,14 @@
 # Veselina Slavkova, 2024
 # Milena Georgieva, 2024
 # Martin Dinovski, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-08-03 03:14+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-20 12:59+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "pos_sale/bg/>\n"
 "Language: bg\n"
@@ -45,33 +45,33 @@ msgstr ""
 #: code:addons/pos_sale/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(с вкл. данък)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
-msgstr ""
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "A new order has been created."
-msgstr ""
+msgstr "Създадена е нова поръчка."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Приложи аванс (фиксирана сума)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Приложи аванс (процент)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -131,6 +131,8 @@ msgstr "Доставено от"
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
 msgstr ""
+"Искате ли да заредите серийните номера/партидите, свързани с поръчката за "
+"продажба?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -142,12 +144,12 @@ msgstr "Аванс"
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr ""
+msgstr "Аванс (POS)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr ""
+msgstr "Детайли за аванса"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -161,7 +163,7 @@ msgstr "Продукт на аванс "
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Дължимо салдо: %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -198,25 +200,27 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Изглежда, че не сте конфигурирали продукт за аванс във вашата каса. Можете "
+"да отидете в конфигурацията на касата, за да изберете такъв."
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "Свързани POS поръчки"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "Свързана поръчка за продажба"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #, python-format
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "Свързани поръчки за продажба"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -244,7 +248,7 @@ msgstr "Не"
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr ""
+msgstr "Няма продукт за аванс"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -268,12 +272,12 @@ msgstr "Поръчка"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "Редове на поръчка, прехвърлени към касата"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "POS поръчка"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -288,7 +292,7 @@ msgstr "Конфигурация на център за продажби"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr ""
+msgstr "Редове на поръчка в касата"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -315,7 +319,7 @@ msgstr "Брой на ПОС поръчки"
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr ""
+msgstr "Списък с предишни поръчки"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -343,7 +347,7 @@ msgstr "Изпратена оферта"
 #: code:addons/pos_sale/static/src/app/set_sale_order_button/set_sale_order_button.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr ""
+msgstr "Оферта/Поръчка"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
@@ -355,14 +359,14 @@ msgstr "Свързана поръчка"
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "Зареждане на серийни номера/партиди"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "SO"
-msgstr ""
+msgstr "Поръчка за продажба"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
@@ -404,12 +408,12 @@ msgstr "Търговски отдел"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "Търговски отдел (POS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales are reported to the following sales team"
-msgstr ""
+msgstr "Продажбите се отчитат към следния търговски отдел"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -445,7 +449,7 @@ msgstr "Изпълняващи се сесии"
 #: code:addons/pos_sale/static/src/app/set_sale_order_button/set_sale_order_button.xml:0
 #, python-format
 msgid "Set Sale Order"
-msgstr ""
+msgstr "Задай поръчка за продажба"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -466,7 +470,7 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Изходен ред на поръчка за продажба"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -492,6 +496,7 @@ msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
 msgstr ""
+"Курсът на валутата към валутата на курса, приложим към датата на поръчката"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -505,18 +510,18 @@ msgstr ""
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
-msgstr ""
+msgstr "Продажбите на тази каса ще бъдат свързани с този търговски отдел."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied when down payment is made"
-msgstr ""
+msgstr "Този продукт ще се прилага при извършване на аванс"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr ""
+msgstr "Този продукт ще се използва като аванс по поръчка за продажба."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -580,4 +585,4 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 #, python-format
 msgid "x"
-msgstr ""
+msgstr "x"

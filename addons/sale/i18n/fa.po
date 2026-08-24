@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale
+# * sale
 #
 # Translators:
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
@@ -26,14 +26,14 @@
 # Hanna Kheradroosta, 2025
 # Naser mars, 2025
 # Tiffany Chang, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2026-08-07 00:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-22 14:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/sale/fa/>"
 "\n"
 "Language: fa\n"
@@ -639,6 +639,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>در انتظار پرداخت</b>
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"پیش‌فاکتورها\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -1471,6 +1472,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با DHL<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1484,6 +1488,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با FedEx<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1502,6 +1509,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با UPS<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1510,6 +1520,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با USPS<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1800,7 +1813,7 @@ msgstr "پیش‌فاکتور و سفارش‌های خود سفارشی کن."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "رابط DHL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -4910,7 +4923,7 @@ msgstr "پارامترهای ارائه شده نامعتبر هستند."
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 #, python-format
 msgid "The sale order has expired."
-msgstr ""
+msgstr "سفارش فروش منقضی شده است."
 
 #. module: sale
 #. odoo-python
@@ -5613,6 +5626,8 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'سفارش معوق' or 'سفارش' }} (کد {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

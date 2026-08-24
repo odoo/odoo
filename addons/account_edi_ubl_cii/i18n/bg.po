@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:37+0000\n"
-"PO-Revision-Date: 2026-08-04 10:34+0000\n"
+"PO-Revision-Date: 2026-08-08 17:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/bg/>\n"
@@ -42,7 +42,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "(Раз)групиране на редовете по данък"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -487,26 +487,26 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A payment of %s was detected."
-msgstr ""
+msgstr "Беше открито плащане от %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A rounding amount of %s was detected."
-msgstr ""
+msgstr "Беше открита сума за закръгляне от %s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr ""
+msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
@@ -565,7 +565,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
 msgid "BIS3 DE (XRechnung)"
-msgstr ""
+msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -573,6 +573,8 @@ msgstr ""
 #, python-format
 msgid "Cannot decode origin file, try by importing it again"
 msgstr ""
+"Не може да се декодира оригиналният файл, опитайте, като го импортирате "
+"отново"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -580,6 +582,7 @@ msgstr ""
 #, python-format
 msgid "Cannot find the origin file, try by importing it again"
 msgstr ""
+"Не може да се намери оригиналният файл, опитайте, като го импортирате отново"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -599,12 +602,17 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
+"Код, използван за идентифициране на крайната точка за BIS Billing 3.0 и "
+"нейните производни.\n"
+"             Списък наличен на https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr ""
+"Общи функции за EDI документи: генериране на данните, ограниченията и т.н."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
@@ -621,7 +629,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Conditional cash/payment discount"
-msgstr ""
+msgstr "Условна отстъпка за плащане в брой/плащане"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_config_settings
@@ -642,6 +650,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
 msgstr ""
+"Валутата не може да бъде намерена: %s. Активирахте ли опцията за множество "
+"валути и валутата?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -660,7 +670,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_efff
 msgid "E-FFF (BE)"
-msgstr ""
+msgstr "E-FFF (BE)"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_search
@@ -678,26 +688,26 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr ""
+msgstr "Всеки ред от фактурата трябва да има един и само един данък."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr ""
+msgstr "Всеки ред от фактурата трябва да има продукт или етикет."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr ""
+msgstr "Всеки ред от фактурата трябва да има поне един данък."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Електронно фактуриране"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__enable_ubl_cii_xml
@@ -709,7 +719,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr ""
+msgstr "Възникнаха грешки при създаването на EDI документа (формат: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -717,14 +727,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Exempt from tax"
-msgstr ""
+msgstr "Освободено от данък"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Export outside the EU"
-msgstr ""
+msgstr "Износ извън ЕС"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__facturx
@@ -734,7 +744,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/XRechnung CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -744,13 +754,15 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
+"За вътреобщностна доставка трябва да се включи действителната дата на "
+"доставка или периодът на фактуриране."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr ""
+msgstr "За вътреобщностна доставка трябва да се включи адресът за доставка."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__ubl_cii_format
@@ -763,7 +775,7 @@ msgstr "Формат"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Format used to import the invoice: %s"
-msgstr ""
+msgstr "Формат, използван за импортиране на фактурата: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__invoice_is_ubl_cii
@@ -775,7 +787,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Групирани редове по данък"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -788,12 +800,12 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
-msgstr ""
+msgstr "Вътреобщностна доставка"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Invoice generated by Odoo"
-msgstr ""
+msgstr "Фактура, генерирана от Odoo"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move
@@ -852,13 +864,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
-msgstr ""
+msgstr "Peppol крайна точка"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr ""
+msgstr "Peppol е-адрес (EAS)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
@@ -888,6 +900,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Обратно начисляване: При липса на писмено възражение в срок от един месец от "
+"получаването на фактурата се приема, че клиентът потвърждава, че е данъчно "
+"задължено лице, задължено да подава периодични декларации. Ако това условие "
+"не е изпълнено, клиентът отговаря за плащането на дължимите данък, лихви и "
+"глоби във връзка с това условие."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -899,12 +916,12 @@ msgstr "Закръгление"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
-msgstr ""
+msgstr "SI-UBL 2.0 (NLCIUS)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -921,13 +938,15 @@ msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
 msgstr ""
+"Крайната точка на Peppol е невалидна. Тя трябва да съдържа точно 10 цифри "
+"(ЕИК номер). Очакваният формат е: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
-msgstr ""
+msgstr "Крайната точка на Peppol е невалидна. Очакваният формат е: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -936,6 +955,7 @@ msgstr ""
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
 msgstr ""
+"Крайната точка на Peppol е невалидна. Очакваният формат е: 73282932000074"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -953,21 +973,21 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The VAT of the %s should be prefixed with its country code."
-msgstr ""
+msgstr "ДДС номерът на %s трябва да бъде с префикс кода на държавата."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The bank account couldn't be fetched: %s"
-msgstr ""
+msgstr "Банковата сметка не можа да бъде извлечена: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
-msgstr ""
+msgstr "Държавата е задължителна за %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -975,7 +995,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr ""
+msgstr "Валутата '%s' не е активна."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -997,6 +1017,7 @@ msgstr ""
 #, python-format
 msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
+"Полето 'Изчистен номер на сметка' е задължително на банката на получателя."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1017,6 +1038,7 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
+"Фактурата беше преобразувана в кредитно известие и количествата бяха върнати."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1030,31 +1052,31 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
-msgstr ""
+msgstr "UBL 2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_21
 msgid "UBL 2.1"
-msgstr ""
+msgstr "UBL 2.1"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_file
 msgid "UBL/CII File"
-msgstr ""
+msgstr "UBL/CII файл"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "Разгрупирани редове от %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1063,20 +1085,22 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
+"Уникален идентификатор, използван от BIS Billing 3.0 и неговите производни, "
+"известен също като „Endpoint ID“."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Unknown partner"
-msgstr ""
+msgstr "Неизвестен партньор"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Неподдържан тип файл през %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1093,6 +1117,8 @@ msgid ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
 msgstr ""
+"Когато се прилага Общият косвен данък на Канарските острови (IGIC), "
+"данъчната ставка на всеки ред от фактурата трябва да бъде по-голяма от 0."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__xrechnung
@@ -1104,7 +1130,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
-msgstr ""
+msgstr "Можете да групирате/разгрупирате само редове на чернова на фактура"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1113,13 +1139,15 @@ msgstr ""
 msgid ""
 "You can only (un)group lines of an invoice not linked to a purchase order"
 msgstr ""
+"Можете да групирате/разгрупирате само редове на фактура, която не е свързана "
+"с поръчка за покупка"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only group lines of an invoice"
-msgstr ""
+msgstr "Можете да групирате само редове на фактура"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1130,6 +1158,9 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
 "code (BT-151)."
 msgstr ""
+"Трябва да включите поне един данък на ред от фактурата. [BR-CO-04]-Всеки ред "
+"от фактурата (BG-25) трябва да бъде категоризиран с код за ДДС категория на "
+"фактурирания артикул (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__zugferd
@@ -1144,12 +1175,12 @@ msgstr "factur-x.xml"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "fx"
-msgstr ""
+msgstr "fx"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr ""
+msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
 #~ msgid "1.0"
 #~ msgstr "1.0"

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_holidays_attendance
+# * hr_holidays_attendance
 #
 # Translators:
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
@@ -8,14 +8,14 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-#
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-08 06:50+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-18 10:09+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays_attendance/fi/>\n"
 "Language: fi\n"
@@ -99,12 +99,12 @@ msgstr "Lisätunnit"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr "Lisäaikoja saatavilla"
+msgstr "Saatavilla olevat lisätunnit"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
 msgid "Frequency Hourly Source"
-msgstr "Kunka usein Tunnit Lähde"
+msgstr "Tuntikertymän lähde"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -134,7 +134,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr "Uusi kohdentamispyyntö"
+msgstr "Uusi lomapyyntö"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
@@ -151,14 +151,14 @@ msgid ""
 "Only an Officer or Administrator is allowed to edit the allocation duration "
 "in this status."
 msgstr ""
-"Ainoastaan esimies tai pääkäyttäjä voi muokata myöntöjen kestoa tässä "
-"tilassa."
+"Vain virkailija tai ylläpitäjä voi muokata tässä tilassa olevien lomien "
+"myöntämisen kestoa."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr "Ylityön omavastuuosuus"
+msgstr "Ylityön vähennyskelpoisuus"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
@@ -182,7 +182,7 @@ msgstr "Lähde"
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
 msgstr ""
-"Työntekijällä ei ole riittävästi lisätunteja tämän kohdentamisen "
+"Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän myöntämisen "
 "pidentämiseksi."
 
 #. module: hr_holidays_attendance
@@ -191,7 +191,8 @@ msgstr ""
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr ""
-"Työntekijällä ei ole riittävästi lisätunteja tämän loman pidentämiseksi."
+"Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän loman "
+"pidentämiseksi."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -199,8 +200,8 @@ msgstr ""
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr ""
-"Työntekijällä ei ole riittävästi ylimääräisiä tunteja, jotta hän voisi "
-"pyytää tätä lomaa."
+"Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän loman "
+"pyytämiseksi."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -217,7 +218,7 @@ msgstr "Vapaa"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr "Vapaa-ajan kohdentaminen"
+msgstr "Vapaiden myöntäminen"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
