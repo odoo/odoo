@@ -26,7 +26,7 @@
     <record id="group_hr_attendance_officer" model="res.groups">
         <field name="name">Officer: Manage attendances</field>
         <field name="sequence">10</field>
-        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">The user will have access to the attendance records and reporting of employees where he's set as an attendance manager</field>
     </record>
 
