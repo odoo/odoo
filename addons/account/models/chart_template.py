@@ -33,6 +33,24 @@ TEMPLATE_MODELS = (
 
 TAX_TAG_DELIMITER = '||'
 
+# Territories that don't have their own fiscal localization and whose
+# chart of accounts should default to their parent country's template.
+# French DROM-COM territories all use the French PCG.
+CHART_TEMPLATE_COUNTRY_FALLBACK = {
+    'gp': 'fr',
+    'mq': 'fr',
+    're': 'fr',
+    'gf': 'fr',
+    'yt': 'fr',
+    'bl': 'fr',
+    'mf': 'fr',
+    'pm': 'fr',
+    'pf': 'fr',
+    'wf': 'fr',
+    'tf': 'fr',
+    'nc': 'fr',
+}
+
 
 def preserve_existing_tags_on_taxes(env, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
@@ -111,6 +129,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _select_chart_template(self, country=None):
         """Get the available templates in a format suited for Selection fields."""
         country = country if country is not None else self.env.company.country_id
+        if country and country.code:
+            fallback_code = CHART_TEMPLATE_COUNTRY_FALLBACK.get(country.code.lower())
+            if fallback_code:
+                country = self.env.ref(f'base.{fallback_code}', raise_if_not_found=False) or country
         chart_template_mapping = self._get_chart_template_mapping()
         return [
             (template_code, template['name'])
