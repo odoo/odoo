@@ -7,12 +7,12 @@ import {
     defineModels,
     fields,
     models,
-    mockService,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
+import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 import { ActivityMenu } from "@hr_attendance/components/attendance_menu/attendance_menu";
 
 class HrAttendance extends models.Model {
@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 
 test("the attendance review keeps its dropdown open when using a datetime field", async () => {
-    mockService("lazy_session", () => ({
+    patchWithCleanup(LazySessionPlugin.prototype, {
         getValue(key, callback) {
             if (key === "attendance_check_in_ability") {
                 callback(true);
@@ -49,7 +49,7 @@ test("the attendance review keeps its dropdown open when using a datetime field"
                 callback(false);
             }
         },
-    }));
+    });
     onRpc("/hr_attendance/attendance_user_data", () => ({
         id: 7,
         name: "Test Employee",
@@ -91,7 +91,7 @@ test("the attendance review keeps its dropdown open when using a datetime field"
 });
 
 function mockCheckedOutEmployee(todayAttendances) {
-    mockService("lazy_session", () => ({
+    patchWithCleanup(LazySessionPlugin.prototype, {
         getValue(key, callback) {
             if (key === "attendance_check_in_ability" || key === "attendance_break_management") {
                 callback(true);
@@ -101,7 +101,7 @@ function mockCheckedOutEmployee(todayAttendances) {
                 callback(false);
             }
         },
-    }));
+    });
     onRpc("/hr_attendance/attendance_user_data", () => ({
         id: 7,
         name: "Test Employee",

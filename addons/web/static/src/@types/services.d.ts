@@ -22,7 +22,7 @@ declare module "services" {
     import { actionService } from "@web/webclient/actions/action_plugin";
     import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
     import { menuService } from "@web/webclient/menus/menu_service";
-    import { lazySession } from "@web/webclient/session_service";
+    import { lazySessionService } from "@web/webclient/lazy_session_plugin";
     import { shareTargetService } from "@web/webclient/share_target/share_target_service";
 
     type ExtractServiceFactory<T extends ServicesRegistryShape> = Awaited<ReturnType<T["start"]>>;
@@ -41,7 +41,7 @@ declare module "services" {
         file_upload: typeof fileUploadService;
         hotkey: typeof hotkeyService;
         http: typeof httpService;
-        lazy_session: typeof lazySession;
+        lazy_session: typeof lazySessionService;
         menu: typeof menuService;
         name: typeof nameService;
         notification: typeof notificationService;
