@@ -57,15 +57,20 @@
                 </sheet>
                 <footer>
                     <!-- attrs doesn't work for 'disabled'-->
-                    <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                            invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
-                    <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                            invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled='1'/>
-                    <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                        invisible="composition_mode != 'mass'"/>
-                    <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
-                        invisible="composition_mode != 'mass'"/>
-                    <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    <div class="d-flex w-100 justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex flex-wrap gap-1">
+                            <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                                    invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
+                            <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                                    invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled="1"/>
+                            <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                                invisible="composition_mode != 'mass'"/>
+                            <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
+                                invisible="composition_mode != 'mass'"/>
+                            <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                        </div>
+                        <widget name="sms_char_counter"/>
+                    </div>
                 </footer>
             </form>
         </field>
