@@ -9,7 +9,7 @@ registerThreadAction("call", {
     iconClass: "oi-filled",
     name: ({ channel }) => (channel?.hasRtcSessionActive ? _t("Join the Call") : _t("Start Call")),
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
-    propsInline: { rounded: true },
+    propsInline: { rounded: true, variant: () => "btn-call" },
     sequence: 10,
     sequenceQuick: 30,
 });
@@ -24,7 +24,7 @@ registerThreadAction("camera-call", {
             camera: true,
             fullscreen: !store.inPublicPage,
         }),
-    propsInline: { rounded: true },
+    propsInline: { rounded: true, variant: () => "btn-call" },
     sequence: 5,
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
 });

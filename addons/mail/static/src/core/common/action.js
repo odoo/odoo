@@ -74,7 +74,7 @@ import { Reactive } from "@web/core/utils/reactive";
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
  * @property {{}} [propsDropdown] Extra fixed-shape props merged into the
  *   ones given to {@link ActionDropdown} when this action is rendered inside a dropdown's menu.
- * @property {{rounded?: boolean}} [propsInline] Extra fixed-shape props merged into the
+ * @property {{rounded?: boolean, variant?: () => string}} [propsInline] Extra fixed-shape props merged into the
  *   ones given to {@link ActionButton} when this action is rendered as a plain inline button.
  * @property {number|(params: ActionParams_T) => number} [sequence]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceGroup]

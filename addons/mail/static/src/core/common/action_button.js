@@ -23,6 +23,7 @@ export class ActionButton extends Component {
             dropdown: t.boolean().optional(),
             inline: t.boolean().optional(),
             rounded: t.boolean().optional(),
+            variant: t.function([], t.string()).optional(() => () => "btn-secondary"),
         });
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
@@ -42,7 +43,8 @@ export class ActionButton extends Component {
 
     get btnClass() {
         let cls = this.attClassObjectToString({
-            "o-mail-ActionList-button btn btn-group-item btn-secondary position-relative": true,
+            "o-mail-ActionList-button btn btn-group-item position-relative": true,
+            [this.props.variant()]: true,
             "o-inline": this.props.inline,
             "text-start": this.props.dropdown && !this.ui.isSmall,
             "rounded-circle d-flex align-items-center justify-content-center": this.props.rounded,
