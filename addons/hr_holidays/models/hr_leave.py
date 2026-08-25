@@ -1163,7 +1163,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
             meeting_values = {
                 'name': meeting_name,
-                'duration': holiday.number_of_days * (holiday.resource_calendar_id.hours_per_day or HOURS_PER_DAY),
+                'duration': self.env['calendar.event']._get_duration(start_value, stop_value),
                 'description': holiday.notes,
                 'user_id': user.id,
                 'start': start_value,
