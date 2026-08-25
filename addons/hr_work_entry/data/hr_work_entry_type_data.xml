@@ -1109,6 +1109,16 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_illness_half_time_12m_workers_initiative" model="hr.work.entry.type">
+        <field name="name">Illness half-time&gt;12m - workers initiative</field>
+        <field name="code">LEAVE12305</field>
+        <field name="display_code">ILL12M</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="resource_calendar_selectable" eval="True"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_strike" model="hr.work.entry.type">
         <field name="name">Strike / Lock-out</field>
         <field name="code">LEAVE251</field>
@@ -1722,7 +1732,7 @@
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
     </record>
-
+    
 <!-- BD : Bangladesh -->
     <record id="bd_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Attendance</field>
