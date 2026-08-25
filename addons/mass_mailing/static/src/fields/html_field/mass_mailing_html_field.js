@@ -3,10 +3,11 @@ import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_f
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
-    useProps,
     signal,
     status,
     t,
@@ -15,14 +16,13 @@ import {
     useListener,
     useOnChange,
     usePlugin,
+    useProps,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
-import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";

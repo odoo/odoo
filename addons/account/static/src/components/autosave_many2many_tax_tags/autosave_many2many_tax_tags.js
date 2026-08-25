@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import {
     Many2ManyTaxTagsField,
-    many2ManyTaxTagsField
+    many2ManyTaxTagsField,
 } from "@account/components/many2x_tax_tags/many2x_tax_tags";
+import { useEffect } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 export class AutosaveMany2ManyTaxTagsField extends Many2ManyTaxTagsField {
     setup() {
@@ -18,7 +18,7 @@ export class AutosaveMany2ManyTaxTagsField extends Many2ManyTaxTagsField {
             super_update(recordlist);
             this._saveOnUpdate();
         };
-        useRecordObserver(this.onRecordChange.bind(this));
+        useEffect(this.onRecordChange.bind(this));
     }
 
     async deleteTag(id) {
@@ -26,8 +26,8 @@ export class AutosaveMany2ManyTaxTagsField extends Many2ManyTaxTagsField {
         await this._saveOnUpdate();
     }
 
-    onRecordChange(record) {
-        const line = record.data;
+    onRecordChange() {
+        const line = this.props.record.data;
         if (line.tax_ids.records.length > 0) {
             if (line.balance !== this.lastBalance
                 || line.account_id.id !== this.lastAccount.id
@@ -35,7 +35,7 @@ export class AutosaveMany2ManyTaxTagsField extends Many2ManyTaxTagsField {
                 this.lastBalance = line.balance;
                 this.lastAccount = line.account_id;
                 this.lastPartner = line.partner_id;
-                return record.model.root.save();
+                return this.props.record.model.root.save();
             }
         }
     }

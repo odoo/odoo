@@ -1,9 +1,8 @@
-import { domainField, DomainField, domainFieldProps } from "@web/views/fields/domain/domain_field";
-import { useProps, t } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { domainField, DomainField, domainFieldProps } from "@web/views/fields/domain/domain_field";
 import { MailingFilterFormViewDialog } from "../../components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog";
 
 /**
@@ -31,7 +30,7 @@ export class DomainSavableField extends DomainField {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.notification = useService("notification");
-        useRecordObserver(async () => {
+        useEffect(() => {
             this.state.showSaveButton = this.getDomain() !== "[]";
         });
         this.saveBtnLabel = _t("Save as a Dynamic List");

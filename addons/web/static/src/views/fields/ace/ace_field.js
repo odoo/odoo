@@ -1,13 +1,11 @@
+import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
+import { cookie } from "@web/core/browser/cookie";
+import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { standardFieldProps } from "../standard_field_props";
-
-import { CodeEditor } from "@web/core/code_editor/code_editor";
-import { Component, proxy, t, useProps } from "@odoo/owl";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import { formatText } from "@web/views/fields/formatters";
-import { cookie } from "@web/core/browser/cookie";
+import { standardFieldProps } from "../standard_field_props";
 
 export class AceField extends Component {
     static template = "web.AceField";
@@ -20,8 +18,8 @@ export class AceField extends Component {
 
     setup() {
         this.state = proxy({});
-        useRecordObserver((record) => {
-            this.state.initialValue = formatText(record.data[this.props.name]);
+        useEffect(() => {
+            this.state.initialValue = formatText(this.props.record.data[this.props.name]);
         });
 
         this.isDirty = false;

@@ -1,10 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { debounce } from "@web/core/utils/timing";
-import { useRecordObserver } from "@web/model/relational_model/utils";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class JsonCheckboxes extends Component {
     static template = "account.JsonCheckboxes";
@@ -18,8 +17,8 @@ export class JsonCheckboxes extends Component {
         this.checkboxes = proxy(this.props.record.data[this.props.name]);
         this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 100);
 
-        useRecordObserver((record) => {
-            Object.assign(this.checkboxes, record.data[this.props.name]);
+        useEffect(() => {
+            Object.assign(this.checkboxes, this.props.record.data[this.props.name]);
         });
     }
 
