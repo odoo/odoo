@@ -38,7 +38,7 @@ test("subtracts tare from gross to get net", async () => {
 test("ignores tare if hardware tare is enabled", async () => {
     const scale = await setupScale();
 
-    scale.hardwareTare = true;
+    Object.defineProperty(scale, "hardwareTare", { value: true });
     scale.weight = 7;
     scale.tare = 5;
 

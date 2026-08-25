@@ -13,7 +13,6 @@ export class ScaleInterface extends Reactive {
         this.loading = false;
         this.weight = 0;
         this.tare = 0;
-        this.hardwareTare = false;
         this.tareRequested = false;
         this.errorCallback = null;
     }
@@ -23,6 +22,14 @@ export class ScaleInterface extends Reactive {
      * will be used and the other `ScaleInterface` implementations won't be called.
      */
     async connectToScale() {
+        return false;
+    }
+
+    /**
+     * If true, the gross weight display and tare control will be removed, leaving just
+     * the net weight displayed.
+     */
+    get hardwareTare() {
         return false;
     }
 
