@@ -1,5 +1,5 @@
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
-import { useDynamicInterval } from "@mail/utils/common/misc";
+import { computedUntilStale } from "@mail/utils/common/signal";
 
 import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
@@ -24,31 +24,41 @@ export class Poll extends Component {
             selectedOptionIds: new Set(),
             voting: false,
         });
-        useDynamicInterval(() => {
-            const endDt = this.props.poll.poll_end_dt;
-            if (!endDt) {
-                return;
-            }
-            const diff = endDt.diffNow(["hours", "minutes", "seconds"]);
-            if (diff.valueOf() <= 0) {
-                this.state.remainingTimeText = _t("Poll will end soon");
-                return;
-            }
-            const hours = Math.ceil(diff.as("hours"));
-            if (hours > 1) {
-                this.state.remainingTimeText = _t("%(hours)s hours left", { hours });
-                return (diff.as("hours") - hours + 1) * 3600 * 1000;
-            }
-            const minutes = Math.ceil(diff.as("minutes"));
-            if (minutes > 1) {
-                this.state.remainingTimeText = _t("%(minutes)s minutes left", { minutes });
-                return (diff.as("minutes") - minutes + 1) * 60 * 1000;
-            }
-            const seconds = Math.ceil(diff.as("seconds"));
-            this.state.remainingTimeText =
-                seconds > 1 ? _t("%(seconds)s seconds left", { seconds }) : _t("1 second left");
-            return (diff.as("seconds") - seconds + 1) * 1000;
-        });
+        this.remainingTime = computedUntilStale(
+            () => {
+                const endDt = this.props.poll.poll_end_dt;
+                if (!endDt) {
+                    return { text: "" };
+                }
+                const diff = endDt.diffNow(["hours", "minutes", "seconds"]);
+                if (diff.valueOf() <= 0) {
+                    return { text: _t("Poll will end soon") };
+                }
+                const hours = Math.ceil(diff.as("hours"));
+                if (hours > 1) {
+                    return {
+                        text: _t("%(hours)s hours left", { hours }),
+                        ms: (diff.as("hours") - hours + 1) * 3600 * 1000,
+                    };
+                }
+                const minutes = Math.ceil(diff.as("minutes"));
+                if (minutes > 1) {
+                    return {
+                        text: _t("%(minutes)s minutes left", { minutes }),
+                        ms: (diff.as("minutes") - minutes + 1) * 60 * 1000,
+                    };
+                }
+                const seconds = Math.ceil(diff.as("seconds"));
+                return {
+                    text:
+                        seconds > 1
+                            ? _t("%(seconds)s seconds left", { seconds })
+                            : _t("1 second left"),
+                    ms: (diff.as("seconds") - seconds + 1) * 1000,
+                };
+            },
+            ({ ms }) => ms
+        );
     }
 
     get remainingTimeTextTitle() {

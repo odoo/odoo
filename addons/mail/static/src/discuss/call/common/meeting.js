@@ -5,7 +5,7 @@ import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, signal, types, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, types, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { user } from "@web/core/user";
@@ -15,7 +15,6 @@ import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
-import { useDynamicInterval } from "@mail/utils/common/misc";
 
 const { DateTime } = luxon;
 const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
@@ -42,11 +41,6 @@ export class Meeting extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
-        this.datetimeNow = signal(DateTime.now());
-        useDynamicInterval(() => {
-            this.datetimeNow.set(DateTime.now());
-            return 60_000 - (Date.now() % 60_000);
-        });
         useSubEnv({
             inDiscussCallView: true,
             inMeetingView: {
@@ -74,11 +68,15 @@ export class Meeting extends Component {
     }
 
     get dateSimple() {
-        return this.datetimeNow().toLocaleString(DateTime.TIME_SIMPLE, { locale: user.lang });
+        return this.store.startOfMinute.toLocaleString(DateTime.TIME_SIMPLE, {
+            locale: user.lang,
+        });
     }
 
     get datetimeMedium() {
-        return this.datetimeNow().toLocaleString(DateTime.DATETIME_MED, { locale: user.lang });
+        return this.store.startOfMinute.toLocaleString(DateTime.DATETIME_MED, {
+            locale: user.lang,
+        });
     }
 
     get pipExtraActions() {

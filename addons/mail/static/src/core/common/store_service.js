@@ -1,4 +1,5 @@
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
+import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
 import {
     attClassObjectToString,
     generateEmojisOnHtml,
@@ -102,10 +103,46 @@ export class Store extends BaseStore {
     }
 
     /**
-     * Start of the current day, moved when the day changes: nothing observes
-     * the clock, so what derives from today reads this.
+     * @param {string} [tz]
+     * @returns {string|null}
      */
-    startOfToday = DateTime.now().startOf("day");
+    localTimeIn(tz) {
+        const partnerTz = resolveTimeZoneName(tz);
+        const selfTz = resolveTimeZoneName(this.self?.tz);
+        if (
+            !partnerTz ||
+            !selfTz ||
+            [partnerTz, selfTz].includes("local") ||
+            partnerTz === selfTz
+        ) {
+            return null;
+        }
+        return formatLocalDateTime(partnerTz, selfTz, this.startOfMinute);
+    }
+
+    /**
+     * Start of the current minute, made again when the minute changes:
+     * nothing observes the clock, so what shows a time reads this.
+     */
+    get startOfMinute() {
+        return this.computedUntilStale(
+            "startOfMinute",
+            () => DateTime.now().startOf("minute"),
+            (startOfMinute) => startOfMinute.plus({ minutes: 1 }).diffNow().toMillis()
+        )();
+    }
+
+    /**
+     * Start of the current day, made again when the day changes: nothing
+     * observes the clock, so what derives from today reads this.
+     */
+    get startOfToday() {
+        return this.computedUntilStale(
+            "startOfToday",
+            () => DateTime.now().startOf("day"),
+            (startOfToday) => startOfToday.plus({ days: 1 }).diffNow().toMillis()
+        )();
+    }
 
     /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = fields.Attr([], { asProxy: true });
@@ -228,22 +265,6 @@ export class Store extends BaseStore {
      */
     onStarted() {
         this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
-        this.onChange(
-            () => [],
-            () => {
-                let timeout;
-                const moveStartOfToday = () => {
-                    this.startOfToday = DateTime.now().startOf("day");
-                    const nextDay = this.startOfToday.plus({ day: 1 });
-                    timeout = browser.setTimeout(
-                        moveStartOfToday,
-                        Math.max(0, nextDay.diffNow().toMillis())
-                    );
-                };
-                moveStartOfToday();
-                return () => browser.clearTimeout(timeout);
-            }
-        );
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {

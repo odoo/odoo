@@ -1,4 +1,4 @@
-import { effect, untrack, useEffect } from "@odoo/owl";
+import { effect, untrack } from "@odoo/owl";
 
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -199,30 +199,6 @@ export const hasHardwareAcceleration = memoize(() => {
     }
     return true;
 });
-
-/**
- * A hook that repeatedly calls a function with dynamically computed
- * intervals.
- *
- * @param {() => number|void} fn A callback that is invoked initially, after
- * signals, proxies, or computed values read during the callback change, or
- * when the delay has passed. Returning a falsy value cancels the interval.
- * Avoid reading reactive values that the callback itself writes unless they
- * are intended dependencies.
- */
-export function useDynamicInterval(fn) {
-    useEffect(() => {
-        let timer;
-        function tick() {
-            const nextDelay = fn();
-            if (nextDelay) {
-                timer = setTimeout(tick, Math.ceil(nextDelay));
-            }
-        }
-        tick();
-        return () => clearTimeout(timer);
-    });
-}
 
 /**
  * @param {() => void} effectFn

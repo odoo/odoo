@@ -1,9 +1,7 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { ImStatus } from "@mail/core/common/im_status";
-import { useDynamicInterval } from "@mail/utils/common/misc";
-import { formatLocalDateTime } from "@mail/utils/common/dates";
 
-import { Component, signal, t, useListener, useProps } from "@odoo/owl";
+import { Component, computed, signal, t, useListener, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -28,21 +26,13 @@ export class AvatarCard extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
-        this.partnerLocalDateTimeFormatted = signal("");
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,
         });
-        useDynamicInterval(() => this.onChangeTz());
-    }
-
-    onChangeTz() {
-        const formatted = formatLocalDateTime(this.partner?.tz, this.store.self?.tz);
-        this.partnerLocalDateTimeFormatted.set(formatted);
-        if (!formatted) {
-            return;
-        }
-        return 60000 - (Date.now() % 60000);
+        this.partnerLocalDateTimeFormatted = computed(() =>
+            this.store.localTimeIn(this.partner?.tz)
+        );
     }
 
     get avatarUrl() {
