@@ -121,6 +121,7 @@ onRpc("res.users", "get_calendar_model_data", () => ({
     sync_email: false,
     default_duration: 1,
 }))
+onRpc("hr.employee", "has_access", () => true);
 
 beforeEach(() => {
     mockDate("2020-12-10 15:00:00");

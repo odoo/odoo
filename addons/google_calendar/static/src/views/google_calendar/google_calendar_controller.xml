@@ -5,8 +5,9 @@
         <xpath expr="//div[@id='header_synchronization_settings']//h5[@id='synchronize_with']" position="after">
             <div t-if="this.model.googleCredentialsSet and !this.model.state.googleIsSync and !this.model.state.googleIsPaused and !this.model.state.googlePendingSync" id="google_calendar_sync" class="mx-1 d-inline-flex">
                 <button type="button" id="google_sync_pending" class="btn btn-sm text-nowrap border-info d-flex align-items-center" t-on-click="this.onGoogleSyncCalendar">
+                    <i class="oi d-sm-none me-1" data-icon="refresh"/>
                     <img src="/google_calendar/static/src/img/google-calendar.svg"/>
-                    <b>Google</b>
+                    <b class="d-none d-sm-inline">Google</b>
                 </button>
             </div>
         </xpath>

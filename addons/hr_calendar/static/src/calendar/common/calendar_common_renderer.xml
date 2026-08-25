@@ -17,7 +17,7 @@
     </t>
 
     <div t-name="hr_calendar.MultiCalendarButtonWorkLocation" class="o_worklocation_btn my-2 opacity-75 w-100 d-flex align-items-center cursor-default">
-        <div t-if="Object.keys(this.worklocation).length &gt; 0" class="d-flex gap-1 ms-1 flex-wrap w-75">
+        <div t-if="Object.keys(this.worklocation).length &gt; 0" class="d-flex gap-1 ms-1 flex-wrap w-100">
             <t t-set="iconClass" t-value="`o_homework_content d-flex align-items-center justify-content-center flex-wrap border border-1 rounded-circle me-0`"/>
             <div t-foreach="Object.keys(this.worklocation)" t-as="location" t-key="location" class="o_homework_multi d-flex gap-1 ms-1 w-100">
                 <t t-foreach="this.worklocation[location]" t-as="wl" t-key="wl.id">
