@@ -1408,8 +1408,7 @@ export class LinkPlugin extends Plugin {
         }
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
         blockToSplit = targetNode;
-        splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
-        return true;
+        return splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
