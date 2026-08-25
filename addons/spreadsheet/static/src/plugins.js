@@ -1,4 +1,4 @@
-import { CorePlugin, CoreViewPlugin, UIPlugin } from "@odoo/o-spreadsheet";
+import { CorePlugin, EvaluationPlugin, UIPlugin } from "@odoo/o-spreadsheet";
 
 /**
  * An o-spreadsheet core plugin with access to all custom Odoo plugins
@@ -8,9 +8,9 @@ export const OdooCorePlugin = CorePlugin;
 
 /**
  * An o-spreadsheet CoreView plugin with access to all custom Odoo plugins
- * @type {import("@spreadsheet").OdooUIPluginConstructor}
+ * @type {import("@spreadsheet").OdooCoreViewPluginConstructor}
  **/
-export const OdooCoreViewPlugin = CoreViewPlugin;
+export const OdooEvaluationPlugin = EvaluationPlugin;
 
 /**
  * An o-spreadsheet UI plugin with access to all custom Odoo plugins

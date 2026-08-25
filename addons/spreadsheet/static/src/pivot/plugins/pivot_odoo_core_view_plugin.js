@@ -1,10 +1,10 @@
-import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
+import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { links, isCoreCommand } from "@odoo/o-spreadsheet";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
 const { isMarkdownLink, parseMarkdownLink } = links;
 
-export class PivotOdooCoreViewPlugin extends OdooCoreViewPlugin {
+export class PivotOdooCoreViewPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ (["isPivotUsedInHyperlinks"]);
 
     /**

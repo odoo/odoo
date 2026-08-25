@@ -2,7 +2,7 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getListFunctions } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
-import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
+import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
 
@@ -20,7 +20,7 @@ const { unquote, isMatrix, isEvaluationError, PositionMap } = spreadsheet.helper
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
 
-export class ListCoreViewPlugin extends OdooCoreViewPlugin {
+export class ListCoreViewPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ ([
         "getListComputedDomain",
         "getListHeaderValue",
