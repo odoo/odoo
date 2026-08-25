@@ -847,6 +847,21 @@ class TestVersionCron(TransactionCase):
             "distance_home_work should have changed after calling _cron_update_current_version_id()",
         )
 
+    def test_get_version_without_any_version(self):
+        """
+        _get_version() should not raise an IndexError and should return an
+        empty recordset when the employee has no version at all, neither
+        active nor archived (e.g. an employee left over by a faulty
+        migration script).
+        """
+        # Bypass the ORM guards preventing an employee from losing its last
+        # version (_unlink_except_last_version, write() on 'active'), as
+        # this is precisely the invalid state a bad migration can produce.
+        self.env.cr.execute("DELETE FROM hr_version WHERE employee_id = %s", (self.employee.id,))
+        self.employee.invalidate_recordset(['version_ids'])
+        self.assertFalse(self.employee.version_ids)
+        self.assertFalse(self.employee._get_version())
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
