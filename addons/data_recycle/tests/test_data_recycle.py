@@ -17,9 +17,15 @@ class TestDataRecycle(TransactionCase):
 
         cls.server_model = cls.env['ir.model']._get('fetchmail.server')
 
-        cls.recycle_model = cls.env['data_recycle.model'].create({
+        cls.DCBase = cls.env['data_cleaning.base']
+        cls.base_model = cls.DCBase.create({
             'name': 'Recycle Test Server',
             'res_model_id': cls.server_model.id,
+        })
+
+        cls.recycle_model = cls.env['data_recycle.model'].create({
+            'name': 'Recycle Test Server',
+            'base_id': cls.base_model.id,
             'time_field_id': cls.env['ir.model.fields'].search([('name', '=', 'date'), ('model_id', '=', cls.server_model.id)], limit=1).id,
             'time_field_delta': 1,
             'time_field_delta_unit': 'years',
@@ -58,9 +64,10 @@ class TestDataRecycle(TransactionCase):
         self.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
-        self.recycle_model.notify_user_ids = [(4, self.env.ref('base.user_admin').id)]
+        self.base_model.notify_user_ids = [(4, self.env.ref('base.user_admin').id)]
         old_notif_count = self.env['mail.notification'].search_count([])
-        self.recycle_model._cron_recycle_records()
+        self.DCBase._perform_cleaning(self.base_model)
+        self.base_model._notify_records()
         new_notif_count = self.env['mail.notification'].search_count([])
         self.assertEqual(new_notif_count, old_notif_count + 1)
 
@@ -77,13 +84,19 @@ class TestDataRecycle(TransactionCase):
         self.assertFalse(self.recycle_model.recycle_record_ids.exists())
         self.assertFalse(self.old_servers.exists())
 
-    def test_include_archived(self):
-        self.old_servers[0].active = False
-        self.recycle_model._recycle_records()
+    def test_recycle_automatic_on_config_save(self):
+        """ Saving the configuration refreshes the candidates, the cron applies them. """
+        self.base_model.cleaning_mode = 'automatic'
+        self.recycle_model.domain = "[('name', 'not ilike', '0')]"
+
         self.assertEqual(len(self.recycle_model.recycle_record_ids), 4)
-        self.recycle_model.include_archived = True
-        self.recycle_model._recycle_records()
-        self.assertEqual(len(self.recycle_model.recycle_record_ids), 5)
+        self.assertTrue(all(server.active for server in self.old_servers), 'Saving the configuration should not archive the servers')
+
+        self.DCBase._perform_cleaning(self.base_model)
+
+        self.assertFalse(self.recycle_model.recycle_record_ids.exists())
+        self.assertTrue(self.old_servers[0].active, 'The server excluded by the domain should be untouched')
+        self.assertTrue(all(not server.active for server in self.old_servers[1:]), 'The cron should archive the candidates')
 
     def test_recycle_record_removed_when_no_longer_matching(self):
         """ Ensure recycle records are removed when a record no longer matches rules. """
