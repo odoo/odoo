@@ -32,7 +32,7 @@ export const fontFamilyItems = [
 
 export class FontFamilyPlugin extends Plugin {
     static id = "fontFamily";
-    static dependencies = ["split", "selection", "dom", "format"];
+    static dependencies = ["split", "selection", "dom", "format", "history"];
     fontFamily = proxy({ displayName: defaultFontFamily.nameShort });
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -70,13 +70,13 @@ export class FontFamilyPlugin extends Plugin {
                     fontFamilyItems: fontFamilyItems,
                     currentFontFamily: this.fontFamily,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) => {
                         this.dependencies.format.requestFormat("fontFamily", {
                             applyStyle: item.fontFamily !== false,
                             formatProps: item,
                         });
                         this.updateCurrentFontFamily();
-                    },
+                    }),
                 },
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
                 isAvailable: (selection) =>
@@ -88,6 +88,7 @@ export class FontFamilyPlugin extends Plugin {
         on_history_commit_undone_handlers: this.updateCurrentFontFamily.bind(this),
         on_history_commit_redone_handlers: this.updateCurrentFontFamily.bind(this),
         on_collapsed_formats_removed_handlers: this.updateCurrentFontFamily.bind(this),
+        on_savepoint_restored_handlers: this.updateCurrentFontFamily.bind(this),
     };
 
     updateCurrentFontFamily(ev) {

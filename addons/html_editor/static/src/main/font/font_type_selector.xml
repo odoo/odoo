@@ -7,12 +7,13 @@
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
-                        <DropdownItem
+                        <PreviewableDropdownItem
                             attrs="{ name: item.tagName }"
                             class="{ active: item.name === this.state.displayName }"
-                            onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                            onSelected="() => this.onSelected(item)"
+                            preview="this.preview" item="item">
                             <t t-out="item.name"/>
-                        </DropdownItem>
+                        </PreviewableDropdownItem>
                     </t>
                 </div>
             </t>

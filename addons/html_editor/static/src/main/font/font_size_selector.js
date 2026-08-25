@@ -1,14 +1,16 @@
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { PreviewableDropdownItem } from "@html_editor/main/toolbar/previewable_dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     useDropdownAutoVisibility,
+    useToolbarDropdownPreview,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
+import { ACTIVE_ELEMENT_CLASS } from "@web/core/navigation/navigation";
 
 export const MAX_FONT_SIZE = 144;
 
@@ -21,7 +23,7 @@ export class FontSizeSelector extends Component {
         maxFontSize: t.number().optional(MAX_FONT_SIZE),
         onBlur: t.function().optional(),
         onFontSizeInput: t.function(),
-        onSelected: t.function(),
+        previewableOperation: t.object(),
 
         // from toolbarButtonProps
         getSelection: t.function(),
@@ -30,7 +32,7 @@ export class FontSizeSelector extends Component {
         isSelectionInEditable: t.function(),
         focusEditable: t.function(),
     });
-    static components = { Dropdown, DropdownItem, IframeInput };
+    static components = { Dropdown, PreviewableDropdownItem, IframeInput };
 
     fontSizeSelector = signal.ref();
 
@@ -53,6 +55,11 @@ export class FontSizeSelector extends Component {
             200
         );
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
+        this.preview = useToolbarDropdownPreview({
+            dropdown: this.dropdown,
+            menuRef: this.menuRef,
+            previewableOperation: this.props.previewableOperation,
+        });
         const htmlStyle = getHtmlStyle(document);
         this.fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
     }
@@ -87,6 +94,9 @@ export class FontSizeSelector extends Component {
     onCustomFontSizeInput(ev) {
         let fontSize = parseInt(ev.target.value, 10);
         if (fontSize > 0) {
+            // Revert any hovered item preview first: otherwise the typed size
+            // would be committed on top of it and reverted along with it.
+            this.preview.revert();
             fontSize = Math.min(fontSize, this.props.maxFontSize);
             if (this.state.displayName !== fontSize) {
                 this.props.onFontSizeInput(`${fontSize}px`);
@@ -107,11 +117,14 @@ export class FontSizeSelector extends Component {
             if (!fontSizeSelectorMenu) {
                 return;
             }
+            const activeItem = fontSizeSelectorMenu.querySelector(
+                `:scope > .${ACTIVE_ELEMENT_CLASS}`
+            );
             ev.target.blur();
             const fontSizeMenuItemToFocus =
                 ev.key === "ArrowUp"
-                    ? fontSizeSelectorMenu.lastElementChild
-                    : fontSizeSelectorMenu.firstElementChild;
+                    ? activeItem?.previousElementSibling || fontSizeSelectorMenu.lastElementChild
+                    : activeItem?.nextElementSibling || fontSizeSelectorMenu.firstElementChild;
             if (fontSizeMenuItemToFocus) {
                 fontSizeMenuItemToFocus.focus();
             }
@@ -119,6 +132,6 @@ export class FontSizeSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.preview.commit(item);
     }
 }

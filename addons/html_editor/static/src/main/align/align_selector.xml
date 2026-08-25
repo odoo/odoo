@@ -9,11 +9,11 @@
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
-                        <DropdownItem
+                        <PreviewableDropdownItem
                             tag="'button'"
                             attrs="{ title: item.description, 'data-icon': `format_align_${item.icon}` }"
                             class="{['dropdown-item_active_noarrow btn btn-light oi']: true, active: item.icon === this.state.displayName }"
-                            t-on-pointerdown.prevent="() => {}"
+                            preview="this.preview" item="item"
                             onSelected="() => this.onSelected(item)"
                         />
                     </t>

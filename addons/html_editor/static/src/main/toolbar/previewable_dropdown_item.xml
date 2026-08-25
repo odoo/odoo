@@ -1,0 +1,12 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.PreviewableDropdownItem">
+        <DropdownItem
+            t-props="this.dropdownProps"
+            t-on-pointerdown.prevent="() => {}"
+            t-on-mouseover="() => this.props.preview.preview(this.props.item)"
+            t-on-focusin="() => this.props.preview.preview(this.props.item)"
+        >
+            <t t-call-slot="default"/>
+        </DropdownItem>
+    </t>
+</templates>

@@ -1,24 +1,24 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableBorderStyleSelector">
-        <Dropdown menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef">
+        <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef">
             <button class="btn btn-light" t-att-title="this.props.title" name="table_border_style">
                 <t t-call="html_editor.TableBorderStyleSvg"/>
             </button>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true" data-vertical="true">
-                    <DropdownItem
+                    <PreviewableDropdownItem
                         class="{'dropdown-item_active_noarrow btn btn-light': true, active: this.state.displayName === 'none' }"
-                        t-on-pointerdown.prevent="() => {}"
+                        preview="this.preview" item="{ value: 'none' }"
                         onSelected="() => this.onSelected({ value: 'none' })"
-                    >None</DropdownItem>
+                    >None</PreviewableDropdownItem>
                     <div t-foreach="this.items" t-as="item" t-key="item.value">
-                        <DropdownItem
+                        <PreviewableDropdownItem
                             class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.value === this.state.displayName}"
-                            t-on-pointerdown.prevent="() => {}"
+                            preview="this.preview" item="item"
                             onSelected="() => this.onSelected(item)"
                         >
                             <div class="o-border-preview" t-attf-style="border-style: {{item.value}}; width: 50px;"/>
-                        </DropdownItem>
+                        </PreviewableDropdownItem>
                     </div>
                 </div>
             </t>
