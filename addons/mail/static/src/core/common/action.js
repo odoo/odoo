@@ -81,8 +81,10 @@ function toArray(val) {
  * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
  * @property {string|(params: ActionParams_T) => string} [btnClass]
  * @property {Component} [component]
+ * @property {Component} [extraContentComponent]
  * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
  * @property {(params: ActionParams_T) => Component<Props, Env>} [componentProps]
+ * @property {(params: ActionParams_T) => Component<Props, Env>} [extraContentComponentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
  * @property {boolean|(params: ActionParams_T) => boolean} [dropdownTrigger]
@@ -689,6 +691,10 @@ export class Action {
 
     get tagClassNames() {
         return this.tags.map((tag) => `o-tag-${tag}`).join(" ");
+    }
+
+    get closingModeAsDropdown() {
+        return this.definition.closingModeAsDropdown ?? "all";
     }
 }
 

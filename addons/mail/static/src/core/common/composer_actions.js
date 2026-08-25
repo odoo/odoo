@@ -6,6 +6,7 @@ import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/e
 import {
     Action,
     ACTION_TAGS,
+    IS_ACTION_GROUP_DESCRIPTION_SYM,
     IS_ACTION_DEFINITION_SYM,
     useAction,
     UseActions,
@@ -36,6 +37,13 @@ export function registerComposerAction(id, definition) {
     composerActionsRegistry.add(
         id,
         Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true })
+    );
+}
+
+export function describeComposerActionGroup(id, definition) {
+    composerActionsRegistry.add(
+        id,
+        Object.assign(definition, { [IS_ACTION_GROUP_DESCRIPTION_SYM]: true })
     );
 }
 
