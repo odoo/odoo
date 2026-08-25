@@ -61,11 +61,6 @@ class ProductProduct(models.Model):
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit')
 
-    is_in_purchase_order = fields.Boolean(
-        compute='_compute_is_in_purchase_order',
-        search='_search_is_in_purchase_order',
-    )
-
     def _compute_purchased_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
         domain = [
@@ -101,30 +96,6 @@ class ProductProduct(models.Model):
             res[product.id]['incoming_qty'] += to_receive
             res[product.id]['virtual_available'] += to_receive
         return res
-
-    @api.depends_context('order_id')
-    def _compute_is_in_purchase_order(self):
-        order_id = self.env.context.get('order_id')
-        if not order_id:
-            self.is_in_purchase_order = False
-            return
-
-        read_group_data = self.env['purchase.order.line']._read_group(
-            domain=[('order_id', '=', order_id)],
-            groupby=['product_id'],
-            aggregates=['__count'],
-        )
-        data = {product.id: count for product, count in read_group_data}
-        for product in self:
-            product.is_in_purchase_order = bool(data.get(product.id, 0))
-
-    def _search_is_in_purchase_order(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        product_ids = self.env['purchase.order.line'].search([
-            ('order_id', 'in', [self.env.context.get('order_id', '')]),
-        ]).product_id.ids
-        return [('id', 'in', product_ids)]
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")

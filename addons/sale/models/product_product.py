@@ -12,9 +12,6 @@ class ProductProduct(models.Model):
 
     sales_count = fields.Float(compute="_compute_sales_count", string="Sold", digits="Product Unit")
 
-    product_catalog_product_is_in_sale_order = fields.Boolean(
-        compute="_compute_product_is_in_sale_order", search="_search_product_is_in_sale_order"
-    )
     previously_bought_by_customer = fields.Boolean(
         search="_search_previously_bought_by_customer", store=False
     )
@@ -86,33 +83,6 @@ class ProductProduct(models.Model):
                     ),
                 }
             }
-
-    @api.depends_context("order_id")
-    def _compute_product_is_in_sale_order(self):
-        order_id = self.env.context.get("order_id")
-        if not order_id:
-            self.product_catalog_product_is_in_sale_order = False
-            return
-
-        read_group_data = self.env["sale.order.line"]._read_group(
-            domain=[("order_id", "=", order_id)], groupby=["product_id"], aggregates=["__count"]
-        )
-        data = {product.id: count for product, count in read_group_data}
-        for product in self:
-            product.product_catalog_product_is_in_sale_order = bool(data.get(product.id, 0))
-
-    def _search_product_is_in_sale_order(self, operator, value):  # noqa: ARG002
-        if operator != "in":
-            return NotImplemented
-        product_ids = (
-            self
-            .env["sale.order.line"]
-            .search_fetch(
-                [("order_id", "in", [self.env.context.get("order_id", "")])], ["product_id"]
-            )
-            .product_id.ids
-        )
-        return [("id", "in", product_ids)]
 
     def _search_previously_bought_by_customer(self, operator, value):  # noqa: ARG002
         if operator != "in":

@@ -131,17 +131,6 @@ class ProductProduct(models.Model):
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
 
-    # Catalog related fields
-    product_catalog_product_is_in_bom = fields.Boolean(
-        compute='_compute_product_is_in_bom_and_mo',
-        search='_search_product_is_in_bom',
-    )
-
-    product_catalog_product_is_in_mo = fields.Boolean(
-        compute='_compute_product_is_in_bom_and_mo',
-        search='_search_product_is_in_mo',
-    )
-
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count([
@@ -194,28 +183,6 @@ class ProductProduct(models.Model):
         for product in self:
             product.used_in_bom_count = self.env['mrp.bom'].search_count(
                 [('bom_line_ids.product_id', 'in', product.ids)])
-
-    @api.depends_context('order_id')
-    def _compute_product_is_in_bom_and_mo(self):
-        # Just to enable the _search method
-        self.product_catalog_product_is_in_bom = False
-        self.product_catalog_product_is_in_mo = False
-
-    def _search_product_is_in_bom(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        product_ids = self.env['mrp.bom.line'].search([
-            ('bom_id', '=', self.env.context.get('order_id', '')),
-        ]).product_id.ids
-        return [('id', operator, product_ids)]
-
-    def _search_product_is_in_mo(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        product_ids = self.env['mrp.production'].search([
-            ('id', 'in', [self.env.context.get('order_id', '')]),
-        ]).move_raw_ids.product_id.ids
-        return [('id', operator, product_ids)]
 
     def write(self, vals):
         if 'active' in vals:

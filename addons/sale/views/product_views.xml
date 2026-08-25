@@ -168,7 +168,7 @@
                 <filter string="In the Order"
                         invisible="context.get('active_model', '') != 'sale.order.line'"
                         name="products_in_sale_order"
-                        domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
+                        domain="[('catalog_is_in_order', '=', True)]"/>
                 <filter
                     string="Previously bought"
                     name="products_previously_bought_by_customer"
