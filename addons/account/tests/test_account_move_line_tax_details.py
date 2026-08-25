@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 #pylint: disable=too-many-lines
+from numbers import Number
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import Command
@@ -23,13 +25,46 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
         return base_lines, tax_lines
 
+    def _sort_tax_details(self, tax_details):
+        return sorted(tax_details, key=lambda x: (
+            x.get('base_line_id') or 0,
+            abs(float(x.get('base_amount') or 0.0)),
+            abs(float(x.get('tax_amount') or 0.0)),
+            x.get('tax_line_id') or 0,
+            x.get('src_line_id') or 0,
+        ))
+
+    def assertTaxDetailsMatch(self, tax_details, python_tax_details):
+        tax_details = self._sort_tax_details(tax_details)
+        python_tax_details = self._sort_tax_details(python_tax_details)
+        self.assertEqual(len(tax_details), len(python_tax_details))
+
+        for row, python_row in zip(tax_details, python_tax_details):
+            self.assertEqual(row.keys(), python_row.keys())
+            for key, value in row.items():
+                python_value = python_row[key]
+                if isinstance(value, Number) and isinstance(python_value, Number):
+                    self.assertAlmostEqual(float(value), float(python_value), places=6, msg=key)
+                else:
+                    self.assertEqual(value, python_value, key)
+
     def _get_tax_details(self, fallback=False, extra_domain=None):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
-        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
-        self.env['account.move.line'].flush_model()
-        self.cr.execute(tax_details_query)
-        tax_details_res = self.cr.dictfetchall()
-        return sorted(tax_details_res, key=lambda x: (x['base_line_id'], abs(x['base_amount']), abs(x['tax_amount'])))
+        tax_details_res = self.env['account.move.line']._get_tax_details_from_domain(
+            domain,
+            fallback=fallback,
+        )
+        python_tax_details = self.env['account.move.line']._get_python_tax_details_from_domain(
+            domain,
+            fallback=fallback,
+        )
+        self.assertTaxDetailsMatch(tax_details_res, python_tax_details)
+        snapshot_tax_details = self.env['account.move.line']._get_python_tax_details_from_snapshot_domain(
+            domain,
+            fallback=fallback,
+        )
+        self.assertTaxDetailsMatch(tax_details_res, snapshot_tax_details)
+        return self._sort_tax_details(tax_details_res)
 
     def assertTaxDetailsValues(self, tax_details, expected_values_list):
         self.assertEqual(len(tax_details), len(expected_values_list))
@@ -49,6 +84,50 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                                      for x in tax_details
                                      if (x['group_tax_id'] or x['tax_id']) == tax.id)
             self.assertAlmostEqual(tax_amount, tax_details_amount)
+
+    def test_basic_python_tax_details(self):
+        tax_20 = self.env['account.tax'].create({
+            'name': "tax_20",
+            'amount_type': 'percent',
+            'amount': 20.0,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_20.ids)],
+                }),
+                Command.create({
+                    'name': 'line2',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 200.0,
+                    'tax_ids': [Command.set(tax_20.ids)],
+                }),
+            ],
+        })
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+
+        tax_details = self._get_tax_details(
+            extra_domain=[('move_id', '=', invoice.id)],
+        )
+        self.assertTaxDetailsValues(tax_details, [
+            {
+                'base_line_id': base_lines[0].id,
+                'tax_line_id': tax_lines.id,
+                'tax_amount': -20.0,
+            },
+            {
+                'base_line_id': base_lines[1].id,
+                'tax_line_id': tax_lines.id,
+                'tax_amount': -40.0,
+            },
+        ])
 
     def test_affect_base_amount_1(self):
         tax_20_affect = self.env['account.tax'].create({

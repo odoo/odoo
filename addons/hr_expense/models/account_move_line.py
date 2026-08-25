@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import SQL
 
 
 class AccountMoveLine(models.Model):
@@ -38,5 +37,18 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, expenses.with_context(force_price_include=True))._compute_totals()
         super(AccountMoveLine, self - expenses)._compute_totals()
 
-    def _get_extra_query_base_tax_line_mapping(self) -> SQL:
-        return SQL(' AND (base_line.expense_id IS NULL OR account_move_line.expense_id = base_line.expense_id)')
+    @api.model
+    def _get_python_tax_details_extra_line_fields(self):
+        return super()._get_python_tax_details_extra_line_fields() + ['expense_id']
+
+    @api.model
+    def _is_python_base_tax_line_mapping_allowed(self, base_line, tax_line):
+        if isinstance(base_line, dict):
+            return (
+                super()._is_python_base_tax_line_mapping_allowed(base_line, tax_line)
+                and (not base_line.get('expense_id') or tax_line.get('expense_id') == base_line.get('expense_id'))
+            )
+        return (
+            super()._is_python_base_tax_line_mapping_allowed(base_line, tax_line)
+            and (not base_line.expense_id or tax_line.expense_id == base_line.expense_id)
+        )

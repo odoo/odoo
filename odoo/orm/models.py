@@ -37,6 +37,7 @@ import uuid
 import warnings
 from collections import defaultdict, deque
 from collections.abc import Callable, Mapping
+from concurrent.futures import ThreadPoolExecutor
 from inspect import getmembers
 from operator import attrgetter, itemgetter
 
@@ -3816,6 +3817,281 @@ class BaseModel(metaclass=MetaModel):
             forbidden = (self - fetched).exists()
             if forbidden:
                 raise self.env['ir.rule']._make_access_error('read', forbidden)
+
+    @api.private
+    @api.model
+    def parallel_fetch(
+        self,
+        fetches: Collection,
+        max_workers: int = 4,
+    ) -> list[Self]:
+        """Fetch several independent recordsets in parallel.
+
+        ``fetches`` accepts either ``(records, field_names)`` or
+        ``(model_name, domain, field_names[, options])`` entries.  Domains are
+        prepared on the main environment and executed by worker cursors when
+        their fields are supported.  Worker cursors only execute SQL; only the
+        main environment cache is populated.  Unsupported fields fall back to
+        the regular :meth:`fetch` implementation.
+        """
+        if not fetches or max_workers <= 0:
+            return []
+
+        def prepare_column_job(records, fields):
+            column_fields = []
+            other_fields = []
+            for field in fields:
+                if field.name == 'id':
+                    continue
+                (column_fields if field.column_type else other_fields).append(field)
+            if not column_fields:
+                return None, other_fields
+
+            query = records._search([('id', 'in', records.ids)], active_test=False)
+            sql_terms = [SQL.identifier(records._table, 'id')]
+            for field in column_fields:
+                sql = records._field_to_sql(records._table, field.name, query)
+                if not field.translate:
+                    to_flush = (f for f in sql.to_flush if f != field)
+                    sql = SQL(sql.code, *sql.params, to_flush=to_flush)
+                sql_terms.append(sql)
+            sql_query = query.select(*sql_terms)
+            records.env.flush_query(sql_query)
+            return {
+                'kind': 'column',
+                'records': records,
+                'fields': column_fields,
+                'sql': sql_query,
+            }, other_fields
+
+        def prepare_search_column_job(model, domain, fields, options, result_index):
+            column_fields = []
+            other_fields = []
+            for field in fields:
+                if field.name == 'id':
+                    continue
+                (column_fields if field.column_type else other_fields).append(field)
+            if not column_fields:
+                return None, other_fields
+
+            query = model._search(
+                domain,
+                offset=options.get('offset', 0),
+                limit=options.get('limit'),
+                order=options.get('order') or model._order,
+            )
+            sql_terms = [SQL.identifier(model._table, 'id')]
+            for field in column_fields:
+                sql = model._field_to_sql(model._table, field.name, query)
+                if not field.translate:
+                    to_flush = (f for f in sql.to_flush if f != field)
+                    sql = SQL(sql.code, *sql.params, to_flush=to_flush)
+                sql_terms.append(sql)
+            sql_query = query.select(*sql_terms)
+            model.env.flush_query(sql_query)
+            return {
+                'kind': 'column',
+                'records': model.browse(),
+                'fields': column_fields,
+                'sql': sql_query,
+                'result_index': result_index,
+            }, other_fields
+
+        def prepare_one2many_job(records, field):
+            if not records:
+                return None
+            context = {'active_test': False}
+            context.update(field.context)
+            comodel = records.env[field.comodel_name].with_context(**context)
+            inverse = field.inverse_name
+            domain = field.get_comodel_domain(records) & Domain(inverse, 'in', records.ids)
+            query = comodel._search(domain)
+            sql_terms = [
+                SQL.identifier(comodel._table, 'id'),
+                comodel._field_to_sql(comodel._table, inverse, query),
+            ]
+            active_field = comodel._fields[comodel._active_name] if comodel._active_name else None
+            if active_field:
+                sql_terms.append(comodel._field_to_sql(comodel._table, active_field.name, query))
+            sql_query = query.select(*sql_terms)
+            records.env.flush_query(sql_query)
+            return {
+                'kind': 'one2many',
+                'records': records,
+                'field': field,
+                'comodel': comodel,
+                'active_field': active_field,
+                'sql': sql_query,
+            }
+
+        def prepare_many2many_job(records, field):
+            if not records:
+                return None, False
+
+            context = {'active_test': False}
+            context.update(field.context)
+            comodel = records.env[field.comodel_name].with_context(**context)
+            filter_access = field.bypass_search_access and type(comodel)._search is not BaseModel._search
+            if filter_access:
+                return None, True
+
+            query = comodel._search(field.get_comodel_domain(records), order=comodel._order)
+            sql_id1 = SQL.identifier(field.relation, field.column1)
+            sql_id2 = SQL.identifier(field.relation, field.column2)
+            query.add_join('JOIN', field.relation, None, SQL(
+                "%s = %s", sql_id2, SQL.identifier(comodel._table, 'id'),
+            ))
+            query.add_where(SQL("%s IN %s", sql_id1, tuple(records.ids)))
+            sql_terms = [sql_id1, sql_id2]
+            active_field = comodel._fields[comodel._active_name] if comodel._active_name else None
+            if active_field:
+                sql_terms.append(comodel._field_to_sql(comodel._table, active_field.name, query))
+            sql_query = query.select(*sql_terms)
+            records.env.flush_query(sql_query)
+            return {
+                'kind': 'many2many',
+                'records': records,
+                'field': field,
+                'comodel': comodel,
+                'active_field': active_field,
+                'sql': sql_query,
+            }, False
+
+        def prepare_record_jobs(records, field_names):
+            records = records._origin
+            if not records or not (field_names is None or field_names):
+                return []
+
+            fields = records._determine_fields_to_fetch(field_names, ignore_when_in_cache=True)
+            if not fields:
+                return []
+
+            jobs = []
+            fallback_fields = []
+            column_job, other_fields = prepare_column_job(records, fields)
+            if column_job:
+                jobs.append(column_job)
+
+            for field in other_fields:
+                if field.type == 'one2many':
+                    job = prepare_one2many_job(records, field)
+                    if job:
+                        jobs.append(job)
+                    else:
+                        fallback_fields.append(field.name)
+                elif field.type == 'many2many':
+                    job, fallback = prepare_many2many_job(records, field)
+                    if job:
+                        jobs.append(job)
+                    if fallback:
+                        fallback_fields.append(field.name)
+                else:
+                    fallback_fields.append(field.name)
+
+            if fallback_fields:
+                jobs.append({
+                    'kind': 'fallback',
+                    'records': records,
+                    'field_names': fallback_fields,
+                })
+            return jobs
+
+        def execute_job(job):
+            with self.pool.cursor() as cr:
+                cr.execute(job['sql'])
+                return cr.fetchall()
+
+        def populate_job(job, rows):
+            kind = job['kind']
+            if kind == 'fallback':
+                job['records'].fetch(job['field_names'])
+                return
+
+            if kind == 'column':
+                if not rows:
+                    fetched = job['records'].browse()
+                else:
+                    column_values = zip(*rows)
+                    ids = next(column_values)
+                    fetched = job['records'].browse(ids)
+                    for field, values in zip(job['fields'], column_values, strict=True):
+                        field._insert_cache(fetched, values)
+
+                records = job['records']
+                if fetched != records:
+                    forbidden = (records - fetched).exists()
+                    if forbidden:
+                        raise records.env['ir.rule']._make_access_error('read', forbidden)
+                if 'result_index' in job:
+                    results[job['result_index']] = fetched
+                return
+
+            records = job['records']
+            field = job['field']
+            active_field = job['active_field']
+            group = defaultdict(list)
+            active_ids = []
+            active_values = []
+            if kind == 'one2many':
+                for row in rows:
+                    line_id, inverse_id, *active_value = row
+                    group[inverse_id].append(line_id)
+                    if active_field:
+                        active_ids.append(line_id)
+                        active_values.append(active_value[0])
+            elif kind == 'many2many':
+                for row in rows:
+                    id1, id2, *active_value = row
+                    group[id1].append(id2)
+                    if active_field:
+                        active_ids.append(id2)
+                        active_values.append(active_value[0])
+
+            values = [tuple(group[id_]) for id_ in records._ids]
+            field._insert_cache(records, values)
+            if active_field and active_ids:
+                active_field._insert_cache(job['comodel'].browse(active_ids), active_values)
+
+        jobs = []
+        results = []
+        for result_index, fetch_spec in enumerate(fetches):
+            if not fetch_spec:
+                results.append(self.browse())
+                continue
+            if isinstance(fetch_spec[0], str):
+                model_name, domain, field_names = fetch_spec[:3]
+                options = fetch_spec[3] if len(fetch_spec) > 3 else {}
+                model = self.env[model_name].with_context(**options.get('context', {}))
+                fields = model._determine_fields_to_fetch(field_names)
+                column_job, other_fields = prepare_search_column_job(model, domain, fields, options, result_index)
+                if column_job and not other_fields:
+                    jobs.append(column_job)
+                    results.append(model.browse())
+                    continue
+                records = model.search(
+                    domain,
+                    offset=options.get('offset', 0),
+                    limit=options.get('limit'),
+                    order=options.get('order'),
+                )
+            else:
+                records, field_names = fetch_spec
+            results.append(records)
+            jobs.extend(prepare_record_jobs(records, field_names))
+
+        parallel_jobs = [job for job in jobs if job['kind'] != 'fallback']
+        fallback_jobs = [job for job in jobs if job['kind'] == 'fallback']
+
+        if parallel_jobs:
+            with ThreadPoolExecutor(max_workers=min(max_workers, len(parallel_jobs))) as executor:
+                futures = [(job, executor.submit(execute_job, job)) for job in parallel_jobs]
+                for job, future in futures:
+                    populate_job(job, future.result())
+
+        for job in fallback_jobs:
+            populate_job(job, ())
+
+        return results
 
     def _determine_fields_to_fetch(
             self,
