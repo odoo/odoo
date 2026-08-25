@@ -594,8 +594,8 @@ class ProductProduct(models.Model):
         qty_by_product = {p: (lot.product_qty if lot else p.qty_available) for p in products}
         for product in products:
             quantity = qty_by_product.get(product, 0)
+            std_price = lot.standard_price if lot else product.standard_price
             if product.uom_id.compare(quantity, 0) < 0:
-                std_price = lot.standard_price if lot else product.standard_price
                 if at_date:
                     last_in = product._get_last_in(at_date)
                     std_price = last_in._get_price_unit() if last_in else std_price
@@ -622,7 +622,7 @@ class ProductProduct(models.Model):
                 if correction:
                     stack_by_product[product].append(FifoCandidate(valued_qty, valued_value))
 
-            std_price = value / quantity if quantity else 0
+            std_price = value / quantity if quantity else std_price
             std_price_by_product_id[product.id] = std_price
             value_by_product_id[product.id] = value
 
