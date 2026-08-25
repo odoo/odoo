@@ -4,6 +4,7 @@ $s-map-desc-alpha: 0.80 !default;
 
 .s_map {
     position: relative;
+    height: clamp(112px, var(--GoogleMap-height), 90svh);
 
     .map_container {
         @include o-position-absolute(0, 0, 0, 0);
