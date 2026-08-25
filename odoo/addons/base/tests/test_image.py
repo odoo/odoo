@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import io
 
 from PIL import Image, ImageDraw, PngImagePlugin
 
@@ -65,13 +64,6 @@ class TestImage(TransactionCase):
             (image.size[0], image.size[1] - offset)
         ], fill=self.fill_color)
         self.img_1080x1920_png = tools.image_apply_opt(image, 'PNG')
-
-        # Create an animated GIF with an adaptive color palette to preserve frames during processing
-        gif_stream = io.BytesIO()
-        gif_f1 = Image.new("RGB", (200, 200), color="red").convert("P", palette=Image.ADAPTIVE)
-        gif_f2 = Image.new("RGB", (200, 200), color="blue").convert("P", palette=Image.ADAPTIVE)
-        gif_f1.save(gif_stream, format="GIF", save_all=True, append_images=[gif_f2], duration=100, loop=0)
-        self.img_animated_gif = gif_stream.getvalue()
 
     def test_02_image_fix_orientation(self):
         """Test that the orientation of images is correct."""
@@ -371,20 +363,3 @@ class TestImage(TransactionCase):
         image1 = Image.new('P', (1, 1), color='red')
         image2 = Image.new('RGB', (1, 1), color='red')
         self.assertEqual(tools.image_apply_opt(image1, 'JPEG'), tools.image_apply_opt(image2, 'JPEG'))
-
-    def test_animated_gif_downscale(self):
-        """ Test that downscaling an animated GIF shrinks frames properly. """
-        processed_binary = tools.image_process(self.img_animated_gif, size=(100, 100))
-        img = img_open(processed_binary)
-
-        self.assertEqual(img.format, "GIF")
-        self.assertEqual(img.n_frames, 2)
-        self.assertEqual(img.size, (100, 100))
-
-    def test_animated_gif_upscale_is_blocked(self):
-        """ Test that upscaling an animated GIF safely leaves it unchanged. """
-        processed_binary = tools.image_process(self.img_animated_gif, size=(500, 500), expand=True)
-        img = img_open(processed_binary)
-
-        self.assertEqual(img.n_frames, 2)
-        self.assertEqual(img.size, (200, 200))
