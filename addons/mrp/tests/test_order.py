@@ -754,6 +754,100 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
+<<<<<<< 0385fe086b3638d2d5b27297896fee662150051e
+||||||| 4d241398541e15b8e2889e513f24be5d18e64ba7
+    def test_product_produce_6(self):
+        """ Plan 5 finished products, reserve and produce 3. Post the current production.
+        Simulate an unlock and edit and, on the opened moves, set the consumed quantity
+        to 3. Now, try to update the quantity to mo2 to 3. It should fail since there
+        are consumed quantities. Unlock and edit, remove the consumed quantities and
+        update the quantity to produce to 3."""
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 20)
+
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 3
+        mo = mo_form.save()
+
+        mo._post_inventory()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 3
+
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 3,
+        })
+
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 0
+        update_quantity_wizard.change_prod_qty()
+
+        self.assertEqual(len(mo.move_raw_ids), 4)
+
+        mo.move_raw_ids.picked = True
+        action = mo.button_mark_done()
+
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
+            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom':  3},
+            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom': 12},
+        ])
+        warning.action_confirm()
+
+        self.assertTrue(all(s in ['done', 'cancel'] for s in mo.move_raw_ids.mapped('state')))
+
+=======
+    def test_product_produce_6(self):
+        """ Plan 5 finished products, reserve and produce 3. Post the current production.
+        Simulate an unlock and edit and, on the opened moves, set the consumed quantity
+        to 3. Now, try to update the quantity to mo2 to 3. It should fail since there
+        are consumed quantities. Unlock and edit, remove the consumed quantities and
+        update the quantity to produce to 3."""
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 20)
+
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 3
+        mo = mo_form.save()
+
+        mo._post_inventory()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done' and m.product_id == p2).quantity = 3
+
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 3,
+        })
+
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done' and m.product_id == p2).quantity = 0
+        update_quantity_wizard.change_prod_qty()
+
+        self.assertEqual(len(mo.move_raw_ids), 4)
+
+        mo.move_raw_ids.picked = True
+        action = mo.button_mark_done()
+
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        self.assertRecordValues(warning.mrp_consumption_warning_line_ids.sorted('product_id.id'), [
+            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom': 12, 'product_id': p1.id},
+            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom':  3, 'product_id': p2.id},
+        ])
+        warning.action_confirm()
+
+        self.assertTrue(all(s in ['done', 'cancel'] for s in mo.move_raw_ids.mapped('state')))
+
+>>>>>>> 98dc29f13a27be4e2777c92e6bda22974a91ecc8
     def test_product_produce_7(self):
         """ Plan 2 finished products, reserve and produce 3. Post the current production.
         Simulate an unlock and edit and, on the opened moves, set the consumed quantity
