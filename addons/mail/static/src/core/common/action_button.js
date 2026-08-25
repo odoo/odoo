@@ -22,6 +22,7 @@ export class ActionButton extends Component {
             style: t.string().optional(),
             dropdown: t.boolean().optional(),
             inline: t.boolean().optional(),
+            rounded: t.boolean().optional(),
         });
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
@@ -44,6 +45,7 @@ export class ActionButton extends Component {
             "o-mail-ActionList-button btn btn-group-item btn-secondary position-relative": true,
             "o-inline": this.props.inline,
             "text-start": this.props.dropdown && !this.ui.isSmall,
+            "rounded-circle": this.props.rounded,
         });
         cls = this.attClassObjectToString({ [cls]: true, [this.paddingClass]: true });
         cls = this.attClassObjectToString({
