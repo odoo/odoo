@@ -15,6 +15,7 @@ export const composerActionsRegistry = registry.category("mail.composer/actions"
 
 export const composerButtonPropsInline = {
     rounded: true,
+    variant: () => "",
 };
 
 /** @typedef {import("@odoo/owl").Component} Component */
