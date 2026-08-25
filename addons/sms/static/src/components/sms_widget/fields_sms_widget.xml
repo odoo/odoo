@@ -2,14 +2,15 @@
 
 <templates xml:space="preserve">
     <t t-name="sms.SmsWidget" t-inherit="mail.EmojisTextField" t-inherit-mode="primary">
-        <xpath expr="//div[hasclass('o_field_input_buttons')]/button[hasclass('fa-magic')]" position="replace"/>
-        <xpath expr="/*[last()]/*[last()]" position="after">
-            <div class="o_sms_container mt-3">
-                <button t-if="props.dynamicPlaceholder and !props.readonly"
-                    class="btn btn-link py-0 border-0"
+        <xpath expr="//div[hasclass('o_field_input_buttons')]/button[@data-icon='wand_stars']" position="replace"/>
+        <xpath expr="//div[hasclass('o_field_input_buttons')]" position="inside">
+            <div class="d-inline-flex align-items-center justify-content-center">
+                <button t-if="this.props.dynamicPlaceholder and !this.props.readonly"
+                    class="btn btn-link end-0 bottom-0"
                     title="Insert Field"
-                    t-on-click="onDynamicPlaceholderOpen"
-                ><span class="fa fa-magic me-1"/><span>Insert Field</span></button>
+                    t-on-click="this.onDynamicPlaceholderOpen">
+                    <span class="oi oi-fw me-1" data-icon="wand_stars"/>
+                </button>
             </div>
         </xpath>
     </t>
