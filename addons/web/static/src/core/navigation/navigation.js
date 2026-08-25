@@ -207,6 +207,10 @@ export class Navigator {
         }
     }
 
+    clearActive() {
+        this._setActiveItem(-1);
+    }
+
     update() {
         const oldItems = new Map(this.items.map((item) => [item.el, item]));
         const oldActiveItem = this.activeItem;
