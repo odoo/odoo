@@ -470,7 +470,8 @@ class IrHttp(models.AbstractModel):
         # See /5, missing lang in url, /home -> /fr/home
         elif not url_lang_str:
             _logger.debug("%r (lang: %r) missing lang in url, redirect", path, request_url_code)
-            redirect = request.redirect_query(f'/{request_url_code}{path}', request.httprequest.args)
+            lang_path = f'/{request_url_code}' if path == '/' else f'/{request_url_code}{path}'
+            redirect = request.redirect_query(lang_path, request.httprequest.args)
             redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
             werkzeug.exceptions.abort(redirect)
 
