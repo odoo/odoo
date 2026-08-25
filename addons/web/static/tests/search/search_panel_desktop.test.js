@@ -52,7 +52,7 @@ function getFiltersCounter() {
 class TestComponent extends Component {
     static components = { SearchBarMenu, SearchPanel };
     static template = xml`
-        <div class="o_test_component">
+        <div class="o_test_component o_component_with_search_panel">
             <SearchPanel t-if="this.env.searchModel.display.searchPanel" />
             <SearchBarMenu />
         </div>

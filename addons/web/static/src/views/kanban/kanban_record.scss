@@ -23,6 +23,13 @@
         background-color: var(--KanbanColumn__highlight-selected);
     }
 
+    // Follow the card's top corner (only rounded on E.E) (see --Card-border-radius-top).
+    // Falls back to square. Takes the border width into account.
+    .o_dropdown_kanban .btn {
+        border-radius: 0;
+        border-top-right-radius: calc(var(--Card-border-radius-top, 0px) - var(--Card-border-width, #{$border-width}));
+    }
+
     @media (pointer: fine) {
         .o_dropdown_kanban {
             visibility: hidden;
@@ -35,15 +42,18 @@
     }
 
     // Records colours
+    .o_kanban_record_colored:after {
+        @include o-position-absolute(0, auto, 0, -$border-width);
+        content: "";
+    }
+
     @for $size from 2 through length($o-colors) {
         // Note: the first color is not defined as it is the 'no color' for kanban
         &.o_kanban_color_#{$size - 1}::after {
             $-color: nth($o-colors, $size);
 
-            @include o-position-absolute(0, auto, 0, -$border-width);
             border-left: $border-width solid rgba($-color, 0.5);
             border-right: ($border-width * 2) solid $-color;
-            content: "";
         }
     }
 }

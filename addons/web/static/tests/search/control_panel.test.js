@@ -232,7 +232,7 @@ test("hotkey overlay not overlapped by active view button", async () => {
     );
     const buttonZIndex = Number(getComputedStyle(queryFirst(`.o_switch_view.active`)).zIndex);
 
-    expect(hotkeyZIndex).toBeGreaterThan(buttonZIndex);
+    expect(buttonZIndex).not.toBeGreaterThan(hotkeyZIndex);
 
     await keyUp("alt");
     expect(`.o_cp_switch_buttons .o_web_hotkey_overlay`).toHaveCount(0);

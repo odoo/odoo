@@ -1,11 +1,14 @@
-.o_group_config.show {
-    visibility: visible;
-}
 
-.o_group_config {
-    visibility: hidden;
-    @include media-breakpoint-down(md) {
-        visibility: visible;
+@include media-breakpoint-up(md) {
+    .o_group_config {
+        .o_group_has_content:where(:not(:hover)) &, // List
+        .o_kanban_header:where(:not(:hover)) & {    // Kanban
+            visibility: hidden;
+        }
+
+        &:has(.show) {
+            visibility: visible;
+        }
     }
 }
 

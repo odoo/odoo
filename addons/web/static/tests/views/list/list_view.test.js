@@ -218,7 +218,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
         await contains(
-            ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+            ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
         ).click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
@@ -1449,12 +1449,12 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
@@ -1464,7 +1464,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     ]);
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
@@ -1547,7 +1547,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
 
     await clickRecordSelector();
     await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='settings']"
+        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
@@ -6119,8 +6119,10 @@ test(`fields are translatable in list view`, async () => {
 
 test.tags("desktop");
 test(`long words in text cells should break into smaller lines`, async () => {
-    Foo._records[0].text = "a";
-    Foo._records[1].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
+    // The first row is skipped on purpose: its top border is not collapsed with a
+    // preceding row's, which makes it half a pixel shorter than the other ones.
+    Foo._records[1].text = "a";
+    Foo._records[2].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
 
     await mountView({
         resModel: "foo",
@@ -6131,9 +6133,9 @@ test(`long words in text cells should break into smaller lines`, async () => {
     // Intentionally set the table width to a small size
     queryOne("table").style.width = "100px";
     queryOne("th:eq(-1)").style.width = "100px";
-    const shortText = queryRect(".o_data_row:eq(0) td:eq(-1)").height;
-    const longText = queryRect(".o_data_row:eq(1) td:eq(-1)").height;
-    const emptyText = queryRect(".o_data_row:eq(2) td:eq(-1)").height;
+    const shortText = queryRect(".o_data_row:eq(1) td:eq(-1)").height;
+    const longText = queryRect(".o_data_row:eq(2) td:eq(-1)").height;
+    const emptyText = queryRect(".o_data_row:eq(3) td:eq(-1)").height;
 
     expect(shortText).toBe(emptyText, {
         message: "Short word should not change the height of the cell",
@@ -19723,7 +19725,7 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
     expect(".o_list_view").toHaveCount(1);
 
     await selectAllRecords();
-    await contains(`.o_cp_action_menus button:has([data-icon='settings'])`).click();
+    await contains(`.o_cp_action_menus button[data-hotkey='u']`).click();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 

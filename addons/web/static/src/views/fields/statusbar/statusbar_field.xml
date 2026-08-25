@@ -13,7 +13,7 @@
     </t>
 
     <t t-name="web.StatusBarField">
-        <div class="o_statusbar_status" t-ref="this.rootRef" role="radiogroup" aria-label="Statusbar">
+        <div class="o_statusbar_status o_switcher" t-ref="this.rootRef" role="radiogroup" aria-label="Statusbar">
             <Dropdown position="'bottom-end'">
                 <button
                     t-ref="this.afterRef"
@@ -29,22 +29,27 @@
                 </t>
             </Dropdown>
             <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
-                <button
-                    type="button"
-                    class="btn btn-secondary o_arrow_button"
-                    t-att-class="{
-                        o_first: item_first,
-                        o_arrow_button_current: item.isSelected,
-                        o_last: item_last,
-                    }"
-                    t-att-disabled="this.props.isDisabled || item.isSelected"
-                    role="radio"
-                    t-att-aria-checked="item.isSelected.toString()"
-                    t-att-aria-current="item.isSelected and 'step'"
-                    t-att-data-value="item.value"
-                    t-out="item.label"
-                    t-on-click="() => this.selectItem(item)"
-                />
+                <div class="o_arrow_button_wrap d-flex gap-1">
+                    <button
+                        type="button"
+                        class="btn btn-secondary o_arrow_button"
+                        t-att-class="{
+                            o_first: item_first,
+                            o_arrow_button_current: item.isSelected,
+                            o_last: item_last,
+                        }"
+                        t-att-disabled="this.props.isDisabled || item.isSelected"
+                        role="radio"
+                        t-att-aria-checked="item.isSelected.toString()"
+                        t-att-aria-current="item.isSelected and 'step'"
+                        t-att-data-value="item.value"
+                        t-out="item.label"
+                        t-on-click="() => this.selectItem(item)"
+                    />
+                    <i t-if="!item_first"
+                        class="oi align-self-center opacity-75 d-none d-md-inline"
+                        data-icon="chevron_forward"/>
+                </div>
             </t>
             <Dropdown position="'bottom-start'">
                 <button
@@ -70,7 +75,7 @@
                     t-att-class="{'o_arrow_button': this.uiService.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
                     t-att-disabled="this.props.isDisabled"
                 >
-                    <t t-out="this.getCurrentLabel()" />
+                    <i class="oi oi-fw" data-icon="chevron_forward" role="presentation"/> <t t-out="this.getCurrentLabel()" />
                 </button>
                 <t t-set-slot="content">
                     <t t-call="web.StatusBarField.Dropdown" items="this.getAllItems()"/>

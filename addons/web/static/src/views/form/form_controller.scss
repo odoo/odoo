@@ -252,17 +252,18 @@
     .o_form_sheet {
         margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
         padding: var(--formView-sheet-padding-y, #{map-get($spacers, 3)}) var(--formView-sheet-padding-x, #{map-get($spacers, 3)});
-        border-style: solid;
-        border-color: $border-color;
-        border-width: var(--formView-sheet-border-width, 1px 0 1px 0);
-        border-radius: var(--formView-sheet-border-radius, 0);
-        background-color: $o-view-background-color;
 
         @include media-breakpoint-up(md) {
+            border-style: solid;
+            border-color: $border-color;
+            border-width: var(--formView-sheet-border-width, 1px 0 1px 0);
+            border-radius: var(--formView-sheet-border-radius, 0);
+            background-color: $o-view-background-color;
+
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, #{map-get($spacers, 3)});
             --formView-sheet-margin-x: var(--formView-sheet-margin-x-md, 0);
             --formView-sheet-border-width: var(--formView-sheet-border-width-md, #{$border-width});
-            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius});
+            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius-lg});
         }
 
         @include media-breakpoint-up(lg) {
@@ -271,8 +272,8 @@
         }
 
         @include media-breakpoint-up(xxl) {
-            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 3)});
-            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 3)});
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 4)});
+            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 4)});
         }
 
     }

@@ -192,6 +192,19 @@ export class TimeOffCard extends Component {
 
         openLeaveWindow(this.actionService, resModel, name, domain, context);
     }
+
+    getColor() {
+        if(!this.props.index) {return "4";}
+        const colorMap = {
+            0: "4",
+            1: "5",
+            2: "6",
+            3: "7",
+            4: "8",
+            5: "9",
+        };
+        return colorMap[this.props.index % 6];
+    }
 }
 
 function openLeaveWindow(actionService, resModel, name, domain, context) {

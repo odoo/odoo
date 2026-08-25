@@ -9,9 +9,10 @@
 
         &.show {
             $-value: map-get($o-btns-bs-outline-override, 'secondary');
+            --#{$prefix}btn-active-border-color: #{map-get($-value, 'active-border')};
+
             color: map-get($-value, 'active-color');
             background-color: map-get($-value, 'active-background');
-            border-color: map-get($-value, 'active-border');
         }
     }
 

@@ -17,7 +17,7 @@
                     <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                 </t>
                 <div class="o_calendar_container d-grid h-100 bg-view">
-                    <div class="o_calendar_header d-flex align-items-center gap-1 px-3 pe-md-1 py-2 px-print-0 pt-print-0 border-bottom">
+                    <div class="o_calendar_header d-flex align-items-center gap-1 px-3 py-2 px-print-0 pt-print-0 border-bottom">
                         <div t-if="!this.uiService.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
                             <button
                                 class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
@@ -34,7 +34,7 @@
                         </div>
                         <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none order-3 order-lg-0'"/>
                         <button
-                            class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-auto ms-lg-0"
+                            class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-auto ms-md-0"
                             t-on-click.stop="() => this.setDate('today')">
                             Today
                         </button>
@@ -53,6 +53,27 @@
                             </t>
                         </h5>
                         <MultiSelectionButtons reactive="this.multiSelectionButtonsReactive" />
+                        <div t-if="this.hasSidePanel and !this.uiService.isSmall" class="o_calendar_sidebar_controller d-flex align-items-center gap-2 ms-auto d-print-none small">
+                            <div t-if="!this.sidePanelExpanded" class="d-flex align-items-center gap-1">
+                                <i t-if="this.filters.length" class="oi" data-icon="filter_alt"/>
+                                <t t-foreach="this.filters" t-as="filter" t-key="filter_index">
+                                    <div class="d-flex align-items-center gap-1 badge bg-300" t-att-class="{ 'text-muted': !filter.active }">
+                                        <span class="text-truncate" t-out="filter.label"/>
+                                    </div>
+                                </t>
+                                <span t-if="this.filters &amp;&amp; this.model.meta.canScheduleEvents">-</span>
+                                <div t-if="this.model.meta.canScheduleEvents" class="badge bg-info-light text-truncate" t-out="this.toScheduleString"/>
+                            </div>
+                            <button
+                                class="btn btn-secondary"
+                                t-att-class="{ 'active': this.sidePanelExpanded }"
+                                t-on-click="() => this.toggleSidePanel()"
+                                title="Toggle Side Panel"
+                                aria-label="Toggle Side Panel"
+                                >
+                                <i class="oi" t-att-class="{'oi-filled': this.sidePanelExpanded}" data-icon="dock_to_left"/>
+                            </button>
+                        </div>
                     </div>
                     <MobileFilterPanel t-if="this.uiService.isSmall and this.hasSidePanel" t-props="this.mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">

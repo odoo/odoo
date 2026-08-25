@@ -199,13 +199,13 @@ test("should not restore manually applied colors while restoring other original 
     await testEditor({
         contentBefore: '<p>abc<font style="color: rgb(255, 255, 255)">d[e]f</font></p>',
         contentBeforeEdit:
-            '<p>abc<font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d[e]f</font></p>',
+            '<p>abc<font style="color: rgb(178, 178, 178);" data-original-color="rgb(255, 255, 255)">d[e]f</font></p>',
         stepFunction: setColor("rgb(255, 255, 255)", "color"),
         contentAfterEdit: unformat(`
             <p>abc
-                <font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d</font>
+                <font style="color: rgb(178, 178, 178);" data-original-color="rgb(255, 255, 255)">d</font>
                 <font style="color: rgb(255, 255, 255);">[e]</font>
-                <font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">f</font>
+                <font style="color: rgb(178, 178, 178);" data-original-color="rgb(255, 255, 255)">f</font>
             </p>
         `),
         contentAfter: unformat(`
@@ -223,13 +223,13 @@ test("should apply contrast to color classes with important style and remove it 
     await testEditor({
         contentBefore: '<p>abc<font class="text-o-color-3">[def]</font></p>',
         contentBeforeEdit:
-            '<p>abc<font class="text-o-color-3" data-original-color="" style="color: rgb(190, 182, 175) !important;">[def]</font></p>',
-        stepFunction: setColor("rgb(190, 182, 175)", "color"),
+            '<p>abc<font class="text-o-color-3" data-original-color="" style="color: rgb(185, 177, 169) !important;">[def]</font></p>',
+        stepFunction: setColor("rgb(185, 177, 169)", "color"),
         contentAfterEdit: unformat(`
-            <p>abc<font class="" style="color: rgb(190, 182, 175);">[def]</font></p>
+            <p>abc<font class="" style="color: rgb(185, 177, 169);">[def]</font></p>
         `),
         contentAfter: unformat(`
-            <p>abc<font style="color: rgb(190, 182, 175);">[def]</font></p>
+            <p>abc<font style="color: rgb(185, 177, 169);">[def]</font></p>
         `),
         config: { includePlugins: [ContrastPlugin] },
     });

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.GroupConfigMenu">
-        <div class="o_group_config d-print-none d-flex">
+        <div class="o_group_config d-print-none d-flex me-1">
             <Dropdown menuClass="'o-dropdown--group-config-menu'" position="'bottom-end'">
-                <button class="btn px-2 py-0" tabindex="-1">
-                    <i class="oi oi-filled ar opacity-50 opacity-100-hover" data-icon="settings" role="img" aria-label="Settings" title="Settings"/>
+                <button class="btn btn-light btn-sm px-1" tabindex="-1">
+                    <i class="oi oi-filled" data-icon="settings" role="img" aria-label="Settings" title="Settings"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="this.configItems" t-as="item" t-key="item.key">

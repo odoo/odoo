@@ -54,11 +54,8 @@
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
 
-    @include media-breakpoint-up(md) {
-        border-right: $border-width solid $border-color;
-    }
-
     .list-group-item {
+        --list-group-bg: transparent;
         --list-group-color: #{$gray-800};
         --list-group-item-padding-y: var(--SearchPanelHeader-padding-y, calc(#{map-get($spacers, 2)} - var(--SearchPanelHeader-margin-y)));
         --list-group-item-padding-x: 0;
@@ -93,22 +90,11 @@
 
 .o_search_panel_resize {
     cursor: col-resize;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: 0px -2px;
-    width: 10px;
-    height: 100%;
-    z-index: 1;
 }
 
 .o_search_panel_sidebar {
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    width: 3rem;
-    @include media-breakpoint-up(md) {
-        border-right: $border-width solid $border-color;
-    }
 
     & .btn {
         writing-mode: initial;

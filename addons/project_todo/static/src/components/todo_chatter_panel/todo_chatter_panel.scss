@@ -1,5 +1,5 @@
 // Reduce horizontal spacing if the next sibling is an aside chatter
-.o_form_sheet_bg:has(+ .o_todo_chatter) {
+.o_form_sheet_bg:has(+ .o_todo_chatter:not(.d-none)) {
     @media screen and (max-width: 1920px)  and (min-width: map-get($grid-breakpoints, md)) {
         --formView-sheetBg-padding-right: #{map-get($spacers, 2)};
     }

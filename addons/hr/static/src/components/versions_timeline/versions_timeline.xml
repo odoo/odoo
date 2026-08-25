@@ -44,30 +44,32 @@
 
         <t t-foreach="this.items.inline" position="replace">
             <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
-                <div class="o_arrow_button_wrapper"
-                        t-att-data-tooltip="item.toolTip">
-                    <button
-                        type="button"
-                        class="btn btn-secondary o_arrow_button"
-                        t-att-class="{
-                            o_first: item_first,
-                            o_arrow_button_current: item.isSelected,
-                            o_last: item_last,
-                        }"
-                        t-att-disabled="this.props.isDisabled || item.isSelected"
-                        role="radio"
-                        t-att-aria-checked="item.isSelected.toString()"
-                        t-att-aria-current="item.isSelected and 'step'"
-                        t-att-data-value="item.value"
-                        t-out="item.label"
-                        t-on-click="() => this.selectItem(item)"/>
-                    <div
-                        t-if="this.displayContractLines"
-                        t-att-class="{
-                            o_first: item_first,
-                            o_last: item_last,
-                            o_purple_line: item.isInContract and item.isCurrentContract,
-                        }"/>
+            <div class="o_arrow_button_wrapper position-relative">
+                <button
+                    type="button"
+                    class="btn btn-secondary o_arrow_button"
+                    t-att-class="{
+                        o_first: item_first,
+                        o_arrow_button_current: item.isSelected,
+                        o_last: item_last,
+                    }"
+                    t-att-disabled="this.props.isDisabled || item.isSelected"
+                    role="radio"
+                    t-att-aria-checked="item.isSelected.toString()"
+                    t-att-aria-current="item.isSelected and 'step'"
+                    t-att-data-value="item.value"
+                    t-on-click="() => this.selectItem(item)"
+                    t-att-data-tooltip="item.toolTip">
+                        <t t-out="item.label"/>
+                    </button>
+                    <span
+                            t-if="this.displayContractLines"
+                            class="o_contract_line position-absolute top-100 start-0 end-0 d-block"
+                            t-att-class="{
+                                'border-top border-primary': item.isInContract and item.isCurrentContract,
+                                'me-1': item_first,
+                                'ms-1': item_last,
+                            }"/>
                 </div>
             </t>
         </t>

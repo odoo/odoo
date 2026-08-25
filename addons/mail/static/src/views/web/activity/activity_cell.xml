@@ -4,9 +4,9 @@
     <t t-name="mail.ActivityCell">
         <div class="h-100 cursor-pointer p-1 d-flex flex-column justify-content-between" t-on-click="this.onClick">
             <div class="d-flex position-relative" t-ref="this.contentRef">
-                <div class="position-absolute text-truncate px-2 w-100" t-out="this.displayedSummaries"/>
+                <div class="text-truncate w-100 fs-6 fw-bold" t-out="this.displayedSummaries"/>
             </div>
-            <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+            <div class="d-flex justify-content-between align-items-center gap-3 small">
                 <div class="o-mail-ActivityCell-deadline" t-out="this.reportingDateFormatted"/>
                 <div class="d-flex justify-content-end align-items-center">
                     <div t-if="this.props.userAssignedIds and this.props.userAssignedIds.length > 0" class="d-flex justify-content-start align-items-center">
