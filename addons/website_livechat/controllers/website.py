@@ -1,6 +1,6 @@
 from odoo import http
 from odoo.http import request
-from odoo.addons.im_livechat.tools.misc import force_guest_env
+
 from odoo.addons.website.controllers.main import Website
 
 
@@ -11,5 +11,6 @@ class WebsiteLivechat(Website):
         # Since _upsert_visitor needs the guest in the context
         guest_token = request.httprequest.cookies.get(request.env['mail.guest']._cookie_name)
         if guest_token and request.env.user._is_public():
-            force_guest_env(guest_token, raise_if_not_found=False)
+            if guest := request.env['mail.guest']._get_guest_from_token(guest_token):
+                request.update_context(guest=guest)
         return super().track(res_model=res_model, res_id=res_id, **kwargs)
