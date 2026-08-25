@@ -4,7 +4,8 @@ import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 import { MoveNodePlugin } from "@html_editor/main/movenode_plugin";
 import { user } from "@web/core/user";
-import { t, useProps } from "@odoo/owl";
+import { t, usePlugin, useProps } from "@odoo/owl";
+import { AllowedQwebExpressionsPlugin } from "@web/views/fields/allowed_qweb_expressions_plugin";
 
 const cssRulesByElement = new WeakMap();
 
@@ -13,6 +14,7 @@ export class HtmlMailField extends HtmlField {
         ...htmlFieldProps,
         disableMoveNodePlugin: t.boolean().optional(),
     });
+    allowedQwebExpressionsPlugin = usePlugin(AllowedQwebExpressionsPlugin);
 
     /**
      * @param {WeakMap} cssRulesByElement
@@ -81,10 +83,9 @@ export class HtmlMailField extends HtmlField {
     }
 
     async loadAllowedExpressions(resModel) {
-        const getAllowedQwebExpressions = this.env.services["allowed_qweb_expressions"];
         [this.isTemplateEditor, this.allowedQwebExpressions] = await Promise.all([
             user.hasGroup("mail.group_mail_template_editor"),
-            getAllowedQwebExpressions(resModel),
+            this.allowedQwebExpressionsPlugin.getAllowedQwebExpressions(resModel),
         ]);
     }
 }

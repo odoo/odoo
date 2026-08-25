@@ -70,6 +70,7 @@
             "web/static/src/views/fields/translation/*",
             "web/static/src/views/fields/dynamic_placeholder_hook.js",
             "web/static/src/views/fields/dynamic_placeholder_popover.*",
+            "web/static/src/views/fields/allowed_qweb_expressions_plugin.js",
             "web/static/src/views/fields/formatters.js",
             "web/static/src/views/fields/standard_field_props.js",
             "web/static/src/views/fields/input_field_hook.js",
