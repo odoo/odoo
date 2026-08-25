@@ -412,7 +412,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_edi_web_service_navarra_vals(self, invoices):
         wsdl = 'SuministroFactEmitidas' if invoices[0].is_sale_document() else 'SuministroFactRecibidas'
         return {
-            'url': f'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws/{wsdl}.wsdl',
+            'url': f'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/{wsdl}.wsdl',
             'address': 'https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx',
             'test_url': 'https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx',
             'custom_navarra': True,
