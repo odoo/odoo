@@ -4,12 +4,13 @@ import {
     defineMailModels,
     onRpcBefore,
     openDiscuss,
+    openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockUserAgent } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { download } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
@@ -487,4 +488,23 @@ test("view and play audio attachment", async () => {
     await contains(".o-mail-AttachmentCard");
     await click(".o-mail-AttachmentCard");
     await contains(".o-FileViewer audio");
+});
+
+test("attachment inlined in the body is not listed", async () => {
+    const pyEnv = await startServer();
+    const [inlinedAttachmentId, attachmentId] = pyEnv["ir.attachment"].create([
+        { mimetype: "image/png", name: "inlined.png" },
+        { mimetype: "image/png", name: "listed.png" },
+    ]);
+    pyEnv["mail.message"].create({
+        attachment_ids: [inlinedAttachmentId, attachmentId],
+        body: `<p><img data-attachment-id="${inlinedAttachmentId}"></p>`,
+        message_type: "comment",
+        model: "res.partner",
+        res_id: serverState.partnerId,
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await contains(".o-mail-Message .o-mail-AttachmentContainer[title='listed.png']");
+    await contains(".o-mail-Message .o-mail-AttachmentContainer");
 });
