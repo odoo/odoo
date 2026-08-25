@@ -16,7 +16,6 @@ class TestAccountBankStatementLine(AccountPaymentCustomCommon):
         tx = self._create_transaction(flow="direct", state="pending")
         absl = self.env["account.bank.statement.line"].create({
             "payment_ref": tx.reference,
-            "partner_id": tx.partner_id.id,
             "amount": tx.amount,
         })
         absl._cron_confirm_wire_transfer_transactions()
@@ -29,7 +28,6 @@ class TestAccountBankStatementLine(AccountPaymentCustomCommon):
         tx = self._create_transaction(flow="direct", state="pending")
         absl = self.env["account.bank.statement.line"].create({
             "payment_ref": "S00098",  # non-matching reference
-            "partner_id": tx.partner_id.id,
             "amount": tx.amount,
         })
         absl._cron_confirm_wire_transfer_transactions()
