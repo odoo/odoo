@@ -1,9 +1,46 @@
 from odoo import _, models
 from odoo.addons.account.models.chart_template import template
+from odoo.tools import convert
+
+
+OPTIONAL_REPORT_TEMPLATE_FILES = (
+    ('sale', 'report/jp_sale_report.xml', ('report_saleorder_document',)),
+    ('purchase', 'report/jp_purchase_report.xml', ('report_purchaseorder_document', 'report_purchasequotation_document')),
+    ('stock', 'report/jp_stock_report.xml', ('report_delivery_document',)),
+)
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
+
+    def _register_hook(self):
+        res = super()._register_hook()
+
+        # ponytail: fold-in cleanup for legacy split modules (kept minimal to avoid migration scaffolding).
+        self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('key', 'like', 'l10n_jp_doc_layout%'),
+        ]).write({'active': False})
+
+        force_reload_optional_reports = 'l10n_jp' in self.pool.updated_modules
+        module_obj = self.env['ir.module.module']
+
+        for module_name, filename, xml_ids in OPTIONAL_REPORT_TEMPLATE_FILES:
+            if not module_obj.search_count([('name', '=', module_name), ('state', '=', 'installed')]):
+                continue
+
+            if not force_reload_optional_reports and all(
+                self.env.ref(f'l10n_jp.{xml_id}', raise_if_not_found=False)
+                for xml_id in xml_ids
+            ):
+                continue
+
+            # PY023: static module/file names from OPTIONAL_REPORT_TEMPLATE_FILES,
+            # clean environment, never user-controlled input.
+            convert.convert_file(
+                self.env(context={}), 'l10n_jp', filename, None, mode='update', noupdate=False,
+            )
+
+        return res
 
     @template('jp')
     def _get_jp_template_data(self):

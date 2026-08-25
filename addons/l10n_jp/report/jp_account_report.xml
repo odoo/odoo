@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_recipient_partner" t-value="o.partner_id"/>
+            </xpath>
+
+            <xpath expr="//address[@t-field='o.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+
+            <xpath expr="//th[@name='th_priceunit']/span" position="replace">
+                <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
+                <span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'" t-out="'Unit Price (%s)' % jp_currency_label"/>
+                <span t-else="">Unit Price</span>
+            </xpath>
+
+            <xpath expr="//th[@name='th_subtotal']/span" position="replace">
+                <span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'" t-out="'Amount (%s)' % jp_currency_label"/>
+                <span t-else="">Amount</span>
+            </xpath>
+        </template>
+
+        <template id="report_payment_receipt_document" inherit_id="account.report_payment_receipt_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_recipient_partner" t-value="o.partner_id"/>
+            </xpath>
+
+            <xpath expr="//table[@name='invoices']/thead/tr/th[last()]/span" position="replace">
+                <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
+                <span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'" t-out="'Amount (%s)' % jp_currency_label"/>
+                <span t-else="">Amount</span>
+            </xpath>
+        </template>
+    </data>
+</odoo>
