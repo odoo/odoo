@@ -1,8 +1,10 @@
+import { markup } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
+import { setElementContent } from '@web/core/utils/html';
 import { renderToMarkup } from '@web/core/utils/render';
 import { Interaction } from '@web/public/interaction';
 
@@ -421,6 +423,7 @@ export class PaymentForm extends Interaction {
             const processingValues = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
             ));
+            processingValues['redirect_form_html'] = markup(processingValues['redirect_form_html'])
             if (processingValues.state === 'error') {
                 this._handlePaymentProcessingError(processingValues);
                 return;
@@ -504,7 +507,7 @@ export class PaymentForm extends Interaction {
     _processRedirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
         // Create and configure the form element with the content rendered by the server.
         const div = document.createElement('div');
-        div.innerHTML = processingValues['redirect_form_html'];
+        setElementContent(div, processingValues['redirect_form_html']);
         const redirectForm = div.querySelector('form');
         redirectForm.setAttribute('id', 'o_payment_redirect_form');
         redirectForm.setAttribute('target', '_top');  // Ensures redirections when in an iframe.
