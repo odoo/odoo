@@ -35,7 +35,6 @@ export class ActionButton extends Component {
 
     get paddingClass() {
         return this.attClassObjectToString({
-            "o-p-0_5": this.props.inline,
             "px-3 py-2": this.props.dropdown && this.ui.isSmall,
             "px-2 py-1": this.props.dropdown && !this.ui.isSmall,
         });

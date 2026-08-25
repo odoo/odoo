@@ -1,0 +1,20 @@
+.o-mail-ActionList-button {
+    aspect-ratio: 1;
+    padding: 6px !important;
+
+
+}
+
+.o-mail-ActionList-group.btn-group {
+    > :first-child:not(.rounded-circle) {
+        @extend .rounded-start-3;
+    }
+
+    > :last-child:not(.rounded-circle) {
+        @extend .rounded-end-3;
+    }
+
+    &:has(.rounded-circle) {
+        gap: 4px;
+    }
+}
