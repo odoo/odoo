@@ -98,9 +98,7 @@ export class ImagePlugin extends Plugin {
                     items: IMAGE_ALIGNMENT,
                     getDisplay: () => this.imageAlignment,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
-                        this.setImageAlignment(item);
-                    },
+                    previewable: () => this.previewableSetImageAlignment,
                 },
                 isAvailable: isHtmlContentSupported,
             }),
@@ -114,9 +112,7 @@ export class ImagePlugin extends Plugin {
                     icon: "padding",
                     items: IMAGE_PADDING,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
-                        this.setImagePadding({ size: item.value });
-                    },
+                    previewable: () => this.previewableSetImagePadding,
                 },
                 isAvailable: isHtmlContentSupported,
             }),
@@ -131,10 +127,7 @@ export class ImagePlugin extends Plugin {
                     items: IMAGE_SIZE,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
                     icon: "expand_content",
-                    onSelected: (item) => {
-                        this.resizeImage({ size: item.value });
-                        this.updateImageParams();
-                    },
+                    previewable: () => this.previewableResizeImage,
                 },
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
@@ -155,6 +148,7 @@ export class ImagePlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateImageParams.bind(this)),
         on_undone_handlers: this.updateImageParams.bind(this),
         on_redone_handlers: this.updateImageParams.bind(this),
+        on_savepoint_restored_handlers: this.updateImageParams.bind(this),
         should_show_hint_predicates: (node) => {
             if (isElementOverlappingAnyFloatingImage(closestBlock(node))) {
                 return false;
@@ -180,6 +174,16 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = this.services.fileViewer();
+        const previewable = (operation) =>
+            this.dependencies.history.makePreviewableOperation(operation);
+        this.previewableSetImageAlignment = previewable((item) => this.setImageAlignment(item));
+        this.previewableSetImagePadding = previewable((item) =>
+            this.setImagePadding({ size: item.value })
+        );
+        this.previewableResizeImage = previewable((item) => {
+            this.resizeImage({ size: item.value });
+            this.updateImageParams();
+        });
     }
 
     destroy() {

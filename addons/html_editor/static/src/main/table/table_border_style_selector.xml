@@ -1,18 +1,20 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableBorderStyleSelector">
-        <Dropdown menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef">
+        <Dropdown navigationOptions="this.preview.navigationOptions" state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="menuRef">
             <button class="btn btn-light" t-att-title="this.props.title" name="table_border_style">
                 <t t-call="html_editor.TableBorderStyleSvg"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true" data-vertical="true">
+                <div data-prevent-closing-overlay="true" data-vertical="true" t-on-mouseleave="this.onItemHoverOut">
                     <DropdownItem
+                        attrs="{ 'data-preview-index': 0 }"
                         class="{'dropdown-item_active_noarrow btn btn-light': true, active: this.state.displayName === 'none' }"
                         t-on-pointerdown.prevent="() => {}"
                         onSelected="() => this.onSelected({ value: 'none' })"
                     >None</DropdownItem>
                     <div t-foreach="this.items" t-as="item" t-key="item.value">
                         <DropdownItem
+                            attrs="{ 'data-preview-index': item_index + 1 }"
                             class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.value === this.state.displayName}"
                             t-on-pointerdown.prevent="() => {}"
                             onSelected="() => this.onSelected(item)"

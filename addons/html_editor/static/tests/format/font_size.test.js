@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, hover, describe, waitFor, queryOne } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import {
@@ -8,9 +8,31 @@ import {
     tripleClick,
 } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
-import { press } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
+import { contains } from "@web/../tests/web_test_helpers";
+import { getIframeInput } from "../_helpers/iframe_input";
+
+async function setupFontSizeDropdown(content) {
+    const { el } = await setupEditor(content);
+
+    await waitFor(".o-we-toolbar", 1);
+    const inputEl = await getIframeInput(
+        ".o-we-toolbar [name='font_size'] iframe.o_font_size_selector_iframe",
+        "input[name='font_size_input']"
+    );
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expect(inputEl).toBeFocused();
+    await waitFor(".o_font_size_selector_menu div");
+
+    return { el, inputEl };
+}
+
+function getFontSizeItem(size) {
+    return queryOne(`.o_font_size_selector_menu .dropdown-item:contains('${size}')`);
+}
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -39,6 +61,24 @@ test("should change the font size of a whole heading after a triple click", asyn
         },
         contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
     });
+});
+
+test("Should show the default font display name", async () => {
+    const { el } = await setupEditor(`
+        <ul>
+            <li class="display-2-fs">
+                <div class="o-paragraph">abc</div>
+                <ul class="o_default_font_size">
+                    <li>[def]</li>
+                </ul>
+            </li>
+        </ul>
+    `);
+    await waitFor(".btn[name='font_size']");
+    const fontSelectorInput = el.ownerDocument
+        .querySelector("iframe")
+        .contentDocument.querySelector("input");
+    expect(fontSelectorInput.value).toBe("14");
 });
 
 test("should change the font-size for a character in an inline that has a font-size", async () => {
@@ -258,5 +298,136 @@ test("should format inside of content editable boundary (setFontSize)", async ()
         stepFunction: setFontSize("36px"),
         contentAfter:
             '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
+    });
+});
+
+describe("Font size preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different font sizes on hover", async () => {
+        const { el } = await setupFontSizeDropdown("<p>a[bc]d</p>");
+
+        await hover(getFontSizeItem(21));
+        expect(getContent(el)).toBe(`<p>a<span class="h2-fs">[bc]</span>d</p>`);
+
+        await hover(getFontSizeItem(64));
+        expect(getContent(el)).toBe(`<p>a<span class="display-3-fs">[bc]</span>d</p>`);
+
+        await hover(getFontSizeItem(17));
+        expect(getContent(el)).toBe(`<p>a<span class="h4-fs">[bc]</span>d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying font size (no initial font size)", async () => {
+        const { el, inputEl } = await setupFontSizeDropdown("<p>a[bc]d</p>");
+
+        await hover(getFontSizeItem(21));
+        expect(getContent(el)).toBe(`<p>a<span class="h2-fs">[bc]</span>d</p>`);
+
+        await hover(el);
+
+        expect(inputEl.value).toBe("14");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying font size (existing font size)", async () => {
+        const { el, inputEl } = await setupFontSizeDropdown(
+            '<p>a<span class="h4-fs">[bc]</span>d</p>'
+        );
+
+        await hover(getFontSizeItem(21));
+        expect(getContent(el)).toBe(`<p>a<span class="h2-fs">[bc]</span>d</p>`);
+
+        await hover(el);
+
+        expect(inputEl.value).toBe("17");
+        expect(getContent(el)).toBe(`<p>a<span class="h4-fs">[bc]</span>d</p>`);
+    });
+});
+
+describe("Font size preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different font sizes while navigating with keyboard", async () => {
+        const { el } = await setupFontSizeDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(".o_font_size_selector_menu").toHaveCount(1);
+        expect(getFontSizeItem(13)).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a<span class="o_small-fs">[bc]</span>d</p>`);
+
+        await press("ArrowDown");
+        expect(getFontSizeItem(14)).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a<span class="h6-fs">[bc]</span>d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (no initial font size)", async () => {
+        const { el, inputEl } = await setupFontSizeDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(".o_font_size_selector_menu").toHaveCount(1);
+        expect(getFontSizeItem(13)).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a<span class="o_small-fs">[bc]</span>d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+
+        expect(inputEl.value).toBe("14");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing font size)", async () => {
+        const { el, inputEl } = await setupFontSizeDropdown(
+            '<p>a<span class="h4-fs">[bc]</span>d</p>'
+        );
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(".o_font_size_selector_menu").toHaveCount(1);
+        expect(getFontSizeItem(13)).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a<span class="o_small-fs">[bc]</span>d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+        expect(inputEl.value).toBe("17");
+        expect(getContent(el)).toBe(`<p>a<span class="h4-fs">[bc]</span>d</p>`);
+    });
+});
+
+describe("Font size preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation", async () => {
+        const { el } = await setupFontSizeDropdown("<p>a[bc]d</p>");
+
+        await hover(getFontSizeItem(21));
+        expect(getContent(el)).toBe(`<p>a<span class="h2-fs">[bc]</span>d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getFontSizeItem(34)).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a<span class="h1-fs">[bc]</span>d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard navigation", async () => {
+        const { el, inputEl } = await setupFontSizeDropdown(
+            '<p>a<span class="h4-fs">[bc]</span>d</p>'
+        );
+
+        await hover(getFontSizeItem(21));
+        expect(getContent(el)).toBe(`<p>a<span class="h2-fs">[bc]</span>d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getFontSizeItem(34)).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a<span class="h1-fs">[bc]</span>d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+        expect(inputEl.value).toBe("17");
+        expect(getContent(el)).toBe(`<p>a<span class="h4-fs">[bc]</span>d</p>`);
     });
 });

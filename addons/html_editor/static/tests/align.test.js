@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { click, describe, expect, hover, queryOne, test, waitFor } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import {
     alignCenter,
@@ -10,6 +10,20 @@ import {
     alignBottom,
 } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
+import { getContent } from "./_helpers/selection";
+import { animationFrame, press } from "@odoo/hoot-dom";
+
+async function setupAlignDropdown(content) {
+    const { el } = await setupEditor(content);
+    await expandToolbar();
+    await click(".btn[name='text_align']");
+    await waitFor(".o-we-toolbar-dropdown button");
+    return { el };
+}
+
+function getAlignItem(icon) {
+    return queryOne(`.o-we-toolbar-dropdown button[data-icon='format_align_${icon}']`);
+}
 
 test("should have align tool only if the block is content editable", async () => {
     for (const [contenteditable, count] of [
@@ -692,5 +706,166 @@ describe("override !important class", () => {
             stepFunction: alignCenter,
             contentAfter: '<p style="text-align: center;">a[]b</p>',
         });
+    });
+});
+
+describe("Align preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different alignments on hover", async () => {
+        const { el } = await setupAlignDropdown("<p>a[bc]d</p>");
+
+        await hover(getAlignItem("center"));
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+
+        await hover(getAlignItem("right"));
+        expect(getContent(el)).toBe(`<p style="text-align: end;">a[bc]d</p>`);
+
+        await hover(getAlignItem("justify"));
+        expect(getContent(el)).toBe(`<p style="text-align: justify;">a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying align style (no initial align)", async () => {
+        const { el } = await setupAlignDropdown("<p>a[bc]d</p>");
+
+        await hover(getAlignItem("center"));
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+
+        await hover(el);
+
+        expect(queryOne(".btn[name='text_align'] i")).toHaveAttribute(
+            "data-icon",
+            "format_align_left"
+        );
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying align style (existing align)", async () => {
+        const { el } = await setupAlignDropdown('<p style="text-align: center;">a[bc]d</p>');
+
+        await hover(getAlignItem("left"));
+        expect(getContent(el)).toBe(`<p style="text-align: start;">a[bc]d</p>`);
+
+        await hover(el);
+
+        expect(queryOne(".btn[name='text_align'] i")).toHaveAttribute(
+            "data-icon",
+            "format_align_center"
+        );
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+    });
+});
+
+describe("Align preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different alignments while navigating with keyboard", async () => {
+        const { el } = await setupAlignDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown");
+        await animationFrame();
+
+        expect(getAlignItem("left")).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getAlignItem("center")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getAlignItem("right")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: end;">a[bc]d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getAlignItem("justify")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: justify;">a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (no initial align)", async () => {
+        const { el } = await setupAlignDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getAlignItem("left")).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getAlignItem("center")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+        await animationFrame();
+
+        expect(queryOne(".btn[name='text_align'] i")).toHaveAttribute(
+            "data-icon",
+            "format_align_left"
+        );
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing align)", async () => {
+        const { el } = await setupAlignDropdown('<p style="text-align: center;">a[bc]d</p>');
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getAlignItem("left")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: start;">a[bc]d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+        await animationFrame();
+
+        expect(queryOne(".btn[name='text_align'] i")).toHaveAttribute(
+            "data-icon",
+            "format_align_center"
+        );
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+    });
+});
+
+describe("Align preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation", async () => {
+        const { el } = await setupAlignDropdown("<p>a[bc]d</p>");
+
+        await hover(getAlignItem("center"));
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+
+        expect(getAlignItem("right")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: end;">a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard navigation", async () => {
+        const { el } = await setupAlignDropdown('<p style="text-align: center;">a[bc]d</p>');
+
+        await hover(getAlignItem("right"));
+        expect(getContent(el)).toBe(`<p style="text-align: end;">a[bc]d</p>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+
+        expect(getAlignItem("justify")).toBeFocused();
+        expect(getContent(el)).toBe(`<p style="text-align: justify;">a[bc]d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+        await animationFrame();
+
+        expect(queryOne(".btn[name='text_align'] i")).toHaveAttribute(
+            "data-icon",
+            "format_align_center"
+        );
+        expect(getContent(el)).toBe(`<p style="text-align: center;">a[bc]d</p>`);
     });
 });
