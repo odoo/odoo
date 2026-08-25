@@ -77,6 +77,9 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "win the lead",
         run:"click"
     }, {
+        trigger: ".o_form_view .ribbon:contains('Won')",
+        content: "wait for the lead to be won",
+    }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
         tooltipPosition: "bottom",
