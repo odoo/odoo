@@ -810,13 +810,14 @@ export class DomPlugin extends Plugin {
     isRetaggingSafe(block) {
         return (
             this.dependencies.properties.get(block, "retaggable") ??
-            !(
-                (isParagraphRelatedElement(block) ||
-                    isListItemElement(block) ||
-                    isPhrasingContent(block)) &&
-                (this.dependencies.delete.isUnremovable(block) ||
-                    !block.parentElement.isContentEditable)
-            )
+            (block.isContentEditable &&
+                !(
+                    (isParagraphRelatedElement(block) ||
+                        isListItemElement(block) ||
+                        isPhrasingContent(block)) &&
+                    (this.dependencies.delete.isUnremovable(block) ||
+                        !block.parentElement.isContentEditable)
+                ))
         );
     }
 
@@ -836,8 +837,7 @@ export class DomPlugin extends Plugin {
                 // selected so exclude it.
                 (isCollapsed || block !== lastTargetedNode) &&
                 this.isRetaggingSafe(block) &&
-                !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
-                block.isContentEditable
+                !descendants(block).some((descendant) => targetedBlocks.includes(descendant))
         );
     }
 
@@ -869,10 +869,11 @@ export class DomPlugin extends Plugin {
         let newEl;
         for (const block of this.getBlocksToSet()) {
             if (
-                isParagraphRelatedElement(block) ||
-                isListItemElement(block) ||
-                isPhrasingContent(block) ||
-                block.nodeName === "BLOCKQUOTE"
+                this.dependencies.properties.get(block, "retaggable") ??
+                (isParagraphRelatedElement(block) ||
+                    isListItemElement(block) ||
+                    isPhrasingContent(block) ||
+                    block.nodeName === "BLOCKQUOTE")
             ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
