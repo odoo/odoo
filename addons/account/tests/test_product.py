@@ -203,32 +203,37 @@ class TestProduct(AccountTestInvoicingCommon):
 
         self.env['product.supplierinfo'].create({
             'partner_id': vendor.id,
+            'product_id': product_cube_blue.id,
+            'price': 202.0,
+            'sequence': 1,
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
             'product_tmpl_id': product_tmpl_cube.id,
             'price': 101.0,
             'date_start': '2000-01-01',
             'date_end': '2100-01-01',
-        })
-        self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
-            'product_id': product_cube_blue.id,
-            'price': 202.0
+            'sequence': 2,
         })
         self.env['product.supplierinfo'].create({
             'partner_id': vendor.id,
             'product_id': product_ball_red.id,
-            'price': 303.0
+            'price': 303.0,
+            'sequence': 3,
         })
         self.env['product.supplierinfo'].create({
             'partner_id': vendor.id,
             'product_id': product_ball_blue.id,
             'price': 404.0,
             'date_end': '2000-01-01',
+            'sequence': 4,
         })
         self.env['product.supplierinfo'].create({
             'partner_id': vendor.id,
             'product_id': product_ball_blue.id,
             'price': 405.0,
             'min_qty': 2.0,
+            'sequence': 5,
         })
 
         move_form = Form(self.env['account.move'].with_context({'default_move_type': 'in_invoice'}))

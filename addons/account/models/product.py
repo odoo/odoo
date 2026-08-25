@@ -247,15 +247,14 @@ class ProductProduct(models.Model):
             if document_type == 'sale':
                 product_price_unit = product.with_company(company).lst_price
             elif document_type == 'purchase':
-                supplier_info_list = product._get_filtered_sellers(
-                    partner_id=partner, quantity=qty, date=fields.Date.context_today(self), uom_id=product_uom
-                ) if partner else False
-                if supplier_info_list:
-                    supplier_info = supplier_info_list[0]
-                    for item in supplier_info_list[1:]:
-                        if item.product_id:
-                            supplier_info = item
-                    product_price_unit = supplier_info[0].currency_id._convert(supplier_info[0].price_discounted, product_currency)
+                supplier_info = product._get_filtered_sellers(
+                    partner_id=partner,
+                    quantity=qty,
+                    date=fields.Date.context_today(self),
+                    uom_id=product_uom,
+                )[:1]
+                if supplier_info:
+                    product_price_unit = supplier_info.currency_id._convert(supplier_info.price_discounted, product_currency)
                 else:
                     product_price_unit = product.with_company(company).standard_price
             else:
