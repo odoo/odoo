@@ -125,9 +125,12 @@ patch(LocationSelectorDialog.prototype, {
         this.state.locations = locations.pickup_location_data;
         this.state.countries = locations.country_data;
         if (this.state.countries.length && !this.state.selectedCountryData.code) {
-            this.state.selectedCountryData = this.props.countryCode ? this.state.countries.find(
+            const matchingCountry = this.props.countryCode && this.state.countries.find(
                 (country) => country.value.code === this.props.countryCode
-            ).value : this.state.countries[0].value;
+            );
+            this.state.selectedCountryData = matchingCountry
+                ? matchingCountry.value
+                : this.state.countries[0].value;
         }
     },
 });

@@ -28,7 +28,6 @@ class WebsiteSaleCollect(WebsiteSale):
                 "zip_code": (  # Define the zip code.
                     order_sudo.partner_shipping_id.zip
                     or selected_location_data.get("zip_code")
-                    or request.geoip.postal.code
                     or ""  # String expected for the widget.
                 ),
                 "country_code": (
