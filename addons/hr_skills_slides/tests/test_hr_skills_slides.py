@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import RecordCapturer, TransactionCase
 
 
 class TestHrSkillsSlides(TransactionCase):
@@ -55,6 +55,34 @@ class TestHrSkillsSlides(TransactionCase):
         resume_line = self.employee.resume_line_ids.filtered(lambda rl: rl.channel_id)
         self.assertEqual(resume_line.channel_id.id, self.channel.id)
         self.assertEqual(resume_line.course_url, self.channel.website_absolute_url)
+
+    def test_no_duplicate_subscribe_message_on_reenroll(self):
+        """
+        Re-adding a partner that is already an active 'joined' member of the channel
+        does not repost any message on the employee's chatter.
+        """
+
+        with RecordCapturer(self.env['mail.message'], []) as capture:
+            channel = self.env['slide.channel'].create({
+                'name': 'Test Channel 1',
+                'enroll': 'public',
+                'user_id': self.user.id,
+            })
+        enroll_message = capture.records.filtered(lambda m: m.model == 'hr.employee')
+        self.assertEqual(enroll_message.res_id, self.employee.id)
+        self.assertIn('subscribed to the course', enroll_message.body)
+        self.assertIn(self.user.partner_id, channel.partner_ids)
+
+        enroll_group = self.user.group_ids
+        group_users = enroll_group.all_user_ids
+        with RecordCapturer(self.env['mail.message'], []) as capture:
+            # The partner is already an active 'joined' member: no enroll message.
+            # The Admin is not enrolled yet.
+            channel.enroll_group_ids = enroll_group
+        newly_enrolled_users = group_users - self.user
+        self.assertEqual(len(capture.records), 1)
+        self.assertEqual(capture.records.res_id, newly_enrolled_users.employee_id.id)
+        self.assertIn('subscribed to the course', capture.records.body)
 
     def test_remove_resume_line_no_readd(self):
         """
