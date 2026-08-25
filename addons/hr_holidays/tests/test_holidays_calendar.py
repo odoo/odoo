@@ -141,3 +141,24 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         leave_request_b.action_approve()
         with self.assertRaises(ValidationError):
             leave_request_a.action_approve()
+
+    def test_duration_calendar_event_all_day(self):
+        """
+        Ensure that calendar events created from multi-day leave requests
+        have their duration computed correctly
+        """
+
+        leave_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test',
+            'code': 'Test',
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+            'create_calendar_meeting': True,
+        })
+
+        leave = self._create_leave(self.employee_emp, leave_type, date(2026, 8, 24), date(2026, 8, 28), validate=True)
+        event = leave.meeting_id
+
+        # Ensure that the length of the duration matches the start and stop times
+        self.assertTrue(event.allday)
+        self.assertEqual(event.duration, 105)
