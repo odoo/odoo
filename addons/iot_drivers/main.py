@@ -159,6 +159,9 @@ class Manager(Thread):
 
         certificate.ensure_validity()
 
+        for interface_class in interfaces.values():
+            interface_class().start()
+
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
         self._send_all_devices()
