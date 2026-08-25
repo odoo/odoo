@@ -1854,6 +1854,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if (
             self.env["res.users"]._get_signup_invitation_scope() == "b2c"
             and self.env.website.is_public_user()
+            and not order.partner_id.user_ids
         ):
             order.partner_id.signup_prepare()
             signup_url = urlparse(
