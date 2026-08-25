@@ -7,8 +7,6 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Thread } from "@mail/core/common/thread";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Composer } from "@mail/core/common/composer";
-import { useDynamicInterval } from "@mail/utils/common/misc";
-import { formatLocalDateTime } from "@mail/utils/common/dates";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -41,7 +39,6 @@ export class DiscussContent extends Component {
             const partition = this.threadActions.partition;
             return [partition.quick, partition.other, ...partition.group.slice().reverse()];
         });
-        this.correspondentLocalDateTimeFormatted = signal("");
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
         this.attClassObjectToString = attClassObjectToString;
@@ -52,17 +49,9 @@ export class DiscussContent extends Component {
             () => [this.thread],
             () => this.actionPanelAutoOpenFn()
         );
-        useDynamicInterval(() => {
-            const formatted = formatLocalDateTime(
-                this.thread?.channel?.correspondent?.persona?.tz,
-                this.store.self?.tz
-            );
-            this.correspondentLocalDateTimeFormatted.set(formatted);
-            if (!formatted) {
-                return;
-            }
-            return 60000 - (Date.now() % 60000);
-        });
+        this.correspondentLocalDateTimeFormatted = computed(() =>
+            this.store.localTimeIn(this.thread?.channel?.correspondent?.persona?.tz)
+        );
     }
 
     actionPanelAutoOpenFn() {

@@ -97,6 +97,13 @@ export class RecordInternal {
      */
     disposeFns = new Set();
     /**
+     * Computeds of this record that go stale on their own, by the key their
+     * getter reads them under.
+     *
+     * @type {Map<string, () => any>|undefined}
+     */
+    staleComputeds;
+    /**
      * Scope holding the owl computeds of this record, made on the first one and
      * disposed with the record.
      *

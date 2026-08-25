@@ -19,6 +19,7 @@ import {
     technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
+import { computedUntilStale } from "@mail/utils/common/signal";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
@@ -438,6 +439,29 @@ export class Record {
                 });
             })
         );
+    }
+
+    /**
+     * The `computedUntilStale` of this record kept under `key`, made on the
+     * first read so that a value nobody reads is never scheduled.
+     *
+     * @template T
+     * @param {string} key where the computed is kept, off the fields of the record
+     * @param {() => T} compute
+     * @param {(value: T) => number|void} msUntilStale
+     * @returns {() => T}
+     */
+    computedUntilStale(key, compute, msUntilStale) {
+        const record = this._raw;
+        const staleComputeds = (record._.staleComputeds ??= new Map());
+        let staleComputed = staleComputeds.get(key);
+        if (!staleComputed) {
+            staleComputed = record._.ensureScope(record).run(() =>
+                computedUntilStale(compute, msUntilStale)
+            );
+            staleComputeds.set(key, staleComputed);
+        }
+        return staleComputed;
     }
 
     /**

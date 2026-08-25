@@ -1,30 +1,19 @@
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 
-const { DateTime } = luxon;
-
-function resolveTimeZoneName(tz) {
+export function resolveTimeZoneName(tz) {
     return tz === "localtime" ? "local" : tz;
 }
 
 /**
- * @param {string} partnerTz
- * @param {string} currentUserTz
+ * @param {string} partnerTz resolved, and different from the current user one
+ * @param {string} currentUserTz resolved
+ * @param {import("luxon").DateTime<true>} now
+ * @returns {string} the local time of the partner, translated
  */
-export function formatLocalDateTime(partnerTz, currentUserTz) {
-    const resolvedCurrentUserTz = resolveTimeZoneName(currentUserTz);
-    const resolvedPartnerTz = resolveTimeZoneName(partnerTz);
-    if (
-        !resolvedPartnerTz ||
-        !resolvedCurrentUserTz ||
-        [resolvedPartnerTz, resolvedCurrentUserTz].includes("local") ||
-        resolvedPartnerTz === resolvedCurrentUserTz
-    ) {
-        return null;
-    }
-    const now = DateTime.now();
-    const partnerDateTime = now.setZone(resolvedPartnerTz);
-    const currentUserDateTime = now.setZone(resolvedCurrentUserTz);
+export function formatLocalDateTime(partnerTz, currentUserTz, now) {
+    const partnerDateTime = now.setZone(partnerTz);
+    const currentUserDateTime = now.setZone(currentUserTz);
     const format = currentUserDateTime.hasSame(partnerDateTime, "day")
         ? localization.timeFormat.replace(":ss", "")
         : localization.dateTimeFormat.replace(":ss", "");

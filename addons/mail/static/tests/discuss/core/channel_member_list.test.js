@@ -9,18 +9,10 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 
-import {
-    Command,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -143,17 +135,6 @@ test("Avatar card shows local timezone", async () => {
         channel_type: "channel",
     });
     listenStoreFetch(["avatar_card"]);
-    let changeTzResolver = Promise.withResolvers();
-    patchWithCleanup(AvatarCard.prototype, {
-        /**
-         * This assumes this is internal code to compute formatting of tz,
-         * and next animation frame implies showing or not of timezone on the card
-         */
-        onChangeTz(...args) {
-            changeTzResolver?.resolve();
-            return super.onChangeTz(...args);
-        },
-    });
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList");
@@ -168,9 +149,7 @@ test("Avatar card shows local timezone", async () => {
     // Case 2: correspondent tz === self tz ('localtime' tz)
     pyEnv["res.partner"].write([partnerId], { tz: "localtime" });
     await click(".o-discuss-ChannelMember:has(:text('Demo'))");
-    changeTzResolver = Promise.withResolvers();
     await waitStoreFetch(["avatar_card"]);
-    await changeTzResolver.promise;
     await animationFrame();
     await contains(".o-mail-avatar-card-name:text('Demo')");
     await contains(".o-mail-avatar-card-localtime", { count: 0 });
@@ -179,9 +158,7 @@ test("Avatar card shows local timezone", async () => {
     // Case 3: correspondent tz === self tz (explicit tz)
     pyEnv["res.partner"].write([partnerId], { tz: "Europe/Brussels" });
     await click(".o-discuss-ChannelMember:has(:text('Demo'))");
-    changeTzResolver = Promise.withResolvers();
     await waitStoreFetch(["avatar_card"]);
-    await changeTzResolver.promise;
     await animationFrame();
     await contains(".o-mail-avatar-card-name:text('Demo')");
     await contains(".o-mail-avatar-card-localtime", { count: 0 });

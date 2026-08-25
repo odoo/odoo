@@ -1,3 +1,34 @@
+import { computed, getScope, signal } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
+
+/**
+ * A computed that arms the timeout marking its own value stale, so a value
+ * nobody reads schedules nothing and its scope drops the last timeout.
+ *
+ * @template T
+ * @param {() => T} compute
+ * @param {(value: T) => number|void} msUntilStale delay before the value has
+ *  to be made again, or nothing to leave it as it is
+ * @returns {() => T}
+ */
+export function computedUntilStale(compute, msUntilStale) {
+    const staleness = signal(0);
+    const markStale = incrementFn(staleness);
+    let timeout;
+    getScope()?.onDestroy(() => browser.clearTimeout(timeout));
+    return computed(() => {
+        void staleness();
+        browser.clearTimeout(timeout);
+        const value = compute();
+        const ms = msUntilStale(value);
+        if (ms) {
+            timeout = browser.setTimeout(markStale, Math.ceil(ms));
+        }
+        return value;
+    });
+}
+
 /**
  * Returns a function to increment the value of a number signal. The initial
  * state is taken when the resulting function is ran, not when incrementFn is

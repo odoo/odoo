@@ -29,7 +29,7 @@
                         <a href="#" class="text-decoration-underline link-underline link-underline-opacity-0 link-underline-opacity-100-hover" t-on-click="this.onClickNumberOfVotes" t-out="this.props.poll.voteCountText(this.props.poll.numberOfVotes)"/>
                         <span class="text-muted">&#8729;</span>
                         <span t-if="this.props.poll.end_message_id" class="text-muted">Poll closed</span>
-                        <span t-else="" class="text-muted" t-att-title="this.remainingTimeTextTitle" t-out="this.state.remainingTimeText"/>
+                        <span t-else="" class="text-muted" t-att-title="this.remainingTimeTextTitle" t-out="this.remainingTime().text"/>
                     </div>
                     <t t-if="!this.props.poll.end_message_id">
                         <t t-if="!this.props.poll.selfAlreadyVoted">
