@@ -45,7 +45,7 @@ export class ActionButton extends Component {
             "o-mail-ActionList-button btn btn-group-item btn-secondary position-relative": true,
             "o-inline": this.props.inline,
             "text-start": this.props.dropdown && !this.ui.isSmall,
-            "rounded-circle": this.props.rounded,
+            "rounded-circle d-flex align-items-center justify-content-center": this.props.rounded,
         });
         cls = this.attClassObjectToString({ [cls]: true, [this.paddingClass]: true });
         cls = this.attClassObjectToString({

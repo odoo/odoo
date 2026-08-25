@@ -13,6 +13,10 @@ import { markEventHandled } from "@web/core/utils/misc";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
+export const composerButtonPropsInline = {
+    rounded: true,
+};
+
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("models").Composer} Composer */
 /**
@@ -58,6 +62,7 @@ registerComposerAction("send-message", {
             ? _t("Log")
             : _t("Send"),
     onSelected: ({ owner }) => owner.sendMessage(),
+    propsInline: composerButtonPropsInline,
     sequenceQuick: 30,
 });
 registerComposerAction("add-emoji", {
@@ -78,6 +83,7 @@ registerComposerAction("add-emoji", {
     onSelected(params, ev) {
         markEventHandled(ev, "Composer.onClickAddEmoji");
     },
+    propsInline: composerButtonPropsInline,
     setup({ store }) {
         if (store.env.services.ui.isSmall) {
             return;
@@ -100,6 +106,7 @@ registerComposerAction("upload-files", {
         markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },
+    propsInline: composerButtonPropsInline,
     setup: ({ owner }) => (owner.fileUploaderRef = signal.ref()),
     sequence: 20,
 });
@@ -116,6 +123,7 @@ registerComposerAction("open-full-composer", {
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     name: _t("Open Full Composer"),
     onSelected: ({ owner }) => owner.onClickFullComposer(),
+    propsInline: composerButtonPropsInline,
     sequence: 30,
 });
 registerComposerAction("add-canned-response", {
@@ -128,6 +136,7 @@ registerComposerAction("add-canned-response", {
     icon: "article",
     name: _t("Insert Canned Response"),
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),
+    propsInline: composerButtonPropsInline,
     sequence: 5,
 });
 registerComposerAction("create-poll", {
@@ -146,6 +155,7 @@ registerComposerAction("create-poll", {
             { rootRef: action.actionRef }
         );
     },
+    propsInline: composerButtonPropsInline,
     setup: ({ owner }) => {
         owner.dialogService = useService("dialog");
     },
