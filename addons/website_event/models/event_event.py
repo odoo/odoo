@@ -669,28 +669,45 @@ class EventEvent(models.Model):
             data['image_url'] = event._get_image_url()
         return results_data
 
+    def _get_attendance_jsonld_vals(self, place_name=None):
+        """Build the Schema.org properties telling how and where the event is
+        attended.
+
+        An event is either physical (``address_id``) or online
+        (``event_share_url``) and the two are mutually exclusive, hence the
+        attendance mode is returned along with the location itself.
+
+        :param str place_name: Name of the place, e.g. the room a track happens
+            in; defaults to the venue's own name.
+        :return: The ``eventAttendanceMode`` and ``location`` properties.
+        :rtype: dict
+        """
+        self.ensure_one()
+        if not self.address_id:
+            return {
+                'eventAttendanceMode': 'https://schema.org/OnlineEventAttendanceMode',
+                'location': {'@type': 'VirtualLocation', 'url': self.event_share_url},
+            }
+        address = self.address_id.sudo()
+        location = {'@type': 'Place'}
+        if name := place_name or self.address_name or address.city:
+            location['name'] = name
+        if postal := self._build_postaladdress_jsonld_vals(address):
+            # Fall back to the company country when the venue has none set.
+            if 'addressCountry' not in postal and self.company_id.country_id.code:
+                postal['addressCountry'] = self.company_id.country_id.code
+            location['address'] = postal
+        return {
+            'eventAttendanceMode': 'https://schema.org/OfflineEventAttendanceMode',
+            'location': location,
+        }
+
     def _prepare_jsonld_vals(self):
         self.ensure_one()
-        # An event is either physical (address_id) or online (event_share_url);
-        # the two are mutually exclusive. Skip events that are either past, or
-        # non-public.
+        # Skip events that are either past, or non-public.
         if self.is_done or self.website_visibility != 'public':
             return {}
         base_url = self.get_base_url()
-        if self.address_id:
-            address = self.address_id.sudo()
-            location = {'@type': 'Place'}
-            if place_name := self.address_name or address.city:
-                location['name'] = place_name
-            if postal := self._build_postaladdress_jsonld_vals(address):
-                # Fall back to the company country when the venue has none set.
-                if 'addressCountry' not in postal and self.company_id.country_id.code:
-                    postal['addressCountry'] = self.company_id.country_id.code
-                location['address'] = postal
-            attendance_mode = 'OfflineEventAttendanceMode'
-        else:
-            location = {'@type': 'VirtualLocation', 'url': self.event_share_url}
-            attendance_mode = 'OnlineEventAttendanceMode'
         description = self.subtitle or (
             self.description and text_from_html(self.description, True)
         )
@@ -705,8 +722,7 @@ class EventEvent(models.Model):
             'startDate': self._to_iso_datetime(self.date_begin),
             'endDate': self._to_iso_datetime(self.date_end),
             'eventStatus': f'https://schema.org/{event_status}',
-            'eventAttendanceMode': f'https://schema.org/{attendance_mode}',
-            'location': location,
+            **self._get_attendance_jsonld_vals(),
         }
         if offers := self._get_ticket_offer_jsonlds():
             vals['offers'] = offers
