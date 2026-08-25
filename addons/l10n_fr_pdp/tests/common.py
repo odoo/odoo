@@ -66,14 +66,14 @@ def mock_pdp_peppol_lookup_not_found(identifiers):
 
 
 @contextmanager
-def mock_pdp_annuaire_lookup(*pids):
+def mock_pdp_annuaire_lookup(*pids, **extra_result_kwargs):
     valid_identifiers = [pid.lstrip('0225:') for pid in pids]
 
     def in_annuaire(request):
         return parse_qs(urlsplit(request.url).query)['pdp_identifier'][0] in valid_identifiers
     with MockHTTPClient(
         matcher=lambda r: r.method == 'GET' and urlsplit(r.url).path.endswith('/annuaire_lookup'),
-        return_json=lambda r: {'result': {'in_annuaire': in_annuaire(r)}},
+        return_json=lambda r: {'result': {'in_annuaire': in_annuaire(r), **extra_result_kwargs}},
     ) as mock_response:
         yield mock_response
 
