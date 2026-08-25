@@ -12,11 +12,11 @@ import { _t } from "@web/core/l10n/translation";
  */
 function getShortLabels() {
     return {
-        margin: _t("M"),
-        margin_percent: _t("M%"),
-        price_total: _t("TI"),
-        price_subtotal: _t("TE"),
-        qty_delivered_percent: _t("D%"),
+        margin: _t("M:"),
+        margin_percent: _t("M%:"),
+        price_total: _t("TI:"),
+        price_subtotal: _t("TE:"),
+        qty_delivered_percent: _t("D%:"),
     };
 }
 
