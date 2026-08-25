@@ -2,10 +2,12 @@ import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { serializeDate } from "@web/core/l10n/dates";
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
 
 export class ContractEndDialog extends Component {
     static template = "hr.ContractEndDialog";
-    static components = { Dialog, Many2XAutocomplete };
+    static components = { Dialog, Many2XAutocomplete, DateTimeInput };
 
     props = useProps({
         close: t.function(),
@@ -17,6 +19,7 @@ export class ContractEndDialog extends Component {
         this.state = proxy({
             reason: "correction",
             template: { id: false, name: "" },
+            date: this.props.record.data.contract_date_end,
         });
         this.onTemplateUpdate = this.onTemplateUpdate.bind(this);
     }
@@ -34,7 +37,7 @@ export class ContractEndDialog extends Component {
     }
 
     onCorrectContract() {
-        this.props.close({ reason: "correction" });
+        this.props.close({ reason: "correction", date: this.state.date });
     }
 
     async onEndCollaboration() {
@@ -46,10 +49,10 @@ export class ContractEndDialog extends Component {
         action.views = [[false, "form"]];
         action.context = {
             ...(action.context || {}),
-            default_dismissal_date: this.props.record.data.contract_date_end,
+            default_dismissal_date: this.state.date ? serializeDate(this.state.date) : false,
         };
 
-        this.props.close({ reason: "end_collaboration", action });
+        this.props.close({ reason: "end_collaboration", action, date: this.state.date });
     }
 
     onDiscard() {
@@ -59,6 +62,7 @@ export class ContractEndDialog extends Component {
     async onNewContract() {
         this.props.close({
             reason: "new_contract",
+            date: this.state.date,
             contractTemplateId: this.state.template.id || false,
         });
     }

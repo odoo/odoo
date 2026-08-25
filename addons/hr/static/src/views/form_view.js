@@ -15,20 +15,33 @@ export class EmployeeFormController extends FormController {
         this.pendingNewContract = null;
     }
 
-    async onWillSaveRecord(record, changes) {
-        const contractDateStart = record.data.contract_date_start;
+    async onRecordChanged(record, changes) {
+        super.onRecordChanged(...arguments);
+        if (!("contract_date_end" in changes)) {
+            return;
+        }
         const contractDateEnd = record.data.contract_date_end;
-        const previousContractDateStart = record._values?.contract_date_start;
         const previousContractDateEnd = record._values?.contract_date_end;
-        const hasDeparture = record.data.departure_id;
-
         const bypassContractEndDialog =
-            previousContractDateStart !== contractDateStart
+            // a new contract is being encoded: its end date is not a change of the current contract
+            record._values?.contract_date_start !== record.data.contract_date_start
             || previousContractDateEnd === contractDateEnd
             || !contractDateEnd
-            || hasDeparture
+            || record.data.departure_id
             || record._skipContractEndDialog;
+        if (bypassContractEndDialog) {
+            return;
+        }
+        // Ask as soon as the end date is changed, without waiting for the save (autosave would be
+        // blocked by the dialog). The result is applied once this hook returns, as it updates and
+        // saves the record.
+        const result = await new Promise((resolve) => {
+            this.dialogService.add(ContractEndDialog, { record }, { onClose: resolve });
+        });
+        setTimeout(() => this._applyContractEndDialogResult(record, result, previousContractDateEnd));
+    }
 
+    async onWillSaveRecord(record, changes) {
         // Only run the logic if it's not an employee creation but an update
         // and if it's only directly on the employee form not in a popup for another model
         if (Boolean(record._config.resId) && record._config.resModel == "hr.employee") {
@@ -75,49 +88,6 @@ export class EmployeeFormController extends FormController {
                 if (!proceed) return false;
             }
         }
-        if (!bypassContractEndDialog) {
-            return new Promise((resolve) => {
-                this.dialogService.add(ContractEndDialog, {
-                    record: record,
-                }, {
-                    onClose: (result) => {
-                        switch (result?.reason) {
-                            case "correction":
-                                changes.fixed_term = true;
-                                break;
-                            case "end_collaboration":
-                                this.actionService.doAction(result.action, {
-                                    onClose: async () => {
-                                        await record.model.load();
-                                    },
-                                });
-                                break;
-                            case "new_contract": {
-                                const newContractDateStart = contractDateEnd.plus({ days: 1 });
-                                let newContractDateEnd = false;
-                                if (previousContractDateEnd && contractDateEnd < previousContractDateEnd) {
-                                    newContractDateEnd = previousContractDateEnd;
-                                }
-                                this.pendingNewContract = {
-                                    date_version: serializeDate(newContractDateStart),
-                                    contract_date_start: serializeDate(newContractDateStart),
-                                    contract_date_end: newContractDateEnd ? serializeDate(newContractDateEnd) : false,
-                                    contract_template_id: result.contractTemplateId,
-                                };
-                                break;
-                            }
-                            case "discard":
-                            default: {
-                                changes.contract_date_end = previousContractDateEnd ? serializeDate(previousContractDateEnd) : false;
-                                break;
-                            }
-                        }
-                        resolve(true);
-                    },
-                });
-            });
-        }
-
         return true;
     }
 
@@ -144,6 +114,43 @@ export class EmployeeFormController extends FormController {
                     version_id,
                 },
             });
+        }
+    }
+
+    async _applyContractEndDialogResult(record, result, previousContractDateEnd) {
+        record._skipContractEndDialog = true;
+        try {
+            if (!result?.reason || result.reason === "discard") {
+                await record.update({ contract_date_end: previousContractDateEnd || false });
+                return;
+            }
+            // the end date may have been corrected in the dialog
+            const contractDateEnd = result.date || record.data.contract_date_end;
+            await record.update({
+                contract_date_end: contractDateEnd,
+                ...(result.reason === "correction" ? { fixed_term: true } : {}),
+            });
+            if (result.reason === "new_contract") {
+                const newContractDateStart = contractDateEnd.plus({ days: 1 });
+                const newContractDateEnd = previousContractDateEnd && contractDateEnd < previousContractDateEnd
+                    ? previousContractDateEnd : false;
+                this.pendingNewContract = {
+                    date_version: serializeDate(newContractDateStart),
+                    contract_date_start: serializeDate(newContractDateStart),
+                    contract_date_end: newContractDateEnd ? serializeDate(newContractDateEnd) : false,
+                    contract_template_id: result.contractTemplateId,
+                };
+            }
+            await record.save();
+            if (result.reason === "end_collaboration") {
+                this.actionService.doAction(result.action, {
+                    onClose: async () => {
+                        await record.model.load();
+                    },
+                });
+            }
+        } finally {
+            record._skipContractEndDialog = false;
         }
     }
 }
