@@ -10,7 +10,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
-import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
+import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_plugin";
 
 test.tags("desktop");
 test("basic rendering", async () => {
