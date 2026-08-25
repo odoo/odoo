@@ -1,6 +1,6 @@
 import { registry } from '@web/core/registry';
 import { ListRenderer } from '@web/views/list/list_renderer';
-import { listView } from '@web/views/list/list_view';
+import { SaleListView } from "@sale/views/sale_onboarding_list/sale_onboarding_list_view";
 import { WebsiteSaleDashboard } from '../../js/dashboard/dashboard';
 
 export class DashboardListRenderer extends ListRenderer {
@@ -12,7 +12,7 @@ export class DashboardListRenderer extends ListRenderer {
 }
 
 export const dashboardListView = {
-	...listView,
+	...SaleListView,
 	Renderer: DashboardListRenderer,
 };
 

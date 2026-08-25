@@ -1291,14 +1291,14 @@
     <record id="action_quotations_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="view_id" ref="sale.sale_order_list_upload"/>
         <field name="act_window_id" ref="action_quotations"/>
     </record>
 
     <record id="action_quotations_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="sale.view_sale_order_kanban"/>
+        <field name="view_id" ref="sale.sale_order_kanban_upload"/>
         <field name="act_window_id" ref="action_quotations"/>
     </record>
 

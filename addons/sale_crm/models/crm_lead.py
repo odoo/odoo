@@ -34,8 +34,11 @@ class CrmLead(models.Model):
 
     def action_new_quotation(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale_crm.sale_action_quotations_new")
-        action['context'] = self._prepare_opportunity_quotation_context()
-        action['context']['search_default_opportunity_id'] = self.id
+        context = self._prepare_opportunity_quotation_context()
+        context.update(self.env.context)
+        context["search_default_opportunity_id"] = self.id
+
+        action["context"] = context
         return action
 
     def action_view_sale_quotation(self):

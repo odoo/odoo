@@ -15,9 +15,11 @@ export class SaleTemplateDropdown extends Component {
     props = useProps({
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),
+        string: t.string().optional("New"),
         // `isDisabled` was only declared in `defaultProps`, but it is used in the template
         isDisabled: t.boolean().optional(false),
         record: t.object().optional(),
+        action: t.string().optional(),
     });
 
     setup() {
@@ -64,6 +66,17 @@ export class SaleTemplateDropdown extends Component {
         if (!additionalContext.default_sale_order_template_id) {
             // If the user doesn't specify a template, we remove the previous one from the context
             additionalContext.default_sale_order_template_id = false;
+        }
+
+        if (this.props.action) {
+            await this.action.doActionButton({
+                resModel: this.props.record.resModel,
+                resId: this.props.record.resId,
+                name: this.props.action,
+                type: "object",
+                context: additionalContext,
+            });
+            return;
         }
 
         if (this.isFormView) {

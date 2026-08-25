@@ -52,6 +52,7 @@ The Dashboard for the Sales Manager will include
         "web.assets_backend": [
             "sale_management/static/src/fields/**/*",
             "sale_management/static/src/views/**/*",
+            "sale_management/static/src/js/new_quatation_button/*",
         ],
         "web.assets_frontend": ["sale_management/static/src/interactions/**/*"],
         "web.assets_tests": ["sale_management/static/tests/tours/**/*"],
