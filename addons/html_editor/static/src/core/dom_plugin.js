@@ -446,9 +446,9 @@ export class DomPlugin extends Plugin {
         let insertedContent = [];
         let isFirst = true;
         for (const node of nodes) {
-            refNode = this.findNextInsertionReferenceNode(node, firstLeaf(refNode), marker);
-
-            if (this.canInsertBefore(node, refNode)) {
+            const next = this.findNextInsertionReferenceNode(node, firstLeaf(refNode), marker);
+            if (next) {
+                refNode = next;
                 const wasFakeLineBreak = refNode.nodeName === "BR" && isFakeLineBreak(refNode);
                 refNode.before(node);
                 let insertedNodes = [node];
@@ -533,11 +533,17 @@ export class DomPlugin extends Plugin {
      * @param {Node} node
      * @param {Node} reference
      * @param {Node} marker
-     * @returns {Node}
+     * @returns {Node | undefined}
      */
     findNextInsertionReferenceNode(node, reference, marker) {
         const parent = reference.parentElement;
-        if (this.canInsertBefore(node, reference) || isEditionBoundary(parent, this.editable)) {
+        const checkPredicates = () =>
+            this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent, node);
+        if (
+            !isBlock(node) ||
+            (allowsParagraphRelatedElements(parent) && (checkPredicates() ?? true)) ||
+            isEditionBoundary(parent, this.editable)
+        ) {
             return reference;
         }
         if (this.isAtBlockEdge(reference, "start")) {
@@ -557,7 +563,6 @@ export class DomPlugin extends Plugin {
             const nextReference = isBlock(newParent) ? reference : newParent;
             return this.findNextInsertionReferenceNode(node, nextReference, marker);
         }
-        return reference;
     }
 
     /**
@@ -587,26 +592,6 @@ export class DomPlugin extends Plugin {
             node = parent;
         }
         return true;
-    }
-
-    /**
-     * Return true if the given node can be inserted before the given reference,
-     * false otherwise.
-     *
-     * @param {Node} node
-     * @param {Node} reference
-     * @returns {boolean}
-     */
-    canInsertBefore(node, reference) {
-        if (!isBlock(node)) {
-            return true;
-        }
-        const parent = reference.parentElement;
-        return (
-            allowsParagraphRelatedElements(parent) &&
-            (this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent, node) ??
-                true)
-        );
     }
 
     /**
