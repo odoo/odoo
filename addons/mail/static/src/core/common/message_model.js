@@ -79,7 +79,7 @@ export class Message extends Record {
         },
     });
     /** attachments not already clearly visible in the body, unlike inlined images */
-    extra_body_attachment_ids = fields.Attr("ir.attachment", {
+    extra_body_attachment_ids = fields.Many("ir.attachment", {
         compute() {
             const parsedBody = createDocumentFragmentFromContent(this.body);
             const inlinedImageAttachmentIds = [
