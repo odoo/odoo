@@ -34,7 +34,7 @@ import {
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { childNodeIndex, nodeSize, leftPos, rightPos } from "../utils/position";
+import { childNodeIndex, nodeSize, leftPos } from "../utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import {
     baseContainerGlobalSelector,
@@ -451,45 +451,7 @@ export class DomPlugin extends Plugin {
                 refNode = next;
                 const wasFakeLineBreak = refNode.nodeName === "BR" && isFakeLineBreak(refNode);
                 refNode.before(node);
-                let insertedNodes = [node];
-
-                // Restore lost line breaks.
-                if (this.nodesBeforeWhichToRestoreLineBreak.has(node)) {
-                    if (!node.nextSibling) {
-                        node.after(marker);
-                    }
-                    refNode = node.nextSibling;
-                    const [targetNode, targetOffset] = leftPos(node);
-                    const split = this.dependencies.split.splitBlockNode({
-                        targetNode,
-                        targetOffset,
-                    });
-                    switch (split.type) {
-                        case SPLIT_OPERATION_TYPES.LINE: {
-                            insertedNodes.unshift(...split.lineBreaks);
-                            break;
-                        }
-                        case SPLIT_OPERATION_TYPES.BLOCK: {
-                            if (node.isConnected) {
-                                if (this.isAtBlockEdge(node, "end")) {
-                                    insertedNodes = [split.after];
-                                }
-                            } else {
-                                insertedNodes = [];
-                                const [anchorNode, anchorOffset] = rightPos(split.before);
-                                split.after.remove();
-                                refNode = enterSelectionPoint({ anchorNode, anchorOffset }, marker);
-                            }
-                            break;
-                        }
-                        default: {
-                            if (this.isAtBlockEdge(node, "end")) {
-                                insertedNodes = [closestBlock(node)];
-                            }
-                        }
-                    }
-                }
-                insertedContent.push(...insertedNodes);
+                insertedContent.push(node);
 
                 // Clean up: remove the reference if needed.
                 if (
@@ -509,6 +471,36 @@ export class DomPlugin extends Plugin {
             isFirst = false;
         }
         marker.remove();
+
+        // Restore lost breaks.
+        for (const node of this.nodesBeforeWhichToRestoreLineBreak) {
+            const index = insertedContent.indexOf(node);
+            if (index === -1 || !node.parentNode) {
+                continue;
+            }
+            const [targetNode, targetOffset] = leftPos(node);
+            const split = this.dependencies.split.splitBlockNode({ targetNode, targetOffset });
+            switch (split.type) {
+                case SPLIT_OPERATION_TYPES.LINE: {
+                    insertedContent.splice(index, 1, ...split.lineBreaks, node);
+                    break;
+                }
+                case SPLIT_OPERATION_TYPES.BLOCK: {
+                    if (!node.isConnected) {
+                        insertedContent.splice(index, 1);
+                        split.after.remove();
+                    } else if (this.isAtBlockEdge(node, "end")) {
+                        insertedContent.splice(index, 1, split.after);
+                    }
+                    break;
+                }
+                default: {
+                    if (this.isAtBlockEdge(node, "end")) {
+                        insertedContent.splice(index, 1, closestBlock(node));
+                    }
+                }
+            }
+        }
 
         insertedContent = this.processThrough("inserted_content_processors", insertedContent);
 
