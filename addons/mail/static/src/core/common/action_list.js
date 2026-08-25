@@ -1,17 +1,10 @@
 import { Action as ActionModel } from "@mail/core/common/action";
-import {
-    ActionButton,
-    actionButtonProps,
-    actionButtonPropsSchema,
-} from "@mail/core/common/action_button";
+import { ActionButton } from "@mail/core/common/action_button";
 import { ActionDropdown } from "@mail/core/common/action_dropdown";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
-
-const actionListProps = actionButtonProps;
-const actionListPropsSchema = actionButtonPropsSchema;
 
 /**
  * Wraps an action's chrome (rendered generically by {@link ActionButton}) with
@@ -34,7 +27,9 @@ class Action extends Component {
         this.props = useProps({
             action: t.instanceOf(ActionModel),
             style: t.string().optional(),
-            ...actionListPropsSchema,
+            dropdown: t.boolean().optional(),
+            fw: t.boolean().optional(true),
+            inline: t.boolean().optional(),
         });
         this.store = useService("mail.store");
         if (this.props.action.definition?.isMoreAction) {
@@ -57,14 +52,9 @@ export class ActionList extends Component {
         return {
             action,
             group,
-            ...Object.fromEntries(
-                actionListProps.map((propName) => {
-                    const actualPropName = propName.endsWith("?")
-                        ? propName.substring(0, propName.length - 1)
-                        : propName;
-                    return [actualPropName, this.props[actualPropName]];
-                })
-            ),
+            dropdown: this.props.dropdown,
+            fw: this.props.fw,
+            inline: this.props.inline,
             style: `z-index: ${group.length - index + (action.hotkey ? 1 : 0)}`,
         };
     }
@@ -77,11 +67,12 @@ export class ActionList extends Component {
         );
         this.props = useProps({
             groupClass: t.string().optional(),
-            ...actionListPropsSchema,
+            dropdown: t.boolean().optional(),
+            fw: t.boolean().optional(true),
+            inline: t.boolean().optional(),
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.actionListProps = actionListProps;
     }
 
     groups = computed(() => {

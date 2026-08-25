@@ -3,14 +3,6 @@ import { Component, t, useProps } from "@odoo/owl";
 import { Action as ActionModel } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
-export const actionButtonProps = ["inline?", "dropdown?", "fw?"];
-
-export const actionButtonPropsSchema = {
-    dropdown: t.boolean().optional(),
-    fw: t.boolean().optional(true),
-    inline: t.boolean().optional(),
-};
-
 /**
  * Renders the button chrome for an action: core button classes, icon/name
  * content, badge, hotkey wiring. This is the generic renderer used by
@@ -28,7 +20,9 @@ export class ActionButton extends Component {
         this.props = useProps({
             action: t.instanceOf(ActionModel),
             style: t.string().optional(),
-            ...actionButtonPropsSchema,
+            dropdown: t.boolean().optional(),
+            fw: t.boolean().optional(true),
+            inline: t.boolean().optional(),
         });
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
