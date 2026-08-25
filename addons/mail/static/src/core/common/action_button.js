@@ -21,7 +21,6 @@ export class ActionButton extends Component {
             action: t.instanceOf(ActionModel),
             style: t.string().optional(),
             dropdown: t.boolean().optional(),
-            fw: t.boolean().optional(true),
             inline: t.boolean().optional(),
         });
         this.ui = useService("ui");

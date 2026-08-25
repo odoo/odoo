@@ -28,7 +28,6 @@ class Action extends Component {
             action: t.instanceOf(ActionModel),
             style: t.string().optional(),
             dropdown: t.boolean().optional(),
-            fw: t.boolean().optional(true),
             inline: t.boolean().optional(),
         });
         this.store = useService("mail.store");
@@ -53,7 +52,6 @@ export class ActionList extends Component {
             action,
             group,
             dropdown: this.props.dropdown,
-            fw: this.props.fw,
             inline: this.props.inline,
             style: `z-index: ${group.length - index + (action.hotkey ? 1 : 0)}`,
         };
@@ -68,7 +66,6 @@ export class ActionList extends Component {
         this.props = useProps({
             groupClass: t.string().optional(),
             dropdown: t.boolean().optional(),
-            fw: t.boolean().optional(true),
             inline: t.boolean().optional(),
         });
         this.store = useService("mail.store");
