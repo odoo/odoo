@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
     },
     {
         trigger: ".o_field_widget[name=product_id] input",
-        run: "edit Serial",
+        run: "edit Product Serial",
     },
     {
         trigger: ".ui-menu-item > a:contains('Product Serial')",
