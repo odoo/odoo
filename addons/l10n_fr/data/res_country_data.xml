@@ -1,9 +1,26 @@
 <odoo>
     <data noupdate="1">
+        <!-- Not used anymore to remove in master -->
         <record id="fr_and_mc" model="res.country.group">
             <field name="name">France and Monaco</field>
             <field name="code">FR-MC</field>
             <field name="country_ids" eval="[Command.set([ref('base.fr'), ref('base.mc')])]"/>
+        </record>
+
+        <record id="fr_and_mc_and_drom" model="res.country.group">
+            <field name="name">France and Monaco and Drom</field>
+            <field name="code">FR-MC-DROM</field>
+            <field name="country_ids" eval="[
+                Command.set([
+                    ref('base.fr'),
+                    ref('base.mc'),
+                    ref('base.gf'),
+                    ref('base.gp'),
+                    ref('base.mq'),
+                    ref('base.re'),
+                    ref('base.yt'),
+                ])
+            ]"/>
         </record>
     </data>
 </odoo>
