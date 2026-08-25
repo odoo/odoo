@@ -193,7 +193,7 @@ class PosOrderReceipt(models.AbstractModel):
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()
 
-        use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url' and self.state != 'draft'
+        use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url'
         config_logo = image_data_uri(self.config_id.logo) if self.config_id.logo else False
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
         tip_percentage = [self.config_id.tip_percentage_1, self.config_id.tip_percentage_2, self.config_id.tip_percentage_3] if self.config_id.set_tip_after_payment and self.amount_total > 0 else False
