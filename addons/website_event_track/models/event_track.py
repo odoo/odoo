@@ -10,6 +10,7 @@ import werkzeug.urls
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
@@ -35,7 +36,8 @@ class EventTrack(models.Model):
         'mail.activity.mixin',
         'website.seo.metadata',
         'website.published.mixin',
-        'website.searchable.mixin'
+        'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _primary_email = 'contact_email'
 
@@ -522,6 +524,70 @@ class EventTrack(models.Model):
             'order': order,
             'group_name': self.env._("Talks"),
         }
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        event = self.event_id
+        if (not self.date or not self.is_published
+                or event.is_done or event.website_visibility != 'public'):
+            return {}
+        base_url = self.get_base_url()
+        event_status = 'EventCancelled' if self.stage_id.is_cancel else 'EventScheduled'
+        vals = {
+            '@type': 'Event',
+            '@id': f'{self.website_absolute_url}/#event',
+            'name': self.name,
+            'url': self.website_absolute_url,
+            'startDate': self._to_iso_datetime(self.date),
+            'endDate': self._to_iso_datetime(self.date_end),
+            'eventStatus': f'https://schema.org/{event_status}',
+            **event._get_attendance_jsonld_vals(place_name=self.location_id.name),
+            'superEvent': {'@id': f'{event.website_absolute_url}/#event'},
+        }
+        if description := self.description and text_from_html(self.description, True):
+            vals['description'] = description
+        if self.website_image_url:
+            vals['image'] = f'{base_url}{self.website_image_url}'
+        if self.partner_name:
+            vals['performer'] = {
+                '@type': 'Organization' if self.partner_id.sudo().is_company else 'Person',
+                'name': self.partner_name,
+            }
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        # All the tracks of a listing belong to the same event, which the
+        # controller passes along as an empty listing carries none.
+        event = self.event_id or self.env['event.event'].browse(self.env.context.get('event_id'))
+        if not event:
+            return super()._get_breadcrumb_items(is_detail_page)
+        items = event._get_breadcrumb_items(True)
+        # The listing is either the agenda or the talks page, never both.
+        is_agenda = self.env.context.get('is_agenda_page')
+        items.append((
+            self.env._("Agenda") if is_agenda else self.env._("Talks"),
+            f'{event.website_url}/agenda' if is_agenda else f'{event.website_url}/track',
+        ))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if not self:
+            return schemas
+        if is_detail_page:
+            if track_vals := self._prepare_jsonld_vals():
+                schemas.append(track_vals)
+                # Describe the event too, so that `superEvent` resolves on the page.
+                if event_vals := self.event_id._prepare_jsonld_vals():
+                    schemas.append(event_vals)
+            return schemas
+        if tracks := self.filtered('is_published'):
+            # The listing the visitor is on is the last breadcrumb item.
+            name, path = self._get_breadcrumb_items()[-1]
+            schemas.append(self._build_collectionpage_jsonld_vals(name, path, tracks))
+        return schemas
 
     # ------------------------------------------------------------
     # MESSAGING
