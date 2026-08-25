@@ -182,7 +182,7 @@ export class LocationSelectorDialog extends Component {
     }
 
     get postalCodePlaceholder() {
-        return _t("Your postal code");
+        return _t("Zip or City");
     }
 
     get listViewButtonLabel() {
