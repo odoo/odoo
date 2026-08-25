@@ -17,7 +17,7 @@ BIZKAIA_TEST_BASE_URL = "https://pruapps.bizkaia.eus/SSII-FACT/ws"
 GIPUZKOA_BASE_URL = "https://egoitza.gipuzkoa.eus/ogasuna/sii/ficheros/v1.1"
 GIPUZKOA_TEST_BASE_URL = "https://sii-prep.egoitza.gipuzkoa.eus/JBS/HACI/SSII-FACT/ws"
 
-NAVARRA_BASE_URL = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii/fact/ws"
+NAVARRA_BASE_URL = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws"
 NAVARRA_ADDRESS = "https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx"
 NAVARRA_TEST_ADDRESS = "https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx"
 
