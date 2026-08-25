@@ -187,24 +187,13 @@ class MailScheduledMessage(models.Model):
             instead of raising an error, and send a notification to the author about the failure.
             This is useful when scheduled messages are sent from the _post_messages_cron.
         """
-        notification_parameters_whitelist = self._notification_parameters_whitelist()
         auto_commit = not modules.module.current_test
         for scheduled_message in self:
             message_creator = scheduled_message.create_uid
+            record = scheduled_message.env[scheduled_message.model].browse(scheduled_message.res_id).with_user(message_creator)
             try:
                 scheduled_message.with_user(message_creator).check_access('write')
-                message = self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
-                        clean_context(scheduled_message.send_context or {})
-                    ).with_user(message_creator).message_post(
-                    attachment_ids=list(scheduled_message.attachment_ids.ids),
-                    author_id=scheduled_message.author_id.id,
-                    subject=scheduled_message.subject,
-                    body=scheduled_message.body,
-                    partner_ids=list(scheduled_message.partner_ids.ids),
-                    partner_cc_ids=list(scheduled_message.partner_cc_ids.ids),
-                    subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
-                    **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
-                )
+                message = scheduled_message._post_message_send(record)
                 scheduled_message._message_created_hook(message)
                 if auto_commit:
                     self.env.cr.commit()
@@ -234,6 +223,21 @@ class MailScheduledMessage(models.Model):
                     if auto_commit:
                         self.env.cr.rollback()
         self.unlink()
+
+    def _post_message_send(self, record):
+        self.ensure_one()
+        return record.with_context(
+            clean_context(self.send_context or {})
+        ).message_post(
+            attachment_ids=list(self.attachment_ids.ids),
+            author_id=self.author_id.id,
+            subject=self.subject,
+            body=self.body,
+            partner_ids=list(self.partner_ids.ids),
+            partner_cc_ids=list(self.partner_cc_ids.ids),
+            subtype_xmlid='mail.mt_note' if self.is_note else 'mail.mt_comment',
+            **{k: v for k, v in json.loads(self.notification_parameters or '{}').items() if k in self._notification_parameters_whitelist()},
+        )
 
     # ------------------------------------------------------
     # Business Methods
