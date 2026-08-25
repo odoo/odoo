@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sale.NewQuotationButton">
+        <button
+            type="button"
+            class="btn btn-primary oe_highlight"
+            t-on-click="this.onClick"
+            t-att-title="this.props.title"
+            t-att-data-hotkey="this.props.hotkey"
+        >
+            <t t-out="this.props.string"/>
+        </button>
+    </t>
+</templates>
