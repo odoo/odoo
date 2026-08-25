@@ -5,6 +5,8 @@ from urllib.parse import parse_qs
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
+
 from .common import TestL10nFrPdpCommon
 
 
@@ -200,3 +202,40 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'pdp_verification_display_state': 'pdp_valid',
             'invoice_sending_method': False,
         }])
+
+    def test_validate_partner_fr_b2g(self):
+        partner = self.partner_a
+        self.assertEqual(
+            partner._get_pdp_receiver_identification_info(),
+            ('pdp', "0225:968515759_96851575905823")
+        )
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'not_valid',
+            'pdp_verification_display_state': 'pdp_not_valid',
+            'invoice_edi_format': 'ubl_21_fr',
+        }])
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            self.assertEqual(r.method, "GET")
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+            if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823", b2g=True)
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+
+        partner.invoice_sending_method = False
+        with (
+                mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+                mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+            'invoice_sending_method': False,
+            'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
+        }])
+        self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
