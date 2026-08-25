@@ -1721,6 +1721,42 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(move.move_type, 'out_invoice')
         self.assertEqual(self._get_valid_invoiced_lines(move).quantity, 1.0)
 
+    def test_period_invoicing_after_manual_over_invoicing(self):
+        sale_order = self._create_order_with_timesheet_lines()
+        so_line = sale_order.order_line
+
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet June (1 hour)',
+                'date': '2026-06-15',
+                'unit_amount': 1.0,
+                'project_id': so_line.task_id.project_id.id,
+                'task_id': so_line.task_id.id,
+                'employee_id': self.employee_user.id,
+            },
+            {
+                'name': 'Timesheet July (1 hour)',
+                'date': '2026-07-15',
+                'unit_amount': 1.0,
+                'project_id': so_line.task_id.project_id.id,
+                'task_id': so_line.task_id.id,
+                'employee_id': self.employee_user.id,
+            }
+        ])
+
+        invoice_june = self._create_invoice_timesheet_over_period(sale_order, '2026-06-01', '2026-06-30')
+        self.assertEqual(self._get_valid_invoiced_lines(invoice_june).quantity, 1.0, "Should invoice the one hour of June")
+        self._get_valid_invoiced_lines(invoice_june).write({'quantity': 11.0})
+        invoice_june.action_post()
+
+        self.assertEqual(so_line.qty_delivered, 2.0, "Should reflect both the hours of June and July")
+        self.assertEqual(so_line.qty_invoiced, 11.0, "Should reflect the manual over-invoicing")
+
+        invoice_july = self._create_invoice_timesheet_over_period(sale_order, '2026-07-01', '2026-07-31')
+        self.assertEqual(self._get_valid_invoiced_lines(invoice_july).quantity, 1.0,
+                         'We should invoice the timesheet of July, depsite over-billing the one of June')
+
+
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
 
