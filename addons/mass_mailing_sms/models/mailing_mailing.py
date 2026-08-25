@@ -250,9 +250,18 @@ class MailingMailing(models.Model):
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if res_ids:
-                composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
+                composer = self.env['sms.composer'].with_context(active_id=False).with_company(
+                    mailing._sms_get_company()
+                ).create(mailing._send_sms_get_composer_values(res_ids))
                 composer._action_send_sms()
         return True
+
+    def _sms_get_company(self):
+        self.ensure_one()
+        company = (self.user_id or self.write_uid).company_id
+        if self.env.su or company.id in self.env.user._get_company_ids():
+            return company
+        return self.env.company
 
     # ------------------------------------------------------
     # STATISTICS

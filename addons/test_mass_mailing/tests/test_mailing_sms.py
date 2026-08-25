@@ -516,6 +516,25 @@ class TestMassSMSTwilio(TestMassSMSCommon, MockSmsTwilioApi):
             self.records,
         )
 
+    def test_mass_sms_multi_company(self):
+        """ Test SMS marketing using the Twilio account of the responsible's company """
+        self._setup_sms_twilio(self.company_2)
+        self.mailing_sms.write({
+            'state': 'in_queue',
+            'user_id': self.user_employee_c2.id,
+        })
+        # prevent _commit_progress from breaking the test environment
+        self.patch(
+            self.registry['ir.cron'],
+            '_commit_progress',
+            lambda cron_model, processed=0, remaining=None, **kwargs: 1,
+        )
+
+        with self.mock_sms_twilio_gateway():
+            self.env['mailing.mailing']._process_mass_mailing_queue()
+
+        self.assertEqual(self._new_sms.record_company_id, self.company_2)
+
     @users('user_marketing')
     def test_mass_sms_twilio_issue(self):
         """ Test specific propagation / update to trace failure_type from twilio
