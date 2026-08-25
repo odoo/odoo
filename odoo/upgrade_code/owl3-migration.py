@@ -1129,6 +1129,7 @@ SERVICES_MAPPING = {
     "signInfo": ['SignInfoPlugin', '@sign/plugins/sign_info_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
     "simple_notification": ['SimpleNotificationPlugin', '@bus/simple_notification_plugin'],
+    "tooltip": ['TooltipPlugin', '@web/core/tooltip/tooltip_plugin'],
     "ui": ['UIPlugin', '@web/core/ui/ui_plugin'],
     "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
 }
