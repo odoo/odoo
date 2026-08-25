@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_cn_baiwang" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_cn_baiwang</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="invisible">not show_reset_to_draft_button or l10n_cn_baiwang_state in ('sent', 'issued')</attribute>
+            </xpath>
+
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="not l10n_cn_baiwang_date_consistency_warning">
+                    <field name="l10n_cn_baiwang_date_consistency_warning"/>
+                </div>
+
+                <div class="alert alert-info mb-3 d-flex justify-content-between align-items-center" role="alert"
+                    invisible="move_type != 'in_invoice' or l10n_cn_baiwang_red_form_status != 'red_form_pending'">
+                    <div>
+                        <strong>Red Form <field name="l10n_cn_baiwang_red_form_number" readonly="1" class="oe_inline"/> received</strong><br/> Credit price (tax exclusive): <field name="l10n_cn_baiwang_red_form_amount_total" readonly="1" class="oe_inline"/><br/> Credit tax: <field name="l10n_cn_baiwang_red_form_amount_tax" readonly="1" class="oe_inline"/>
+                    </div>
+                    <div>
+                        <button name="action_approve_inbound_red_form" string="01 - Confirm" type="object" class="btn btn-success btn-sm"/>
+                        <button name="action_reject_inbound_red_form" string="02 - Reject" type="object" class="btn btn-danger btn-sm ms-2"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//widget[@name='web_ribbon']" position="before">
+                <widget name="web_ribbon" title="Red Form Rejected" bg_color="text-bg-warning"
+                    invisible="move_type != 'out_refund' or l10n_cn_baiwang_state != 'failed'"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_post']" position="before">
+                <button name="action_request_baiwang_red_form"
+                    string="Send Red Form"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="state != 'draft' or move_type != 'out_refund' or not l10n_cn_baiwang_red_form_required or l10n_cn_baiwang_state in ('sent', 'issued')"/>
+            </xpath>
+
+            <xpath expr="//field[@name='fapiao']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='fapiao']" position="after">
+                <field name="l10n_cn_baiwang_invoice_type_code"
+                    invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
+                    readonly="l10n_cn_baiwang_state in ('sent', 'issued') or l10n_cn_baiwang_red_form_status in ('red_form_pending', 'red_form_confirmed')"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Baiwang E-Fapiao" name="china_e_fapiao" invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')">
+                    <group>
+                        <group string="E-Fapiao Details">
+                            <field name="l10n_cn_baiwang_invoice_no" readonly="l10n_cn_baiwang_state in ('sent', 'issued')"/>
+                            <field name="l10n_cn_baiwang_invoice_date" readonly="l10n_cn_baiwang_state in ('sent', 'issued')"/>
+                            <field name="l10n_cn_baiwang_state" widget="badge"
+                                decoration-success="l10n_cn_baiwang_state == 'issued'"
+                                decoration-warning="l10n_cn_baiwang_state == 'sent'"
+                                decoration-danger="l10n_cn_baiwang_state == 'failed'"/>
+                            <field name="l10n_cn_baiwang_serial_no" invisible="not l10n_cn_baiwang_serial_no" readonly="1"/>
+                        </group>
+
+                        <group string="Red Form Requests" invisible="not l10n_cn_baiwang_red_form_uuid and move_type != 'out_refund'">
+                            <field name="l10n_cn_baiwang_red_form_type" readonly="l10n_cn_baiwang_red_form_status in ('red_form_pending', 'red_form_confirmed')"/>
+                            <field name="l10n_cn_baiwang_red_form_number"/>
+                            <field name="l10n_cn_baiwang_red_form_amount_total" invisible="move_type != 'in_invoice' or not l10n_cn_baiwang_red_form_uuid"/>
+                            <field name="l10n_cn_baiwang_red_form_amount_tax" invisible="move_type != 'in_invoice' or not l10n_cn_baiwang_red_form_uuid"/>
+                            <field name="l10n_cn_baiwang_red_form_status" widget="badge"
+                                decoration-success="l10n_cn_baiwang_red_form_status == 'red_form_confirmed'"
+                                decoration-warning="l10n_cn_baiwang_red_form_status == 'red_form_pending'"
+                                decoration-danger="l10n_cn_baiwang_red_form_status == 'failed'"/>
+
+                            <label for="l10n_cn_baiwang_red_form_uuid"/>
+                            <div class="o_row">
+                                <field name="l10n_cn_baiwang_red_form_uuid"/>
+                                <button name="action_cancel_baiwang_red_form"
+                                    string="Cancel"
+                                    type="object"
+                                    class="btn-primary"
+                                    icon="fa-times-circle"
+                                    invisible="not l10n_cn_baiwang_red_form_uuid or l10n_cn_baiwang_red_form_status != 'red_form_pending'"/>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='other_info']//field[@name='partner_bank_id']" position="before">
+                <field name="l10n_cn_buyer_bank_id"
+                    invisible="country_code != 'CN'"
+                    options="{'no_create': True, 'no_open': True}"
+                    placeholder="Select customer bank account..."/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">
+                <field name="l10n_cn_tax_category_id" optional="show" column_invisible="parent.country_code != 'CN'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
