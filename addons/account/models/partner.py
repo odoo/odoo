@@ -345,6 +345,12 @@ class ResPartner(models.Model):
     fiscal_country_group_codes = fields.Json(compute='_compute_fiscal_country_group_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
     duplicate_bank_partner_ids = fields.Many2many('res.partner', compute='_compute_duplicate_bank_partner_ids')
+    qr_code_method = fields.Selection(
+        selection=lambda self: self.env['res.partner.bank'].get_available_qr_methods_in_sequence(),
+        string="Payment QR-code",
+        company_dependent=True,
+        copy=False,
+    )
 
     @api.depends('company_id', 'country_code')
     @api.depends_context('allowed_company_ids')
