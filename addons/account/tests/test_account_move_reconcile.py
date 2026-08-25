@@ -4489,6 +4489,83 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 1333.33,  'credit': 0.0,      'tax_tag_ids': [],  'account_id': self.company_data['default_account_receivable'].id},
         ])
 
+    def test_reversing_unpaid_invoice_with_caba(self):
+        ''' Test that cash basis tax lines are reconciled when an invoice (without payment) is reversed. '''
+        self.env.company.tax_exigibility = True
+        invoice = self._create_invoice_one_line(price_unit=1000, tax_ids=self.cash_basis_tax_a_third_amount.ids, post=True)
+
+        reversal_wizard = self.env['account.move.reversal']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({
+                'reason': "test_reconcile_cash_basis_tax_line_reverse",
+                'journal_id': invoice.journal_id.id,
+            })
+        refund = self.env['account.move'].browse(reversal_wizard.refund_moves()['res_id'])
+        refund.action_post()
+
+        tax_matching_number = invoice.line_ids.filtered('tax_line_id').matching_number
+        receivable_matching_number = invoice.line_ids.filtered(lambda l: l.account_type == 'asset_receivable').matching_number
+
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'debit': 0.0,      'credit': 1000.0,  'matching_number': False,                       'account_id': self.company_data['default_account_revenue'].id},
+            {'debit': 0.0,      'credit': 333.33,  'matching_number': tax_matching_number,         'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1333.33,  'credit': 0.0,     'matching_number': receivable_matching_number,  'account_id': self.company_data['default_account_receivable'].id},
+        ])
+        self.assertRecordValues(refund.line_ids.sorted('balance'), [
+            {'debit': 0.0,     'credit': 1333.33,  'matching_number': receivable_matching_number,  'account_id': self.company_data['default_account_receivable'].id},
+            {'debit': 333.33,  'credit': 0.0,      'matching_number': tax_matching_number,         'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1000.0,  'credit': 0.0,      'matching_number': False,                       'account_id': self.company_data['default_account_revenue'].id},
+        ])
+
+    def test_reversing_paid_invoice_with_caba_and_foreign_currency(self):
+        ''' Test that cash basis tax lines in exchange diffs are reconciled when an invoice with cash basis
+        taxes is unreconcile from the payment and the cash basis move thus deleted.
+        '''
+        self.env.company.tax_exigibility = True
+        currency_eur = self.setup_other_currency('EUR', rates=[('2025-01-01', 4.0), ('2025-01-05', 5.0)])
+        invoice = self._create_invoice_one_line(
+            price_unit=1000,
+            date='2025-01-02',  # rate 4.0
+            tax_ids=self.cash_basis_tax_a_third_amount.ids,
+            currency_id=currency_eur,
+            post=True,
+        )
+
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2025-01-06',  # rate 3.0
+            'amount': 1333.33,
+        })._create_payments()
+
+        # Get exchange and CABA moves created during the payment/reconciliation
+        exchange_tax = invoice.line_ids.filtered(lambda l: l.display_type == 'tax').matched_debit_ids.exchange_move_id
+        caba_move = self._get_caba_moves(invoice)
+        self.assertTrue(caba_move.exists())
+
+        # De-reconcile
+        invoice.line_ids.filtered(lambda l: l.account_type == 'asset_receivable').remove_move_reconcile()
+
+        # The CABA move should be deleted and the Exchange Difference move reversed, the ED for the CABA tax line
+        # should be reconciled.
+        self.assertFalse(caba_move.exists())
+
+        expected_matching_number = exchange_tax.line_ids.filtered(
+            lambda l: l.account_id == self.cash_basis_tax_a_third_amount.cash_basis_transition_account_id
+        ).matching_number
+
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'debit': 0.0,     'credit': 250.0,  'matching_number': False,  'account_id': self.company_data['default_account_revenue'].id},
+            {'debit': 0.0,     'credit': 83.33,  'matching_number': False,  'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 333.33,  'credit': 0.0,    'matching_number': False,  'account_id': self.company_data['default_account_receivable'].id},
+        ])
+        self.assertRecordValues(exchange_tax.line_ids.sorted('balance'), [
+            {'debit': 0.0,   'credit': 16.66,  'matching_number': False,                     'account_id': self.env.company.expense_currency_exchange_account_id.id},
+            {'debit': 16.66,  'credit': 0.0,   'matching_number': expected_matching_number,  'account_id': self.cash_basis_transfer_account.id},
+        ])
+        self.assertRecordValues(exchange_tax.reversal_move_ids.line_ids.sorted('balance'), [
+            {'debit': 0.0,    'credit': 16.66,  'matching_number': expected_matching_number,  'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 16.66,  'credit': 0.0,    'matching_number': False,                     'account_id': self.env.company.expense_currency_exchange_account_id.id},
+        ])
+
     def test_reconcile_cash_basis_tax_grid_multi_taxes(self):
         ''' Test the tax grid when reconciling an invoice with multiple taxes/tax repartition. '''
         self.env.company.tax_exigibility = True
