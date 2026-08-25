@@ -466,6 +466,9 @@ test("select @ mention from the suggestion list being filtered", async () => {
     patchWithCleanup(DiscussAvatar.prototype, {
         setup() {
             super.setup();
+            if (!this.env.inNavigableList) {
+                return;
+            }
             // Simulate a slow render of the filtered list, keeping the previous search on screen.
             onWillUpdateProps(() => {
                 if (suggestionList.props.options.length === 1) {
