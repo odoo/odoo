@@ -4,11 +4,12 @@ from odoo import Command
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
+from .test_recruitment_allowed_user_ids import TestRecruitmentAllowedRecruiters
 
 
 @tagged('recruitment')
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestRecruitment(MailCase, TransactionCase):
+class TestRecruitment(TestRecruitmentAllowedRecruiters, MailCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -554,3 +555,33 @@ class TestRecruitment(MailCase, TransactionCase):
         })
 
         self.assertFalse(wizard.template_id)
+
+    def test_recruiter_is_auto_subscribed_on_create_and_update(self):
+        """
+        Ensure recruiters are added as a follower on both job
+        positions and applicants, when assigned on creation or when
+        the record is later updated.
+        """
+        job = self.env['hr.job'].create({
+            'name': 'Job',
+            'recruiter_id': self.employee_a.id,
+        })
+        self.assertIn(self.employee_a._get_related_partners(), job.message_partner_ids)
+
+        job.recruiter_id = self.officer_employee_company_a
+        self.assertIn(
+            self.officer_employee_company_a._get_related_partners(),
+            job.message_partner_ids,
+        )
+
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Applicant',
+            'recruiter_id': self.employee_a.id,
+        })
+        self.assertIn(self.employee_a._get_related_partners(), applicant.message_partner_ids)
+
+        applicant.recruiter_id = self.officer_employee_company_a
+        self.assertIn(
+            self.officer_employee_company_a._get_related_partners(),
+            applicant.message_partner_ids,
+        )

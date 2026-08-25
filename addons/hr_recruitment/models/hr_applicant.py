@@ -651,6 +651,7 @@ class HrApplicant(models.Model):
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
 
         for applicant in applicants:
+            applicant._applicant_message_auto_subscribe_notify()
             if applicant.talent_pool_ids and not applicant.pool_applicant_id:
                 applicant.pool_applicant_id = applicant
 
@@ -676,6 +677,8 @@ class HrApplicant(models.Model):
         # recruiter change: update date_open
         if vals.get('recruiter_id'):
             vals['date_open'] = fields.Datetime.now()
+            old_recruiter_partners = {recruiter: recruiter._get_related_partners() for recruiter in self.recruiter_id}
+            old_recruiters = {applicant: old_recruiter_partners[applicant.recruiter_id] for applicant in self}
         old_interviewers = self.interviewer_ids
         # stage_id: track last stage before update
         if 'stage_id' in vals:
@@ -706,6 +709,13 @@ class HrApplicant(models.Model):
                 if 'type_id' in vals:
                     applicant.pool_applicant_id.type_id = vals['type_id']
 
+        if vals.get('recruiter_id'):
+            new_recruiter = self.recruiter_id._get_related_partners() if self else self.env['res.partner']
+            for applicant in self:
+                notify = new_recruiter - old_recruiters[applicant] - self.env.user.partner_id
+                if notify:
+                    applicant._applicant_message_auto_subscribe_notify(new_recruiter=notify)
+
         if 'interviewer_ids' in vals:
             interviewers_to_clean = old_interviewers - self.interviewer_ids
             interviewers_to_clean._remove_recruitment_interviewers()
@@ -733,6 +743,27 @@ class HrApplicant(models.Model):
         if self.filtered("is_pool_applicant"):
             raise UserError(self.env._("You cannot duplicate the talent(s)."))
         return super().copy(default=default)
+
+    def _applicant_message_auto_subscribe_notify(self, new_recruiter=None):
+        user_partner = self.env.user.partner_id
+        recruiter_partners = new_recruiter if new_recruiter else self.recruiter_id._get_related_partners()
+        self.message_subscribe((user_partner | recruiter_partners).ids)
+
+        notify_partners = recruiter_partners - user_partner
+        if notify_partners and not self.env.context.get('mail_auto_subscribe_no_notify'):
+            notification_subject = _("You have been assigned as a recruiter for %s", self.display_name)
+            notification_body = _("You have been assigned as a recruiter for the Applicant %s", self.partner_name)
+            self.message_notify(
+                res_id=self.id,
+                model=self._name,
+                partner_ids=notify_partners.ids,
+                author_id=self.env.user.partner_id.id,
+                email_from=self.env.user.email_formatted,
+                subject=notification_subject,
+                body=notification_body,
+                email_layout_xmlid="mail.mail_notification_layout",
+                model_description="Applicant",
+            )
 
     @api.model
     def get_empty_list_help(self, help_message):
