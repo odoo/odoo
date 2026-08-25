@@ -25,7 +25,16 @@ export function useToolbarDropdownFocus(dropdown, buttonRef) {
         "keydown",
         (ev) => {
             if (ev.key === "Escape" && dropdown.isOpen) {
-                buttonRef()?.focus();
+                const onKeyUp = (ev) => {
+                    if (ev.key === "Escape" && !dropdown.isOpen) {
+                        buttonRef()?.focus();
+                    }
+                };
+
+                document.addEventListener("keyup", onKeyUp, {
+                    capture: true,
+                    once: true,
+                });
             }
         },
         { capture: true }
