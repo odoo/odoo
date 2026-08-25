@@ -12,7 +12,7 @@ export class ProductGridLayout extends Interaction {
 
     dynamicContent = {
         _window: {
-            "t-on-resize": this.debounced(this.onResize, 100),
+            "t-on-resize.passive": this.debounced(this.onResize, 100),
         },
         _root: {
             "t-att-class": () => ({

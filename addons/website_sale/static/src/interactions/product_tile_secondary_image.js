@@ -6,7 +6,7 @@ export class ProductTileSecondaryImage extends Interaction {
     dynamicContent = {
         _root: {
             "t-att-class": () => ({ "o_product_tile_scrolled": this.isSecondImgInView }),
-            "t-on-scroll": (ev) => this.onScroll(ev),
+            "t-on-scroll.passive": (ev) => this.onScroll(ev),
         }
     };
 

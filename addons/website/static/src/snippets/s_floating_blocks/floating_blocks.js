@@ -8,8 +8,8 @@ export class FloatingBlocks extends Interaction {
 
     dynamicContent = {
         _window: {
-            "t-on-resize": this.debounced(this.onResize, 100),
-            "t-on-scroll": this.throttled(this.onScroll),
+            "t-on-resize.passive": this.debounced(this.onResize, 100),
+            "t-on-scroll.passive": this.throttled(this.onScroll),
         },
         ".s_floating_blocks_block": {
             "t-att-style": (blockEl) => ({

@@ -6,7 +6,7 @@ export class ProductVariantPreview extends Interaction {
 
     dynamicContent = {
         _window: {
-            "t-on-resize": this.debounced(this.updateVariantPreview, 250),
+            "t-on-resize.passive": this.debounced(this.updateVariantPreview, 250),
         },
     };
 

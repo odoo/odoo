@@ -8,7 +8,7 @@ export class GoogleMap extends Interaction {
     static selector = ".s_google_map";
     dynamicContent = {
         _window: {
-            "t-on-resize": () => {
+            "t-on-resize.passive": () => {
                 if (this.gps) {
                     this.map.setCenter(this.gps);
                 }

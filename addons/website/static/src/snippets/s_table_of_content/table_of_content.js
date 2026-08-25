@@ -80,7 +80,7 @@ export class TableOfContent extends Interaction {
             )
         );
 
-        this.addListener(this.scrollTarget, "scroll", this.scrollBound);
+        this.addListener(this.scrollTarget, "scroll", this.scrollBound, { passive: true });
     }
 
     //--------------------------------------------------------------------------
