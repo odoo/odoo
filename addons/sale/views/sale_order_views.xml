@@ -782,10 +782,7 @@
                                         class="fw-normal text-muted"
                                     />
                                 </column>
-                                <column
-                                    width="[130px]"
-                                    column_invisible="parent.state != 'sale'"
-                                >
+                                <column column_invisible="parent.state != 'sale'">
                                     <field
                                         name="qty_delivered"
                                         string="Delivered"
@@ -826,7 +823,11 @@
                                     require duplicating this definition.
                                 -->
                                 <column name="price_unit">
-                                    <field name="price_unit" invisible="display_type" readonly="qty_invoiced &gt; 0"/>
+                                    <field
+                                        name="price_unit"
+                                        invisible="display_type"
+                                        readonly="qty_invoiced &gt; 0"
+                                    />
                                 </column>
                                 <field
                                     name="tax_ids"
@@ -842,7 +843,6 @@
                                     width="50px"
                                     optional="show"/>
                                 <column
-                                    width="[170px]"
                                     column_invisible="parent.document_tax_mode == 'tax_included'"
                                 >
                                     <field
@@ -853,20 +853,19 @@
                                     <field
                                         name="price_subtotal"
                                         string="Tax Excl."
-                                        invisible="is_downpayment"
+                                        invisible="display_type or is_downpayment"
                                         widget="labeled_monetary_field"
                                         optional="hide"
                                     />
                                     <field
                                         name="price_total"
                                         string="Tax Incl."
-                                        invisible="is_downpayment"
+                                        invisible="display_type or is_downpayment"
                                         widget="labeled_monetary_field"
                                         optional="hide"
                                     />
                                 </column>
                                 <column
-                                    width="[170px]"
                                     column_invisible="parent.document_tax_mode == 'tax_excluded'"
                                 >
                                     <field
@@ -877,14 +876,14 @@
                                     <field
                                         name="price_subtotal"
                                         string="Tax Excl."
-                                        invisible="is_downpayment"
+                                        invisible="display_type or is_downpayment"
                                         widget="labeled_monetary_field"
                                         optional="hide"
                                     />
                                     <field
                                         name="price_total"
                                         string="Tax Incl."
-                                        invisible="is_downpayment"
+                                        invisible="display_type or is_downpayment"
                                         widget="labeled_monetary_field"
                                         optional="hide"
                                     />
