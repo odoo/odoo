@@ -148,7 +148,7 @@ class PurchaseBillLineMatch(models.Model):
                    aml.name as description
               FROM account_move_line aml
          LEFT JOIN account_move am on aml.move_id = am.id
-             WHERE aml.display_type = 'product'
+             WHERE aml.display_type IN ('product', 'downpayment')
                AND am.move_type in ('in_invoice', 'in_refund')
                AND aml.parent_state in ('draft', 'posted')
         """)
