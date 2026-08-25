@@ -1,28 +1,9 @@
 import { Component, onWillStart, proxy, signal, usePlugin, useProps } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useAutofocus } from "@web/core/utils/hooks";
-
-const allowedQwebExpressionsService = {
-    dependencies: ["orm"],
-    start(env, { orm }) {
-        const cache = new Map();
-        return (resModel) => {
-            if (cache.has(resModel)) {
-                return cache.get(resModel);
-            }
-            const prom = orm.call(resModel, "mail_allowed_qweb_expressions").catch((e) => {
-                cache.delete(resModel);
-                return Promise.reject(e);
-            });
-            cache.set(resModel, prom);
-            return prom;
-        };
-    },
-};
-registry.category("services").add("allowed_qweb_expressions", allowedQwebExpressionsService);
+import { AllowedQwebExpressionsPlugin } from "@web/views/fields/allowed_qweb_expressions_plugin";
 
 export class DynamicPlaceholderPopover extends Component {
     static template = "web.DynamicPlaceholderPopover";
@@ -34,6 +15,7 @@ export class DynamicPlaceholderPopover extends Component {
     autofocusRef = signal.ref();
 
     debugMode = usePlugin(DebugModePlugin);
+    allowedQwebExpressionsPlugin = usePlugin(AllowedQwebExpressionsPlugin);
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });
@@ -46,10 +28,9 @@ export class DynamicPlaceholderPopover extends Component {
     }
 
     async _loadAllowedExpressions() {
-        const getAllowedQwebExpressions = this.env.services["allowed_qweb_expressions"];
         [this.isTemplateEditor, this.allowedQwebExpressions] = await Promise.all([
             user.hasGroup("mail.group_mail_template_editor"),
-            getAllowedQwebExpressions(this.props.resModel),
+            this.allowedQwebExpressionsPlugin.getAllowedQwebExpressions(this.props.resModel),
         ]);
     }
 

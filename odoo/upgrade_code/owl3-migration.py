@@ -1110,6 +1110,7 @@ MISC_WHITELIST = {
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
     "action": ['ActionPlugin', '@web/webclient/actions/action_plugin'],
+    "allowed_qweb_expressions": ['AllowedQwebExpressionsPlugin', '@web/views/fields/allowed_qweb_expressions_plugin'],
     "assetsWatchdog": ['AssetsWatchdogPlugin', '@bus/services/assets_watchdog_plugin'],
     "barcode": ['BarcodePlugin', '@barcodes/barcode_plugin'],
     "bottom_sheet": ['BottomSheetPlugin', '@web/core/bottom_sheet/bottom_sheet_plugin'],
