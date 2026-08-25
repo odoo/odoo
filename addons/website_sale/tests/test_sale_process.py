@@ -236,6 +236,21 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             values['company_id'] = company_id
         return self.env['sale.order'].create(values)
 
+    def test_confirmation_does_not_prepare_signup_for_existing_user(self):
+        self.website.auth_signup_uninvited = 'b2c'
+        partner = self.env.ref('base.partner_admin')
+        partner.signup_cancel()
+        order = self._create_so(partner_id=partner.id)
+
+        session = self.authenticate(None, None)
+        session['sale_last_order_id'] = order.id
+        odoo.http.root.session_store.save(session)
+        response = self.url_open('/shop/confirmation')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(partner.signup_type)
+        self.assertNotIn('/web/signup?', response.text)
+
     def _get_last_address(self, partner):
         """ Useful to retrieve the last created address (shipping or billing) """
         return partner.child_ids.sorted('id', reverse=True)[0]

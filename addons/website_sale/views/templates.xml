@@ -2414,7 +2414,7 @@
                     </h5>
                 </div>
             </t>
-            <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
+            <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user() and not order.partner_id.user_ids">
                 <p class="alert alert-info mt-3" role="status">
                     <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True).signup_url" class="btn btn-primary">Sign Up</a>
                     to follow your order.
