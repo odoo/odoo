@@ -1,35 +1,37 @@
 .o_account_dashboard_kpis_wrapper {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
     gap: map-get($spacers, 2);
     align-items: start;
     flex: 0 0 100%;
     max-width: 100%;
-    padding-block: map-get($spacers, 2) map-get($spacers, 1);
-    padding-inline: map-get($spacers, 2);
-    margin-block-end: map-get($spacers, 2);
-    border: $border-width solid $border-color;
-    border-radius: $border-radius-sm;
-    background-color: $o-view-background-color;
 
-    @include media-breakpoint-up(md) {
-        flex-basis: calc(100% - var(--KanbanRecord-margin-h) * 2);
-        max-width: calc(100% - var(--KanbanRecord-margin-h) * 2);
-        margin-inline: var(--KanbanRecord-margin-h);
+    @include media-breakpoint-down(md) {
+        margin: 0 0 (1px + $border-width); // 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top
     }
 }
 
 .o_account_dashboard_kpis {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: map-get($spacers, 2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: $o-kanban-record-margin * 2;
     width: 100%;
-    padding: map-get($spacers, 2);
-}
+    min-width: 0;
+    overflow: scroll hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
 
-.o_account_dashboard_kpis_close {
-    margin-block-start: map-get($spacers, 1);
-    margin-inline-end: map-get($spacers, 1);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @include media-breakpoint-down(md) {
+        flex-wrap: nowrap;
+        gap: map-get($spacers, 2);
+        padding-inline: map-get($spacers, 2);
+        scroll-padding-inline: map-get($spacers, 2);
+    }
 }
 
 .o_account_dashboard_kpi_card {
@@ -38,9 +40,10 @@
     min-height: 4.5rem;
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border: $border-width solid $border-color;
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius-lg;
     background-color: $o-view-background-color;
-    box-shadow: 0 .125rem .25rem rgba($black, .075);
+    flex: 1 0 12rem;
+    scroll-snap-align: start;
 
     &:not(:disabled):hover {
         border-color: $o-brand-primary;
