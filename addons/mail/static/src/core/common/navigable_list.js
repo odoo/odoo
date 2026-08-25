@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
@@ -49,6 +50,7 @@ export class NavigableList extends Component {
             position: t.string().optional("bottom"),
             rememberPosition: t.boolean().optional(),
         });
+        useSubEnv({ inNavigableList: true });
         this.state = proxy({
             activeIndex: null,
             open: false,
