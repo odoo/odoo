@@ -88,6 +88,7 @@
         'views/mv_spot_data_mirror_views.xml',
         'views/mv_spot_data_mirrors_views.xml',
         'views/mv_spot_data_views.xml',
+        'views/mv_postlog_import_views.xml',
         'views/mv_station_views.xml',
         'views/mv_tape_views.xml',
         'views/mv_time_and_expense_detail_views.xml',
@@ -155,6 +156,11 @@
             'marathon_ventures/static/src/scss/prelog_fuzzy_matching.scss',
             'marathon_ventures/static/src/js/prelog_fuzzy_matching/prelog_fuzzy_matching.js',
             'marathon_ventures/static/src/js/prelog_fuzzy_matching/prelog_fuzzy_matching.xml',
+            # Postlog Workbench. Deliberately reuses the prelog stylesheet
+            # (shared .mv-fuzzy__* class names) so the two pages cannot drift
+            # visually and there is only one place to restyle.
+            'marathon_ventures/static/src/js/postlog_matching/postlog_matching.js',
+            'marathon_ventures/static/src/js/postlog_matching/postlog_matching.xml',
             'marathon_ventures/static/src/scss/report_builder.scss',
             'marathon_ventures/static/src/js/report_builder/report_builder.js',
             'marathon_ventures/static/src/js/report_builder/report_builder.xml',
@@ -178,6 +184,11 @@
             'marathon_ventures/static/src/scss/mv_email_tags.scss',
             'marathon_ventures/static/src/js/mv_email_tags/mv_email_tags.js',
             'marathon_ventures/static/src/js/mv_email_tags/mv_email_tags.xml',
+        ],
+        'web.assets_tests': [
+            # Browser tour driving the Postlog Workbench; see
+            # tests/test_postlog_workbench_ui.py
+            'marathon_ventures/static/tests/tours/postlog_workbench_tour.js',
         ],
     },
     'installable': True,

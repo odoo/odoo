@@ -190,6 +190,14 @@
             }
         }
 
+        // The reason text is the widest thing in the grid, so let its column
+        // run wider than the 220px default. The table is width: max-content
+        // inside an overflow: auto wrapper, so this scrolls rather than
+        // squeezing the other columns.
+        td:has(> .mv-fuzzy__reason) {
+            max-width: 330px;
+        }
+
         td {
             max-width: 220px;
             padding: 0.54rem 0.62rem;
@@ -256,8 +264,15 @@
     }
 
     &__reason {
-        display: inline-flex;
-        max-width: 230px;
+        // inline-block, not inline-flex: text-overflow only applies to block
+        // containers with inline content, so inline-flex silently disables the
+        // ellipsis and the text gets hard-cut mid-word instead.
+        display: inline-block;
+        // Never wider than its own cell. A fixed px cap here can exceed the
+        // td's max-width and spill over the next column, because td carries no
+        // overflow: hidden.
+        max-width: 100%;
+        vertical-align: middle;
         padding: 0.2rem 0.44rem;
         border-radius: 999px;
         overflow: hidden;
@@ -451,6 +466,7 @@
             &.active { border-bottom-color: var(--mv-fuzzy-blue); color: #244f91; }
             &.active span { color: #fff; background: var(--mv-fuzzy-blue); }
         }
+
     }
 
     &__searchbar {
@@ -580,6 +596,55 @@
     &__quality--fuzzy { color: #7d5000; background: #ffedb4; }
     &__text-warning { color: #9a5700; background: #fff4de !important; font-weight: 700; }
 
+    // Runner-up schedules in the drawer. Scoped to classes the prelog template
+    // does not use, so prelog's page is unaffected.
+    &__alt-hint {
+        margin: 0 0 0.5rem;
+        color: #6b7688;
+        font-size: 0.72rem;
+    }
+
+    &__alts {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__alt {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.45rem;
+        padding: 0.55rem 0.65rem;
+        border: 1px solid var(--mv-fuzzy-border);
+        border-radius: 8px;
+        background: #fbfcfe;
+        transition: border-color 0.16s ease, box-shadow 0.16s ease;
+
+        &:hover {
+            border-color: var(--mv-fuzzy-blue);
+            box-shadow: 0 1px 6px rgba(36, 79, 145, 0.14);
+        }
+
+        strong { font-size: 0.8rem; }
+    }
+
+    &__alt-main { min-width: 0; }
+
+    &__alt-meta {
+        margin-top: 0.15rem;
+        color: #46526a;
+        font-size: 0.72rem;
+    }
+
+    &__alt-why {
+        margin-top: 0.1rem;
+        color: #9a5700;
+        font-size: 0.7rem;
+        font-weight: 650;
+    }
+
     &__drawer-backdrop {
         position: fixed;
         z-index: 1050;
@@ -650,3 +715,4 @@
         &__bulk-actions { flex-wrap: wrap; }
     }
 }
+

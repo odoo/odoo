@@ -127,10 +127,12 @@
     <field name="target">new</field>
   </record>
 
+  <!-- Routed by Program Type: Cable -> Postlog Data, Bundle/PP -> phase28.
+       Sequence 8 keeps it with Postlog Workbench (9) and its jobs (10). -->
   <menuitem id="menu_mv_postlog_import"
             name="Import Postlog"
             parent="menu_mv_operations"
-            action="action_open_postlog_import_wizard"
-            sequence="6"/>
+            action="action_open_postlog_upload_wizard"
+            sequence="8"/>
 
 </odoo>

@@ -74,12 +74,21 @@ class PostlogImportEngine:
     }
     _DEFAULT_REQUIRED_FIELDS = ["air_date", "air_time", "network_deal_number"]
 
+    # Mirrors PrelogImportEngine's status vocabulary so both jobs report the
+    # same three outcomes into `import_match_status`.
+    _MATCHED = "matched"
+    _CREATED_WITHOUT_SCHEDULE = "created_without_schedule"
+    _FAILED_TO_CREATE = "failed_to_create"
+
     def __init__(self, env, *, program, upload_file, upload_filename):
         self.env = env
         self.program = program
         self.upload_file = upload_file
         self.upload_filename = (upload_filename or "").strip()
         self.config = load_program_config(program.display_name if program else "")
+        # Rows dropped by _should_skip_row; surfaced on the import job so blank
+        # or unusable rows are reported instead of quietly disappearing.
+        self.skipped_row_count = 0
 
     def decode_upload(self):
         if not self.upload_file:
@@ -96,18 +105,44 @@ class PostlogImportEngine:
             raise UserError("The uploaded file has no data rows.")
 
         normalized_rows = []
-        for row in raw_rows:
+        skipped_row_count = 0
+        first_data_row = self._first_data_row_number()
+        for offset, row in enumerate(raw_rows):
+            row_number = first_data_row + offset
             if self._should_skip_row(row):
+                skipped_row_count += 1
                 continue
-            normalized_rows.append(self._normalize_row(row))
+            normalized_rows.append(self._normalize_row(row, row_number=row_number))
         if not normalized_rows:
             raise UserError("The uploaded file has no importable data rows.")
-        detected_weeks = [self._detect_week(row) for row in normalized_rows]
-        unique_weeks = sorted(set(detected_weeks))
+        self.skipped_row_count = skipped_row_count
+
+        # Week detection reports its own row number too, so "one Week" failures
+        # point at a spreadsheet row instead of the whole file.
+        weeks_by_row = {}
+        for row, row_number in zip(normalized_rows, self._data_row_numbers(raw_rows)):
+            weeks_by_row[row_number] = self._detect_week(row, row_number=row_number)
+        unique_weeks = sorted(set(weeks_by_row.values()))
         if len(unique_weeks) != 1:
-            raise UserError("The uploaded file must contain exactly one Week.")
+            sample = ', '.join(
+                '%s (row %s)' % (week, min(r for r, w in weeks_by_row.items() if w == week))
+                for week in unique_weeks[:4]
+            )
+            raise UserError(
+                "The uploaded file must contain exactly one Week, but %s were found: %s."
+                % (len(unique_weeks), sample)
+            )
 
         return normalized_rows, unique_weeks[0]
+
+    def _data_row_numbers(self, raw_rows):
+        """Spreadsheet row numbers of the rows that survived _should_skip_row."""
+        first_data_row = self._first_data_row_number()
+        return [
+            first_data_row + offset
+            for offset, row in enumerate(raw_rows)
+            if not self._should_skip_row(row)
+        ]
 
     def import_rows(self, rows, import_week):
         SpotData = self.env["mv.spot_data"]
@@ -137,13 +172,129 @@ class PostlogImportEngine:
                 summary["errors"].append("Row %s: %s" % (row_index, exc))
         return summary
 
-    def _normalize_row(self, row):
+    def build_row_vals(self, row, import_week, row_index):
+        """Return mv.spot_data values for one normalized row.
+
+        Mirrors PrelogImportEngine.build_row_vals. Parse failures are collected
+        into `import_match_detail` rather than aborting the whole upload, so one
+        malformed cell cannot cost the operator the other 2,000 rows.
+        """
+        parse_errors = []
+        air_date = self._safe_optional_value("air_date", row.get("air_date"), parse_errors)
+        air_time = self._safe_optional_value("air_time", row.get("air_time"), parse_errors)
+        length = self._safe_optional_value("length", row.get("length"), parse_errors)
+        length = self._coerce_selection("length", length, parse_errors, "Aired Length")
+        spot_rate = self._safe_optional_value("spot_rate", row.get("spot_rate"), parse_errors)
+        network_deal_number = self._safe_optional_value("network_deal_number", row.get("network_deal_number"), parse_errors)
+        status = self._safe_optional_value("status", row.get("status"), parse_errors) or "aired"
+        status = self._coerce_selection("status", status, parse_errors, "Status") or "aired"
+        selected_program_name = self._selected_program_name()
+        broadcast_network = (
+            selected_program_name
+            if self.config.get("useProgramForNetwork")
+            else self._safe_optional_value("broadcast_network", row.get("broadcast_network"), parse_errors)
+        )
+
+        schedule, match_detail = self._match_schedule(
+            network=(
+                selected_program_name
+                if self.config.get("useProgramForNetwork")
+                else self._safe_optional_value("network", row.get("network"), parse_errors) or selected_program_name
+            ),
+            network_deal_number=network_deal_number,
+            air_date=air_date,
+            air_time=air_time,
+            length=length,
+            spot_rate=spot_rate,
+            import_week=import_week,
+        )
+
+        detail_parts = list(parse_errors)
+        if match_detail:
+            detail_parts.append(match_detail)
+
+        return {
+            "schedule": schedule.id if schedule else False,
+            "air_date": air_date,
+            "air_time": air_time,
+            "length": length,
+            "spot_rate": spot_rate,
+            "isci": self._safe_optional_value("isci", row.get("isci"), parse_errors),
+            "aired_ad_id": self._safe_optional_value("aired_ad_id", row.get("aired_ad_id"), parse_errors),
+            "broadcast_network": broadcast_network,
+            "network_deal_number": network_deal_number,
+            "raycom_order_number": network_deal_number,
+            "agency": self._safe_optional_value("agency", row.get("agency"), parse_errors),
+            "commercial_title": self._safe_optional_value("commercial_title", row.get("commercial_title"), parse_errors),
+            "materialdescription": self._safe_optional_value("materialdescription", row.get("materialdescription"), parse_errors),
+            "orderproductdescription": self._safe_optional_value("orderproductdescription", row.get("orderproductdescription"), parse_errors),
+            "product": self._safe_optional_value("product", row.get("product"), parse_errors),
+            "program": self._safe_optional_value("program", row.get("program"), parse_errors),
+            "program_id": self._safe_optional_value("program_id", row.get("program_id"), parse_errors),
+            "line_number": self._safe_optional_value("line_number", row.get("line_number"), parse_errors),
+            "time_period": self._safe_optional_value("time_period", row.get("time_period"), parse_errors),
+            "raycom_invoice_number": self._safe_optional_value("raycom_invoice_number", row.get("raycom_invoice_number"), parse_errors),
+            "x800": self._safe_optional_value("x800", row.get("x800"), parse_errors),
+            "status": status,
+            "batch_id": self.upload_filename or False,
+            "import_program": self.program.id if self.program else False,
+            "import_week_value": import_week,
+            "import_match_status": self._MATCHED if schedule else self._CREATED_WITHOUT_SCHEDULE,
+            "import_match_detail": "; ".join(part for part in detail_parts if part) or False,
+        }
+
+    def export_field_names(self):
+        return list(self._field_map().keys())
+
+    def _coerce_selection(self, field_name, value, errors, label):
+        """Blank out a value the mv.spot_data Selection does not accept.
+
+        mv.spot_data.length and mv.deal.length do not carry the same value set
+        (mv.deal has v_20, v_25, v_35, v_40, v_105, v_150, v_240 and others that
+        mv.spot_data lacks), so a perfectly ordinary spot length can produce a
+        key the field rejects. Writing it would raise ValueError inside create()
+        and cost the whole row. Blanking it and recording why keeps the row, and
+        the operator sees it in the workbench as an unmatched spot with a
+        readable reason instead of an entry in errors.csv.
+        """
+        if value in (None, False, ""):
+            return False
+        field = self.env["mv.spot_data"]._fields.get(field_name)
+        if not field or field.type != "selection":
+            return value
+        selection = field.selection
+        if callable(selection):
+            selection = selection(self.env["mv.spot_data"])
+        allowed = {key for key, _label in selection}
+        if value in allowed:
+            return value
+        errors.append(
+            "%s value %r is not one of the accepted values for this field, so it "
+            "was left blank." % (label, value)
+        )
+        return False
+
+    def _safe_optional_value(self, field_name, value, errors):
+        if value in (None, ""):
+            return False
+        try:
+            return self._optional_value(field_name, value)
+        except UserError as exc:
+            errors.append(str(exc))
+            return False
+
+    def _normalize_row(self, row, row_number=None):
         normalized = {}
         for canonical_name, candidates in self._field_map().items():
             normalized[canonical_name] = self._first_value(row, candidates)
         for required_field in self._required_fields():
             if normalized.get(required_field) in (None, ""):
-                raise UserError("Required field '%s' is missing from the uploaded file." % required_field)
+                where = " (row %s)" % row_number if row_number else ""
+                raise UserError(
+                    "Required field '%s' is missing from the uploaded file%s. "
+                    "Every row needs %s; fix that row or remove it, then upload again."
+                    % (required_field, where, ", ".join(self._required_fields()))
+                )
         return normalized
 
     def _field_map(self):
@@ -160,7 +311,7 @@ class PostlogImportEngine:
             normalized[canonical_name] = self._first_value(row, candidates)
         return all(normalized.get(required_field) in (None, "") for required_field in self._required_fields())
 
-    def _detect_week(self, row):
+    def _detect_week(self, row, row_number=None):
         week_value = row.get("week")
         if week_value not in (None, ""):
             return self._transform_value("week", week_value)
@@ -168,11 +319,22 @@ class PostlogImportEngine:
         if self.config.get("deriveWeekFromAirDate", True):
             air_date_value = row.get("air_date")
             if air_date_value in (None, ""):
-                raise UserError("Every uploaded row must include an Air Date value to derive the import week.")
-            air_date = self._transform_value("air_date", air_date_value)
+                raise UserError(
+                    "Every uploaded row must include an Air Date value to derive "
+                    "the import week%s." % (" (row %s)" % row_number if row_number else "")
+                )
+            try:
+                air_date = self._transform_value("air_date", air_date_value)
+            except UserError as exc:
+                raise UserError(
+                    "%s%s" % (exc, " (row %s)" % row_number if row_number else "")
+                ) from exc
             return air_date - timedelta(days=air_date.weekday())
 
-        raise UserError("Every uploaded row must include a Week value.")
+        raise UserError(
+            "Every uploaded row must include a Week value%s."
+            % (" (row %s)" % row_number if row_number else "")
+        )
 
     def _transform_value(self, field_name, value):
         transforms = dict(self._DEFAULT_TRANSFORMS)

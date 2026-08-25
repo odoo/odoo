@@ -85,6 +85,27 @@ class MvSpotData(models.Model):
     time_period = fields.Char(string='Time Period', size=255)  # SF: Time_Period__c
     x800 = fields.Char(string='800 #', size=100)  # SF: X800__c
 
+    # === Postlog Workbench fields (mirrors mv.prelog_data) ===
+    # Plain indexed fields written by the Postlog import. Deliberately separate
+    # from the generated `program` Char (which holds the show name, e.g.
+    # "NEW DETECTIVES") and from the stubbed `spot_week` compute.
+    # NOTE: there is no `version` / `removed` here - a postlog is one upload per
+    # week of what actually aired, so neither concept applies.
+
+    import_job = fields.Many2one(string='Import Job', comodel_name='mv.postlog_import_job', ondelete='set null', index=True)
+    import_program = fields.Many2one(string='Import Program', comodel_name='mv.programs', ondelete='restrict', index=True)
+    import_week_value = fields.Date(string='Import Week', index=True)
+    import_match_status = fields.Selection(
+        string='Import Match Status',
+        selection=[
+            ('matched', 'Matched'),
+            ('created_without_schedule', 'Created Without Schedule'),
+            ('failed_to_create', 'Failed to Create'),
+        ],
+    )
+    import_match_detail = fields.Text(string='Import Match Detail')
+    batch_id = fields.Char(string='Batch', size=255)
+
     # === Computed / Roll-Up ===
 
     @api.depends()
