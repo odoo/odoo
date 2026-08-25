@@ -3,7 +3,7 @@ import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { computeFormatFromCurrency } from "../helpers";
-const { featurePluginRegistry } = registries;
+const { featurePluginRegistry, evaluationUIPluginRegistry } = registries;
 
 export class CurrencyPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ (["getCurrencyRate", "getCompanyCurrencyFormat"]);
@@ -73,3 +73,4 @@ export class CurrencyPlugin extends OdooUIPlugin {
 }
 
 featurePluginRegistry.add("odooCurrency", CurrencyPlugin);
+evaluationUIPluginRegistry.add("odooCurrency", CurrencyPlugin);
