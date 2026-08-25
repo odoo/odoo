@@ -5,48 +5,41 @@
         <field name="model">homework.location.wizard</field>
         <field name="arch" type="xml">
             <form string="Location">
-                <group col="12" class="mb-2 d-flex">
-                    <i class="oi ms-1" data-icon="schedule" title="Date"/>
-                    <field name="date" nolabel="1" class="oe_inline o_input_5ch" default_focus="0"/>
-                    <field name="weekly" class="oe_inline" nolabel="1" default_focus="1"/>
-                    <span class="w-100">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
+                    <field name="date" nolabel="1" class="min-w-5" default_focus="0"/>
+                    <field name="weekly" class="oe_inline ms-1" nolabel="1" default_focus="1"/>
+                    <span>
                         Repeat every <field name="day_week_string" class="oe_inline"/>
                     </span>
-                </group>
-                <group>
-                    <div class="o_row">
-                        <i class="oi mx-2 pt-2" data-icon="location_on" title="Location"/>
-                        <field name="work_location_id"
-                               class="mb-n3"
-                               nolabel="1"
-                               widget="badges_many2one"
-                               options="{
-                                    'related_icon_field': 'icon',
-                                    'default_icon': 'location_on',
-                               }"/>
-                    </div>
-                </group>
+                </div>
+                <div class="o_outlined d-flex align-items-baseline gap-2">
+                    <i class="oi pt-2" data-icon="location_on" title="Location"/>
+                    <field name="work_location_id"
+                           nolabel="1"
+                           widget="badges_many2one"
+                           options="{
+                                'related_icon_field': 'icon',
+                                'default_icon': 'location_on',
+                           }"/>
+                </div>
                 <footer>
-                    <div class="d-flex justify-content-between w-100">
-                        <div>
-                            <button name="set_employee_location" type="object" class="btn-primary me-2" string="Set Location"/>
-                            <button name="discard" string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
-                        </div>
-                        <button title="Delete homeworking location"
-                            name="delete_employee_location"
-                            type="object"
-                            class="btn btn-secondary oi oi-filled"
-                            data-icon="delete"
-                            confirm="Are you sure you want to delete this location?"
-                            invisible="not context.get('default_work_location_id') or context.get('default_weekly')"/>
-                        <button title="Delete homeworking location"
-                            name="delete_employee_location"
-                            type="object"
-                            class="btn btn-secondary oi oi-filled"
-                            data-icon="delete"
-                            confirm="Are you sure you want to delete this recurring location?"
-                            invisible="not context.get('default_weekly')"/>
-                    </div>
+                    <button name="set_employee_location" type="object" class="btn-primary" string="Set Location"/>
+                    <button name="discard" string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button title="Delete homeworking location"
+                        name="delete_employee_location"
+                        type="object"
+                        class="btn btn-secondary ms-auto"
+                        confirm="Are you sure you want to delete this location?"
+                        invisible="not context.get('default_work_location_id') or context.get('default_weekly')">
+                        Delete
+                    </button>
+                    <button title="Delete homeworking location"
+                        name="delete_employee_location"
+                        type="object"
+                        class="btn btn-secondary oi oi-filled ms-auto"
+                        data-icon="delete"
+                        confirm="Are you sure you want to delete this recurring location?"
+                        invisible="not context.get('default_weekly')"/>
                 </footer>
             </form>
         </field>
