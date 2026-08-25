@@ -2041,7 +2041,121 @@ class AccountEdiUBL(models.AbstractModel):
         return self._import_ubl_retrieve_customer_search_plan(collected_values)
 
     def _import_ubl_retrieve_customer(self, collected_values):
+<<<<<<< ffd2c8fe7b49abab6f902790ad202b411954d730
         self._import_retrieve_customer(collected_values)
+||||||| 4001c609e382ca382fba587d21ad4aeedcb1f53c
+        company = collected_values['company']
+        customer_values = collected_values['customer_values']
+        customer_values['account_numbers'] = collected_values.get('partner_bank_values', {}).get('account_numbers')
+        self.env['res.partner']._import_retrieve_customer(
+            search_plan=self._import_ubl_retrieve_customer_search_plan(collected_values),
+            company=company,
+            customer_values_list=[customer_values],
+        )
+        if partner := customer_values.get('customer'):
+            collected_values['to_write']['partner_id'] = partner.id
+
+    def _import_ubl_get_country(self, collected_values):
+        customer_values = collected_values['customer_values']
+        country_code = customer_values.get('country_code')
+        if not country_code:
+            return None
+
+        if country_code == 'GB':
+            # While the code is gb, the xml_id is uk
+            country_code = 'UK'
+        return self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
+
+    def _import_ubl_prepare_missing_customer_create_values(self, collected_values):
+        customer_values = collected_values['customer_values']
+        partner_create_values = {
+            'is_company': True,
+        }
+        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city'):
+            if value := customer_values.get(key):
+                partner_create_values[key] = value
+
+        if (peppol_eas := customer_values.get('peppol_eas')) and (peppol_endpoint := customer_values.get('peppol_endpoint')):
+            partner_create_values['peppol_eas'] = peppol_eas
+            partner_create_values['peppol_endpoint'] = peppol_endpoint
+
+        country = self._import_ubl_get_country(collected_values)
+        if country:
+            partner_create_values['country_id'] = country.id
+        if vat := customer_values.get('vat'):
+            partner_create_values['vat'], _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
+        return partner_create_values
+
+    def _check_customer_vat_match(self, customer, vat, collected_values):
+        """
+        Compare the VAT from an EDI document against a partner's stored VAT,
+        with country-specific normalization where needed.
+        Should stay consistent with `_get_country_specific_vat_variants`.
+        """
+        country = self._import_ubl_get_country(collected_values)
+        customer_vat = customer.vat.replace(' ', '').upper()
+        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
+        if country.code == 'CH':
+            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
+            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        return customer_vat == vat_to_compare
+=======
+        company = collected_values['company']
+        customer_values = collected_values['customer_values']
+        customer_values['account_numbers'] = collected_values.get('partner_bank_values', {}).get('account_numbers')
+        self.env['res.partner']._import_retrieve_customer(
+            search_plan=self._import_ubl_retrieve_customer_search_plan(collected_values),
+            company=company,
+            customer_values_list=[customer_values],
+        )
+        if partner := customer_values.get('customer'):
+            collected_values['to_write']['partner_id'] = partner.id
+
+    def _import_ubl_get_country(self, collected_values):
+        customer_values = collected_values['customer_values']
+        country_code = customer_values.get('country_code')
+        if not country_code:
+            return None
+
+        if country_code == 'GB':
+            # While the code is gb, the xml_id is uk
+            country_code = 'UK'
+        return self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False)
+
+    def _import_ubl_prepare_missing_customer_create_values(self, collected_values):
+        customer_values = collected_values['customer_values']
+        partner_create_values = {
+            'is_company': True,
+        }
+        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city'):
+            if value := customer_values.get(key):
+                partner_create_values[key] = value
+
+        if (peppol_eas := customer_values.get('peppol_eas')) and (peppol_endpoint := customer_values.get('peppol_endpoint')):
+            partner_create_values['peppol_eas'] = peppol_eas
+            partner_create_values['peppol_endpoint'] = peppol_endpoint
+
+        country = self._import_ubl_get_country(collected_values)
+        if country:
+            partner_create_values['country_id'] = country.id
+        if vat := customer_values.get('vat'):
+            partner_create_values['vat'], _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
+        return partner_create_values
+
+    def _check_customer_vat_match(self, customer, vat, collected_values):
+        """
+        Compare the VAT from an EDI document against a partner's stored VAT,
+        with country-specific normalization where needed.
+        Should stay consistent with `_get_country_specific_vat_variants`.
+        """
+        country = self._import_ubl_get_country(collected_values) or customer.country_id
+        customer_vat = customer.vat.replace(' ', '').upper()
+        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
+        if country and country.code == 'CH':
+            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
+            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        return customer_vat == vat_to_compare
+>>>>>>> 0c53073b4057d1cebb8e3abc3af83ea203d8628c
 
     def _import_ubl_create_missing_customer(self, collected_values):
         self._import_create_missing_customer(collected_values)
