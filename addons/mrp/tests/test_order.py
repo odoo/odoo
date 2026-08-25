@@ -809,14 +809,14 @@ class TestMrpOrder(TestMrpCommon):
         mo._post_inventory()
         self.assertEqual(len(mo.move_raw_ids), 4)
 
-        mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 3
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done' and m.product_id == p2).quantity = 3
 
         update_quantity_wizard = self.env['change.production.qty'].create({
             'mo_id': mo.id,
             'product_qty': 3,
         })
 
-        mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity = 0
+        mo.move_raw_ids.filtered(lambda m: m.state != 'done' and m.product_id == p2).quantity = 0
         update_quantity_wizard.change_prod_qty()
 
         self.assertEqual(len(mo.move_raw_ids), 4)
@@ -825,9 +825,9 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
 
         warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
-        self.assertRecordValues(warning.mrp_consumption_warning_line_ids, [
-            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom':  3},
-            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom': 12},
+        self.assertRecordValues(warning.mrp_consumption_warning_line_ids.sorted('product_id.id'), [
+            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom': 12, 'product_id': p1.id},
+            {'product_consumed_qty_uom': 0, 'product_expected_qty_uom':  3, 'product_id': p2.id},
         ])
         warning.action_confirm()
 
