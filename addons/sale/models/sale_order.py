@@ -1837,6 +1837,9 @@ class SaleOrder(models.Model):
             "views": [(False, "form")],
         }
 
+    def _get_order_creation_context(self):
+        return {}
+
     # INVOICING #
 
     def _prepare_invoice(self):

@@ -93,6 +93,9 @@ class CrmLead(models.Model):
             quotation_context['default_team_id'] = self.team_id.id
         if self.user_id:
             quotation_context['default_user_id'] = self.user_id.id
+        quotation_context.update(
+            self.env["sale.order"]._get_order_creation_context()
+        )
         return quotation_context
 
     def _merge_get_fields_specific(self):
