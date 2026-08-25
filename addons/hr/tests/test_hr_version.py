@@ -281,11 +281,11 @@ class TestHrVersion(TestHrCommon):
 
         v2.write({
             'contract_date_start': '2020-01-01',
-            'contract_date_end': '2020-12-31',
+            'contract_date_end': '2023-12-31',
         })
         self.assertEqual(v2.contract_date_start, date(2020, 1, 1))
         self.assertEqual(v1.contract_date_start, v2.contract_date_start)
-        self.assertEqual(v2.contract_date_end, date(2020, 12, 31))
+        self.assertEqual(v2.contract_date_end, date(2023, 12, 31))
         self.assertEqual(v1.contract_date_end, v2.contract_date_end)
 
         v3 = employee.create_version({
@@ -345,7 +345,7 @@ class TestHrVersion(TestHrCommon):
         # Archived versions do not count.
         # So if we archive v2, the synchronisation should start again.
         v2.active = False
-        employee.write({'contract_date_start': '2021-01-01'})
+        employee.write({'contract_date_start': '2021-01-01', 'contract_date_end': False})
         self.assertEqual(v1.contract_date_start, v1.date_version)
 
     def test_in_out_contract(self):
@@ -462,7 +462,7 @@ class TestHrVersion(TestHrCommon):
         })
 
         with self.assertRaises(ValidationError):
-            versions[:2].contract_date_end = "2020-9-30"
+            versions.contract_date_end = "2020-9-30"
 
     def test_multi_edit_other(self):
         """
@@ -893,3 +893,87 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(versions, v1)
         versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
         self.assertEqual(versions, v2)
+
+    def test_set_contract_dates_with_multiple_versions(self):
+        """
+        In a multi-version setup, where they all initially share the same contract. Checks the following cases:
+        1. When the end date of v1 is set before v2: v1 has a different contract than v2 and v3 which share the same one
+        2. When the end date of v1 is deleted: v1, v2 and v3 share the same contract.
+        3. When the start date of v2 is set after v1: v1 has a different contract than v2 and v3 which share the same one
+        4. When the end date of v2 is set before v3: all versions have their own different contract.
+        5. When the end date of v1 is deleted: v1, v2 and v3 share the same contract.
+        6. When the start date of v3 is set after v2: v3 has a different contract than v1 and v2 which share the same one
+        7. When v1=v2 and the end date of v1 is set before v2. v2 should keep its initial end date.
+        """
+        # setup
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2026-01-01',
+            'contract_date_start': '2026-01-01'
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2026-06-01',
+        })
+        v3 = employee.create_version({
+            'date_version': '2026-09-01',
+        })
+        self.assertEqual(len(set((v1 | v2 | v3).mapped('contract_date_start'))), 1)
+        self.assertEqual(len(set((v1 | v2 | v3).mapped('contract_date_end'))), 1)
+
+        # 1.
+        v1.write({'contract_date_end': '2026-05-31'})
+        self.assertEqual(v1.contract_date_start, date(2026, 1, 1))
+        self.assertEqual(v1.contract_date_end, date(2026, 5, 31))
+        self.assertEqual(v2.contract_date_start, date(2026, 6, 1))
+        self.assertEqual(v2.contract_date_end, False)
+        self.assertEqual(v2.contract_date_start, v3.contract_date_start)
+        self.assertEqual(v2.contract_date_end, v3.contract_date_end)
+
+        # 2.
+        v1.write({'contract_date_end': False})
+        self.assertEqual(v1.contract_date_start, date(2026, 1, 1))
+        self.assertEqual(v1.contract_date_end, False)
+        self.assertEqual(len(set((v1 | v2 | v3).mapped('contract_date_start'))), 1)
+        self.assertEqual(len(set((v1 | v2 | v3).mapped('contract_date_end'))), 1)
+
+        # 3.
+        v2.write({'contract_date_start': '2026-06-01'})
+        self.assertEqual(v1.contract_date_start, date(2026, 1, 1))
+        self.assertEqual(v1.contract_date_end, date(2026, 5, 31))
+        self.assertEqual(v2.contract_date_start, date(2026, 6, 1))
+        self.assertEqual(v2.contract_date_end, False)
+        self.assertEqual(v2.contract_date_start, v3.contract_date_start)
+        self.assertEqual(v2.contract_date_end, v3.contract_date_end)
+
+        # 4.
+        v2.write({'contract_date_end': '2026-08-31'})
+        self.assertEqual(v1.contract_date_start, date(2026, 1, 1))
+        self.assertEqual(v1.contract_date_end, date(2026, 5, 31))
+        self.assertEqual(v2.contract_date_start, date(2026, 6, 1))
+        self.assertEqual(v2.contract_date_end, date(2026, 8, 31))
+        self.assertEqual(v3.contract_date_start, date(2026, 9, 1))
+        self.assertEqual(v3.contract_date_end, False)
+
+        # 5.
+        v1.write({'contract_date_end': False})
+        self.assertEqual(len(set((v1 | v2 | v3).mapped('contract_date_start'))), 1)
+        self.assertEqual(len(set((v1 | v2 | v3).mapped('contract_date_end'))), 1)
+
+        # 6.
+        v3.write({'contract_date_start': '2026-09-01'})
+        self.assertEqual(v1.contract_date_start, date(2026, 1, 1))
+        self.assertEqual(v1.contract_date_end, date(2026, 8, 31))
+        self.assertEqual(v2.contract_date_start, v1.contract_date_start)
+        self.assertEqual(v2.contract_date_end, v1.contract_date_end)
+        self.assertEqual(v3.contract_date_start, date(2026, 9, 1))
+        self.assertEqual(v3.contract_date_end, False)
+
+        # 7.
+        v1.write({'contract_date_end': '2026-05-31'})
+        self.assertEqual(v1.contract_date_start, date(2026, 1, 1))
+        self.assertEqual(v1.contract_date_end, date(2026, 5, 31))
+        self.assertEqual(v2.contract_date_start, date(2026, 6, 1))
+        self.assertEqual(v2.contract_date_end, date(2026, 8, 31))
+        self.assertEqual(v3.contract_date_start, date(2026, 9, 1))
+        self.assertEqual(v3.contract_date_end, False)
