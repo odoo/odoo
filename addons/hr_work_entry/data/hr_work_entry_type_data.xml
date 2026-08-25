@@ -474,6 +474,7 @@
         <field name="code">OUT</field>
         <field name="country_id" ref="base.be"/>
         <field name="amount_rate">0.0</field>
+        <field name="count_as">absence</field>
     </record>
 
     <record id="be_work_entry_type_leave" model="hr.work.entry.type">
@@ -495,7 +496,7 @@
     </record>
 
     <record id="be_work_entry_type_home_working" model="hr.work.entry.type">
-        <field name="name">Home Working</field>
+        <field name="name">Remote work</field>
         <field name="display_code">HW</field>
         <field name="code">WORK110</field>
         <field name="color">2</field>
@@ -1038,7 +1039,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_european" model="hr.work.entry.type">
-        <field name="name">European Time Off (Employee)</field>
+        <field name="name">European Time Off</field>
         <field name="code">LEAVE216</field>
         <field name="color">5</field>
         <field name="display_code">EUR</field>
