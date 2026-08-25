@@ -3,11 +3,11 @@ import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
-    useProps,
     proxy,
     signal,
     t,
     useEffect,
+    useProps,
     onMounted,
     onWillUnmount,
 } from "@odoo/owl";
@@ -17,6 +17,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Tooltip } from "@web/core/tooltip/tooltip";
 import {
     BUTTON_SHAPES,
     BUTTON_SIZES,
@@ -69,7 +70,7 @@ function useContentChange(el, callback) {
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
     props = useProps(linkPopoverProps);
-    static components = { CheckBox, Dropdown, DropdownItem };
+    static components = { CheckBox, Dropdown, DropdownItem, Tooltip };
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
     buttonTypesData = BUTTON_TYPES;
@@ -108,6 +109,7 @@ export class LinkPopover extends Component {
             // `.getAttribute("href")` instead of `.href` to keep relative url
             url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
             label: labelEqualsUrl ? "" : textContent,
+            description: linkElement.getAttribute("aria-label") || "",
             previewIcon: {
                 /** @type {'oi'|'imgSrc'|'mimetype'} */
                 type: "oi",
@@ -192,6 +194,7 @@ export class LinkPopover extends Component {
                 attributes[attribute] = value;
             }
         }
+        attributes["aria-label"] = this.state.description;
         return {
             label: this.state.label,
             attachmentId: this.state.attachmentId,
