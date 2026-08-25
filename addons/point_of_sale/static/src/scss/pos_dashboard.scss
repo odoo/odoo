@@ -1,5 +1,12 @@
-.o_pos_kanban .o_kanban_renderer.o_kanban_ungrouped {
-  .o_kanban_record {
+.o_pos_kanban .o_kanban_renderer {
+  --Card-padding-v: #{$o-kanban-dashboard-vpadding};
+  --Card-padding-h: #{$o-kanban-dashboard-hpadding};
+
+  .o_kanban_record .o_dashboard_graph {
+    margin-bottom: -#{map-get($spacers, 2)};
+  }
+
+  &.o_kanban_ungrouped .o_kanban_record {
     width: 500px;
   }
 }
