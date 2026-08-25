@@ -1,10 +1,14 @@
 import { Component, onWillStart, useProps, proxy, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog, deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
+import {
+    ConfirmationDialog,
+    deleteConfirmationMessage,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { user } from "@web/core/user";
 import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 
 const isRTL = () => localization.direction === "rtl";
 const isRowAction = (item) => Boolean(item?.el.closest(".o_template_icon_group"));
@@ -66,9 +70,11 @@ export class SaleTemplateDropdown extends Component {
     props = useProps({
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),
+        string: t.string().optional(_t("New")),
         // `isDisabled` was only declared in `defaultProps`, but it is used in the template
         isDisabled: t.boolean().optional(false),
         record: t.object().optional(),
+        action: t.string().optional(),
     });
 
     setup() {
@@ -116,6 +122,17 @@ export class SaleTemplateDropdown extends Component {
         if (!additionalContext.default_sale_order_template_id) {
             // If the user doesn't specify a template, we remove the previous one from the context
             additionalContext.default_sale_order_template_id = false;
+        }
+
+        if (this.props.action) {
+            await this.action.doActionButton({
+                resModel: this.props.record.resModel,
+                resId: this.props.record.resId,
+                name: this.props.action,
+                type: "object",
+                context: additionalContext,
+            });
+            return;
         }
 
         if (this.isFormView) {

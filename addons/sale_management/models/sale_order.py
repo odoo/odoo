@@ -145,6 +145,12 @@ class SaleOrder(models.Model):
 
         return new_template.get_record_default_action()
 
+    def _get_order_creation_context(self):
+        context = super()._get_order_creation_context()
+        if default_template_id := self.env.context.get('default_sale_order_template_id'):
+            context['default_sale_order_template_id'] = default_template_id
+        return context
+
     # === TOOLING METHODS ===#
 
     def _prepare_template_order_values(self):
