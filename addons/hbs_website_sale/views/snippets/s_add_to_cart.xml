@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <template id="hbs_add_to_cart" inherit_id="website_sale.s_add_to_cart">
+            <xpath expr="//div[contains(@class, 's_add_to_cart')]" position="replace">
+                <div class="s_add_to_cart">
+                    <button class="s_add_to_cart_btn disabled btn btn-secondary">
+                        <i class="fa fa-cart-plus me-2"/>
+                    </button>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

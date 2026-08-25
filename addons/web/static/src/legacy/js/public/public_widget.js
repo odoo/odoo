@@ -377,7 +377,7 @@ const ServicesMixin = {
  * Base class for all visual components. Provides a lot of functions helpful
  * for the management of a part of the DOM.
  *
- * Widget handles:
+ * Widet hgandles:
  *
  * - Rendering with QWeb.
  * - Life-cycle management and parenting (when a parent is destroyed, all its
