@@ -58,7 +58,7 @@ export function getRawValue(record, fieldName) {
     switch (field.type) {
         case "one2many":
         case "many2many": {
-            return value.count ? value.currentIds : [];
+            return value && value.count ? value.currentIds : [];
         }
         case "many2one": {
             return (value && value.id) || false;

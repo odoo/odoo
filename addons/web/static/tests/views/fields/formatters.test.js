@@ -127,6 +127,10 @@ test("formatX2many", () => {
     expect(String(formatX2many({ currentIds: [] }))).toBe("No records");
     expect(String(formatX2many({ currentIds: [1] }))).toBe("1 record");
     expect(String(formatX2many({ currentIds: [1, 3] }))).toBe("2 records");
+    expect(String(formatX2many(false))).toBe("No records");
+    expect(String(formatX2many(null))).toBe("No records");
+    expect(String(formatX2many(undefined))).toBe("No records");
+    expect(String(formatX2many({}))).toBe("No records");
 });
 
 test("formatMonetary", () => {

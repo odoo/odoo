@@ -299,6 +299,9 @@ export function formatMany2one(value, options) {
  * @returns {string}
  */
 export function formatX2many(value) {
+    if (!value || !value.currentIds) {
+        return _t("No records");
+    }
     const count = value.currentIds.length;
     if (count === 0) {
         return _t("No records");
