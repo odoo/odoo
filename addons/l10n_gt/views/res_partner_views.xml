@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_property_form_inherit_l10n_gt" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_gt</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_position_id" position="after">
+                <field name="l10n_gt_isr_withholding_agent" invisible="'GT' not in fiscal_country_codes"/>
+                <field name="l10n_gt_vat_withholding_type" invisible="'GT' not in fiscal_country_codes"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

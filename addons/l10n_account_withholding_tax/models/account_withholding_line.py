@@ -467,6 +467,11 @@ class AccountWithholdingLine(models.AbstractModel):
                 calculate_withholding_taxes=True,
                 manual_tax_line_name=base_line.get('manual_tax_line_name'),
                 filter_tax_function=None,
+                # Preparing a base line again forgets the amounts forced on it, for example the ones a
+                # localization computed in company currency on a foreign currency document.
+                manual_total_excluded_currency=base_line.get('manual_total_excluded_currency'),
+                manual_total_excluded=base_line.get('manual_total_excluded'),
+                manual_tax_amounts=base_line.get('manual_tax_amounts'),
             ))
 
         AccountTax._add_tax_details_in_base_lines(new_base_lines, company)

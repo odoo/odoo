@@ -31,6 +31,12 @@ class AccountMove(models.Model):
         help="The net amount due after deducting the remaining withholding amount."
     )
 
+    def _get_withholding_base_lines(self):
+        """ Return the base lines applicable to withholding taxes."""
+        self.ensure_one()
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
+        return base_lines
+
     @api.depends("line_ids.tax_ids", "line_ids.price_unit", "line_ids.quantity", "line_ids.discount")
     def _compute_withholding_total_amount(self):
         AccountTax = self.env["account.tax"]
@@ -39,28 +45,23 @@ class AccountMove(models.Model):
             withholding_total_amount_currency = 0.0
 
             if move.is_invoice(include_receipts=True):
-                for line in move.line_ids.filtered(lambda l: l.tax_ids):
-                    withholding_taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.is_withholding_tax)
-                    if not withholding_taxes:
-                        continue
-                    base_line = AccountTax._prepare_base_line_for_taxes_computation(
-                        line,
-                        tax_ids=withholding_taxes,
-                        price_unit=line.price_unit * (1 - (line.discount or 0.0) / 100.0),
-                        quantity=line.quantity,
-                        currency_id=move.currency_id,
-                        calculate_withholding_taxes=True,
-                    )
+                # The other taxes of the line are kept: they are the ones giving the tax excluded base the
+                # withholding taxes apply on, the same way the register payment wizard computes it.
+                base_lines = [
+                    {
+                        **base_line,
+                        'calculate_withholding_taxes': True,
+                        'filter_tax_function': None,
+                    }
+                    for base_line in move._get_withholding_base_lines()
+                ]
+                AccountTax._add_tax_details_in_base_lines(base_lines, move.company_id)
+                AccountTax._round_base_lines_tax_details(base_lines, move.company_id)
 
-                    AccountTax._add_tax_details_in_base_line(base_line, move.company_id)
-                    AccountTax._round_base_lines_tax_details([base_line], move.company_id)
-                    tax_details = base_line.get("tax_details", {})
-                    taxes_data = tax_details.get("taxes_data", [])
-
-                    for tax_data in taxes_data:
-                        tax = tax_data.get("tax")
-                        if tax and tax.is_withholding_tax:
-                            withholding_total_amount_currency += tax_data.get("tax_amount_currency", 0.0)
+                for base_line in base_lines:
+                    for tax_data in base_line["tax_details"]["taxes_data"]:
+                        if tax_data["tax"].is_withholding_tax:
+                            withholding_total_amount_currency += tax_data["tax_amount_currency"]
 
             move.withholding_total_amount_currency = move.currency_id.round(-withholding_total_amount_currency)
 
