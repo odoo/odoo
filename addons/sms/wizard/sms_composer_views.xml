@@ -39,7 +39,8 @@
                         <field name="sanitized_numbers" invisible="1"/>
                         <field name="template_id" invisible="1"/>
                         <div name="recipient_single_description" class="o_form_label d-flex align-items-center" invisible="not comment_single_recipient">
-                            To <field name="recipient_single_description" class="ps-1" invisible="not recipient_single_description"/>
+                            <span class="text-muted">To</span>
+                            <field name="recipient_single_description" class="ps-1" invisible="not recipient_single_description"/>
                         </div>
                         <field invisible="not comment_single_recipient" name="recipient_single_number_itf" nolabel="1" onchange_on_keydown="True" placeholder="e.g. +1 415 555 0100"/>
                     </group>
