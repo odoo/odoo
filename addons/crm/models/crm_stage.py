@@ -51,6 +51,9 @@ class CrmStage(models.Model):
 
     @api.onchange('is_won')
     def _onchange_is_won(self):
+        if not self._origin:
+            # don't display the warning when creating a new stage
+            return
         return {
             'warning': {
                 'title': _("Do you really want to update this stage?"),
