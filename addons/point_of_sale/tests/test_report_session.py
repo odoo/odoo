@@ -172,19 +172,24 @@ class TestReportSession(TestPoSCommon):
 
         order_report_lines = self.env['report.pos.order'].sudo().search([('order_id', '=', order.id)])
 
-        self.assertEqual(len(order_report_lines), 2)
-        self.assertEqual(order_report_lines[0].payment_method_id.id, order_report_lines[1].payment_method_id.id)
+        # the 2 lines of the order, reported once per payment method that settled it
+        self.assertEqual(len(order_report_lines), 4)
+        self.assertEqual(order_report_lines.mapped('payment_method_id'), cash_payment_method | bank_payment_method)
 
-        for order in order_report_lines:
-            self.assertEqual(order.price_total, 165.0)
-            self.assertEqual(order.nbr_lines, 1)
-            self.assertEqual(order.product_qty, 1)
+        for report_line in order_report_lines:
+            # each method paid 165 of the 330 of the order, so it carries half of every line
+            self.assertEqual(report_line.price_total, 82.5)
+
+        # the split changes nothing to what the order weighs in the report
+        self.assertEqual(sum(order_report_lines.mapped('price_total')), 330.0)
+        self.assertEqual(sum(order_report_lines.mapped('product_qty')), 2)
+        self.assertEqual(sum(order_report_lines.mapped('nbr_lines')), 2)
 
         order_report_lines_count_product1 = self.env['report.pos.order'].sudo().search_count([('product_id', '=', product1.id)])
         order_report_lines_count_product2 = self.env['report.pos.order'].sudo().search_count([('product_id', '=', product2.id)])
 
-        self.assertEqual(order_report_lines_count_product1, 1)
-        self.assertEqual(order_report_lines_count_product2, 1)
+        self.assertEqual(order_report_lines_count_product1, 2)
+        self.assertEqual(order_report_lines_count_product2, 2)
 
     def test_report_session_3(self):
         self.product1 = self.create_product('Product A', self.categ_basic, 100)

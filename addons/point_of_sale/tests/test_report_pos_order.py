@@ -140,3 +140,56 @@ class TestReportPoSOrder(TestPoSCommon):
         self.assertEqual(reports[0].margin, 150)
         self.assertEqual(reports[0].price_subtotal_excl, 150)
         self.assertEqual(reports[0].price_total, 150)
+
+    def test_report_pos_order_multiple_payment_methods(self):
+        """An order split over several payment methods is reported once per method."""
+
+        product1 = self.create_product('Product 1', self.categ_basic, 180)
+        self.open_new_session()
+
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data(
+            [(product1, 2)],
+            payments=[(self.cash_pm1, 100), (self.bank_pm1, 260)],
+        )])
+
+        report = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)])
+
+        self.assertEqual(len(report), 2, "one row per payment method used by the order")
+        self.assertEqual(report.mapped('payment_method_id'), self.cash_pm1 | self.bank_pm1)
+
+        # the split does not change what the order as a whole weighs in the report
+        self.assertAlmostEqual(sum(report.mapped('price_total')), 360)
+        self.assertEqual(sum(report.mapped('product_qty')), 2, "the 2 units are counted once, not once per method")
+        self.assertEqual(sum(report.mapped('nbr_lines')), 1)
+
+        cash_row = report.filtered(lambda r: r.payment_method_id == self.cash_pm1)
+        bank_row = report.filtered(lambda r: r.payment_method_id == self.bank_pm1)
+        # amounts are prorated: each method carries what it actually paid
+        self.assertAlmostEqual(cash_row.price_total, 100)
+        self.assertAlmostEqual(bank_row.price_total, 260)
+        # the goods are not split: they are all reported on the method that paid the most
+        self.assertEqual(bank_row.product_qty, 2)
+        self.assertEqual(bank_row.nbr_lines, 1)
+        self.assertEqual(cash_row.product_qty, 0)
+        self.assertEqual(cash_row.nbr_lines, 0)
+        # a unit price is not a share of anything
+        self.assertAlmostEqual(cash_row.average_price, 180)
+        self.assertAlmostEqual(bank_row.average_price, 180)
+
+    def test_report_pos_order_change_is_netted_out(self):
+        """The change given back is a negative cash payment: it nets out of the cash share."""
+
+        product1 = self.create_product('Product 2', self.categ_basic, 100)
+        self.open_new_session()
+
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data(
+            [(product1, 1)],
+            payments=[(self.cash_pm1, 150), (self.cash_pm1, -50)],
+        )])
+
+        report = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)])
+
+        self.assertEqual(len(report), 1, "the two cash payments are merged into a single row")
+        self.assertEqual(report.payment_method_id, self.cash_pm1)
+        self.assertAlmostEqual(report.price_total, 100)
+        self.assertAlmostEqual(report.product_qty, 1)
