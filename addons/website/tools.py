@@ -95,6 +95,12 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     return content
 
 
+def _is_dark_rgb(red, green, blue, alpha, lightness_threshold):
+    rgb = tuple(map(int, (red, green, blue)))
+    _, lightness, _ = colorsys.rgb_to_hls(*(channel / 255 for channel in rgb))
+    return (not alpha or float(alpha) > 0) and lightness < lightness_threshold
+
+
 def adapt_dark_palette_content(root):
     """Keep text and carousel controls readable with dark palettes."""
     for element in root.iter():
@@ -102,6 +108,26 @@ def adapt_dark_palette_content(root):
         if 'carousel-dark' in class_names:
             class_names.remove('carousel-dark')
             element.set('class', ' '.join(class_names))
+        # Blurred backgrounds inherit text colors from their closest preset.
+        # Dark translucent backgrounds need `o_cc1` to keep text visible.
+        if 'o_bg_blur_option' in class_names:
+            color_match = re.search(
+                r'background-color:\s*rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)'
+                r'(?:\s*,\s*([\d.]+))?\s*\)',
+                element.get('style', ''),
+            )
+            if color_match:
+                red, green, blue, alpha = color_match.groups()
+                if _is_dark_rgb(red, green, blue, alpha, 0.5):
+                    color_preset_el = element
+                    while color_preset_el is not None:
+                        color_preset_classes = color_preset_el.get('class', '').split()
+                        if 'o_cc' in color_preset_classes:
+                            if 'o_cc5' in color_preset_classes:
+                                color_preset_classes[color_preset_classes.index('o_cc5')] = 'o_cc1'
+                                color_preset_el.set('class', ' '.join(color_preset_classes))
+                            break
+                        color_preset_el = color_preset_el.getparent()
         if 'o_cc1' not in class_names and 'o_cc5' not in class_names:
             continue
         for child_el in element:
@@ -114,9 +140,10 @@ def adapt_dark_palette_content(root):
                 r'rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)',
                 child_el.get('style', ''),
             ):
-                rgb = tuple(map(int, (red, green, blue)))
-                _, lightness, _ = colorsys.rgb_to_hls(*(channel / 255 for channel in rgb))
-                if (not alpha or float(alpha) > 0) and lightness < 0.5:
+                # The 65% threshold keeps text light over all theme gradient
+                # filters (e.g. the `s_cover` filter from `theme_monglia`,
+                # which contains a color with 61% lightness).
+                if _is_dark_rgb(red, green, blue, alpha, 0.65):
                     has_dark_gradient = True
                     break
             if any(name.startswith('bg-black-') for name in child_class_names) or has_dark_gradient:
