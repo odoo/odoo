@@ -1,22 +1,12 @@
 .o-mail-ActionList {
     --o-mail-ActionList-icon-opacity: 65%;
 
-    .o-mail-ActionList-group:has(.rounded-circle.o-hasBtnBg) {
-        gap: map-get($spacers, 1);
-    }
-
     button {
         z-index: 1;
         --btn-disabled-opacity: 0.25;
-
-        &:not(.o-hasBtnBg) {
-            background-color: inherit;
-        }
+        background-color: inherit;
 
         &.o-simulateDarkTheme {
-            &.o-hasBtnBg:hover {
-                filter: brightness(1.3);
-            }
             &.o-dropdown-item:hover {
                 backdrop-filter: brightness(1.3);
             }
@@ -120,14 +110,9 @@
             }
 
             &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
-                &.o-hasBtnBg {
-                    --btn-active-bg: var(--btn-bg);
-                }
-                &:not(.o-hasBtnBg) {
-                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                    &:active {
-                        background-color: inherit;
-                    }
+                color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
+                &:active {
+                    background-color: inherit;
                 }
             }
         }
@@ -144,17 +129,6 @@
             padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x) !important;
             font-size: $h5-font-size !important;
             font-weight: $o-font-weight-medium !important;
-        }
-    }
-
-    & button.o-simulateDarkTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
-        background-color: #{$gray-800};
-        border: 1px solid rgba(white, 0.1);
-
-        &.active {
-            // Same colors than dark theme since dark theme is simulated for call view.
-            background-color: #17373b !important;
-            border-color: #03f9e3 !important;
         }
     }
 
