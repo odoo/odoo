@@ -5,6 +5,8 @@ from odoo.exceptions import UserError
 from odoo.tools import float_repr, float_round
 from odoo.tools.misc import format_list
 
+REASON_REQUIRING_STATUSES = frozenset({'refused', 'suspended'})
+
 
 class PdpResponseWizard(models.TransientModel):
     _name = 'pdp.response.wizard'
@@ -19,10 +21,12 @@ class PdpResponseWizard(models.TransientModel):
             # For outgoing messages
             ("PD", "Paid"),
             ("cancelled", "Cancelled"),
+            ("suspended", "Suspended"),
             # For incoming messages
             ("refused", "Refused"),
             ("AP", "Approved"),
             ("in_hand", "In Hand"),
+            ("completed", "Completed"),
         ],
     )
     available_statuses = fields.Char(
@@ -31,6 +35,7 @@ class PdpResponseWizard(models.TransientModel):
     )
     reason_code = fields.Selection(
         selection=[
+            # Refused
             ("TX_TVA_ERR", "Incorrect VAT rate"),
             ("MONTANTTOTAL_ERR", "Incorrect Total Amount"),
             ("CALCUL_ERR", "Billing calculation error"),
@@ -43,6 +48,14 @@ class PdpResponseWizard(models.TransientModel):
             ("CMD_ERR", "Order number is incorrect or missing"),
             ("ADR_ERR", "Incorrect electronic billing address"),
             ("REF_CT_ABSENT", "Contract reference required to process the missing invoice"),
+            # Suspended
+            ("JUSTIF_ABS", "Missing or Insufficient Supporting Documentation"),
+            ("COORD_BANC_ERR", "Bank Account Information Error"),
+            # ("CMD_ERR", "Order number is incorrect or missing"),
+            ("SIRET_ERR", "Incorrect or missing SIRET number"),
+            ("CODE_ROUTAGE_ERR", "Missing or incorrect CODE_ROUTAGE"),
+            # ("REF_CT_ABSENT", "Contract reference required to process the missing invoice"),
+            ("REF_ERR", "Incorrect reference"),
         ],
     )
     show_reason_code = fields.Boolean(
@@ -76,6 +89,13 @@ class PdpResponseWizard(models.TransientModel):
         help="The payment's currency.",
     )
 
+    # TODO: remove in master
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        self.env['res.config.settings']._pdp_ensure_selection_value('pdp.response.wizard', 'status', 'completed')
+        self.env['res.config.settings']._pdp_ensure_selection_value('pdp.response.wizard', 'reason_code', 'JUSTIF_ABS')
+        return super().fields_get(allfields, attributes)
+
     @api.depends('move_ids')
     def _compute_move_count(self):
         for wizard in self:
@@ -98,7 +118,7 @@ class PdpResponseWizard(models.TransientModel):
     @api.depends('status')
     def _compute_show_reason_code(self):
         for wizard in self:
-            wizard.show_reason_code = wizard.status == 'refused'
+            wizard.show_reason_code = wizard.status in REASON_REQUIRING_STATUSES
 
     @api.depends('move_ids')
     def _compute_available_statuses(self):
@@ -112,9 +132,9 @@ class PdpResponseWizard(models.TransientModel):
                 raise UserError(_("All journal entries must either be purchase or sale documents."))
             category = next(iter(categories))
             if category == 'sale':
-                statuses = ['PD', 'cancelled']
+                statuses = ['PD', 'cancelled', 'completed']
             else:
-                statuses = ['refused', 'AP']
+                statuses = ['refused', 'AP', 'suspended']
             wizard.available_statuses = ','.join(statuses)
 
     @api.model
@@ -233,6 +253,10 @@ class PdpResponseWizard(models.TransientModel):
             raise UserError(_("To refuse an invoice please select a Reason Code."))
         if self.status == 'refused' and not self.note:
             raise UserError(_("To refuse an invoice please enter a Note."))
+        if self.status == 'suspended' and not self.reason_code:
+            raise UserError(_("To suspend an invoice please select a Reason Code."))
+        if self.status == 'suspended' and not self.note:
+            raise UserError(_("To suspend an invoice please enter a Note."))
         if self.status in ('cancelled', 'refused') and (not_cancelled_moves := self.move_ids.filtered(lambda m: m.state != 'cancel')):
             raise UserError(_("Some of the journal entries are not cancelled: %s", format_list(self.env, not_cancelled_moves.mapped('display_name'))))
         if self.status == 'AP' and (not_approved_moves := self.move_ids.filtered(lambda m: m.state != 'posted')):

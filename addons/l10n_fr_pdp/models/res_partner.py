@@ -6,6 +6,7 @@ from urllib import parse
 
 from odoo import _, api, fields, models
 
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
@@ -144,6 +145,8 @@ class ResPartner(models.Model):
                 'account_peppol_validity_last_check': fields.Date.context_today(self),
                 'account_peppol_is_endpoint_valid': (participant_info or {}).get('in_annuaire') or False,
             })
+
+            self._peppol_fill_participant_supported_documents()
         return False
 
     @api.model
@@ -190,3 +193,20 @@ class ResPartner(models.Model):
         if peppol_eas == '0225':
             proxy_type = 'pdp'
         return proxy_type, identifier
+
+    def _peppol_fill_participant_supported_documents(self):
+        super()._peppol_fill_participant_supported_documents()
+
+        for partner in self:
+            edi_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}".lower()
+            annuaire_info = self._pdp_annuaire_lookup_participant(edi_identification) or {}
+            if not annuaire_info.get('b2g'):
+                continue
+
+            # This is a bit of a hack to avoid having to add a field to signify the partner is behind Chorus Pro.
+            # The users that are associated with Chorus Pro (9999) on the annuaire are not on Peppol.
+            # They just communicate with Chorus Pro which communicates with the other platforms (not via Peppol).
+            # So the `peppol_supported_documents` would be empty for them otherwise.
+            # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
+            # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
+            partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
