@@ -455,3 +455,31 @@ class TestArManual(common.TestArCommon):
         })
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
+
+    def test_vendor_bills_never_make_a_sequence_gap(self):
+        """ Vendor bills are numbered by the vendor, so two bills with unrelated numbers are not a gap """
+        purchase_journal = self.env['account.journal'].search([
+            ('type', '=', 'purchase'),
+            ('company_id', '=', self.env.company.id),
+            ('l10n_latam_use_documents', '=', True),
+        ], limit=1)
+
+        bills = self.env['account.move']
+        for document_number in ('00001-00000010', '00001-00000045'):
+            with Form(self.env['account.move'].with_context(default_move_type='in_invoice')) as bill_form:
+                bill_form.partner_id = self.res_partner_adhoc
+                bill_form.journal_id = purchase_journal
+                bill_form.invoice_date = '2023-02-09'
+                bill_form.l10n_latam_document_type_id = self.document_type['invoice_a']
+                bill_form.l10n_latam_document_number = document_number
+                with bill_form.invoice_line_ids.new() as line_form:
+                    line_form.product_id = self.product_iva_21
+                    line_form.price_unit = 100
+            bills |= bill_form.save()
+
+        for bill in bills:
+            self._post(bill)
+
+        self.assertEqual(bills.mapped('name'), ['FA-A 00001-00000010', 'FA-A 00001-00000045'])
+        self.assertEqual(bills.mapped('sequence_number'), [10, 45])
+        self.assertEqual(bills.mapped('made_sequence_gap'), [False, False])

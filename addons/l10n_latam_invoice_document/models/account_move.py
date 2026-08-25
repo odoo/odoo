@@ -237,15 +237,14 @@ class AccountMove(models.Model):
             if rec.l10n_latam_document_type_id not in document_types:
                 rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
-    def _compute_made_sequence_gap(self):
-        use_documents_moves = self.filtered(lambda m: m.l10n_latam_use_documents)
-        use_documents_moves.made_sequence_gap = False
+    def _update_sequence_made_gap(self, invalidate_current=False):
+        # Moves using documents don't follow a sequence Odoo is in control of: a vendor bill is numbered
+        # by the vendor, so two consecutive bills of the same journal have unrelated numbers and the jump
+        # between them is not a gap. Same reasoning as <account.journal>._compute_has_sequence_holes.
+        use_documents_moves = self.filtered('l10n_latam_use_documents')
+        use_documents_moves.filtered('made_sequence_gap').made_sequence_gap = False
         if other_moves := self - use_documents_moves:
-            super(AccountMove, other_moves)._compute_made_sequence_gap()
-
-    def _set_next_made_sequence_gap(self, made_gap: bool):
-        if other_moves := self.filtered(lambda m: not m.l10n_latam_use_documents):
-            super(AccountMove, other_moves)._set_next_made_sequence_gap(made_gap)
+            super(AccountMove, other_moves)._update_sequence_made_gap(invalidate_current=invalidate_current)
 
     def _search_l10n_latam_use_documents(self, operator, value):
         if operator not in ('=', '!='):
