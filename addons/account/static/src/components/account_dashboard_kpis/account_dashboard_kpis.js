@@ -16,7 +16,6 @@ export class AccountDashboardKpis extends Component {
         this.offlinePlugin = usePlugin(OfflinePlugin);
         this.state = proxy({
             cards: [],
-            isVisible: true,
         });
 
         onWillStart(async () => {
@@ -51,9 +50,5 @@ export class AccountDashboardKpis extends Component {
         }
 
         this.action.doAction(card.action_id);
-    }
-
-    hideKpis() {
-        this.state.isVisible = false;
     }
 }

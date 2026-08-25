@@ -87,8 +87,4 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
     await contains(".o_account_dashboard_kpi_card:eq(1)").click();
 
     expect.verifySteps(["open action 42", "open action 43"]);
-
-    await contains(".o_account_dashboard_kpis_close").click();
-    expect(".o_account_dashboard_kpis_wrapper").toHaveCount(0);
-    expect(".o_account_dashboard_kpi_card").toHaveCount(0);
 });
