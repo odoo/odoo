@@ -10,7 +10,7 @@ from PIL import Image
 
 from odoo import _, api, models, modules
 from odoo.tools.image import image_data_uri
-from odoo.tools.misc import format_datetime
+from odoo.tools.misc import format_datetime, format_time
 
 
 def _get_str_notes(note):
@@ -394,6 +394,10 @@ class PosOrderReceipt(models.AbstractModel):
         preset_fields = self.env['pos.preset']._load_pos_data_fields(self.config_id)
         preset = self.preset_id if self.preset_id else False
         preset_time = self.preset_time or False
+        if preset_time and preset_time.date() == self.date_order.date():
+            preset_time_str = format_time(self.env, preset_time, time_format='short')
+        else:
+            preset_time_str = format_datetime(self.env, preset_time) if preset_time else False
 
         base = {
             'order': self.read(order_fields, load=False)[0],
@@ -404,7 +408,7 @@ class PosOrderReceipt(models.AbstractModel):
             'extra_data': {
                 'time': format_datetime(self.env, self.date_order),
                 'employee_name': self.user_id.name if self.user_id else '',
-                'preset_time': format_datetime(self.env, preset_time) if preset_time else False,
+                'preset_time': preset_time_str,
                 'prefix': _("Order"),
                 'order_label': self.floating_order_name,
                 'reprint': False,
