@@ -104,16 +104,22 @@ class PaymentCommon(BaseCommon):
         super().setUp()
         if self.account_payment_installed and self.enable_post_process_patcher:
             # Disable the generation of account payments if account_payment is installed, because
-            # the accounting setup of providers is not managed in this common, but mark transactions
-            # as post-processed to allow redirecting users from /payment/status to the landing page.
-            self.post_process_patcher = patch(
-                "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction"
-                "._post_process",
-                new=lambda self_: self_.with_context(payment_safe_write=True).write({
-                    "is_post_processed": True
-                }),
-            )
-            self.startPatcher(self.post_process_patcher)
+            # the accounting setup of providers is not managed in this common. Transactions are
+            # still flagged as post-processed by the base `_post_process` driver regardless, which
+            # allows redirecting users from /payment/status to the landing page.
+            for hook_name in (
+                "_finalize_draft_transactions",
+                "_finalize_cancel_transactions",
+                "_finalize_error_transactions",
+                "_finalize_done_transactions",
+            ):
+                self.startPatcher(
+                    patch(
+                        "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction"
+                        f".{hook_name}",
+                        new=lambda _self: None,
+                    )
+                )
 
     # === Utils ===#
 

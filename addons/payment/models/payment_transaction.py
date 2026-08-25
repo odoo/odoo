@@ -1297,14 +1297,62 @@ class PaymentTransaction(models.Model):
     def _post_process(self):
         """Post-process the transactions.
 
-        The generic post-processing only consists in flagging the transactions as post-processed.
-        For a module to add its own logic to the post-processing, it must overwrite this method and
-        apply its specific logic to the transactions, optionally after filtering them based on their
-        state.
+        This is the internal technical driver of the post-processing: it dispatches the
+        transactions to the state-scoped hooks below based on their state, then flags them as
+        post-processed. For a module to add its own logic to the post-processing, it must
+        overwrite the hook matching the state it is interested in; it must not overwrite this
+        method, nor filter transactions by state itself, nor deal with `is_post_processed`.
+
+        A module that needs to defer the post-processing of some transactions for a reason other
+        than their state (e.g., a related document not being ready yet) may still overwrite this
+        method and call `super()` on a restricted recordset; the excluded transactions are left
+        with `is_post_processed = False` and will be retried by the cron.
 
         :return: None
         """
+        self.filtered(lambda tx: tx.state == "draft")._finalize_draft_transactions()
+        self.filtered(lambda tx: tx.state == "pending")._finalize_pending_transactions()
+        self.filtered(lambda tx: tx.state == "authorized")._finalize_authorized_transactions()
+        self.filtered(lambda tx: tx.state == "done")._finalize_done_transactions()
+        self.filtered(lambda tx: tx.state == "cancel")._finalize_cancel_transactions()
+        self.filtered(lambda tx: tx.state == "error")._finalize_error_transactions()
         self.is_post_processed = True
+
+    def _finalize_draft_transactions(self):
+        """Add module-specific logic for transactions in state 'draft'.
+
+        :return: None
+        """
+
+    def _finalize_pending_transactions(self):
+        """Add module-specific logic for transactions in state 'pending'.
+
+        :return: None
+        """
+
+    def _finalize_authorized_transactions(self):
+        """Add module-specific logic for transactions in state 'authorized'.
+
+        :return: None
+        """
+
+    def _finalize_done_transactions(self):
+        """Add module-specific logic for transactions in state 'done'.
+
+        :return: None
+        """
+
+    def _finalize_cancel_transactions(self):
+        """Add module-specific logic for transactions in state 'cancel'.
+
+        :return: None
+        """
+
+    def _finalize_error_transactions(self):
+        """Add module-specific logic for transactions in state 'error'.
+
+        :return: None
+        """
 
     # === REQUEST HELPERS === #
 
