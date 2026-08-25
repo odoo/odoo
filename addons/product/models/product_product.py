@@ -180,6 +180,26 @@ class ProductProduct(models.Model):
         compute='_compute_base_unit_name',
     )
 
+    catalog_is_in_order = fields.Boolean(search="_search_is_in_catalog_order", store=False)
+
+    def _search_is_in_catalog_order(self, operator, value):  # noqa: ARG002
+        if operator != "in":
+            return NotImplemented
+
+        ctx = self.env.context
+        order_id = ctx.get('order_id')
+        order_model = ctx.get('product_catalog_order_model')
+        line_field = ctx.get('child_field')
+        if not (order_id and order_model and line_field):
+            return []
+
+        order = self.env[order_model].browse(order_id)
+        child_model = order._fields[line_field].comodel_name
+        parent_field = order._fields[line_field].inverse_name
+
+        subquery = self.env[child_model]._search([(parent_field, "=", order.id)])
+        return [("id", "in", subquery.subselect(subquery.table.product_id))]
+
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
