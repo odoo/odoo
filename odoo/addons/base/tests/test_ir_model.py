@@ -744,6 +744,25 @@ class TestCustomFields(TestCommonCustomFields):
         self.assertEqual(rec2.x_sel, 'quux')
         self.assertEqual(rec3.x_sel, 'baz')
 
+    def test_write_on_base(self):
+        IrModelFields = self.env["ir.model.fields"]
+        res_currency_name = IrModelFields._get("res.currency", "name")
+
+        self.assertEqual(res_currency_name.state, "base")
+        former_copied_value = res_currency_name.copied
+        with self.assertRaises(UserError):
+            res_currency_name.copied = not former_copied_value
+
+        from odoo.addons.base.models.ir_model import WRITABLE_FIELD_PROPERTIES
+        WRITABLE_FIELD_PROPERTIES.add("copied")
+        self.addCleanup(lambda: WRITABLE_FIELD_PROPERTIES.remove("copied"))
+        res_currency_name.copied = not former_copied_value
+        res_currency_name.flush_recordset()
+        # Fails at the next assertion probably because
+        # registry._setup_models__  recreates the field from Python
+        # rather than from ir.model.fields
+        self.assertNotEqual(res_currency_name.copied, former_copied_value)
+
 
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_related_field_non_stored_not_allowed(self):
