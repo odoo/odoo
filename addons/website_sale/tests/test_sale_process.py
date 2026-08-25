@@ -171,6 +171,19 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         })
         self.start_tour("/shop", "shop_repair_product", login=None)
 
+    def test_confirmation_does_not_prepare_signup_for_existing_user(self):
+        self.website.auth_signup_uninvited = "b2c"
+        partner = self.env.ref("base.partner_admin")
+        partner.signup_cancel()
+        order = self._create_so(partner_id=partner.id)
+
+        self.authenticate(None, None, session_extra={"sale_last_order_id": order.id})
+        response = self.url_open("/shop/confirmation")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(partner.signup_type)
+        self.assertNotIn("/web/signup?", response.text)
+
     def test_checkout_with_rewrite(self):
         # check that checkout page can be open with step rewritten
         self.env["website.rewrite"].create({
