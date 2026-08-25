@@ -29,6 +29,25 @@ class TestTRNilveraEreceiptUpload(TestStockCommon):
         cls.uom_unit = cls.env.ref('uom.product_uom_unit').id
         cls.uom_kgm = cls.env.ref('uom.product_uom_kgm').id
 
+    def test_ereceipt_xml_with_timezone_offset_upload(self):
+        """Nilvera sends the time with fractional seconds and an offset, e.g. `11:30:00.0000000+03:00`."""
+        with file_open('l10n_tr_nilvera_edispatch/tests/test_files/test_ereceipt_timezone_offset.xml', 'rb') as f:
+            ereceipt_xml = self.env['ir.attachment'].create({
+                'name': 'test_ereceipt_timezone_offset_upload.xml',
+                'type': 'binary',
+                'raw': f.read(),
+            })
+
+        picking, files_with_errors = self.env['stock.picking']._l10n_tr_create_receipts_from_attachment(ereceipt_xml)
+        self.assertEqual(files_with_errors, [])
+        self.assertRecordValues(
+            picking,
+            [{
+                'scheduled_date': fields.Datetime.from_string('2025-07-29 11:30:00'),
+                'origin': 'EIT2025000000101',
+            }],
+        )
+
     def test_ereceipt_xml_without_errors_upload(self):
         with file_open('l10n_tr_nilvera_edispatch/tests/test_files/test_ereceipt.xml', 'rb') as f:
             ereceipt_xml = self.env['ir.attachment'].create({
