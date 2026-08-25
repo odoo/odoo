@@ -77,10 +77,10 @@ class MailGuest(models.Model):
                     guest_name=guest.name,
                 )
 
-    def _get_guest_from_token(self, token=""):
+    def _get_guest_from_token(self, token=None):
         """Returns the guest record for the given token, if applicable."""
         guest = self.env["mail.guest"]
-        parts = token.split(self._cookie_separator)
+        parts = (token or "").split(self._cookie_separator)
         if len(parts) == 2:
             guest_id, guest_access_token = parts
             # sudo: mail.guest: guests need sudo to read their access_token

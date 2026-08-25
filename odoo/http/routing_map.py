@@ -204,6 +204,9 @@ def route(
         if routing.get('auth') == 'bearer':
             routing.setdefault('save_session', False)  # stateless
             assert 'bearer_scope' in routing, "bearer_scope must be set for auth='bearer'"
+        if routing.get('auth') in ('force_guest', 'force_guest_optional'):  # im_livechat extension
+            assert not routing.get('save_session', True), \
+                "save_session=False must be set for auth='force_guest'"
 
         @functools.wraps(endpoint)
         def route_wrapper(self, *args, **params):
