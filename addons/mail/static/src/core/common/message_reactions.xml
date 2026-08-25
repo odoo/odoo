@@ -5,14 +5,13 @@
         t-att-class="{
             'flex-row-reverse me-3': this.env.inChatWindow and this.env.alignedRight,
             'ms-3': !(this.env.inChatWindow and this.env.alignedRight) and (this.message().isDiscussion),
-            'o-emojiPickerOpen': this.emojiPicker.isOpen,
             'mt-n1': this.message().message_type === 'comment' and !this.message().attachment_ids.length,
             'o-mt-0_5': this.message().attachment_ids.length,
         }">
         <t t-foreach="this.message().sortedReactions" t-as="reaction" t-key="reaction.content">
             <MessageReactionList message="this.message" openReactionMenu="this.openReactionMenu" reaction="reaction"/>
         </t>
-        <QuickReactionMenu t-if="this.message().canAddReaction and !this.isReadOnly()" action="this.messageActions.actions.find(action => action.id === 'reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="this.message()"/>
+        <QuickReactionMenu t-if="this.hasQuickReaction" action="this.messageActions.actions.find(action => action.id === 'reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="this.message()"/>
     </div>
 </t>
 </templates>

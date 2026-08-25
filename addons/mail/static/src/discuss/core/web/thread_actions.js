@@ -29,14 +29,14 @@ registerThreadAction("expand-discuss", {
         !owner.isDiscussSidebarChannelActions,
     icon: "expand_content",
     name: _t("Open in Discuss"),
-    onSelected({ channel, owner, store }) {
+    onSelected({ channel, store }) {
         store.env.services.action.doAction(
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
             },
             {
-                clearBreadcrumbs: owner.env.services["home_menu"]?.hasHomeMenu,
+                clearBreadcrumbs: true,
                 additionalContext: { active_id: channel.id },
             }
         );
