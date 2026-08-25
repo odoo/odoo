@@ -1,6 +1,8 @@
 from odoo import Command
 from odoo.tests import tagged
 
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
+
 from .common import TestL10nFrPdpCommon
 
 
@@ -55,3 +57,18 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         credit_note.action_post()
         self._send_patched(credit_note)
         self._assert_invoice_ubl_file(credit_note, "ubl_21_fr_out_credit_note")
+
+    def test_export_invoice_partner_fr_b2g(self):
+        if self.env['ir.module.module']._get('l10n_fr_facturx_chorus_pro').state != 'installed':
+            self.skipTest("'l10n_fr_facturx_chorus_pro' is not installed")
+
+        self.partner_a.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+        self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(self.partner_a))
+
+        invoice = self._create_french_invoice(
+            buyer_reference="Chorus Pro buyer reference",
+            purchase_order_reference="Chorus Pro purchase order reference",
+        )
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_b2g")
