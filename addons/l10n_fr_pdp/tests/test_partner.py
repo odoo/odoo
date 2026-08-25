@@ -4,6 +4,8 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.mail.tests.common import MailCase
 
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
+
 from .common import TestL10nFrPdpCommon, mock_pdp_annuaire_lookup, mock_pdp_peppol_lookup_not_found, mock_pdp_peppol_lookup_success
 
 
@@ -160,3 +162,30 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
                 'Partner is not in the annuaire',
             )],
         })
+
+    def test_validate_partner_fr_b2g(self):
+        partner = self.partner_a
+        self.assertTrue(partner.l10n_fr_is_pdp)
+        with mock_pdp_annuaire_lookup():  # not in the annuaire
+            partner.button_account_peppol_check_partner_endpoint()
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'not_valid',
+            'pdp_verification_display_state': 'pdp_not_valid',
+            'invoice_edi_format': 'ubl_21_fr',
+        }])
+
+        partner.invoice_sending_method = False
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock_pdp_annuaire_lookup('968515759_96851575905808', b2g=True),
+            mock_pdp_peppol_lookup_success(['0225:968515759_96851575905808']),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+            'invoice_sending_method': False,
+            'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
+        }])
+        self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))

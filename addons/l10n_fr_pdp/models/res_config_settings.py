@@ -59,3 +59,13 @@ class ResConfigSettings(models.TransientModel):
     def _peppol_allows_document_reception(self):
         self.ensure_one()
         return super()._peppol_allows_document_reception() and self.country_code != 'FR'
+
+    # TODO: remove in master
+    @api.model
+    def _pdp_ensure_selection_value(self, model_name, field_name, new_value):
+        # hack to load new selection values in stable
+        field = self.env[model_name]._fields[field_name]
+        if new_value not in {value for value, name in field.get_description(self.env)['selection']}:
+            self.env['ir.model.fields'].invalidate_model(['selection_ids'])
+            self.env['ir.model.fields.selection'].sudo()._update_selection(model_name, field_name, field.selection)
+            self.env.transaction.invalidate_ormcache()
