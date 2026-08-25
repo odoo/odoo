@@ -10,7 +10,7 @@
             t-on-click.stop="() => this.createQuotation()"
             data-bounce-button=""
         >
-            New
+            <t t-out="this.props.string"/>
         </button>
         <Dropdown t-else="">
             <button
@@ -20,7 +20,7 @@
                 t-att-data-hotkey="this.props.hotkey"
                 data-bounce-button=""
             >
-                New
+                <t t-out="this.props.string"/>
             </button>
             <t t-set-slot="content">
                 <DropdownItem
