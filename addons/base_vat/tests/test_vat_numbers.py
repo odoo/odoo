@@ -136,6 +136,28 @@ class TestStructure(TransactionCase):
             self.assertEqual(partner.parent_id.name, 'My Company')
             self.assertEqual(partner.parent_id.vies_valid, True)
 
+    def test_vies_valid_syncs_with_commercial_partner(self):
+        self.env.user.company_id.vat_check_vies = True
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
+            company = self.env["res.partner"].create({
+                'name': 'Dummy Company',
+                'vat': 'BE0477472701',
+                'country_id': self.env.ref("base.be").id,
+            })
+            contact = self.env["res.partner"].create({
+                'name': 'Dummy Contact',
+                'parent_id': company.id,
+            })
+
+            self.assertEqual(contact.vat, company.vat)
+            self.assertEqual(contact.vies_valid, company.vies_valid)
+
+            company.vies_valid = False
+            self.assertEqual(contact.vies_valid, False)
+
+            contact.vies_valid = True
+            self.assertEqual(company.vies_valid, True)
+
     def test_rut_uy(self):
         test_partner = self.env["res.partner"].create({"name": "UY Company", "country_id": self.env.ref("base.uy").id})
         # Set a valid Number
