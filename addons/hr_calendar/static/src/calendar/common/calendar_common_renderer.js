@@ -3,15 +3,21 @@ import { patch } from "@web/core/utils/patch";
 import { onWillUpdateProps } from "@odoo/owl";
 
 patch(AttendeeCalendarCommonRenderer.prototype, {
-	setup() {
-		super.setup(...arguments);
-		onWillUpdateProps(() => {
-			this.fc.api.setOption("businessHours", this.props.model.workingHours)
-		});
-	},
-	get options() {
-		return Object.assign(super.options, {
-			businessHours: this.props.model.workingHours,
-		});
-	},
+    setup() {
+        super.setup(...arguments);
+        if (this.props.model.businessHoursMode === "working_hours") {
+            onWillUpdateProps(() => {
+                this.fc.api.setOption("businessHours", this.props.model.workingHours);
+            });
+        }
+    },
+    get options() {
+        if (this.props.model.businessHoursMode !== "working_hours") {
+            return super.options;
+        }
+
+        return Object.assign(super.options, {
+            businessHours: this.props.model.workingHours,
+        });
+    },
 });
