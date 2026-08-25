@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
@@ -47,6 +47,7 @@ export class NavigableList extends Component {
             position: t.string().optional("bottom"),
             rememberPosition: t.boolean().optional(),
         });
+        useChildSubEnv({ inNavigableList: true });
         this.rootRef = useRef("root");
         this.state = proxy({
             activeIndex: null,
