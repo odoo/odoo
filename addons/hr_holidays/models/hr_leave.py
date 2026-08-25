@@ -777,6 +777,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         if any(not vals.get('employee_id') for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        # A base.automation during create can flush duration before dates are set (storing 0);
+        # recompute now that create returned and date_from/date_to are correct.
+        holidays._compute_duration()
         holidays._check_validity()
 
         for holiday in holidays:
