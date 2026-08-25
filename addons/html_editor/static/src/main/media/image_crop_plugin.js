@@ -30,6 +30,7 @@ export class ImageCropPlugin extends Plugin {
                 id: "image_crop",
                 commandId: "cropImage",
                 groupId: "image_modifiers",
+                takesFocus: true,
             }),
         ],
     };
@@ -63,6 +64,7 @@ export class ImageCropPlugin extends Plugin {
                 onClose: () => {
                     registry.category("main_components").remove("ImageCropping");
                     imageCropProps.onClose?.();
+                    this.dependencies.selection.focusEditable();
                 },
             },
         });
