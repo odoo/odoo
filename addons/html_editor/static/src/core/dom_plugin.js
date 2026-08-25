@@ -452,20 +452,17 @@ export class DomPlugin extends Plugin {
                 const wasFakeLineBreak = refNode.nodeName === "BR" && isFakeLineBreak(refNode);
                 refNode.before(node);
                 insertedContent.push(node);
-
-                // Clean up: remove the reference if needed.
-                if (
+                const shouldRemoveReference =
                     // Inserting a phrasing container (even nested) in an empty
                     // block should mean replacing that block.
                     (isFirst && isEmptyBlock(refNode) && findDownTo(node, isPhrasingContainer)) ||
                     // Inserting inline content before a fake line break will
                     // make it real. Remove it.
-                    (wasFakeLineBreak && !isBlock(node))
-                ) {
+                    (wasFakeLineBreak && !isBlock(node));
+                if (shouldRemoveReference) {
                     refNode.remove();
-                    // Reset the reference.
                     node.after(marker);
-                    refNode = node.nextSibling;
+                    refNode = marker;
                 }
             }
             isFirst = false;
