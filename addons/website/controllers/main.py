@@ -1595,8 +1595,8 @@ class Website(Home):
             img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
             tree = html.fromstring(str(record[img['field']]))
             modified = False
-            for index, element in enumerate(tree.xpath('//img')):
-                imgId = self._get_image_id(img['res_model'], img['res_id'], img['field'], str(index))
+            for index, element in enumerate(tree.xpath('//img[@src]')):
+                imgId = f"{img['res_model']}-{img['res_id']}-{img['field']}-{index}"
                 if imgId == img['id']:
                     if (img['decorative']):
                         element.set('alt', '')
@@ -1606,7 +1606,7 @@ class Website(Home):
                         element.attrib.pop('role', None)
                     modified = True
             if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
+                new_html_content = html.tostring(tree, encoding='unicode', method='xml')
                 record.write({img['field']: new_html_content})
 
     @staticmethod
