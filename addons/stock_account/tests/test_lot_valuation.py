@@ -772,6 +772,11 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(product.qty_available, 11)
         self.assertEqual(product.total_value, 400)
 
+        # Ensure the lot's standard price is preserved even when its quantity reaches zero.
+        self._make_out_move(product, 6, lot_ids=[lot2])
+        self.assertEqual(lot2.product_qty, 0)
+        self.assertEqual(lot2.standard_price, 50)
+
     def test_fifo_lot_replay_single(self):
         """Backdating a cheaper receipt reshuffles the FIFO layers of the lot and
         re-prices the delivery accordingly."""
