@@ -95,6 +95,7 @@ class SmsComposer(models.TransientModel):
         'mail.scheduled.message',
         string='Scheduled Message'
     )
+    template_name = fields.Char(string='Template Name')
 
     @api.depends('res_ids_count')
     @api.depends_context('sms_composition_mode')
@@ -211,6 +212,19 @@ class SmsComposer(models.TransientModel):
                 composer.scheduled_date = composer.mail_scheduled_message_id.scheduled_date
             elif composer.template_id and 'scheduled_date' in composer.template_id._fields:
                 composer.scheduled_date = composer.template_id.scheduled_date
+
+    def open_template_creation_wizard(self):
+        self.ensure_one()
+        return {
+            'context': {'dialog_size': 'medium'},
+            'name': _('Create an SMS Template'),
+            'res_id': self.id,
+            'res_model': 'sms.composer',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'view_id': self.env.ref('sms.sms_composer_view_form_template_save').id,
+            'view_mode': 'form',
+        }
 
     # ------------------------------------------------------------
     # Actions

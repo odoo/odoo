@@ -85,6 +85,23 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                     mail_message_values={"body": expected_notification_content},
                 )
 
+    def test_sms_composer_action_create_template(self):
+        """ Test to save new SMS template """
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=self.partner_employee.id,
+        ).create({
+            'body': 'SMS Template new body',
+            'template_name': 'Test SMS Template',
+        })
+
+        composer.action_create_sms_template()
+
+        template = self.env['sms.template'].search([('name', '=', 'Test SMS Template')], limit=1)
+        self.assertTrue(template, 'New SMS Template must be created')
+        self.assertEqual(template.body, 'SMS Template new body')
+        self.assertEqual(template.model_id.model, 'res.partner')
+
     def test_sms_composer_schedule_action(self):
         """ Test that simulates the correct working of the 'Schedule' button in the wizard """
         test_partner = self.env['res.partner'].create({
