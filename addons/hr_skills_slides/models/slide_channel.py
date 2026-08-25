@@ -69,15 +69,19 @@ class SlideChannel(models.Model):
 
     def _action_add_members(self, target_partners, member_status='joined', raise_on_access=False):
         res = super()._action_add_members(target_partners, member_status=member_status, raise_on_access=raise_on_access)
+        newly_joined_by_channel = res.grouped('channel_id')
         if member_status == 'joined':
             for channel in self:
+                newly_joined_partners = target_partners & newly_joined_by_channel.get(
+                    channel, self.env['slide.channel.partner']
+                ).mapped('partner_id')
                 channel._message_employee_chatter(
                     _('The employee subscribed to the course %s',
                         Markup('<a href="%(link)s">%(course)s</a>') % {
                             'link': channel.website_absolute_url,
                             'course': channel.name
                     }),
-                    target_partners
+                    newly_joined_partners
                 )
         return res
 
