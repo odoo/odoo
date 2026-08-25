@@ -857,6 +857,73 @@ class AccountMoveLine(models.Model):
             line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
             line.price_total = base_line['tax_details']['raw_total_included_currency']
 
+        # When the base rounding delta is absorbed by the payment_term line
+        # (cf. `_should_distribute_base_delta_for_excluded_mode`), re-run the
+        # move-level orchestration to align `price_subtotal` and `price_total`
+        # with the journal-entry balances. Otherwise the printed totals can
+        # diverge from the booked totals by a few cents on multi-line invoices.
+        per_move = defaultdict(self.browse)
+        for line in self:
+            if line.display_type not in ('product', 'cogs'):
+                continue
+            move = line.move_id
+            if not move:
+                continue
+            company = line.company_id or move.company_id
+            if company.tax_calculation_rounding_method != 'round_globally':
+                continue
+            if AccountTax._should_distribute_base_delta_for_excluded_mode(company):
+                continue
+            per_move[move] |= line
+
+        for move, scope_lines in per_move.items():
+            self._align_totals_with_journal_entry(AccountTax, move, scope_lines)
+
+    @api.model
+    def _align_totals_with_journal_entry(self, AccountTax, move, scope_lines):
+        """ Re-orchestrate the move-level tax rounding (which already embeds
+        the base-delta neutralisation and tax-amount alignment driven by the
+        `_should_distribute_base_delta_for_excluded_mode` hook) and propagate
+        the resulting values into the printed `price_subtotal` and
+        `price_total`. Keeps UI / PDF / journal entry in lockstep on
+        multi-line invoices under `round_globally`.
+        """
+        all_lines = move.line_ids.filtered(
+            lambda l: l.display_type in ('product', 'cogs'),
+        )
+        if not all_lines:
+            return
+
+        base_lines = []
+        line_to_base = {}
+        for line in all_lines:
+            base_line = move._prepare_product_base_line_for_taxes_computation(line)
+            base_lines.append(base_line)
+            line_to_base[line.id] = base_line
+
+        AccountTax._add_tax_details_in_base_lines(base_lines, move.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, move.company_id)
+
+        for line in scope_lines:
+            base_line = line_to_base.get(line.id)
+            if not base_line:
+                continue
+            td = base_line['tax_details']
+            taxes_data = td.get('taxes_data') or []
+            currency = line.currency_id or move.company_currency_id
+
+            new_subtotal = currency.round(
+                td.get('total_excluded_currency', 0.0)
+                + td.get('delta_total_excluded_currency', 0.0)
+            )
+            line_tax = sum(td2['tax_amount_currency'] for td2 in taxes_data)
+            new_total = currency.round(new_subtotal + line_tax)
+
+            if line.price_subtotal != new_subtotal:
+                line.price_subtotal = new_subtotal
+            if line.price_total != new_total:
+                line.price_total = new_total
+
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
         for line in self:
