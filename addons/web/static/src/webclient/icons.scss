@@ -78,10 +78,10 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
 .o_rtl .oi {
     $rtl-selectors: ();
     @each $icon in $oi-custom-rtl-icons {
-        $rtl-selectors: append($rtl-selectors, unquote('[data-icon="oi_#{$icon}"]'), comma);
+        $rtl-selectors: append($rtl-selectors, unquote('&[data-icon="oi_#{$icon}"]'), comma);
     }
     @each $icon in $ms-rtl-icons {
-        $rtl-selectors: append($rtl-selectors, unquote('[data-icon="#{$icon}"]'), comma);
+        $rtl-selectors: append($rtl-selectors, unquote('&[data-icon="#{$icon}"]'), comma);
     }
     
     #{$rtl-selectors} {
