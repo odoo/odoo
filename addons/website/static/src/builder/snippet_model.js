@@ -1,8 +1,25 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { SnippetModel } from "@html_builder/snippets/snippet_service";
+import { adaptDarkPaletteContent } from "@website/components/dialog/dark_palette_utils";
 
 export class WebsiteSnippetModel extends SnippetModel {
+    computeSnippetTemplates(snippetsDocument) {
+        super.computeSnippetTemplates(snippetsDocument);
+        this.darkPaletteSnippetsById = new Map();
+        for (const snippet of this.snippetStructures) {
+            if (!snippet.isCustom) {
+                const contentEl = snippet.content.cloneNode(true);
+                contentEl.dataset.name = snippet.title;
+                adaptDarkPaletteContent(contentEl);
+                this.darkPaletteSnippetsById.set(snippet.id, {
+                    ...snippet,
+                    content: contentEl,
+                });
+            }
+        }
+    }
+
     /**
      * @override
      */

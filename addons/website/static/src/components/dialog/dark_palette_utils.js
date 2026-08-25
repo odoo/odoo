@@ -1,3 +1,4 @@
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { convertCSSColorToRgba, convertRgbToHsl } from "@web/core/utils/colors";
 
@@ -43,14 +44,11 @@ export function isDarkColorPalette(pageDocument) {
  * @param {Element} rootEl
  */
 export function adaptDarkPaletteContent(rootEl) {
-    rootEl.classList.remove("carousel-dark");
-    for (const carouselEl of rootEl.querySelectorAll(".carousel-dark")) {
+    for (const carouselEl of selectElements(rootEl, ".carousel-dark")) {
         carouselEl.classList.remove("carousel-dark");
     }
     // A standalone snippet can carry its color preset on the root itself.
-    const colorPresetEls = rootEl.matches(".o_cc1, .o_cc5")
-        ? [rootEl, ...rootEl.querySelectorAll(".o_cc1, .o_cc5")]
-        : rootEl.querySelectorAll(".o_cc1, .o_cc5");
+    const colorPresetEls = selectElements(rootEl, ".o_cc1, .o_cc5");
     for (const colorPresetEl of colorPresetEls) {
         for (const childEl of colorPresetEl.children) {
             if (!childEl.classList.contains("o_we_bg_filter")) {
