@@ -357,10 +357,10 @@ class TestAuthTimeoutHttp(HttpCase):
     def test_multiple_lock_timeouts_mfa(self):
         group1, group2 = self.user.group_ids[:2]
 
-        # Set 2 lock timeouts, one at 15 mins without MFA and one at 60 mins with MFA
+        # Set 2 lock timeouts, one at 15 mins without MFA and one at 30 mins with MFA
         group1.lock_timeout_inactivity = 15
         group1.lock_timeout_inactivity_mfa = False
-        group2.lock_timeout_inactivity = 60
+        group2.lock_timeout_inactivity = 30
         group2.lock_timeout_inactivity_mfa = True
 
         # Enforce TOTP by mail so the user has a 2FA
@@ -371,10 +371,10 @@ class TestAuthTimeoutHttp(HttpCase):
 
         session_id = self.authenticate(self.user.login, self.user.login).sid
 
-        # Simulate the session did not authenticate for 30 minutes
+        # Simulate the session did not authenticate for 20 minutes
         # Which falls between the 15 mins lock timeout without MFA
-        # and the 60 mins lock timeout with MFA
-        self.set_session_next_check_identity(session_id, time.time() - 30 * 60)
+        # and the 30 mins lock timeout with MFA
+        self.set_session_next_check_identity(session_id, time.time() - 20 * 60)
 
         # Assert the check identity exception is raised
         self.assertMustCheckIdentity()
@@ -386,7 +386,7 @@ class TestAuthTimeoutHttp(HttpCase):
         self.assertMustNotCheckIdentity()
 
         # Simulate the session did not authenticate for 90 mins
-        # Which is greather than the 60 mins lock timeout with MFA
+        # Which is greather than the 30 mins lock timeout with MFA
         self.set_session_next_check_identity(session_id, time.time() - 90 * 60)
 
         # Assert the check identity exception is raised
