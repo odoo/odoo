@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import date, datetime
 
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import ValidationError
@@ -311,3 +311,58 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             self.assertEqual(leave_form.number_of_hours, 0)
             self.assertEqual(leave_form.date_from, datetime(2019, 9, 2, 6, 0, 0))
             self.assertEqual(leave_form.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+
+@tagged('post_install', '-at_install')
+class TestDurationWithActivityAutomation(TestHrHolidaysCommon):
+    def test_duration_with_activity_automation(self):
+        """An automation that creates a "Time Off Approval" activity on leave
+        creation must not reset the leave duration to 0.
+
+        base_automation is not a dependency of hr_holidays, so skip when it is
+        not installed.
+        """
+        if 'base.automation' not in self.env:
+            self.skipTest("`base_automation` is not installed")
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Automation Duration Test',
+            'time_type': 'leave',
+            'requires_allocation': 'no',
+        })
+
+        # The activity must be assigned to a user other than the one creating the
+        # leave: only then is a notification sent, which renders the leave's
+        # display_name (reading number_of_days) mid-create and triggers the bug.
+        approver = self.env['res.users'].create({
+            'name': 'TOA Approver',
+            'login': 'toa_approver',
+            'email': 'toa_approver@example.com',
+        })
+
+        model = self.env['ir.model']._get('hr.leave')
+        automation = self.env['base.automation'].create({  # noqa: OLS03001
+            'name': 'Create Time Off Approval activity',
+            'trigger': 'on_create_or_write',
+            'model_id': model.id,
+        })
+        self.addCleanup(self.env['base.automation']._unregister_hook)
+        self.env['ir.actions.server'].create({
+            'name': 'Create TOA activity',
+            'base_automation_id': automation.id,
+            'model_id': model.id,
+            'state': 'next_activity',
+            'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
+            'activity_user_type': 'specific',
+            'activity_user_id': approver.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'holiday_status_id': leave_type.id,
+            'employee_id': self.employee_emp_id,
+            'request_date_from': date(2019, 9, 2),
+            'request_date_to': date(2019, 9, 4),
+        })
+        self.assertTrue(leave.activity_ids)
+        self.assertEqual(leave.number_of_days, 3.0)
+        self.assertEqual(leave.number_of_hours, 24.0)
