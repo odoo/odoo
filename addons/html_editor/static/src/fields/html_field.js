@@ -1,34 +1,44 @@
-import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
+import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
+import {
+    MAIN_EMBEDDINGS,
+    READONLY_MAIN_EMBEDDINGS,
+} from "@html_editor/others/embedded_components/embedding_sets";
 import {
     COLLABORATION_PLUGINS,
     EMBEDDED_COMPONENT_PLUGINS,
     MAIN_PLUGINS,
     NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
 } from "@html_editor/plugin_sets";
-import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
-import {
-    MAIN_EMBEDDINGS,
-    READONLY_MAIN_EMBEDDINGS,
-} from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
+import { withSequence } from "@html_editor/utils/resource";
+import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, useProps, signal, status, proxy, t, useApp } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    proxy,
+    signal,
+    status,
+    t,
+    useApp,
+    useEffect,
+    useProps,
+} from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import "@web/views/fields/html/html_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation/translation";
-import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
-import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import "@web/views/fields/html/html_field";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -126,8 +136,8 @@ export class HtmlField extends Component {
                 this.state.key++;
             }
         });
-        useRecordObserver((record) => {
-            const value = record.data[this.props.dynamicFieldReferenceModel || "model"];
+        useEffect(() => {
+            const value = this.props.record.data[this.props.dynamicFieldReferenceModel || "model"];
             // update Dynamic Placeholder reference model
             if (this.editor && this.editor.isReady) {
                 this.editor.trigger("on_model_changed_handlers", value);

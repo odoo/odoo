@@ -1,11 +1,8 @@
-/** @odoo-module */
-
-import { Component, proxy, useProps } from "@odoo/owl";
+import { Component, proxy, useEffect, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 /**
@@ -42,9 +39,9 @@ export class AdditionalIdentifiersCommon extends Component {
 
         this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 50);
 
-        useRecordObserver((record) => {
-            this.state.identifiers = parseJson(record.data[this.props.name]);
-            this.state.metadata = parseJson(record.data[METADATA_FIELD]);
+        useEffect(() => {
+            this.state.identifiers = parseJson(this.props.record.data[this.props.name]);
+            this.state.metadata = parseJson(this.props.record.data[METADATA_FIELD]);
         });
     }
 

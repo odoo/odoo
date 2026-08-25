@@ -1,4 +1,4 @@
-import { Component, computed, proxy, t, untrack, useProps } from "@odoo/owl";
+import { Component, computed, proxy, t, untrack, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -84,8 +84,8 @@ export class ReferenceField extends Component {
             });
         } else {
             /** Sync the currentRelation with current value's resModel */
-            useRecordObserver((record) => {
-                const resModel = record.data[this.props.name]?.resModel;
+            useEffect(() => {
+                const resModel = this.props.record.data[this.props.name]?.resModel;
                 if (resModel && untrack(() => this.state.currentRelation) !== resModel) {
                     this.state.currentRelation = resModel;
                 }
