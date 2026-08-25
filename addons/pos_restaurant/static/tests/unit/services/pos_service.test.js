@@ -3,7 +3,7 @@ import { mockDate, tick } from "@odoo/hoot-mock";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
-import { MockServer } from "@web/../tests/web_test_helpers";
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { waitUntil } from "@odoo/hoot-dom";
 
 const { DateTime } = luxon;
@@ -1262,5 +1262,27 @@ describe("restaurant pos_store.js", () => {
         expect(printedOrderChanges[1].noteUpdate[0].product_id).toBe(10);
         expect(printedOrderChanges[1].noteUpdate[1].basic_name).toBe("Steel desk");
         expect(printedOrderChanges[1].noteUpdate[1].product_id).toBe(11);
+    });
+
+    test("name entered for a name-required preset shows as the prep ticket order_label", async () => {
+        const store = await setupPosEnv();
+        const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
+        const preset = store.models["pos.preset"].get(3); // "Name Required Preset", identification: "name"
+
+        const order = await getFilledOrder(store);
+        order.setPreset(preset);
+        expect(order.floating_order_name).toBeEmpty();
+
+        patchWithCleanup(store.dialog, {
+            add(component, props) {
+                props.getPayload("Mitchell");
+            },
+        });
+        await store.handleSelectNamePreset(order);
+        expect(order.floating_order_name).toBe("Mitchell");
+
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
+        expect(orderChange[0].extra_data.order_label).toBe("Mitchell");
     });
 });
