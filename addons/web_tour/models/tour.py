@@ -61,7 +61,6 @@ class Web_TourTour(models.Model):
         js_content = f"""import {{ registry }} from '@web/core/registry';
 
 registry.category("web_tour.tours").add("{self.name}", {{
-    url: "{self.url}",
     steps: () => {json.dumps(self.step_ids.get_steps_json(), indent=4)}
 }})"""
 
