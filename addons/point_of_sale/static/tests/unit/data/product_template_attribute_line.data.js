@@ -38,5 +38,10 @@ export class ProductTemplateAttributeLine extends models.ServerModel {
             product_template_value_ids: [11],
             active: true,
         },
+        {
+            id: 108,
+            attribute_id: 8,
+            product_template_value_ids: [12],
+        },
     ];
 }
