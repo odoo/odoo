@@ -60,14 +60,12 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             trigger: "body:not(:has(.o_datetime_picker))",
         },
         {
-            content: "Wait the form is dirty and click on save button",
-            trigger: "body:has(.o_form_dirty) .o_form_button_save",
+            content: "The End of Contract dialog opens without saving: 'Correct terms' saves the form",
+            trigger: ".modal button.btn-primary",
             run: "click",
         },
         {
-            content: "Close the End of Contract dialog ('Correct terms' button)",
-            trigger: ".modal button.btn-primary",
-            run: "click",
+            trigger: "body:not(:has(.modal)) .o_form_saved",
         },
         {
             content: "Open Create New Version",
