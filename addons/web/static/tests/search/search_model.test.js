@@ -802,6 +802,54 @@ test("toggle a date filter", async () => {
     expect(model.domain).toEqual([]);
 });
 
+test("applySearch() restores a quarter of a non-current year without stranding the default year", async () => {
+    mockDate("2019-06-06T15:00:00");
+    const searchViewArch = `
+        <search>
+            <filter name="date_filter" date="date_field" string="DateFilter"/>
+        </search>
+    `;
+    const model = await createSearchModel({ searchViewArch });
+    const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
+    model.toggleParentFilter(filterId, "second_quarter"); // auto-selects "year" (2019)
+    model.toggleParentFilter(filterId, "year-1"); // add 2018 alongside it
+    model.toggleParentFilter(filterId, "year"); // then drop 2019
+    expect(model._getSelectedGeneratorIds(filterId).toSorted()).toEqual([
+        "second_quarter",
+        "year-1",
+    ]);
+
+    const search = model.getCurrentSearch();
+    const freshModel = await createSearchModel({ searchViewArch });
+    const freshFilterId = Object.keys(freshModel.searchItems).map((key) => Number(key))[0];
+    freshModel.applySearch(search);
+    expect(freshModel._getSelectedGeneratorIds(freshFilterId).toSorted()).toEqual([
+        "second_quarter",
+        "year-1",
+    ]);
+});
+
+test("applySearch() restores a lazily-loaded parentFilter custom option without an RPC", async () => {
+    const searchViewArch = `
+        <search>
+            <filter name="parent_filter" string="ParentFilter">
+                <field name="state"/>
+            </filter>
+        </search>
+    `;
+    const model = await createSearchModel({ searchViewArch, resModel: "partner" });
+    const filterId = Object.keys(model.searchItems).map((key) => Number(key))[0];
+    await model.loadLazyParentFilter(filterId); // simulates opening the dropdown once
+    model.toggleParentFilter(filterId, "custom_abc_state");
+    expect(model.domain).toEqual([["state", "=", "abc"]]);
+
+    const search = model.getCurrentSearch();
+    const freshModel = await createSearchModel({ searchViewArch, resModel: "partner" });
+    // No loadLazyParentFilter() call here: this must not need an RPC to restore.
+    freshModel.applySearch(search);
+    expect(freshModel.domain).toEqual([["state", "=", "abc"]]);
+});
+
 test("toggle a custom option in a date filter", async () => {
     mockDate("2019-01-06T15:00:00");
     const model = await createSearchModel({
@@ -1043,6 +1091,73 @@ test("no search items created for search panel sections", async () => {
     const sections = model.getSections();
     expect(sections).toHaveLength(2);
     expect(sanitizeSearchItems(model)).toEqual([]);
+});
+
+test("getCurrentSearch()/applySearch() round-trip the Search Panel selection", async () => {
+    const searchViewArch = `
+        <search>
+            <searchpanel>
+                <field name="company_id"/>
+                <field name="company_ids" select="multi"/>
+            </searchpanel>
+        </search>
+    `;
+    const model = await createSearchModel(
+        { searchViewArch, resModel: "partner" },
+        { viewType: "kanban" }
+    );
+    await model.sectionsPromise;
+    const [categorySection, filterSection] = model.getSections();
+    model.toggleCategoryValue(categorySection.id, 5);
+    model.toggleFilterValues(filterSection.id, [3]);
+
+    const search = model.getCurrentSearch();
+    expect(search.searchPanel).toEqual({
+        [categorySection.id]: 5,
+        [filterSection.id]: [3],
+    });
+
+    // A fresh model restores the selection from that snapshot alone.
+    const freshModel = await createSearchModel(
+        { searchViewArch, resModel: "partner" },
+        { viewType: "kanban" }
+    );
+    freshModel.applySearch(search);
+    await freshModel.sectionsPromise; // applySearch restores the panel selection in the background
+    const [freshCategorySection, freshFilterSection] = freshModel.getSections();
+    expect(freshCategorySection.activeValueId).toBe(5);
+    expect(
+        [...freshFilterSection.values].filter(([, value]) => value.checked).map(([id]) => id)
+    ).toEqual([3]);
+});
+
+test("applySearch() ignores a Search Panel filter value id that no longer exists", async () => {
+    const searchViewArch = `
+        <search>
+            <searchpanel>
+                <field name="company_ids" select="multi"/>
+            </searchpanel>
+        </search>
+    `;
+    const model = await createSearchModel(
+        { searchViewArch, resModel: "partner" },
+        { viewType: "kanban" }
+    );
+    await model.sectionsPromise;
+    const [filterSection] = model.getSections();
+    const search = model.getCurrentSearch();
+    search.searchPanel = { [filterSection.id]: [3, 999] }; // 999: e.g. a deleted record
+
+    const freshModel = await createSearchModel(
+        { searchViewArch, resModel: "partner" },
+        { viewType: "kanban" }
+    );
+    freshModel.applySearch(search);
+    await freshModel.sectionsPromise;
+    const [freshFilterSection] = freshModel.getSections();
+    expect(
+        [...freshFilterSection.values].filter(([, value]) => value.checked).map(([id]) => id)
+    ).toEqual([3]);
 });
 
 test("a field of type 'properties' should not be accepted as a search_default", async () => {

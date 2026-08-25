@@ -563,7 +563,7 @@ test(`switchView pushes the stat but doesn't add to the breadcrumbs`, async () =
     });
 });
 
-test(`properly push globalState`, async () => {
+test(`properly push urlState`, async () => {
     await mountWithCleanup(WebClient);
     expect(browser.location.href).toBe("http://example.com/odoo");
     expect(browser.history.length).toBe(1);
@@ -584,7 +584,9 @@ test(`properly push globalState`, async () => {
 
     // add element on the search Model
     await editSearch("blip");
+    expect(`.o_searchview_autocomplete .o-dropdown-item:first`).toHaveText(`Search Foo for: blip`);
     await validateSearch();
+    expect(queryAllTexts(".o_searchview_facet_label")).toEqual(["Foo"]);
     expect(queryAllTexts(".o_facet_value")).toEqual(["blip"]);
 
     //open record
@@ -614,6 +616,7 @@ test(`properly push globalState`, async () => {
     await animationFrame();
 
     // The search Model should be restored
+    expect(queryAllTexts(".o_searchview_facet_label")).toEqual(["Foo"]);
     expect(queryAllTexts(".o_facet_value")).toEqual(["blip"]);
     expect(browser.location.href).toBe("http://example.com/odoo/action-4");
 });

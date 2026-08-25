@@ -1155,7 +1155,7 @@ export function makeActionManager(env, router = _router) {
             const urlState = Object.assign(
                 {},
                 currentController.action.urlState,
-                currentController.getUrlState() // what if this = {}?
+                currentController.getUrlState()
             );
             currentController.action.urlState = urlState;
             // Avoid pushing the globalState, if the state on the router was changed.

@@ -77,6 +77,9 @@ export class WithSearch extends Component {
             getGlobalState: () => ({
                 searchModel: JSON.stringify(this.searchModel.exportState()),
             }),
+            getUrlState: () => ({
+                searchFacets: this.searchModel.getCurrentSearch(),
+            }),
         });
 
         onWillStart(async () => {
@@ -95,6 +98,11 @@ export class WithSearch extends Component {
                 delete config.globalState;
             }
             await this.searchModel.load(config);
+            if (!config.state && this.props.urlState?.searchFacets) {
+                // No globalState to fully restore from (e.g. a fresh url/reload):
+                // fall back to re-applying the search from the lighter urlState.
+                this.searchModel.applySearch(this.props.urlState.searchFacets);
+            }
         });
 
         onWillUpdateProps(async (nextProps) => {

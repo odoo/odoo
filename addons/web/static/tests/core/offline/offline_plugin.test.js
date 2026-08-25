@@ -297,7 +297,7 @@ test("getAvailableSearches (searches order)", async () => {
     ]);
 });
 
-test("relative date filter available offline, loosing its navigation capabilities", async () => {
+test("relative date filter available offline, restored as a real facet with disabled nav", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
         searchViewId: false,
@@ -342,20 +342,27 @@ test("relative date filter available offline, loosing its navigation capabilitie
     const cachedSearches = await offline.getAvailableSearches(1, "list");
     expect(cachedSearches.length).toBe(2);
 
-    // Both restore their frozen smart-date domain, each degraded to a plain
-    // static "filter" facet (no navigation arrows). getAvailableSearches returns
-    // the most recently cached first, so "Next week" precedes "This Week".
+    // Both restore as a proper "relative" facet, nav arrows included.
+    // getAvailableSearches returns the most recently cached first, so
+    // "Next week" precedes "This Week".
     searchModel.applySearch(cachedSearches[0]);
     await animationFrame();
     expect(searchModel.domain).toEqual(nextWeekDomain);
-    expect(searchModel.facets.map((f) => f.type)).toEqual(["filter"]);
-    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(0);
+    expect(searchModel.facets.map((f) => f.type)).toEqual(["relative"]);
+    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(2);
 
     searchModel.applySearch(cachedSearches[1]);
     await animationFrame();
     expect(searchModel.domain).toEqual(thisWeekDomain);
-    expect(searchModel.facets.map((f) => f.type)).toEqual(["filter"]);
-    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(0);
+    expect(searchModel.facets.map((f) => f.type)).toEqual(["relative"]);
+    expect(`.o_searchview_facet .o_date_nav_btn`).toHaveCount(2);
+
+    // Nav buttons look the same offline, but are disabled like any other button: we can't
+    // know the domain a shift would land on is cached, so it must not be clickable.
+    expect(`.o_searchview_facet [aria-label="Next period"]`).toHaveAttribute("disabled");
+    expect(`.o_searchview_facet [aria-label="Next period"]`).toHaveClass("o_disabled_offline");
+    await contains(`.o_searchview_facet [aria-label="Next period"]`).click();
+    expect(searchModel.domain).toEqual(thisWeekDomain);
 });
 
 test("scheduleORM", async () => {

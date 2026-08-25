@@ -7609,13 +7609,16 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
     await contains(".o_column_folded:eq(0)").click();
     await animationFrame();
     expect(".o_content").toHaveProperty("scrollLeft", 0, {
-        message: "Group should be completely inside the viewport after unfold, no scroll"
+        message: "Group should be completely inside the viewport after unfold, no scroll",
     });
 
     // "column 6" is followed by a folded group ("column 7"), which ends up outside
     // of the viewport after the unfold: scroll to that group
     contains(".o_content").scroll({
-        left: content().scrollLeft + queryRect(".o_column_folded:eq(0)").right - queryRect(".o_content").right,
+        left:
+            content().scrollLeft +
+            queryRect(".o_column_folded:eq(0)").right -
+            queryRect(".o_content").right,
     });
     let scrollLeft = content().scrollLeft;
     await contains(".o_column_folded:eq(0)").click();
@@ -8918,6 +8921,12 @@ test(`[Offline] keep facets name when coming back online`, async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
     await toggleMenuItem("GroupBy Blip");
     expect(".o_kanban_group").toHaveCount(1);
+    expect(queryAllTexts(".o_searchview .o_searchview_facet_label")).toEqual(["Foo", "", ""]);
+    expect(queryAllTexts(".o_searchview .o_facet_values")).toEqual([
+        "boo\nor\nblip",
+        "Filter Blip",
+        "GroupBy Blip",
+    ]);
 
     // Switch offline and visit available filters
     await setOffline(true);
@@ -8932,8 +8941,9 @@ test(`[Offline] keep facets name when coming back online`, async () => {
 
     // Switch back online
     await setOffline(false);
+    expect(queryAllTexts(".o_searchview .o_searchview_facet_label")).toEqual(["Foo", "", ""]);
     expect(queryAllTexts(".o_searchview .o_facet_values")).toEqual([
-        "Foo boo or blip",
+        "boo\nor\nblip",
         "Filter Blip",
         "GroupBy Blip",
     ]);
