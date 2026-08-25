@@ -1836,7 +1836,6 @@ class Field[T]:
         else:
             # non-stored field or stored field on new record: default value
             value = self.convert_to_cache(False, record, validate=False)
-            self._update_cache(record, value)
             defaults = record.default_get([self.name])
             if self.name in defaults:
                 # The null value above is necessary to convert x2many field
@@ -1846,7 +1845,7 @@ class Field[T]:
                 # to determine the field's value, and generates an infinite
                 # recursion.
                 value = self.convert_to_cache(defaults[self.name], record)
-                self._update_cache(record, value)
+            self._update_cache(record, value)
             # get the final value (see patches in x2many fields)
             value = field_cache[record_id]
 
