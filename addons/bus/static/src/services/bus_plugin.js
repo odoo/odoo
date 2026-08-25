@@ -121,7 +121,6 @@ export class BusPlugin extends Plugin {
                 }
                 for (const { id, type, payload } of notifications) {
                     this.notificationBus.trigger(type, { id, payload });
-                    this._onMessage(this.env, id, type, payload);
                 }
                 break;
             }
@@ -180,10 +179,6 @@ export class BusPlugin extends Plugin {
 
     removeEventListener(type, listener) {
         this.bus.removeEventListener(type, listener);
-    }
-
-    trigger(type, data) {
-        this.bus.trigger(type, data);
     }
 
     async addChannel(channel) {
@@ -254,9 +249,6 @@ export class BusPlugin extends Plugin {
         );
         this.subscribeFnToWrapper.delete(callback);
     }
-
-    /** Overridden to provide logs in tests. Use subscribe() in production. */
-    _onMessage(env, id, type, payload) {}
 }
 
 services.add(BusPlugin);
@@ -282,7 +274,7 @@ export const busService = {
                 return busPlugin.workerState();
             },
         });
-        const INTERNAL_METHODS = new Set(["constructor", "setup", "handleMessage", "_onMessage"]);
+        const INTERNAL_METHODS = new Set(["constructor", "setup", "handleMessage"]);
         for (const method of Object.getOwnPropertyNames(BusPlugin.prototype)) {
             if (!INTERNAL_METHODS.has(method) && typeof busPlugin[method] === "function") {
                 busServiceWrapper[method] = busPlugin[method].bind(busPlugin);

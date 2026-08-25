@@ -12,14 +12,13 @@ import {
 export class SelectPrintersWizard extends FormController {
     setup() {
         super.setup();
-        this.bus = useService("bus_service");
         this.notification = useService("notification");
         this.printersCache = useService("report_printers_cache");
         this.onClickViewButton = useViewButtonHandler();
 
         onWillUnmount(() => {
             // If the user closes the popup without selecting a printer we still send a message back
-            this.bus.trigger("printer-selected", {
+            this.env.bus.trigger("printer-selected", {
                 reportId: this.props.context.report_id,
                 deviceSettings: null,
             });
@@ -40,7 +39,7 @@ export class SelectPrintersWizard extends FormController {
     async onClickPrinterSelectionSaveButton(params) {
         const deviceSettings = this.extractSettings;
         if (deviceSettings.selectedPrinters.length > 0) {
-            this.bus.trigger("printer-selected", {
+            this.env.bus.trigger("printer-selected", {
                 reportId: this.props.context.report_id,
                 deviceSettings,
             });
