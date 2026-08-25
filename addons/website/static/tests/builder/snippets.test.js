@@ -54,7 +54,7 @@ test("Disable undroppable snippets after custom snippet save", async () => {
 
     await contains("#blocks-tab").click();
     // Verify that debug group should be the last snippet group.
-    expect(".o_snippets_container .o_snippet.o_draggable:last-child").toHaveAttribute(
+    expect("#snippet_groups .o_snippet.o_draggable:last-child").toHaveAttribute(
         "data-snippet-group",
         "debug"
     );
