@@ -156,7 +156,7 @@ class StockPackageLevel(models.Model):
         package_levels = super().create(vals_list)
         for package_level, vals in zip(package_levels, vals_list):
             if vals.get('location_dest_id') and not self.env.context.get('from_put_in_pack'):
-                package_level.move_line_ids.write({'location_dest_id': vals['location_dest_id']})
+                package_level.move_line_ids.filtered(lambda ml: ml.location_dest_id.id != vals['location_dest_id']).write({'location_dest_id': vals['location_dest_id']})
                 package_level.move_ids.write({'location_dest_id': vals['location_dest_id']})
         return package_levels
 
