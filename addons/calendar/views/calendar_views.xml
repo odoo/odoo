@@ -106,9 +106,17 @@
                     <label for="recurrence_update" class="me-2">Edit recurring event</label>
                     <field name="recurrence_update" widget="radio" options="{'horizontal': True}"/>
                 </div>
-                <div class="alert alert-warning" role="alert" invisible="not invalid_email_partner_ids">
-                    <span>The following attendees do not have an email address set. They will not be invited to the event.</span>
-                    <field name="invalid_email_partner_ids" widget="many2many_tags"/>
+                <div class="alert alert-warning" role="alert" invisible="not invalid_email_partner_ids and not synced_partner_ids">
+                    <ul class="list-unstyled mb-0">
+                        <li invisible="not invalid_email_partner_ids">
+                            <span class="me-1">The following attendees do not have an email address set. They will not be invited to the event.</span>
+                            <field name="invalid_email_partner_ids" widget="many2many_tags"/>
+                        </li>
+                        <li invisible="not synced_partner_ids">
+                            <span class="me-1">The following attendees have an external calendar synchronization, but this event will not be synchronized with it.</span>
+                            <field name="synced_partner_ids" widget="many2many_tags"/>
+                        </li>
+                    </ul>
                 </div>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
