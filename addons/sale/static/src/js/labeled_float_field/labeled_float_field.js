@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { getShortLabel } from "../labeled_field_short_labels";
 import { FloatField, floatField, floatFieldProps } from "@web/views/fields/float/float_field";
 import { t, useProps } from "@odoo/owl";
 
@@ -15,7 +16,7 @@ export const labeledFloatField = {
     component: LabeledFloatField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = floatField.extractProps(fieldInfo, dynamicInfo);
-        props.label = fieldInfo.string;
+        props.label = getShortLabel(fieldInfo.name) ?? fieldInfo.string;
         return props;
     },
 };

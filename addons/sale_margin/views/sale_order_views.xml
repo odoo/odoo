@@ -9,17 +9,12 @@
         <field name="arch" type="xml">
             <xpath
                 expr="//field[@name='order_line']//list//column[@name='price_unit']"
-                position="attributes"
-            >
-                <attribute name="width">[160px]</attribute>
-            </xpath>
-            <xpath
-                expr="//field[@name='order_line']//list//column[@name='price_unit']"
                 position="inside"
             >
                 <field
                     name="margin"
                     widget="labeled_float_field"
+                    invisible="display_type"
                     readonly="qty_invoiced &gt; 0"
                     optional="hide"
                 />
@@ -27,7 +22,7 @@
                     name="margin_percent"
                     widget="labeled_percentage_field"
                     readonly="purchase_price == 0 or qty_invoiced &gt; 0"
-                    invisible="price_subtotal == 0"
+                    invisible="display_type or price_subtotal == 0"
                     optional="hide"
                 />
             </xpath>

@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { getShortLabel } from "../labeled_field_short_labels";
 import {
     MonetaryField,
     monetaryField,
@@ -19,7 +20,7 @@ export const labeledMonetaryField = {
     component: LabeledMonetaryField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = monetaryField.extractProps(fieldInfo, dynamicInfo);
-        props.label = fieldInfo.string;
+        props.label = getShortLabel(fieldInfo.name) ?? fieldInfo.string;
         return props;
     },
 };

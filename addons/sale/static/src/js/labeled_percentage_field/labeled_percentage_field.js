@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { getShortLabel } from "../labeled_field_short_labels";
 import { PercentageField, percentageField } from "@web/views/fields/percentage/percentage_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { t, useProps } from "@odoo/owl";
@@ -18,7 +19,7 @@ export const labeledPercentageField = {
     component: LabeledPercentageField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = percentageField.extractProps(fieldInfo, dynamicInfo);
-        props.label = fieldInfo.string;
+        props.label = getShortLabel(fieldInfo.name) ?? fieldInfo.string;
         return props;
     },
 };
