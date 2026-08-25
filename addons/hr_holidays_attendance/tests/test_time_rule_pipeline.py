@@ -3672,7 +3672,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             # each rule must earn allocation credit for the full 6h interval:
             # rule1 via alloc_acc credit loop, rule2 via pp-only excess branch -> 2 credits total.
             # both excess_alloc entries target the same allocation type so the days are
-            # accumulated into one allocation record with 2× the per-rule credit.
+            # accumulated into one allocation record with 2x the per-rule credit.
             allocations = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', leave.employee_id.id),
                 ('work_entry_type_id', '=', comp_type.id),
@@ -3680,7 +3680,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             ])
             self.assertTrue(allocations, "At least one allocation must be created for comp_type")
             hours_per_day = leave.employee_id.resource_calendar_id.hours_per_day or 8.0
-            # 6h × 1.0 rate / hours_per_day × 2 rules
+            # 6h x 1.0 rate / hours_per_day x 2 rules
             expected_days = 2 * 6.0 / hours_per_day
             self.assertAlmostEqual(
                 sum(a.number_of_days for a in allocations), expected_days, places=4,

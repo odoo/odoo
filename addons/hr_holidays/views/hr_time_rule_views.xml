@@ -49,15 +49,22 @@
                 <attribute name="invisible">not condition_is_hourly</attribute>
             </xpath>
 
-            <!-- replace "Set Excess/Deficit to" with "Reclassify to" for day/half-day types -->
+            <!-- replace "Set Excess/Deficit to" with "Reclassify to" for day/half-day types;
+                 also extend the existing tooltips with leave-specific constraints -->
             <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Excess')]" position="attributes">
                 <attribute name="invisible">threshold_operator == 'less_than' or not condition_is_hourly</attribute>
+            </xpath>
+            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Excess')]/sup" position="attributes">
+                <attribute name="data-tooltip">The time off type created for the excess. Must not require allocation. For hourly conditions, only hourly output types are accepted.</attribute>
             </xpath>
             <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]" position="attributes">
                 <attribute name="invisible">threshold_operator != 'less_than' or not condition_is_hourly</attribute>
             </xpath>
+            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]/sup" position="attributes">
+                <attribute name="data-tooltip">The time off type created for the deficit. Must not require allocation. For hourly conditions, only hourly output types are accepted.</attribute>
+            </xpath>
             <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]" position="after">
-                <span class="o_form_label" invisible="condition_is_hourly">Reclassify to</span>
+                <span class="o_form_label" invisible="condition_is_hourly">Reclassify to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="The time off type used to reclassify this record. Must not require allocation.">?</sup></span>
             </xpath>
 
             <!-- allocation row appended after the output WET div -->
@@ -70,7 +77,8 @@
                     <span class="text-muted" invisible="not leave_compensation_rate">to</span>
                     <field name="allocation_type_id" nolabel="1"
                         invisible="not leave_compensation_rate"
-                        placeholder="Choose a Time Off Type"/>
+                        placeholder="Choose a Time Off Type"
+                        help="Must require allocation and be selectable in time off requests."/>
                 </div>
             </xpath>
         </field>

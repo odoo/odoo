@@ -11,16 +11,45 @@ from odoo.exceptions import ValidationError
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
-    condition_work_entry_type_ids = fields.Many2many(
-        domain="[('id', 'in', country_work_entry_type_ids)]",
-    )
     work_entry_type_id = fields.Many2one(
-        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
+        domain="[('id', 'in', allowed_output_work_entry_type_ids)]",
+    )
+    # output unit must be of equal or finer granularity than the condition unit:
+    # hour <= half_day <= day, so a day-condition rule may output day, half_day, or hour.
+    allowed_output_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type',
+        compute='_compute_allowed_output_work_entry_type_ids',
     )
     condition_is_hourly = fields.Boolean(
         compute='_compute_condition_is_hourly',
         help="True when all selected condition time types are hourly (request_unit='hour').",
     )
+
+    _OUTPUT_UNITS_ALLOWED = {
+        'hour': {'hour'},
+        'half_day': {'hour', 'half_day'},
+        'day': {'hour', 'half_day', 'day'},
+    }
+
+    @api.depends('condition_work_entry_type_ids.request_unit', 'country_work_entry_type_ids')
+    def _compute_allowed_output_work_entry_type_ids(self):
+        for rule in self:
+            units = rule.condition_work_entry_type_ids.mapped('request_unit')
+            cond_unit = units[0] if units else 'hour'
+            allowed = rule._OUTPUT_UNITS_ALLOWED.get(cond_unit, {'hour'})
+            rule.allowed_output_work_entry_type_ids = rule.country_work_entry_type_ids.filtered(
+                lambda t: not t.requires_allocation and t.request_unit in allowed
+            )
+
+    @api.constrains('work_entry_type_id', 'condition_work_entry_type_ids')
+    def _check_output_request_unit(self):
+        for rule in self:
+            if rule.work_entry_type_id and rule.work_entry_type_id not in rule.allowed_output_work_entry_type_ids:
+                raise ValidationError(self.env._(
+                    "Rule '%(name)s': output type '%(out)s' is not compatible with the condition time types.",
+                    name=rule.name,
+                    out=rule.work_entry_type_id.name,
+                ))
 
     @api.constrains('condition_work_entry_type_ids')
     def _check_condition_units_uniform(self):
@@ -69,7 +98,7 @@ class HrTimeRule(models.Model):
     allocation_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Allocate to",
-        domain="[('requires_allocation', '=', True), ('id', 'in', country_work_entry_type_ids)]",
+        domain="[('requires_allocation', '=', True), ('time_off_selectable', '=', True), ('id', 'in', country_work_entry_type_ids)]",
     )
 
     def _resolve_output_intervals(self, intervals):
@@ -125,7 +154,7 @@ class HrTimeRule(models.Model):
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             alloc_days = excess_hours * rule.leave_compensation_rate / hours_per_day
             if alloc_days > 0:
-                excess_by_key[(employee, rule.allocation_type_id)] += alloc_days
+                excess_by_key[employee, rule.allocation_type_id] += alloc_days
 
         alloc_create_vals = []
         for (employee, alloc_type), alloc_days in excess_by_key.items():
@@ -154,7 +183,7 @@ class HrTimeRule(models.Model):
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             deduct_days = deficit_hours * rule.leave_compensation_rate / hours_per_day
             if deduct_days > 0:
-                deficit_by_key[(employee, rule.allocation_type_id)] += deduct_days
+                deficit_by_key[employee, rule.allocation_type_id] += deduct_days
 
         for (employee, alloc_type), deduct_days in deficit_by_key.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([

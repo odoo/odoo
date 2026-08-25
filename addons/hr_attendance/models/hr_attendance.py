@@ -225,56 +225,48 @@ class HrAttendance(models.Model):
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
-        """Verify attendance records don't overlap.
-
-        Engine outputs (is_time_rule_output / source_attendance_id) are exempt from
-        the check themselves — the engine places them with skip_time_rules and they
-        are allowed to occupy any slot.  User-owned records, however, must not
-        overlap with engine outputs: the user should delete the output first.
+        """ Verifies the validity of the attendance record compared to the others from the same employee.
+            For the same employee we must have :
+                * maximum 1 "open" attendance record (without check_out)
+                * no overlapping time slices with previous employee records
         """
         if self.env.context.get('skip_time_rules'):
             return
-        for attendance in self.filtered(lambda a: not a.is_time_rule_output and not a.source_attendance_id and a.active):
-            src_domain = [
+        for attendance in self.filtered('active'):
+            # we take the latest attendance before our check_in time and check it doesn't overlap with ours
+            last_attendance_before_check_in = self.env['hr.attendance'].search([
                 ('employee_id', '=', attendance.employee_id.id),
+                ('check_in', '<=', attendance.check_in),
                 ('id', '!=', attendance.id),
-            ]
-            last_before_check_in = self.env['hr.attendance'].search(
-                src_domain + [('check_in', '<=', attendance.check_in)],
-                order='check_in desc', limit=1,
-            )
-            if (last_before_check_in and last_before_check_in.check_out
-                    and last_before_check_in.check_out > attendance.check_in):
-                raise exceptions.ValidationError(_(
-                    "Cannot create new attendance record for %(empl_name)s, "
-                    "the employee was already checked in on %(datetime)s",
-                    empl_name=attendance.employee_id.name,
-                    datetime=format_datetime(self.env, attendance.check_in, dt_format=False),
-                ))
+            ], order='check_in desc', limit=1)
+            if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
+                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                                                   empl_name=attendance.employee_id.name,
+                                                   datetime=format_datetime(self.env, attendance.check_in, dt_format=False)))
+
             if not attendance.check_out:
-                no_co = self.env['hr.attendance'].search(
-                    src_domain + [('check_out', '=', False)],
-                    order='check_in desc', limit=1,
-                )
-                if no_co:
-                    raise exceptions.ValidationError(_(
-                        "Cannot create new attendance record for %(empl_name)s, "
-                        "the employee hasn't checked out since %(datetime)s",
-                        empl_name=attendance.employee_id.name,
-                        datetime=format_datetime(self.env, no_co.check_in, dt_format=False),
-                    ))
+                # if our attendance is "open" (no check_out), we verify there is no other "open" attendance
+                no_check_out_attendances = self.env['hr.attendance'].search([
+                    ('employee_id', '=', attendance.employee_id.id),
+                    ('check_out', '=', False),
+                    ('id', '!=', attendance.id),
+                ], order='check_in desc', limit=1)
+                if no_check_out_attendances:
+                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
+                                                       empl_name=attendance.employee_id.name,
+                                                       datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))
             else:
-                last_before_check_out = self.env['hr.attendance'].search(
-                    src_domain + [('check_in', '<', attendance.check_out)],
-                    order='check_in desc', limit=1,
-                )
-                if last_before_check_out and last_before_check_in != last_before_check_out:
-                    raise exceptions.ValidationError(_(
-                        "Cannot create new attendance record for %(empl_name)s, "
-                        "the employee was already checked in on %(datetime)s",
-                        empl_name=attendance.employee_id.name,
-                        datetime=format_datetime(self.env, last_before_check_out.check_in, dt_format=False),
-                    ))
+                # we verify that the latest attendance with check_in time before our check_out time
+                # is the same as the one before our check_in time computed before, otherwise it overlaps
+                last_attendance_before_check_out = self.env['hr.attendance'].search([
+                    ('employee_id', '=', attendance.employee_id.id),
+                    ('check_in', '<', attendance.check_out),
+                    ('id', '!=', attendance.id),
+                ], order='check_in desc', limit=1)
+                if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
+                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                                                       empl_name=attendance.employee_id.name,
+                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
     def write(self, vals):
         if vals.get('employee_id') and \

@@ -1,17 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import defaultdict, namedtuple
+from ast import literal_eval
+from collections import defaultdict
 from datetime import UTC, datetime, time, timedelta
 from itertools import pairwise
+from typing import NamedTuple
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
-from ast import literal_eval
 from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.tools.float_utils import float_compare
 from odoo.tools.intervals import Intervals, invert_intervals
@@ -19,11 +19,14 @@ from odoo.tools.intervals import Intervals, invert_intervals
 _logger = logging.getLogger(__name__)
 
 # single interval shape used throughout the pipeline, excess, and output stages.
-# pp starts empty and is filled in by _resolve_output_intervals; source is the record
-# being classified (hr.leave or hr.attendance) and doubles as the excess dict key.
-_Iv = namedtuple('_Iv', 'start end wet source rule acc pp',
-                 defaults=(None, None, frozenset(), frozenset()))
-
+class _Iv(NamedTuple):
+    start: object           # interval start(local naive datetime)
+    end: object             # interval end (local naive datetime)
+    wet: object             # current work entry type; updated as rules reclassify
+    source: object = None   # originating time record. (hr.leave or hr.attendance)
+    rule: object = None     # rule that last classified this interval; none = unclassified
+    acc: frozenset = frozenset()  # accumulator of rules: overlapping rules displaced by rule.
+    pp: frozenset = frozenset()   # premium pay category ids on this interval
 
 def resolve_intervals_by_sequence(intervals):
     """For each non-overlapping sub-interval, pick the payload with the lowest sequence.
@@ -516,7 +519,7 @@ class HrTimeRule(models.Model):
         self.ensure_one()
         return frozenset()
 
-    def _get_output_in_place_extra_vals(self, accumulated_pp=frozenset()):
+    def _get_source_annotation_vals(self, accumulated_pp=frozenset()):
         """Extra write vals when the source record is repurposed in-place as the first output segment.
 
         Override to propagate fields that _get_output_*_vals sets on newly created records
@@ -615,11 +618,11 @@ class HrTimeRule(models.Model):
                 if all(not iv.rule.work_entry_type_id for iv in output_intervals):
                     all_pp = frozenset().union(*(iv.pp for iv in output_intervals))
                     # collect extra_vals from every distinct classifying rule so that
-                    # future overrides of _get_output_in_place_extra_vals that inspect
+                    # future overrides of _get_source_annotation_vals that inspect
                     # self are all called, not just the first interval's rule.
                     extra_vals = {}
                     for rule in dict.fromkeys(iv.rule for iv in output_intervals):
-                        extra_vals |= rule._get_output_in_place_extra_vals(accumulated_pp=all_pp)
+                        extra_vals |= rule._get_source_annotation_vals(accumulated_pp=all_pp)
                     if extra_vals:
                         source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
                     for iv in output_intervals:
@@ -645,7 +648,7 @@ class HrTimeRule(models.Model):
                 if min_out_start_utc <= src_start_utc:
                     first = output_intervals[0]
                     first_end_utc = _to_utc(first.end, tz)
-                    extra_vals = first.rule._get_output_in_place_extra_vals(accumulated_pp=first.pp)
+                    extra_vals = first.rule._get_source_annotation_vals(accumulated_pp=first.pp)
                     if not (
                         source.work_entry_type_id == first.wet
                         and source.time_rule_id == first.rule
