@@ -1,17 +1,16 @@
-import { Component, useProps } from "@odoo/owl";
+import { Component, signal, usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { WebSerialScale } from "@point_of_sale/app/utils/scale/web_serial_scale";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { WebSerialScale } from "../../web_serial_scale";
 
 export class ConnectWebSerialScale extends Component {
-    static template = `point_of_sale.ConnectWebSerialScale`;
-    props = useProps(standardWidgetProps);
+    static template = `iot_webserial.ConnectWebSerialScale`;
 
     setup() {
         super.setup();
-        this.notification = useService("notification");
+        this.notification = usePlugin(NotificationPlugin);
+        this.loading = signal(false);
     }
 
     checkBrowserCompatibility() {
@@ -34,15 +33,25 @@ export class ConnectWebSerialScale extends Component {
         return true;
     }
 
-    async openSerialScale() {
+    async requestPort() {
         try {
-            const port = await navigator.serial.requestPort();
-            const scale = new WebSerialScale(this, port);
-            if (await scale.isScaleSupported()) {
-                this.notification.add(
-                    _t("Scale connected successfully! It will be used automatically in the POS."),
-                    { type: "success" }
-                );
+            return await navigator.serial.requestPort();
+        } catch {
+            this.notification.add(_t("No device was selected."), { type: "warning" });
+            return null;
+        }
+    }
+
+    async openSerialScale() {
+        const port = await this.requestPort();
+        if (!port) {
+            return;
+        }
+
+        const scale = new WebSerialScale(port);
+        try {
+            if (await scale.open()) {
+                this.notification.add(_t("Scale connected successfully!"), { type: "success" });
                 await port.close();
             } else {
                 this.notification.add(_t("Your scale is not compatible with Odoo."), {
@@ -51,7 +60,8 @@ export class ConnectWebSerialScale extends Component {
                 await port.forget();
             }
         } catch {
-            this.notification.add(_t("No device was selected."), { type: "warning" });
+            await port.forget();
+            this.notification.add(_t("Failed to open device."), { type: "danger" });
         }
     }
 
@@ -59,13 +69,12 @@ export class ConnectWebSerialScale extends Component {
         if (!this.checkBrowserCompatibility()) {
             return;
         }
+        this.loading.set(true);
         await this.openSerialScale();
+        this.loading.set(false);
     }
 }
 
-export const connectWebSerialScaleWidget = {
+registry.category("view_widgets").add("iot_webserial.connect_web_serial_scale", {
     component: ConnectWebSerialScale,
-};
-registry
-    .category("view_widgets")
-    .add("point_of_sale_connect_web_serial_scale", connectWebSerialScaleWidget);
+});

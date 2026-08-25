@@ -6,7 +6,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'product', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete', 'base_report_wkhtmltox'],
+    'depends': ['resource', 'product', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete', 'base_report_wkhtmltox', 'iot_webserial'],
     'data': [
         'security/point_of_sale_security.xml',
         'data/default_barcode_patterns.xml',
@@ -102,9 +102,7 @@
             ('remove', 'point_of_sale/static/src/backend/views/pivot/*'),
             ('remove', 'point_of_sale/static/src/backend/views/graph/*'),
             'point_of_sale/static/src/backend/test_epos/*',
-            'point_of_sale/static/src/backend/connect_web_serial_scale/*',
             'point_of_sale/static/src/app/utils/init_lna.js',
-            'point_of_sale/static/src/app/utils/scale/*.js',
             'point_of_sale/static/src/backend/pos_open_ui_button/*',
         ],
         'web.assets_backend_lazy': [
@@ -235,6 +233,7 @@
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'google_address_autocomplete/static/src/**/*',
             'point_of_sale/static/src/backend/pos_res_partner_view/*',
+            'iot_webserial/static/src/web_serial_*.js',
         ],
         'point_of_sale.base_tests': [
             ('include', 'web_tour.assets'),
