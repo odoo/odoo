@@ -139,6 +139,7 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_paternity_company" model="hr.work.entry.type">
@@ -148,6 +149,7 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_paternity_legal" model="hr.work.entry.type">
@@ -173,6 +175,7 @@
         <field name="unit_of_measure">day</field>
         <field name="employee_requests">True</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="allocation_validation_type">no_validation</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_unpredictable" model="hr.work.entry.type">
@@ -183,6 +186,7 @@
         <field name="unit_of_measure">day</field>
         <field name="hide_on_dashboard">True</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="allocation_validation_type">no_validation</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_training_time_off" model="hr.work.entry.type">
@@ -192,6 +196,7 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="country_id" ref="base.be"/>
+        <field name="allocation_validation_type">manager</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_training_time_off_with_meal_voucher" model="hr.work.entry.type">
@@ -201,6 +206,7 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="country_id" ref="base.be"/>
+        <field name="allocation_validation_type">manager</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
@@ -210,6 +216,7 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="country_id" ref="base.be"/>
+        <field name="allocation_validation_type">manager</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off_with_meal_voucher" model="hr.work.entry.type">
@@ -219,11 +226,12 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="country_id" ref="base.be"/>
+        <field name="allocation_validation_type">manager</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_extra_legal" model="hr.work.entry.type">
         <field name="requires_allocation">True</field>
-        <field name="employee_requests">True</field>
+        <field name="employee_requests">False</field>
         <field name="request_unit">half_day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
@@ -264,6 +272,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">10</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_long_sick" model="hr.work.entry.type">
@@ -284,6 +293,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">11</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week" model="hr.work.entry.type">
@@ -294,6 +304,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">12</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week_short_term_employee" model="hr.work.entry.type">
@@ -304,6 +315,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">12</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_after_second_week" model="hr.work.entry.type">
@@ -314,6 +326,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">13</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_worker_time_off" model="hr.work.entry.type">
@@ -335,6 +348,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">14</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly" model="hr.work.entry.type">
@@ -345,6 +359,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">15</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_accident_second_week" model="hr.work.entry.type">
@@ -355,6 +370,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">16</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_accident_second_week_short_term_employee" model="hr.work.entry.type">
@@ -365,6 +381,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">16</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_accident_unpaid" model="hr.work.entry.type">
@@ -375,6 +392,7 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">17</field>
         <field name="country_id" ref="base.be"/>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_work_accident_unassimilated" model="hr.work.entry.type">
@@ -405,8 +423,8 @@
 
     <record id="hr_work_entry.l10n_be_work_entry_type_phc" model="hr.work.entry.type">
         <field name="name">Public Holiday Compensation</field>
-        <field name="requires_allocation">yes</field>
-        <field name="employee_requests">no</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">False</field>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
@@ -415,10 +433,12 @@
 
     <record id="hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_other_presence" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
+        <field name="time_off_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest" model="hr.work.entry.type">
@@ -446,30 +466,40 @@
         <field name="request_unit">hour</field>
         <field name="unit_of_measure">hour</field>
         <field name="requires_allocation" eval="False"/>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_overtime_no_onss_horeca" model="hr.work.entry.type">
         <field name="request_unit">hour</field>
         <field name="unit_of_measure">hour</field>
         <field name="requires_allocation" eval="False"/>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_150" model="hr.work.entry.type">
         <field name="request_unit">hour</field>
         <field name="unit_of_measure">hour</field>
         <field name="requires_allocation" eval="False"/>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_200" model="hr.work.entry.type">
         <field name="request_unit">hour</field>
         <field name="unit_of_measure">hour</field>
         <field name="requires_allocation" eval="False"/>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net" model="hr.work.entry.type">
         <field name="request_unit">hour</field>
         <field name="unit_of_measure">hour</field>
         <field name="requires_allocation" eval="False"/>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_political_leave" model="hr.work.entry.type">
@@ -505,6 +535,218 @@
         <field name="request_unit">hour</field>
         <field name="unit_of_measure">hour</field>
         <field name="requires_allocation" eval="False"/>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.be_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+    </record>
+
+    <record id="hr_work_entry.be_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <record id="hr_work_entry.be_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.be_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_medical_assistance" model="hr.work.entry.type">
+        <field name="allocation_validation_type">no_validation</field>
+        <field name="time_off_selectable">False</field>
+        <field name="resource_calendar_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_bank_holiday" model="hr.work.entry.type">
+        <field name="unit_of_measure">day</field>
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_training" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+        <field name="allocation_validation_type">manager</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_breast_feeding" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+        <field name="allocation_validation_type">no_validation</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_recovery_additional" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_economic_unemployment" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_long_sick" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_leave_palliative_care" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_parental_time_off" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_partial_incapacity" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_work_incapacity_sickness_credit" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_common_law_illness_attributable_to_worker" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_common_law_illness_after_legal_period" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off_maternity_protection" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="employee_requests">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_dismissal" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_agreeement" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_reduction" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_strike" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_training_social_promotion" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_maternity_time_off_converted" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_environmental_protection" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_union_mission" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_social_judge" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_union_mission_unpaid" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_civic_duty_unpaid" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_public_mandate_unpaid" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_militia_obligation" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_normal_inactivity" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_public_holiday_working_without_recovery" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
     </record>
 
     <!-- 137.00 -->
