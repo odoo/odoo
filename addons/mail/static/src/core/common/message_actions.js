@@ -3,9 +3,7 @@ import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
@@ -33,13 +31,6 @@ export function registerMessageAction(id, definition) {
 }
 
 registerMessageAction("reaction", {
-    component: QuickReactionMenu,
-    componentProps: ({ action, message, owner }) => ({
-        action,
-        message,
-        messageActive: owner.isActive?.(),
-    }),
-    componentCondition: ({ reactionAnchorRef }) => !isMobileOS() && !reactionAnchorRef,
     condition: ({ message }) => message.canAddReaction,
     icon: "add_reaction",
     name: _t("Add a Reaction"),
