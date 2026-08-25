@@ -3,8 +3,12 @@ import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { arg, toString } = spreadsheet.helpers;
-const { functionRegistry, featurePluginRegistry, NonSquishableFunctionRegistry } =
-    spreadsheet.registries;
+const {
+    functionRegistry,
+    featurePluginRegistry,
+    NonSquishableFunctionRegistry,
+    evaluationUIPluginRegistry,
+} = spreadsheet.registries;
 
 /**
  * Standard spreadsheet dashboards defined in the source code need to be translated.
@@ -36,6 +40,7 @@ class TranslationNamespace extends OdooUIPlugin {
     }
 }
 featurePluginRegistry.replace("dynamic_translate", TranslationNamespace);
+evaluationUIPluginRegistry.replace("dynamic_translate", TranslationNamespace);
 
 functionRegistry.add("_t", {
     description: _t("Get the translated value of the given string"),
