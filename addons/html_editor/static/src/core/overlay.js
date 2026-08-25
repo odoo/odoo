@@ -68,7 +68,11 @@ export class EditorOverlay extends Component {
 
         if (this.props.positionOptions?.updatePositionOnResize ?? true) {
             const resizeObserver = new ResizeObserver(() => {
-                position.unlock();
+                // A preview resizes the content without the user moving the
+                // selection. Skip repositioning so it doesn't jump.
+                if (!this.props.shared.getIsPreviewing()) {
+                    position.unlock();
+                }
             });
             useOnChange(
                 () => [this.rootRef()],
@@ -117,7 +121,17 @@ export class EditorOverlay extends Component {
                 this.updateVisibility(el, solution, scrollContainer);
             },
         };
-        position = usePosition(this.rootRef, getTarget, positionOptions);
+        position = usePosition(
+            this.rootRef,
+            // Dropdown updates can trigger repositioning during a preview.
+            // Skip these updates to keep the overlay stable.
+            () => {
+                if (!this.props.shared.getIsPreviewing()) {
+                    return getTarget();
+                }
+            },
+            positionOptions
+        );
 
         this.overlayState = proxy({ isOverlayVisible: true });
         useSubEnv({ overlayState: this.overlayState });

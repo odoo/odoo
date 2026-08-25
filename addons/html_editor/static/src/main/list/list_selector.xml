@@ -6,12 +6,12 @@
                 <div data-prevent-closing-overlay="true">
                     <t t-set="activeMode" t-value="this.getActiveMode()"/>
                     <t t-foreach="this.props.getButtons()" t-as="button" t-key="button_index">
-                        <DropdownItem
+                        <PreviewableDropdownItem
                             tag="'button'"
                             attrs="{ name: button.id, title: button.description, 'data-icon': button.icon }"
                             class="{'dropdown-item_active_noarrow btn btn-light oi': true, active: activeMode === button.mode }"
-                            onSelected="button.run"
-                            t-on-pointerdown.prevent="() => {}"
+                            onSelected="() => this.onSelected(button)"
+                            preview="this.preview" item="button"
                         />
                     </t>
                 </div>
