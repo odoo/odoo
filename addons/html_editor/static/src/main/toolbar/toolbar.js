@@ -44,6 +44,7 @@ export class Toolbar extends Component {
                                                 iconClass: { type: String, optional: true },
                                                 text: { type: String, optional: true },
                                                 isActive: Boolean,
+                                                takesFocus: { type: Boolean, optional: true },
                                             });
                                         }
                                         return true;
@@ -103,7 +104,7 @@ export class Toolbar extends Component {
         button.run();
         if (button.id === "expand_toolbar") {
             this.focusFirstToolbarButton();
-        } else {
+        } else if (!button.takesFocus) {
             this.props.focusEditable();
         }
     }
