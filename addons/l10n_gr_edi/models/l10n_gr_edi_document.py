@@ -3,7 +3,8 @@ import requests
 from lxml import etree
 from requests import RequestException
 
-from odoo import fields, models
+from odoo import api, fields, models, modules
+from odoo.tools import cleanup_xml_node
 
 
 def _make_mydata_request(company, endpoint, xml_content) -> dict[str, str] | dict[int, dict[str, str]]:
@@ -93,6 +94,121 @@ class GreeceEDIDocument(models.Model):
     mydata_mark = fields.Char()
     mydata_cls_mark = fields.Char()
     mydata_url = fields.Char()
+
+    @api.model
+    def _l10n_gr_edi_get_document_state(self, record, state):
+        is_sale = record.is_sale_document(include_receipts=True)
+        if state == 'error':
+            return 'invoice_error' if is_sale else 'bill_error'
+        return 'invoice_sent' if is_sale else 'bill_sent'
+
+    @api.model
+    def _l10n_gr_edi_get_document_record_vals(self, record):
+        return {'move_id': record.id}
+
+    @api.model
+    def _l10n_gr_edi_get_xml_template(self, record):
+        return 'l10n_gr_edi.mydata_expense_classification' if record.is_purchase_document(include_receipts=True) else 'l10n_gr_edi.mydata_invoice'
+
+    @api.model
+    def _l10n_gr_edi_get_error_states(self):
+        return {'invoice_error', 'bill_error'}
+
+    @api.model
+    def _l10n_gr_edi_create_error_document(self, record, values: dict):
+        """
+        Creates ``l10n_gr_edi.document`` of state ``invoice_error`` or ``bill_error`` or ``delivery_note_error``.
+        :param values: dictionary in the format of: {'error': <str>, 'xml_content': <optional/str>}
+        """
+        document = self.create({
+            **self._l10n_gr_edi_get_document_record_vals(record),
+            'state': self._l10n_gr_edi_get_document_state(record, 'error'),
+            'message': values['error'],
+        })
+        if xml_content := values.get('xml_content'):
+            document.attachment_id = self.env['ir.attachment'].sudo().create({
+                'name': f"mydata_{record.name.replace('/', '_')}.xml",
+                'res_model': document._name,
+                'res_id': document.id,
+                'raw': xml_content,
+                'type': 'binary',
+                'mimetype': 'application/xml',
+            })
+        return document
+
+    @api.model
+    def _l10n_gr_edi_create_sent_document(self, record, values: dict):
+        """
+        Creates ``l10n_gr_edi.document`` of state ``invoice_sent``, ``bill_sent`` or ``delivery_note_sent``.
+        :param values: dictionary in the format of:
+        {
+            'mydata_mark': <str>,
+            'mydata_cls_mark': <optional/str>,
+            'mydata_url': <str>,
+            'xml_content': <str>,
+        }
+        """
+        document = self.create({
+            **self._l10n_gr_edi_get_document_record_vals(record),
+            'state': self._l10n_gr_edi_get_document_state(record, 'sent'),
+            'mydata_mark': values['mydata_mark'],
+            'mydata_cls_mark': values.get('mydata_cls_mark'),
+            'mydata_url': values['mydata_url'],
+        })
+        document.attachment_id = self.env['ir.attachment'].sudo().create({
+            'name': f"mydata_{record.name.replace('/', '_')}.xml",
+            'res_model': record._name,
+            'res_id': record.id,
+            'raw': values['xml_content'],
+            'type': 'binary',
+            'mimetype': 'application/xml',
+        })
+        return document
+
+    @api.model
+    def _l10n_gr_edi_handle_send_result(self, result, xml_vals):
+        """
+        Handle the result object received from sending xml to myDATA.
+        Create the related error/sent document with the necessary values.
+        It accepts moves (invoices or expense claddification) and pickings (delivery notes)
+        as the document is the same for both
+        """
+        xml_map = {}  # Dictionary mapping of ``move_id, picking_id`` -> ``xml_content``.
+        for vals in xml_vals['invoice_values_list']:
+            single_xml_vals = {'invoice_values_list': [vals]}
+            move = vals['__move__']
+            xml_content = self._l10n_gr_edi_generate_xml_content(self._l10n_gr_edi_get_xml_template(move), single_xml_vals)
+            xml_map[move] = xml_content
+
+        move_ids = list(xml_map.keys())
+
+        if 'error' in result:
+            # If the request failed at this stage, it is probably caused by connection/credentials issues (status != 200).
+            # In such case, we don't need to attach the xml here as it won't be helpful for the user.
+            for move in move_ids:
+                self._l10n_gr_edi_create_error_document(move, result)
+        else:
+            for result_id, result_dict in result.items():
+                move = move_ids[result_id]
+                xml_content = xml_map[move]
+                document_values = {**result_dict, 'xml_content': xml_content}
+                # Delete previous error documents
+                error_states = self._l10n_gr_edi_get_error_states()
+                move.l10n_gr_edi_document_ids.filtered(lambda d: d.state in error_states).unlink()
+                if 'error' in result_dict:
+                    # At this stage, the sending process has succeeded (status == 200), and any error we receive is generated from the myDATA API.
+                    # Previous error(s) without attachments (generated from pre-compute) are now useless and can be unlinked.
+                    self._l10n_gr_edi_create_error_document(move, document_values)
+                else:
+                    self._l10n_gr_edi_create_sent_document(move, document_values)
+
+        if not modules.module.current_test:
+            self.env.cr.commit()
+
+    @api.model
+    def _l10n_gr_edi_generate_xml_content(self, xml_template, xml_vals):
+        xml_content = self.env['ir.qweb']._render(xml_template, xml_vals)
+        return etree.tostring(element_or_tree=cleanup_xml_node(xml_content), encoding='ISO-8859-7', standalone='yes')
 
     def action_download(self):
         """ Download the XML file linked to the document. """
