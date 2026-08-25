@@ -75,6 +75,19 @@ describe("pos.order - loyalty", () => {
         expect(order.uiState.couponPointChanges[remainingKeys[0]].program_id).toBe(2);
     });
 
+    test("restoreState falls back to defaults when cached uiState has no loyalty keys", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        // Simulates an order whose uiState was serialized to IndexedDB before
+        // pos_loyalty was installed: none of the loyalty-specific keys exist yet.
+        expect(() => order.restoreState({})).not.toThrow();
+
+        expect(order.uiState.couponPointChanges).toMatchObject({});
+        expect(order.uiState.codeActivatedProgramRules.length).toBeEmpty();
+        expect(order.uiState.disabledRewards.size).toBeEmpty();
+    });
+
     test("_resetPrograms", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
