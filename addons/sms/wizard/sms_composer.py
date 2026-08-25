@@ -96,6 +96,7 @@ class SmsComposer(models.TransientModel):
         'mail.scheduled.message',
         string='Scheduled Message'
     )
+    template_name = fields.Char(string='Template Name')
 
     @api.depends('res_ids_count')
     @api.depends_context('sms_composition_mode')
@@ -213,9 +214,49 @@ class SmsComposer(models.TransientModel):
             else:
                 composer.scheduled_date = False
 
+    def open_template_creation_wizard(self):
+        self.ensure_one()
+        return {
+            'context': {'dialog_size': 'medium'},
+            'name': _('Create an SMS Template'),
+            'res_id': self.id,
+            'res_model': 'sms.composer',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'view_id': self.env.ref('sms.sms_composer_view_form_template_save').id,
+            'view_mode': 'form',
+        }
+
     # ------------------------------------------------------------
     # Actions
     # ------------------------------------------------------------
+
+    def action_create_sms_template(self):
+        self.ensure_one()
+
+        if not self.template_name:
+            raise UserError(_("Please provide a name for the template."))
+
+        model_id = self.env['ir.model']._get_id(self.res_model)
+        if not model_id:
+            raise UserError(_("Impossible to determine the model for the template."))
+
+        template = self.env['sms.template'].create({
+            'name': self.template_name,
+            'body': self.body,
+            'model_id': model_id,
+        })
+
+        self.template_id = template.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sms.composer',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {**self.env.context, 'default_model': self.res_model},
+        }
 
     def action_schedule_message(self):
         self.ensure_one()
