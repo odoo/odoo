@@ -14,11 +14,13 @@ from odoo.tools import BinaryBytes
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
+    def _get_attendance_manager_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['group_user_regular', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
         string="Attendance Approver",
         compute='_compute_attendance_manager',
-        domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        domain=_get_attendance_manager_domain,
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
     attendance_ids = fields.One2many(
