@@ -419,7 +419,10 @@ export class Composer extends Component {
             return undefined;
         }
         return this.composerActions.more(this.composerActionsParams, {
-            actions: this.composerActions.partition.other,
+            actions: [
+                this.composerActions.partition.other,
+                ...this.composerActions.partition.group,
+            ],
             disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
             dropdownPosition: "top-start",
             icon: "add_circle",
