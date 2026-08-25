@@ -81,7 +81,7 @@ export class TableMenu extends Component {
                 this.updatePosition();
             });
             useListener(this.props.document, "pointerdown", (ev) => {
-                if (!this.overlayEl.contains(ev.target)) {
+                if (this.overlayEl && !this.overlayEl.contains(ev.target)) {
                     this.props.close();
                 }
             });
