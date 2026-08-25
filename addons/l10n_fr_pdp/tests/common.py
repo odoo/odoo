@@ -119,12 +119,13 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
         return response
 
     @classmethod
-    def _get_annuaire_lookup_response(cls, peppol_identifier, expected_peppol_identifier):
+    def _get_annuaire_lookup_response(cls, peppol_identifier, expected_peppol_identifier, **extra_result_kwargs):
         response = requests.Response()
         response.status_code = 200
         response.json = lambda: {
             "result": {
                 "in_annuaire": peppol_identifier == expected_peppol_identifier,
+                **extra_result_kwargs,
             }
         }
         return response

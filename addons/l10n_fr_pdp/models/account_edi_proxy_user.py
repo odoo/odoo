@@ -35,11 +35,14 @@ CDAR_NSMAP = MappingProxyType({
 
 PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PDP = MappingProxyType({
     '200': 'submitted',  # PA-S (sending platform)
+    '201': 'sent',  # PA-S
     '202': 'AB',  # PA-R (receiving platform)
     '203': 'made_available',  # PA-R
     '204': 'in_hand',  # R (receiver)
     '205': 'AP',  # R
     '207': 'contested',  # R
+    '208': 'suspended',  # R
+    '209': 'completed',  # S
     '210': 'refused',  # R
     '211': 'payment_sent',  # R
     '212': 'PD',  # S (sender)
