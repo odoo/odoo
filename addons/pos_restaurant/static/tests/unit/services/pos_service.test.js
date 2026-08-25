@@ -5,7 +5,7 @@ import {
     setupPosEnv,
     waitUntilOrdersSynced,
 } from "@point_of_sale/../tests/unit/utils";
-import { MockServer } from "@web/../tests/web_test_helpers";
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -594,5 +594,27 @@ describe("restaurant pos_store.js", () => {
         expect(tableOrderChange[0].extra_data.order_label).toBe(false);
         expect(tableOrderChange[0].extra_data.table_name).toBe(table.table_number);
         expect(tableOrderChange[0].extra_data.floor_name).toBe(table.floor_id.name);
+    });
+
+    test("name entered for a name-required preset shows as the prep ticket order_label", async () => {
+        const store = await setupPosEnv();
+        const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
+        const preset = store.models["pos.preset"].get(3); // "Name Required Preset", identification: "name"
+
+        const order = await getFilledOrder(store);
+        order.setPreset(preset);
+        expect(order.floating_order_name).toBeEmpty();
+
+        patchWithCleanup(store.dialog, {
+            add(component, props) {
+                props.getPayload("Mitchell");
+            },
+        });
+        await store.handleSelectNamePreset(order);
+        expect(order.floating_order_name).toBe("Mitchell");
+
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
+        expect(orderChange[0].extra_data.order_label).toBe("Mitchell");
     });
 });
