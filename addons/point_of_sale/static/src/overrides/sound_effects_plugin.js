@@ -1,7 +1,7 @@
-import { SoundEffects } from "@mail/core/common/sound_effects_service";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { patch } from "@web/core/utils/patch";
 
-patch(SoundEffects.prototype, {
+patch(SoundEffectsPlugin.prototype, {
     play() {
         this.soundEffects = {
             ...this.soundEffects,

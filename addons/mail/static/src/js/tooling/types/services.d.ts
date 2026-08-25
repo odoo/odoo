@@ -16,7 +16,6 @@ declare module "services" {
     import { discussP2P } from "@mail/discuss/call/common/discuss_p2p_service";
     import { pttExtensionHookService } from "@mail/discuss/call/common/ptt_extension_service";
     import { rtcService } from "@mail/discuss/call/common/rtc_service";
-    import { soundEffects } from "@mail/core/common/sound_effects_service";
     import { storeService } from "@mail/core/common/store_service";
     import { suggestionService } from "@mail/core/common/suggestion_service";
     import { voiceMessageService } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -38,7 +37,6 @@ declare module "services" {
         "mail.notification.permission": typeof notificationPermissionService;
         "mail.out_of_focus": typeof outOfFocusService;
         "mail.popout": typeof mailPopoutService;
-        "mail.sound_effects": typeof soundEffects;
         "mail.store": typeof storeService;
         "mail.suggestion": typeof suggestionService;
         im_status: typeof im_status;
