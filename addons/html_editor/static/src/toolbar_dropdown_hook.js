@@ -31,3 +31,44 @@ export function useToolbarDropdownFocus(dropdown, buttonRef) {
         { capture: true }
     );
 }
+
+/**
+ * Previews a toolbar dropdown item while it is hovered or navigated to, and
+ * reverts the preview when the pointer leaves the menu or the dropdown closes.
+ *
+ * @param {Object} params
+ * @param {Object} params.dropdown state of the dropdown, as returned by `useDropdownState`
+ * @param {() => import("@html_editor/core/history_plugin").PreviewableOperation} params.previewable
+ */
+export function useToolbarDropdownPreview({ dropdown, previewable }) {
+    let previewedItem;
+
+    const resetPreview = () => {
+        previewedItem = undefined;
+        previewable().revert();
+    };
+
+    useEffect(() => {
+        if (dropdown.isOpen) {
+            return resetPreview;
+        }
+    });
+
+    return {
+        preview(ev, item) {
+            if (item === previewedItem) {
+                return;
+            }
+            previewedItem = item;
+            previewable().preview(item);
+            if (document.activeElement !== ev.currentTarget) {
+                ev.currentTarget.focus();
+            }
+        },
+        commit(item) {
+            previewedItem = undefined;
+            previewable().commit(item);
+        },
+        reset: resetPreview,
+    };
+}

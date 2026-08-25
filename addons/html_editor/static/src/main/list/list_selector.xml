@@ -3,15 +3,17 @@
         <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
             <button t-ref="this.listSelector" class="btn btn-light oi" data-icon="format_list_bulleted" t-att-title="this.props.title" name="list_selector"/>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
+                <div data-prevent-closing-overlay="true" t-on-mouseleave="() => this.preview.reset()">
                     <t t-set="activeMode" t-value="this.getActiveMode()"/>
                     <t t-foreach="this.props.getButtons()" t-as="button" t-key="button_index">
                         <DropdownItem
                             tag="'button'"
                             attrs="{ name: button.id, title: button.description, 'data-icon': button.icon }"
                             class="{'dropdown-item_active_noarrow btn btn-light oi': true, active: activeMode === button.mode }"
-                            onSelected="button.run"
+                            onSelected="() => this.onSelected(button)"
                             t-on-pointerdown.prevent="() => {}"
+                            t-on-mouseover="(ev) => this.preview.preview(ev, button)"
+                            t-on-focusin="(ev) => this.preview.preview(ev, button)"
                         />
                     </t>
                 </div>

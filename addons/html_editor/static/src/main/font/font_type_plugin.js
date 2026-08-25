@@ -47,6 +47,7 @@ export class FontTypePlugin extends Plugin {
         "format",
         "lineBreak",
         "delete",
+        "history",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -118,13 +119,7 @@ export class FontTypePlugin extends Plugin {
                 props: {
                     getItems: () => this.availableFontTypeItems,
                     getDisplay: () => this.fontType,
-                    onSelected: (item) => {
-                        this.dependencies.dom.setBlock({
-                            tagName: item.tagName,
-                            extraClass: item.extraClass,
-                        });
-                        this.updateFontTypeSelectorParams();
-                    },
+                    previewable: () => this.previewableSetBlock,
                 },
                 isAvailable: this.blockFormatIsAvailable.bind(this),
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
@@ -258,6 +253,13 @@ export class FontTypePlugin extends Plugin {
                 !SUPPORTED_BASE_CONTAINER_NAMES.includes(tagName.toUpperCase()) ||
                 this.config.baseContainers.includes(tagName.toUpperCase())
         );
+        this.previewableSetBlock = this.dependencies.history.makePreviewableOperation((item) => {
+            this.dependencies.dom.setBlock({
+                tagName: item.tagName,
+                extraClass: item.extraClass,
+            });
+            this.updateFontTypeSelectorParams();
+        });
     }
 
     normalize(root) {
