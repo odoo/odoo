@@ -60,14 +60,19 @@
                     <div class="d-flex w-100 justify-content-between align-items-center flex-wrap">
                         <div class="d-flex flex-wrap gap-1">
                             <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                                    invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
+                                    invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid or scheduled_date"/>
+                            <button string="Schedule" type="object" class="btn-primary" name="action_schedule_message" data-hotkey="q"
+                                    invisible="composition_mode != 'comment' or not scheduled_date or not recipient_single_valid"/>
                             <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                                    invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled="1"/>
+                                    invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid or scheduled_date" disabled="1"/>
+                            <button string="Schedule" type="object" class="btn-primary" name="action_schedule_message" data-hotkey="q"
+                                    invisible="composition_mode != 'comment' or not scheduled_date or recipient_single_valid" disabled="1"/>
                             <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                                 invisible="composition_mode != 'mass'"/>
                             <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
                                 invisible="composition_mode != 'mass'"/>
                             <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                            <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_mode != 'comment'"/>
                         </div>
                         <widget name="sms_char_counter"/>
                     </div>
