@@ -45,8 +45,9 @@ export async function mailCanAddMessageReactionMobile() {
     });
     await click(".modal .o-EmojiPicker .o-Emoji:contains('😀')");
     await contains(".o-mail-MessageReaction:contains('😀')");
-    // Can quickly add new reactions
-    await click(".o-mail-MessageReactions button[title='Add a Reaction']");
+    // Can add new reactions to a message that already has some
+    await click(".o-mail-Message:contains('Hello world') [title='Expand']");
+    await click(".o-dropdown-item:contains('Add a Reaction')");
     await click(".modal .o-EmojiPicker .o-Emoji:contains('🤣')");
     await contains(".o-mail-MessageReaction:contains('🤣')");
     await contains(".o-mail-MessageReaction:contains('😀')");

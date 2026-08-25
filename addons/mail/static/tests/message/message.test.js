@@ -919,28 +919,6 @@ test("Two users reacting with the same emoji", async () => {
     await contains(".o-mail-MessageReaction:text('😅 2')");
 });
 
-test("Can quickly add a reaction", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "channel1",
-    });
-    pyEnv["mail.message"].create({
-        body: "Hello world",
-        res_id: channelId,
-        message_type: "comment",
-        model: "discuss.channel",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await click("[title='Add a Reaction']");
-    await click(".o-mail-QuickReactionMenu button:text('😅')");
-    await contains(".o-mail-MessageReaction:text('😅 1')");
-    await click(".o-mail-MessageReactions button[title='Add a Reaction']");
-    await click(".o-mail-QuickReactionMenu button:text('🤣')");
-    await contains(".o-mail-MessageReaction:text('🤣 1')");
-});
-
 test("Reaction summary", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -1576,9 +1554,8 @@ test("Message in message delete dialog should be read-only", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction:text(😅 1)");
-    await contains(".o-mail-MessageReactions [title='Add a Reaction']");
     const messageActionsSelector = ".o-mail-Message-actions";
-    await contains(messageActionsSelector);
+    await contains(`${messageActionsSelector} [title='Add a Reaction']`);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Delete')");
     await contains(
@@ -1587,7 +1564,7 @@ test("Message in message delete dialog should be read-only", async () => {
     await contains(".modal .pe-none .o-mail-Message"); // pe-none around message prevents any button click
     await contains(".modal .o-mail-MessageReaction");
     await contains(".modal .o-mail-MessageReaction:text(😅 1)");
-    await contains(".modal .o-mail-MessageReactions [title='Add a Reaction']", { count: 0 });
+    await contains(".modal .o-mail-Message [title='Add a Reaction']", { count: 0 });
     await contains(`.modal ${messageActionsSelector}`, { count: 0 });
 });
 

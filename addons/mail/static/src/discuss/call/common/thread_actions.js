@@ -9,10 +9,7 @@ registerThreadAction("call", {
     icon: "phone",
     iconClass: "oi-filled",
     name: ({ channel }) => (channel?.hasRtcSessionActive ? _t("Join the Call") : _t("Start Call")),
-    onSelected: ({ channel, store }) =>
-        store.rtc.requestToggleCall(channel, {
-            fullscreen: channel.channel_type !== "channel" && !store.inPublicPage,
-        }),
+    onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 10,
     sequenceQuick: 30,
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],

@@ -122,7 +122,7 @@
                         </div>
                         <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.env.inChatWindow)" t-call="mail.Message.actions"/>
                     </div>
-                    <MessageReactions t-if="this.message.reactions.length" isReadOnly="this.isReadOnly" message="this.message" openReactionMenu="this.openReactionMenu"/>
+                    <MessageReactions t-if="this.message.reactions.length" hasActions="this.props.hasActions" isReadOnly="this.isReadOnly" message="this.message" openReactionMenu="this.openReactionMenu"/>
                     <t name="after-reactions"/>
                 </div>
             </div>
