@@ -1,12 +1,11 @@
+import { usePlugin, Plugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { url } from "@web/core/utils/urls";
+import { services } from "@web/core/services";
 
-export class SoundEffects {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     */
-    constructor(env) {
+export class SoundEffectsPlugin extends Plugin {
+    setup() {
         this.soundEffects = {
             "call-join": { defaultVolume: 0.75, path: "/mail/static/src/audio/call-join" },
             "call-leave": { defaultVolume: 0.75, path: "/mail/static/src/audio/call-leave" },
@@ -84,12 +83,17 @@ export class SoundEffects {
     }
 }
 
+services.add(SoundEffectsPlugin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the sound effects service are removed
+ * -----------------------------------------------------------------------------
+ */
 export const soundEffects = {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     */
-    start(env) {
-        return new SoundEffects(env);
+    start() {
+        return usePlugin(SoundEffectsPlugin);
     },
 };
 
