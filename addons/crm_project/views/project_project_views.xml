@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_view_form_inherit_crm_project" model="ir.ui.view">
+        <field name="name">project.project.view.form.inherit.crm.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/button[@name='action_view_tasks']" position="after">
+                <button name="action_view_lead" icon="star" icon_class="oi-filled" type="object" class="oe_stat_button"
+                    invisible="not is_opportunity_button_visible" groups="sales_team.group_sale_salesman_all_leads">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Opportunity</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

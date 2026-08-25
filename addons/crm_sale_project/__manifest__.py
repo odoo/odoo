@@ -1,14 +1,13 @@
 {
-    'name': 'CRM - Project',
-    'summary': 'Project Generation from Opportunities',
+    'name': 'CRM - Sales - Project',
+    'summary': 'Billable Project Generation from Opportunities',
     'category': 'Sales/CRM',
     'depends': [
+        'crm_project',
+        'sale_crm',
         'sale_project',
-        'crm',
     ],
     'data': [
-        'data/ir_actions_server_data.xml',
-        'views/crm_lead_views.xml',
         'views/project_project_views.xml',
         'wizard/project_template_create_wizard.xml',
     ],

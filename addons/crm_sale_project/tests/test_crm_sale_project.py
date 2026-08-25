@@ -7,6 +7,16 @@ from odoo.addons.crm.tests.common import TestCrmCommon
 @tagged('at_install', '-post_install')
 class TestCrmSaleOrderProject(TestCrmCommon):
 
+    def test_opportunity_button_visibility_on_non_billable_project(self):
+        """The link back to the opportunity is only shown on billable projects."""
+        action = self.lead_1.action_create_project()
+        project = self.env['project.project'].with_context(action['context']).create({'name': 'Project'})
+        self.assertTrue(project.allow_billable, "Projects created from a lead are billable by default")
+        self.assertTrue(project.is_opportunity_button_visible)
+
+        project.allow_billable = False
+        self.assertFalse(project.is_opportunity_button_visible)
+
     def test_sale_order_project_opportunity_link(self):
         action = self.lead_1.action_create_project()
         projects = self.env['project.project'].with_context(action['context']).create([

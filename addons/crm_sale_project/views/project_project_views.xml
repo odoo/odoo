@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_edit_project_inherit_form_crm_project" model="ir.ui.view">
-        <field name="name">project.project.view.inherit.crm.project</field>
+    <record id="project_view_form_inherit_crm_sale_project" model="ir.ui.view">
+        <field name="name">project.project.view.form.inherit.crm.sale.project</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="sale_project.view_edit_project_inherit_form"/>
         <field name="arch" type="xml">
+            <!-- Keep the opportunity button next to the other sales stat buttons. -->
             <xpath expr="//button[@name='action_customer_preview']" position="after">
-                <button name="action_view_lead" icon="star" icon_class="oi-filled" type="object" class="oe_stat_button"
-                    invisible="not lead_id or not allow_billable" groups="sales_team.group_sale_salesman_all_leads">
-                    <div class="o_stat_info">
-                        <span class="o_stat_text">Opportunity</span>
-                    </div>
-                </button>
+                <xpath expr="//button[@name='action_view_lead']" position="move"/>
             </xpath>
         </field>
     </record>

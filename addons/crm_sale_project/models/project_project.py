@@ -1,10 +1,8 @@
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class ProjectProject(models.Model):
     _inherit = 'project.project'
-
-    lead_id = fields.Many2one('crm.lead', index=True, export_string_translation=False)
 
     @api.model
     def default_get(self, fields):
@@ -13,19 +11,11 @@ class ProjectProject(models.Model):
             defaults['allow_billable'] = True
         return defaults
 
-    @api.model
-    def _get_template_default_context_whitelist(self):
-        return [
-            *super()._get_template_default_context_whitelist(),
-            'lead_id',
-        ]
-
-    def action_view_lead(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'crm.lead',
-            'view_mode': 'form',
-            'res_id': self.lead_id.id,
-            'context': {'create': False},
-        }
+    # The dependencies of the overridden compute have to be restated, as only the
+    # decorator of the resolved method is taken into account.
+    @api.depends('lead_id', 'allow_billable')
+    def _compute_is_opportunity_button_visible(self):
+        super()._compute_is_opportunity_button_visible()
+        for project in self:
+            if not project.allow_billable:
+                project.is_opportunity_button_visible = False
