@@ -93,9 +93,7 @@ export class ImagePlugin extends Plugin {
                     items: IMAGE_ALIGNMENT,
                     getDisplay: () => this.imageAlignment,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
-                        this.setImageAlignment(item);
-                    },
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) => this.setImageAlignment(item)),
                 },
             }),
             withSequence(30, {
@@ -109,9 +107,9 @@ export class ImagePlugin extends Plugin {
                     getDisplay: () => this.imagePadding,
                     items: IMAGE_PADDING,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
-                        this.setImagePadding({ size: item.value });
-                    },
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) =>
+                        this.setImagePadding({ size: item.value })
+                    ),
                 },
             }),
             {
@@ -125,10 +123,10 @@ export class ImagePlugin extends Plugin {
                     items: IMAGE_SIZE,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
                     icon: "resize",
-                    onSelected: (item) => {
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) => {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();
-                    },
+                    }),
                 },
                 isAvailable: () => this.config.allowImageResize ?? true,
             },
@@ -158,6 +156,7 @@ export class ImagePlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateImageParams.bind(this)),
         on_history_commit_undone_handlers: this.updateImageParams.bind(this),
         on_history_commit_redone_handlers: this.updateImageParams.bind(this),
+        on_savepoint_restored_handlers: this.updateImageParams.bind(this),
         should_show_hint_predicates: (node) => {
             if (isElementOverlappingAnyFloatingImage(closestBlock(node))) {
                 return false;

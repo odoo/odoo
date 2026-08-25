@@ -44,7 +44,7 @@ export const fontSizeItems = [
 
 export class FontSizePlugin extends Plugin {
     static id = "fontSize";
-    static dependencies = ["format", "selection"];
+    static dependencies = ["format", "selection", "history"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -86,13 +86,13 @@ export class FontSizePlugin extends Plugin {
                         }
                         this.updateFontSizeSelectorParams();
                     },
-                    onSelected: (item) => {
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) => {
                         this.dependencies.format.requestFormat("fontSize", {
                             formatProps: { className: item.className },
                             applyStyle: true,
                         });
                         this.updateFontSizeSelectorParams();
-                    },
+                    }),
                     onBlur: () => {
                         this.isTypingFontSize = false;
                         this.updateFontSizeSelectorParams();
@@ -119,6 +119,7 @@ export class FontSizePlugin extends Plugin {
         on_collapsed_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         on_all_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_savepoint_restored_handlers: this.updateFontSizeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
 
         is_format_class_predicates: (className, targetClassName) => {

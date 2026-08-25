@@ -720,6 +720,9 @@ export class HistoryPlugin extends Plugin {
                 this.commit();
             },
             revert: async () => {
+                if (this.isDestroyed) {
+                    return;
+                }
                 await revertOperation();
                 revertOperation = () => {};
                 this.isPreviewing = false;

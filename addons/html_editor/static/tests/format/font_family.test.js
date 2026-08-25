@@ -1,12 +1,25 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, describe, hover } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
-import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { setFontFamily, undo, redo, insertText, deleteBackward } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expandToolbar } from "../_helpers/toolbar";
 import { expectElementCount } from "../_helpers/ui_expectations";
+
+async function openFontFamilyDropdown() {
+    await expandToolbar();
+    expect(queryOne(".btn[name='font_family']")).toHaveCount(1);
+
+    await click(".btn[name='font_family']");
+    await animationFrame();
+    expectElementCount(".o_font_family_selector_menu", 1);
+}
+
+function getFontFamilyItem(name) {
+    return queryOne(`.o_font_family_selector_menu .o-dropdown-item[name='${name}']`);
+}
 
 test("should give a few characters a fontFamily", async () => {
     await testEditor({
@@ -234,4 +247,146 @@ test("should update toolbar font family when applying and removing it on a colla
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     expect(queryOne(".btn[name='font_family']").textContent).toBe("Arial");
+});
+
+describe("Font family preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different font families on hover, revert on mouse leave, and commit on click", async () => {
+        const { el } = await setupEditor("<p>a[bc]d</p>");
+        await openFontFamilyDropdown();
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(getFontFamilyItem("Verdana"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(getFontFamilyItem("Tahoma"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(el);
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await hover(getFontFamilyItem("Arial"));
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await click(getFontFamilyItem("Arial"));
+        await animationFrame();
+        expect(".o_font_family_selector_menu").toHaveCount(0);
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying font family (existing font family)", async () => {
+        const { el } = await setupEditor(
+            '<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>'
+        );
+        await openFontFamilyDropdown();
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(el);
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Tahoma");
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+});
+
+describe("Font family preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different font families while navigating with keyboard and revert on Escape", async () => {
+        const { el } = await setupEditor("<p>a[bc]d</p>");
+        await openFontFamilyDropdown();
+
+        await press("ArrowDown"); // Default font
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown"); // Arial
+        expect(getFontFamilyItem("Arial")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("ArrowDown"); // Verdana
+        expect(getFontFamilyItem("Verdana")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("Escape");
+        await animationFrame();
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing font family)", async () => {
+        const { el } = await setupEditor(
+            '<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>'
+        );
+        await openFontFamilyDropdown();
+
+        await press("ArrowDown"); // Default font
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown"); // Arial
+        expect(getFontFamilyItem("Arial")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("Escape");
+        await animationFrame();
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Tahoma");
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+});
+
+describe("Font family preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation, and revert on Escape", async () => {
+        const { el } = await setupEditor(
+            '<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>'
+        );
+        await openFontFamilyDropdown();
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        getFontFamilyItem("Verdana").focus();
+        expect(getFontFamilyItem("Verdana")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("Escape");
+        await animationFrame();
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Tahoma");
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
 });

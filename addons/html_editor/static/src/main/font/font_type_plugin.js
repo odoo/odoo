@@ -46,6 +46,7 @@ export class FontTypePlugin extends Plugin {
         "format",
         "lineBreak",
         "delete",
+        "history",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -117,13 +118,13 @@ export class FontTypePlugin extends Plugin {
                 props: {
                     getItems: () => this.availableFontTypeItems,
                     getDisplay: () => this.fontType,
-                    onSelected: (item) => {
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) => {
                         this.dependencies.dom.setBlock({
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
                         this.updateFontTypeSelectorParams();
-                    },
+                    }),
                 },
                 isAvailable: this.blockFormatIsAvailable.bind(this),
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
