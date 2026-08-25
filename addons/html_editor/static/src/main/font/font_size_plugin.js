@@ -44,7 +44,7 @@ export const fontSizeItems = [
 
 export class FontSizePlugin extends Plugin {
     static id = "fontSize";
-    static dependencies = ["format", "selection"];
+    static dependencies = ["format", "selection", "history"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -86,13 +86,7 @@ export class FontSizePlugin extends Plugin {
                         }
                         this.updateFontSizeSelectorParams();
                     },
-                    onSelected: (item) => {
-                        this.dependencies.format.requestFormat("fontSize", {
-                            formatProps: { className: item.className },
-                            applyStyle: true,
-                        });
-                        this.updateFontSizeSelectorParams();
-                    },
+                    previewable: () => this.previewableSetFontSize,
                     onBlur: () => {
                         this.isTypingFontSize = false;
                         this.updateFontSizeSelectorParams();
@@ -111,6 +105,7 @@ export class FontSizePlugin extends Plugin {
         ),
         on_history_commit_undone_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_history_commit_redone_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_savepoint_restored_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         normalize_processors: this.normalize.bind(this),
 
@@ -205,6 +200,13 @@ export class FontSizePlugin extends Plugin {
     setup() {
         this.fontSize = proxy({ displayName: "" });
         this.isTypingFontSize = false;
+        this.previewableSetFontSize = this.dependencies.history.makePreviewableOperation((item) => {
+            this.dependencies.format.requestFormat("fontSize", {
+                formatProps: { className: item.className },
+                applyStyle: true,
+            });
+            this.updateFontSizeSelectorParams();
+        });
     }
 
     normalize(root) {

@@ -1,15 +1,17 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableBorderWidthSelector">
-        <Dropdown menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef">
+        <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef">
             <button class="btn btn-light" t-att-title="this.props.title" name="table_border_width">
                 <t t-call="html_editor.TableBorderWidthSvg"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true" data-vertical="true">
+                <div data-prevent-closing-overlay="true" data-vertical="true" t-on-mouseleave="() => this.preview.reset()">
                     <div t-foreach="this.items" t-as="item" t-key="item.value">
                         <DropdownItem
                             class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.value === this.state.displayName}"
                             t-on-pointerdown.prevent="() => {}"
+                            t-on-mouseover="(ev) => this.preview.preview(ev, item)"
+                            t-on-focusin="(ev) => this.preview.preview(ev, item)"
                             onSelected="() => this.onSelected(item)"
                         >
                             <div class="o-border-preview" t-attf-style="border-width: {{item.value}}; margin-top: {{item.margin}}; border-style: solid; width: 50px;"/>
