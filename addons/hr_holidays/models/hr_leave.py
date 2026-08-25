@@ -954,10 +954,19 @@ class HrLeave(models.Model):
         if any(not vals.get('employee_id') for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+<<<<<<< 997afdf840c5620fd83f81c00eb44ad461cd830a
         employees_without_allocation, zero_duration_employees = holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
         invalid_holidays = holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
         holidays -= invalid_holidays
         invalid_holidays.unlink()
+||||||| bb7bc99a31055d69aa6c997f464df6b8a730cbf1
+        holidays._check_validity()
+=======
+        # A base.automation during create can flush duration before dates are set (storing 0);
+        # recompute now that create returned and date_from/date_to are correct.
+        holidays._compute_duration()
+        holidays._check_validity()
+>>>>>>> 258676e374470d26fe098acd69ddfe013e9be6bb
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:
