@@ -21,9 +21,9 @@ function writeToStorage(cache) {
 
 /** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const reportPrintersCacheService = {
-    dependencies: ["action", "bus_service", "orm", "ui"],
+    dependencies: ["action", "orm", "ui"],
 
-    start(env, { action, bus_service: bus, orm, ui }) {
+    start(env, { action, orm, ui }) {
         let cache = readFromStorage(); // hydrated once
 
         function writeCache(newCache) {
@@ -71,13 +71,13 @@ export const reportPrintersCacheService = {
                         if (newSettings) {
                             writeCache({ ...cache, [reportId]: newSettings });
                         }
-                        bus.removeEventListener("printer-selected", onPrinterSelected);
+                        env.bus.removeEventListener("printer-selected", onPrinterSelected);
                         if (uiWasBlocked) {
                             ui.block();
                         }
                         resolve(newSettings ?? null);
                     };
-                    bus.addEventListener("printer-selected", onPrinterSelected);
+                    env.bus.addEventListener("printer-selected", onPrinterSelected);
                 });
             },
         };

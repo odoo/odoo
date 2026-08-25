@@ -42,20 +42,27 @@ import { useListener } from "@odoo/owl";
 //-----------------------------------------------------------------------------
 
 patch(BusPlugin.prototype, {
-    _onMessage(env, id, type, payload) {
-        // Generic handlers (namely: debug info)
-        if (type in busMessageHandlers) {
-            busMessageHandlers[type](env, id, payload);
-        } else {
-            registerDebugInfo("bus message", { id, type, payload });
+    handleMessage(messageEv) {
+        super.handleMessage(messageEv);
+        const { type, data } = messageEv.data;
+        if (type !== "BUS:NOTIFICATION") {
+            return;
         }
-
-        // Notifications
-        if (!busNotifications.has(env)) {
-            busNotifications.set(env, []);
-            after(() => busNotifications.clear());
+        for (const { id, message } of data) {
+            const { type, payload } = message;
+            // Generic handlers (namely: debug info)
+            if (type in busMessageHandlers) {
+                busMessageHandlers[type](this.env, id, payload);
+            } else {
+                registerDebugInfo("bus message", { id, type, payload });
+            }
+            // Notifications
+            if (!busNotifications.has(this.env)) {
+                busNotifications.set(this.env, []);
+                after(() => busNotifications.clear());
+            }
+            busNotifications.get(this.env).push({ id, type, payload });
         }
-        busNotifications.get(env).push({ id, type, payload });
     },
 });
 
