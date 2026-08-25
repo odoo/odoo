@@ -78,7 +78,7 @@ class AccountMove(models.Model):
             if move.commercial_partner_id == move.company_id.partner_id.commercial_partner_id:
                 invalid_moves_dict['l10n_sa_edi_invalid_partner'] += move
 
-            if invalid_lines := move.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line._check_edi_line_tax_required() and not line.tax_ids):
+            if invalid_lines := move.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment') and line._check_edi_line_tax_required() and not line.tax_ids):
                 invalid_moves_dict['l10n_sa_edi_no_tax_lines'] |= invalid_lines.move_id
 
             if move.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
@@ -100,7 +100,7 @@ class AccountMove(models.Model):
                 any(
                     tax.ubl_cii_tax_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU')
                     for tax in move.invoice_line_ids.filtered(
-                        lambda line: line.display_type == 'product',
+                        lambda line: line.display_type in ('product', 'downpayment'),
                     ).tax_ids
                 )
                 and (

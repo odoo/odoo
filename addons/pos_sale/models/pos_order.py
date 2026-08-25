@@ -143,7 +143,7 @@ class PosOrder(models.Model):
                 origin_line._set_analytic_distribution(move)
 
             if self.config_id.down_payment_product_id == pos_line.product_id:
-                move["is_downpayment"] = True
+                move["display_type"] = 'downpayment'
 
         return lines
 

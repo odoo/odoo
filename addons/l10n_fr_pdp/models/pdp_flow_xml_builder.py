@@ -284,14 +284,14 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         move_is_downpayment = move._is_downpayment()
         down_payment_type = '2' if move_is_downpayment and move.payment_state in {'paid', 'reversed'} else '1'
         for line in move.invoice_line_ids:
-            if line.display_type != 'product':
+            if line.display_type not in ('product', 'downpayment'):
                 continue
 
             if any(tax.tax_scope == 'service' for tax in line.tax_ids):
                 scopes.add('S')
             elif any(tax.tax_scope == 'consu' for tax in line.tax_ids):
                 scopes.add('B')
-            if move_is_downpayment and not line.is_downpayment:
+            if move_is_downpayment and line.display_type != 'downpayment':
                 down_payment_type = '4'
             if not tax_exigibility_on_invoice and any(tax.tax_exigibility in {None, 'on_invoice'} for tax in line.tax_ids):
                 tax_exigibility_on_invoice = True
@@ -572,7 +572,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _get_move_business_process_id(self, move):
         """Determine billing framework code (TT-28) from invoice"""
-        product_lines = move.invoice_line_ids.filtered(lambda ln: ln.display_type == 'product')
+        product_lines = move.invoice_line_ids.filtered(lambda ln: ln.display_type in ('product', 'downpayment'))
         scopes = set(product_lines.tax_ids.mapped('tax_scope'))
         if 'service' in scopes:
             if 'consu' in scopes:
@@ -583,7 +583,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             prefix = 'B'
 
         if move._is_downpayment():
-            if any(line.display_type == 'product' and not line.is_downpayment for line in move.invoice_line_ids):
+            if any(line.display_type == 'product' for line in move.invoice_line_ids):
                 suffix = '4'
             else:
                 suffix = '2' if move.payment_state in ('paid', 'reversed') else '1'
