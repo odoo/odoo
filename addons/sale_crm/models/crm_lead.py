@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
+from odoo.tools.safe_eval import safe_eval
 
 
 class CrmLead(models.Model):
@@ -34,8 +35,11 @@ class CrmLead(models.Model):
 
     def action_new_quotation(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale_crm.sale_action_quotations_new")
-        action['context'] = self._prepare_opportunity_quotation_context()
-        action['context']['search_default_opportunity_id'] = self.id
+        action["context"] = {
+            **safe_eval(action["context"], {'active_id': self.id}),
+            **self._prepare_opportunity_quotation_context(),
+            **self.env.context
+        }
         return action
 
     def action_view_sale_quotation(self):
