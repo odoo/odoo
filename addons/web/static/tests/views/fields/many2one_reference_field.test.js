@@ -230,3 +230,34 @@ test("Many2OneReferenceField with no_create option", async () => {
         ".o_field_widget[name='res_id'] .dropdown-menu .o_m2o_dropdown_option_create"
     ).toHaveCount(0);
 });
+
+test("Many2OneReferenceField on ir.attachment linked to another attachment", async () => {
+    class Attachment extends models.Model {
+        _name = "ir.attachment";
+        name = fields.Char();
+        res_model = fields.Char();
+        res_id = fields.Many2oneReference({
+            string: "Resource Id",
+            model_field: "res_model",
+            relation: "ir.attachment",
+        });
+        _records = [
+            { id: 1, name: "variant.jpg", res_model: "ir.attachment", res_id: 2 },
+            { id: 2, name: "original.webp", res_model: false, res_id: false },
+        ];
+    }
+    defineModels([Attachment]);
+
+    await mountView({
+        type: "form",
+        resModel: "ir.attachment",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+            </form>`,
+    });
+    expect(".o_field_widget[name=res_id] input").toHaveValue("original.webp");
+});
