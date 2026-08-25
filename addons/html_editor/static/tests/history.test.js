@@ -1314,3 +1314,29 @@ describe("grouped undo/redo", () => {
         expect(getContent(el)).toBe(abc_def_ghi_);
     });
 });
+
+describe("normalization on undo/redo", () => {
+    test("should not grow the commits during undo and redo", async () => {
+        const { el, editor } = await setupEditor('<p><a href="#">link</a>[]b</p>');
+        await insertText(editor, "a");
+        // An undo/redo commit is the reverse of the commit it relates to, so
+        // it must hold the same number of mutations.
+        const expectSameSizeAsRelatedCommit = () => {
+            const { data } = editor.shared.history.getCommits().at(-1);
+            expect(data.mutations).toHaveLength(data.relatedCommit.data.mutations.length);
+        };
+        undo(editor);
+        expectSameSizeAsRelatedCommit();
+        redo(editor);
+        expectSameSizeAsRelatedCommit();
+        undo(editor);
+        expectSameSizeAsRelatedCommit();
+        redo(editor);
+        expectSameSizeAsRelatedCommit();
+        undo(editor);
+        expectSameSizeAsRelatedCommit();
+        redo(editor);
+        expectSameSizeAsRelatedCommit();
+        expect(getContent(el)).toBe('<p>\ufeff<a href="#">\ufefflink\ufeff</a>\ufeffa[]b</p>');
+    });
+});
