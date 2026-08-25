@@ -19,6 +19,10 @@ function isTextareaOfSyntaxHighlight(el) {
     return el.nodeName === "TEXTAREA" && el.classList.contains("o_prism_source");
 }
 
+function isSyntaxHighlightHost(el) {
+    return el.matches?.(CODE_BLOCK_SELECTOR);
+}
+
 export class SyntaxHighlightingPlugin extends Plugin {
     static id = "syntaxHighlighting";
     static dependencies = [
@@ -47,11 +51,10 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 // Remove invisible whitespace that would become visible in a `<pre>` element.
                 removeInvisibleWhitespace(params.block, cursors);
             }
-            if (isTextareaOfSyntaxHighlight(block)) {
+            if (isSyntaxHighlightHost(block) || isTextareaOfSyntaxHighlight(block)) {
                 params.block = this.convertToParagraph(block);
             }
         },
-
         /** Properties */
         properties: [
             {
@@ -60,7 +63,11 @@ export class SyntaxHighlightingPlugin extends Plugin {
             },
             // Ensure focus can be preserved within the textarea:
             { predicate: ".o_prism_source", editable: true },
-            { predicate: isTextareaOfSyntaxHighlight, retaggable: true },
+            {
+                predicate: (block) =>
+                    isSyntaxHighlightHost(block) || isTextareaOfSyntaxHighlight(block),
+                retaggable: true,
+            },
         ],
 
         /** Processors */
