@@ -17,6 +17,10 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div t-if="order.get('general_customer_note')">
+                            <strong>Note: </strong>
+                            <span class="order-general-customer-note" t-out="order['general_customer_note']" />
+                        </div>
                     </div>
                     <div class="w-100 mb-3" name="prices" t-if="not conditions['basic_receipt']">
                         <table class="w-100 text-large">
