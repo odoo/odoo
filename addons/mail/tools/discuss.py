@@ -36,7 +36,7 @@ def add_guest_to_context(func):
             raise NotImplementedError(
                 self.env._("@add_guest_to_context must be called only within a request context."),
             )
-        token = req.cookies.get(req.env["mail.guest"]._cookie_name, "")
+        token = req.cookies.get(req.env["mail.guest"]._cookie_name)
         guest = req.env["mail.guest"]._get_guest_from_token(token)
         if guest and not guest.timezone and not req.env.cr.readonly:
             timezone = req.env["mail.guest"]._get_timezone_from_request(req)
