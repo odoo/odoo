@@ -1,4 +1,6 @@
 import { test, describe, expect } from "@odoo/hoot";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import {
     setupSelfPosEnv,
     getFilledSelfOrder,
@@ -44,5 +46,28 @@ describe("preparation ticket", () => {
             { name: "Wood desk", quantity: 2 },
         ]);
         expect(result).toBe(true);
+    });
+    test("name entered for a name-required preset shows as the prep ticket order_label", async () => {
+        const store = await setupSelfPosEnv();
+        store.config.company_id.country_id.state_ids = [];
+        store.config.company_id.country_id.phone_code = 1;
+        const order = await getFilledSelfOrder(store);
+        const preset = store.models["pos.preset"].get(3);
+        order.preset_id = preset;
+
+        const comp = await mountWithCleanup(PresetInfoPopup, {
+            props: { close: () => {}, getPayload: () => {} },
+        });
+        comp.state.name = "Mitchell";
+        await comp.setInformations();
+        expect(store.currentOrder.floating_order_name).toBe("Mitchell");
+
+        const categoryIds = store.config.preparationCategories;
+        const generator = store.ticketPrinter.getGenerator({
+            models: store.models,
+            order: store.currentOrder,
+        });
+        const changes = generator.generatePreparationData(categoryIds, {});
+        expect(changes[0].extra_data.order_label).toBe("Mitchell");
     });
 });
