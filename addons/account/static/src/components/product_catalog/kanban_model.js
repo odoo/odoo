@@ -6,7 +6,7 @@ patch(ProductCatalogKanbanModel.prototype, {
         if (this.env.searchModel.filterBySection) {
             params = {
                 ...params,
-                domain: [...(params.domain || []), ['is_in_selected_section_of_order', '=', true]],
+                domain: [...(params.domain || []), ['catalog_is_in_selected_section', '=', true]],
                 context: {
                     ...params.context,
                     section_id: this.env.searchModel.selectedSectionId,

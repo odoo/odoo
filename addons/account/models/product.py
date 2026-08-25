@@ -216,7 +216,26 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    catalog_is_in_selected_section = fields.Boolean(
+        search="_search_is_in_selected_catalog_section", store=False
+    )
     tax_string = fields.Char(compute='_compute_tax_string')
+
+    def _search_is_in_selected_catalog_section(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+
+        ctx = self.env.context
+        order_id = ctx.get('order_id')
+        order_model = ctx.get('product_catalog_order_model')
+        line_field = ctx.get('child_field')
+        if not (order_id and order_model and line_field):
+            return []
+
+        order_lines = self.env[order_model].browse(order_id)[line_field]
+        product_ids = order_lines.filtered(lambda line: line._is_in_section()).product_id.ids
+
+        return [('id', 'in', product_ids)]
 
     def _get_product_accounts(self):
         return self.product_tmpl_id._get_product_accounts()
