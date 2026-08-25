@@ -12,7 +12,7 @@ import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
-import { onWillRender, render } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import {
@@ -28,6 +28,8 @@ import { useMagicColumnWidths } from "./column_width_hook";
 
 import {
     Component,
+    computed,
+    effect,
     onMounted,
     onPatched,
     onWillDestroy,
@@ -39,6 +41,7 @@ import {
     signal,
     status,
     t,
+    untrack,
     useListener,
     useProps,
 } from "@odoo/owl";
@@ -149,7 +152,18 @@ export class ListRenderer extends Component {
     tableRef = signal.ref();
 
     debugOpenView = signal(false);
-    editedRecord = signal(null);
+    editedRecord = computed(() => this.props.list.editedRecord);
+    computedAllColumns = computed(() => {
+        const list = this.props.list;
+        // Property field definitions are raw; record data changes invalidate their columns.
+        for (const record of list.records) {
+            Object.keys(record.data);
+        }
+        return this.processAllColumn(this.props.archInfo.columns, list);
+    });
+    computedColumns = computed(() => this.getActiveColumns());
+    computedAggregates = computed(() => this.computeAggregates());
+    storageRevision = signal(0);
     optionalActiveFields = proxy(this.props.optionalActiveFields || {});
 
     setup() {
@@ -199,20 +213,25 @@ export class ListRenderer extends Component {
             const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
             this.activeRowId = activeRow ? activeRow.dataset.id : null;
         });
-        /** @type {Column[]} */
-        this.allColumns = [];
-        /** @type {Column[]} */
-        this.columns = [];
-        onWillRender(() => {
-            this.editedRecord.set(this.props.list.editedRecord);
-            this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
-            Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
-            this.debugOpenView.set(
-                exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView))
-            );
-            this.columns = this.getActiveColumns();
-            this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
-            this.aggregates = this.computeAggregates();
+        let disposeStorageEffect;
+        onWillStart(() => {
+            disposeStorageEffect = effect(() => {
+                this.storageRevision();
+                Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
+                this.debugOpenView.set(
+                    exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView))
+                );
+            });
+        });
+        onWillDestroy(() => disposeStorageEffect?.());
+        useListener(window, "storage", (event) => {
+            if (
+                event.key === null ||
+                event.key === this.keyOptionalFields ||
+                event.key === this.keyDebugOpenView
+            ) {
+                this.storageRevision.set(this.storageRevision() + 1);
+            }
         });
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",
@@ -352,8 +371,8 @@ export class ListRenderer extends Component {
         });
     }
 
-    getActiveColumns() {
-        return this.allColumns.filter((col) => {
+    getActiveColumns(allColumns = this.allColumns) {
+        return allColumns.filter((col) => {
             if (col.optional && !this.optionalActiveFields[col.name]) {
                 return false;
             }
@@ -364,8 +383,24 @@ export class ListRenderer extends Component {
         });
     }
 
+    get allColumns() {
+        return this.computedAllColumns();
+    }
+
+    get columns() {
+        return this.computedColumns();
+    }
+
+    get aggregates() {
+        return this.computedAggregates();
+    }
+
     get hasSelectors() {
         return this.props.allowSelectors && !this.uiService.isSmall;
+    }
+
+    get withHandleColumn() {
+        return this.columns.some((column) => column.widget === "handle");
     }
 
     get hasOpenFormViewColumn() {
@@ -1380,7 +1415,10 @@ export class ListRenderer extends Component {
         // only apply list_optional_show once when filter changes to keep it possible
         // to untoggle optional fields even if they occur in list_optional_show
         if (optionalShowChanged) {
-            Object.assign(optionalActiveFields, this.optionalActiveFields);
+            Object.assign(
+                optionalActiveFields,
+                untrack(() => ({ ...this.optionalActiveFields }))
+            );
             this.lastOptionalShow = JSON.stringify(optionalShow);
             if (optionalShow) {
                 for (const fieldName of optionalShow) {
