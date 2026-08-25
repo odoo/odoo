@@ -457,6 +457,9 @@ test("select @ mention from the suggestion list being filtered", async () => {
     patchWithCleanup(ImStatus.prototype, {
         setup() {
             super.setup();
+            if (!this.env.inNavigableList) {
+                return;
+            }
             // Simulate a slow render, keeping the previous search on screen.
             onWillUpdateProps(() => {
                 filtering.resolve();
