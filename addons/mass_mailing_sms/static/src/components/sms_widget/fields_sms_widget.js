@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
-import { SmsWidget } from "@sms/components/sms_widget/fields_sms_widget";
+import { SmsCharCounter } from "@sms/components/sms_widget/sms_char_counter";
 
 import { onWillStart } from "@odoo/owl";
 
@@ -15,7 +15,7 @@ const TEXT_URL_REGEX = /https?:\/\/([\w@:%+&~#=/-]|[.,][^\s](?!$))+(?:\?(?:[^\s.
  * consider links converted with link_tracker and opt-out
  * link if the option is selected.
  */
-patch(SmsWidget.prototype, {
+patch(SmsCharCounter.prototype, {
     setup() {
         super.setup(...arguments);
         this.orm = useService("orm");
