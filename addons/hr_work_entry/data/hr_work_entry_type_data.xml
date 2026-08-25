@@ -476,6 +476,7 @@
         <field name="code">000.00</field>
         <field name="country_id" ref="base.be"/>
         <field name="amount_rate">0.0</field>
+        <field name="count_as">absence</field>
     </record>
 
     <record id="be_work_entry_type_home_working" model="hr.work.entry.type">
@@ -488,7 +489,7 @@
     </record>
 
     <record id="be_work_entry_type_unpaid_leave" model="hr.work.entry.type">
-        <field name="name">Leave without pay</field>
+        <field name="name">Unpaid Leave</field>
         <field name="color">5</field>
         <field name="display_code">UN</field>
         <field name="code">158.00</field>
@@ -527,7 +528,7 @@
     </record>
 
     <record id="be_work_entry_type_sick_leave" model="hr.work.entry.type">
-        <field name="name">Guaranteed monthly wage illness</field>
+        <field name="name">Sick Leave</field>
         <field name="display_code">STO</field>
         <field name="code">013.00</field>
         <field name="color">5</field>
@@ -711,7 +712,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_paternity_company" model="hr.work.entry.type">
-        <field name="name">Leave for Birth (days 1-3)</field>
+        <field name="name">Birth Leave (days 1-3)</field>
         <field name="code">007.05</field>
         <field name="color">5</field>
         <field name="display_code">PTC</field>
@@ -720,7 +721,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_paternity_legal" model="hr.work.entry.type">
-        <field name="name">Leave for birth (days 4-20)</field>
+        <field name="name">Birth Leave (days 4-20)</field>
         <field name="code">128.05</field>
         <field name="color">5</field>
         <field name="display_code">PTL</field>
@@ -756,7 +757,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_training_time_off" model="hr.work.entry.type">
-        <field name="name">Educational leave (unlimited)</field>
+        <field name="name">Educational leave</field>
         <field name="code">024.00</field>
         <field name="color">5</field>
         <field name="display_code">EDU</field>
@@ -765,7 +766,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
-        <field name="name">Flemish Training Leave (unlimited)</field>
+        <field name="name">Flemish Training Leave</field>
         <field name="code">024.04</field>
         <field name="color">5</field>
         <field name="display_code">FED</field>
@@ -932,7 +933,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_european" model="hr.work.entry.type">
-        <field name="name">European Time Off</field>
+        <field name="name">European Leave</field>
         <field name="code">142.20</field>
         <field name="color">5</field>
         <field name="display_code">EUR</field>
@@ -941,7 +942,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_credit_time" model="hr.work.entry.type">
-        <field name="name">Time credit (with/no motif)</field>
+        <field name="name">Time Credit</field>
         <field name="code">147.00</field>
         <field name="color">8</field>
         <field name="display_code">CRT</field>
@@ -973,7 +974,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_work_accident_unassimilated" model="hr.work.entry.type">
-        <field name="name">Industrial accident 31st day - 6 month</field>
+        <field name="name">Industrial accident (31d-6m)</field>
         <field name="code">113.00</field>
         <field name="color">5</field>
         <field name="display_code">WAU</field>
@@ -1015,7 +1016,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_strike" model="hr.work.entry.type">
-        <field name="name">Strike recognized by trade union Or Lock-out</field>
+        <field name="name">Strike Absence</field>
         <field name="code">132.00</field>
         <field name="color">5</field>
         <field name="display_code">STR</field>
@@ -1113,7 +1114,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_sectoral_compensatory_rest" model="hr.work.entry.type">
-        <field name="name">Repos comp. (RTT) payé par tiers</field>
+        <field name="name">Unpaid Compensatory Rest</field>
         <field name="code">165.00</field>
         <field name="color">5</field>
         <field name="display_code">SCT</field>
@@ -1479,7 +1480,7 @@
     </record>
 
     <record id="l10n_be_work_entry_type_foster_care" model="hr.work.entry.type">
-        <field name="name">Absence equated foster care (Days 1 - 6 / NES)</field>
+        <field name="name">Foster Care Leave</field>
         <field name="code">128.07</field>
         <field name="color">5</field>
         <field name="display_code">FOS</field>
