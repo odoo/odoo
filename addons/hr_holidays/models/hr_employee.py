@@ -16,10 +16,12 @@ from odoo.tools import OrderedSet, float_round
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
+    def _get_leave_manager_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['group_user_regular', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_holidays.group_hr_holidays_employee').id
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off Approver',
         compute='_compute_leave_manager', store=True, readonly=False,
-        domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        domain=_get_leave_manager_domain,
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     current_work_entry_type_id = fields.Many2one('hr.work.entry.type', compute='_compute_current_work_entry_type_id', string="Current Time Type",
