@@ -82,13 +82,31 @@ def set_limit_memory_hard():
         resource.setrlimit(rlimit, (limit_memory_hard, hard))
 
 
+def pipe_new():
+    pipe = os.pipe()
+    for fd in pipe:
+        # non_blocking
+        flags = fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK
+        fcntl.fcntl(fd, fcntl.F_SETFL, flags)
+        # close_on_exec
+        flags = fcntl.fcntl(fd, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
+        fcntl.fcntl(fd, fcntl.F_SETFD, flags)
+    return pipe
+
+
+def pipe_ping(pipe):
+    try:
+        os.write(pipe[1], b'.')
+    except BlockingIOError:
+        pass
+
+
 def empty_pipe(fd):
     try:
         while os.read(fd, 1):
             pass
-    except OSError as e:
-        if e.errno not in [errno.EAGAIN]:
-            raise
+    except BlockingIOError:
+        pass
 
 
 def cron_database_list():
@@ -811,28 +829,10 @@ class PreforkServer(CommonServer):
         self.queue = collections.deque()
         self.servers_gevent = {}
 
-    def pipe_new(self):
-        pipe = os.pipe()
-        for fd in pipe:
-            # non_blocking
-            flags = fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK
-            fcntl.fcntl(fd, fcntl.F_SETFL, flags)
-            # close_on_exec
-            flags = fcntl.fcntl(fd, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
-            fcntl.fcntl(fd, fcntl.F_SETFD, flags)
-        return pipe
-
-    def pipe_ping(self, pipe):
-        try:
-            os.write(pipe[1], b'.')
-        except OSError as e:
-            if e.errno not in [errno.EAGAIN, errno.EINTR]:
-                raise
-
     def signal_handler(self, sig, frame):
         if len(self.queue) < 5 or sig == signal.SIGCHLD:
             self.queue.append(sig)
-            self.pipe_ping(self.pipe)
+            pipe_ping(self.pipe)
         else:
             self.logger.warning("Dropping signal: %s", sig)
 
@@ -987,7 +987,7 @@ class PreforkServer(CommonServer):
         # wakeup pipe, python doesn't throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
-        self.pipe = self.pipe_new()
+        self.pipe = pipe_new()
         # set signal handlers
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
@@ -1184,8 +1184,8 @@ class Worker:
     def __init__(self, multi):
         self.multi = multi
         self.watchdog_time = time.time()
-        self.watchdog_pipe = multi.pipe_new()
-        self.eintr_pipe = multi.pipe_new()
+        self.watchdog_pipe = pipe_new()
+        self.eintr_pipe = pipe_new()
         self.wakeup_fd_r, self.wakeup_fd_w = self.eintr_pipe
         # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
@@ -1300,7 +1300,7 @@ class Worker:
         try:
             while self.alive:
                 self.check_limits()
-                self.multi.pipe_ping(self.watchdog_pipe)
+                pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 if not self.alive:
                     break
