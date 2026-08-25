@@ -13,7 +13,7 @@ import { _t } from "@web/core/l10n/translation";
  * }} MessagingMenuTabFilter
  */
 
-/** @typedef {{id: string, text: string, icon?: string, isDisabled?: () => boolean, onClick: () => void, preventDropdownClose?: boolean}} MessagingMenuTabAction */
+/** @typedef {{id: string, text: string, icon?: string, iconClass?: string, isDisabled?: () => boolean, onClick: () => void, preventDropdownClose?: boolean}} MessagingMenuTabAction */
 
 /**
  * Defines a messaging menu tab with:

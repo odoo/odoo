@@ -147,7 +147,8 @@ const messagingMenuPatch = {
                             ? [
                                   {
                                       id: "start_meeting",
-                                      icon: { template: "mail.NewMeetingIcon" },
+                                      icon: "video_call",
+                                      iconClass: "oi-filled",
                                       text: _t("Meeting"),
                                       title: _t("New Meeting"),
                                       onClick: () => this.store.requestStartMeeting(),

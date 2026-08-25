@@ -464,6 +464,10 @@ const MS_ICONS = {
         has_fill: false,
         tags: "adjust adjustments area arrow arrows aspect ratio canvas circle clockwise corners counter-clockwise crop direction edit editing frame graphic image images manipulate modify orientation photo photos picture rearrange reorient resize rotate settings size square tool transform turn visual",
     },
+    crown: {
+        has_fill: true,
+        tags: "achievement award best bonus challenge crown exclusive high king leaderboard level member membership premium queen rank ranking reward royalty special success tiara top trend trending unique unlock upgrade victory vip winner",
+    },
     currency_bitcoin: {
         has_fill: false,
         tags: "bill bitcoin blockchain card cash circle coin commerce cost credit crypto cryptocurrency currency digital digital asset digital currency dollar dollars economics finance financial symbol franc investment letter b money online online payment oval pay payment price shopping stripes symbol trading two lines virtual currency wealth",
@@ -1783,6 +1787,10 @@ const MS_ICONS = {
     vertical_align_top: {
         has_fill: false,
         tags: "align alignment arrange arrow box doc document down edit editing editor format layout line move object position rectangle sheet sort spreadsheet text top type up vertical vertically writing",
+    },
+    video_call: {
+        has_fill: true,
+        tags: "+ add audio broadcast call camera chat cinema communication conference distance learning film film strip filming group call hardware image live media meeting motion movie multimedia new online meeting picture plus record remote communication remote work streaming symbol telehealth video video chat video conferencing videocall videography virtual meeting webcam",
     },
     video_file: {
         has_fill: true,

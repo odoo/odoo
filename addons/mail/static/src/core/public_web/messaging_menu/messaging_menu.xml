@@ -9,8 +9,7 @@
                 <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
                     <button t-foreach="this.activeTab().actions" t-as="action" t-key="action.id" class="btn btn-sm btn-primary rounded-2 flex-grow-1 py-1 w-50 d-flex align-items-center justify-content-center" t-att-disabled="action.isDisabled?.()" t-on-click="() => this.onClickAction(action)"  t-att-title="action.title">
                         <span t-if="action.icon" class="d-flex align-items-center opacity-75" t-att-class="{'me-1': action.text}">
-                            <i t-if="typeof action.icon === 'string'" class="oi" t-att-data-icon="action.icon"/>
-                            <t t-else="" t-call="{{ action.icon.template }}"/>
+                            <i class="oi" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
                         </span>
                         <t t-out="action.text"/>
                     </button>
