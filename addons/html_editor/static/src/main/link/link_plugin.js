@@ -167,6 +167,7 @@ async function fetchAttachmentMetaData(url, ormService) {
  *      getProps: (props) => props;
  *  }[]} link_popovers
  * @typedef {((linkEl: HTMLAnchorElement) => void)[]} on_link_created_handlers
+ * @typedef {((url: string) => string[] | undefined)[]} auto_link_rel_providers
  */
 
 export class LinkPlugin extends Plugin {
@@ -454,9 +455,41 @@ export class LinkPlugin extends Plugin {
         for (const [param, value] of Object.entries(this.config.defaultLinkAttributes || {})) {
             link.setAttribute(param, `${value}`);
         }
+        if (url !== undefined) {
+            this.applyAutoLinkRel(link, url);
+        }
         link.textContent = label;
         this.trigger("on_link_created_handlers", link);
         return link;
+    }
+
+    /**
+     * @param {string} url
+     * @returns {string[]} tokens to apply
+     */
+    getAutoLinkRel(url) {
+        // Keep only tokens actually used by popover options to avoid storing
+        // tokens that are not relevant to the user interface.
+        const optionTokens = new Set(
+            this.getResource("advanced_popover_options")
+                .filter((option) => option.attribute === "rel")
+                .map((option) => option.value)
+        );
+        const tokens = this.getResource("auto_link_rel_providers")
+            .flatMap((provider) => provider(url) || [])
+            .filter((token) => optionTokens.has(token));
+        return [...new Set(tokens)];
+    }
+
+    /**
+     * @param {HTMLAnchorElement} link
+     * @param {string} url
+     */
+    applyAutoLinkRel(link, url) {
+        const tokens = this.getAutoLinkRel(url);
+        if (tokens.length) {
+            link.relList.add(...tokens);
+        }
     }
 
     /**
@@ -626,6 +659,7 @@ export class LinkPlugin extends Plugin {
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
             getAttachmentMetadata: this.getAttachmentMetadata,
+            getAutoLinkRel: this.getAutoLinkRel.bind(this),
             recordInfo: this.config.getRecordInfo?.() || {},
             canEdit:
                 (!this.linkInDocument ||
@@ -718,6 +752,12 @@ export class LinkPlugin extends Plugin {
             }
             if (attachmentId) {
                 this.linkInDocument.dataset.attachmentId = attachmentId;
+            }
+            // The popover edits a link through `applyAttributes`, skipping
+            // `createLink`, so the auto `rel` tokens are set here instead.
+            const href = this.linkInDocument?.getAttribute("href");
+            if (href) {
+                this.applyAutoLinkRel(this.linkInDocument, href);
             }
         };
     }
