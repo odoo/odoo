@@ -1,4 +1,10 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import {
+    useChildSubEnv,
+    useExternalListener,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
@@ -50,6 +56,7 @@ export class NavigableList extends Component {
 
     setup() {
         super.setup();
+        useChildSubEnv({ inNavigableList: true });
         this.rootRef = useRef("root");
         this.state = useState({
             activeIndex: null,
