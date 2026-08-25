@@ -226,6 +226,7 @@ describe("Popup options: popup in page before edit", () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
             undo(builder.getEditor())
         );
+        await builder.waitSidebarUpdated();
         expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility_off");
     });
 
