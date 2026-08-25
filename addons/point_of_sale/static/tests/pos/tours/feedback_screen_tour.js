@@ -105,6 +105,8 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
             inLeftSide([
                 { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
                 ...ProductScreen.addCustomerNote("Test customer note"),
+                ...ProductScreen.clickSelectedLine("Desk Pad"),
+                ...ProductScreen.addCustomerNote("Global Note"),
             ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -120,6 +122,12 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                                 text: "Test customer note",
                             },
                         ],
+                    },
+                ],
+                cssRules: [
+                    {
+                        css: ".order-general-customer-note",
+                        text: "Global Note",
                     },
                 ],
             }),
