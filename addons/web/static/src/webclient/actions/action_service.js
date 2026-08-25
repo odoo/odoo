@@ -94,6 +94,7 @@ export const standardActionServiceProps = {
     actionId: t.number().optional(), // prop added by _getActionInfo
     className: t.string().optional(), // prop added by the ActionContainer
     globalState: t.object().optional(), // prop added by _updateUI
+    urlState: t.object().optional(), // prop added by _updateUI
     state: t.object().optional(), // prop added by _updateUI
     resId: t.or([t.number(), t.boolean()]).optional(),
     updateActionState: t.function().optional(),
@@ -155,7 +156,7 @@ export function makeActionManager(env, router = _router) {
     let dialog = null;
     let nextDialog = null;
 
-    router.hideKeyFromUrl("globalState");
+    router.hideKeyFromUrl("urlState");
 
     rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
@@ -582,13 +583,13 @@ export function makeActionManager(env, router = _router) {
                     actionRequest = state.action;
                 }
             }
-            if ((state.resId && state.resId !== "new") || state.globalState) {
+            if ((state.resId && state.resId !== "new") || state.urlState) {
                 options.props = {};
                 if (state.resId && state.resId !== "new") {
                     options.props.resId = state.resId;
                 }
-                if (state.globalState) {
-                    options.props.globalState = state.globalState;
+                if (state.urlState) {
+                    options.props.urlState = state.urlState;
                 }
             }
         } else if (state.model) {
@@ -967,6 +968,7 @@ export function makeActionManager(env, router = _router) {
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__getGlobalState__ = new CallbackRecorder();
+                    this.__getUrlState__ = new CallbackRecorder();
                     this.__getLocalState__ = new CallbackRecorder();
                     useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (ev) => {
                         const callbacks = ev.detail;
@@ -977,6 +979,7 @@ export function makeActionManager(env, router = _router) {
                         useSubEnv({
                             __beforeLeave__: this.__beforeLeave__,
                             __getGlobalState__: this.__getGlobalState__,
+                            __getUrlState__: this.__getUrlState__,
                             __getLocalState__: this.__getLocalState__,
                         });
                     }
@@ -1048,6 +1051,12 @@ export function makeActionManager(env, router = _router) {
                             return Object.assign({}, ...exportFns.map((fn) => fn()));
                         }
                     };
+                    controller.getUrlState = () => {
+                        const exportFns = this.__getUrlState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
+                        }
+                    };
                     controller.getLocalState = () => {
                         const exportFns = this.__getLocalState__.callbacks;
                         if (exportFns.length) {
@@ -1079,6 +1088,7 @@ export function makeActionManager(env, router = _router) {
                 if (this.constructor.Component === View) {
                     componentProps.__beforeLeave__ = this.__beforeLeave__;
                     componentProps.__getGlobalState__ = this.__getGlobalState__;
+                    componentProps.__getUrlState__ = this.__getUrlState__;
                     componentProps.__getLocalState__ = this.__getLocalState__;
                 }
                 return componentProps;
@@ -1135,13 +1145,19 @@ export function makeActionManager(env, router = _router) {
         // if globalState is not useful for client actions --> maybe use that thing in useSetupView instead of useSetupAction?
         // a good thing: the Object.assign seems to reflect the use of "externalState" in legacy Model class --> things should be fine.
         if (currentController && currentController.getGlobalState) {
-            const globalState = Object.assign(
+            currentController.action.globalState = Object.assign(
                 {},
                 currentController.action.globalState,
                 currentController.getGlobalState() // what if this = {}?
             );
-
-            currentController.action.globalState = globalState;
+        }
+        if (currentController && currentController.getUrlState) {
+            const urlState = Object.assign(
+                {},
+                currentController.action.urlState,
+                currentController.getUrlState() // what if this = {}?
+            );
+            currentController.action.urlState = urlState;
             // Avoid pushing the globalState, if the state on the router was changed.
             // For instance, if a link was clicked, the state of the router will be the one of the link and not the one of the currentController.
             // Or when using the back or forward buttons on the browser.
@@ -1150,11 +1166,14 @@ export function makeActionManager(env, router = _router) {
                 currentController.state.active_id === router.current.active_id &&
                 currentController.state.resId === router.current.resId
             ) {
-                router.pushState({ globalState }, { sync: true });
+                router.pushState({ urlState }, { sync: true });
             }
         }
         if (controller.action.globalState) {
             controller.props.globalState = controller.action.globalState;
+        }
+        if (controller.action.urlState) {
+            controller.props.urlState = controller.action.urlState;
         }
 
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {

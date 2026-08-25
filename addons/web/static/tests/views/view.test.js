@@ -1089,12 +1089,13 @@ test("multiple ways to pass classes for styling", async () => {
 });
 
 test("callback recorders are moved from props to subenv", async () => {
-    expect.assertions(5);
+    expect.assertions(6);
     class ToyController extends Component {
         props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.env.__getGlobalState__).toBeInstanceOf(CallbackRecorder); // put in env by View
+            expect(this.env.__getUrlState__).toBeInstanceOf(CallbackRecorder); // put in env by View
             expect(this.env.__getContext__).toBeInstanceOf(CallbackRecorder); // put in env by View
             expect(this.env.__getLocalState__).toBe(null); // set by View
             expect(this.env.__beforeLeave__).toBe(null); // set by View
@@ -1106,6 +1107,7 @@ test("callback recorders are moved from props to subenv", async () => {
         type: "toy",
         resModel: "animal",
         __getGlobalState__: new CallbackRecorder(),
+        __getUrlState__: new CallbackRecorder(),
         __getContext__: new CallbackRecorder(),
     };
     await mountWithCleanup(View, { props });

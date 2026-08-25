@@ -54,6 +54,7 @@ export function useSetupAction(params = {}) {
     const {
         __beforeLeave__,
         __getGlobalState__,
+        __getUrlState__,
         __getLocalState__,
         __getContext__,
         __getOrderBy__,
@@ -64,6 +65,7 @@ export function useSetupAction(params = {}) {
         beforeUnload,
         beforeLeave,
         getGlobalState,
+        getUrlState,
         getLocalState,
         rootRef,
     } = params;
@@ -78,14 +80,11 @@ export function useSetupAction(params = {}) {
     if (__beforeLeave__ && beforeLeave) {
         useCallbackRecorder(__beforeLeave__, beforeLeave);
     }
-    if (__getGlobalState__ && (getGlobalState || rootRef)) {
-        useCallbackRecorder(__getGlobalState__, () => {
-            const state = {};
-            if (getGlobalState) {
-                Object.assign(state, getGlobalState());
-            }
-            return state;
-        });
+    if (__getGlobalState__ && getGlobalState) {
+        useCallbackRecorder(__getGlobalState__, () => Object.assign({}, getGlobalState()));
+    }
+    if (__getUrlState__ && getUrlState) {
+        useCallbackRecorder(__getUrlState__, () => Object.assign({}, getUrlState()));
     }
 
     const getRootEl = () => untrack(rootRef);

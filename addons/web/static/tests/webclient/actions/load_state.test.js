@@ -853,7 +853,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-4/action-3/2");
         // pushState was called only once
         expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,action,globalState",
+            "Update the state without updating URL, nextState: actionStack,action,urlState",
             "pushState http://example.com/odoo/action-4/action-3/2",
         ]);
 
@@ -866,7 +866,7 @@ describe(`new urls`, () => {
         await animationFrame(); // pushState is debounced
         expect(browser.location.href).toBe("http://example.com/odoo/action-4");
         expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
+            "Update the state without updating URL, nextState: actionStack,resId,action,urlState",
             "pushState http://example.com/odoo/action-4",
         ]);
     });
@@ -892,7 +892,7 @@ describe(`new urls`, () => {
         await animationFrame(); // pushState is debounced
         expect(browser.location.href).toBe("http://example.com/odoo/action-3/action-1");
         expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,action,globalState",
+            "Update the state without updating URL, nextState: actionStack,action,urlState",
             "pushState http://example.com/odoo/action-3/action-1",
         ]);
         expect.verifyErrors([/RPC_ERROR/]);
@@ -941,7 +941,7 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe("http://example.com/odoo/action-3/1");
         // should push the state if it changes afterwards
         expect.verifySteps([
-            "Update the state without updating URL, nextState: actionStack,action,globalState",
+            "Update the state without updating URL, nextState: actionStack,action,urlState",
             "pushState http://example.com/odoo/action-3/1",
         ]);
     });

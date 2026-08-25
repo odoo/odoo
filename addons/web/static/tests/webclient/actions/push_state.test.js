@@ -21,6 +21,8 @@ import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
+import { useSetupAction } from "@web/search/action_hook";
+import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
@@ -614,4 +616,91 @@ test(`properly push globalState`, async () => {
     // The search Model should be restored
     expect(queryAllTexts(".o_facet_value")).toEqual(["blip"]);
     expect(browser.location.href).toBe("http://example.com/odoo/action-4");
+});
+
+test(`urlState is pushed to the router, not globalState`, async () => {
+    patchWithCleanup(FormController.prototype, {
+        setup() {
+            super.setup();
+            useSetupAction({
+                getGlobalState: () => ({ secret: "should not reach the router" }),
+                getUrlState: () => ({ foo: "bar" }),
+            });
+        },
+    });
+
+    patchWithCleanup(browser.history, {
+        pushState(state) {
+            expect.step(state);
+            return super.pushState(...arguments);
+        },
+        replaceState(state) {
+            expect.step(state);
+            return super.replaceState(...arguments);
+        },
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        res_id: 1,
+        views: [[false, "form"]],
+    });
+    expect(`.o_form_view`).toHaveCount(1);
+
+    expect.verifySteps([
+        {
+            nextState: {
+                actionStack: [
+                    { displayName: "First record", model: "partner", view_type: "form", resId: 1 },
+                ],
+                resId: 1,
+                model: "partner",
+            },
+        },
+    ]);
+
+    // leave the form controller for another action: the action service
+    // captures its getUrlState()/getGlobalState() before switching away
+    await getService("action").doAction(8);
+    expect.verifySteps([
+        {
+            nextState: {
+                actionStack: [
+                    { displayName: "First record", model: "partner", view_type: "form", resId: 1 },
+                ],
+                resId: 1,
+                model: "partner",
+                urlState: {
+                    foo: "bar",
+                    searchFacets: {
+                        domain: "[]",
+                        facets: [],
+                        groupBys: [],
+                        key: "3a66384d",
+                    },
+                },
+            },
+        },
+        {
+            nextState: {
+                actionStack: [
+                    {
+                        displayName: "First record",
+                        model: "partner",
+                        view_type: "form",
+                        resId: 1,
+                    },
+
+                    {
+                        displayName: "Favorite Ponies",
+                        action: 8,
+                        view_type: "list",
+                    },
+                ],
+                action: 8,
+            },
+        },
+    ]);
 });

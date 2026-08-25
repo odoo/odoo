@@ -13,6 +13,7 @@ export const withSearchProps = {
     resModel: t.string(),
 
     globalState: t.object().optional(),
+    urlState: t.object().optional(),
     searchModelArgs: t.object().optional(),
 
     display: t.object().optional(),

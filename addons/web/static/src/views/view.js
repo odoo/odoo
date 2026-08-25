@@ -143,6 +143,7 @@ export class ViewNotFoundError extends Error {}
 const CALLBACK_RECORDER_NAMES = [
     "__beforeLeave__",
     "__getGlobalState__",
+    "__getUrlState__",
     "__getLocalState__",
     "__getContext__",
     "__getOrderBy__",
