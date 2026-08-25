@@ -5896,7 +5896,7 @@ class TestStockMove(TestStockCommon):
         """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
         which returns data used to print delivery slips, with an incomplete order put in packages
         """
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 25)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5)
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -5941,7 +5941,7 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(aggregated_val['qty_ordered'], 10)
         self.assertEqual(aggregated_val['quantity'], False)
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 20)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.customer_location), 5)
 
     def test_move_sn_warning(self):

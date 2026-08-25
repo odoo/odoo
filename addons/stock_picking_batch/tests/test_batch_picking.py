@@ -396,11 +396,17 @@ class TestBatchPicking(TransactionCase):
 
         # a new package is made and done quantities should be in same package
         self.assertTrue(package)
-        done_qty_move_lines = self.batch.move_line_ids.filtered(lambda ml: ml.quantity == 5)
-        self.assertEqual(done_qty_move_lines[0].result_package_id.id, package.id)
-        self.assertEqual(done_qty_move_lines[1].result_package_id.id, package.id)
+        move_lines_with_packages = self.batch.move_line_ids.filtered(lambda ml: ml.quantity == 5 and ml.result_package_id).sorted("id")
+        self.assertEqual(move_lines_with_packages[0].product_id.id, self.productA.id)
+        self.assertEqual(move_lines_with_packages[0].result_package_id.id, package.id)
+        self.assertEqual(move_lines_with_packages[1].product_id.id, self.productB.id)
+        self.assertEqual(move_lines_with_packages[1].result_package_id.id, package.id)
 
-        # confirm w/ backorder
+        # confirm w/ backorder => Removing new pickings created by put_in_pack
+        remaining_demands = self.batch.move_line_ids.filtered(lambda ml: not ml.result_package_id)
+        self.assertEqual(len(remaining_demands), 2)
+        self.assertEqual(remaining_demands.mapped('quantity'), [5, 5])
+        remaining_demands.unlink()  # Remove them to get the backorder wizard
         back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
         back_order_wizard = Form.from_action(self.env, back_order_wizard_dict).save()
