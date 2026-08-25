@@ -26,6 +26,7 @@ import {
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
+import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 
@@ -340,7 +341,7 @@ export class FontTypePlugin extends Plugin {
         if (previousElementSibling?.tagName === "BR" && nextElementSibling?.tagName === "BR") {
             nextElementSibling.remove();
             previousElementSibling.remove();
-            this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
                 blockToSplit,
@@ -348,11 +349,14 @@ export class FontTypePlugin extends Plugin {
             this.dependencies.dom.setBlock({
                 tagName: this.dependencies.baseContainer.getDefaultNodeName(),
             });
-            return true;
+            return splitResult;
         }
 
-        this.dependencies.lineBreak.insertLineBreakElement({ targetNode, targetOffset });
-        return true;
+        const lineBreaks = this.dependencies.lineBreak.insertLineBreakElement({
+            targetNode,
+            targetOffset,
+        });
+        return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks };
     }
 
     // @todo @phoenix: Move this to a specific Heading plugin?
@@ -367,26 +371,27 @@ export class FontTypePlugin extends Plugin {
             headingTags.includes(element.tagName)
         );
         if (closestHeading) {
-            const [, newElement] = this.dependencies.split.splitElementBlock(params);
+            const splitResult = this.dependencies.split.splitElementBlock(params);
             // @todo @phoenix: if this condition can be anticipated before the split,
             // handle the splitBlock only in such case.
             if (
-                newElement &&
-                headingTags.includes(newElement.tagName) &&
-                !descendants(newElement).some(isVisibleTextNode)
+                splitResult.type === SPLIT_OPERATION_TYPES.BLOCK &&
+                headingTags.includes(splitResult.after.tagName) &&
+                !descendants(splitResult.after).some(isVisibleTextNode)
             ) {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer({
-                    children: [...newElement.childNodes],
+                    children: [...splitResult.after.childNodes],
                 });
-                const dir = newElement.getAttribute("dir");
+                const dir = splitResult.after.getAttribute("dir");
                 if (dir) {
                     baseContainer.setAttribute("dir", dir);
                 }
-                newElement.replaceWith(baseContainer);
+                splitResult.after.replaceWith(baseContainer);
                 baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
+                return { ...splitResult, after: baseContainer };
             }
-            return true;
+            return splitResult;
         }
     }
 

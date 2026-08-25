@@ -11,6 +11,7 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 /** @typedef {((insertedNode: Node) => insertedNode)[]} fragment_to_insert_within_pre_processors */
 
@@ -88,34 +89,38 @@ export class CodeBlockPlugin extends Plugin {
             isEmptyBlock(closestBlockNode)
         ) {
             // Remove the last empty block node within pre tag
-            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
                 blockToSplit: closestBlockNode,
             });
-            const isPreBlock = beforeElement.nodeName === "PRE";
+            if (splitResult.type !== SPLIT_OPERATION_TYPES.BLOCK) {
+                return splitResult;
+            }
+            const isPreBlock = splitResult.before.nodeName === "PRE";
             const baseContainer = isPreBlock
                 ? this.dependencies.baseContainer.createBaseContainer({
-                      children: [...afterElement.childNodes],
+                      children: [...splitResult.after.childNodes],
                   })
-                : afterElement;
+                : splitResult.after;
             if (isPreBlock) {
-                afterElement.replaceWith(baseContainer);
+                splitResult.after.replaceWith(baseContainer);
             } else {
-                beforeElement.remove();
-                closestPre.after(afterElement);
+                splitResult.before.remove();
+                closestPre.after(splitResult.after);
             }
             const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
             if (dir) {
                 baseContainer.setAttribute("dir", dir);
             }
             this.dependencies.selection.setCursorStart(baseContainer);
+            return true;
         } else {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
             this.dependencies.selection.setCursorEnd(lineBreak);
+            return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks: [lineBreak] };
         }
-        return true;
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {

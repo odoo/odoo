@@ -43,6 +43,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "@html_editor/utils/dom_state";
 import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
+import { SPLIT_OPERATION_TYPES } from "./split_plugin";
 
 const IS_MARKER = Symbol("isMarker");
 /**
@@ -392,21 +393,24 @@ export class DomPlugin extends Plugin {
                     }
                     refNode = node.nextSibling;
                     const [targetNode, targetOffset] = leftPos(node);
-                    const [before, after] = this.dependencies.split.splitBlockNode({
+                    const split = this.dependencies.split.splitBlockNode({
                         targetNode,
                         targetOffset,
                     });
-                    if (!node.isConnected && after) {
-                        const [anchorNode, anchorOffset] = rightPos(before);
-                        after.remove();
-                        refNode = enterSelectionPoint({ anchorNode, anchorOffset }, marker);
-                    } else if (this.isAtBlockEdge(node, "end")) {
-                        insertedContent.pop();
-                        if (node.previousSibling?.nodeName === "BR") {
-                            // We inserted a BR instead of splitting.
-                            insertedContent.push(node.previousSibling, node);
-                        } else {
-                            insertedContent.push(after || closestBlock(node));
+                    if (split.type === SPLIT_OPERATION_TYPES.BLOCK) {
+                        const { before, after } = split;
+                        if (!node.isConnected && after) {
+                            const [anchorNode, anchorOffset] = rightPos(before);
+                            after.remove();
+                            refNode = enterSelectionPoint({ anchorNode, anchorOffset }, marker);
+                        } else if (this.isAtBlockEdge(node, "end")) {
+                            insertedContent.pop();
+                            if (node.previousSibling?.nodeName === "BR") {
+                                // We inserted a BR instead of splitting.
+                                insertedContent.push(node.previousSibling, node);
+                            } else {
+                                insertedContent.push(after || closestBlock(node));
+                            }
                         }
                     }
                 }

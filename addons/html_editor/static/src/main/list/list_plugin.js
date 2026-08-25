@@ -45,6 +45,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { isColorGradient } from "@web/core/utils/colors";
+import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 const listSelectorItems = [
     {
@@ -984,11 +985,12 @@ export class ListPlugin extends Plugin {
             this.outdentLI(closestLI);
             return true;
         }
-        const [, newLI] = this.dependencies.split.splitElementBlock({
+        const splitResult = this.dependencies.split.splitElementBlock({
             ...params,
             blockToSplit: closestLI,
         });
-        if (newLI) {
+        if (splitResult.type === SPLIT_OPERATION_TYPES.BLOCK) {
+            const newLI = splitResult.after;
             if (closestLI.classList.contains("o_checked")) {
                 removeClass(newLI, "o_checked");
             }
@@ -996,7 +998,7 @@ export class ListPlugin extends Plugin {
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
             this.adjustListPadding(newLI.parentElement);
         }
-        return true;
+        return splitResult;
     }
 
     /**
@@ -1321,15 +1323,17 @@ export class ListPlugin extends Plugin {
         }
         if (li) {
             // Helper li to split the list
-            const [, after] = this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode: blockEl,
                 targetOffset: nodeSize(blockEl),
                 blockToSplit: li,
             });
-            const [anchorNode, anchorOffset] = getDeepestEditablePosition(after, 0);
-            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-            // Fully outdent li to exit the list
-            this.liToBlocks(after);
+            if (splitResult.type === SPLIT_OPERATION_TYPES.BLOCK) {
+                const [anchorNode, anchorOffset] = getDeepestEditablePosition(splitResult.after, 0);
+                this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+                // Fully outdent li to exit the list
+                this.liToBlocks(splitResult.after);
+            }
         }
     }
 
