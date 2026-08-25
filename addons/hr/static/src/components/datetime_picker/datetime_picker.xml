@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.DateTimePicker" t-inherit="web.DateTimePicker" t-inherit-mode="primary">
+        <nav class="o_datetime_picker_header d-flex" position="before">
+            <div t-if="this.versionDateTimePickerProps.showCreationModeToggle" class="o_creation_mode_toggle d-flex align-items-center gap-3 px-2">
+                <span class="text-muted small text-nowrap">Create new:</span>
+                <div class="form-check form-check-inline mb-0">
+                    <input
+                        type="radio"
+                        class="form-check-input"
+                        id="o_creation_mode_version"
+                        name="o_creation_mode"
+                        t-att-checked="(this.versionDateTimePickerProps.creationMode || 'version') === 'version'"
+                        t-on-change="() => this.versionDateTimePickerProps.onCreationModeChange('version')"
+                    />
+                    <label class="form-check-label small" for="o_creation_mode_version">version</label>
+                </div>
+                <div class="form-check form-check-inline mb-0">
+                    <input
+                        type="radio"
+                        class="form-check-input"
+                        id="o_creation_mode_contract"
+                        name="o_creation_mode"
+                        t-att-checked="this.versionDateTimePickerProps.creationMode === 'contract'"
+                        t-on-change="() => this.versionDateTimePickerProps.onCreationModeChange('contract')"
+                    />
+                    <label class="form-check-label small" for="o_creation_mode_contract">contract</label>
+                </div>
+            </div>
+        </nav>
+    </t>
+</templates>

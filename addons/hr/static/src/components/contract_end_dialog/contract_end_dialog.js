@@ -2,10 +2,11 @@ import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { DateTimeInput } from '@web/core/datetime/datetime_input';
 
 export class ContractEndDialog extends Component {
     static template = "hr.ContractEndDialog";
-    static components = { Dialog, Many2XAutocomplete };
+    static components = { Dialog, Many2XAutocomplete, DateTimeInput };
 
     props = useProps({
         close: t.function(),
@@ -17,6 +18,7 @@ export class ContractEndDialog extends Component {
         this.state = proxy({
             reason: "correction",
             template: { id: false, name: "" },
+            date: this.props.record.data.contract_date_end,
         });
         this.onTemplateUpdate = this.onTemplateUpdate.bind(this);
     }
