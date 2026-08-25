@@ -1,9 +1,6 @@
 import { SnippetViewer } from "@html_builder/snippets/snippet_viewer";
-import {
-    adaptDarkPaletteContent,
-    isDarkColorPalette,
-} from "@website/components/dialog/dark_palette_utils";
 import { onMounted, onPatched, onWillPatch, onWillUnmount } from "@odoo/owl";
+import { isDarkColorPalette } from "@website/components/dialog/dark_palette_utils";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -40,14 +37,8 @@ patch(SnippetViewer.prototype, {
         if (!this.isDarkPalette) {
             return snippets;
         }
-        // Keep text and carousel controls readable with dark palettes.
-        return snippets.map((snippet) => {
-            if (snippet.isCustom) {
-                return snippet;
-            }
-            const contentEl = snippet.content.cloneNode(true);
-            adaptDarkPaletteContent(contentEl);
-            return { ...snippet, content: contentEl };
-        });
+        return snippets.map(
+            (snippet) => this.props.snippetModel.darkPaletteSnippetsById?.get(snippet.id) || snippet
+        );
     },
 });
