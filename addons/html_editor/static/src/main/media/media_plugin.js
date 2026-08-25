@@ -93,6 +93,7 @@ export class MediaPlugin extends Plugin {
                 id: "replace_image",
                 groupId: "image_replace",
                 commandId: "replaceImage",
+                opensUi: true,
             },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),

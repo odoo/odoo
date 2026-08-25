@@ -267,6 +267,7 @@ export class LinkPlugin extends Plugin {
                 description: _t("Insert link (Ctrl + K)"),
                 groupId: "link",
                 commandId: "openLinkPopover",
+                opensUi: true,
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
@@ -281,6 +282,7 @@ export class LinkPlugin extends Plugin {
                 id: "link",
                 groupId: "image_link",
                 commandId: "openLinkPopover",
+                opensUi: true,
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
@@ -830,10 +832,11 @@ export class LinkPlugin extends Plugin {
         const commonAncestor = closestElement(selection.commonAncestorContainer, "A");
         const isNonEditableLink = commonAncestor && !commonAncestor.isContentEditable;
         if (!this.isLinkAllowedOnSelection() && !isNonEditableLink) {
-            return this.services.notification.add(
+            this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
                 { type: "danger" }
             );
+            return this.dependencies.selection.focusEditable();
         }
         const context = this.getLinkPopoverContext(linkElement, type);
         const applyCallback = this.getApplyCallbacks(context);
@@ -856,6 +859,8 @@ export class LinkPlugin extends Plugin {
                     this.newlyInsertedLinks.delete(this.linkInDocument);
                 }
             }
+        } else {
+            this.dependencies.selection.focusEditable();
         }
     }
 

@@ -18,6 +18,7 @@ const genericButtonSchema = {
     id: t.string(),
     isActive: t.boolean(),
     isDisabled: t.boolean(),
+    opensUi: t.boolean().optional(),
     run: t.function(),
     text: t.string().optional(),
 };
@@ -96,7 +97,7 @@ export class Toolbar extends Component {
         if (button.id === "expand_toolbar") {
             // Toolbar update is async, defer focus until after OWL re-renders the DOM.
             this.shouldFocusFirstButton = true;
-        } else {
+        } else if (!button.opensUi) {
             this.props.focusEditable();
         }
     }
