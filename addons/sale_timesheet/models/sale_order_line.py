@@ -166,7 +166,8 @@ class SaleOrderLine(models.Model):
             and sol.product_id._is_delivered_timesheet()
             and sol.invoice_status == 'to invoice')
         domain = Domain(lines_by_timesheet._timesheet_compute_delivered_quantity_domain())
-        refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
+        credit_notes = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund' and am.reversed_entry_id)
+        refund_account_moves = credit_notes.reversed_entry_id
         timesheet_domain = Domain('timesheet_invoice_id', '=', False) | Domain('timesheet_invoice_id.state', '=', 'cancel') & Domain('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy')
         if refund_account_moves:
             credited_timesheet_domain = Domain('timesheet_invoice_id.state', '=', 'posted') & Domain('timesheet_invoice_id', 'in', refund_account_moves.ids)
@@ -179,12 +180,17 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            # A period only selects which delivered hours are candidates; qty_delivered
-            # - qty_invoiced remains the authoritative quantity still due.
-            qty_to_invoice = max(0.0, min(
-                mapping.get(line.id, 0.0),
-                line.qty_delivered - line.qty_invoiced,
-            ))
+            if line.invoice_lines.move_id & credit_notes:
+                # `qty_delivered - qty_invoiced` to prevent over-billing
+                # when credit notes complicate the invoiced state
+                qty_to_invoice = max(0.0, min(
+                    mapping.get(line.id, 0.0),
+                    line.qty_delivered - line.qty_invoiced,
+                ))
+            else:
+                # No related credit note: invoice exactly what is
+                # calculated for this period
+                qty_to_invoice = max(0.0, mapping.get(line.id, 0.0))
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             elif start_date or end_date:
