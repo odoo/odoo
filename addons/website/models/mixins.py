@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import json
 import re
 import urllib.parse
 from datetime import UTC, date, datetime
@@ -10,7 +10,6 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import Query
 from odoo.tools import split_every
-from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.urls import urljoin as url_join
 
@@ -148,7 +147,7 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
 
     _description = 'Cover Properties Website Mixin'
 
-    cover_properties = fields.Text('Cover Properties', default=lambda s: json_safe.dumps(s._default_cover_properties()))
+    cover_properties = fields.Text('Cover Properties', default=lambda s: json.dumps(s._default_cover_properties()))
 
     def _default_cover_properties(self):
         return {
@@ -160,7 +159,7 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
 
     def _get_background(self, height=None, width=None):
         self.ensure_one()
-        properties = json_safe.loads(self.cover_properties)
+        properties = json.loads(self.cover_properties)
         img = properties.get('background-image', "none")
 
         if img.startswith('url(/web/image/'):
@@ -186,7 +185,7 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
         if 'cover_properties' not in vals:
             return super().write(vals)
 
-        cover_properties = json_safe.loads(vals['cover_properties'])
+        cover_properties = json.loads(vals['cover_properties'])
         resize_classes = cover_properties.get('resize_class', '').split()
         classes = ['o_half_screen_height', 'o_full_screen_height', 'cover_auto']
         if not set(resize_classes).isdisjoint(classes):
@@ -199,9 +198,9 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
         # destroying resize_class).
         copy_vals = dict(vals)
         for item in self:
-            old_cover_properties = json_safe.loads(item.cover_properties)
+            old_cover_properties = json.loads(item.cover_properties)
             cover_properties['resize_class'] = old_cover_properties.get('resize_class', classes[0])
-            copy_vals['cover_properties'] = json_safe.dumps(cover_properties)
+            copy_vals['cover_properties'] = json.dumps(cover_properties)
             super(WebsiteCover_PropertiesMixin, item).write(copy_vals)
         return True
 
@@ -311,7 +310,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         breadcrumb_items = self._get_breadcrumb_items(is_detail_page=is_detail_page)
         if len(breadcrumb_items) > 1:
             schemas.append(self._build_breadcrumb_jsonld(breadcrumb_items))
-        return json_safe.dumps(
+        return json.dumps(
             {'@context': 'https://schema.org', '@graph': schemas},
             ensure_ascii=False,
         )

@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import json as json_
 from base64 import b64encode
 
 from odoo import Command, tests
 from odoo.tools import mute_logger
-from odoo.tools.json import scriptsafe as json_safe
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.base.tests.files import GIF_B64, GIF_RAW
@@ -37,14 +36,14 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             response = self.url_open(
                 f'/html_editor/modify_image/{attachment.id}',
                 headers={'Content-Type': 'application/json'},
-                data=json_safe.dumps({
+                data=json_.dumps({
                     "params": params,
                 }),
             )
             self.assertEqual(200, response.status_code, "Expect response")
             if expect_fail:
-                return json_safe.loads(response.content)
-            content = json_safe.loads(response.content)
+                return json_.loads(response.content)
+            content = json_.loads(response.content)
             self.assertFalse(content.get('error'), "An error should not happen")
             url = content.get('result')
             url_path = url['original'].partition('?unique=')[0]
