@@ -39,7 +39,7 @@ class CustomerPortal(portal.CustomerPortal):
             return
 
         if input_quantity is not False:
-            quantity = input_quantity
+            quantity = max(input_quantity, 0)
         else:
             number = -1 if remove else 1
             quantity = max((order_line.product_uom_qty + number), 0)
