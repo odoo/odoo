@@ -48,10 +48,14 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 // Remove invisible whitespace that would become visible in a `<pre>` element.
                 removeInvisibleWhitespace(params.block, cursors);
             }
-            if (block.nodeName === "TEXTAREA" && block.classList.contains("o_prism_source")) {
+            if (this.isCodeBlockSource(block)) {
                 params.block = this.convertToParagraph(block);
             }
         },
+        // Allow Set Tag to target a code block even when its embedded component
+        // is not mounted.
+        // e.g. right after a preview is reverted and reapplied).
+        set_tag_target_predicates: (block) => this.isCodeBlockSource(block),
         toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
             if (
                 targetedNodes.length &&
@@ -209,6 +213,17 @@ export class SyntaxHighlightingPlugin extends Plugin {
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
         }
+    }
+
+    /**
+     * A code block may be the editable `<textarea>` or, if its embedded component
+     * is not mounted, the host `<div>`.
+     */
+    isCodeBlockSource(block) {
+        return (
+            (block.nodeName === "TEXTAREA" && block.classList.contains("o_prism_source")) ||
+            Boolean(block.matches?.(CODE_BLOCK_SELECTOR))
+        );
     }
 
     convertToParagraph(target) {
