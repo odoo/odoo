@@ -864,7 +864,7 @@ class Website(models.CachedModel):
         )
 
     @api.model
-    def configurator_get_images(self, industry_id, theme=''):
+    def configurator_get_custom_resources(self, industry_id, theme=''):
         if not industry_id or industry_id <= 0:
             return {}
         try:
@@ -874,14 +874,18 @@ class Website(models.CachedModel):
             )
         except (AccessError, RequestException) as e:
             logger.warning(
-                "Failed to fetch configurator images for industry %s: %s",
+                "Failed to fetch configurator resources for industry %s: %s",
                 industry_id,
                 e,
             )
             return {}
         if not isinstance(custom_resources, dict):
             return {}
-        return custom_resources.get('images', {})
+        return custom_resources
+
+    @api.model
+    def configurator_get_images(self, industry_id, theme=''):
+        return self.configurator_get_custom_resources(industry_id, theme).get('images', {})
 
     @api.model
     def configurator_apply(self, **kwargs):

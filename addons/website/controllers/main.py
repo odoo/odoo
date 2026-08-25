@@ -490,17 +490,17 @@ class Website(Home):
         except FileNotFoundError as exc:
             raise NotFound() from exc
 
-    def _get_configurator_preview_images_map(self, theme_name, industry_id):
-        """Fetch the industry image replacements for a theme preview.
+    def _get_configurator_preview_resources(self, theme_name, industry_id):
+        """Fetch the industry replacements for a preview.
 
         :param str theme_name: name of the previewed theme
         :param int industry_id: selected website industry id
-        :return: mapping from original image names to replacement URLs
+        :return: the IAP resources personalizing the preview
         :rtype: dict
         """
         if not theme_name or industry_id <= 0:
             return {}
-        return request.env['website'].configurator_get_images(industry_id, theme_name)
+        return request.env['website'].configurator_get_custom_resources(industry_id, theme_name)
 
     def _get_theme_static_preview_image_url(self, theme_name, image_name):
         """Find an image directly in the theme static preview files.
@@ -648,6 +648,27 @@ class Website(Home):
         final_html = re.sub(r'/web/image/[^"\'\s,)]+', replace_image_url, final_html)
         return final_html
 
+    def _apply_configurator_preview_texts(self, final_html, catalog):
+        if not catalog:
+            return final_html
+
+        def replace_keyed_text(match):
+            slot, _, field = match.group(2).rpartition('.')
+            value = catalog.get(slot, {}).get(field)
+            # A slot only partly written keeps its placeholder: an unwritten
+            # price is a zero, which no preview should ever display.
+            if not value:
+                return match.group(0)
+            if field == 'price':
+                value = f'{value:.2f}'
+            return f'{match.group(1)}{markup_escape(value)}'
+
+        return re.sub(
+            r'(<[^>]*\bindustry_text_key="([^"]*)"[^>]*>)[^<]*',
+            replace_keyed_text,
+            final_html,
+        )
+
     def _get_configurator_preview_shape_url(self, shape_url, palette_map):
         """Replace palette references in a shape URL query string.
 
@@ -766,46 +787,50 @@ class Website(Home):
             final_html,
             palette_map,
         )
-        dark_mode_overrides = ''
+        content_overrides = ''
         if is_dark:
             root_variables += (
                 '--body-bg:var(--o-color-4);'
                 '--body-color:var(--o-color-5);'
             )
-            dark_mode_overrides = (
+            content_overrides = (
                 '#wrapwrap>main,#wrapwrap.o_footer_effect_enable>main{'
                 'background-color:var(--o-color-4);'
                 'color:var(--o-color-5);'
                 '}'
             )
-            for area_name, area_selector in (
-                ('menu', '#wrapwrap header .navbar'),
-                ('footer', '#wrapwrap footer'),
-            ):
-                background_match = re.search(
-                    rf'--{area_name}\s*:\s*'
-                    r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
-                    final_html,
-                )
-                if not background_match:
-                    continue
-                color_name, color_value = background_match.groups()
-                background_color = palette_map.get(color_name) if color_name else color_value
-                if not background_color:
-                    continue
-                text_color = self._get_configurator_preview_contrast_color(background_color)
-                dark_mode_overrides += (
-                    f'{area_selector},'
-                    f'{area_selector} :is('
-                    'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
-                    f'){{color:{text_color}!important;}}'
-                )
+        # The menu and footer text colors are compiled against the palette the
+        # preview was generated with. They are recomputed for the selected one
+        # whether it is dark or light, otherwise a preview generated on a dark
+        # menu keeps white links on the light menu it is shown with.
+        for area_name, area_selector in (
+            ('menu', '#wrapwrap header .navbar'),
+            ('footer', '#wrapwrap footer'),
+        ):
+            background_match = re.search(
+                rf'--{area_name}\s*:\s*'
+                r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
+                final_html,
+            )
+            if not background_match:
+                continue
+            color_name, color_value = background_match.groups()
+            background_color = palette_map.get(color_name) if color_name else color_value
+            if not background_color:
+                continue
+            text_color = self._get_configurator_preview_contrast_color(background_color)
+            content_overrides += (
+                f'{area_selector},'
+                f'{area_selector} :is('
+                'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
+                f'){{color:{text_color}!important;}}'
+            )
         # Chrome may show thin gaps between sections in scaled iframes. The
         # `.o_we_shape` and `section` rules overlap them to hide those gaps.
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
-            f'{dark_mode_overrides}'
+            f'{content_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
             '</style>'
@@ -858,11 +883,16 @@ class Website(Home):
             for index, color in enumerate(palette, start=1)
             if color
         }
-        images_map = self._get_configurator_preview_images_map(theme_name, industry_id)
+        resources = self._get_configurator_preview_resources(theme_name, industry_id)
 
         final_html = self._load_configurator_preview_html(preview_url)
         final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
-        final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
+        final_html = self._apply_configurator_preview_images(
+            final_html, theme_name, resources.get('images', {})
+        )
+        final_html = self._apply_configurator_preview_texts(
+            final_html, resources.get('catalog', {})
+        )
         if is_dark == '1':
             preview_doc = html.document_fromstring(final_html)
             preview_doctype = preview_doc.getroottree().docinfo.doctype
