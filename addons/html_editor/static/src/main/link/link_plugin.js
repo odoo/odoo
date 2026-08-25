@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { hasColor } from "@html_editor/utils/color";
 import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
@@ -180,6 +181,7 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "format",
         "baseContainer",
         "feff",
         "delete",
@@ -778,7 +780,7 @@ export class LinkPlugin extends Plugin {
                 });
                 if (!this.config.hideStylingInLinkPopover) {
                     link.removeAttribute("style");
-                    this.dependencies.color.removeAllColor();
+                    this.dependencies.format.removeSelectionFormats(["color", "backgroundColor"]);
                 }
                 // Remove the current link (linkInDocument) if it has no content
                 if (
@@ -812,20 +814,24 @@ export class LinkPlugin extends Plugin {
             const childNodes = [...anchorEl.childNodes];
             // For each anchor element, if it has an inline color style,
             // (converted from an external style), remove it from the anchor,
-            // create a font tag inside it, and move the color to the font tag.
-            // This ensures the color is applied to the font element instead of
+            // create a span inside it, and move the color to that span.
+            // This ensures the color is applied to the span element instead of
             // the anchor element itself.
+            // TODO DESO: should be a html_compatibility_processor.
             if (color && childNodes.every(isPhrasingContent)) {
                 anchorEl.style.removeProperty("color");
-                const font =
-                    anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
+                const wrapper = anchorEl.firstElementChild;
+                if (
+                    wrapper &&
+                    hasColor(wrapper, "color") &&
+                    cleanZWChars(anchorEl.textContent) === wrapper.textContent
+                ) {
                     continue;
                 }
-                const newFont = this.document.createElement("font");
-                newFont.append(...childNodes);
-                anchorEl.appendChild(newFont);
-                this.dependencies.color.colorElement(newFont, color, "color");
+                const newSpan = this.document.createElement("span");
+                newSpan.append(...childNodes);
+                anchorEl.appendChild(newSpan);
+                this.dependencies.color.colorElement(newSpan, color, "color");
             }
 
             // When a link contains unsupported element (like an iframe or a link),

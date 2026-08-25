@@ -1103,16 +1103,6 @@ describe("Unwrapping html element", () => {
         });
     });
 
-    test("should unwrap a node when pasting in between same node (6)", async () => {
-        await testEditor({
-            contentBefore: '<p><font style="background-color: rgb(255, 0, 0);">[]test</font></p>',
-            stepFunction: async (editor) => {
-                pasteHtml(editor, '<font style="background-color: rgb(255, 0, 0);">nested </font>');
-            },
-            contentAfter:
-                '<p><font style="background-color: rgb(255, 0, 0);">nested []test</font></p>',
-        });
-    });
     test("should not unwrap a node when pasting at start of different node (1)", async () => {
         await testEditor({
             contentBefore: "<p>[]mn</p>",
@@ -1164,12 +1154,12 @@ describe("Unwrapping html element", () => {
 
     test("should unwrap a node when pasting at start of same node (3)", async () => {
         await testEditor({
-            contentBefore: '<h1><font style="background-color: rgb(255, 0, 0);">[]mn</font></h1>',
+            contentBefore: '<h1><span style="background-color: rgb(255, 0, 0);">[]mn</span></h1>',
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h1>def</h1><h1>ghi</h1>");
             },
             contentAfter:
-                '<h1>abc</h1><h1>def</h1><h1><font style="background-color: rgb(255, 0, 0);">ghi[]mn</font></h1>',
+                '<h1>abc</h1><h1>def</h1><h1><span style="background-color: rgb(255, 0, 0);">ghi[]mn</span></h1>',
         });
     });
     test("should not unwrap a node when pasting at end of different node (1)", async () => {
@@ -1223,12 +1213,12 @@ describe("Unwrapping html element", () => {
 
     test("should unwrap a node when pasting at end of same node (3)", async () => {
         await testEditor({
-            contentBefore: '<h1><font style="background-color: rgb(255, 0, 0);">mn[]</font></h1>',
+            contentBefore: '<h1><span style="background-color: rgb(255, 0, 0);">mn[]</span></h1>',
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h1>def</h1><h1>ghi</h1>");
             },
             contentAfter:
-                '<h1><font style="background-color: rgb(255, 0, 0);">mnabc</font></h1><h1>def</h1><h1>ghi[]</h1>',
+                '<h1><span style="background-color: rgb(255, 0, 0);">mnabc</span></h1><h1>def</h1><h1>ghi[]</h1>',
         });
     });
     test("should not unwrap empty block nodes even when pasting on same node", async () => {
@@ -1266,10 +1256,10 @@ describe("Unwrapping html element", () => {
             stepFunction: async (editor) => {
                 pasteOdooEditorHtml(
                     editor,
-                    '<p><font style="background-color: rgb(255, 0, 0);">abc</font></p>'
+                    '<p><span style="background-color: rgb(255, 0, 0);">abc</span></p>'
                 );
             },
-            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
+            contentAfter: '<h1><span style="background-color: rgb(255, 0, 0);">abc</span>[]</h1>',
         });
     });
 
@@ -1279,10 +1269,10 @@ describe("Unwrapping html element", () => {
             stepFunction: async (editor) => {
                 pasteOdooEditorHtml(
                     editor,
-                    '<div class="o-paragraph"><font style="background-color: rgb(255, 0, 0);">abc</font></div>'
+                    '<div class="o-paragraph"><span style="background-color: rgb(255, 0, 0);">abc</span></div>'
                 );
             },
-            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
+            contentAfter: '<h1><span style="background-color: rgb(255, 0, 0);">abc</span>[]</h1>',
         });
     });
 
@@ -2896,7 +2886,7 @@ describe("pasting within pre", () => {
             stepFunction: async (editor) => {
                 pasteHtml(
                     editor,
-                    '<div class="o-paragraph">a<strong>bcd</strong><font style="color: rgb(255, 0, 0);">efg</font><font style="background-color: rgba(255, 156, 0, 0.6);">hij</font><span class="display-3-fs">klm</span>no</div>'
+                    '<div class="o-paragraph">a<strong>bcd</strong><span style="color: rgb(255, 0, 0);">efg</span><span style="background-color: rgba(255, 156, 0, 0.6);">hij</span><span class="display-3-fs">klm</span>no</div>'
                 );
             },
             contentAfter: "<pre>abcdefghijklmno[]</pre>",

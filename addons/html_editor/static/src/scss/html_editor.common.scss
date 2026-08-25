@@ -792,11 +792,22 @@ pre {
         background-size: 0px;
         background-image: inherit !important;
     }
-    s:not(font[style*="-webkit-text-fill-color"] s) {
+    // A font change gives the descendant its own text box, misaligning the
+    // ancestor's clip: re-clip the inherited gradient to its own glyphs.
+    // TODO: `*=` also matches any class merely containing "-fs", and re-clipping
+    // an element that did not change font restarts the gradient on it. CSS
+    // cannot express "a token ending in -fs" ($= and *= match the whole
+    // attribute, ~= only whole tokens), so this wants the font size classes
+    // enumerated - `small` included, which no -fs match catches.
+    :is([style*="font-size"], [style*="font-family"], [class*="-fs"]) {
+        background-size: auto;
+        -webkit-background-clip: text;
+    }
+    s:not(:is(font, span)[style*="-webkit-text-fill-color"] s) {
         @extend %o-text-gradient-decoration;
         background-position: 0 50%;
     }
-    u:not(font[style*="-webkit-text-fill-color"] u) {
+    u:not(:is(font, span)[style*="-webkit-text-fill-color"] u) {
         @extend %o-text-gradient-decoration;
         background-position: 0 95%;
     }
@@ -847,8 +858,7 @@ code.o_inline_code {
     font-weight: normal;
 }
 
-// Ensure colored font wrapper is inherited by child links
-font[class^="text-o-"] a,
-font[style*="color"] a {
+// Ensure colored wrapper is inherited by child links.
+:is(font, span):is([class*="text-o-"], [style*="color"]) a {
     color: inherit !important;
 }

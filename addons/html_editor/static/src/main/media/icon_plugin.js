@@ -12,7 +12,9 @@ import {
     isTextNode,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, findUpTo } from "@html_editor/utils/dom_traversal";
+import { closestBlock } from "@html_editor/utils/blocks";
+import { hasColor } from "@html_editor/utils/color";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -131,6 +133,22 @@ export class IconPlugin extends Plugin {
             },
         ],
         click_overrides: this.onClickIcon.bind(this),
+        is_formattable_node_predicates: (node, formatName) => {
+            if (
+                (formatName === "color" || formatName === "backgroundColor") &&
+                isIconElement(node)
+            ) {
+                return this.dependencies.selection.isNodeEditable(node);
+            }
+        },
+        atomic_format_leaf_predicates: (node, formatName) => {
+            if (
+                (formatName === "color" || formatName === "backgroundColor") &&
+                isIconElement(node)
+            ) {
+                return true;
+            }
+        },
         would_feff_be_legit_predicates: (node) => {
             if (
                 (node.previousSibling && isIconElement(closestElement(node.previousSibling))) ||
@@ -241,7 +259,9 @@ export class IconPlugin extends Plugin {
         if (nodes.length === 0) {
             return;
         }
-        const el = closestElement(nodes[0], "font");
+        const el = findUpTo(nodes[0].parentElement, closestBlock(nodes[0]).parentElement, (n) =>
+            hasColor(n, "backgroundColor")
+        );
         if (!el) {
             return;
         }

@@ -197,22 +197,22 @@ describe("Dark background", () => {
 
 test("should not restore manually applied colors while restoring other original colors on save", async () => {
     await testEditor({
-        contentBefore: '<p>abc<font style="color: rgb(255, 255, 255)">d[e]f</font></p>',
+        contentBefore: '<p>abc<span style="color: rgb(255, 255, 255)">d[e]f</span></p>',
         contentBeforeEdit:
-            '<p>abc<font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d[e]f</font></p>',
+            '<p>abc<span style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d[e]f</span></p>',
         stepFunction: setColor("rgb(255, 255, 255)", "color"),
         contentAfterEdit: unformat(`
             <p>abc
-                <font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d</font>
-                <font style="color: rgb(255, 255, 255);">[e]</font>
-                <font style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">f</font>
+                <span style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">d</span>
+                <span style="color: rgb(255, 255, 255);">[e]</span>
+                <span style="color: rgb(183, 183, 183);" data-original-color="rgb(255, 255, 255)">f</span>
             </p>
         `),
         contentAfter: unformat(`
             <p>abc
-                <font style="color: rgb(255, 255, 255);">d</font>
-                <font style="color: rgb(255, 255, 255);">[e]</font>
-                <font style="color: rgb(255, 255, 255);">f</font>
+                <span style="color: rgb(255, 255, 255);">d</span>
+                <span style="color: rgb(255, 255, 255);">[e]</span>
+                <span style="color: rgb(255, 255, 255);">f</span>
             </p>
         `),
         config: { includePlugins: [ContrastPlugin] },
@@ -221,15 +221,15 @@ test("should not restore manually applied colors while restoring other original 
 
 test("should apply contrast to color classes with important style and remove it on manual color change", async () => {
     await testEditor({
-        contentBefore: '<p>abc<font class="text-o-color-3">[def]</font></p>',
+        contentBefore: '<p>abc<span class="text-o-color-3">[def]</span></p>',
         contentBeforeEdit:
-            '<p>abc<font class="text-o-color-3" data-original-color="" style="color: rgb(190, 182, 175) !important;">[def]</font></p>',
+            '<p>abc<span class="text-o-color-3" data-original-color="" style="color: rgb(190, 182, 175) !important;">[def]</span></p>',
         stepFunction: setColor("rgb(190, 182, 175)", "color"),
         contentAfterEdit: unformat(`
-            <p>abc<font class="" style="color: rgb(190, 182, 175);">[def]</font></p>
+            <p>abc<span style="color: rgb(190, 182, 175);">[def]</span></p>
         `),
         contentAfter: unformat(`
-            <p>abc<font style="color: rgb(190, 182, 175);">[def]</font></p>
+            <p>abc<span style="color: rgb(190, 182, 175);">[def]</span></p>
         `),
         config: { includePlugins: [ContrastPlugin] },
     });
@@ -238,16 +238,16 @@ test("should apply contrast to color classes with important style and remove it 
 test("should use background color classes for contrast and remove temporary important style on save", async () => {
     await testEditor({
         contentBefore:
-            '<p><font class="bg-o-color-5">abc<font class="text-o-color-5">[def]</font></font></p>',
+            '<p><span class="bg-o-color-5">abc<span class="text-o-color-5">[def]</span></span></p>',
         contentBeforeEdit: unformat(`
             <p>
-                <font class="bg-o-color-5">abc
-                    <font class="text-o-color-5" data-original-color="" style="color: rgb(91, 64, 85) !important;">[def]</font>
-                </font>
+                <span class="bg-o-color-5">abc
+                    <span class="text-o-color-5" data-original-color="" style="color: rgb(91, 64, 85) !important;">[def]</span>
+                </span>
             </p>
         `),
         contentAfter: unformat(`
-            <p><font class="bg-o-color-5">abc<font class="text-o-color-5">[def]</font></font></p>
+            <p><span class="bg-o-color-5">abc<span class="text-o-color-5">[def]</span></span></p>
         `),
         config: { includePlugins: [ContrastPlugin] },
     });

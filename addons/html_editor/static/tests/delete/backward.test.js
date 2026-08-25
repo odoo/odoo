@@ -232,8 +232,8 @@ describe("Selection collapsed", () => {
                     deleteBackward(editor);
                     await insertText(editor, "i");
                 },
-                contentAfterEdit: '<p>uv<font style="color: red;"><em>i[]</em></font>xy</p>',
-                contentAfter: '<p>uv<font style="color: red;"><em>i[]</em></font>xy</p>',
+                contentAfterEdit: '<p>uv<span style="color: red;"><em>i[]</em></span>xy</p>',
+                contentAfter: '<p>uv<span style="color: red;"><em>i[]</em></span>xy</p>',
             });
         });
 
@@ -2284,9 +2284,9 @@ describe("Selection not collapsed", () => {
 
     test("should not delete the block and appends a paragraph if the element has textContent (2)", async () => {
         await testEditor({
-            contentBefore: `<h1><font style="background-color: rgb(255, 0, 0);">[]abc</font></h1>`,
+            contentBefore: `<h1><span style="background-color: rgb(255, 0, 0);">[]abc</span></h1>`,
             stepFunction: deleteBackward,
-            contentAfter: `<h1><font style="background-color: rgb(255, 0, 0);">[]abc</font></h1>`,
+            contentAfter: `<h1><span style="background-color: rgb(255, 0, 0);">[]abc</span></h1>`,
         });
     });
 
