@@ -3,7 +3,12 @@
 from datetime import datetime
 from freezegun import freeze_time
 
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
 from odoo import Command
+||||||| 9b26cc0cf68a44fa900a98cfadeb87bc78ea29ca
+=======
+from odoo.fields import Command
+>>>>>>> d7fb1772b5b61ef19456af6aeda16a88c73a65a6
 from odoo.addons.stock.tests.test_generate_serial_numbers import StockGenerateCommon
 from odoo.addons.stock.tests.test_picking_tours import TestStockPickingTour
 from odoo.tools.misc import get_lang
@@ -151,6 +156,7 @@ class TestStockLot(StockGenerateCommon):
             self.assertEqual(move_line.quantity, 1)
             self.assertEqual(move_line.expiration_date, list_lot_and_qty[i]["datetime"])
 
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
     @freeze_time('2025-9-13')
     def test_set_multiple_lot_name_with_expiration_date_05_import_dates(self):
         """ When importing lot names, quantities and expiration dates, make sure the date is not
@@ -186,6 +192,66 @@ class TestStockLot(StockGenerateCommon):
             {'quantity': 3, 'lot_name': 'lot3', 'expiration_date': datetime.strptime('1970-1-1', "%Y-%m-%d")},
         ])
 
+||||||| 9b26cc0cf68a44fa900a98cfadeb87bc78ea29ca
+=======
+    @freeze_time('2025-9-13')
+    def test_set_multiple_lot_name_with_expiration_date_05_import_dates(self):
+        """ When importing lot names, quantities and expiration dates, make sure the date is not
+        replaced by the computed date and if there's no date, it takes the computed date. Also,
+        a lot name matching an existing lot must use that lot's own expiration date instead. """
+        product_lot = self.env['product.product'].create({
+            'name': 'Tracked by Lot Numbers',
+            'tracking': 'lot',
+            'is_storable': True,
+            'use_expiration_date': True,
+            'expiration_time': 10,
+        })
+        existing_lot = self.env['stock.lot'].create({
+            'name': 'existing-lot',
+            'product_id': product_lot.id,
+            'expiration_date': datetime(2030, 1, 1),
+        })
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'state': 'draft',
+            'move_ids': [Command.create({
+                'name': product_lot.name,
+                'product_id': product_lot.id,
+                'product_uom_qty': 25,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })]
+        })
+        action_context = {
+            'default_company_id': self.env.company.id,
+            'default_picking_id': receipt_picking.id,
+            'default_picking_type_id': self.warehouse.in_type_id.id,
+            'default_location_id': receipt_picking.location_id.id,
+            'default_location_dest_id': receipt_picking.location_dest_id.id,
+            'default_product_id': product_lot.id,
+            'default_tracking': 'lot',
+        }
+
+        move_line_vals = self.env['stock.move'].action_generate_lot_line_vals(
+            action_context, 'import', None, 0, 'lot1;10;2025-12-31\nlot2;7\nlot3;3;1970-1-1',
+        )
+        self.assert_move_line_vals_values(move_line_vals, [
+            {'quantity': 10, 'lot_name': 'lot1', 'expiration_date': datetime.strptime('2025-12-31', "%Y-%m-%d")},
+            {'quantity': 7, 'lot_name': 'lot2', 'expiration_date': datetime.strptime('2025-9-23', "%Y-%m-%d")},
+            {'quantity': 3, 'lot_name': 'lot3', 'expiration_date': datetime.strptime('1970-1-1', "%Y-%m-%d")},
+        ])
+
+        # A lot name matching an existing lot: that lot's own expiration date prevails.
+        receipt_picking.picking_type_id.use_existing_lots = True
+        move_line_vals = self.env['stock.move'].action_generate_lot_line_vals(
+            action_context, 'import', None, 0, 'existing-lot;5',
+        )
+        self.assertEqual(move_line_vals[0]['lot_id']['id'], existing_lot.id)
+        self.assertEqual(move_line_vals[0]['expiration_date'], existing_lot.expiration_date)
+
+>>>>>>> d7fb1772b5b61ef19456af6aeda16a88c73a65a6
     @freeze_time('2023-04-17')
     def test_set_multiple_lot_name_with_expiration_date_05_wrong_given_date(self):
         """ This test ensure when the given dates aren't correctly written, the
@@ -250,6 +316,7 @@ class TestStockLot(StockGenerateCommon):
             self.assertEqual(move.move_line_ids.lot_name, "lot-001")
             self.assertEqual(move.move_line_ids.quantity, 20)
             self.assertEqual(move.move_line_ids.expiration_date, datetime(day=4, month=8, year=2048))
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
 
 
 class TestProductExpiryTour(TestStockPickingTour):
@@ -279,3 +346,36 @@ class TestProductExpiryTour(TestStockPickingTour):
         url = self._get_picking_url(self.receipt.id)
 
         self.start_tour(url, 'test_generate_serial_with_expiration', login='admin')
+||||||| 9b26cc0cf68a44fa900a98cfadeb87bc78ea29ca
+=======
+
+
+class TestProductExpiryTour(TestStockPickingTour):
+
+    @freeze_time("2025-06-01")
+    def test_generate_serial_with_expiration(self):
+        """
+        Ensure that serial/lot numbers generated using the 'Generate Serials/Lots' button in Detailed
+        Operations have expiration dates set.
+        """
+        product_exp = self.env['product.product'].create({
+            'name': 'Product Exp',
+            'is_storable': True,
+            'tracking': 'serial',
+            'use_expiration_date': True,
+            'expiration_time': 2,
+        })
+
+        self.env['stock.move'].create({
+            'name': product_exp.name,
+            'product_id': product_exp.id,
+            'product_uom_qty': 2,
+            'product_uom': product_exp.uom_id.id,
+            'picking_id': self.receipt.id,
+        })
+
+        self.receipt.action_confirm()
+        url = self._get_picking_url(self.receipt.id)
+
+        self.start_tour(url, 'test_generate_serial_with_expiration', login='admin')
+>>>>>>> d7fb1772b5b61ef19456af6aeda16a88c73a65a6
