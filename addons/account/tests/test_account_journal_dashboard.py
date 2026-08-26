@@ -512,3 +512,122 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(150))
+
+    @freeze_time("2025-01-22")
+    def test_journal_dashboard_kpi(self):
+        self.env.ref('base.CHF').write({'active': True})
+        self.env['res.currency.rate'].create([{
+            'currency_id': self.env.ref('base.EUR').id,
+            'name': '2024-12-01',
+            'rate': 2.0,
+        }, {
+            'currency_id': self.env.ref('base.CHF').id,
+            'name': '2024-12-01',
+            'rate': 4.0,
+        }])
+        coa_ref = self.env['account.chart.template'].ref
+
+        moves = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'journal_id': coa_ref('sale').id,
+                'partner_id': self.partner_a.id,
+                'currency_id': currency.id,
+                'review_state': 'todo',
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 100,
+                        'tax_ids': [],
+                    }),
+                ],
+            } for currency in (self.env.ref('base.EUR'), self.env.ref('base.CHF'))
+        ] + [
+            {
+                'move_type': 'in_invoice',
+                'invoice_date': '2025-01-01',
+                'journal_id': coa_ref('purchase').id,
+                'partner_id': self.partner_a.id,
+                'currency_id': currency.id,
+                'review_state': 'todo',
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 1000,
+                        'tax_ids': [],
+                    }),
+                ],
+            } for currency in (self.env.ref('base.EUR'), self.env.ref('base.CHF'))
+        ])
+        moves.action_post()
+
+        self.env['account.bank.statement'].create([{
+            'name': 'statement_2',
+            'balance_start': 0.0,
+            'balance_end_real': 10000.0,
+            'line_ids': [
+                Command.create({
+                    'payment_ref': 'Opening balance',
+                    'amount': 10000.0,
+                    'journal_id': coa_ref('bank').id,
+                }),
+            ],
+        }])
+
+        profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl')
+        partner_ledger_action = self.env.ref('account_reports.action_account_report_partner_ledger')
+        cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis')
+        invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
+        kpis = self.env['account.journal'].get_account_dashboard_kpis()
+        self.assertEqual(kpis, [{
+            'action_id': profit_and_loss_action.id,
+            'has_total': True,
+            'id': 'gross_margin',
+            'name': 'Gross Margin',
+            'value': '$\xa0-675.00',
+        }, {
+            'action_id': profit_and_loss_action.id,
+            'has_total': True,
+            'id': 'revenue',
+            'name': 'Revenue',
+            'value': '$\xa075.00',
+        }, {
+            'action_id': profit_and_loss_action.id,
+            'has_total': True,
+            'id': 'net_margin',
+            'name': 'Net Margin',
+            'value': '$\xa0-675.00',
+        }, {
+            'action_id': profit_and_loss_action.id,
+            'has_total': True,
+            'id': 'expenses',
+            'name': 'Expenses',
+            'value': '$\xa0750.00',
+        }, {
+            'action_id': partner_ledger_action.id,
+            'has_total': False,
+            'id': 'unpaid',
+            'name': 'Unpaid',
+            'values': [
+                {'label': 'Customers', 'value': '$\xa075.00'},
+                {'label': 'Suppliers', 'value': '$\xa0750.00'},
+            ],
+        }, {
+            'action_id': cashflow_analysis_action.id,
+            'has_total': False,
+            'id': 'cashflow',
+            'name': 'Cash Flow',
+            'values': [
+                {'label': 'Cash In', 'value': '$\xa010,000.00'},
+                {'label': 'Cash Out', 'value': '$\xa00.00'},
+            ],
+        }, {
+            'action_id': invoice_layout_action.id,
+            'has_total': False,
+            'id': 'invoice_layout',
+            'image': '/web/static/img/mimetypes/document.svg',
+            'is_invoice_layout_card': True,
+            'name': 'Invoice Layout',
+        }])
