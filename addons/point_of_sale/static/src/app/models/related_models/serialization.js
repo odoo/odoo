@@ -56,7 +56,7 @@ const deepSerialization = (
                     if (childRecord.isSynced && childRecord._dirty) {
                         toUpdate.push(childRecord);
 
-                        if (!opts.keepCommands) {
+                        if (!opts.keepCommands && !opts.keepDirty) {
                             childRecord._dirty = false;
                         }
                     } else if (!childRecord.isSynced) {
@@ -184,7 +184,7 @@ const deepSerialization = (
         res[key] = getValue();
     }
 
-    if (!opts.keepCommands) {
+    if (!opts.keepCommands && !opts.keepDirty) {
         record._dirty = false;
     }
 
