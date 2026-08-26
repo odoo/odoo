@@ -1,4 +1,5 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     advanceTime,
@@ -406,6 +407,37 @@ test("Save image with correct parameter", async () => {
         </div>`);
     await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     await expect.waitForSteps(["modify_image"]);
+});
+
+test("width and height attributes of images are removed in edit mode and not saved", async () => {
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        const savedImgEl = new DOMParser()
+            .parseFromString(args[1], "text/html")
+            .querySelector("img.img-fluid");
+        expect(savedImgEl).not.toHaveAttribute("width");
+        expect(savedImgEl).not.toHaveAttribute("height");
+        expect(savedImgEl.style.width).toBe("");
+        expect(savedImgEl.style.height).toBe("");
+        expect.step("save");
+        return true;
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <h1 class="title">Hello</h1>
+        <img class="img-fluid" src="/web/static/img/logo.png" width="200" height="100">`);
+    const imgEl = queryOne(":iframe img.img-fluid");
+    expect(imgEl).not.toHaveAttribute("width");
+    expect(imgEl).not.toHaveAttribute("height");
+    // Contrary to html_editor, website does not convert them to inline styles.
+    expect(imgEl.style.width).toBe("");
+    expect(imgEl.style.height).toBe("");
+
+    // Modify the page so that it gets saved.
+    const editor = getEditor();
+    const textNode = queryOne(":iframe h1.title").firstChild;
+    setSelection({ anchorNode: textNode, anchorOffset: 1 });
+    await insertText(editor, "1");
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
+    await expect.waitForSteps(["save"]);
 });
 
 test("Correct options appear when clicking on a gif image", async () => {
