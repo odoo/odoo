@@ -13,6 +13,7 @@ import unicodedata
 import werkzeug.routing
 
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
@@ -1142,31 +1143,49 @@ class Website(models.CachedModel):
             ('module', '=', 'website'),
             ('model', '=', 'ir.attachment')
         ]).mapped('name')
-        for name, image_src in images.items():
-            extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
-            if extn_identifier in names:
-                continue
+
+        def get_attachment_identifier(name):
+            return 'configurator_%s_%s' % (website.id, name.split('.')[1])
+
+        def download_image(image_src):
             try:
                 response = requests.get(image_src, timeout=3)
                 response.raise_for_status()
             except Exception as e:
                 logger.warning("Failed to download image: %s.\n%s", image_src, e)
-            else:
-                attachment = self.env['ir.attachment'].create({
-                    'name': name,
-                    'website_id': website.id,
-                    'key': name,
-                    'type': 'binary',
-                    'raw': response.content,
-                    'public': True,
-                })
-                self.env['ir.model.data'].create({
-                    'name': extn_identifier,
-                    'module': 'website',
-                    'model': 'ir.attachment',
-                    'res_id': attachment.id,
-                    'noupdate': True,
-                })
+                return None
+            return response.content
+
+        images_to_download = {
+            name: image_src for name, image_src in images.items()
+            if get_attachment_identifier(name) not in names
+        }
+
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            downloaded_images = dict(zip(
+                images_to_download,
+                executor.map(download_image, images_to_download.values()),
+            ))
+
+        for name, image_content in downloaded_images.items():
+            if image_content is None:
+                continue
+
+            attachment = self.env['ir.attachment'].create({
+                'name': name,
+                'website_id': website.id,
+                'key': name,
+                'type': 'binary',
+                'raw': image_content,
+                'public': True,
+            })
+            self.env['ir.model.data'].create({
+                'name': get_attachment_identifier(name),
+                'module': 'website',
+                'model': 'ir.attachment',
+                'res_id': attachment.id,
+                'noupdate': True,
+            })
 
         def fallback_create_missing_industry_image(image_name, fallback_img_name):
             """ If an industry did not specify an image, this method allows that
