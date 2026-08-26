@@ -270,7 +270,8 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
     return [
         {
             content: markup(_t("<b>Click Edit</b> dropdown")),
-            trigger: "body .o_menu_systray button:contains('Edit')",
+            trigger:
+                "body:has(:iframe body[is-ready=true]) .o_menu_systray button:contains('Edit')",
             tooltipPosition: position,
             run: "click",
         },
