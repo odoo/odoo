@@ -1,7 +1,7 @@
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
 import {
     getService,
@@ -1836,4 +1836,29 @@ test("a read of a computed field in a child model reads it on the parent model",
     expect(channel.label).toBe("label 0");
     channel.thread.counter = 1;
     expect(channel.label).toBe("label 1");
+});
+
+test("a computed until stale should recompute value when stale", async () => {
+    let ticks = 0;
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        label = this.computedUntilStale(
+            () => {
+                expect.step(`compute ${ticks}`);
+                return `label ${ticks}`;
+            },
+            () => 1000
+        );
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    expect(thread.label).toBe("label 0");
+    expect.verifySteps(["compute 0"]);
+    ticks = 1;
+    expect(thread.label).toBe("label 0");
+    expect.verifySteps([]);
+    await advanceTime(1000);
+    expect(thread.label).toBe("label 1");
+    expect.verifySteps(["compute 1"]);
 });
