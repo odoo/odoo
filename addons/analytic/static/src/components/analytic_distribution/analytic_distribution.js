@@ -268,7 +268,7 @@ export class AnalyticDistribution extends Component {
             })
         }
         this.state.formattedData = distribution;
-        if (accountNotFound) {
+        if (accountNotFound && this.editingRecord) {
             // Analytic accounts in the json were not found, save the json without them
             await this.save();
         }
