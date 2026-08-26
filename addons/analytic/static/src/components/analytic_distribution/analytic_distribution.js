@@ -268,7 +268,10 @@ export class AnalyticDistribution extends Component {
             })
         }
         this.state.formattedData = distribution;
-        if (accountNotFound) {
+
+        // In multi-edit, the cleanup is not persisted as load() reloads the stale analytic account.
+        // Skip save() to avoid the cleanup loop.
+        if (accountNotFound && !this.props.multi_edit) {
             // Analytic accounts in the json were not found, save the json without them
             await this.save();
         }
