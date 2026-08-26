@@ -47,7 +47,7 @@ class StockWarehouse(models.Model):
         'stock.location', 'Location Stock',
         domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
         required=True, check_company=True)
-    code = fields.Char('Short Name', required=True, help="Short name used to identify your warehouse")
+    code = fields.Char('Short Name', required=True, help="Short name used to identify your warehouse", copy=lambda self: self.env._('COPY'))
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
@@ -168,16 +168,6 @@ class StockWarehouse(models.Model):
         if not self.env.user.has_group('stock.group_stock_manager'):
             raise UserError(self.env._('Please contact your administrator to configure your warehouse.'))
         raise RedirectWarning(msg, warehouse_action.id, _('Go to Warehouses'))
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        for warehouse, vals in zip(self, vals_list):
-            if 'name' not in default:
-                vals['name'] = _("%s (copy)", warehouse.name)
-            if 'code' not in default:
-                vals['code'] = _("COPY")
-        return vals_list
 
     def write(self, vals):
         if 'company_id' in vals:

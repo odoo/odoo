@@ -95,7 +95,3 @@ class HrAttendanceOvertimeRuleset(models.Model):
         action['domain'] = self._get_versions_with_current_ruleset_domain()
         action['context'] = ctx
         return action
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", ruleset.name)) for ruleset, vals in zip(self, vals_list)]

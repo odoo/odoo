@@ -24,7 +24,7 @@ class WebsiteMenu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
-    name = fields.Char('Menu', required=True, translate=True)
+    name = fields.Char('Menu', required=True, translate=True, copy=True)
     url = fields.Char("Url", compute="_compute_url", compute_sudo=True, inverse="_inverse_url", search="_search_url")
     manual_url = fields.Char('Url defined by user')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade', index='btree_not_null')

@@ -6,7 +6,7 @@ from uuid import uuid4
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools.translate import LazyTranslate, mark_as_copy
+from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
@@ -27,7 +27,7 @@ class LoyaltyProgram(models.Model):
                 default_values = program_default_values[program_type]
                 defaults.update({k: v for k, v in default_values.items() if k in fields})
         return defaults
-    name = fields.Char(string="Program Name", translate=True, required=True, copy=mark_as_copy('name'))
+    name = fields.Char(string="Program Name", translate=True, required=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(copy=False)
     company_id = fields.Many2one(

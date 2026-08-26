@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.translate import mark_as_copy
 
 
 class HrWorkEntryType(models.Model):
@@ -13,7 +12,7 @@ class HrWorkEntryType(models.Model):
     _order = 'sequence'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(required=True, translate=True, tracking=True, copy=mark_as_copy('name'))
+    name = fields.Char(required=True, translate=True, tracking=True)
     display_code = fields.Char(string="Display Code", size=3, translate=True, tracking=True, help="This code can be changed, it is only for a display purpose (3 letters max)")
     code = fields.Char(
         string="Payroll Code",

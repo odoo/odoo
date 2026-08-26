@@ -3,7 +3,6 @@ from math import copysign
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import BinaryBytes, file_open, float_compare
-from odoo.tools.translate import mark_as_copy
 
 
 class PosPaymentMethod(models.Model):
@@ -39,7 +38,7 @@ class PosPaymentMethod(models.Model):
             selection.append(('bank_qr_code', self.env._('Bank App (QR Code)')))
         return selection
 
-    name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.', copy=mark_as_copy('name'))
+    name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
     sequence = fields.Integer(copy=False, default=_default_sequence)
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',

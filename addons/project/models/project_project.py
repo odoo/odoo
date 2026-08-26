@@ -93,7 +93,7 @@ class ProjectProject(models.Model):
         else:
             self_sudo.favorite_user_ids = [Command.unlink(self.env.uid)]
 
-    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
+    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True, copy=True)
     description = fields.Html(help="Description to provide more information and context about this project")
     active = fields.Boolean(default=True, copy=False, export_string_translation=False)
     sequence = fields.Integer(default=10, export_string_translation=False)

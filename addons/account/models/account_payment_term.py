@@ -2,7 +2,6 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL, format_date, formatLang, frozendict, date_utils
 from odoo.tools.float_utils import float_round
-from odoo.tools.translate import mark_as_copy
 
 from dateutil.relativedelta import relativedelta
 
@@ -19,7 +18,7 @@ class AccountPaymentTerm(models.Model):
     def _default_example_date(self):
         return self.env.context.get('example_date') or fields.Date.context_today(self)
 
-    name = fields.Char(string='Payment Terms', translate=True, required=True, copy=mark_as_copy('name'))
+    name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Html(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)

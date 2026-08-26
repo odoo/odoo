@@ -136,7 +136,7 @@ class ThemeWebsiteMenu(models.Model):
     _name = 'theme.website.menu'
     _description = 'Website Theme Menu'
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(required=True, translate=True, copy=True)
     url = fields.Char(default='#')
     page_id = fields.Many2one('theme.website.page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')

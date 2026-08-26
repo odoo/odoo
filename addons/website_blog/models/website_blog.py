@@ -5,7 +5,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import html_translate, mark_as_copy
+from odoo.tools.translate import html_translate
 
 from odoo.addons.website.tools import images_from_html, text_from_html
 
@@ -183,7 +183,7 @@ class BlogPost(models.Model):
         return """
             <p>%(text)s</p>
         """ % {"text": text}
-    name = fields.Char('Title', required=True, translate=True, default='', copy=mark_as_copy('name'))
+    name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)

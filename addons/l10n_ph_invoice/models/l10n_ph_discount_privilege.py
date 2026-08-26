@@ -83,17 +83,3 @@ class L10nPhDiscountPrivilege(models.Model):
                 [("id", "child_of", categories.ids)],
             )
         return categories
-
-    def copy_data(self, default=None):
-        """
-        Suffixed copy names with "(copy)" to preserve the unique
-        name-per-company constraint when duplicating a privilege.
-        """
-        vals_list = super().copy_data(default=default)
-        return [
-            dict(
-                vals,
-                name=self.env._("%s (copy)", privilege.name),
-            )
-            for privilege, vals in zip(self, vals_list)
-        ]

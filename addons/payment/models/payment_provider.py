@@ -28,7 +28,7 @@ class PaymentProvider(models.Model):
 
     # === GENERAL FIELDS === #
 
-    name = fields.Char(string="Name", required=True, translate=True)
+    name = fields.Char(string="Name", required=True, translate=True, copy=True)
     code = fields.Selection(
         string="Code",
         help="The technical code of this payment provider.",

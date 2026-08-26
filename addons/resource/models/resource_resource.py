@@ -95,10 +95,6 @@ class ResourceResource(models.Model):
                     values['tz'] = tz
         return super().create(vals_list)
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", resource.name)) for resource, vals in zip(self, vals_list)]
-
     def write(self, vals):
         if self.env.context.get('check_idempotence') and len(self) == 1:
             vals = {

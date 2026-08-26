@@ -21,7 +21,6 @@ from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import expr_eval, safe_eval, test_python_expr
 from odoo.tools.json import stringify_keys
-from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -582,7 +581,7 @@ class IrActionsServer(models.Model):
                 return field_name
         return ''
 
-    name = fields.Char(compute='_compute_name', store=True, readonly=False, copy=mark_as_copy('name'))
+    name = fields.Char(compute='_compute_name', store=True, readonly=False)
     automated_name = fields.Char(compute='_compute_name', store=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([

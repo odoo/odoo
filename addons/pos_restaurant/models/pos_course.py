@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class PosCourse(models.Model):
@@ -12,20 +12,12 @@ class PosCourse(models.Model):
 
     name = fields.Char(string="Course Name", required=True)
     sequence = fields.Integer(string="Sequence", default=_default_sequence)
-    category_ids = fields.One2many('pos.category', 'course_id', string="Pos Category")
+    category_ids = fields.One2many('pos.category', 'course_id', string="Pos Category", copy=False)
 
     _name_unique = models.Constraint(
         'unique (name)',
         'A course with this name already exists',
     )
-
-    def copy_data(self, default=None):
-        default = dict(default or {}, category_ids=[(5, 0, 0)])
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for course, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", course.name)
-        return vals_list
 
     @api.model
     def _load_pos_data_domain(self, data):

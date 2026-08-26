@@ -150,7 +150,7 @@ class IrUiView(models.Model):
     _allow_sudo_commands = False
     _clear_cache_name = 'templates'
 
-    name = fields.Char(string='View Name', required=True)
+    name = fields.Char(string='View Name', required=True, copy=True)
     model = fields.Char(index=True)
     key = fields.Char(index='btree_not_null')
     priority = fields.Integer(string='Sequence', default=16, required=True)

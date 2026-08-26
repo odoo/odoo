@@ -9,6 +9,7 @@ from typing import Any, Literal
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 
@@ -99,10 +100,10 @@ class ResLang(models.CachedModel):
             ('%Y.%m.%d', '%s.01.31' % current_year),
         ]
 
-    name = fields.Char(required=True)
-    code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
+    name = fields.Char(required=True, copy=mark_as_copy('name'))
+    code = fields.Char(string='Locale Code', required=True, copy=mark_as_copy('code'), help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
+    url_code = fields.Char('URL Code', required=True, copy=mark_as_copy('url_code'), help='The Lang Code displayed in the URL')
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Selection(selection=_get_date_format_selection, string='Date Format', required=True, default='%m/%d/%Y')
@@ -437,18 +438,6 @@ class ResLang(models.CachedModel):
                 raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        for record, vals in zip(self, vals_list):
-            if "name" not in default:
-                vals["name"] = _("%s (copy)", record.name)
-            if "code" not in default:
-                vals["code"] = _("%s (copy)", record.code)
-            if "url_code" not in default:
-                vals["url_code"] = _("%s (copy)", record.url_code)
-        return vals_list
 
     def format(self, percent: str, value, grouping: bool = False) -> str:
         """ Format() will return the language-specific output for float values"""

@@ -1447,6 +1447,8 @@ class IrModelFields(models.Model):
             )
             if field_data['ttype'] == 'char':
                 attrs['size'] = field_data['size'] or None
+                if attrs['copy']:
+                    attrs.pop('copy')  # use the default setting for "(copy)"
             elif field_data['ttype'] == 'html':
                 attrs['sanitize'] = field_data['sanitize']
                 attrs['sanitize_overridable'] = field_data['sanitize_overridable']
@@ -2011,6 +2013,7 @@ class IrModelConstraint(models.Model):
 
     name = fields.Char(
         string='Constraint', required=True, index=True, readonly=True,
+        copy=lambda c: f'{c.name}_name',
         help="PostgreSQL constraint or foreign key name.")
     definition = fields.Char(help="PostgreSQL constraint definition", readonly=True)
     message = fields.Char(help="Error message returned when the constraint is violated.", translate=True)
@@ -2075,10 +2078,6 @@ class IrModelConstraint(models.Model):
                 _logger.info('Dropped INDEX %s@%s', name, data.model.model)
 
         return super().unlink()
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=constraint.name + '_copy') for constraint, vals in zip(self, vals_list)]
 
     def _reflect_constraint(self, model, conname, type, definition, module, message=None):
         """ Reflect the given constraint, and return its corresponding record.

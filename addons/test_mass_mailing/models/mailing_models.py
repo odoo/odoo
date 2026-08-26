@@ -72,7 +72,7 @@ class MailingTestOptout(models.Model):
     _inherit = ['mail.thread.blacklist']
     _primary_email = 'email_from'
 
-    name = fields.Char()
+    name = fields.Char(copy=True)
     email_from = fields.Char()
     opt_out = fields.Boolean()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)

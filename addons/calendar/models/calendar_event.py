@@ -163,7 +163,7 @@ class CalendarEvent(models.Model):
         ]
 
     # description
-    name = fields.Char('Meeting Subject', required=True)
+    name = fields.Char('Meeting Subject', required=True, copy=True)
     description = fields.Html('Description',
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \

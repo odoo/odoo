@@ -12,7 +12,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools.misc import split_every
-from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 
@@ -58,7 +57,6 @@ class StockRule(models.Model):
     name = fields.Char(
         'Name', required=True, translate=True,
         help="This field will fill the packing origin and the name of its moves",
-        copy=mark_as_copy('name'),
     )
     active = fields.Boolean(
         'Active', default=True,

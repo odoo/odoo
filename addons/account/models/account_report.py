@@ -7,7 +7,6 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools.translate import mark_as_copy
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -50,7 +49,7 @@ class AccountReport(models.Model):
 
     #  CORE ==========================================================================================================================================
 
-    name = fields.Char(string="Name", required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
@@ -364,7 +363,7 @@ class AccountReportLine(models.Model):
     _description = "Accounting Report Line"
     _order = 'sequence, id'
 
-    name = fields.Char(string="Name", translate=True, required=True)
+    name = fields.Char(string="Name", translate=True, required=True, copy=True)
     expression_ids = fields.One2many(string="Expressions", comodel_name='account.report.expression', inverse_name='report_line_id')
     report_id = fields.Many2one(
         string="Parent Report",

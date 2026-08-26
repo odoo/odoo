@@ -587,7 +587,7 @@ class IrAttachment(models.Model):
         """
         return ['base.group_system']
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, copy=True)
     description = fields.Text('Description')
     res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model')

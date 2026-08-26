@@ -44,6 +44,7 @@ class WebsitePage(models.Model):
     name = fields.Char(
         string="Page Name",
         compute='_compute_name', inverse='_inverse_name', store=True,
+        copy=True,
         translate=True,
     )
     url = fields.Char('Page URL', required=True, translate=True, copy=lambda self: self.env['website'].get_unique_path(self.url))

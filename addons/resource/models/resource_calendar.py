@@ -220,10 +220,6 @@ class ResourceCalendar(models.Model):
     # Overrides
     # --------------------------------------------------
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", calendar.name)) for calendar, vals in zip(self, vals_list)]
-
     @api.model_create_multi
     def create(self, vals_list):
         calendars = super().create(vals_list)

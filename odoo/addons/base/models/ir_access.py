@@ -258,15 +258,6 @@ class IrAccess(models.Model):
     # Copy and customization
     #
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        if 'name' in (default or {}):
-            return vals_list
-        return [
-            dict(vals, name=f"{access.name or ''} (copy)")
-            for access, vals in zip(self, vals_list)
-        ]
-
     def customize(self):
         """ Customize some access.  If the access comes from a module,
         deactivate it and edit a copy.

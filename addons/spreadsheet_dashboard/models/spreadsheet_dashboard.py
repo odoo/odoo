@@ -2,7 +2,6 @@ import json
 
 from odoo import Command, api, fields, models
 from odoo.tools import file_open
-from odoo.tools.translate import mark_as_copy
 
 
 class SpreadsheetDashboard(models.Model):
@@ -11,7 +10,7 @@ class SpreadsheetDashboard(models.Model):
     _inherit = ["spreadsheet.mixin"]
     _order = 'sequence'
 
-    name = fields.Char(required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(required=True, translate=True)
     dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, index=True, string="Section")
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)

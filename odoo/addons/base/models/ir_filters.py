@@ -55,7 +55,7 @@ class IrFilters(models.Model):
         for vals in vals_list:
             if vals.get('embedded_parent_res_id') == 0:
                 del vals['embedded_parent_res_id']
-        return [dict(vals, name=self.env._("%s (copy)", ir_filter.name)) for ir_filter, vals in zip(self, vals_list)]
+        return vals_list
 
     def write(self, vals):
         new_filter = super().write(vals)

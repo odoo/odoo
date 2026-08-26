@@ -3,7 +3,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.translate import mark_as_copy
 
 
 class ProductCategory(models.Model):
@@ -14,7 +13,7 @@ class ProductCategory(models.Model):
     _parent_store = True
     _rec_name = 'complete_name'
     _order = 'parent_id desc, name asc'
-    name = fields.Char('Name', index='trigram', required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char('Name', index='trigram', required=True, translate=True)
     complete_name = fields.Char(
         string='Complete Name',
         compute='_compute_complete_name',

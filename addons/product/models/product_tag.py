@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools.translate import mark_as_copy
 
 
 class ProductTag(models.Model):
@@ -16,7 +15,7 @@ class ProductTag(models.Model):
     def _get_default_variant_id(self):
         return self.env['product.product'].browse(self.env.context.get('product_variant_id'))
 
-    name = fields.Char(string="Name", required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(default=10)
     color = fields.Char(string="Color", default='#3C3C3C')
     product_template_ids = fields.Many2many(

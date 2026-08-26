@@ -8,7 +8,6 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools.translate import mark_as_copy
 
 
 class StockLocation(models.Model):
@@ -290,14 +289,6 @@ class StockLocation(models.Model):
         self.invalidate_model(['warehouse_id'])
         return res
 
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for location, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", location.name)
-        return vals_list
-
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
@@ -524,7 +515,7 @@ class StockRoute(models.Model):
     _order = 'sequence'
     _check_company_auto = True
 
-    name = fields.Char('Route', required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char('Route', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
     rule_ids = fields.One2many('stock.rule', 'route_id', 'Rules', copy=True)

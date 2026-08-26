@@ -1084,7 +1084,7 @@ class TestComputeOnchange2(TransactionCase):
             new_partners = partners.copy()
 
         for old_partner, new_partner in zip(partners, new_partners):
-            self.assertEqual(new_partner.name, old_partner.name)
+            self.assertEqual(new_partner.name, old_partner.name + " (copy)")
 
     def test_write(self):
         model = self.env['test_orm.compute.onchange']
