@@ -8,5 +8,6 @@ export class AccountAnalyticLine extends models.ServerModel {
     x_plan1_id = fields.Many2one({ string: "State", relation: "account.analytic.account" })
     x_plan1_id_1 = fields.Many2one({ string: "Continent", relation: "account.analytic.plan" })
     x_plan1_id_2 = fields.Many2one({ string: "Country ", relation: "account.analytic.plan" })
+    x_plan2_id = fields.Many2one({ string: "Departments", relation: "account.analytic.account" })
     analytic_distribution = fields.Json();
 }
