@@ -720,11 +720,15 @@ class Website(models.Model):
     @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
-        theme_name = kwargs['theme_name']
-        theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
-        redirect_url = theme.button_choose_theme()
+        threading.current_thread().configurator_website_id = website.id
+        try:
+            theme_name = kwargs['theme_name']
+            theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
+            redirect_url = theme.button_choose_theme()
 
-        website.configurator_done = True
+            website.configurator_done = True
+        finally:
+            threading.current_thread().configurator_website_id = None
 
         # Enable tour
         tour_asset_id = self.env.ref('website.configurator_tour')
@@ -1366,6 +1370,7 @@ class Website(models.Model):
 
         - the website forced in session `force_website_id`
         - the website set in context
+        - the website forced in the current thread `configurator_website_id`
         - (if frontend or fallback) the website matching the request's "domain"
         - arbitrary the first website found in the database if `fallback` is set
           to `True`
@@ -1381,6 +1386,14 @@ class Website(models.Model):
                 return website_id
 
         website_id = self.env.context.get('website_id')
+        if website_id:
+            return self.browse(website_id)
+
+        website_id = (
+            hasattr(threading.current_thread(), "configurator_website_id")
+            and threading.current_thread().configurator_website_id
+            or False
+        )
         if website_id:
             return self.browse(website_id)
 
