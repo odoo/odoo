@@ -1644,3 +1644,25 @@ test("computed field first read by a component outlives that component", async (
     channel.count = 5;
     expect.verifySteps(["multiplicity:many"]);
 });
+
+test("a record is its proxy in a field declaration and in setup", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        author = fields.One("Partner");
+        readAuthorFromDeclaration = () => this.author;
+        readAuthorFromSetup;
+        setup() {
+            super.setup(...arguments);
+            this.readAuthorFromSetup = () => this.author;
+        }
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert({ id: 1, author: "John" });
+    expectRecord(message.readAuthorFromDeclaration()).toEqual(message.author);
+    expectRecord(message.readAuthorFromSetup()).toEqual(message.author);
+});

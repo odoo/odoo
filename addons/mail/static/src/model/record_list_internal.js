@@ -119,7 +119,7 @@ export class RecordListInternal {
         });
     }
     computeField() {
-        this.owner._.compute(this.owner, this.name, { fromInNeed: true });
+        this.owner._.compute(this.name, { fromInNeed: true });
     }
     /**
      * Version of delete() that does not update the inverse.
