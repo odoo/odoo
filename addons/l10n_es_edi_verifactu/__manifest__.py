@@ -16,6 +16,7 @@
         'views/report_invoice.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
+        'views/account_journal_dashboard_view.xml',
         'data/ir_cron.xml',
         'security/ir.access.csv',
     ],

@@ -301,7 +301,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             cancellation = last_registered_document.document_type == 'cancellation'
             return 'cancelled' if cancellation else last_registered_document.state
 
-        rejected_document = self.filtered(lambda doc: doc.state == 'rejected')[:1]
+        rejected_document = self.filtered(lambda doc: doc.state == 'rejected' or doc.errors)[:1]
         if rejected_document:
             return 'rejected'
 

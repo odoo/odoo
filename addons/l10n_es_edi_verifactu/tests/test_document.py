@@ -65,7 +65,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertRecordValues(document, [expected_document_values])
 
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'rejected',
             'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -91,7 +91,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         errors = ["There is no Veri*Factu document for the refunded record.", "The refund reason is not specified."]
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'rejected',
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -125,7 +125,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         substitution_move._l10n_es_edi_verifactu_create_documents()
         errors = ["There is no Veri*Factu document for the substituted record.", "There is no Veri*Factu document for the reversal of the substituted record."]
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'rejected',
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -140,7 +140,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         substitution_move._l10n_es_edi_verifactu_create_documents()
         errors = ["There is no Veri*Factu document for the reversal of the substituted record."]
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'rejected',
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -178,7 +178,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         waiting_warning = "A Veri*Factu document is waiting to be sent as soon as possible."
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'rejected',
             'l10n_es_edi_verifactu_warning': expected_document_values['errors'] + "\n" + waiting_warning,
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -518,7 +518,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         waiting_warning = "A Veri*Factu document is waiting to be sent as soon as possible."
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'rejected',
             'l10n_es_edi_verifactu_warning': expected_document_values['errors'] + "\n" + waiting_warning,
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
