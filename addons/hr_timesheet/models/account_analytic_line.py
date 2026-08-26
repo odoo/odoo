@@ -85,16 +85,14 @@ class AccountAnalyticLine(models.Model):
     def _search_message_partner_ids(self, operator, value):
         followed_ids_by_model = dict(self.env['mail.followers']._read_group([
             ('partner_id', operator, value),
-            ('res_model', 'in', ('project.project', 'project.task')),
+            ('res_model', '=', 'project.task'),
         ], ['res_model'], ['res_id:array_agg']))
         if not followed_ids_by_model:
             return Domain.FALSE
-        domain = Domain.FALSE
-        if project_ids := followed_ids_by_model.get('project.project'):
-            domain |= Domain('project_id', 'in', project_ids)
-        if task_ids := followed_ids_by_model.get('project.task'):
-            domain |= Domain('task_id', 'in', task_ids)
-        return domain
+        task_ids = followed_ids_by_model.get('project.task')
+        if task_ids:
+            return Domain('task_id', 'in', task_ids)
+        return Domain.FALSE
 
     @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
     def _compute_message_partner_ids(self):
