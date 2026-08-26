@@ -200,7 +200,7 @@ export const fields = {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @returns {luxon.DateTime}
+     * @returns {import("luxon").DateTime}
      */
     Date(param0) {
         return {
@@ -220,7 +220,7 @@ export const fields = {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @returns {luxon.DateTime}
+     * @returns {import("luxon").DateTime}
      */
     Datetime(param0) {
         return {
