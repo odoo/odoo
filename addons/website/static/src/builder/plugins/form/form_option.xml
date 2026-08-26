@@ -131,9 +131,9 @@
                 <BuilderSelectItem actionValue="'datetime'">Date &amp; Time</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'binary'">File Upload</BuilderSelectItem>
             </BuilderContext>
-            <t t-if="this.state.availableFields.length">
+            <t t-if="this.fieldOptionData().availableFields.length">
                 <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Existing fields</div>
-                <t t-foreach="this.state.availableFields" t-as="field" t-key="field.name">
+                <t t-foreach="this.fieldOptionData().availableFields" t-as="field" t-key="field.name">
                     <BuilderSelectItem action="'existingField'" actionValue="field.name" t-out="field.string"/>
                 </t>
             </t>
@@ -149,8 +149,9 @@
             <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+    <t t-set="valueList" t-value="this.fieldOptionData().valueList"/>
     <BuilderRow label.translate="Selection type">
-        <BuilderSelect t-if="this.isExistingFieldSelectType and this.state.valueList"
+        <BuilderSelect t-if="this.isExistingFieldSelectType and valueList"
             id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
         >
             <BuilderSelectItem actionValue="'many2many'" t-if="this.isExistingFieldSelectTypeMultiple">Checkbox</BuilderSelectItem>
@@ -244,20 +245,20 @@
             applyWithUnit="false"
         />
     </BuilderRow>
-    <BuilderRow t-if="this.state.valueList and (!(this.domState.fieldName === 'state_id' and this.isActiveItem('link_state_to_country_opt')))">
+    <BuilderRow t-if="valueList and (!(this.domState.fieldName === 'state_id' and this.isActiveItem('link_state_to_country_opt')))">
         <div class="d-flex flex-column w-100">
             <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
-                <t t-out="this.state.valueList.title" />
+                <t t-out="valueList.title" />
             </p>
             <BuilderList
                 t-key="this.getFieldKey"
                 action="'setFormCustomFieldValueList'"
-                addItemTitle="this.state.valueList.addItemTitle"
-                itemShape="{ display_name: 'text', selected: this.state.valueList.checkType }"
-                default="{ display_name: this.state.valueList.defaultItemName, selected: false }"
-                defaultNewValue="{ id: this.state.valueList.defaultItemName }"
+                addItemTitle="valueList.addItemTitle"
+                itemShape="{ display_name: 'text', selected: valueList.checkType }"
+                default="{ display_name: valueList.defaultItemName, selected: false }"
+                defaultNewValue="{ id: valueList.defaultItemName }"
                 forbidLastItemRemoval="true"
-                records="this.state.valueList.availableRecords"/>
+                records="valueList.availableRecords"/>
         </div>
     </BuilderRow>
     <BuilderRow label.translate="Add Other" t-if="this.isOtherOptionSupported" tooltip.translate="Allow people to add their own option">
@@ -424,7 +425,7 @@
         <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
             <BuilderSelect id="'hidden_condition_opt'" preview="false">
                 <!-- Load every existing form input -->
-                <BuilderSelectItem t-foreach="this.state.conditionInputs" t-as="input" t-key="input.name"
+                <BuilderSelectItem t-foreach="this.fieldOptionData().conditionInputs" t-as="input" t-key="input.name"
                     action="'setVisibilityDependency'" actionValue="input.name"
                     t-out="input.textContent"
                 />
@@ -497,7 +498,7 @@
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
             >
                 <!-- checkbox, select, radio possible values -->
-                <BuilderSelectItem t-foreach="this.state.conditionValueList" t-as="record" t-key="record.value"
+                <BuilderSelectItem t-foreach="this.fieldOptionData().conditionValueList" t-as="record" t-key="record.value"
                     dataAttributeActionValue="record.value"
                     t-out="record.textContent"
                 />

@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { asyncComputed, onWillStart, useProps, t } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import {
     getDependencyEl,
@@ -20,21 +20,14 @@ export const RANGE_COMPARATORS = ["between", "!between"];
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
     static dependencies = ["websiteFormOption"];
-    static props = {
-        redrawSequence: { type: Number, optional: true },
-    };
+    props = useProps({
+        redrawSequence: t.number().optional(),
+    });
     static components = { FormActionFieldsOption };
 
     setup() {
         super.setup();
         const { loadFieldOptionData } = this.dependencies.websiteFormOption;
-        this.state = proxy({
-            availableFields: [],
-            conditionInputs: [],
-            conditionValueList: [],
-            dependencyEl: null,
-            valueList: null,
-        });
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
@@ -112,26 +105,28 @@ export class FormFieldOption extends BaseOptionComponent {
             return { value: getFieldName(el) === "state_id" && hasCountryField };
         });
 
-        onWillStart(async () => {
+        this.fieldOptionData = asyncComputed(async () => {
+            this.props.redrawSequence;
             const el = this.env.getEditingElement();
-            const fieldOptionData = await loadFieldOptionData(el);
-            this.state.fields = fieldOptionData.fields;
-            this.state.availableFields.push(...fieldOptionData.availableFields);
-            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
-            this.state.valueList = fieldOptionData.valueList;
-            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+            const data = await loadFieldOptionData(el);
+            const fieldKey = isFieldCustom(el) ? el.dataset.type : getFieldName(el);
+            return {
+                ...data,
+                fieldKey,
+            };
+        }, {
+            initial: {
+                fields: undefined,
+                availableFields: [],
+                conditionInputs: [],
+                valueList: null,
+                conditionValueList: [],
+                fieldKey: undefined,
+            },
         });
-        onWillUpdateProps(async (props) => {
-            const el = this.env.getEditingElement();
-            const fieldOptionData = await loadFieldOptionData(el);
-            this.state.fields = fieldOptionData.fields;
-            this.state.availableFields.length = 0;
-            this.state.availableFields.push(...fieldOptionData.availableFields);
-            this.state.conditionInputs.length = 0;
-            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
-            this.state.valueList = fieldOptionData.valueList;
-            this.state.conditionValueList.length = 0;
-            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+
+        onWillStart(async () => {
+            await this.fieldOptionData.currentPromise();
         });
         // TODO select field's hack ?
     }
@@ -277,7 +272,7 @@ export class FormFieldOption extends BaseOptionComponent {
     }
     get isExistingFieldSelectTypeMultiple() {
         const el = this.env.getEditingElement();
-        return !isFieldCustom(el) && this.state.fields[getFieldName(el)].type === "many2many";
+        return !isFieldCustom(el) && this.fieldOptionData().fields[getFieldName(el)].type === "many2many";
     }
     get isOtherOptionSupported() {
         const el = this.env.getEditingElement();
@@ -312,9 +307,6 @@ export class FormFieldOption extends BaseOptionComponent {
      * Dynamic key to force BuilderList to re-render when field type changes.
      */
     get getFieldKey() {
-        if (this.domState.elClassList.includes("s_website_form_custom")) {
-            return this.domState.elDataset.type;
-        }
-        return this.domState.fieldName;
+        return this.fieldOptionData().fieldKey;
     }
 }
