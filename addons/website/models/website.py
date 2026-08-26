@@ -2185,24 +2185,22 @@ class Website(models.Model):
             similarities.extend(indirect_similarities)
             best_similarity = SQL('GREATEST(%(similarities)s)', similarities=SQL(', ').join(similarities))
 
-            # Filter unpublished records for portal and public user for
-            # performance.
-            # TODO: Same for `active` field?
-            filter_is_published = (
-                'is_published' in model._fields
-                and model._fields['is_published'].base_field.model_name == model_name
-                and not self.env.user._is_internal()
-            )
-            if filter_is_published:
-                query.add_where('is_published')
+            # Rank only the records eligible for the provider domain, before the
+            # similarity LIMIT. The eligible ids are a sub-select (not fetched)
+            # to keep the domain's joins/aliases out of the similarity query.
+            query.add_where(SQL(
+                "%(id)s IN %(eligible_ids)s",
+                id=SQL.identifier(model._table, 'id'),
+                eligible_ids=model._search(AND(domain)).subselect(),
+            ))
 
             query.order = '_best_similarity desc'
             query.limit = 1000
-            self.env.cr.execute(query.select(
+            rows = self.env.execute_query(query.select(
                 SQL.identifier(model._table, 'id'),
                 SQL('%s AS _best_similarity', best_similarity),
             ))
-            ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
+            ids = {row[0] for row in rows if row[1] and row[1] >= similarity_threshold}
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
             records = model.search_read(domain, direct_fields, limit=limit)
