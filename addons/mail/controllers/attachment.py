@@ -139,6 +139,7 @@ class AttachmentController(ThreadController):
         """
         ids_list = list(map(int, file_ids.split(',')))
         attachments = request.env['ir.attachment'].browse(ids_list)
+        attachments.check_access('read')
         return self._make_zip(zip_name, attachments)
 
     @http.route(
