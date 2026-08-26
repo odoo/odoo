@@ -121,8 +121,6 @@ test("parseFloat", () => {
 });
 
 test("parseFloatTime", () => {
-    expect(parseFloatTime("=1")).toBe(1);
-    expect(parseFloatTime(" =1")).toBe(1);
     expect(parseFloatTime("0")).toBe(0);
     expect(parseFloatTime("100")).toBe(100);
     expect(parseFloatTime("100.00")).toBe(100);
@@ -165,6 +163,10 @@ test("parseFloatTime", () => {
     localization.thousandsSep = ".";
     localization.decimalPoint = ",";
     expect(parseFloatTime("0,5")).toBe(0.5);
+
+    // Division by 0 is rejected instead of producing an unformattable Infinity/NaN
+    expect(() => parseFloatTime("/=0")).toThrow();
+    expect(() => parseFloatTime("=6h/0")).toThrow();
 });
 
 test("parseInteger", () => {

@@ -1,6 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { smartDateUnits } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { Operation } from "@web/model/relational_model/operation";
@@ -9,6 +10,8 @@ import { formatDate } from "@web/views/fields/formatters";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 const { DateTime } = luxon;
+
+const formatters = registry.category("formatters");
 
 export class ListConfirmationDialog extends Component {
     static template = "web.ListView.ConfirmationModal";
@@ -129,5 +132,15 @@ export class ListConfirmationDialog extends Component {
 
     isValueOperation(field) {
         return this.props.changes[field.name] instanceof Operation;
+    }
+
+    operationText(field) {
+        const operation = this.props.changes[field.name];
+        const formatter = typeof operation.operand === "number" && formatters.get(field.widget, false);
+        if (!formatter) {
+            return `${field.label} ${operation}`;
+        }
+        const operand = formatter(operation.operand, formatter.extractOptions?.(field.fieldNode) || {});
+        return `${field.label} ${operation.operator} ${operand}`;
     }
 }
