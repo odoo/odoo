@@ -213,23 +213,18 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='month']" position="before">
                     <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
+                    <filter name="my_projects_and_tasks" string="My Projects/Tasks" domain="['|', ('project_id.user_id', '=', uid), ('task_id.user_ids', 'in', uid)]" context="{'group_expand': False}"/>
                     <separator/>
                 </xpath>
-                <xpath expr="//group" position="before">
+                <xpath expr="//field[@name='name']" position="before">
                     <field name="employee_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
-                    <field name="parent_task_id"/>
-                    <field name="department_id"/>
-                    <field name="manager_id"/>
                 </xpath>
-                <xpath expr="//group" position="inside">
-                    <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
-                    <filter string="Parent Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'parent_task_id'}"/>
-                    <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
-                    <filter string="Department" name="groupby_department" domain="[]" context="{'group_by': 'department_id'}"/>
-                    <filter string="Manager" name="groupby_manager" domain="[]" context="{'group_by': 'manager_id'}"/>
+                <xpath expr="//filter[@name='group_date']" position="before">
                     <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
                 </xpath>
             </field>
         </record>
@@ -266,11 +261,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <field name="employee_id" position="replace"/>
-                <field name="department_id" position="replace"/>
-                <field name="manager_id" position="replace"/>
                 <filter name="mine" position="replace"/>
-                <filter name="groupby_department" position="replace"/>
-                <filter name="groupby_manager" position="replace"/>
                 <filter name="groupby_employee" position="replace"/>
             </field>
         </record>
