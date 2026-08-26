@@ -356,21 +356,26 @@ export class TourInteractive {
         }
 
         if (runCommand === "drop") {
+            const conditional = (ev) => {
+                const dropTarget = this.currentAction.findTrigger() || element;
+                const doc = dropTarget.ownerDocument;
+                if (doc.elementsFromPoint(ev.clientX, ev.clientY).includes(dropTarget)) {
+                    return true;
+                }
+                const rect = dropTarget.getBoundingClientRect();
+                const x = Math.min(Math.max(ev.clientX, rect.left + 1), rect.right - 1);
+                const y = Math.min(Math.max(ev.clientY, rect.top + 1), rect.bottom - 1);
+                return doc.elementsFromPoint(x, y).includes(dropTarget);
+            };
             consumeEvents.push({
                 name: "pointerup",
                 target: element.ownerDocument,
-                conditional: (ev) =>
-                    element.ownerDocument
-                        .elementsFromPoint(ev.clientX, ev.clientY)
-                        .includes(element),
+                conditional,
             });
             consumeEvents.push({
                 name: "drop",
                 target: element.ownerDocument,
-                conditional: (ev) =>
-                    element.ownerDocument
-                        .elementsFromPoint(ev.clientX, ev.clientY)
-                        .includes(element),
+                conditional,
             });
         }
 

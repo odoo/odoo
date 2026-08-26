@@ -90,8 +90,10 @@ export class TourStepInteractive extends TourStep {
             // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
             // but the tip is attached to the .ui-draggable-handle element which may
             // be one of its children (or the element itself
-            return el.closest(
-                ".ui-draggable, .o_draggable, .o_we_draggable, .o-draggable, [draggable='true']"
+            return (
+                el.closest(
+                    ".ui-draggable, .o_draggable, .o_we_draggable, .o-draggable, [draggable='true']"
+                ) || el
             );
         }
         if (event === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {
@@ -125,6 +127,7 @@ export class TourStepInteractive extends TourStep {
         }
         if (!pointerState.trigger?.isConnected) {
             this.tour.robotStep = null;
+            this.tour.anchorEl = undefined;
             this.tour.updatePointer();
             return;
         }

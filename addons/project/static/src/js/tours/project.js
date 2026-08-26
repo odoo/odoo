@@ -192,6 +192,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "edit New Sub-task",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_form_project_tasks .o_form_dirty",
 },
 {
@@ -216,6 +217,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_widget_subtask_kanban_list .subtask_list",
 },
 {
@@ -225,6 +227,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
+    isActive: ["auto"],
     trigger: ".subtask_create_input",
 },
 {
@@ -239,6 +242,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
+    isActive: ["auto"],
     trigger: ".project_task_state_selection_menu.dropdown-menu",
 },
 {
@@ -247,6 +251,7 @@ registry.category("web_tour.tours").add('project_tour', {
     content: markup(_t("Mark the task as <b>Cancelled</b>")),
     run: "click",
 }, {
+    isActive: ["auto"],
     trigger: ".o-overlay-container:not(:visible):not(:has(.project_task_state_selection_menu))",
 }, {
     isActive: ["auto"],
