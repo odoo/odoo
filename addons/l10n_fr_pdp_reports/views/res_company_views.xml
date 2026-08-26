@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_pdp_reports_view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.pdp.reports</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="PDP e-Reporting" name="pdp_page" invisible="country_code != 'FR'">
+                    <group>
+                        <field name="country_code" invisible="1"/>
+                        <group>
+                            <field name="l10n_fr_pdp_enabled"/>
+                            <field name="l10n_fr_pdp_send_mode" invisible="l10n_fr_pdp_enabled == False"/>
+                            <field name="l10n_fr_pdp_route_code" invisible="l10n_fr_pdp_enabled == False"/>
+                        </group>
+                        <group invisible="l10n_fr_pdp_enabled == False">
+                            <field name="l10n_fr_pdp_periodicity"/>
+                            <field name="l10n_fr_pdp_payment_periodicity"/>
+                            <field name="l10n_fr_pdp_tax_due_code"/>
+                        </group>
+                        <group invisible="l10n_fr_pdp_enabled == False">
+                            <field name="l10n_fr_pdp_deadline_override_start"/>
+                            <field name="l10n_fr_pdp_deadline_override_end"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
