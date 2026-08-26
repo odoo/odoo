@@ -13,4 +13,3 @@ from . import stock_rule
 from . import stock_warehouse
 from . import mrp_production
 from . import mrp_unbuild
-from . import mrp_workorder
