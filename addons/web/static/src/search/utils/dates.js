@@ -385,7 +385,7 @@ export function constructRelativeDateDomain(searchItem, option, offset) {
  * `offset` periods, in terms of the dates it covers rather than of its distance
  * from now (eg. "Aug 2 - Aug 8" instead of "2 weeks ago").
  *
- * @param {luxon.DateTime} referenceMoment
+ * @param {import("luxon").DateTime} referenceMoment
  * @param {Object} option a relative filter option, @see RELATIVE_FILTER_OPTIONS
  * @param {number} offset number of periods to shift, negative for the past
  * @returns {string}
