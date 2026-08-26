@@ -1,6 +1,6 @@
 /** @odoo-module alias=@web/../tests/utils default=false */
 
-import { __debug__, after, afterEach, expect, getFixture } from "@odoo/hoot";
+import { __debug__, after, afterEach, expect, getFixture, globals } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { isMacOS } from "@web/core/browser/feature_detection";
@@ -11,6 +11,8 @@ import { isVisible } from "@web/core/utils/ui";
  * openDiscuss pays for the whole mount and the first fetches.
  */
 export const TIMEOUT = 10000;
+const TICK_TIMEOUT = 500;
+const { clearTimeout: unmockedClearTimeout, setTimeout: unmockedSetTimeout } = globals;
 
 /**
  * Use `expect.step` instead
@@ -539,6 +541,7 @@ afterEach(() => (hasUsedContainsPositively = false));
  * @property {boolean} [visible] if provided, the found element(s) must be (in)visible
  */
 class Contains {
+    timeoutCount = 0;
     /**
      * @param {string} selector
      * @param {ContainsOptions} [options={}]
@@ -606,6 +609,19 @@ class Contains {
         this.executeError = undefined;
     }
 
+    setTickTimeout() {
+        this.timer = unmockedSetTimeout(() => {
+            this.timeoutCount++;
+            const res = this.runOnce(
+                `Timeout of ${(this.timeoutCount * TICK_TIMEOUT) / 1000} seconds`,
+                { crashOnFail: this.timeoutCount >= TIMEOUT / TICK_TIMEOUT }
+            );
+            if (!res) {
+                this.setTickTimeout();
+            }
+        }, TICK_TIMEOUT);
+    }
+
     /**
      * Starts this contains check, either immediately resolving if there is a
      * match, or registering appropriate listeners and waiting until there is a
@@ -621,10 +637,7 @@ class Contains {
         this.scrollListeners = new Set();
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
-            this.timer = setTimeout(
-                () => this.runOnce(`Timeout of ${TIMEOUT / 1000} seconds`, { crashOnFail: true }),
-                TIMEOUT
-            );
+            this.setTickTimeout();
             this.observer = new MutationObserver((mutations) => {
                 try {
                     this.runOnce("after mutations");
@@ -663,7 +676,7 @@ class Contains {
         if ((res?.length ?? 0) === this.options.count || crashOnFail) {
             // clean before doing anything else to avoid infinite loop due to side effects
             this.observer?.disconnect();
-            clearTimeout(this.timer);
+            unmockedClearTimeout(this.timer);
             for (const el of this.scrollListeners ?? []) {
                 el.removeEventListener("scroll", this.onScroll);
             }
