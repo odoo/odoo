@@ -5,7 +5,20 @@ patch(TicketScreen.prototype, {
     get showSubPads() {
         return (
             super.showSubPads &&
-            (!this.pos.config.module_pos_hr || this.pos.cashier._role !== "minimal")
+            (!this.pos.config.module_pos_hr ||
+                !this.pos.hasEmployeeRole(["supervised", "restrictive"]))
         );
+    },
+    shouldHideDeleteButton(order) {
+        if (this.pos.hasEmployeeRole(["supervised", "restrictive"])) {
+            return true;
+        }
+        return super.shouldHideDeleteButton(order);
+    },
+    onClickOrderline(orderline) {
+        if (this.pos.hasEmployeeRole(["supervised", "restrictive"])) {
+            return;
+        }
+        return super.onClickOrderline(...arguments);
     },
 });

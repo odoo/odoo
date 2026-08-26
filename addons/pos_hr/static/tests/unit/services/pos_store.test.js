@@ -38,6 +38,12 @@ test("hasProductCreationAccess", async () => {
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
     expect(await store.hasProductCreationAccess).toBe(false);
+    const restrictive = store.models["hr.employee"].get(4);
+    store.setCashier(restrictive);
+    expect(await store.hasProductCreationAccess).toBe(false);
+    const supervised = store.models["hr.employee"].get(5);
+    store.setCashier(supervised);
+    expect(await store.hasProductCreationAccess).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
     const store = await setupPosEnv();
@@ -91,10 +97,17 @@ test("keybordInputRights", async () => {
     expect(line.qty).toBe(3);
     const emp = store.models["hr.employee"].get(4);
     store.setCashier(emp);
-
     const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
     orderSummary.numberBuffer._handleInput("-");
+
     expect(line.qty).toBe(3);
+
+    const cashier = store.models["hr.employee"].get(3);
+    store.setCashier(cashier);
+
+    orderSummary.numberBuffer._handleInput("-");
+
+    expect(line.qty).toBe(-3);
 });
 
 test("validateOrder", async () => {

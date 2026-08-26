@@ -20,6 +20,24 @@
                 <i class="oi oi-fw" data-icon="lock" aria-hidden="true" /> Lock
             </DropdownItem>
         </xpath>
+        <xpath expr="//DropdownItem/i[@data-icon='picture_as_pdf']/.." position="attributes">
+            <attribute name="t-if"
+            add="(!this.pos.config.module_pos_hr or this.pos.employeeIsAdmin or this.pos.getCashierUserId() === this.pos.session.user_id?.id)" separator=" and "/>
+        </xpath>
+        <xpath expr="//DropdownItem/i[@data-icon='desktop_windows']/.." position="attributes">
+            <attribute name="t-if">
+                !this.pos.hasEmployeeRole(['supervised'])
+            </attribute>
+        </xpath>
+        <xpath expr="//DropdownItem/i[@data-icon='print']/.." position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised'])" separator=" and "/>
+        </xpath>
+        <xpath expr="//DropdownItem/i[@data-icon='download']/.." position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised', 'restrictive'])" separator=" and "/>
+        </xpath>
+        <xpath expr="//DropdownItem/i[@data-icon='payments']/.." position="attributes">
+            <attribute name="t-if" add="!this.pos.hasEmployeeRole(['supervised', 'restrictive'])" separator=" and "/>
+        </xpath>
     </t>
 
 </templates>

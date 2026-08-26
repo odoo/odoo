@@ -65,9 +65,6 @@ export class DebugWidget extends Component {
             () => [this.state.isOpen]
         );
     }
-    get isDisabled() {
-        return this.pos.cashier._role === "minimal";
-    }
     disableDebugMode() {
         const url = new URL(window.location.href);
         url.searchParams.delete("debug");

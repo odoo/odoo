@@ -155,6 +155,43 @@ patch(PosStore.prototype, {
     canEditPayment(order) {
         return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
     },
+    cashierHasPriceControlRights() {
+        if (!super.cashierHasPriceControlRights()) {
+            return false;
+        }
+
+        return !this.hasEmployeeRole(["supervised", "restrictive"]);
+    },
+    cashierHasDiscountControlRights() {
+        if (!super.cashierHasDiscountControlRights()) {
+            return false;
+        }
+
+        return !this.hasEmployeeRole(["supervised", "restrictive"]);
+    },
+    canUseBackspace() {
+        if (
+            !this.selectedOrder?.getSelectedOrderline()?.isDirty() &&
+            this.hasEmployeeRole(["supervised"])
+        ) {
+            return false;
+        }
+        return super.canUseBackspace();
+    },
+    canSwitchSign() {
+        if (!super.canSwitchSign()) {
+            return false;
+        }
+
+        return !this.hasEmployeeRole(["supervised", "restrictive"]);
+    },
+    canSortProducts() {
+        if (!super.canSortProducts()) {
+            return false;
+        }
+
+        return !this.hasEmployeeRole(["supervised", "restrictive"]);
+    },
     async handleUrlParams() {
         if (this.config.module_pos_hr && !this.cashier) {
             if (this.router.currentScreen() !== "LoginScreen") {

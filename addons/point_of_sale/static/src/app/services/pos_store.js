@@ -1464,8 +1464,29 @@ export class PosStore extends WithLazyGetterTrap {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.getCashier()._role == "manager";
     }
+    cashierHasDiscountControlRights() {
+        return this.config.manual_discount;
+    }
+    canUseBackspace() {
+        // overide in pos_hr
+        return true;
+    }
+    canSwitchSign() {
+        // overide in pos_hr
+        return true;
+    }
+    canSortProducts() {
+        // overide in pos_hr
+        return true;
+    }
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
+    }
+    hasEmployeeRole(roles = []) {
+        if (!this.config.module_pos_hr) {
+            return;
+        }
+        return roles.includes(this.cashier?._role);
     }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(

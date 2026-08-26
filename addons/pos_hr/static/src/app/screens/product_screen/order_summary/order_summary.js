@@ -17,7 +17,7 @@ patch(OrderSummary.prototype, {
     },
 
     async updateSelectedOrderline({ buffer, key }) {
-        if (key == "-" && this.pos.cashier._role === "minimal") {
+        if (key == "-" && this.pos.hasEmployeeRole("restrictive", "supervised")) {
             this.numberBuffer.reset();
             return;
         }

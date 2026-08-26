@@ -4,7 +4,7 @@
         <t t-set="productInfo" t-value="this.props.info.productInfo"/>
         <Dialog contentClass="'product-info-popup'">
             <t t-set-slot="header">
-                <button t-on-click="this.toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
+                <button t-on-click="this.toggleFavorite" class="toggle-favourite border-0 bg-transparent mb-2">
                     <i class="oi oi-lg oi-fw" t-att-class="{'oi-filled': this.props.productTemplate.is_favorite}" data-icon="star"
                         t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                         role="img"/>
@@ -22,7 +22,7 @@
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center justify-content-between gap-2">
                         <h3 class="section-title">Inventory</h3>
-                        <button class="btn btn-lg lh-lg text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
+                        <button class="btn btn-lg lh-lg text-nowrap snooze-btn" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
                             <i class="oi me-1" data-icon="schedule" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
                             <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
                             <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">

@@ -14,4 +14,7 @@ test("canEditPayment", async () => {
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
     expect(store.canEditPayment(order)).toBe(false);
+    const supervised = store.models["hr.employee"].get(5);
+    store.setCashier(supervised);
+    expect(store.canEditPayment(order)).toBe(false);
 });

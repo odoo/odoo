@@ -108,12 +108,15 @@ export class CashierSelector {
             }
         }
 
+        const currentScreen = this.pos.router.currentScreen();
+        if (currentScreen === "PaymentScreen" && employee._role === "supervised") {
+            return this.notification.add(_t("Access Denied"));
+        }
         if (login && employee) {
             this.pos.hasLoggedIn = true;
             this.pos.setCashier(employee);
         }
 
-        const currentScreen = this.pos.router.currentScreen();
         if (currentScreen === "LoginScreen" && login && employee) {
             const selectedScreen = this.pos.defaultPage;
             const props = {

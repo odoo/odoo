@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.PartnerList" t-inherit="point_of_sale.PartnerList" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('create-partner')]" position="attributes">
+            <attribute name="t-if">!this.pos.hasEmployeeRole(['restrictive'])</attribute>
+        </xpath>
+    </t>
+</templates>

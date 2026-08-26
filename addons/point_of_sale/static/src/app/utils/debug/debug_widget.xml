@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.DebugWidget">
-        <div t-if="!this.state.isOpen and !this.isDisabled"
+        <div t-if="!this.state.isOpen"
             class="o-debug-widget-btn open position-absolute align-items-center justify-content-center d-flex cursor-pointer shadow-sm bg-danger text-white"
             t-on-click="this.toggleWidget"
             data-tooltip="Open debug widget"
