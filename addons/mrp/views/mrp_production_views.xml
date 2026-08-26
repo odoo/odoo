@@ -182,17 +182,6 @@
                 action = records.action_scrap()</field>
         </record>
 
-        <record id="action_print_labels" model="ir.actions.server">
-            <field name="name">Print Labels</field>
-            <field name="model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">form</field>
-            <field name="state">code</field>
-            <field name="code">
-            if records:
-                action = records.action_open_label_type()</field>
-        </record>
-
         <record id="action_plan_at_date" model="ir.actions.server">
             <field name="name">Plan at Date</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
