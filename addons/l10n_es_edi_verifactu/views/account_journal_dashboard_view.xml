@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view_inherit_verifactu" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit.verifactu</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@t-if='!journal_is_empty' and @name='kanban_primary_right']/div[@t-if='dashboard.number_draft']"
+                   position="before">
+                <t t-set="journal_type" t-value="record.type.raw_value"/>
+                <div class="row" t-if="dashboard.number_draft">
+                    <div class="col overflow-hidden text-start">
+                        <a t-if="journal_type == 'sale' and dashboard.vf_rejected" class="text-danger" type="object"
+                           name="open_action"
+                           context="{'search_default_l10n_es_edi_verifactu_state_rejected': '1'}">
+                            <span title="Veri*factu Errors"><t t-out="dashboard.vf_rejected"/> Veri*factu
+                                Error(s)</span>
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
