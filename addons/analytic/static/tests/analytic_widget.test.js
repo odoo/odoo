@@ -1,6 +1,14 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { contains, makeMockServer, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    makeMockServer,
+    MockServer,
+    mountView,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { AnalyticDistribution } from "@analytic/components/analytic_distribution/analytic_distribution";
 import { defineAnalyticModels } from "./analytic_test_helpers";
 
 defineAnalyticModels()
@@ -116,4 +124,44 @@ test("Analytic dynamic multi-edit", async () => {
     expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(0);
     await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
+})
+
+
+test.tags("desktop");
+test("Analytic readonly list: unknown accounts are left untouched", async () => {
+    // a distribution pointing to an analytic account that doesn't exist anymore
+    MockServer.env["account.analytic.line"].create({ analytic_distribution: { 9999: 100 }, amount: 7 });
+
+    patchWithCleanup(AnalyticDistribution.prototype, {
+        save() {
+            expect.step("save");
+            return super.save(...arguments);
+        },
+    });
+    onRpc("account.analytic.line", "web_save", () => expect.step("web_save"));
+    onRpc("account.analytic.line", "write", () => expect.step("write"));
+    onRpc("account.analytic.line", "web_search_read", () => expect.step("web_search_read"));
+
+    await mountView({
+        type: "list",
+        resModel: "account.analytic.line",
+        arch: `
+            <list multi_edit="1" default_order="id DESC">
+                <field name="account_id"/>
+                <field name="x_plan1_id"/>
+                <field name="x_plan2_id"/>
+                <field name="analytic_distribution" widget="analytic_distribution" options="{'multi_edit': True}"/>
+            </list>`,
+    });
+    await runAllTimers();
+    await animationFrame();
+
+    // the rows are readonly: the invalid json is neither cleaned up nor written back,
+    // so there is no reload feeding the same invalid json back in
+    expect.verifySteps(["web_search_read"]);
+    expect(".o_data_row").toHaveCount(7);
+    // the row with the missing account is rendered without any tag instead of blocking the list
+    expect(".o_data_row:nth-child(1) .o_field_analytic_distribution .o_tag").toHaveCount(0);
+    // the other rows are unaffected
+    expect(".o_data_row:nth-child(2) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Los Angeles");
 })
