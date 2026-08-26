@@ -1,4 +1,4 @@
-import { test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupSelfPosEnv } from "@pos_self_order/../tests/unit/utils";
@@ -586,16 +586,9 @@ test("self_kiosk_each_table_takeaway_out: table mode, order, close, URL validati
     await Utils.clickBtn("Order Now");
     await Utils.clickCategory("Miscellaneous");
     await Utils.checkIsDisabledBtn("Checkout");
-    const order = store.currentOrder;
-    const selfInvoicingURL = `${order.config._base_url}/pos/ticket`;
-    if (!selfInvoicingURL || selfInvoicingURL.includes("undefined")) {
-        throw new Error(`Invalid self invoicing URL (contains undefined): ${selfInvoicingURL}`);
-    }
-    try {
-        new URL(selfInvoicingURL);
-    } catch {
-        throw new Error(`Invalid self invoicing URL: ${selfInvoicingURL}`);
-    }
+    const selfInvoicingURL = `${store.currentOrder.config._base_url}/pos/ticket`;
+    expect(selfInvoicingURL).not.toInclude("undefined");
+    expect(new URL(selfInvoicingURL)).toBeInstanceOf(URL);
 });
 
 test("self_kiosk_each_counter_takeaway_in: counter mode multi-category, total check", async () => {

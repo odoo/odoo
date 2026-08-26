@@ -1,5 +1,6 @@
 import { before, withFetch } from "@odoo/hoot";
 import { loadBundle } from "@web/core/assets";
+import { patch } from "@web/core/utils/patch";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
 import { IrAccess } from "./_framework/mock_server/mock_models/ir_access";
@@ -104,7 +105,6 @@ export {
     unmakeKwArgs,
 } from "./_framework/mock_server/mock_server_utils";
 export { serverState } from "./_framework/mock_server_state.hoot";
-export { patchWithCleanup } from "./_framework/patch_test_helpers";
 export { preventResizeObserverError } from "./_framework/resize_observer_error_catcher";
 export {
     editFavorite,
@@ -219,3 +219,6 @@ export const webModels = {
     ResUsers,
     ResUsersSettings,
 };
+
+/** @deprecated `patch` from "@web/core/utils/patch" is already cleaned up; use it directly */
+export const patchWithCleanup = patch;

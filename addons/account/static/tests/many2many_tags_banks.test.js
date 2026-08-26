@@ -11,6 +11,7 @@ import {
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { accountModels } from "./account_test_helpers";
 import { Record } from "@web/model/relational_model/record";
+import { patch } from "@web/core/utils/patch";
 
 class TestBank extends models.Model {
     _name = "test.bank";
@@ -72,52 +73,56 @@ describe("many2many_tags_banks widget", () => {
 
         // First tag: Bank A (allow_out_payment = true)
         expect(".o_tag[data-tooltip='Bank A']").toHaveCount(1);
-        expect(".o_tag[data-tooltip='Bank A'] .oi[data-icon='security'].text-success").toHaveCount(1);
-        expect(".o_tag[data-tooltip='Bank A'] .oi[data-icon='security'].text-success").toHaveAttribute("data-tooltip", "Trusted");
+        expect(".o_tag[data-tooltip='Bank A'] .oi[data-icon='security'].text-success").toHaveCount(
+            1
+        );
+        expect(
+            ".o_tag[data-tooltip='Bank A'] .oi[data-icon='security'].text-success"
+        ).toHaveAttribute("data-tooltip", "Trusted");
 
         // Second tag: Bank B (allow_out_payment = false)
         expect(".o_tag[data-tooltip='Bank B']").toHaveCount(1);
         expect(".o_tag[data-tooltip='Bank B'] .oi[data-icon='error'].text-danger").toHaveCount(1);
-        expect(".o_tag[data-tooltip='Bank B'] .oi[data-icon='error'].text-danger").toHaveAttribute("data-tooltip", "Untrusted");
+        expect(".o_tag[data-tooltip='Bank B'] .oi[data-icon='error'].text-danger").toHaveAttribute(
+            "data-tooltip",
+            "Untrusted"
+        );
     });
 
     test.tags("desktop");
     test("archiving a tag updates the related record active state to false and removes from UI", async () => {
         let updateCalled = false;
         let updateChanges = null;
-        const originalUpdate = Record.prototype.update;
-        Record.prototype.update = async function(changes) {
-            if (this.resModel === "test.bank") {
-                updateCalled = true;
-                updateChanges = changes;
-            }
-            return originalUpdate.apply(this, arguments);
-        };
+        patch(Record.prototype, {
+            update(changes) {
+                if (this.resModel === "test.bank") {
+                    updateCalled = true;
+                    updateChanges = changes;
+                }
+                return super.update(...arguments);
+            },
+        });
 
-        try {
-            await mountView({
-                type: "form",
-                resModel: "test.partner",
-                resId: 1,
-                mode: "edit",
-            });
+        await mountView({
+            type: "form",
+            resModel: "test.partner",
+            resId: 1,
+            mode: "edit",
+        });
 
-            expect(".o_tag").toHaveCount(2);
+        expect(".o_tag").toHaveCount(2);
 
-            // Click delete on Bank A (id: 10)
-            await click(".o_tag[data-tooltip='Bank A'] a.o_delete");
-            await runAllTimers();
+        // Click delete on Bank A (id: 10)
+        await click(".o_tag[data-tooltip='Bank A'] a.o_delete");
+        await runAllTimers();
 
-            // Verify tag is removed from the UI
-            expect(".o_tag").toHaveCount(1);
-            expect(".o_tag[data-tooltip='Bank A']").toHaveCount(0);
+        // Verify tag is removed from the UI
+        expect(".o_tag").toHaveCount(1);
+        expect(".o_tag[data-tooltip='Bank A']").toHaveCount(0);
 
-            // Verify update was called on the bank record with active: false
-            expect(updateCalled).toBe(true);
-            expect(updateChanges).toEqual({ active: false });
-        } finally {
-            Record.prototype.update = originalUpdate;
-        }
+        // Verify update was called on the bank record with active: false
+        expect(updateCalled).toBe(true);
+        expect(updateChanges).toEqual({ active: false });
     });
 
     test.tags("desktop");
@@ -156,28 +161,22 @@ describe("many2many_tags_banks widget", () => {
     test.tags("desktop");
     test("saves root record if dirty when mounting", async () => {
         let saveCalled = false;
-        const originalIsDirty = Record.prototype.isDirty;
-        const originalSave = Record.prototype.save;
+        patch(Record.prototype, {
+            async isDirty() {
+                return true;
+            },
+            async save() {
+                saveCalled = true;
+                return true;
+            },
+        });
 
-        Record.prototype.isDirty = async function() {
-            return true;
-        };
-        Record.prototype.save = async function() {
-            saveCalled = true;
-            return true;
-        };
-
-        try {
-            await mountView({
-                type: "form",
-                resModel: "test.partner",
-                resId: 1,
-            });
-            await runAllTimers();
-        } finally {
-            Record.prototype.isDirty = originalIsDirty;
-            Record.prototype.save = originalSave;
-        }
+        await mountView({
+            type: "form",
+            resModel: "test.partner",
+            resId: 1,
+        });
+        await runAllTimers();
 
         // The record is dirty on mount, so save should be triggered.
         expect(saveCalled).toBe(true);
@@ -186,28 +185,22 @@ describe("many2many_tags_banks widget", () => {
     test.tags("desktop");
     test("does not save root record if clean when mounting", async () => {
         let saveCalled = false;
-        const originalIsDirty = Record.prototype.isDirty;
-        const originalSave = Record.prototype.save;
+        patch(Record.prototype, {
+            async isDirty() {
+                return false;
+            },
+            async save() {
+                saveCalled = true;
+                return true;
+            },
+        });
 
-        Record.prototype.isDirty = async function() {
-            return false;
-        };
-        Record.prototype.save = async function() {
-            saveCalled = true;
-            return true;
-        };
-
-        try {
-            await mountView({
-                type: "form",
-                resModel: "test.partner",
-                resId: 1,
-            });
-            await runAllTimers();
-        } finally {
-            Record.prototype.isDirty = originalIsDirty;
-            Record.prototype.save = originalSave;
-        }
+        await mountView({
+            type: "form",
+            resModel: "test.partner",
+            resId: 1,
+        });
+        await runAllTimers();
 
         // The record is clean on mount, so save should not be triggered.
         expect(saveCalled).toBe(false);
