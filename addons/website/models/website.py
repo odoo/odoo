@@ -779,36 +779,21 @@ class Website(models.CachedModel):
         if not industry_name:
             return []
         try:
-            catalog_desc = "\n".join(
-                f"- {name}: {description}" for name, description in theme_catalog.items() if description
-            )
-            prompt = (
-                f"I'm building {website_type or 'a'} website for a {industry_name} business "
-                f"with a {positioning or 'general'} positioning.\n"
-                f"Available themes:\n{catalog_desc}\n\n"
-                f"Pick the {count} best-fitting themes. Return ONLY a JSON array of theme names, "
-                f"e.g. [\"theme_clean\", \"theme_cobalt\"]. No explanation."
-            )
-            database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
             response = self._OLG_api_rpc(
-                route='/api/olg/1/chat',
+                route='/api/olg/1/theme_recommendation',
                 params={
-                    'prompt': prompt,
-                    'conversation_history': [],
-                    'database_id': database_id,
+                    'themes': theme_catalog,
+                    'industry': industry_name,
+                    'website_type': website_type,
+                    'positioning': positioning,
+                    'count': count,
+                    'database_id': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
                 },
-                timeout=15,
+                timeout=25,
             )
-            content = response.get('content', '') if isinstance(response, dict) else ''
-            if isinstance(content, str) and (match := re.search(r'\[[\s\S]*?\]', content)):
-                suggestions = json.loads(match.group())
-                if isinstance(suggestions, list):
-                    return [
-                        theme for theme in suggestions
-                        if isinstance(theme, str) and theme in theme_catalog
-                    ][:count]
-        except (AccessError, iap_tools.InsufficientCreditError, json.JSONDecodeError, RequestException):
-            pass
+            return response.get('themes', []) if isinstance(response, dict) else []
+        except (AccessError, iap_tools.InsufficientCreditError, RequestException) as e:
+            logger.warning("Theme recommendation failed: %s", e)
         return []
 
     @api.model
