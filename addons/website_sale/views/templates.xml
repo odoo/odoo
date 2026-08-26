@@ -2272,6 +2272,7 @@
         <div id="cart_products"
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
+<<<<<<< 5ad065b0a289ebf5df984f8f760999f6f6b84ea3
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
                 <div
@@ -2281,6 +2282,23 @@
                     <div
                         class="o_cart_product_image"
                     >
+||||||| 08d5e003ab5c9445be74f62959629e2433534816
+            <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
+            <div t-foreach="website_sale_order.website_order_line"
+                 t-as="line"
+                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
+                 t-attf-data-product-id="#{line.product_id and line.product_id.id}">
+                <t t-if="line.product_id">
+                    <div style="width: 64px">
+=======
+            <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
+            <div t-foreach="website_sale_order.website_order_line"
+                 t-as="line"
+                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info' or ''} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
+                 t-attf-data-product-id="#{line.product_id and line.product_id.id}">
+                <t t-if="line.product_id">
+                    <div style="width: 64px">
+>>>>>>> 933c7a17eefda535b865b4df8c80d7afc6f309c4
                         <!--
                             Unsellable lines can have unpublished products, but portal users have no
                             access to unpublished product images. To ensure product images are
