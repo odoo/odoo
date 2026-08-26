@@ -36,6 +36,12 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".ui-menu-item > a:contains('Brandon Freeman')",
     run: "click",
 }, {
+    isActive: ["manual"],
+    trigger: ".o_kanban_quick_create .o_m2o_dropdown_option_create",
+    content: _t("Create your new contact."),
+    tooltipPosition: "top",
+    run: "click",
+}, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='name'] input:value('Brandon Freeman')",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
