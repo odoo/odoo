@@ -371,6 +371,10 @@ async function __gcAndLogMemory(label, testCount) {
     if (typeof window.gc !== "function") {
         return;
     }
+    const memory = window.performance.memory;
+    if (memory && memory.usedJSHeapSize < memory.jsHeapSizeLimit * GC_HEAP_RATIO) {
+        return;
+    }
 
     // Cleanup last retained textarea
     const textarea = document.createElement("textarea");
@@ -535,6 +539,7 @@ const AUTO_INCLUDED_ADDONS = {
 };
 const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
+const GC_HEAP_RATIO = 0.5;
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
     ["@web/core/template_inheritance", makeFixedFactory],
