@@ -83,6 +83,7 @@ export class PosOrder extends PosOrderAccounting {
             },
             requiredPartnerDetails: {},
             tip: { value: false, type: false },
+            isReprinting: false,
         };
     }
 
