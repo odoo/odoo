@@ -1326,6 +1326,22 @@ class HrLeave(models.Model):
 
         if any(not vals.get('employee_id', self.env.context.get('default_employee_id')) for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
+
+        for values in vals_list:
+            if 'work_entry_type_id' in values and 'number_of_hours' in values and self.env['hr.work.entry.type'].browse(values['work_entry_type_id']).request_unit == 'hour':
+                user_tz = self.env['hr.employee'].browse(values['employee_id']).tz
+                user_hour_from = (datetime.strptime(str(values['request_date_hour_from']), '%Y-%m-%d %H:%M:%S').replace
+                                  (tzinfo=UTC).astimezone(ZoneInfo(user_tz)).hour)
+                user_hour_to = (datetime.strptime(str(values['request_date_hour_to']), '%Y-%m-%d %H:%M:%S').replace
+                                (tzinfo=UTC).astimezone(ZoneInfo(user_tz)).hour)
+                values.update({
+                    'request_duration': 'specific',
+                    'request_hour_from': float(datetime.strptime(str(values['request_date_hour_from']), '%Y-%m-%d %H:%M:%S').hour),
+                    'request_hour_to': float(datetime.strptime(str(values['request_date_hour_to']), '%Y-%m-%d %H:%M:%S').hour),
+                    'request_date_from_period': 'am' if user_hour_from < 12 else 'pm',
+                    'request_date_to_period': 'am' if user_hour_to < 12 else 'pm'
+                })
+
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         real_holidays = holidays.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
         employees_without_allocation, zero_duration_employees = real_holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()

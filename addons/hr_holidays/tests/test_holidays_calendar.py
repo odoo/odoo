@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
@@ -141,3 +141,47 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         leave_request_b.action_approve()
         with self.assertRaises(ValidationError):
             leave_request_a.action_approve()
+
+    def test_half_day_and_hours_based_leave_on_same_day(self):
+        """ Checks that an employee can book a hours-based time off in the afternoon if they already booked a half-day
+        time off in the morning."""
+        hours_time_off_type, half_days_time_off_type = self.env['hr.work.entry.type'].create([{
+            'name': 'hours based time off',
+            'code': 'HPTO',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'unit_of_measure': 'hour',
+            'request_unit': 'hour',
+            'leave_validation_type': 'no_validation',
+        },
+        {
+            'name': 'half-day based time off',
+            'code': 'HDPTO',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'unit_of_measure': 'hour',
+            'request_unit': 'half_day',
+            'leave_validation_type': 'no_validation',
+        }])
+        _, hours_time_off = self.env['hr.leave'].with_user(self.user_hruser).create([
+        {
+            'name': 'Leave 2',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': half_days_time_off_type.id,
+            'request_date_from': datetime(2026, 8, 21, 8, 0, 0),
+            'request_date_to': datetime(2026, 8, 21, 12, 0, 0),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
+            'request_duration': 'am'
+        }, {
+            'name': 'Leave 1',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': hours_time_off_type.id,
+            'request_date_from': date(2026, 8, 21),
+            'request_date_to': date(2026, 8, 21),
+            'request_date_hour_from': datetime(2026, 8, 21, 15, 0, 0),
+            'request_date_hour_to': datetime(2026, 8, 21, 16, 0, 0),
+            'number_of_hours': 1,
+        }])
+        self.assertEqual(hours_time_off.request_hour_from, 17)  # converted to employee tz
+        self.assertEqual(hours_time_off.request_hour_to, 18)
