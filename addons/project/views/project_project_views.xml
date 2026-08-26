@@ -165,6 +165,11 @@
                                     <field name="alias_contact" class="oe_inline" string="Accept Emails From"
                                            invisible="not alias_email"/>
                                     <field name="privacy_visibility" widget="radio"/>
+                                    <field name="allowed_internal_user_ids"
+                                        widget="many2many_avatar_user"
+                                        placeholder="Select who can access"
+                                        options="{'no_create': True}"
+                                        invisible="privacy_visibility not in ['followers', 'invited_users']"/>
                                     <button name="%(project.project_share_wizard_action)d" 
                                             type="action" 
                                             string="Invite Portal Users" 
