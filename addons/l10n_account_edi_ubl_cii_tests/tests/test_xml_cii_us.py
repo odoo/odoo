@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import unittest
 
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
@@ -39,6 +40,7 @@ class TestCIIUS(TestUBLCommon):
         )
         return res
 
+    @unittest.skip("Failing test on runbot due to incompatible wkhtmltopdf version")
     def test_print_pdf_us_company(self):
         """ Even for a US company, a printed PDF should contain a Factur-X xml
         """
