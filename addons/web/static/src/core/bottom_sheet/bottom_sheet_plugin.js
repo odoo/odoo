@@ -1,4 +1,4 @@
-import { assertType, markRaw, Plugin, t, usePlugin } from "@odoo/owl";
+import { assertType, markRaw, Plugin, signal, t, useEffect, usePlugin } from "@odoo/owl";
 import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 import { registry } from "@web/core/registry";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
@@ -16,6 +16,15 @@ const BottomSheetOptionSchema = t.object({
 export class BottomSheetPlugin extends Plugin {
     /** @private */
     overlay = usePlugin(OverlayPlugin);
+
+    /** @private */
+    bottomSheetCount = signal(0);
+
+    setup() {
+        useEffect(() => {
+            document.body.classList.toggle("bottom-sheet-open", this.bottomSheetCount() >= 1);
+        });
+    }
 
     /**
      * @param {HTMLElement} target
@@ -38,10 +47,14 @@ export class BottomSheetPlugin extends Plugin {
             },
             {
                 scope: options.scope,
-                onRemove: options.onClose,
+                onRemove: (...args) => {
+                    this.bottomSheetCount.set(this.bottomSheetCount() - 1);
+                    return options.onClose?.(...args);
+                },
                 rootId: target.getRootNode()?.host?.id,
             }
         );
+        this.bottomSheetCount.set(this.bottomSheetCount() + 1);
 
         return remove;
     }
