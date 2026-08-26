@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.tools import SQL, float_round
+from odoo.tools import float_round, formatLang
 from odoo.exceptions import ValidationError
 
 
@@ -18,8 +18,10 @@ class AccountCashRounding(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    name = fields.Char(string="Name", translate=True, required=True)
+    name = fields.Char(string="Name", translate=True, inverse='_inverse_name')
+    name_placeholder = fields.Char(compute='_compute_name_placeholder')
     sequence = fields.Integer(required=True, default=10)
+    active = fields.Boolean(default=True)
 
     # Rounding fields
     rounding = fields.Float(
@@ -52,22 +54,18 @@ class AccountCashRounding(models.Model):
     profit_account_id = fields.Many2one(
         'account.account',
         string="Profit Account",
-        compute='_compute_profit_account_id',
-        store=True,
-        readonly=False,
         company_dependent=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        domain="[('internal_group', '=', 'income')]",
         ondelete='restrict',
+        inverse='_inverse_profit_account_id',
     )
     loss_account_id = fields.Many2one(
         'account.account',
         string="Loss Account",
-        compute='_compute_loss_account_id',
-        store=True,
-        readonly=False,
         company_dependent=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        domain="[('internal_group', '=', 'expense')]",
         ondelete='restrict',
+        inverse='_inverse_loss_account_id',
     )
 
     # Conditions fields
@@ -76,42 +74,33 @@ class AccountCashRounding(models.Model):
     payment_method_line_ids = fields.Many2many(comodel_name='account.payment.method.line', string="Payment Method")
     company_id = fields.Many2one('res.company', string="Company", ondelete='cascade')
 
-    def _get_default_accounts(self, internal_group):
-        return {
-            self.env['res.company'].browse(company_id): account_id
-            for company_id, account_id in
-            self.env.execute_query(SQL(
-                """
-                SELECT DISTINCT ON (company.id) company.id, account.id
-                  FROM res_company company
-                  JOIN account_account_res_company_rel rel
-                    ON rel.res_company_id = ANY(STRING_TO_ARRAY(RTRIM(company.parent_path, '/'), '/')::int[])
-                  JOIN account_account account
-                    ON rel.account_account_id = account.id
-                 WHERE account.active
-                   AND SPLIT_PART(account.account_type, '_', 1) = %(internal_group)s
-                """,
-                internal_group=internal_group,
-            ))
-        }
+    def _inverse_name(self):
+        for record in self:
+            if not record.name:
+                for lang in self.env['res.lang'].get_all():
+                    record = record.with_context(lang=lang.code)
+                    record.name = record.name_placeholder
 
-    @api.depends('strategy', 'company_id')
-    def _compute_profit_account_id(self):
-        default_accounts = self._get_default_accounts('income')
-        need_profit_account = self.filtered(lambda r: r.strategy == 'add_invoice_line' and not r.profit_account_id)
-        for record in need_profit_account:
-            for company, account_id in default_accounts.items():
-                if not record.company_id or record.company_id in company.parent_ids:
-                    record.with_company(company).profit_account_id = account_id
+    def _inverse_profit_account_id(self):
+        for record in self:
+            if record.profit_account_id and not record.env.company.cash_rounding_profit_account_id:
+                record.env.company.cash_rounding_profit_account_id = record.profit_account_id
 
-    @api.depends('strategy', 'company_id')
-    def _compute_loss_account_id(self):
-        default_accounts = self._get_default_accounts('expense')
-        need_loss_account = self.filtered(lambda r: r.strategy == 'add_invoice_line' and not r.loss_account_id)
-        for record in need_loss_account:
-            for company, account_id in default_accounts.items():
-                if not record.company_id or record.company_id in company.parent_ids:
-                    record.with_company(company).loss_account_id = account_id
+    def _inverse_loss_account_id(self):
+        for record in self:
+            if record.loss_account_id and not record.env.company.cash_rounding_loss_account_id:
+                record.env.company.cash_rounding_loss_account_id = record.loss_account_id
+
+    @api.depends_context('lang')
+    @api.depends('rounding_method', 'rounding', 'strategy')
+    def _compute_name_placeholder(self):
+        method_labels, strategy_labels = (dict(self._fields[fname]._description_selection(self.env)) for fname in ('rounding_method', 'strategy'))
+        for record in self:
+            record.name_placeholder = ' '.join(filter(None, [
+                method_labels.get(record.rounding_method),
+                formatLang(record.env, record.rounding) if record.rounding else None,
+                strategy_labels['biggest_tax'] if record.strategy == 'biggest_tax' else None,
+            ]))
 
     @api.constrains('rounding')
     def validate_rounding(self):

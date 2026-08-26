@@ -749,7 +749,6 @@ class AccountMove(models.Model):
         compute='_compute_invoice_cash_rounding_id',
         store=True, readonly=False, index=True,
     )
-    has_biggest_tax_cash_rounding_line = fields.Boolean(compute='_compute_has_biggest_tax_cash_rounding_line')
     sending_data = fields.Json(copy=False)
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
@@ -1897,6 +1896,8 @@ class AccountMove(models.Model):
         'partner_id',
         'currency_id',
         'document_tax_mode',
+        'line_ids.display_type',
+        'line_ids.tax_repartition_line_id',
     )
     def _compute_tax_totals(self):
         """ Computed field used for custom widget's rendering.
@@ -1911,6 +1912,11 @@ class AccountMove(models.Model):
                     company=move.company_id,
                     cash_rounding=move.sudo().invoice_cash_rounding_id,
                 )
+                if any(
+                    line.display_type == 'rounding' and line.tax_repartition_line_id
+                    for line in move.line_ids
+                ):
+                    tax_totals['has_biggest_tax_cash_rounding'] = True
                 tax_totals['display_in_company_currency'] = (
                     move.company_id.display_invoice_tax_company_currency
                     and move.company_currency_id != move.currency_id
@@ -2564,11 +2570,6 @@ class AccountMove(models.Model):
                 and (not cash_rounding.payment_method_line_ids or move.preferred_payment_method_line_id in cash_rounding.payment_method_line_ids)
             ), False)
 
-    @api.depends('invoice_cash_rounding_id.strategy', 'line_ids')
-    def _compute_has_biggest_tax_cash_rounding_line(self):
-        for move in self:
-            move.has_biggest_tax_cash_rounding_line = move.sudo().invoice_cash_rounding_id.strategy == 'biggest_tax' and any(line.display_type == 'rounding' for line in move.line_ids)
-
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
@@ -2873,14 +2874,19 @@ class AccountMove(models.Model):
             self.name = False
             self._compute_name()
 
-    @api.onchange('invoice_cash_rounding_id')
-    def _onchange_invoice_cash_rounding_id(self):
-        for move in self:
-            if move.invoice_cash_rounding_id.strategy == 'add_invoice_line' and not move.invoice_cash_rounding_id.profit_account_id:
-                return {'warning': {
-                    'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
-                    'message': _("You must specify the Profit Account (company dependent)")
-                }}
+    @api.onchange('invoice_cash_rounding_id', 'tax_totals')
+    def _onchange_ineffective_cash_rounding(self):
+        cash_rounding = self.invoice_cash_rounding_id
+        total_amount_currency = (self.tax_totals or {}).get('total_amount_currency', 0.0)
+        if (
+            cash_rounding.strategy == 'biggest_tax'
+            and not self.currency_id.is_zero(cash_rounding.compute_difference(self.currency_id, total_amount_currency))
+        ):
+            return {'warning': {
+                'title': self.env._("No rounding applied"),
+                'message': self.env._("This document has no tax amount to adjust."),
+                'type': 'notification',
+            }}
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -3146,10 +3152,27 @@ class AccountMove(models.Model):
                 })
 
             elif self.invoice_cash_rounding_id.strategy == 'add_invoice_line':
-                if diff_balance > 0.0 and self.invoice_cash_rounding_id.loss_account_id:
-                    account_id = self.invoice_cash_rounding_id.loss_account_id.id
-                else:
-                    account_id = self.invoice_cash_rounding_id.profit_account_id.id
+                is_loss = diff_balance > 0.0
+                fname = 'loss_account_id' if is_loss else 'profit_account_id'
+                cash_rounding = self.invoice_cash_rounding_id
+                account_id = cash_rounding[fname].id
+                if not account_id:
+                    if self.env.user._is_internal() and cash_rounding.sudo(False).has_access('write'):
+                        raise RedirectWarning(
+                            message=self.env._(
+                                'The cash rounding method "%(name)s" has no Profit/Loss Accounts set, so no rounding line can be added.',
+                                name=self.invoice_cash_rounding_id.display_name,
+                            ),
+                            action=self.invoice_cash_rounding_id._get_records_action(target='new'),
+                            button_text=self.env._("Configure"),
+                        )
+                    else:
+                        account = self.env['account.account'].search([
+                            *self.env['account.account']._check_company_domain(self.env.company),
+                            ('internal_group', '=', 'expense' if is_loss else 'income'),
+                        ], limit=1)
+                        cash_rounding[fname] = account
+                        account_id = account.id
                 rounding_line_vals.update({
                     'name': self.invoice_cash_rounding_id.name,
                     'account_id': account_id,

@@ -151,7 +151,7 @@ export class TaxTotalsComponent extends Component {
 
     taxGroupWithRoundingAmount = computed(() => {
         const totals = this.totals();
-        if (!totals || !this.props.record.data.has_biggest_tax_cash_rounding_line) {
+        if (!totals || !this.showCashRounding || !totals.has_biggest_tax_cash_rounding) {
             return;
         }
         const taxGroups = totals.subtotals?.flatMap((subtotal) => subtotal.tax_groups);
@@ -170,10 +170,12 @@ export class TaxTotalsComponent extends Component {
             position: "left-middle",
             role: "menu",
         });
-        this.groupCashRounding = false;
+        this.hasCashRoundingAccess = false;
 
         onWillStart(async () => {
-            this.groupCashRounding = await user.hasGroup("account.group_cash_rounding");
+            this.hasCashRoundingAccess =
+                this.props.record.isInEdition &&
+                (await user.hasGroup("account.group_cash_rounding"));
         });
     }
 
@@ -182,14 +184,22 @@ export class TaxTotalsComponent extends Component {
     //--------------------------------------------------------------------------
 
     get showCashRounding() {
+        if (this.props.record.resModel !== "account.move") {
+            return false;
+        }
+
         const move = this.props.record.data;
         return (
-            this.groupCashRounding && move.move_type?.startsWith("out_") && move.state === "draft"
+            this.hasCashRoundingAccess &&
+            move.move_type?.startsWith("out_") &&
+            move.state === "draft"
         );
     }
 
     isCashRoundingSelected(cashRoundingId) {
-        return cashRoundingId === this.props.record.data.invoice_cash_rounding_id.id;
+        return (
+            cashRoundingId && cashRoundingId === this.props.record.data.invoice_cash_rounding_id.id
+        );
     }
 
     setCashRounding(cashRoundingId) {
@@ -266,7 +276,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     removeCashRounding() {
-        return this.props.record.update({ ["invoice_cash_rounding_id"]: false });
+        return this.setCashRounding(false);
     }
 
     //--------------------------------------------------------------------------

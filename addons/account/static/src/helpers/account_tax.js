@@ -1459,7 +1459,10 @@ export const accountTaxHelpers = {
                         cash_rounding_base_amount;
                 } else if (strategy === "biggest_tax") {
                     const all_subtotal_tax_group = tax_totals_summary.subtotals.flatMap(
-                        (subtotal) => subtotal.tax_groups.map((tax_group) => [subtotal, tax_group])
+                        (subtotal) =>
+                            subtotal.tax_groups
+                                .filter((tax_group) => !floatIsZero(tax_group.tax_amount_currency, currency.decimal_places))
+                                .map((tax_group) => [subtotal, tax_group])
                     );
 
                     if (all_subtotal_tax_group.length) {
@@ -1474,6 +1477,7 @@ export const accountTaxHelpers = {
                         tax_totals_summary.tax_amount_currency +=
                             cash_rounding_base_amount_currency;
                         tax_totals_summary.tax_amount += cash_rounding_base_amount;
+                        tax_totals_summary.has_biggest_tax_cash_rounding = true;
                     } else {
                         // Failed to apply the cash rounding since there is no tax.
                         cash_rounding_base_amount_currency = 0.0;
