@@ -115,6 +115,41 @@ class TestMailingTest(TestMassMailCommon):
         self.assertIn('/unsubscribe_from_list', body_html)  # Isn't replaced
         self.assertIn('http://www.example.com/view', body_html)  # Isn't replaced
 
+    @users('user_marketing')
+    def test_mailing_test_correct_model(self):
+        """ Testing that an internal user without being an admin is able to delete attachments
+        after sending a test email. """
+        mailing = self.test_mailing_bl.with_env(self.env)
+        attachment = self.env['ir.attachment'].create({
+                'datas': 'IA==',  # a non-empty base64 content.
+                'name': 'attachment_test',
+                'res_name': 'test',
+            })
+        mailing['attachment_ids'] = [attachment.id]
+        attachment['access_token'] = attachment._generate_access_token()
+
+        self.authenticate(user='user_marketing', password='user_marketing')
+        mailing_test = self.env['mailing.mailing.test'].create({
+            'email_to': 'test@test.com',
+            'mass_mailing_id': mailing.id,
+        })
+
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        test_mail_attachment = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)]).attachment_ids
+        self.assertNotEqual(attachment, test_mail_attachment)
+        self.assertEqual(test_mail_attachment.res_model, 'res.users')
+
+        self.make_jsonrpc_request(
+            route='/mail/attachment/delete',
+            params={
+                'attachment_id': attachment['id'],
+                'access_token': attachment['access_token'],
+            },
+        )
+        self.assertFalse(attachment.exists())
+
     def test_mailing_test_equals_reality(self):
         """ Check that both test and real emails will format the qweb and inline
         placeholders correctly in body and subject. """
