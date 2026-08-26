@@ -318,21 +318,6 @@ class AdyenController(http.Controller):
         :return: The computed signature
         :rtype: str
         """
-
-        def _flatten_dict(_value, _path_base="", _separator="."):
-            """Recursively generate a flat representation of a dict.
-
-            :param Object _value: The value to flatten. A dict or an already flat value
-            :param str _path_base: They base path for keys of _value, including preceding separators
-            :param str _separator: The string to use as a separator in the key path
-            """
-            if isinstance(_value, dict):  # The inner value is a dict, flatten it
-                _path_base = _path_base if not _path_base else _path_base + _separator
-                for _key in _value:
-                    yield from _flatten_dict(_value[_key], _path_base + str(_key))
-            else:  # The inner value cannot be flattened, yield it
-                yield _path_base, _value
-
         def _to_escaped_string(_value):
             """Escape payload values that are using illegal symbols and cast them to string.
 
@@ -349,20 +334,18 @@ class AdyenController(http.Controller):
                 return ""
             return str(_value)
 
-        signature_keys = [
-            "pspReference",
-            "originalReference",
-            "merchantAccountCode",
-            "merchantReference",
-            "amount.value",
-            "amount.currency",
-            "eventCode",
-            "success",
+        # Read the signature values
+        amount = payload.get("amount") or {}
+        signature_values = [
+            payload.get("pspReference"),
+            payload.get("originalReference"),
+            payload.get("merchantAccountCode"),
+            payload.get("merchantReference"),
+            amount.get("value"),
+            amount.get("currency"),
+            payload.get("eventCode"),
+            payload.get("success"),
         ]
-        # Flatten the payload to allow accessing inner dicts naively
-        flattened_payload = dict(_flatten_dict(payload))
-        # Build the list of signature values as per the list of required signature keys
-        signature_values = [flattened_payload.get(key) for key in signature_keys]
         # Escape values using forbidden symbols
         escaped_values = [_to_escaped_string(value) for value in signature_values]
         # Concatenate values together with ':' as delimiter
