@@ -841,7 +841,10 @@ export class Store extends BaseStore {
                 ...thread.getFetchParams(),
                 fetch_params: {
                     is_notification,
-                    search_term: (await prettifyMessageText(searchTerm)).replaceAll(nbsp, " "), // formatted like message_post
+                    search_term: searchTerm,
+                    prettified_search_term: (
+                        await prettifyMessageText(searchTerm)
+                    ).replaceAll(nbsp, " "), // formatted like message_post
                     before,
                 },
             },

@@ -34,6 +34,16 @@ SHARE_DOMAIN = (
     & Domain("is_internal", "=", False)
     & Domain("subtype_id.internal", "=", False)
 )
+_QUOTE_BY_ENTITY = {
+    "&quot;": '"',
+    "&#x27;": "'",
+    "&#x60;": "`",
+}
+_QUOTE_ENTITY_RE = re.compile("|".join(_QUOTE_BY_ENTITY), re.IGNORECASE)
+
+
+def _decode_search_term(term):
+    return _QUOTE_ENTITY_RE.sub(lambda m: _QUOTE_BY_ENTITY[m.group(0).lower()], term)
 
 
 def exists_in_cache(records, *, hint_field=''):
@@ -976,7 +986,7 @@ class MailMessage(models.Model):
         ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
-    def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, *, thread=None, search_term=None, prettified_search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
         res = {}
         domain = Domain(True if domain is None else domain)
         if thread:
@@ -991,17 +1001,19 @@ class MailMessage(models.Model):
             domain &= Domain("message_type", "!=", "notification")
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
-            search_term = search_term.replace(" ", "%")
+            text_term = search_term.replace(" ", "%")
+            html_term = _decode_search_term(prettified_search_term).replace(" ", "%")
             message_domain = Domain.OR([
                 # sudo: access to attachment is allowed if you have access to the parent model
-                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", text_term)]))],
                 # sudo: res.partner - allow searching by author name
-                [("author_id", "in", self.env["res.partner"].sudo()._search([("name", "ilike", search_term)]))],
+
+                [("author_id", "in", self.env["res.partner"].sudo()._search([("name", "ilike", text_term)]))],
                 # sudo: mail.guest - allow searching by guest name
-                [("author_guest_id", "in", self.env["mail.guest"].sudo()._search([("name", "ilike", search_term)]))],
-                [("body", "ilike", search_term)],
-                [("subject", "ilike", search_term)],
-                [("subtype_id.description", "ilike", search_term)],
+                [("author_guest_id", "in", self.env["mail.guest"].sudo()._search([("name", "ilike", text_term)]))],
+                [("body", "ilike", html_term)],
+                [("subject", "ilike", html_term)],
+                [("subtype_id.description", "ilike", text_term)],
             ])
             domain &= message_domain
         if search_term or is_notification is not None:
