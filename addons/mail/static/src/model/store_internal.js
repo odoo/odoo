@@ -209,7 +209,7 @@ export class StoreInternal extends RecordInternal {
         }
         const fieldType = Model._.fieldsType.get(fieldName);
         const fieldHtml = Model._.fieldsHtml.get(fieldName);
-        const sig = record._.ensureFieldSignal(record, fieldName);
+        const sig = record._.ensureFieldSignal(fieldName);
         const current = sig();
         let shouldChange = current !== value;
         if (fieldType === "datetime" && value) {

@@ -10,7 +10,9 @@ export class Store extends Record {
     static singleton = true;
     /** @type {import("./store_internal").StoreInternal} */
     _;
-    [STORE_SYM] = true;
+    get [STORE_SYM]() {
+        return true;
+    }
     storeReady = false;
 
     handleError(err) {
@@ -56,7 +58,7 @@ export class Store extends Record {
                     const [record, recMap] = FC_QUEUE.entries().next().value;
                     FC_QUEUE.delete(record);
                     for (const fieldName of recMap.keys()) {
-                        record._.requestCompute(record, fieldName, { force: true });
+                        record._.requestCompute(fieldName, { force: true });
                     }
                 }
                 while (FA_QUEUE.size > 0) {
@@ -103,7 +105,7 @@ export class Store extends Record {
                     const [record, map] = FU_QUEUE.entries().next().value;
                     FU_QUEUE.delete(record);
                     for (const fieldName of map.keys()) {
-                        record._.onUpdate(record, fieldName);
+                        record._.onUpdate(fieldName);
                     }
                 }
                 while (RD_QUEUE.size > 0) {

@@ -172,6 +172,8 @@ export class RecordInternal {
     uses = new RecordUses();
     /** @type {string} */
     localId;
+    /** @type {Record} the record these internals belong to */
+    record;
     /** @type {Map<string, import("@mail/model/field_version").SingleFieldVersion|import("@mail/model/field_version").ManyFieldVersion>} */
     fieldsVersion = new Map();
 
@@ -192,15 +194,14 @@ export class RecordInternal {
      * Get-or-create the signal holding the value of the attr field `fieldName`,
      * declared or not.
      *
-     * @param {Record} record
      * @param {string} fieldName
      * @param {any} [value] initial value, on creation only
-     * @param {Object} [param3={}]
-     * @param {boolean} [param3.accessor=true] whether to define the accessor
+     * @param {Object} [param2={}]
+     * @param {boolean} [param2.accessor=true] whether to define the accessor
      *  that reads and writes the field as a property of the record
      * @returns {import("@odoo/owl").Signal<any>}
      */
-    ensureFieldSignal(record, fieldName, value, { accessor = true } = {}) {
+    ensureFieldSignal(fieldName, value, { accessor = true } = {}) {
         let sig = this.fieldsAttrSignal.get(fieldName);
         if (sig) {
             return sig;
@@ -208,7 +209,7 @@ export class RecordInternal {
         sig = signal(value);
         this.fieldsAttrSignal.set(fieldName, sig);
         if (accessor) {
-            Object.defineProperty(record, fieldName, {
+            Object.defineProperty(this.record, fieldName, {
                 configurable: true,
                 enumerable: true,
                 get: () => sig(),
@@ -220,27 +221,51 @@ export class RecordInternal {
         return sig;
     }
 
-    /**
-     * @param {Record} record
-     * @returns {RecordScope} the scope owning the computeds of this record
-     */
-    ensureScope(record) {
-        return (this.scope ??= new RecordScope(record._rawStore));
+    /** @returns {RecordScope} the scope owning the computeds of this record */
+    ensureScope() {
+        return (this.scope ??= new RecordScope(this.record._rawStore));
     }
 
     /**
      * @param {Record} record
-     * @param {string} fieldName
-     * @param {Record} recordProxy
+     * @param {Object} [ids] the identifying values, from `Record.new`
+     * @returns {Record} the proxy of the record, which its constructor returns
      */
-    prepareField(record, fieldName, recordProxy) {
+    prepareRecord(record, ids) {
+        this.record = record;
+        this.localId = record.Model.localId(ids);
+        record._proxy = markRaw(
+            new Proxy(record, {
+                defineProperty: (target, name, descriptor) =>
+                    this.proxyDefineProperty(name, descriptor),
+                deleteProperty: (target, name) => this.proxyDeleteProperty(name),
+                get: (target, name) => this.proxyGet(name),
+                set: (target, name, value) => this.proxySet(name, value),
+            })
+        );
+        return record._proxy;
+    }
+
+    /**
+     * @param {string} fieldName
+     * @returns {boolean} whether the field holds its value on this record
+     */
+    fieldPrepared(fieldName) {
+        const record = this.record;
+        if (isRelation(record.Model, fieldName)) {
+            return record[fieldName] !== undefined;
+        }
+        return this.fieldsAttrSignal.has(fieldName);
+    }
+
+    /**
+     * @param {string} fieldName
+     * @param {any} definition the field definition, or the default value
+     */
+    prepareField(fieldName, definition) {
+        const record = this.record;
         const Model = record.Model;
         if (isRelation(Model, fieldName)) {
-            // Relational fields contain symbols for detection in original class.
-            // This constructor is called on genuine records:
-            // - 'one' fields => undefined
-            // - 'many' fields => RecordList
-            // record[name]?.[0] is ONE_SYM or MANY_SYM
             const recordList = new RecordList();
             Object.assign(recordList._, {
                 name: fieldName,
@@ -252,10 +277,8 @@ export class RecordInternal {
             });
             record[fieldName] = recordList;
         } else {
-            const value = isFieldDefinition(record[fieldName])
-                ? record[fieldName].default
-                : record[fieldName];
-            this.ensureFieldSignal(record, fieldName, value);
+            const value = isFieldDefinition(definition) ? definition.default : definition;
+            this.ensureFieldSignal(fieldName, value);
         }
         this.fieldsDefault.set(fieldName, record[fieldName]);
         // register local storage fields
@@ -271,7 +294,7 @@ export class RecordInternal {
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName) && !Model._.fieldsComputable.get(fieldName)) {
                 record._registerDisposeFn(
-                    observeField(recordProxy, fieldName, () => {
+                    observeField(record._proxy, fieldName, () => {
                         if (this.fieldsComputing.get(fieldName)) {
                             /**
                              * Use a reactive to reset the computeInNeed flag when there is
@@ -288,33 +311,28 @@ export class RecordInternal {
             }
         }
         if (Model._.fieldsOnUpdate.get(fieldName)) {
-            this.prepareFieldOnUpdate(record, fieldName, recordProxy);
+            this.prepareFieldOnUpdate(fieldName);
         }
     }
 
-    /**
-     * @param {Record} record
-     * @param {string} fieldName
-     * @param {Record} recordProxy
-     */
-    prepareFieldOnUpdate(record, fieldName, recordProxy) {
+    /** @param {string} fieldName */
+    prepareFieldOnUpdate(fieldName) {
+        const record = this.record;
         const Model = record.Model;
         const store = Model.store;
-        const fn = store._onChange(recordProxy, fieldName, (obs) => {
+        const fn = store._onChange(record._proxy, fieldName, (obs) => {
             if (store._.UPDATE !== 0) {
                 untrack(() => store._.ADD_QUEUE("onUpdate", record, fieldName));
             } else {
-                this.onUpdate(record, fieldName);
+                this.onUpdate(fieldName);
             }
         });
         this.fieldsOnUpdateStop.set(fieldName, fn);
     }
 
-    /**
-     * @param {Record} record
-     * @param {string} name
-     */
-    proxyDeleteProperty(record, name) {
+    /** @param {string} name */
+    proxyDeleteProperty(name) {
+        const record = this.record;
         const Model = record.Model;
         if (Model._.parentFields.has(name)) {
             const parentFieldName = Model._.parentFields.get(name);
@@ -327,17 +345,18 @@ export class RecordInternal {
                 recordList.clear();
                 return true;
             }
-            record._.ensureFieldSignal(record, name).set(undefined);
+            record._.ensureFieldSignal(name).set(undefined);
             return true;
         });
     }
 
-    /**
-     * @param {Record} record
-     * @param {string} name
-     * @param {Record} recordProxy
-     */
-    proxyGet(record, name, recordProxy) {
+    /** @param {string} name */
+    proxyGet(name) {
+        const record = this.record;
+        const recordProxy = record._proxy;
+        if (technicalKeysOnRecords.has(name)) {
+            return record[name];
+        }
         const Model = record.Model;
         const modelInternal = Model._;
         if (modelInternal.parentFields.has(name)) {
@@ -353,74 +372,84 @@ export class RecordInternal {
             }
             return Reflect.get(parentRecordProxy, name);
         }
-        if (!modelInternal.fields.get(name)) {
+        if (modelInternal.fields.get(name)) {
+            if (modelInternal.fieldsComputable.get(name)) {
+                let computedField = record._.fieldsComputed.get(name);
+                if (!computedField) {
+                    const compute = modelInternal.fieldsCompute.get(name);
+                    const { isUpdateInProgress } = record._rawStore._;
+                    let lastValue = record._.fieldsDefault.get(name);
+                    computedField = record._.ensureScope().run(() =>
+                        computed(function computeFieldValue() {
+                            if (untrack(isUpdateInProgress)) {
+                                // Hold while a write is being applied: the relations this
+                                // reads are written one by one. onAdd, onDelete and onUpdate
+                                // run between writes, at depth 0, so they read fresh values.
+                                // Subscribe only while held, so the release computes once.
+                                void isUpdateInProgress();
+                                return lastValue;
+                            }
+                            lastValue = compute.call(record._proxy);
+                            return lastValue;
+                        })
+                    );
+                    record._.fieldsComputed.set(name, computedField);
+                }
+                return computedField();
+            }
+            if (modelInternal.fieldsCompute.get(name) && !modelInternal.fieldsEager.get(name)) {
+                record._.fieldsComputeInNeed.set(name, true);
+                if (record._.fieldsComputeOnNeed.get(name)) {
+                    record._.compute(name, { fromInNeed: true });
+                }
+            }
             const sig = record._.fieldsAttrSignal.get(name);
             if (sig) {
-                return sig();
+                const val = sig();
+                if (
+                    typeof val === "object" &&
+                    val !== null &&
+                    modelInternal.fieldsAttrAsProxy.has(name)
+                ) {
+                    // Return the value as a proxy, as this field is mutated in place.
+                    return proxy(val);
+                }
+                return val;
             }
-            let res = Reflect.get(...arguments);
-            if (
-                res === undefined &&
-                typeof name === "string" &&
-                !technicalKeysOnRecords.has(name) &&
-                !(name in record)
-            ) {
-                // Create the signal on read, so a reader before the first write observes it.
-                return record._.ensureFieldSignal(record, name, undefined, {
-                    accessor: false,
-                })();
+            if (isRelation(Model, name)) {
+                const recordList = record[name];
+                if (recordList !== undefined) {
+                    const recordListProxy = recordList._proxy;
+                    if (isMany(Model, name)) {
+                        return recordListProxy;
+                    }
+                    return recordListProxy[0];
+                }
             }
-            // a model is a class, so a function: binding it would hide its statics
-            if (typeof res === "function" && !res._) {
-                res = res.bind(recordProxy);
-            }
-            return res;
+            // a field this record does not hold yet: `setup` reads the
+            // prototype before writing such a field
         }
-        if (modelInternal.fieldsComputable.get(name)) {
-            let computedField = record._.fieldsComputed.get(name);
-            if (!computedField) {
-                const compute = modelInternal.fieldsCompute.get(name);
-                const { isUpdateInProgress } = record._rawStore._;
-                let lastValue = record._.fieldsDefault.get(name);
-                computedField = record._.ensureScope(record).run(() =>
-                    computed(function computeFieldValue() {
-                        if (untrack(isUpdateInProgress)) {
-                            // Hold while a write is being applied: the relations this
-                            // reads are written one by one. onAdd, onDelete and onUpdate
-                            // run between writes, at depth 0, so they read fresh values.
-                            // Subscribe only while held, so the release computes once.
-                            void isUpdateInProgress();
-                            return lastValue;
-                        }
-                        lastValue = compute.call(record._proxy);
-                        return lastValue;
-                    })
-                );
-                record._.fieldsComputed.set(name, computedField);
-            }
-            return computedField();
+        const sig = record._.fieldsAttrSignal.get(name);
+        if (sig) {
+            return sig();
         }
-        if (modelInternal.fieldsCompute.get(name) && !modelInternal.fieldsEager.get(name)) {
-            record._.fieldsComputeInNeed.set(name, true);
-            if (record._.fieldsComputeOnNeed.get(name)) {
-                record._.compute(record, name, { fromInNeed: true });
-            }
+        let res = Reflect.get(record, name, recordProxy);
+        if (
+            res === undefined &&
+            typeof name === "string" &&
+            !technicalKeysOnRecords.has(name) &&
+            !(name in record)
+        ) {
+            // Create the signal on read, so a reader before the first write observes it.
+            return record._.ensureFieldSignal(name, undefined, {
+                accessor: false,
+            })();
         }
-        if (isRelation(Model, name)) {
-            const recordListProxy = record[name]._proxy;
-            if (isMany(Model, name)) {
-                return recordListProxy;
-            }
-            return recordListProxy[0];
+        // a model is a class, so a function: binding it would hide its statics
+        if (typeof res === "function" && !res._) {
+            res = res.bind(recordProxy);
         }
-        const val = (
-            record._.fieldsAttrSignal.get(name) ?? record._.ensureFieldSignal(record, name)
-        )();
-        if (typeof val === "object" && val !== null && modelInternal.fieldsAttrAsProxy.has(name)) {
-            // Return the value as a proxy, as this field is mutated in place.
-            return proxy(val);
-        }
-        return val;
+        return res;
     }
 
     /**
@@ -428,8 +457,34 @@ export class RecordInternal {
      * @param {string} name
      * @param {any} val
      */
-    proxySet(record, name, val) {
+    /**
+     * Route a plain data descriptor through the set trap, as patching a
+     * record defines the field rather than sets it.
+     */
+    proxyDefineProperty(name, descriptor) {
+        const record = this.record;
+        if (typeof name === "symbol") {
+            return Reflect.defineProperty(record, name, descriptor);
+        }
+        if (technicalKeysOnRecords.has(name)) {
+            // keep what the constructor set: `Store` redeclares `_` for typing
+            return true;
+        }
+        if (!descriptor.enumerable || !descriptor.writable || !("value" in descriptor)) {
+            return Reflect.defineProperty(record, name, descriptor);
+        }
+        return this.proxySet(name, descriptor.value);
+    }
+
+    proxySet(name, val) {
+        const record = this.record;
         const Model = record.Model;
+        if (isFieldDefinition(val) || (Model._.fields.get(name) && !this.fieldPrepared(name))) {
+            // a declaration: an initializer lands the definition or the default,
+            // and `setup` writes the default of a field no initializer declares
+            this.prepareField(name, val);
+            return true;
+        }
         const store = record._rawStore;
         if (Model._.parentFields.has(name)) {
             const parentFieldName = Model._.parentFields.get(name);
@@ -442,10 +497,11 @@ export class RecordInternal {
         });
     }
 
-    requestCompute(record, fieldName, { force = false } = {}) {
+    requestCompute(fieldName, { force = false } = {}) {
         if (untrack(this.isDeleted)) {
             return;
         }
+        const record = this.record;
         const Model = record.Model;
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
@@ -455,22 +511,22 @@ export class RecordInternal {
             store._.ADD_QUEUE("compute", record, fieldName);
         } else {
             if (Model._.fieldsEager.get(fieldName) || this.fieldsComputeInNeed.get(fieldName)) {
-                this.compute(record, fieldName);
+                this.compute(fieldName);
             } else {
                 this.fieldsComputeOnNeed.set(fieldName, true);
             }
         }
     }
     /**
-     * @param {Record} record
      * @param {string} fieldName
-     * @param {Object} [param2={}]
-     * @param {boolean} [param2.fromInNeed] whether the compute is triggered from an "in-need" observer.
+     * @param {Object} [param1={}]
+     * @param {boolean} [param1.fromInNeed] whether the compute is triggered from an "in-need" observer.
      *  Useful to force keeping the "in-need" flag, as the "in-need" is automatically reset whenever a computing value has changed.
      *  The "in-need" flag is expected to be set again by observed on the next read, but if the compute is immediately triggered
      *  by the "in-need" then that's the case the `fromInNeed: true` and it should preserve for this ongoing compute.
      */
-    compute(record, fieldName, { fromInNeed } = {}) {
+    compute(fieldName, { fromInNeed } = {}) {
+        const record = this.record;
         const Model = record.Model;
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
@@ -483,7 +539,7 @@ export class RecordInternal {
         const stopFn = untrack(() =>
             immediateEffect(() => {
                 if (triggered) {
-                    return untrack(() => this.requestCompute(record, fieldName));
+                    return untrack(() => this.requestCompute(fieldName));
                 }
                 const store = record._rawStore;
                 this.fieldsComputing.set(fieldName, true);
@@ -509,7 +565,8 @@ export class RecordInternal {
         }
         triggered = true;
     }
-    onUpdate(record, fieldName) {
+    onUpdate(fieldName) {
+        const record = this.record;
         const store = record._rawStore;
         const Model = record.Model;
         if (!Model._.fieldsOnUpdate.get(fieldName)) {
@@ -526,7 +583,7 @@ export class RecordInternal {
                 store.handleError(err);
             }
         });
-        this.prepareFieldOnUpdate(record, fieldName, recordProxy);
+        this.prepareFieldOnUpdate(fieldName);
     }
 }
 

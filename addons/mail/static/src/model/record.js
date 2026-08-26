@@ -19,6 +19,7 @@ import {
     technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
+import { RecordInternal } from "./record_internal";
 import { computedUntilStale } from "@mail/utils/common/signal";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
@@ -51,8 +52,18 @@ export class Record {
     /** @type {string} */
     static _name;
 
-    constructor() {
+    /** @param {Object} [ids] the identifying values, from `Record.new` */
+    constructor(ids) {
         markRaw(this);
+        const Model = new.target;
+        this._raw = this;
+        if (!Model._) {
+            // the dummy record collecting the field declarations has no internals
+            return;
+        }
+        this.Model = Model;
+        this._ = this[STORE_SYM] ? Record.store._ : new RecordInternal();
+        return this._.prepareRecord(this, ids);
     }
 
     /** @param {() => any} fn */
@@ -192,12 +203,9 @@ export class Record {
         const Model = this;
         const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordNew() {
-            const recordProxy = new Model();
+            const recordProxy = new Model(ids);
             const record = recordProxy._raw;
-            Object.assign(record._, { localId: Model.localId(ids) });
-            for (const name of Model._.fields.keys()) {
-                record._.prepareField(record, name, recordProxy);
-            }
+            recordProxy.setup();
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
             if (record.Model.getName() === "Store") {
@@ -205,14 +213,14 @@ export class Record {
             }
             // compute inherits fields in priority, as other fields might depend on them
             for (const fieldName of Model._.inheritsFields) {
-                record._.compute?.(record, fieldName);
+                record._.compute?.(fieldName);
             }
             for (const fieldName of record.Model._.fields.keys()) {
                 if (record.Model._.fieldsComputable.get(fieldName)) {
                     // the owl computed() runs on the first read, nothing to request
                     continue;
                 }
-                record._.requestCompute?.(record, fieldName);
+                record._.requestCompute?.(fieldName);
             }
             record._.isConstructing.set(false);
             return recordProxy;
@@ -402,7 +410,7 @@ export class Record {
             // the dummy record collecting the field declarations has no internals
             return;
         }
-        const deps = record._.ensureScope(record).run(() =>
+        const deps = record._.ensureScope().run(() =>
             computed(dependencies.bind(record), { equals: shallowEqual })
         );
         const boundCallback = callback.bind(record);
@@ -456,7 +464,7 @@ export class Record {
         const staleComputeds = (record._.staleComputeds ??= new Map());
         let staleComputed = staleComputeds.get(key);
         if (!staleComputed) {
-            staleComputed = record._.ensureScope(record).run(() =>
+            staleComputed = record._.ensureScope().run(() =>
                 computedUntilStale(compute, msUntilStale)
             );
             staleComputeds.set(key, staleComputed);
