@@ -107,6 +107,37 @@ class SaleOrderLine(models.Model):
 
     def _check_validity(self):
         website = self.order_id.website_id
+        if self.product_type == "combo":
+            # Sudo and search instead of using `linked_line_ids`: this method may run as a
+            # non-privileged (e.g. public) user, and on a line that was just re-browsed after its
+            # combo item lines were created in the same transaction (e.g. `cart.py`'s
+            # `add_to_cart`), where the relational field's cache can be stale.
+            combo_item_lines = (
+                self
+                .env["sale.order.line"]
+                .sudo()
+                .search([("linked_line_id", "=", self.id), ("combo_item_id", "!=", False)])
+            )
+            for combo in self.product_template_id.sudo().combo_ids:
+                combo_item_ids = combo.combo_item_ids.ids
+                selected_qty = sum(
+                    combo_item_line.selected_combo_item_qty
+                    for combo_item_line in combo_item_lines
+                    if combo_item_line.combo_item_id.id in combo_item_ids
+                )
+                # `included_qty` is 0 for POS upsell combos; require 1 item in Sales instead.
+                included_qty = combo.included_qty or 1
+                if selected_qty != included_qty:
+                    raise UserError(
+                        self.env._(
+                            "The number of selected items for combo '%(combo)s'"
+                            " (%(selected_qty)s) must match the included quantity"
+                            " (%(included_qty)s).",
+                            combo=combo.name,
+                            selected_qty=selected_qty,
+                            included_qty=included_qty,
+                        )
+                    )
         if (
             not self.combo_item_id
             and website.prevent_sale

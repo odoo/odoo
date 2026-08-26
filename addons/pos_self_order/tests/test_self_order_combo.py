@@ -685,7 +685,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         })
         combo = self.env['product.combo'].create({
             'name': 'Expensive Combo',
-            'qty_free': 1,
+            'included_qty': 1,
             'qty_max': 1,
             'combo_item_ids': [
                 Command.create({'product_id': expensive_product.id, 'extra_price': 0}),

@@ -10,7 +10,6 @@ class ProductCombo(models.Model):
 
     qty_max = fields.Integer(string="Maximum quantity", default=1, help="Maximum number of items to select in the combo.")
     is_upsell = fields.Boolean(string="Is Upsell", default=False, help="Indicates if the combo is an upsell to the customer. This can be compared to a minimum quantity of 0.")
-    upsell_warning = fields.Char(compute="_compute_upsell_warning")
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -25,13 +24,6 @@ class ProductCombo(models.Model):
         read_records = super()._load_pos_data_read(records, config)
         self._convert_pos_data_currency(read_records, config, 'base_price', 'currency_id')
         return read_records
-
-    @api.depends('is_upsell')
-    def _compute_upsell_warning(self):
-        for record in self:
-            record.upsell_warning = _(
-                "⚠️ In Sales, the included quantity of this upsell combo is set to 1."
-            ) if record.is_upsell else False
 
     @api.onchange('is_upsell')
     def _onchange_is_upsell(self):

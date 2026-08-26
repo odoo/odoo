@@ -830,7 +830,7 @@ test("test_convert_orderlines_to_combo_with_same_product: same product with diff
         name: "Desk Accessories Combo",
         combo_item_ids: [comboItem],
         base_price: 10,
-        qty_free: 1,
+        included_qty: 1,
         qty_max: 2,
         is_upsell: false,
         sequence: 3,
