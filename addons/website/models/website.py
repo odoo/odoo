@@ -32,7 +32,7 @@ from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
 from odoo.tools.translate import _, xml_translate
-from odoo.tools import escape_psql, pycompat
+from odoo.tools import SQL, escape_psql, pycompat
 
 logger = logging.getLogger(__name__)
 
@@ -1906,65 +1906,47 @@ class Website(models.Model):
             for field in fields:
                 # Field might belong to another model (`inherits` mechanism)
                 table = inherits_fields[field]['table'] if field in inherits_fields else model._table
+                field_sql = SQL.identifier(table, field)
                 similarities.append(
-                    sql.SQL("word_similarity({search}, {field})").format(
-                        search=unaccent(sql.Placeholder('search')),
-                        field=unaccent(sql.SQL("{table}.{field}").format(
-                            table=sql.Identifier(table),
-                            field=sql.Identifier(field)
-                        )) if not model._fields[field].translate else
-                        unaccent(sql.SQL("COALESCE({table}.{field}->>{lang}, {table}.{field}->>'en_US')").format(
-                            table=sql.Identifier(table),
-                            field=sql.Identifier(field),
-                            lang=sql.Literal(lang)
-                        )),
+                    SQL("word_similarity(%s, %s)",
+                        unaccent(SQL("%s", search)),
+                        unaccent(field_sql) if not model._fields[field].translate else
+                        unaccent(SQL("COALESCE(%s->>%s, %s->>'en_US')", field_sql, lang, field_sql)),
                     )
                 )
 
-            best_similarity = sql.SQL('GREATEST({similarities})').format(
-                similarities=sql.SQL(', ').join(similarities)
-            )
-
-            where_clause = sql.SQL("")
-            # Filter unpublished records for portal and public user for
-            # performance.
-            # TODO: Same for `active` field?
-            filter_is_published = (
-                'is_published' in model._fields
-                and model._fields['is_published'].base_field.model_name == model_name
-                and not self.env.user.has_group('base.group_user')
-            )
-            if filter_is_published:
-                where_clause = sql.SQL("WHERE is_published")
-
-            from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
+            best_similarity = SQL("GREATEST(%s)", SQL(", ").join(similarities))
+            # Rank only the records eligible for the provider domain, before the
+            # similarity LIMIT. The eligible ids are a sub-select (not fetched)
+            # to keep the domain's joins/aliases out of the similarity query.
+            eligible_query = model._search(AND(domain))
+            from_clause = SQL("%s", SQL.identifier(model._table))
             # Specific handling for fields being actually part of another model
             # through the `inherits` mechanism.
-            for table_to_join in {
+            for inherits_table, inherits_field in {
                 field['table']: field['fname'] for field in inherits_fields.values()
             }.items():  # Removes duplicate inherits model
-                from_clause = sql.SQL("""
-                    {from_clause}
-                    LEFT JOIN {inherits_table} ON {table}.{inherits_field} = {inherits_table}.id
-                """).format(
-                    from_clause=from_clause,
-                    table=sql.Identifier(model._table),
-                    inherits_table=sql.Identifier(table_to_join[0]),
-                    inherits_field=sql.Identifier(table_to_join[1]),
+                from_clause = SQL(
+                    "%s LEFT JOIN %s ON %s = %s",
+                    from_clause,
+                    SQL.identifier(inherits_table),
+                    SQL.identifier(model._table, inherits_field),
+                    SQL.identifier(inherits_table, 'id'),
                 )
-            query = sql.SQL("""
-                SELECT {table}.id, {best_similarity} AS _best_similarity
-                {from_clause}
-                {where_clause}
+            query = SQL("""
+                SELECT %s, %s AS _best_similarity
+                FROM %s
+                WHERE %s IN %s
                 ORDER BY _best_similarity desc
                 LIMIT 1000
-            """).format(
-                table=sql.Identifier(model._table),
-                best_similarity=best_similarity,
-                from_clause=from_clause,
-                where_clause=where_clause,
+            """,
+                SQL.identifier(model._table, 'id'),
+                best_similarity,
+                from_clause,
+                SQL.identifier(model._table, 'id'),
+                eligible_query.subselect(),
             )
-            self.env.cr.execute(query, {'search': search})
+            self.env.cr.execute(query)
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
