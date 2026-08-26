@@ -940,7 +940,7 @@ def adapt_translated_field_value(
     if not isinstance(val, dict):
         return adapter(env.lang or 'en_US', val)
     assert field.translate
-    adapted = {k: adapter(k, v) for k, v in val.items()}
+    adapted = {k: adapter(k, v) for k, v in val.items() if k == 'en_US' or env['res.lang']._lang_get(k)}
     if isinstance(val, StoredTranslations):
         model = env[field.model_name]
         return StoredTranslations({
