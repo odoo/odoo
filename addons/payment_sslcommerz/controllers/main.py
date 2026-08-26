@@ -37,7 +37,11 @@ class SSLCommerzController(http.Controller):
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from SSLCOMMERZ with data:\n%s", pprint.pformat(data))
-        self._verify_and_process(data)
+        if val_id := data.get("val_id"):
+            self._verify_and_process(data.get("tran_id"), val_id)
+        else:
+            _logger.warning("Received payment data with missing val_id.")
+
         return request.redirect("/payment/status")
 
     @http.route(const.IPN_ROUTE, type="http", auth="public", methods=["POST"], csrf=False)
@@ -50,40 +54,42 @@ class SSLCommerzController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from SSLCOMMERZ with data:\n%s", pprint.pformat(data))
-        self._verify_and_process(data)
+        if val_id := data.get("val_id"):
+            self._verify_and_process(data.get("tran_id"), val_id)
+        else:
+            _logger.warning("Received notification data with missing val_id.")
+
         return ""
 
-    def _verify_and_process(self, data):
-        """Verify the payment data and record the transaction update, if any.
+    def _verify_and_process(self, tx_ref, val_id):
+        """Verify the payment data with the Order Validation API and process it.
 
-        :param dict data: The payment data.
+        :param str tx_ref: The reference of the related transaction.
+        :param str val_id: The validation ID of the transaction, as provided by SSLCOMMERZ.
         :return: None
         """
-        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("sslcommerz", data)
+        tx_sudo = (
+            self
+            .env["payment.transaction"]
+            .sudo()
+            ._search_by_reference("sslcommerz", {"tran_id": tx_ref})
+        )
         if not tx_sudo:
             return
-        # SSLCOMMERZ only issues a val_id for successful transactions, and the Order Validation
-        # API is the only verification mechanism available, so a notification without one can't
-        # be verified.
-        if val_id := data.get("val_id"):
-            try:
-                verified_data = tx_sudo._send_api_request(
-                    "GET",
-                    "/validator/api/validationserverAPI.php",
-                    params={
-                        "val_id": val_id,
-                        "store_id": tx_sudo.provider_id.sslcommerz_store_id,
-                        "store_passwd": tx_sudo.provider_id.sslcommerz_store_password,
-                    },
-                )
-            except ValidationError:
-                _logger.error("Unable to process the payment data.")
-            else:
-                if verified_data.get("tran_id") != tx_sudo.reference:
-                    raise Forbidden
-                tx_sudo._record(verified_data)
-        else:
-            _logger.warning(
-                "Received data without a val_id for transaction %s; skipping the verification.",
-                tx_sudo.reference,
+
+        try:
+            verified_data = tx_sudo._send_api_request(
+                "GET",
+                "/validator/api/validationserverAPI.php",
+                params={
+                    "val_id": val_id,
+                    "store_id": tx_sudo.provider_id.sslcommerz_store_id,
+                    "store_passwd": tx_sudo.provider_id.sslcommerz_store_password,
+                },
             )
+        except ValidationError:
+            _logger.error("Unable to process the payment data.")
+        else:
+            if verified_data.get("tran_id") != tx_sudo.reference:
+                raise Forbidden
+            tx_sudo._record(verified_data)
