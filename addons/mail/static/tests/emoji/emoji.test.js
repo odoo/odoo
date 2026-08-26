@@ -16,8 +16,15 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+<<<<<<< e647ebd7b30765c46c6fd60d65ad93fc10941ab2
 import { describe, expect, getFixture, queryFirst, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
+||||||| 9dbaf075280c86fcb4185d3c67905b8901ea0eb0
+import { describe, getFixture, queryFirst, test } from "@odoo/hoot";
+=======
+import { animationFrame, describe, expect, getFixture, queryFirst, test } from "@odoo/hoot";
+import { queryAllTexts } from "@odoo/hoot-dom";
+>>>>>>> d66d9317b8290ae1fe2af60f55d1d1e236d99066
 
 import { signal } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
@@ -263,6 +270,7 @@ test("Emoji picker shows failure to load emojis", async () => {
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker:text('😵‍💫 Failed to load emojis...')");
 });
+<<<<<<< e647ebd7b30765c46c6fd60d65ad93fc10941ab2
 
 test("Frequently used category only appears when the emoji picker is reopened", async () => {
     const pyEnv = await startServer();
@@ -314,3 +322,44 @@ test("clear search icon appears with a search term and clears it on click", asyn
     await contains(".o-EmojiPicker-search input", { value: "" });
     await contains("[data-icon='cancel']", { count: 0 });
 });
+||||||| 9dbaf075280c86fcb4185d3c67905b8901ea0eb0
+=======
+
+test("Frequently used category only appears when the emoji picker is reopened", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await click(".o-EmojiPicker-content .o-Emoji:text('😀')", { shiftKey: true });
+    await contains(".o-mail-Composer-input", { value: "😀" });
+    await animationFrame(); // Wait for the cursor position update.
+    await click(".o-EmojiPicker-content .o-Emoji:text('😝')", { shiftKey: true });
+    await contains(".o-mail-Composer-input", { value: "😀😝" });
+    await contains(".o-EmojiPicker-section", { count: 8 });
+    expect(queryAllTexts(".o-EmojiPicker-section small")).toEqual([
+        "SMILEYS & EMOTION",
+        "PEOPLE & BODY",
+        "ANIMALS & NATURE",
+        "FOOD & DRINK",
+        "TRAVEL & PLACES",
+        "ACTIVITIES",
+        "OBJECTS",
+        "SYMBOLS",
+    ]);
+    triggerHotkey("Escape");
+    await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker-section", { count: 9 });
+    expect(queryAllTexts(".o-EmojiPicker-section small")).toEqual([
+        "FREQUENTLY USED",
+        "SMILEYS & EMOTION",
+        "PEOPLE & BODY",
+        "ANIMALS & NATURE",
+        "FOOD & DRINK",
+        "TRAVEL & PLACES",
+        "ACTIVITIES",
+        "OBJECTS",
+        "SYMBOLS",
+    ]);
+});
+>>>>>>> d66d9317b8290ae1fe2af60f55d1d1e236d99066

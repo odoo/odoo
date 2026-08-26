@@ -123,9 +123,16 @@ export class EmojiPicker extends Component {
         useAutofocus({ ref: this.autofocusRef });
         onWillStart(async () => {
             await loadEmoji();
+<<<<<<< e647ebd7b30765c46c6fd60d65ad93fc10941ab2
             this.recentSnapshot = Object.entries(this.frequentEmojiService.all())
                 .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
                 .map(([codepoints]) => emojiLoader.map.get(codepoints));
+||||||| 9dbaf075280c86fcb4185d3c67905b8901ea0eb0
+=======
+            this.recentSnapshot = Object.entries(this.frequentEmojiService.all)
+                .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
+                .map(([codepoints]) => emojiLoader.map.get(codepoints));
+>>>>>>> d66d9317b8290ae1fe2af60f55d1d1e236d99066
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
