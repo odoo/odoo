@@ -4,25 +4,24 @@ import { createElementFromContent } from "@mail/utils/common/html";
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
 
-    static new(...args) {
-        const step = super.new(...args);
-        step.onChange(
-            () => [step.operatorFound],
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.operatorFound],
             function onOperatorFoundChange() {
                 if (this.operatorFound) {
                     this.operatorFoundEver = true;
                 }
             }
         );
-        step.onChange(
-            () => [step.selectedAnswer],
+        this.onChange(
+            () => [this.selectedAnswer],
             function onSelectedAnswerChange() {
                 if (this.selectedAnswer) {
                     this.selectedAnswerEver = this.selectedAnswer;
                 }
             }
         );
-        return step;
     }
 
     /**

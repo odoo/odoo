@@ -1666,3 +1666,30 @@ test("a record is its proxy in a field declaration and in setup", async () => {
     expectRecord(message.readAuthorFromDeclaration()).toEqual(message.author);
     expectRecord(message.readAuthorFromSetup()).toEqual(message.author);
 });
+
+test("an onChange registered in setup runs on the record proxy", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        static _name = "Thread";
+        name;
+        messages = fields.Many("Message", { inverse: "thread" });
+        setup() {
+            super.setup(...arguments);
+            this.onChange(
+                () => [this.messages.length],
+                () => expect.step(`${this.messages.length} ${this.messages[0]?.body ?? ""}`),
+                { initialRun: false }
+            );
+        }
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "body";
+        static _name = "Message";
+        body;
+        thread = fields.One("Thread", { inverse: "messages" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    thread.messages.add("hello");
+    await expect.waitForSteps(["1 hello"]);
+});
