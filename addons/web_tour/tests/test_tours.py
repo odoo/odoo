@@ -85,7 +85,7 @@ class WebTourHttp(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.eager_files = ["/web_tour/static/src/js/tour_helpers/tour_helpers.js"]
+        cls.eager_files = ["/web_tour/static/src/tour_helpers/tour_helpers.js"]
 
     def test_sanity_automatic(self):
         ResUsers = self.env["res.users"]
@@ -119,7 +119,7 @@ class WebTourHttp(HttpCase):
         code = """
         odoo.define("@web_tour/../tests/sanity_test", [], () => {
             const errors = [];
-            for (const module of ["@odoo/hoot-dom", "@web_tour/js/tour_step"]) {
+            for (const module of ["@odoo/hoot-dom", "@web_tour/tour_step"]) {
                 if (odoo.loader.modules.get(module)) {
                     errors.push(module)
                 }
@@ -162,7 +162,7 @@ class WebTourHttp(HttpCase):
         code = """
         odoo.define("@web_tour/../tests/sanity_test", [], () => {
             const errors = [];
-            for (const module of ["@odoo/hoot-dom", "@web_tour/js/tour_step"]) {
+            for (const module of ["@odoo/hoot-dom", "@web_tour/tour_step"]) {
                 if (odoo.loader.modules.get(module)) {
                     errors.push(module)
                 }

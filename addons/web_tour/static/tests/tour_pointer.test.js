@@ -19,7 +19,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
-import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
+import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
 import { Tour, TourStep } from "./tour_models";
 
 describe.current.tags("desktop");

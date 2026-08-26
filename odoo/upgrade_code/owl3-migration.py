@@ -1127,6 +1127,10 @@ SERVICES_MAPPING = {
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
     "simple_notification": ['SimpleNotificationPlugin', '@bus/simple_notification_plugin'],
+    "tour_automatic_service": ['TourAutomaticPlugin', '@web_tour/tour_automatic/tour_automatic_plugin'],
+    "tour_interactive_service": ['TourInteractivePlugin', '@web_tour/tour_interactive/tour_interactive_plugin'],
+    "tour_recorder_service": ['TourRecorderPlugin', '@web_tour/tour_recorder/tour_recorder_plugin'],
+    "tour_service": ['TourPlugin', '@web_tour/tour_plugin'],
     "ui": ['UIPlugin', '@web/core/ui/ui_plugin'],
     "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
 }

@@ -238,8 +238,7 @@
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
-            "web_tour/static/src/js/**/*",
-            'web_tour/static/src/tour_utils.js',
+            ('include', 'web_tour.engine'),
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [

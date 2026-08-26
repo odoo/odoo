@@ -1,10 +1,12 @@
-import { tourState } from "@web_tour/js/tour_state";
+import { usePlugin } from "@odoo/owl";
+import { tourState } from "@web_tour/tour_state";
+import { TourPlugin } from "@web_tour/tour_plugin";
 import { TourSelectorPopup } from "../components/tour_selector_popup/tour_selector_popup";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable } from "../utils/make_awaitable_dialog";
 
 export default function useTours() {
-    const tour = useService("tour_service");
+    const tour = usePlugin(TourPlugin);
     const dialog = useService("dialog");
     const states = {
         selectedTours: new Set(),
