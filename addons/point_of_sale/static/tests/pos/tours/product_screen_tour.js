@@ -1158,6 +1158,7 @@ registry
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickFastPaymentButton("Bank"),
                 FeedbackScreen.isShown(),
+                FeedbackScreen.clickScreen(),
                 Dialog.confirm(),
                 FeedbackScreen.clickNextOrder(),
                 ProductScreen.isShown(),
