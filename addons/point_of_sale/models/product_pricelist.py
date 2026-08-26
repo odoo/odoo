@@ -53,12 +53,10 @@ class ProductPricelistItem(models.Model):
         if not self._last_server_date_to_load():
             product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
             product_ids = [p['id'] for p in data['product.product']]
-            product_categ = [c['id'] for c in data['product.category']]
             now = fields.Datetime.now()
             domain += [
                 '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
                 '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
-                '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
                 '|', ('date_start', '=', False), ('date_start', '<=', now),
                 '|', ('date_end', '=', False), ('date_end', '>', now),
             ]

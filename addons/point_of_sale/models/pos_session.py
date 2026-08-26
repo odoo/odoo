@@ -218,13 +218,15 @@ class PosSession(models.Model):
         pos_config = self.env['pos.config'].browse(config_id)
         pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(pos_config)
         today = fields.Date.today()
+        categ_ids = self.env['product.template'].browse(product_tmpl_ids).categ_id.ids
         pricelist_item_domain = [
             '&',
             ('pricelist_id', 'in', self.config_id._get_available_pricelists().ids),
             *self.env['product.pricelist.item']._check_company_domain(self.company_id),
-            '|',
+            '|', '|',
             '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             ('product_id', 'in', product_ids),
+            ('categ_id', 'parent_of', categ_ids),
             '|', ('date_start', '=', False), ('date_start', '<=', today),
             '|', ('date_end', '=', False), ('date_end', '>=', today)]
 
