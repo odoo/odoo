@@ -901,7 +901,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # retrieve existing indexes with their table and access method
         cr.execute("""
-            SELECT idx.relname, tbl.relname, am.amname
+            SELECT idx.relname, tbl.relname, am.amname, ix.indpred IS NOT NULL
               FROM pg_index ix
               JOIN pg_class idx ON idx.oid = ix.indexrelid
               JOIN pg_class tbl ON tbl.oid = ix.indrelid
@@ -909,7 +909,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
              WHERE idx.relname IN %s
                AND idx.relnamespace = current_schema::regnamespace
         """, [tuple(row[0] for row in expected)])
-        existing = {indexname: (tablename, method) for indexname, tablename, method in cr.fetchall()}
+        existing = {
+            indexname: (tablename, method, partial)
+            for indexname, tablename, method, partial in cr.fetchall()
+        }
 
         for indexname, tablename, field in expected:
             index = field.index
@@ -929,6 +932,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # The index exists, check if it is stale.
                 expected_method = 'gin' if index == 'trigram' else 'btree'
                 stale = existing[indexname][1] != expected_method
+                if expected_method == 'btree':
+                    stale |= existing[indexname][2] != (index == 'btree_not_null')
                 will_index &= stale  # create only when stale
             else:
                 stale = False
@@ -971,7 +976,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index %r for %s", indexname, self)
 
-            elif not index and tablename == existing.get(indexname, (None, None))[0]:
+            elif not index and tablename == existing.get(indexname, (None, None, None))[0]:
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
 
     def add_foreign_key(

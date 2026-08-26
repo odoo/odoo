@@ -5,8 +5,8 @@ from odoo.tools import sql
 @tagged('post_install', '-at_install')
 class TestIndexMethodMigration(TransactionCase):
     """``Registry.check_indexes`` must rebuild a column index when the field
-    changes the kind of index it wants (e.g. btree -> trigram), even though
-    the index name stays the same."""
+    changes the kind of index it wants (e.g. btree -> trigram or full btree ->
+    partial btree), even though the index name stays the same."""
 
     def _index_method(self, indexname):
         self.cr.execute(
@@ -46,3 +46,27 @@ class TestIndexMethodMigration(TransactionCase):
         # The obsolete btree index must have been dropped and rebuilt as a
         # gin/trigram index under the same name.
         self.assertEqual(self._index_method(indexname), 'gin')
+
+    def test_index_rebuilt_when_predicate_changes(self):
+        field = self.registry['res.partner']._fields['ref']
+        indexname = sql.make_index_name('res_partner', 'ref')
+
+        # Simulate a field backed by an existing full B-tree index while its
+        # definition now requests a partial one.
+        original_index = field.index
+        field.index = 'btree_not_null'
+        self.addCleanup(setattr, field, 'index', original_index)
+        sql.drop_index(self.env.cr, indexname, 'res_partner')
+        sql.create_index(self.env.cr, indexname, 'res_partner', ['"ref"'], 'btree')
+
+        self.registry.check_indexes(self.env.cr, ['res.partner'])
+
+        indexdef, _comment = sql.index_definition(self.env.cr, indexname)
+        self.assertIn(' WHERE ', indexdef)
+
+        # Switching back must also replace the partial index with a full one.
+        field.index = 'btree'
+        self.registry.check_indexes(self.env.cr, ['res.partner'])
+
+        indexdef, _comment = sql.index_definition(self.env.cr, indexname)
+        self.assertNotIn(' WHERE ', indexdef)
