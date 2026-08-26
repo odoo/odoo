@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActionList">
-    <div class="o-mail-ActionList flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': this.props.inline }">
+    <div class="o-mail-ActionList" t-att-class="{ 'align-items-center': this.props.inline }">
         <t t-set="groupAttClass" t-value="{
             [this.props.groupClass]: true,
             'btn-group': !this.props.dropdown,
