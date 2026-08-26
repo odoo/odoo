@@ -300,6 +300,7 @@ class PosOrder(models.Model):
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Monetary(string='Tip Amount', readonly=True)
     refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields', help="Number of orders where items from this order were refunded")
+    payment_count = fields.Integer('Number of Payments', compute='_compute_payment_count')
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
@@ -348,6 +349,11 @@ class PosOrder(models.Model):
         for order in self:
             order.refund_orders_count = len(order.mapped('lines.refund_orderline_ids.order_id'))
             order.refunded_order_id = next(iter(order.lines.refunded_orderline_id.order_id), False)
+
+    @api.depends('payment_ids')
+    def _compute_payment_count(self):
+        for order in self:
+            order.payment_count = len(order.payment_ids)
 
     @api.depends('lines.refunded_qty', 'lines.qty')
     def _compute_has_refundable_lines(self):
@@ -701,6 +707,15 @@ class PosOrder(models.Model):
             'res_model': 'pos.order',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
+        }
+
+    def action_view_payments(self):
+        return {
+            'name': _('Payments'),
+            'view_mode': 'list,form',
+            'res_model': 'pos.payment',
+            'type': 'ir.actions.act_window',
+            'domain': [('pos_order_id', 'in', self.ids)],
         }
 
     def _is_pos_order_paid(self):
