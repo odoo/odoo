@@ -5,8 +5,8 @@ import { patch } from "@web/core/utils/patch";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 patch(PosOrder.prototype, {
-    setup() {
-        super.setup(...arguments);
+    initState() {
+        super.initState();
         if (this.isInvoiceMandatoryForSA()) {
             this.to_invoice = true;
         }
@@ -19,7 +19,7 @@ patch(PosOrder.prototype, {
     isInvoiceMandatoryForSA() {
         // Zatca enforces invoice, but for settlement due, invoices are not needed
         // Only applicable if enterprise:pos_settle_due module is installed
-        return this.isSACompany() && !this.is_settlement() && !this.is_settling_account;
+        return this.isSACompany() && !this.is_settlement() && !this.uiState.is_settling_account;
     },
 
     isToInvoice() {

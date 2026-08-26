@@ -1534,7 +1534,7 @@ export class PosStore extends WithLazyGetterTrap {
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
     }
-    createNewOrder(data = {}) {
+    createNewOrder(data = {}, opt = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
             (fp) => fp.id === this.config.default_fiscal_position_id?.id
         );
@@ -1552,7 +1552,9 @@ export class PosStore extends WithLazyGetterTrap {
             pos_reference: "",
             ...data,
         });
-
+        if (opt.uiState) {
+            order.setOrderUiState(opt.uiState);
+        }
         this.setNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
@@ -1571,18 +1573,18 @@ export class PosStore extends WithLazyGetterTrap {
     shouldSelectPreset(order) {
         return false;
     }
-    addNewOrder(data = {}) {
+    addNewOrder(data = {}, opt = {}) {
         if (this.getOrder()) {
             this.getOrder().updateSavedQuantity();
         }
-        const order = this.createOrderIfNeeded(data);
+        const order = this.createOrderIfNeeded(data, opt);
         this.selectedOrderUuid = order.uuid;
         this.searchProductWord = "";
         this.mobile_pane = "right";
         return order;
     }
-    createOrderIfNeeded(data) {
-        return this.createNewOrder(data);
+    createOrderIfNeeded(data, opt = {}) {
+        return this.createNewOrder(data, opt);
     }
     setNextOrderRefs(order) {
         const deviceIdentifier = this.device.identifier;
@@ -1609,7 +1611,7 @@ export class PosStore extends WithLazyGetterTrap {
     getDefaultPartnerId() {
         return null;
     }
-    getEmptyOrder(data = {}) {
+    getEmptyOrder(data = {}, opt = {}) {
         const defaultPartnerId = this.getDefaultPartnerId();
         const emptyOrders = this.models["pos.order"].filter(
             (order) =>
@@ -1622,9 +1624,12 @@ export class PosStore extends WithLazyGetterTrap {
         );
         if (emptyOrders.length > 0) {
             Object.assign(emptyOrders[0], data);
+            if (opt.uiState) {
+                emptyOrders[0].setOrderUiState(opt.uiState);
+            }
             return emptyOrders[0];
         }
-        return this.addNewOrder(data);
+        return this.addNewOrder(data, opt);
     }
 
     addPendingOrder(orderIds, remove = false) {
