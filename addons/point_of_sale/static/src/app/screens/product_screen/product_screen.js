@@ -292,7 +292,7 @@ export class ProductScreen extends Component {
         return this.currentOrder?.currencyDisplayPrice || 0;
     }
     get items() {
-        return this.env.utils.formatProductQty(
+        return this.pos.formatProductQty(
             this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0,
             false
         );

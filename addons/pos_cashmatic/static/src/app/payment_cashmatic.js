@@ -95,14 +95,17 @@ export class PaymentCashmatic extends PaymentInterface {
 
     cashmaticAmountToPosAmount(amountInCents) {
         const amount = amountInCents / CENTS_PER_UNIT;
-        return this.env.utils.roundCurrency(amount);
+        return this.pos.config.currency_id.round(amount);
     }
 
     showDispenseError(notDispensed) {
         this.showError(
             _t(
                 "The cash machine could not dispense %s. Please give the remaining amount to the customer manually.",
-                this.env.utils.formatCurrency(this.cashmaticAmountToPosAmount(notDispensed))
+                this.pos.formatCurrency(
+                    this.cashmaticAmountToPosAmount(notDispensed),
+                    this.pos.config.currency_id.id
+                )
             )
         );
     }

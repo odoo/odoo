@@ -7,7 +7,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
-import { formatCurrency } from "@web/core/currency";
 
 export const paymentScreenPaymentLinesProps = {
     paymentLines: t.array(t.instanceOf(PosPayment)).optional(),
@@ -36,9 +35,8 @@ export class PaymentScreenPaymentLines extends Component {
     }
 
     getFormattedPrice(line) {
-        const currency = line.currency;
         const amount = line.amount_currency || line.amount;
-        return formatCurrency(amount, currency.id);
+        return this.pos.formatCurrency(amount);
     }
 
     async selectLine(paymentline) {
@@ -47,7 +45,11 @@ export class PaymentScreenPaymentLines extends Component {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),
-                startingValue: this.env.utils.formatCurrency(paymentline.getAmount(), false),
+                startingValue: this.pos.formatCurrency(
+                    paymentline.getAmount(),
+                    this.pos.config.currency_id.id,
+                    { noSymbol: true }
+                ),
                 getPayload: (num) => {
                     this.props.updateSelectedPaymentline(parseFloat(num));
                 },

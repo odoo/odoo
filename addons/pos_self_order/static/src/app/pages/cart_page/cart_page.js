@@ -14,6 +14,8 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PillsSelectionPopup } from "@pos_self_order/app/components/pills_selection_popup/pills_selection_popup";
 import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
 import { getOrderLineValues } from "@pos_self_order/app/services/card_utils";
+import { formatCurrency } from "@web/core/currency";
+
 const { DateTime } = luxon;
 
 export class CartPage extends Component {
@@ -395,7 +397,8 @@ export class CartPage extends Component {
         const payload = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Add a Tip"),
             startingValue: this.isCustomTip ? this.tipUiState.value || "" : "",
-            formatDisplayedValue: (value) => this.env.utils.formatCurrency(parseFloat(value) || 0),
+            formatDisplayedValue: (value) =>
+                formatCurrency(parseFloat(value) || 0, this.selfOrder.currency.id),
         });
         if (!payload) {
             return;

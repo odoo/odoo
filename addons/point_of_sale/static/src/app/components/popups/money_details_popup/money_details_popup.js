@@ -46,16 +46,13 @@ export class MoneyDetailsPopup extends Component {
             if (this.state.moneyDetails[bill.value]) {
                 moneyDetailsNotes +=
                     "\t" +
-                    `${this.state.moneyDetails[bill.value]} x ${this.env.utils.formatCurrency(
+                    `${this.state.moneyDetails[bill.value]} x ${this.pos.formatCurrency(
                         bill.value
                     )}\n`;
             }
         });
         if (moneyDetailsNotes) {
-            moneyDetailsNotes += _t(
-                "Total: %s",
-                this.env.utils.formatCurrency(this.computeTotal())
-            );
+            moneyDetailsNotes += _t("Total: %s", this.pos.formatCurrency(this.computeTotal()));
         }
         this.props.getPayload({
             total: this.computeTotal(),

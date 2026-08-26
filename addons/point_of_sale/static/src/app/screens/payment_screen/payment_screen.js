@@ -1,4 +1,3 @@
-import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -230,7 +229,7 @@ export class PaymentScreen extends Component {
             startingValue:
                 tip.type === "percent"
                     ? String(tip.value || 0)
-                    : formatCurrency(tip.amount || amount || 0),
+                    : this.pos.formatCurrency(tip.amount || amount || 0),
             startingType: tip.type || "fixed",
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
@@ -240,7 +239,7 @@ export class PaymentScreen extends Component {
                 this.onNewTip({ newValue, type, currentTipAmount: tip.amount, change }),
             formatDisplayedValue: (value, type) => {
                 if (type === "fixed") {
-                    return this.env.utils.formatCurrency(parseFloat(value), this.pos.currency);
+                    return this.pos.formatCurrency(parseFloat(value));
                 }
                 if (type === "percent") {
                     return `${value} %`;

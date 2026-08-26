@@ -35,7 +35,7 @@ export class CashMoveListPopup extends Component {
     }
 
     getAmount(cm) {
-        return this.env.utils.formatCurrency(Math.abs(cm.amount));
+        return this.pos.formatCurrency(Math.abs(cm.amount));
     }
 
     async onDeleteCm(cm) {

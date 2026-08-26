@@ -7,7 +7,7 @@ patch(TipScreen.prototype, {
         // Since we don't have any tip amount, we never send a capture request to Stripe.
         // This means we need to manually capture the payment here if the tip amount is 0 or invalid,
         // otherwise the order will be left in a "pending" state in Stripe and automatically cancelled.
-        if (!this.env.utils.parseValidFloat(this.state.inputTipAmount)) {
+        if (!this.pos.parseValidFloat(this.state.inputTipAmount)) {
             const paymentline = this.pos.getOrder().payment_ids[0];
             if (
                 paymentline.payment_method_id.use_payment_terminal === "stripe" &&

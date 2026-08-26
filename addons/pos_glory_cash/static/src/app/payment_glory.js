@@ -224,7 +224,7 @@ export class PaymentGlory extends PaymentInterface {
 
     gloryAmountToPosAmount(amountInCents) {
         const amount = amountInCents / Math.pow(10, this.pos.currency.decimal_places);
-        return this.env.utils.roundCurrency(amount);
+        return this.pos.config.currency_id.round(amount);
     }
 
     showError(msg, title) {

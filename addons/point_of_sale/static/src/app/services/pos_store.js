@@ -51,6 +51,11 @@ import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
 import { SIZES } from "@web/core/ui/ui_utils";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
+import { formatCurrency } from "@web/core/currency";
+import { parseFloat } from "@web/views/fields/parsers";
+import { localization } from "@web/core/l10n/localization";
+import { escapeRegExp } from "@web/core/utils/strings";
+import { formatFloat } from "@web/core/utils/numbers";
 import { PosDataPlugin } from "../plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
@@ -235,7 +240,43 @@ export class PosStore extends WithLazyGetterTrap {
         this.checkAccessRight();
         await this.initCustomerDisplay();
     }
+    formatCurrency(amount, currencyId = this.config.currency_id.id, opts = {}) {
+        /**
+         * This method is made to be available in the templates. Imports
+         * are not available in templates, so we need to wrap the function
+         * to be able to use it in templates.
+         */
+        return formatCurrency(amount, currencyId, opts);
+    }
+    isValidFloat(inputValue) {
+        let floatRegex;
+        const decimalPoint = localization.decimalPoint;
+        const thousandsSep = localization.thousandsSep;
+        const escapedDecimalPoint = escapeRegExp(decimalPoint);
 
+        if (thousandsSep) {
+            const escapedThousandsSep = escapeRegExp(thousandsSep);
+            floatRegex = new RegExp(
+                `^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`
+            );
+        } else {
+            floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
+        }
+
+        return ![decimalPoint, "-"].includes(inputValue) && floatRegex.test(inputValue);
+    }
+    parseValidFloat(inputValue) {
+        return this.isValidFloat(inputValue) ? parseFloat(inputValue) : 0;
+    }
+    formatProductQty(qty, trailingZeros = true) {
+        const productUnit = this.data.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        );
+        return formatFloat(qty, {
+            digits: [true, productUnit.digits],
+            trailingZeros: trailingZeros,
+        });
+    }
     handleQRPaymentLines() {
         // Ensure that all Bank QR payments in the 'waiting' status are automatically set to 'retry'
         // when the POS session is started or restarted.
@@ -713,7 +754,7 @@ export class PosStore extends WithLazyGetterTrap {
                     _t(
                         "%s has a total amount of %s, are you sure you want to delete this order?",
                         order.pos_reference,
-                        this.env.utils.formatCurrency(order.priceIncl)
+                        this.formatCurrency(order.priceIncl)
                     ),
             });
         }
@@ -1825,13 +1866,13 @@ export class PosStore extends WithLazyGetterTrap {
         const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
         const orderMargin = orderPriceWithoutTax - orderCost;
-        const orderTaxTotalCurrency = this.env.utils.formatCurrency(
+        const orderTaxTotalCurrency = this.formatCurrency(
             order.prices.taxDetails.order_sign * order.prices.taxDetails.tax_amount_currency
         );
-        const orderPriceWithTaxCurrency = this.env.utils.formatCurrency(
+        const orderPriceWithTaxCurrency = this.formatCurrency(
             order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
-        const taxAmount = this.env.utils.formatCurrency(
+        const taxAmount = this.formatCurrency(
             productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
         );
         const taxes = order.fiscal_position_id
@@ -1839,14 +1880,14 @@ export class PosStore extends WithLazyGetterTrap {
             : productTemplate.taxes_id;
         const taxName = taxes.map((t) => t.name)?.join(", ");
 
-        const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
-        const marginCurrency = this.env.utils.formatCurrency(margin);
+        const costCurrency = this.formatCurrency(productTemplate.standard_price);
+        const marginCurrency = this.formatCurrency(margin);
         const marginPercent = priceWithoutTax
             ? Math.round((margin / priceWithoutTax) * 10000) / 100
             : 0;
-        const orderPriceWithoutTaxCurrency = this.env.utils.formatCurrency(orderPriceWithoutTax);
-        const orderCostCurrency = this.env.utils.formatCurrency(orderCost);
-        const orderMarginCurrency = this.env.utils.formatCurrency(orderMargin);
+        const orderPriceWithoutTaxCurrency = this.formatCurrency(orderPriceWithoutTax);
+        const orderCostCurrency = this.formatCurrency(orderCost);
+        const orderMarginCurrency = this.formatCurrency(orderMargin);
         const orderMarginPercent = orderPriceWithoutTax
             ? Math.round((orderMargin / orderPriceWithoutTax) * 10000) / 100
             : 0;
@@ -2700,7 +2741,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
     getPaymentMethodFmtAmount(pm, order) {
         const amount = order.getDefaultAmountDueToPayIn(pm);
-        const fmtAmount = this.env.utils.formatCurrency(amount, true);
+        const fmtAmount = this.formatCurrency(amount);
 
         if (!this.currency.isPositive(amount) || !this.config.cash_rounding) {
             return;

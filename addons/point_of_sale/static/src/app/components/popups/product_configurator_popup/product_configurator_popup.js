@@ -26,7 +26,7 @@ export class BaseProductAttribute extends Component {
 
     getFormatPriceExtra(val) {
         const sign = val < 0 ? "- " : "+ ";
-        return sign + this.env.utils.formatCurrency(Math.abs(val));
+        return sign + this.pos.formatCurrency(Math.abs(val));
     }
 }
 
@@ -277,7 +277,7 @@ export class ProductConfiguratorPopup extends Component {
 
         const product = this.product || this.props.productTemplate;
         const info = product.getTaxDetails({ overridedValues });
-        const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
+        const total = this.pos.formatCurrency(info?.raw_total_included_currency || 0.0);
         return `${this.props.productTemplate.display_name} | ${total}`;
     }
     get defaultCode() {

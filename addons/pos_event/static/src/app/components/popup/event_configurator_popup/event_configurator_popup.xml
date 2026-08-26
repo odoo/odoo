@@ -26,7 +26,7 @@
                             </span>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <span t-out="this.env.utils.formatCurrency(ticket.price)" />
+                            <span t-out="this.pos.formatCurrency(ticket.price)" />
                             <NumericInput class="'w-100'" tModel="[this.state[ticket.id], 'qty']" min="0"/>
                         </div>
                     </div>

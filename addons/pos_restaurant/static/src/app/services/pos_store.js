@@ -87,7 +87,7 @@ patch(PosStore.prototype, {
         const count = await makeAwaitable(this.dialog, NumberPopup, {
             startingValue: currentOrder.customer_count,
             feedback: (buffer) => {
-                const value = this.env.utils.formatCurrency(
+                const value = this.formatCurrency(
                     currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0
                 );
                 return value ? `${value} / ${_t("Guest")}` : "";

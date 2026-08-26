@@ -1,6 +1,7 @@
 import { Component, useProps, t } from "@odoo/owl";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { formatFloat } from "@web/core/utils/numbers";
 
 export class ProductCard extends Component {
     static template = "point_of_sale.ProductCard";
@@ -20,6 +21,12 @@ export class ProductCard extends Component {
     });
 
     get productQty() {
-        return this.env.utils.formatProductQty(this.props.productCartQty ?? 0, false);
+        const productUnit = this.props.product.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        );
+        return formatFloat(this.props.productCartQty ?? 0, {
+            digits: [true, productUnit.digits],
+            trailingZeros: false,
+        });
     }
 }

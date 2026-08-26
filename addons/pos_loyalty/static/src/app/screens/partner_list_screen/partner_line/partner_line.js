@@ -31,7 +31,7 @@ patch(PartnerLine.prototype, {
                 }
                 entries.push({
                     id: program.id,
-                    repr: `${program.name}: ${this.env.utils.formatCurrency(card.points)}`,
+                    repr: `${program.name}: ${this.pos.formatCurrency(card.points)}`,
                 });
                 continue;
             }
