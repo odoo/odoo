@@ -58,6 +58,9 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
                             props: {
                                 resId: this.model.root.resId,
                             },
+                            additionalContext: {
+                                is_todo_conversion: true,
+                            }
                         }
                     );
                 },
