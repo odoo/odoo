@@ -807,7 +807,7 @@ font[class*='bg-'] {
         height: $-size;
         line-height: $-size;
         @for $i from 2 through 5 {
-            &.fa-#{$i}x, &.oi-#{$i}x {
+            &.oi-#{$i}x {
                 width: $-size + $i;
                 height: $-size + $i;
                 line-height: $-size + $i;
@@ -2538,7 +2538,7 @@ span.list-inline-item.o_add_language:last-child {
     display: flex;
     // Need to update button size based on icon size.
     @for $i from 1 through 5 {
-        &:has(i.fa-#{$i}x, i.oi-#{$i}x) {
+        &:has(i.oi-#{$i}x) {
             width: #{$i}em;
             height: #{$i}em;
         }
@@ -3672,7 +3672,7 @@ input[value*="data-oe-translation-source-sha"] {
         font-size: 0.875em;
     }
     a {
-        .fa-stack, .oi-stack {
+        .oi-stack {
             /*
             Ensures consistent size and padding around icons when the
             layout is set to "none" and the size is "huge" or "large".
@@ -3681,7 +3681,7 @@ input[value*="data-oe-translation-source-sha"] {
             s_social_media/000.scss and s_share/000.scss).
             */
             @for $i from 2 through 3 {
-                &.fa-#{$i}x, &.oi-#{$i}x {
+                &.oi-#{$i}x {
                     width: $-size + $i;
                     height: $-size + $i;
                     line-height: $-size + $i;
