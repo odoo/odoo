@@ -201,7 +201,7 @@ class SaleOrderLine(models.Model):
                     )
                     line.display_name = name
 
-    @api.depends('product_id.service_policy')
+    @api.depends('product_id.service_policy', 'product_uom.category_id')
     def _compute_remaining_hours_available(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
@@ -209,7 +209,7 @@ class SaleOrderLine(models.Model):
             is_time_product = line.product_uom.category_id == uom_hour.category_id
             line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
-    @api.depends('qty_delivered', 'product_uom_qty', 'analytic_line_ids')
+    @api.depends('remaining_hours_available', 'qty_delivered', 'product_uom_qty', 'product_uom')
     def _compute_remaining_hours(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
