@@ -128,9 +128,9 @@ evaluationPluginRegistry.add(
 );
 evaluationPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
 evaluationPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
-evaluationPluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);
 evaluationPluginRegistry.add("PivotOdooCoreViewPlugin", PivotOdooCoreViewPlugin);
 
+featurePluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);
 featurePluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 featurePluginRegistry.add("odooPivotUIPlugin", PivotOdooUIPlugin);
 featurePluginRegistry.add("odooListUIPlugin", ListUIPlugin);
