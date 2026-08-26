@@ -113,7 +113,8 @@ class HrExpenseSplit(models.TransientModel):
             'product_uom_id': self.product_id.uom_id.id,
             'approval_state': self.approval_state,
             'approval_date': self.approval_date,
-            'manager_id': self.manager_id.id,
+            'manager_id': self.manager_id.id or self.expense_id.manager_id.id,
+            'department_id': self.expense_id.department_id.id,
         }
 
         account = self.product_id.with_company(self.company_id).product_tmpl_id._get_product_accounts()['expense']
