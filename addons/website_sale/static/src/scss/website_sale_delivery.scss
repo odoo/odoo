@@ -1,5 +1,5 @@
 .o_delivery_method_row {
-    grid-template-columns: var(--o-wsale-delivery-narrow-layout-columns, minmax(max-content, 1fr) minmax(10rem, auto) minmax(5.5rem, auto));
+    grid-template-columns: var(--o-wsale-delivery-narrow-layout-columns, minmax(min-content, 1fr) minmax(10rem, auto) minmax(5.5rem, auto));
 
     @include media-breakpoint-down(md) {
         --o-wsale-delivery-narrow-layout-columns: 2fr 1fr;
