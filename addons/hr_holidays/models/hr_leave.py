@@ -1420,9 +1420,12 @@ class HrLeave(models.Model):
                 raise UserError(error_message % {'state': state_description_values.get(holiday.state)})
 
     def unlink(self):
+        self._prepare_leave_unlink()
+        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+
+    def _prepare_leave_unlink(self):
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
-        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
