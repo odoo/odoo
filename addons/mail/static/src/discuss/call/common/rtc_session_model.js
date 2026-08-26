@@ -131,12 +131,7 @@ export class RtcSession extends Record {
             this.channel?.updateCallFocusStack(this);
         },
     });
-    isActuallyTalking = fields.Attr(false, {
-        /** @this {import("models").RtcSession} */
-        compute() {
-            return this.isTalking && !this.isMute;
-        },
-    });
+    isActuallyTalking = this.computed(() => this.isTalking && !this.isMute);
     isVideoStreaming = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         compute() {
@@ -153,18 +148,16 @@ export class RtcSession extends Record {
             }
         },
     });
-    shortStatus = fields.Attr(undefined, {
-        compute() {
-            if (this.is_screen_sharing_on) {
-                return "live";
-            }
-            if (this.is_deaf) {
-                return "deafen";
-            }
-            if (this.isMute) {
-                return "mute";
-            }
-        },
+    shortStatus = this.computed(() => {
+        if (this.is_screen_sharing_on) {
+            return "live";
+        }
+        if (this.is_deaf) {
+            return "deafen";
+        }
+        if (this.isMute) {
+            return "mute";
+        }
     });
     talkingTime = 0;
     localVolume;

@@ -70,8 +70,8 @@ const discussChannelPatch = {
         }
         return correspondent;
     },
-    get correspondents() {
-        return super.correspondents.filter(
+    get computedCorrespondents() {
+        return super.computedCorrespondents.filter(
             (correspondent) => correspondent.livechat_member_type !== "bot"
         );
     },

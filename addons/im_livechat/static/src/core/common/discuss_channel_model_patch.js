@@ -89,9 +89,9 @@ const discussChannelPatch = {
         }
         return super._computeCanHide(...arguments);
     },
-    get displayName() {
+    get computedDisplayName() {
         if (this.channel_type !== "livechat") {
-            return super.displayName;
+            return super.computedDisplayName;
         }
         const selfMemberType = this.isTransient
             ? "visitor"
@@ -117,7 +117,7 @@ const discussChannelPatch = {
         }
         return memberNames.length
             ? formatList(memberNames, { style: "standard-narrow" })
-            : super.displayName;
+            : super.computedDisplayName;
     },
     get isHideUntilNewMessageSupported() {
         if (this.livechat_end_dt) {

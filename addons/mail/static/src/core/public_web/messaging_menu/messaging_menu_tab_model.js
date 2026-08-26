@@ -62,11 +62,7 @@ export class MessagingMenuTab extends Record {
     actions = [];
     /** @type {?string} */
     activeIcon;
-    counter = fields.Attr(0, {
-        compute() {
-            return this._computeCounter();
-        },
-    });
+    counter = this.computed(() => this._computeCounter());
 
     /**
      * Determines if a message should be included in this tab. Centralizes membership
@@ -89,16 +85,14 @@ export class MessagingMenuTab extends Record {
      */
     emptyState = { title: _t("Nothing here yet.") };
     /** Additional counter not tracked server-side (e.g. failures, push permission request). */
-    extraCounter = fields.Attr(0, {
-        compute() {
-            if (!this.eq(this.store.messagingMenu?.odooBotNotificationsTab)) {
-                return 0;
-            }
-            return (
-                (this.store.showPushPermissionRequest ? 1 : 0) +
-                this.store.failures.reduce((acc, failure) => acc + failure.notifications.length, 0)
-            );
-        },
+    extraCounter = this.computed(() => {
+        if (!this.eq(this.store.messagingMenu?.odooBotNotificationsTab)) {
+            return 0;
+        }
+        return (
+            (this.store.showPushPermissionRequest ? 1 : 0) +
+            this.store.failures.reduce((acc, failure) => acc + failure.notifications.length, 0)
+        );
     });
     /**
      * Filters shown as buttons next to the search bar. Selecting a filter narrows the
@@ -137,11 +131,7 @@ export class MessagingMenuTab extends Record {
      */
     loadStatusByFilterId = fields.Attr({}, { asProxy: true });
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
-    loadMoreExcludeIds = fields.Attr([], {
-        compute() {
-            return this._computeLoadMoreExcludeIds();
-        },
-    });
+    loadMoreExcludeIds = this.computed(() => this._computeLoadMoreExcludeIds());
     messagingMenuAsTab = fields.One("MessagingMenu", {
         inverse: "allTabs",
         compute() {

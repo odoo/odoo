@@ -51,14 +51,12 @@ export class Settings extends Record {
      * reloads. Seeing the warning once is enough.
      */
     blurPerformanceWarningDismissed = false;
-    blurPerformanceWarning = fields.Attr(false, {
-        compute() {
-            const rtc = this.store.rtc;
-            if (!rtc || !this.useBlur || this.blurPerformanceWarningDismissed) {
-                return false;
-            }
-            return Boolean(rtc.cameraTrack && !hasHardwareAcceleration());
-        },
+    blurPerformanceWarning = this.computed(() => {
+        const rtc = this.store.rtc;
+        if (!rtc || !this.useBlur || this.blurPerformanceWarningDismissed) {
+            return false;
+        }
+        return Boolean(rtc.cameraTrack && !hasHardwareAcceleration());
     });
     cameraFacingMode = undefined;
 

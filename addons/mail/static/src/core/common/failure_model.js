@@ -24,13 +24,14 @@ export class Failure extends Record {
     get resModel() {
         return this.notifications?.[0]?.mail_message_id?.thread?.model;
     }
-    get resIds() {
-        return new Set([
-            ...this.notifications
-                .map((notif) => notif.mail_message_id?.thread?.id)
-                .filter((id) => !!id),
-        ]);
-    }
+    resIds = this.computed(
+        () =>
+            new Set([
+                ...this.notifications
+                    .map((notif) => notif.mail_message_id?.thread?.id)
+                    .filter((id) => !!id),
+            ])
+    );
     lastMessage = fields.One("mail.message", {
         /** @this {import("models").Failure} */
         compute() {

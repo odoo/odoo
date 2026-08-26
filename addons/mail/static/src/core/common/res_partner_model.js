@@ -27,9 +27,9 @@ export class ResPartner extends Record {
     group_ids = fields.Many("res.groups", { inverse: "partners" });
     /** @type {number} */
     id;
-    /** @type {import("./im_status_mixin").ImStatus} */
-    imStatusUI = fields.Attr(undefined, {
-        compute() {
+    imStatusUI = this.computed(
+        /** @returns {import("@mail/core/common/im_status_mixin").ImStatus} */
+        () => {
             const userStatuses = this.user_ids.map((u) => u.imStatusUI);
             if (userStatuses.includes("online") || this.isBot) {
                 return "online";
@@ -40,8 +40,8 @@ export class ResPartner extends Record {
             } else if (userStatuses.includes("offline")) {
                 return "offline";
             }
-        },
-    });
+        }
+    );
     /** @type {boolean | undefined} */
     is_company;
     /** @type {boolean} */

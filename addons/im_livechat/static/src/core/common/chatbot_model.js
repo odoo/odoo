@@ -44,11 +44,9 @@ export class Chatbot extends Record {
     /**
      * @type {(message: import("models").Message) => Promise<void>}
      */
-    _processAnswerDebounced = fields.Attr(null, {
-        compute() {
-            return debounce(this._processAnswer, Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY);
-        },
-    });
+    _processAnswerDebounced = this.computed(() =>
+        debounce(this._processAnswer, Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY)
+    );
 
     /**
      * Start the chatbot. Either from the beginning if the user just started the

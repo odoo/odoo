@@ -85,22 +85,16 @@ export class ImStatusMixin extends Record {
     });
     /** @type {string|undefined} */
     im_status_access_token;
-    monitorPresence = fields.Attr(false, {
-        compute() {
-            return this._computeMonitorPresence();
-        },
-    });
+    monitorPresence = this.computed(() => this._computeMonitorPresence());
     offline_since = fields.Datetime();
     /** @type {ImStatus} */
     presence_status;
-    presenceChannel = fields.Attr(undefined, {
-        compute() {
-            const channel = `odoo-presence-${this.Model.getName()}_${this.id}`;
-            if (this.im_status_access_token) {
-                return channel + `-${this.im_status_access_token}`;
-            }
-            return channel;
-        },
+    presenceChannel = this.computed(() => {
+        const channel = `odoo-presence-${this.Model.getName()}_${this.id}`;
+        if (this.im_status_access_token) {
+            return channel + `-${this.im_status_access_token}`;
+        }
+        return channel;
     });
 
     _computeMonitorPresence() {

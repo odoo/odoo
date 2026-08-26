@@ -49,11 +49,7 @@ export class ChatbotStep extends Record {
     /** Same unversioned-model problem, and same one-way fix, as `operatorFoundEver`. */
     selectedAnswerEver = fields.One("chatbot.script.answer");
     rawAnswer = fields.Html("");
-    step_type = fields.Attr("", {
-        compute() {
-            return this.scriptStep?.step_type;
-        },
-    });
+    step_type = this.computed(() => this.scriptStep?.step_type);
     isLast = false;
 
     get expectAnswer() {

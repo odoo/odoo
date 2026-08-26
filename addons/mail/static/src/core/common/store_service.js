@@ -56,11 +56,7 @@ export class Store extends BaseStore {
      */
     inPublicPage = false;
     odoobot = fields.One("res.partner");
-    useMobileView = fields.Attr(undefined, {
-        compute() {
-            return this.store.env.services.ui.isSmall || isMobileOS();
-        },
-    });
+    useMobileView = this.computed(() => this.store.env.services.ui.isSmall || isMobileOS());
     /** @type {number|undefined} id of the mail.action_discuss action */
     action_discuss_id;
     /** @type {number} */
