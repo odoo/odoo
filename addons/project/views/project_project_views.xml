@@ -183,19 +183,19 @@
                                 </div>
                             </group>
                             <group>
-                                <group name="group_tasks_managment" string="Tasks Management" class="row o_settings_container">
-                                    <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
+                                <group name="group_tasks_managment" string="Tasks Management" class="row o_settings_container my-0">
+                                    <setting class="col-lg-12" id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
                                         <field name="allow_recurring_tasks"/>
                                     </setting>
-                                    <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks">
+                                    <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks">
                                         <field name="allow_task_dependencies"/>
                                     </setting>
-                                    <setting id="project_milestone_setting" help="Track major progress points that must be reached to achieve success">
+                                    <setting class="col-lg-12" id="project_milestone_setting" help="Track major progress points that must be reached to achieve success">
                                         <field name="allow_milestones"/>
                                     </setting>
                                 </group>
 
-                                <group name="group_time_managment" string="Time Management" class="row o_settings_container" invisible="1"/>
+                                <group name="group_time_managment" string="Time Management" class="row o_settings_container my-0" invisible="1"/>
                             </group>
                         </page>
                     </notebook>
