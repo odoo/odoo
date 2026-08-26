@@ -1,9 +1,11 @@
+import { usePlugin, Plugin, onWillDestroy, useScope, proxy, signal, EventBus } from "@odoo/owl";
+import { services } from "@web/core/services";
 import { barcodeService } from "@barcodes/barcode_service";
-import { EventBus, onWillDestroy, useScope } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
+import { localization } from "@web/core/l10n/localization";
 
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
@@ -12,14 +14,6 @@ const INPUT_KEYS = new Set(
 );
 const CONTROL_KEYS = new Set(["Enter", "Esc"]);
 const ALLOWED_KEYS = new Set([...INPUT_KEYS, ...CONTROL_KEYS]);
-const getDefaultConfig = () => ({
-    decimalPoint: false,
-    triggerAtEnter: false,
-    triggerAtEsc: false,
-    triggerAtInput: false,
-    useWithBarcode: false,
-});
-
 const getDecimalPoint = () => localization.decimalPoint;
 /**
  * This is a singleton.
@@ -56,20 +50,18 @@ const getDecimalPoint = () => localization.decimalPoint;
  * - Make the constants (ALLOWED_KEYS, etc.) more configurable.
  * - Write more integration tests. NumberPopup can be used as test component.
  */
-class NumberBuffer extends EventBus {
-    static serviceDependencies = ["mail.sound_effects", "localization", "overlay"];
-    constructor() {
-        super();
-        this.setup(...arguments);
-    }
-    setup(services) {
-        this.state = {};
-        this.isReset = false;
-        this.bufferHolderStack = [];
-        this.sound = services["mail.sound_effects"];
-        this.overlay = services.overlay;
+export class PosNumberBufferPlugin extends Plugin {
+    state = proxy({});
+    isReset = signal(false);
+    sound = usePlugin(SoundEffectsPlugin);
+    overlay = usePlugin(OverlayPlugin);
+    bufferHolderStack = [];
+
+    setup() {
+        this.bus = new EventBus();
         window.addEventListener("keyup", this._onKeyboardInput.bind(this));
     }
+
     /**
      * @returns {String} value of the buffer, e.g. '-95.79'
      */
@@ -85,15 +77,15 @@ class NumberBuffer extends EventBus {
     set(val) {
         this.state.lastSet = val;
         this.state.buffer = !isNaN(parseFloat(val)) ? val : "";
-        this.trigger("buffer-update", this.state.buffer);
+        this.bus.trigger("buffer-update", this.state.buffer);
     }
     /**
      * Resets the buffer to empty string.
      */
     reset() {
-        this.isReset = true;
+        this.isReset.set(true);
         this.state.buffer = "";
-        this.trigger("buffer-update", this.state.buffer);
+        this.bus.trigger("buffer-update", this.state.buffer);
     }
     /**
      * Calling this function, we immediately invoke the `handler` method
@@ -130,7 +122,16 @@ class NumberBuffer extends EventBus {
     use(config) {
         this.eventsBuffer = [];
         const scope = useScope();
-        config = Object.assign(getDefaultConfig(), config);
+        config = Object.assign(
+            {
+                decimalPoint: false,
+                triggerAtEnter: false,
+                triggerAtEsc: false,
+                triggerAtInput: false,
+                useWithBarcode: false,
+            },
+            config
+        );
 
         this.bufferHolderStack.push({
             scope,
@@ -179,7 +180,6 @@ class NumberBuffer extends EventBus {
             },
         });
         Object.defineProperty(event, "target", { value: {} });
-
         return this._bufferEvents(this._onInput((event) => event.detail.key))(event);
     }
     _bufferEvents(handler) {
@@ -263,16 +263,16 @@ class NumberBuffer extends EventBus {
                 this.state.buffer = this.state.buffer + this.decimalPoint;
             }
         } else if (input === "Delete") {
-            if (this.isReset) {
+            if (this.isReset()) {
                 this.state.buffer = "";
-                this.isReset = false;
+                this.isReset.set(false);
                 return;
             }
             this.state.buffer = isEmpty(this.state.buffer) ? null : "";
         } else if (input === "Backspace") {
-            if (this.isReset) {
+            if (this.isReset()) {
                 this.state.buffer = "";
-                this.isReset = false;
+                this.isReset.set(false);
                 return;
             }
             if (this.state.toStartOver) {
@@ -328,19 +328,11 @@ class NumberBuffer extends EventBus {
         }
         // once an input is accepted and updated the buffer,
         // the buffer should not be in reset state anymore.
-        this.isReset = false;
+        this.isReset.set(false);
         // it should not be in a start the buffer over state anymore.
         this.state.toStartOver = false;
-
-        this.trigger("buffer-update", this.state.buffer);
+        this.bus.trigger("buffer-update", this.state.buffer);
     }
 }
 
-export const numberBufferService = {
-    dependencies: NumberBuffer.serviceDependencies,
-    start(env, deps) {
-        return new NumberBuffer(deps);
-    },
-};
-
-registry.category("services").add("number_buffer", numberBufferService);
+services.add(PosNumberBufferPlugin);

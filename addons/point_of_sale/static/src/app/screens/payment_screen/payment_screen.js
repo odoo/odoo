@@ -8,12 +8,13 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { Component, onMounted, useProps, t } from "@odoo/owl";
+import { Component, onMounted, useProps, t, usePlugin } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -34,7 +35,7 @@ export class PaymentScreen extends Component {
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
         this.payment_methods_from_config = this.configPaymentMethods || [];
-        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.numberBuffer.use(this._getNumberBufferConfig);
         this.error = false;
 

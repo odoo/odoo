@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, computed } from "@odoo/owl";
+import { Component, computed, usePlugin } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -9,6 +9,7 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { parseFloat } from "@web/views/fields/parsers";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { ChoseComboPopup } from "@point_of_sale/app/components/popups/chose_combo_popup/chose_combo_popup";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 export class OrderSummary extends Component {
     static template = "point_of_sale.OrderSummary";
@@ -18,7 +19,7 @@ export class OrderSummary extends Component {
     };
 
     setup() {
-        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.dialog = useService("dialog");
         this.pos = usePos();
 

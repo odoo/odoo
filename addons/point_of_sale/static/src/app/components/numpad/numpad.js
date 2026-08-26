@@ -1,5 +1,5 @@
-import { useService } from "@web/core/utils/hooks";
-import { Component, useProps, t } from "@odoo/owl";
+import { Component, useProps, t, usePlugin } from "@odoo/owl";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { localization } from "@web/core/l10n/localization";
 
 export const buttonsType = t.array(
@@ -71,7 +71,7 @@ export class Numpad extends Component {
     }
     setup() {
         if (!this.props.onClick) {
-            this.numberBuffer = useService("number_buffer");
+            this.numberBuffer = usePlugin(PosNumberBufferPlugin);
             this.onClick = (buttonValue) => this.numberBuffer.sendKey(buttonValue);
         } else {
             this.onClick = this.props.onClick;

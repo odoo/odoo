@@ -1,17 +1,17 @@
-import { computed } from "@odoo/owl";
+import { computed, usePlugin } from "@odoo/owl";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
-        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.nbrRewards = computed(() => this.getPotentialRewards().length);
     },
     _getEWalletRewards(order) {
