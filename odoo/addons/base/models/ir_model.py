@@ -1199,6 +1199,9 @@ class IrModelFields(models.Model):
 
         return res
 
+    def _get_writable_properties(self):
+        return [fname for fname in self._fields if self._fields[fname].translate]
+
     def write(self, vals):
         if not self:
             return True
@@ -1208,8 +1211,10 @@ class IrModelFields(models.Model):
 
         # names of the models to patch
         patched_models = set()
-        translate_only = all(self._fields[field_name].translate for field_name in vals)
-        if vals and self and not translate_only:
+
+        writable_properties = self._get_writable_properties()
+        writable_properties_only = all(field_name in writable_properties for field_name in vals)
+        if vals and self and not writable_properties_only:
             for item in self:
                 if item.state != 'manual':
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
@@ -1281,7 +1286,7 @@ class IrModelFields(models.Model):
                         SQL.identifier(f'{table}_{newname}_index'),
                     ))
 
-        if column_rename or patched_models or translate_only:
+        if column_rename or patched_models or writable_properties_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             model_names = OrderedSet(self.mapped('model'))
