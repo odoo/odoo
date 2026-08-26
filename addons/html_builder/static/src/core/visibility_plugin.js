@@ -152,6 +152,9 @@ export class VisibilityPlugin extends Plugin {
         show = this.toggleVisibilityStatus(editingEl, show, considerDeviceVisibility);
         const resourceName = show ? "on_target_shown_handlers" : "on_target_hidden_handlers";
         this.trigger(resourceName, editingEl);
+        if (!isCleaning) {
+            this.config.updateInvisibleElementsPanel();
+        }
         return show;
     }
 

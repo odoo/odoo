@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, proxy, props, t, useEffect } from "@odoo/owl";
 import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 
@@ -8,19 +8,19 @@ import { scrollTo } from "@html_builder/utils/scrolling";
 
 export class InvisibleElementsPanel extends Component {
     static template = "html_builder.InvisibleElementsPanel";
-    static props = {
-        invisibleEls: { type: Array },
-        invisibleSelector: { type: String },
-    };
+    props = props({
+        invisibleEls: t.array(),
+        invisibleSelector: t.string(),
+    });
 
     setup() {
         this.state = proxy({ invisibleEntries: null });
 
-        onWillStart(() => this.updateInvisibleElementsPanel(this.props.invisibleEls));
-
-        onWillUpdateProps((nextProps) => {
-            const { invisibleEls, invisibleSelector } = nextProps;
-            this.updateInvisibleElementsPanel(invisibleEls, invisibleSelector);
+        useEffect(() => {
+            this.updateInvisibleElementsPanel(
+                this.props.invisibleEls,
+                this.props.invisibleSelector
+            );
         });
     }
 
