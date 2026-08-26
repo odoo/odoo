@@ -329,9 +329,9 @@ export class OrderSummary extends Component {
             }
         }
         const newLine = this.getNewLine();
-        const decreasedQuantity = current_saved_quantity - newQuantity;
-        if (decreasedQuantity != 0) {
-            newLine.setQuantity(-decreasedQuantity + newLine.getQuantity(), true);
+        const decreasedSavedQuantity = current_saved_quantity - newQuantity;
+        if (decreasedSavedQuantity != 0) {
+            newLine.setQuantity(newQuantity, true);
         }
         if (newLine !== selectedLine && selectedLine.uiState.savedQuantity != 0) {
             selectedLine.setQuantity(
@@ -339,7 +339,8 @@ export class OrderSummary extends Component {
                 Boolean(selectedLine.combo_line_ids?.length)
             );
         }
-        return decreasedQuantity;
+        selectedLine.order_id.updateSavedQuantity();
+        return decreasedSavedQuantity;
     }
     getNewLine() {
         let selectedLine = this.currentOrder.getSelectedOrderline();
