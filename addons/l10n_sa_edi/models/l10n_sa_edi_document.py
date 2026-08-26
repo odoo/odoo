@@ -287,7 +287,7 @@ class L10nSaEdiDocument(models.Model):
         return the signed XML
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, certificate, self.resource.l10n_sa_invoice_signature)
-        if self.resource._l10n_sa_is_simplified():
+        if self.resource._l10n_sa_is_simplified() and self.resource.l10n_sa_qr_code_str:
             return self._l10n_sa_apply_qr_code(signed_xml)
         return signed_xml
 

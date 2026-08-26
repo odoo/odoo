@@ -765,3 +765,36 @@ class TestEdiZatca(TestSaEdiCommon):
             journal.l10n_sa_csr_errors,
             r"Please make sure the following fields are shorter than 64 bytes.*Company Name",
         )
+
+    def test_signed_xml_without_qr_code(self):
+        """When the ZATCA QR Code is False it should not be applied on XML"""
+        move_data = {
+            'name': 'INV/2025/00007',
+            'invoice_date': '2025-07-05',
+            'invoice_date_due': '2025-07-12',
+            'company_id': self.sa_branch,
+            'partner_id': self.partner_sa_simplified,
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'price_unit': self.product_a.standard_price,
+                'tax_ids': self.tax_15.ids,
+            }],
+        }
+
+        invoice = self._create_test_invoice(**move_data)
+        invoice.action_post()
+        zatca_doc = invoice.l10n_sa_edi_document_id
+        xml_content = invoice._l10n_sa_generate_unsigned_data()
+        certificate = invoice.journal_id.l10n_sa_production_csid_certificate_id
+
+        qr_xpath = '//*[local-name()="ID"][text()="QR"]/following-sibling::*/*'
+        signed_xml = zatca_doc._l10n_sa_get_signed_xml(xml_content, certificate)
+        root = etree.fromstring(signed_xml)
+        qr_node = root.xpath(qr_xpath)[0]
+        self.assertEqual(qr_node.text, invoice.l10n_sa_qr_code_str)
+
+        invoice.l10n_sa_qr_code_str = False
+        signed_xml = zatca_doc._l10n_sa_get_signed_xml(xml_content, certificate)
+        root = etree.fromstring(signed_xml)
+        qr_node = root.xpath(qr_xpath)[0]
+        self.assertEqual(qr_node.text, 'N/A')
