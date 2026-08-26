@@ -601,3 +601,19 @@ class StockGenerateCommon(TransactionCase):
         self.assertEqual([val.get('lot_name') for val in move_line_vals], ['SN52', 'SN53', 'SN54'])
         # Check that the asequence was not updated
         self.assertEqual(serial_sequence.next_by_id(), '0000039')
+
+    @freeze_time('2026-05-26')
+    def test_lot_names_generation(self):
+        """
+        Test to ensure that suffix and prefix are ignored when generating lot names
+        """
+        seq = self.env.ref('stock.sequence_production_lots')
+        seq.prefix = "%(year)s-"
+        seq.suffix = "-%(month)s"
+        lot_names = self.env['stock.lot'].generate_lot_names("2026--05", 3)
+        expected_lots_names = [
+            "2026-0-05",
+            "2026-1-05",
+            "2026-2-05",
+        ]
+        self.assertEqual([lot_name.get('lot_name') for lot_name in lot_names], expected_lots_names)
