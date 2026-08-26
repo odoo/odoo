@@ -323,6 +323,16 @@ class ResCompany(models.Model):
         help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
     )
 
+    # Cash Rounding default accounts
+    cash_rounding_profit_account_id = fields.Many2one(
+        comodel_name='account.account',
+        **company_default_for('cash_rounding_profit_account_id', 'account.cash.rounding', 'profit_account_id'),
+    )
+    cash_rounding_loss_account_id = fields.Many2one(
+        comodel_name='account.account',
+        **company_default_for('cash_rounding_loss_account_id', 'account.cash.rounding', 'loss_account_id'),
+    )
+
     # If company has Ledgers
     has_ledger = fields.Boolean(
         compute='_compute_has_ledger',

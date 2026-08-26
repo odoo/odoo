@@ -1393,7 +1393,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_cash_rounding_conditions(self):
         self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
         currencies = self.env['res.currency'].concat(self.setup_other_currency(code) for code in ('AED', 'SEK', 'CAD'))
-        categories = self.env['res.partner.category'].create([{'name': f'Category {index}'} for index in range(3)])
+        categories = self.env['res.partner.category'].create([{'name': f'Category {index}'} for index in range(4)])
         partner_without_category, partner_with_category, partner_with_categories = self.env['res.partner'].create([
             {'name': 'Partner without category'},
             {'name': 'Partner with category', 'category_id': categories[0].ids},

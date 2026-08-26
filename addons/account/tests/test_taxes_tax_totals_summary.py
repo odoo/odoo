@@ -1595,6 +1595,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
 
             expected_values = {
                 'same_tax_base': True,
+                'has_biggest_tax_cash_rounding': True,
                 'currency_id': self.foreign_currency.id,
                 'company_currency_id': self.currency.id,
                 'base_amount_currency': 32.40,
@@ -1721,6 +1722,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         document = self.populate_document(document_params)
         expected_values = {
             'same_tax_base': True,
+            'has_biggest_tax_cash_rounding': True,
             'currency_id': self.foreign_currency.id,
             'company_currency_id': self.currency.id,
             'base_amount_currency': 44.25,

@@ -71,7 +71,7 @@
                             isReadonly="this.readonly"
                             onChangeTaxGroup.bind="this._onChangeTaxValueByTaxGroup"
                             invalidate.bind="this.invalidate"
-                            removeCashRounding="(this.showCashRounding &amp;&amp; taxGroup === taxGroupWithRoundingAmount) ? this.removeCashRounding.bind(this) : undefined"
+                            removeCashRounding="taxGroup === taxGroupWithRoundingAmount ? this.removeCashRounding.bind(this) : undefined"
                         />
                     </t>
                 </t>

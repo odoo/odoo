@@ -226,6 +226,18 @@ class ResConfigSettings(models.TransientModel):
     expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False, check_company=True)
     expense_account_active = fields.Boolean(related='expense_account_id.active', string="Expense Account Active")
 
+    # Cash rounding default accounts
+    cash_rounding_profit_account_id = fields.Many2one(
+        related='company_id.cash_rounding_profit_account_id',
+        domain="[('internal_group', '=', 'income')]",
+        readonly=False, check_company=True,
+    )
+    cash_rounding_loss_account_id = fields.Many2one(
+        related='company_id.cash_rounding_loss_account_id',
+        domain="[('internal_group', '=', 'expense')]",
+        readonly=False, check_company=True,
+    )
+
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):
         # we want to show Peppol settings only to customers that are eligible for Peppol,

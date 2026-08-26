@@ -2806,6 +2806,9 @@ class AccountTax(models.Model):
                                                     If there is no amount added, the key is not in the result.
             cash_rounding_base_amount:              The delta added by 'cash_rounding' expressed in local currency.
                                                     If there is no amount added, the key is not in the result.
+            has_biggest_tax_cash_rounding:          Flag indicating the delta added by 'cash_rounding' has been added to the
+                                                    tax group having the biggest tax amount.
+                                                    If there is no amount added, the key is not in the result.
             subtotals:                              A list of subtotal (like "Untaxed Amount"), each one being a python dictionary
                                                     containing:
                 base_amount_currency:                   The base amount expressed in foreign currency.
@@ -2994,6 +2997,7 @@ class AccountTax(models.Model):
                         (subtotal, tax_group)
                         for subtotal in tax_totals_summary['subtotals']
                         for tax_group in subtotal['tax_groups']
+                        if not currency.is_zero(tax_group['tax_amount_currency'])
                     ]
 
                     if all_subtotal_tax_group:
@@ -3007,6 +3011,7 @@ class AccountTax(models.Model):
                         max_subtotal['tax_amount'] += cash_rounding_base_amount
                         tax_totals_summary['tax_amount_currency'] += cash_rounding_base_amount_currency
                         tax_totals_summary['tax_amount'] += cash_rounding_base_amount
+                        tax_totals_summary['has_biggest_tax_cash_rounding'] = True
                     else:
                         # Failed to apply the cash rounding since there is no tax.
                         cash_rounding_base_amount_currency = 0.0
