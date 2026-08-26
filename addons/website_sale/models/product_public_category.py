@@ -140,14 +140,18 @@ class ProductPublicCategory(models.Model):
             )
 
     def _compute_website_url(self):
-        super()._compute_website_url()
+        assignable_categories = (
+            self.filtered("id")
+            if self.env.user._is_internal()
+            else self.filtered(lambda c: c.id and c.has_published_products)
+        )
         slug = self.env["ir.http"]._slug
-        for category in self:
-            if category.id:
-                # Only take the current category and its 4 closest parents to avoid having too long
-                # URLs. This number should stay in sync with the category route computation.
-                category_slugs = [slug(cat) for cat in category.parents_and_self[-5:]]
-                category.website_url = f"{SHOP_PATH}/category/%s" % "/".join(category_slugs)
+        for category in assignable_categories:
+            # Only take the current category and its 4 closest parents to avoid having too long
+            # URLs. This number should stay in sync with the category route computation.
+            category_slugs = [slug(cat) for cat in category.parents_and_self[-5:]]
+            category.website_url = f"{SHOP_PATH}/category/{"/".join(category_slugs)}"
+        super(ProductPublicCategory, self - assignable_categories)._compute_website_url()
 
     @api.depends_context("company", "website_id")
     def _compute_has_published_products(self):
