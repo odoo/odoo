@@ -1375,13 +1375,14 @@
                                                 <div t-attf-class="ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                                     <t t-if="!['line_note', 'line_section', 'line_subsection'].includes(record.display_type.raw_value)">
                                                         <div class="row g-0">
-                                                            <div class="col-2 pe-3">
+                                                            <div t-if="record.product_id.raw_value" class="col-2 pe-3">
                                                                 <field name="product_id" widget="image" options="{'preview_image': 'image_128'}" class="w-100"/>
                                                             </div>
-                                                            <div class="col-10">
+                                                            <div t-att-class="{'col-10': record.product_id.raw_value}">
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        <field class="fw-bold" name="product_id"/>
+                                                                        <field t-if="record.product_id.raw_value" class="fw-bold" name="product_id"/>
+                                                                        <field t-else="" class="fw-bold" name="name"/>
                                                                     </div>
                                                                     <div class="col-auto fw-bold float-end text-end">
                                                                         <field name="price_subtotal"
