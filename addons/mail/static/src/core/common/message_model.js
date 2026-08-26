@@ -38,11 +38,7 @@ export class Message extends Record {
     }
     body = fields.Html("");
     /** Shared by every compute reading the body: clone it before modifying it. */
-    bodyEl = fields.Attr(null, {
-        compute() {
-            return this.body ? createElementFromContent(this.body) : null;
-        },
-    });
+    bodyEl = this.computed(() => (this.body ? createElementFromContent(this.body) : null));
     call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
         compute() {
@@ -70,15 +66,13 @@ export class Message extends Record {
     /** @type {string} */
     email_from;
     /** @type {boolean} */
-    edited = fields.Attr(false, {
-        compute() {
-            return Boolean(
-                // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
-                // when the message is edited
-                this.bodyEl?.querySelector(".o-mail-Message-edited")
-            );
-        },
-    });
+    edited = this.computed(() =>
+        Boolean(
+            // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
+            // when the message is edited
+            this.bodyEl?.querySelector(".o-mail-Message-edited")
+        )
+    );
     editedDate = fields.Datetime({
         compute() {
             return this.bodyEl?.querySelector(".o-mail-Message-edited")?.dataset.oDatetime;
@@ -94,19 +88,15 @@ export class Message extends Record {
             return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
         },
     });
-    hasLink = fields.Attr(false, {
-        compute() {
-            if (this.isBodyEmpty) {
-                return false;
-            }
-            return Boolean(this.bodyEl?.querySelector("a:not([data-oe-model])"));
-        },
+    hasLink = this.computed(() => {
+        if (this.isBodyEmpty) {
+            return false;
+        }
+        return Boolean(this.bodyEl?.querySelector("a:not([data-oe-model])"));
     });
-    hasMailNotificationSummary = fields.Attr(false, {
-        compute() {
-            return Boolean(this.bodyEl?.querySelector('[summary="o_mail_notification"]'));
-        },
-    });
+    hasMailNotificationSummary = this.computed(() =>
+        Boolean(this.bodyEl?.querySelector('[summary="o_mail_notification"]'))
+    );
     /** @type {number|string} */
     id;
     /** @type {Array[Array[string]]} */
@@ -174,16 +164,14 @@ export class Message extends Record {
         inverse: "pinnedMessages",
     });
     scheduledDatetime = fields.Datetime();
-    onlyEmojis = fields.Attr(false, {
-        compute() {
-            const bodyWithoutTags = this.bodyEl?.textContent ?? "";
-            const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
-            return (
-                bodyWithoutTags.length > 0 &&
-                bodyWithoutTags.match(EMOJI_REGEX) &&
-                withoutEmojis.trim().length === 0
-            );
-        },
+    onlyEmojis = this.computed(() => {
+        const bodyWithoutTags = this.bodyEl?.textContent ?? "";
+        const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
+        return (
+            bodyWithoutTags.length > 0 &&
+            bodyWithoutTags.match(EMOJI_REGEX) &&
+            withoutEmojis.trim().length === 0
+        );
     });
     pinned_at = fields.Datetime();
     /** @type {string} */
@@ -199,13 +187,11 @@ export class Message extends Record {
     /** @type {string} model of the record the message is posted on */
     model;
     /** @type {string|undefined} */
-    notificationType = fields.Attr(undefined, {
-        compute() {
-            if (!this.isNotification) {
-                return undefined;
-            }
-            return this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeType;
-        },
+    notificationType = this.computed(() => {
+        if (!this.isNotification) {
+            return undefined;
+        }
+        return this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeType;
     });
     channelAsThreadCreationNotification = fields.One("discuss.channel", {
         /** @this {import("models").Message} */
@@ -344,11 +330,7 @@ export class Message extends Record {
         return this.isSelfMentioned && Boolean(this.thread?.channel);
     }
 
-    isSelfAuthored = fields.Attr(false, {
-        compute() {
-            return Boolean(this.author?.eq(this.effectiveSelf));
-        },
-    });
+    isSelfAuthored = this.computed(() => Boolean(this.author?.eq(this.effectiveSelf)));
 
     isPending = false;
 
@@ -400,17 +382,10 @@ export class Message extends Record {
         return !this.isBodyEmpty || this.subject || this.edited;
     }
 
-    isEmpty = fields.Attr(false, {
-        /** @this {import("models").Message} */
-        compute() {
-            return this.computeIsEmpty();
-        },
-    });
-    isBodyEmpty = fields.Attr(undefined, {
-        compute() {
-            return !this.body || isEmptyBlock(createElementWithContent("div", this.body));
-        },
-    });
+    isEmpty = this.computed(() => this.computeIsEmpty());
+    isBodyEmpty = this.computed(
+        () => !this.body || isEmptyBlock(createElementWithContent("div", this.body))
+    );
 
     computeIsEmpty() {
         return (
@@ -517,9 +492,9 @@ export class Message extends Record {
         return null;
     }
 
-    get failureNotifications() {
-        return this.notification_ids.filter((notification) => notification.isFailure);
-    }
+    failureNotifications = this.computed(() =>
+        this.notification_ids.filter((notification) => notification.isFailure)
+    );
 
     get scheduledDateSimple() {
         return this.scheduledDatetime.toLocaleString(DateTime.TIME_SIMPLE, {

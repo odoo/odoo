@@ -19,20 +19,13 @@ export class ModelInternal {
     /** @type {Map<string, boolean>} */
     fieldsEager = new Map();
     /**
-     * Which fields keep their value in an owl `computed()`, instead of the
-     * model scheduling the compute and storing it. Only a lazy field holding
-     * a plain value qualifies, as every other kind needs the stored value
-     * itself:
-     * - a relation has to materialize in its RecordList, which holds the inverse,
-     * - an eager field is recomputed even while nobody reads it,
-     * - an html, date or datetime value is converted on write,
-     * - a localStorage field is read back from the storage,
-     * - a compute reading the field it computes has no starting value to read.
-     * Key is fieldName.
+     * Names declared with `computed()`. Each record holds the
+     * declaration as its own property until its first read replaces it with an
+     * owl computed in `RecordInternal.fieldsComputed`.
      *
-     * @type {Map<string, boolean>}
+     * @type {Set<string>}
      */
-    fieldsComputable = new Map();
+    fieldsComputable = new Set();
     /** @type {Map<string, string>} */
     fieldsInverse = new Map();
     /** @type {Map<string, () => void>} */
@@ -180,20 +173,6 @@ export class ModelInternal {
                 }
             }
         }
-        const compute = this.fieldsCompute.get(fieldName);
-        const type = this.fieldsType.get(fieldName);
-        this.fieldsComputable.set(
-            fieldName,
-            Boolean(compute) &&
-                !this.fieldsEager.get(fieldName) &&
-                !this.fieldsOne.get(fieldName) &&
-                !this.fieldsMany.get(fieldName) &&
-                !this.fieldsHtml.get(fieldName) &&
-                type !== "date" &&
-                type !== "datetime" &&
-                !this.fieldsLocalStorage.has(fieldName) &&
-                !new RegExp(`this\\.${fieldName}\\b`).test(compute.toString())
-        );
     }
     registerOnUpdate(fieldName, onUpdate) {
         let onUpdateList = this.fieldsOnUpdate.get(fieldName);

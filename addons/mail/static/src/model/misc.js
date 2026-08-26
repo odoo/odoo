@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 
 export const modelRegistry = registry.category("discuss.model");
 
+export const COMPUTED_SYM = Symbol("computed");
 export const FIELD_DEFINITION_SYM = Symbol("field_definition");
 /** @typedef {ATTR_SYM|MANY_SYM|ONE_SYM} FIELD_SYM */
 export const ATTR_SYM = Symbol("attr");
@@ -92,6 +93,10 @@ export function isRelation(Model, fieldName) {
 }
 export function isFieldDefinition(val) {
     return val?.[FIELD_DEFINITION_SYM];
+}
+
+export function isComputedDefinition(val) {
+    return val?.[COMPUTED_SYM];
 }
 
 export const fields = {

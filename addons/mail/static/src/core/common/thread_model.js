@@ -29,6 +29,16 @@ import { user } from "@web/core/user";
 export class Thread extends Record {
     static id = AND("model", "id");
     static _name = "mail.thread";
+
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.composerDisabled],
+            () => this.composerDisabledonUpdate(),
+            { immediate: true, initialRun: false }
+        );
+    }
+
     /**
      * @param {string} localId
      * @returns {string}
@@ -268,14 +278,7 @@ export class Thread extends Record {
      *  @type {integer|undefined}
      */
     pid;
-    composerDisabled = fields.Attr(false, {
-        compute() {
-            return this.computeComposerDisabled();
-        },
-        onUpdate() {
-            this.composerDisabledonUpdate();
-        },
-    });
+    composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
     sortedPinnedMessages = fields.Many("mail.message", {
         compute() {
@@ -319,13 +322,13 @@ export class Thread extends Record {
         );
     }
 
-    get attachmentsInWebClientView() {
+    attachmentsInWebClientView = this.computed(() => {
         const attachments = this.attachments.filter(
             (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
         );
         attachments.sort((a1, a2) => a2.id - a1.id);
         return attachments;
-    }
+    });
 
     get canPostMessage() {
         return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
@@ -411,13 +414,10 @@ export class Thread extends Record {
         return this.messages.length === 0;
     }
 
-    get nonEmptyMessages() {
-        return this.messages.filter((message) => !message.isEmpty);
-    }
-
-    get persistentMessages() {
-        return this.messages.filter((message) => !message.is_transient && !message.isPending);
-    }
+    nonEmptyMessages = this.computed(() => this.messages.filter((message) => !message.isEmpty));
+    persistentMessages = this.computed(() =>
+        this.messages.filter((message) => !message.is_transient && !message.isPending)
+    );
 
     get prefix() {
         return this.channel?.isChatChannel ? "@" : "#";

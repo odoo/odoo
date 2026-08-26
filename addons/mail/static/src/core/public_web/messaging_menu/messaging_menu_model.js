@@ -57,11 +57,7 @@ export class MessagingMenu extends Record {
         },
         eager: true,
     });
-    globalCounter = fields.Attr(0, {
-        compute() {
-            return this._computeGlobalCounter();
-        },
-    });
+    globalCounter = this.computed(() => this._computeGlobalCounter());
     notificationTab = fields.One("MessagingMenuTab", {
         compute() {
             if (this.store.self_user?.notification_type !== "inbox") {

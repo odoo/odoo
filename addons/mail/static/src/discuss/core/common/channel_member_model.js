@@ -13,6 +13,19 @@ const { DateTime } = luxon;
 export class ChannelMember extends Record {
     static _name = "discuss.channel.member";
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.is_pinned],
+            () => {
+                // The channel pin state follows self member only: reacting to the other
+                // members makes Discuss leave a channel that is still displayed.
+                this.channelAsSelf?.onPinStateUpdated();
+            },
+            { immediate: true, initialRun: false }
+        );
+    }
+
     /** @type {string} */
     create_date;
     /**
@@ -26,22 +39,13 @@ export class ChannelMember extends Record {
     invitation_sent_dt = fields.Datetime();
     /** @type {boolean} */
     is_favorite;
-    is_pinned = fields.Attr(undefined, {
-        compute() {
-            return (
-                !this.unpin_dt ||
-                (this.last_interest_dt && this.last_interest_dt >= this.unpin_dt) ||
-                (this.channel_id?.last_interest_dt &&
-                    this.channel_id?.last_interest_dt >= this.unpin_dt)
-            );
-        },
-        /** @this {import("models").ChannelMember} */
-        onUpdate() {
-            // The channel pin state follows self member only: reacting to the other
-            // members makes Discuss leave a channel that is still displayed.
-            this.channelAsSelf?.onPinStateUpdated();
-        },
-    });
+    is_pinned = this.computed(
+        () =>
+            !this.unpin_dt ||
+            (this.last_interest_dt && this.last_interest_dt >= this.unpin_dt) ||
+            (this.channel_id?.last_interest_dt &&
+                this.channel_id?.last_interest_dt >= this.unpin_dt)
+    );
     last_interest_dt = fields.Datetime();
     last_seen_dt = fields.Datetime();
     guest_id = fields.One("mail.guest");

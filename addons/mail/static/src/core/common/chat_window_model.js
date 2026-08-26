@@ -40,11 +40,7 @@ export class ChatWindow extends Record {
         return Boolean(this.hubAsOpened);
     }
 
-    canShow = fields.Attr(true, {
-        compute() {
-            return this.computeCanShow();
-        },
-    });
+    canShow = this.computed(() => this.computeCanShow());
 
     computeCanShow() {
         if (this.store.env.services.ui.isSmall) {

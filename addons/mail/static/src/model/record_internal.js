@@ -3,6 +3,7 @@
 
 import {
     IS_RECORD_SYM,
+    isComputedDefinition,
     isFieldDefinition,
     isMany,
     isRelation,
@@ -139,9 +140,9 @@ export class RecordInternal {
      */
     fieldsComputeStop = new Map();
     /**
-     * Value of a field kept in a per-record owl computed(): computed on the
-     * first read and cached until one of the values it reads changes, instead
-     * of being scheduled and stored by the model. Key is fieldName.
+     * Values declared with `computed()`. Key is the name, Value is the
+     * getter of the owl computed made on the first read, which caches until
+     * something it read changes.
      *
      * @type {Map<string, () => any>}
      */
@@ -227,6 +228,35 @@ export class RecordInternal {
     }
 
     /**
+     * @param {() => any} compute
+     * @returns {() => any} the computed holding the value
+     */
+    makeComputed(compute) {
+        const record = this.record;
+        // the last computed value, answered while a write is being applied
+        let heldValue;
+        const { isUpdateInProgress } = record._rawStore._;
+        const { isDeleted } = this;
+        return this.ensureScope().run(() =>
+            computed(function computeValue() {
+                if (isDeleted()) {
+                    return heldValue;
+                }
+                if (untrack(isUpdateInProgress)) {
+                    // Hold while a write is being applied: the relations this
+                    // reads are written one by one. onAdd, onDelete and onUpdate
+                    // run between writes, at depth 0, so they read fresh values.
+                    // Subscribe only while held, so the release computes once.
+                    void isUpdateInProgress();
+                    return heldValue;
+                }
+                heldValue = compute.call(record._proxy);
+                return heldValue;
+            })
+        );
+    }
+
+    /**
      * @param {Record} record
      * @param {Object} [ids] the identifying values, from `Record.new`
      * @returns {Record} the proxy of the record, which its constructor returns
@@ -292,7 +322,7 @@ export class RecordInternal {
             this.fieldsLocalStorage.set(lsFieldName, new LocalStorageEntry(localStorageKey));
         }
         if (Model._.fieldsCompute.get(fieldName)) {
-            if (!Model._.fieldsEager.get(fieldName) && !Model._.fieldsComputable.get(fieldName)) {
+            if (!Model._.fieldsEager.get(fieldName)) {
                 record._registerDisposeFn(
                     observeField(record._proxy, fieldName, () => {
                         if (this.fieldsComputing.get(fieldName)) {
@@ -373,30 +403,6 @@ export class RecordInternal {
             return Reflect.get(parentRecordProxy, name);
         }
         if (modelInternal.fields.get(name)) {
-            if (modelInternal.fieldsComputable.get(name)) {
-                let computedField = record._.fieldsComputed.get(name);
-                if (!computedField) {
-                    const compute = modelInternal.fieldsCompute.get(name);
-                    const { isUpdateInProgress } = record._rawStore._;
-                    let lastValue = record._.fieldsDefault.get(name);
-                    computedField = record._.ensureScope().run(() =>
-                        computed(function computeFieldValue() {
-                            if (untrack(isUpdateInProgress)) {
-                                // Hold while a write is being applied: the relations this
-                                // reads are written one by one. onAdd, onDelete and onUpdate
-                                // run between writes, at depth 0, so they read fresh values.
-                                // Subscribe only while held, so the release computes once.
-                                void isUpdateInProgress();
-                                return lastValue;
-                            }
-                            lastValue = compute.call(record._proxy);
-                            return lastValue;
-                        })
-                    );
-                    record._.fieldsComputed.set(name, computedField);
-                }
-                return computedField();
-            }
             if (modelInternal.fieldsCompute.get(name) && !modelInternal.fieldsEager.get(name)) {
                 record._.fieldsComputeInNeed.set(name, true);
                 if (record._.fieldsComputeOnNeed.get(name)) {
@@ -432,6 +438,17 @@ export class RecordInternal {
         const sig = record._.fieldsAttrSignal.get(name);
         if (sig) {
             return sig();
+        }
+        if (modelInternal.fieldsComputable.has(name)) {
+            let computedGetter = this.fieldsComputed.get(name);
+            if (!computedGetter) {
+                // the declaration sits on the record until its first read
+                const { compute } = record[name];
+                delete record[name];
+                computedGetter = this.makeComputed(compute);
+                this.fieldsComputed.set(name, computedGetter);
+            }
+            return computedGetter();
         }
         let res = Reflect.get(record, name, recordProxy);
         if (
@@ -479,6 +496,10 @@ export class RecordInternal {
     proxySet(name, val) {
         const record = this.record;
         const Model = record.Model;
+        if (isComputedDefinition(val)) {
+            // the declaration sits on the record until its first read
+            return Reflect.set(record, name, val);
+        }
         if (isFieldDefinition(val) || (Model._.fields.get(name) && !this.fieldPrepared(name))) {
             // a declaration: an initializer lands the definition or the default,
             // and `setup` writes the default of a field no initializer declares

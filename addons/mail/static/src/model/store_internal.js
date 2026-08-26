@@ -207,6 +207,10 @@ export class StoreInternal extends RecordInternal {
             Reflect.set(record._proxy[parentFieldName], fieldName, value);
             return;
         }
+        if (Model._.fieldsComputable.has(fieldName)) {
+            console.warn(`${Model.getName()}.${fieldName} is computed: dropping the write.`);
+            return;
+        }
         const fieldType = Model._.fieldsType.get(fieldName);
         const fieldHtml = Model._.fieldsHtml.get(fieldName);
         const sig = record._.ensureFieldSignal(fieldName);

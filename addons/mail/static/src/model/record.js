@@ -8,6 +8,7 @@ import {
     untrack,
 } from "@odoo/owl";
 import {
+    COMPUTED_SYM,
     OR_SYM,
     STORE_SYM,
     isCommandList,
@@ -216,10 +217,6 @@ export class Record {
                 record._.compute?.(fieldName);
             }
             for (const fieldName of record.Model._.fields.keys()) {
-                if (record.Model._.fieldsComputable.get(fieldName)) {
-                    // the owl computed() runs on the first read, nothing to request
-                    continue;
-                }
                 record._.requestCompute?.(fieldName);
             }
             record._.isConstructing.set(false);
@@ -308,6 +305,19 @@ export class Record {
     _proxy;
 
     setup() {}
+
+    /**
+     * Declares a value computed from the record, read like a field without
+     * being one: the value lives in an owl computed, and the model neither
+     * stores nor serializes it.
+     *
+     * @template T
+     * @param {() => T} compute
+     * @returns {T}
+     */
+    computed(compute) {
+        return { [COMPUTED_SYM]: true, compute };
+    }
 
     /**
      * @param {Object|any} data

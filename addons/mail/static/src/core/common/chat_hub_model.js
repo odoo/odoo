@@ -18,12 +18,9 @@ export class ChatHub extends Record {
 
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth
     recomputeBubbleStart = 0;
-    BUBBLE_START = fields.Attr(CHAT_HUB_DEFAULT_BUBBLE_START, {
-        /** @this {import("models").Chathub} */
-        compute() {
-            void this.recomputeBubbleStart;
-            return this.computeBubbleStart();
-        },
+    BUBBLE_START = this.computed(() => {
+        void this.recomputeBubbleStart;
+        return this.computeBubbleStart();
     });
     computeBubbleStart() {
         return CHAT_HUB_DEFAULT_BUBBLE_START;
@@ -149,11 +146,9 @@ export class ChatHub extends Record {
         );
     }
 
-    showConversations = fields.Attr(false, {
-        compute() {
-            return this.canShowOpened.length + this.canShowFolded.length > 0;
-        },
-    });
+    showConversations = this.computed(
+        () => this.canShowOpened.length + this.canShowFolded.length > 0
+    );
 }
 
 ChatHub.register();

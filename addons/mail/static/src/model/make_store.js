@@ -1,6 +1,7 @@
 import { Store } from "./store";
 import {
     fields,
+    isComputedDefinition,
     isFieldDefinition,
     isRelation,
     modelRegistry,
@@ -44,10 +45,23 @@ export function makeStore(env, { localRegistry } = {}) {
         Models[Model.getName()] = Model;
         store[Model.getName()] = Model;
         // Detect fields with a dummy record and setup getter/setters on them
-        const obj = new OgClass();
+        const obj = new Proxy(new OgClass(), {
+            set(target, name, value) {
+                if (isComputedDefinition(target[name]) && isComputedDefinition(value)) {
+                    throw new Error(
+                        `${OgClass.getName()}.${name}: a computed cannot be redeclared, patch the method its compute calls`
+                    );
+                }
+                return Reflect.set(target, name, value);
+            },
+        });
         obj.setup();
         for (const [name, val] of Object.entries(obj)) {
             if (technicalKeysOnRecords.has(name)) {
+                continue;
+            }
+            if (isComputedDefinition(val)) {
+                Model._.fieldsComputable.add(name);
                 continue;
             }
             if (!isFieldDefinition(val)) {
@@ -97,6 +111,7 @@ export function makeStore(env, { localRegistry } = {}) {
     for (const Model of Object.values(Models)) {
         if (Model._inherits) {
             const ownProperties = new Set([
+                ...Model._.fieldsComputable,
                 ...Model._.fields.keys(),
                 // the model's own members live on the registry class, one layer above the
                 // per-store subclass
@@ -114,8 +129,11 @@ export function makeStore(env, { localRegistry } = {}) {
                 Model._.inheritsFields.add(parentFieldName);
                 const ParentModel = Models[parentModelName];
                 ParentModel._.inheritsInverseFields.add(inverseField);
-                // fields
-                for (const fieldName of ParentModel._.fields.keys()) {
+                // fields and computeds
+                for (const fieldName of [
+                    ...ParentModel._.fieldsComputable,
+                    ...ParentModel._.fields.keys(),
+                ]) {
                     if (ownProperties.has(fieldName)) {
                         continue;
                     }
