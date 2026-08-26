@@ -36,6 +36,7 @@ registerThreadAction("fold-chat-window", {
     name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
     onSelected: ({ owner }) => owner.toggleFold(),
     displayActive: ({ owner }) => !owner.props.chatWindow?.isOpen,
+    propsInline: { variant: () => "btn-clear" },
     sequence: 99,
     sequenceQuick: 20,
 });
@@ -54,6 +55,7 @@ registerThreadAction("close", {
     icon: "close_small",
     name: _t("Close Chat Window (ESC)"),
     onSelected: ({ owner }) => owner.close(),
+    propsInline: { variant: () => "btn-clear" },
     sequence: 100,
     sequenceQuick: 10,
 });
