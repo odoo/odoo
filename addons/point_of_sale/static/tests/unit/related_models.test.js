@@ -877,3 +877,110 @@ describe("loadData function", () => {
         expect(updatedProduct.category_ids).toHaveLength(1);
     });
 });
+
+describe("serialization of x2many commands", () => {
+    const getModels = () =>
+        createRelatedModels(
+            {
+                "pos.order": {
+                    id: { name: "id", type: "integer" },
+                    uuid: { name: "uuid", type: "char" },
+                    lines: {
+                        name: "lines",
+                        type: "one2many",
+                        relation: "pos.order.line",
+                        inverse_name: "order_id",
+                    },
+                },
+                "pos.order.line": {
+                    id: { name: "id", type: "integer" },
+                    uuid: { name: "uuid", type: "char" },
+                    qty: { name: "qty", type: "integer" },
+                    order_id: {
+                        name: "order_id",
+                        type: "many2one",
+                        relation: "pos.order",
+                        inverse_name: "lines",
+                    },
+                },
+            },
+            {},
+            {
+                databaseIndex: { "pos.order": ["uuid"], "pos.order.line": ["uuid"] },
+                databaseTable: {
+                    "pos.order": { key: "uuid", condition: () => true },
+                    "pos.order.line": { key: "uuid", condition: () => true },
+                },
+                dynamicModels: ["pos.order", "pos.order.line"],
+            }
+        ).models;
+
+    // The order as the server currently knows it: one line, already saved.
+    const serverData = () => ({
+        "pos.order": [{ id: 1, uuid: "order-uuid", lines: [10] }],
+        "pos.order.line": [{ id: 10, uuid: "line-uuid", qty: 1, order_id: 1 }],
+    });
+
+    test("a line removed and then reloaded from the server is not unlinked", () => {
+        const models = getModels();
+        models.loadData(serverData());
+        const order = models["pos.order"].get(1);
+
+        // The cashier removes the line: the unlink command is queued but the
+        // order has not been synced yet, so it is still pending.
+        order.lines[0].delete();
+        expect(order.lines).toHaveLength(0);
+        expect(order.getCommand("unlink", "lines")).toEqual([10]);
+
+        // Anything that re-reads the order from the server (another device
+        // through the websocket, the ticket screen, a read/search_read) brings
+        // the line back with its server id.
+        models.loadData(serverData());
+        expect(order.lines.map((line) => line.id)).toEqual([10]);
+
+        models["pos.order.line"].update(models["pos.order.line"].get(10), { qty: 1 });
+
+        // The line is linked again, so it must not be unlinked on the next sync.
+        const commands = order.serialize({ orm: true }).lines;
+        expect(commands.filter((command) => command[0] === 3)).toEqual([]);
+        expect(commands.filter((command) => command[0] === 1).map((c) => c[1])).toEqual([10]);
+    });
+
+    test("a line that is really removed is still unlinked", () => {
+        const models = getModels();
+        models.loadData({
+            "pos.order": [{ id: 1, uuid: "order-uuid", lines: [10, 11] }],
+            "pos.order.line": [
+                { id: 10, uuid: "line-uuid-10", qty: 1, order_id: 1 },
+                { id: 11, uuid: "line-uuid-11", qty: 1, order_id: 1 },
+            ],
+        });
+        const order = models["pos.order"].get(1);
+
+        order.lines.find((line) => line.id === 10).delete();
+        models["pos.order.line"].update(models["pos.order.line"].get(11), { qty: 2 });
+
+        const commands = order.serialize({ orm: true }).lines;
+        expect(commands.filter((command) => command[0] === 3)).toEqual([[3, 10]]);
+        expect(commands.filter((command) => command[0] === 1).map((c) => c[1])).toEqual([11]);
+    });
+
+    test("a line removed again after being reloaded is unlinked", () => {
+        const models = getModels();
+        models.loadData(serverData());
+        const order = models["pos.order"].get(1);
+
+        order.lines[0].delete();
+        models.loadData(serverData());
+        expect(order.lines.map((line) => line.id)).toEqual([10]);
+
+        // The cashier removes the reloaded line again: this removal is real and
+        // must reach the server.
+        order.lines[0].delete();
+        expect(order.lines).toHaveLength(0);
+
+        const commands = order.serialize({ orm: true }).lines;
+        expect(commands.some((command) => command[0] === 3 && command[1] === 10)).toBe(true);
+        expect(commands.filter((command) => command[0] === 1)).toEqual([]);
+    });
+});

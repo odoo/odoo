@@ -261,11 +261,20 @@ export class Base {
                     const unlinks = this.getCommand("unlink", name);
                     const deletes = this.getCommand("delete", name);
                     if (unlinks || deletes) {
+                        // Removal commands are kept until the order is synced, so a record
+                        // reloaded from the server in the meantime is linked again while its
+                        // removal is still pending. Sending both would write the record and
+                        // then drop it, since the ORM applies the commands in order.
+                        const linkedIds = new Set(serializedData[name]);
                         for (const id of unlinks || []) {
-                            serializedDataOrm[name].push([3, id]);
+                            if (!linkedIds.has(id)) {
+                                serializedDataOrm[name].push([3, id]);
+                            }
                         }
                         for (const id of deletes || []) {
-                            serializedDataOrm[name].push([2, id]);
+                            if (!linkedIds.has(id)) {
+                                serializedDataOrm[name].push([2, id]);
+                            }
                         }
                         if (clear) {
                             this.deleteCommand("unlink", name);
