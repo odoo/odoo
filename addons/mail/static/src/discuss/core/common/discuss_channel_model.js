@@ -1,10 +1,6 @@
 import { MessagePinDialog } from "@mail/core/common/message_pin_dialog";
 import { fields, Record } from "@mail/model/export";
-import {
-    compareDatetime,
-    effectWithCleanup,
-    nearestGreaterThanOrEqual,
-} from "@mail/utils/common/misc";
+import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
@@ -21,27 +17,27 @@ export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
 
-    static new() {
-        /** @type {import("models").DiscussChannel} */
-        const channel = super.new(...arguments);
+    setup() {
+        super.setup(...arguments);
         // Handles subscriptions for non-members. Subscriptions for channels
         // that the user is a member of are handled by
         // `ir_websocket@_build_bus_channel_list`.
-        channel._registerDisposeFn(
-            effectWithCleanup(() => {
-                const busChannel =
-                    !channel.isTransient &&
-                    !channel.self_member_id &&
-                    channel.shouldSubscribeToBusChannel &&
-                    channel.busChannel;
-                const busService = channel.store.env.services.bus_service;
+        this.onChange(
+            () => {
+                const shouldSubscribe =
+                    !this.isTransient && !this.self_member_id && this.shouldSubscribeToBusChannel;
+                return [
+                    shouldSubscribe ? this.busChannel : undefined,
+                    this.store.env.services.bus_service,
+                ];
+            },
+            function subscribeToBusChannel(busChannel, busService) {
                 if (busService && busChannel) {
                     busService.addChannel(busChannel);
                     return () => busService.deleteChannel(busChannel);
                 }
-            })
+            }
         );
-        return channel;
     }
 
     /**

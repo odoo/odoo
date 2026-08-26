@@ -1,11 +1,8 @@
-import { effect } from "@odoo/owl";
-
 import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
 import { debounce } from "@web/core/utils/timing";
-import { effectWithCleanup } from "@mail/utils/common/misc";
 
 /** @typedef {'offline' | 'bot' | 'online' | 'away' | undefined} ImStatus */
 
@@ -19,43 +16,44 @@ const { DateTime } = luxon;
 export class ImStatusMixin extends Record {
     static IM_STATUS_DEBOUNCE_DELAY = 1500;
 
-    static new() {
-        /** @type {ImStatusMixin} */
-        const record = super.new(...arguments);
+    setup() {
+        super.setup(...arguments);
         const setImStatusDebounced = debounce(
-            (status) => (record.imStatusUI = status),
+            (status) => (this.imStatusUI = status),
             ImStatusMixin.IM_STATUS_DEBOUNCE_DELAY
         );
-        record.setImStatusDebounced = setImStatusDebounced;
-        record.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
-        record._registerDisposeFn(
-            effect(() => {
-                const store = record.store;
-                const presenceService = record.store.env.services.presence;
-                const statusService = record.store.env.services.im_status;
-                if (record.notEq(store.self_user) && record.notEq(store.self_guest)) {
-                    return;
+        this.setImStatusDebounced = setImStatusDebounced;
+        this.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
+        this.onChange(
+            () => {
+                if (this.notEq(this.store.self_user) && this.notEq(this.store.self_guest)) {
+                    return [false];
                 }
-                const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
-                if (
-                    (record.presence_status === "away" && isOnline) ||
-                    record.presence_status === "offline"
-                ) {
-                    statusService.updateBusPresence();
+                const isOnline =
+                    this.store.env.services.presence.getInactivityPeriod() < AWAY_DELAY;
+                return [
+                    (this.presence_status === "away" && isOnline) ||
+                        this.presence_status === "offline",
+                ];
+            },
+            function updateBusPresence(isPresenceOutdated) {
+                if (isPresenceOutdated) {
+                    this.store.env.services.im_status.updateBusPresence();
                 }
-            })
+            }
         );
-        record._registerDisposeFn(
-            effectWithCleanup(() => {
-                const busService = record.store.env.services.bus_service;
-                const presenceChannel = record.monitorPresence && record.presenceChannel;
+        this.onChange(
+            () => [
+                this.monitorPresence ? this.presenceChannel : undefined,
+                this.store.env.services.bus_service,
+            ],
+            function subscribeToPresenceChannel(presenceChannel, busService) {
                 if (presenceChannel) {
                     busService.addChannel(presenceChannel);
                     return () => busService.deleteChannel(presenceChannel);
                 }
-            })
+            }
         );
-        return record;
     }
     /** @type {(status) => void} */
     setImStatusDebounced;
