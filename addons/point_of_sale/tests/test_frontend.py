@@ -2935,6 +2935,70 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour('test_preset_timing_retail')
 
+    def test_pricelist_categ_rule_on_late_loaded_product(self):
+        """A product loaded through Search More must be priced by the rule set on its category,
+        whether the POS already knows that category or not."""
+        self.env['product.template'].search([]).write({'is_favorite': False})
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
+        self.env['product.template'].create({
+            'name': 'Loaded Product',
+            'available_in_pos': True,
+            'is_favorite': True,
+            'list_price': 1.0,
+            'taxes_id': False,
+        })
+
+        pricelist = self.env['product.pricelist'].create({'name': 'Late Pricelist'})
+        categ = self.env['product.category'].create({'name': 'Late Categ'})
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': pricelist.id,
+            'applied_on': '2_product_category',
+            'categ_id': categ.id,
+            'compute_price': 'fixed',
+            'fixed_price': 500,
+        })
+        self.env['product.template'].create({
+            'name': 'Late Product',
+            'available_in_pos': True,
+            'categ_id': categ.id,
+            'list_price': 42.0,
+            'taxes_id': False,
+        })
+        self.main_pos_config.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        pos_session = self.env.registry.models['pos.session']
+        loaded = []
+
+        def load_data_patch(self, models_to_load):
+            res = super(pos_session, self).load_data(models_to_load)
+            # Created once the POS loaded its data: the client knows none of them.
+            if not loaded:
+                loaded.append(True)
+                newer_categ = self.env['product.category'].sudo().create({'name': 'Newer Categ'})
+                self.env['product.pricelist.item'].sudo().create({
+                    'pricelist_id': pricelist.id,
+                    'applied_on': '2_product_category',
+                    'categ_id': newer_categ.id,
+                    'compute_price': 'fixed',
+                    'fixed_price': 700,
+                })
+                self.env['product.template'].sudo().create({
+                    'name': 'Newer Product',
+                    'available_in_pos': True,
+                    'categ_id': newer_categ.id,
+                    'list_price': 88.0,
+                    'taxes_id': False,
+                })
+            return res
+
+        with patch.object(pos_session, "load_data", load_data_patch):
+            self.start_pos_tour('test_pricelist_categ_rule_on_late_loaded_product')
+
     def test_pricelists_in_pos(self):
         pos_limited_category = self.env['pos.category'].create({'name': 'Limited Category'})
         pos_category = self.env['pos.category'].create({'name': 'test_pricelists_in_pos'})
@@ -3084,13 +3148,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(load_product_from_pos_stats['count'], 7)
 
         # Length of loaded pricelist items should correspond to the number of items linked
-        # to the product template or product variant
+        # to the product template, to the product variant or to the product category
         # Global rules are loaded at starting of the PoS
         self.assertEqual(load_product_from_pos_stats['items']['banana'], 3, "Banana should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['apple'], 1, "Apple should have 1 pricelist item")
+        self.assertEqual(load_product_from_pos_stats['items']['apple'], 2, "Apple should have 2 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['pear'], 3, "Pear should have 3 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['lime'], 3, "Lime should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
+        self.assertEqual(load_product_from_pos_stats['items']['orange'], 3, "Orange should have 3 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
 
     def test_available_children_categories(self):
