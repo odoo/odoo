@@ -327,11 +327,13 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertTrue(self.sale_order.invoice_ids)
         self.assertTrue(tx.invoice_ids.is_move_sent)
 
-    def test_so_partial_payment_no_invoice(self):
+    def test_so_partial_payment_confirm_order(self):
+        """Test that a first successful partial payment confirms the order and creates an
+        invoice."""
         # Set automatic invoice
         self.env.company.sale_automatic_invoice = True
 
-        # Create the payment
+        # Create a partial payment
         self.amount = self.sale_order.amount_total / 10.0
         tx = self._create_transaction(
             flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
@@ -339,16 +341,16 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
             self._run_post_processing(tx)
 
-        self.assertEqual(self.sale_order.state, "draft")
-        self.assertFalse(tx.invoice_ids)
-        self.assertFalse(self.sale_order.invoice_ids)
+        self.assertEqual(self.sale_order.state, "sale")
+        self.assertTrue(tx.invoice_ids)
+        self.assertTrue(self.sale_order.invoice_ids)
 
     def test_payment_does_not_confirm_order_pending_signature(self):
         self.sale_order.require_signature = True
         tx = self._create_transaction(
-            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
-        confirmed_orders = tx._check_amount_and_confirm_order()
+        confirmed_orders = tx._confirm_order()
         self.assertFalse(confirmed_orders)
 
     def test_already_confirmed_so_payment(self):
@@ -427,7 +429,6 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         msg = "The sale order should be linked to 5 transactions."
         self.assertEqual(len(self.sale_order.transaction_ids), 5, msg=msg)
 
-        self.sale_order.action_confirm()
         self.sale_order._create_invoices()
 
         self.assertEqual(len(self.sale_order.invoice_ids), 1, msg="1 invoice should be created.")
@@ -538,11 +539,9 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):
             self.make_jsonrpc_request(url, route_kwargs)
 
-    def test_partial_payment_confirm_order(self):
-        """
-        Test that a sale order can be confirmed through partial payments and that
-        correct mails are sent each time.
-        """
+    def test_confirm_order_on_first_successful_payment(self):
+        """Test that the first successful payment confirms the order and that
+        correct mails are sent each time."""
         self.amount = self.sale_order.amount_total / 2
 
         with patch(
@@ -561,10 +560,19 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             self._run_post_processing(tx_pending)
 
             self.assertEqual(notification_mail_mock.call_count, 1)
-            notification_mail_mock.assert_called_once_with(
-                self.env.ref("sale.mail_template_sale_payment_executed")
+            order_confirmation_mail_template_id = (
+                self
+                .env["ir.config_parameter"]
+                .sudo()
+                .get_int(
+                    "sale.default_confirmation_template",
+                    self.env.ref("sale.mail_template_sale_confirmation").id,
+                )
             )
-            self.assertEqual(self.sale_order.state, "draft")
+            notification_mail_mock.assert_called_once_with(
+                self.env["mail.template"].browse(order_confirmation_mail_template_id)
+            )
+            self.assertEqual(self.sale_order.state, "sale")
             self.assertEqual(self.sale_order.amount_paid, self.amount)
 
             tx_done = self._create_transaction(
@@ -576,19 +584,9 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             self._run_post_processing(tx_done)
 
             self.assertEqual(notification_mail_mock.call_count, 2)
-            order_confirmation_mail_template_id = (
-                self
-                .env["ir.config_parameter"]
-                .sudo()
-                .get_int(
-                    "sale.default_confirmation_template",
-                    self.env.ref("sale.mail_template_sale_confirmation").id,
-                )
-            )
             notification_mail_mock.assert_called_with(
-                self.env["mail.template"].browse(order_confirmation_mail_template_id)
+                self.env.ref("sale.mail_template_sale_payment_executed")
             )
-            self.assertEqual(self.sale_order.state, "sale")
 
     def test_automatic_invoice_mail_author(self):
         self.env.company.sale_automatic_invoice = True

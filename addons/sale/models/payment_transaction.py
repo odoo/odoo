@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
 
         for authorized_tx in self.filtered(lambda tx: tx.state == "authorized"):
             super(PaymentTransaction, authorized_tx)._post_process()
-            confirmed_orders = authorized_tx._check_amount_and_confirm_order()
+            confirmed_orders = authorized_tx._confirm_order()
             if authorized_tx.operation == "validation":
                 continue
             if remaining_orders := (authorized_tx.sale_order_ids - confirmed_orders):
@@ -97,7 +97,7 @@ class PaymentTransaction(models.Model):
 
         for done_tx in self.filtered(lambda tx: tx.state == "done"):
             if done_tx.operation != "validation":
-                confirmed_orders = done_tx._check_amount_and_confirm_order()
+                confirmed_orders = done_tx._confirm_order()
                 (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
             auto_invoice = done_tx.company_id.sale_automatic_invoice
@@ -116,13 +116,11 @@ class PaymentTransaction(models.Model):
                 else:
                     self._send_invoice()
 
-    def _check_amount_and_confirm_order(self):
-        """Confirm the sales order based on the amount of a transaction.
+    def _confirm_order(self):
+        """Confirm the sales order after the first successful payment transaction.
 
-        Confirm the sales orders only if the transaction amount (or the sum of the partial
-        transaction amounts) is equal to or greater than the required amount for order confirmation
-
-        Grouped payments (paying multiple sales orders in one transaction) are not supported.
+        Grouped payments (paying multiple sales orders in one transaction) are not
+        supported.
 
         :return: The confirmed sales orders.
         :rtype: a `sale.order` recordset
@@ -135,7 +133,6 @@ class PaymentTransaction(models.Model):
                 if (
                     quotation
                     and not quotation._has_to_be_signed()
-                    and quotation._is_confirmation_amount_reached()
                 ):
                     quotation.with_context(
                         send_email=True, sale_include_signature=True
