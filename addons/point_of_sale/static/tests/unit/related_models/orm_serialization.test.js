@@ -435,3 +435,85 @@ test("grouped lines and nested lines", async () => {
         expect(lineMapping[line3.uuid]?.["combo_parent_id"]?.length).toBeEmpty();
     }
 });
+
+test("a line removed and then reloaded from the server is not unlinked", async () => {
+    await makeMockServer();
+    const models = getRelatedModelsInstance(false);
+    const order = models["pos.order"].create({});
+    const line = models["pos.order.line"].create({ order_id: order, qty: 1 });
+
+    models.connectNewData({
+        "pos.order": [{ ...order.raw, id: 1, lines: [11] }],
+        "pos.order.line": [{ ...line.raw, id: 11, order_id: 1 }],
+    });
+
+    // The cashier removes the line: the unlink command is queued but the
+    // order has not been synced yet, so it is still pending.
+    order.lines[0].delete();
+    expect(order.lines.length).toBe(0);
+
+    // Another device re-reads the order before this device syncs: the line
+    // comes back with its server id.
+    models.connectNewData({
+        "pos.order": [{ ...order.raw, id: 1, lines: [11] }],
+        "pos.order.line": [{ uuid: line.uuid, id: 11, order_id: 1, qty: 1 }],
+    });
+    expect(order.lines.map((l) => l.id)).toEqual([11]);
+
+    order.lines[0].qty = 2;
+
+    const result = models.serializeForORM(order);
+    expect(result.lines.filter((c) => c[0] === 3)).toEqual([]);
+    expect(result.lines.filter((c) => c[0] === 1).map((c) => c[1])).toEqual([11]);
+});
+
+test("a line that is really removed is still unlinked", async () => {
+    await makeMockServer();
+    const models = getRelatedModelsInstance(false);
+    const order = models["pos.order"].create({});
+    const line1 = models["pos.order.line"].create({ order_id: order, qty: 1 });
+    const line2 = models["pos.order.line"].create({ order_id: order, qty: 1 });
+
+    models.connectNewData({
+        "pos.order": [{ ...order.raw, id: 1, lines: [11, 12] }],
+        "pos.order.line": [
+            { ...line1.raw, id: 11, order_id: 1 },
+            { ...line2.raw, id: 12, order_id: 1 },
+        ],
+    });
+
+    order.lines.find((l) => l.id === 11).delete();
+    order.lines.find((l) => l.id === 12).qty = 2;
+
+    const result = models.serializeForORM(order);
+    expect(result.lines.filter((c) => c[0] === 3)).toEqual([[3, 11]]);
+    expect(result.lines.filter((c) => c[0] === 1).map((c) => c[1])).toEqual([12]);
+});
+
+test("a line removed again after being reloaded is unlinked", async () => {
+    await makeMockServer();
+    const models = getRelatedModelsInstance(false);
+    const order = models["pos.order"].create({});
+    const line = models["pos.order.line"].create({ order_id: order, qty: 1 });
+
+    models.connectNewData({
+        "pos.order": [{ ...order.raw, id: 1, lines: [11] }],
+        "pos.order.line": [{ ...line.raw, id: 11, order_id: 1 }],
+    });
+
+    order.lines[0].delete();
+    models.connectNewData({
+        "pos.order": [{ ...order.raw, id: 1, lines: [11] }],
+        "pos.order.line": [{ uuid: line.uuid, id: 11, order_id: 1, qty: 1 }],
+    });
+    expect(order.lines.map((l) => l.id)).toEqual([11]);
+
+    // The cashier removes the reloaded line again: this removal is real and
+    // must reach the server.
+    order.lines[0].delete();
+    expect(order.lines.length).toBe(0);
+
+    const result = models.serializeForORM(order);
+    expect(result.lines.some((c) => c[0] === 3 && c[1] === 11)).toBe(true);
+    expect(result.lines.filter((c) => c[0] === 1)).toEqual([]);
+});
