@@ -91,66 +91,37 @@ class AccountJournal(models.Model):
         today = fields.Date.context_today(self)
         fiscal_year = self.env.company.compute_fiscalyear_dates(today)
 
-        conversion_rates = {}
-        if len(companies.currency_id) > 1:
-            profit_and_loss_report = self.env.ref(
-                'account_reports.profit_and_loss',
-                raise_if_not_found=False,
-            )
-            currency_translation = (
-                profit_and_loss_report.sudo().currency_translation
-                if profit_and_loss_report
-                else 'current'
-            )
-            _historical_rates, average_rates, current_rates = (
-                self.env['res.currency']
-                .with_context(currency_translation=currency_translation)
-                ._get_parsed_rates(
-                    companies - self.env.company,
-                    fiscal_year['date_from'],
-                    fiscal_year['date_to'],
-                )
-            )
-            conversion_rates = average_rates if currency_translation == 'cta' else current_rates
+        profit_and_loss_report = self.env.ref('account_reports.profit_and_loss', raise_if_not_found=False)
+        currency_translation = (
+            profit_and_loss_report.sudo().currency_translation
+            if profit_and_loss_report
+            else 'current'
+        )
 
-        self.env.cr.execute("""
-            SELECT line.company_id,
-                   account.account_type,
-                   SUM(line.balance) AS balance
-              FROM account_move_line line
-              JOIN account_move move ON move.id = line.move_id
-              JOIN account_account account ON account.id = line.account_id
-             WHERE move.state = 'posted'
-               AND line.company_id = ANY(%(company_ids)s)
-               AND move.date BETWEEN %(date_from)s AND %(date_to)s
-               AND account.account_type IN (
-                   'income',
-                   'income_other',
-                   'expense',
-                   'expense_direct_cost',
-                   'expense_depreciation'
-               )
-          GROUP BY line.company_id, account.account_type
-        """, {
-            'company_ids': companies.ids,
-            'date_from': fiscal_year['date_from'],
-            'date_to': fiscal_year['date_to'],
-        })
+        balances = dict(self.env['account.move.line'].sudo().with_context(currency_translation=currency_translation)._read_group(
+            domain=[
+                ('parent_state', '=', 'posted'),
+                ('date', '>=', fiscal_year['date_from']),
+                ('date', '<=', fiscal_year['date_to']),
+                ('company_id', 'in', companies.ids),
+                ('account_id.account_type', 'in', (
+                    'income',
+                    'income_other',
+                    'expense',
+                    'expense_direct_cost',
+                    'expense_depreciation',
+                )),
+            ],
+            groupby=['account_id.account_type'],
+            aggregates=['consolidation_balance:sum'],
+        ))
 
-        balances = defaultdict(float)
-        for row in self.env.cr.dictfetchall():
-            company = self.env['res.company'].browse(row['company_id'])
-            balances[row['account_type']] += (
-                (row['balance'] or 0.0)
-                * conversion_rates.get(company.id, 1.0)
-            )
-
-        income = -balances['income']
-        other_income = -balances['income_other']
+        income = -balances.get('income', 0)
+        other_income = -balances.get('income_other', 0)
         expenses = (
-            balances['expense']
-            + balances['expense_direct_cost']
-            + balances['expense_depreciation']
+            balances.get('expense', 0)
+            + balances.get('expense_direct_cost', 0)
+            + balances.get('expense_depreciation', 0)
         )
 
         return {
@@ -160,7 +131,7 @@ class AccountJournal(models.Model):
         }
 
     @api.model
-    def _get_sale_purchase_kpi_amounts(self, target_currency):
+    def _get_sale_purchase_kpi_amounts(self):
         amounts = {'sale': 0.0, 'purchase': 0.0}
         journals = self.search([
             ('type', 'in', ('sale', 'purchase')),
@@ -186,51 +157,28 @@ class AccountJournal(models.Model):
             ]
             _count, amounts[journal_type] = journals_of_type._count_results_and_sum_amounts(
                 to_pay_results,
-                target_currency,
+                self.env.company.currency_id,
             )
         return amounts
 
     @api.model
-    def _get_cashflow_kpi_amounts(self, target_currency):
+    def _get_cashflow_kpi_amounts(self):
         date_from = fields.Date.subtract(
             fields.Date.context_today(self),
             months=12,
         )
-        self.env.cr.execute("""
-            SELECT statement_line.company_id,
-                   COALESCE(SUM(move_line.balance) FILTER (
-                       WHERE statement_line.amount > 0
-                         AND move_line.balance > 0
-                   ), 0.0) AS cash_in,
-                   COALESCE(SUM(-move_line.balance) FILTER (
-                       WHERE statement_line.amount < 0
-                         AND move_line.balance < 0
-                   ), 0.0) AS cash_out
-              FROM account_bank_statement_line statement_line
-              JOIN account_journal journal
-                ON journal.id = statement_line.journal_id
-              JOIN account_move_line move_line
-                ON move_line.statement_line_id = statement_line.id
-              JOIN account_account account
-                ON account.id = move_line.account_id
-               AND account.account_type IN ('asset_cash', 'liability_credit_card')
-             WHERE statement_line.company_id = ANY(%(company_ids)s)
-               AND journal.type IN ('bank', 'cash', 'credit')
-               AND move_line.date >= %(date_from)s
-          GROUP BY statement_line.company_id
-        """, {
-            'company_ids': self.env.companies.ids,
-            'date_from': date_from,
-        })
+        query = self.env['account.move.line']._search([
+            ('company_id', 'in', self.env.companies.ids),
+            ('journal_id.type', 'in', ('bank', 'cash', 'credit')),
+            ('date', '>=', date_from),
+        ])
+        table = query.table
 
-        amounts = defaultdict(float)
-        today = fields.Date.context_today(self)
-        for row in self.env.cr.dictfetchall():
-            company = self.env['res.company'].browse(row['company_id'])
-            company_currency = company.currency_id
-            amounts['cash_in'] += company_currency._convert(row['cash_in'], target_currency, company, today)
-            amounts['cash_out'] += company_currency._convert(row['cash_out'], target_currency, company, today)
-        return amounts
+        cash_in, cash_out = self.env.execute_query(query.select(
+            SQL("COALESCE(SUM(%(balance)s) FILTER (WHERE %(amount)s > 0 AND %(balance)s > 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
+            SQL("COALESCE(SUM(-%(balance)s) FILTER (WHERE %(amount)s < 0 AND %(balance)s < 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
+        ))[0]
+        return {'cash_in': cash_in, 'cash_out': cash_out}
 
     @api.model
     def get_account_dashboard_kpis(self):
@@ -270,10 +218,10 @@ class AccountJournal(models.Model):
                 'action_id': profit_and_loss_action.id if profit_and_loss_action else False,
             }
 
-        unpaid_amounts = self._get_sale_purchase_kpi_amounts(currency)
+        unpaid_amounts = self._get_sale_purchase_kpi_amounts()
         customer_unpaid = unpaid_amounts['sale']
         supplier_unpaid = -unpaid_amounts['purchase']
-        cashflow_amounts = self._get_cashflow_kpi_amounts(currency)
+        cashflow_amounts = self._get_cashflow_kpi_amounts()
 
         cards = [
             build_profit_and_loss_card(
@@ -1018,18 +966,10 @@ class AccountJournal(models.Model):
         assert not self.filtered(lambda journal: journal.type not in ('sale', 'purchase'))
         query = self.env['account.move']._search(Domain.AND([
             self.env['account.move']._check_company_domain(self.env.companies),
+            Domain('journal_id', 'in', (sale_journals + purchase_journals).ids),
             Domain('payment_state', 'in', ('not_paid', 'partial')),
             Domain('state', '=', 'posted'),
-            Domain.OR([
-                Domain.AND([
-                    Domain('journal_id', 'in', sale_journals.ids),
-                    Domain('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt')),
-                ]),
-                Domain.AND([
-                    Domain('journal_id', 'in', purchase_journals.ids),
-                    Domain('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')),
-                ]),
-            ]),
+            Domain('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
         ]), bypass_access=True)
         selects = [
             SQL("journal_id"),
