@@ -540,17 +540,24 @@ class SaleOrder(models.Model):
                 self.env._("This product is not available (anymore) in this unit of measure.")
             )
 
+        selected_combo_item_qty = kwargs.get("selected_combo_item_qty") or 1
+
         if existing_sol := self._cart_find_product_line(product_id, uom_id=uom_id, **kwargs)[:1]:
             # If a matching line is found, update the existing line instead.
             return self._cart_update_line_quantity(
                 line_id=existing_sol.id,  # type: ignore
-                quantity=existing_sol.product_uom_qty + quantity,
+                quantity=existing_sol.product_uom_qty + quantity * selected_combo_item_qty,
                 **kwargs,
             )
 
-        quantity, warning = self._verify_updated_quantity(
-            self.env["sale.order.line"], product_id, quantity, uom_id, **kwargs
+        verified_qty, warning = self._verify_updated_quantity(
+            self.env["sale.order.line"],
+            product_id,
+            quantity * selected_combo_item_qty,
+            uom_id,
+            **kwargs,
         )
+        quantity = int(verified_qty // selected_combo_item_qty)
 
         order_line = self._create_new_cart_line(product_id, quantity, uom_id, **kwargs)
 
@@ -674,7 +681,8 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ""
 
-        added_qty = quantity - order_line.product_uom_qty  # new_qty - old_qty
+        old_qty = order_line.product_uom_qty
+        added_qty = quantity - old_qty  # new_qty - old_qty
 
         # Capture tracking before deletion since the line will no longer exist after.
         if quantity <= 0:
@@ -686,7 +694,13 @@ class SaleOrder(models.Model):
                 else []
             )
 
-        order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
+        order_line, combo_warning = self._cart_update_order_line(order_line, quantity, **kwargs)
+        warning = warning or combo_warning
+        if order_line:
+            # A combo line's quantity may have been further reduced by `_cart_update_order_line`
+            # (e.g. one of its items ran out of stock): reflect the real, final quantity.
+            quantity = order_line.product_uom_qty
+            added_qty = quantity - old_qty
         if not self.env.context.get("skip_cart_verification"):
             self._verify_cart_after_update()
 
@@ -786,9 +800,10 @@ class SaleOrder(models.Model):
         if quantity <= 0:
             # Remove zero or negative lines
             order_line.unlink()
-            return self.env["sale.order.line"]
+            return self.env["sale.order.line"], ""
 
         # Update existing line
+        warning = ""
         update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
         if update_values:
             combo_item_lines = order_line.linked_line_ids.filtered("combo_item_id")
@@ -805,13 +820,14 @@ class SaleOrder(models.Model):
                 for item_line in combo_item_lines:
                     target_child_qty = quantity * item_line.selected_combo_item_qty
                     if target_child_qty != item_line.product_uom_qty:
-                        combo_item_quantity, _warning = self._verify_updated_quantity(
+                        combo_item_quantity, item_warning = self._verify_updated_quantity(
                             item_line,
                             item_line.product_id.id,
                             target_child_qty,
                             uom_id=item_line.product_uom_id.id,
                             **kwargs,
                         )
+                        warning = warning or item_warning
                         max_possible_combos = int(
                             combo_item_quantity // item_line.selected_combo_item_qty
                         )
@@ -828,7 +844,7 @@ class SaleOrder(models.Model):
 
             order_line._check_validity()
 
-        return order_line
+        return order_line, warning
 
     def _prepare_order_line_update_values(self, order_line, quantity, **_kwargs):
         self.ensure_one()
@@ -907,7 +923,7 @@ class SaleOrder(models.Model):
         # stray value can't inflate the quantity of an unrelated product line.
         if combo_item_id:
             values["selected_combo_item_qty"] = selected_combo_item_qty
-            values["product_uom_qty"] = quantity * selected_combo_item_qty
+            values["product_uom_qty"] = quantity * (selected_combo_item_qty or 1)
         else:
             values["product_uom_qty"] = quantity
         # Set price_unit with the user-selected donation amount
@@ -960,10 +976,17 @@ class SaleOrder(models.Model):
         if not (combo_lines := line.linked_line_ids):
             return ""
 
-        available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
+        available_combo_quantity = min(
+            int(combo_line.product_uom_qty // (combo_line.selected_combo_item_qty or 1))
+            for combo_line in combo_lines
+        )
         if available_combo_quantity < line.product_uom_qty:
             reason = line._get_shop_warning_stock(line.product_uom_qty, available_combo_quantity)
-            (line + combo_lines).product_uom_qty = available_combo_quantity
+            line.product_uom_qty = available_combo_quantity
+            for combo_line in combo_lines:
+                combo_line.product_uom_qty = available_combo_quantity * (
+                    combo_line.selected_combo_item_qty or 1
+                )
             return reason
 
         return ""
