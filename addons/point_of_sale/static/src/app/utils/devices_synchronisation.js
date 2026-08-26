@@ -130,8 +130,8 @@ export default class DevicesSynchronisation {
                 const session = this.models["pos.session"].get(odoo.pos_session_id);
 
                 for (const order of res["pos.order"]) {
-                    // Clear commands
-                    order.serializeForORM();
+                    // Clear commands but keep dirty state (unsynced local changes)
+                    order.serializeForORM({ keepDirty: true });
                     order.config_id = config;
                     order.session_id = session;
                 }
