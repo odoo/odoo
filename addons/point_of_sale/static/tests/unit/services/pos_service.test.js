@@ -405,18 +405,8 @@ describe("pos_store.js", () => {
                 {
                     uuid: "combo-parent-uuid",
                     combo_line_ids: [
-                        {
-                            uuid: "combo-child-a-uuid",
-                            combo_parent_uuid: "combo-parent-uuid",
-                            product_id: productA,
-                            combo_line_ids: false,
-                        },
-                        {
-                            uuid: "combo-child-b-uuid",
-                            combo_parent_uuid: "combo-parent-uuid",
-                            product_id: productB,
-                            combo_line_ids: false,
-                        },
+                        { id: 1, product_id: productA.id },
+                        { id: 2, product_id: productB.id },
                     ],
                 },
                 {
@@ -448,6 +438,45 @@ describe("pos_store.js", () => {
         const actualUuids = filtered.addedQuantity.map((c) => c.uuid);
 
         expect(actualUuids.sort()).toEqual(expectedUuids.sort());
+    });
+
+    test("filterChangeByCategories on a combo after a print history round trip", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(7),
+                payload: [
+                    [{ combo_item_id: store.models["product.combo.item"].get(1), qty: 1 }],
+                    [{ combo_item_id: store.models["product.combo.item"].get(3), qty: 1 }],
+                ],
+                qty: 1,
+            },
+            order
+        );
+
+        const parentLine = order.lines.find((l) => l.combo_line_ids.length);
+        const childLines = parentLine.combo_line_ids;
+        const childCategIds = childLines.flatMap((l) => l.product_id.parentPosCategIds);
+        expect(childCategIds.length).toBeGreaterThan(0);
+
+        const change = { addedQuantity: [order.dataMaker(parentLine, 1).data] };
+        const restored = JSON.parse(JSON.stringify(change));
+
+        expect(restored.addedQuantity[0].combo_line_ids).toEqual(
+            childLines.map((l) => ({ id: l.id, product_id: l.product_id.id }))
+        );
+
+        const filtered = filterChangeByCategories(new Set(childCategIds), restored, store.models);
+        expect(filtered.addedQuantity).toHaveLength(1);
+
+        const otherCategId = store.models["pos.category"].find(
+            (c) => !childCategIds.includes(c.id)
+        ).id;
+        expect(
+            filterChangeByCategories(new Set([otherCategId]), restored, store.models).addedQuantity
+        ).toEqual([]);
     });
 
     test("deleteOrders", async () => {

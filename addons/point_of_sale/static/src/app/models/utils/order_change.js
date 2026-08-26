@@ -45,7 +45,7 @@ export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, mod
         // Combo line uuids to have at least one child line in the given categories
         changes?.filter((change) =>
             change.combo_line_ids && change.combo_line_ids.length > 0
-                ? change.combo_line_ids.some((child) => matchesCategories(child.product_id.id))
+                ? change.combo_line_ids.some((child) => matchesCategories(child.product_id))
                 : matchesCategories(change["product_id"])
         );
 
