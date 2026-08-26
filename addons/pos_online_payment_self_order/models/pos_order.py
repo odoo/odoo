@@ -80,10 +80,7 @@ class PosOrder(models.Model):
 
         self.config_id._notify("ONLINE_PAYMENT_STATUS", {
             'status': status,  # progress, success, fail
-            'data': {
-                'pos.order': self.read(self._load_pos_self_data_fields(self.config_id), load=False),
-                'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id), load=False),
-            },
+            'order_id': self.id,
         })
 
     def _load_pos_self_data_fields(self, config):
