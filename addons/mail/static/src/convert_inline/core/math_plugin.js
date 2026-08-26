@@ -178,7 +178,7 @@ export class MathPlugin extends Plugin {
         let dist, key;
         for (const testKey of collection) {
             const testDist = Math.abs(value - Number(testKey));
-            if (!dist || dist > testDist) {
+            if (dist === undefined || dist > testDist) {
                 dist = testDist;
                 key = testKey;
             }

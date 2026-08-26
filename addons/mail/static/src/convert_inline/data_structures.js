@@ -17,6 +17,10 @@ export class UniqueArray {
         return this.array.at(index);
     }
 
+    filter(callbackFn, thisArg) {
+        return this.array.filter(callbackFn, thisArg);
+    }
+
     push(...items) {
         const newItemSet = new Set();
         const newItemArray = [];

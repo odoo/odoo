@@ -31,6 +31,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         "measurementSnapshot",
         "math",
         "render",
+        "responsive",
         "responsiveBlock",
         "rules",
         "referenceNode",
@@ -109,16 +110,50 @@ export class HybridFluidStrategyPlugin extends Plugin {
         this.applyCellNewWidth(layout, { emailNode });
 
         // mobile margin handling
+        const clusterChildren = emailNode.parent?.children.filter(
+            (child) => child.analysis.facts.cluster
+        );
+        let bottomGap = 0;
+        const index = clusterChildren?.indexOf(emailNode);
+        if (
+            emailNode.analysis.facts.acceptCellMobileMargin?.["bottom"] &&
+            clusterChildren?.length > 0 &&
+            index >= 0 &&
+            index < clusterChildren.length - 1
+        ) {
+            const sibling = clusterChildren.at(index + 1);
+            const currentRange = this.getNodeClusterRange(
+                emailNode.analysis.facts.cluster.nodes.at(0),
+                emailNode.analysis.facts.cluster.nodes.at(-1)
+            );
+            const siblingRange = this.getNodeClusterRange(
+                sibling.analysis.facts.cluster.nodes.at(0),
+                sibling.analysis.facts.cluster.nodes.at(-1)
+            );
+            let mobileRect, siblingRect;
+            // TODO EGGMAIL: try to optimize this expensive computation:
+            // optimization ideas: pre-compute the mobile boundingClient
+            // rect for all cluster cells => cache all cells when they
+            // are identified, and introduce a phase to compute this value
+            // for all cells at once, once they are all identified.
+            // Such phase should probably be after addSyntheticEmailNodes
+            this.callWithDimensions(() => {
+                mobileRect = this.getBoundingClientRect(currentRange);
+                siblingRect = this.getBoundingClientRect(siblingRange);
+            }, MOBILE);
+            bottomGap = this.gapY(mobileRect, siblingRect);
+        }
         const { referenceRect, marginRect } = emailNode.analysis.facts.tableStrategyReport.spacing;
         const paddingRect = this.containerPadding(marginRect, referenceRect);
         for (const side of DIRECTION_VARIANTS) {
-            if (
-                emailNode.analysis.facts.acceptCellMobileMargin?.[side] &&
-                !this.isZero(paddingRect[side])
-            ) {
+            let spacing = paddingRect[side];
+            if (side === "bottom" && bottomGap) {
+                spacing = Math.max(spacing, bottomGap);
+            }
+            if (emailNode.analysis.facts.acceptCellMobileMargin?.[side] && !this.isZero(spacing)) {
                 layout.setAttributes({
                     classNames: `o-ci-m-margin-${side}-${this.closestValue(
-                        paddingRect[side],
+                        spacing,
                         ALLOWED_MOBILE_MARGINS_SIZES
                     )}`,
                 });

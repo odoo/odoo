@@ -95,8 +95,6 @@ export class RulesPlugin extends Plugin {
                     filteredAttributes[name] = value;
                 }
             },
-            // TODO EGGMAIL: WORKING HERE does it make sense to have to "delete" onFail
-            // since we are working on the filteredAttributes object?
             onMiss: (attributeName) => {
                 console.warn(
                     `Attribute ${attributeName} is missing or was marked as blocked on the given attributes, in relation to referenceNode`,
@@ -150,10 +148,6 @@ export class RulesPlugin extends Plugin {
                 return filteredStyleInfo.merge(styleInfoToFiltered.get(styleInfo));
             }
         }
-        // TODO EGGMAIL: WORKING HERE: must implement missing callbacks
-        // for cases where rules are defaultAllowed
-        // Do we need an onFail implementation since we are working on
-        // the filtered styleInfo?
         rules.processData(styleInfo, {
             getRuleArgs: (propertyName, propertyInfo) => [
                 {

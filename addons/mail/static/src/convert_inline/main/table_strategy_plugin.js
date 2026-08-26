@@ -873,6 +873,7 @@ export class TableStrategyPlugin extends Plugin {
             });
         }
         cellEmailNode.analysis.facts[strategy] = true;
+        cellEmailNode.analysis.facts.cluster = cluster;
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                 child.analysis.facts.desktopMarginStyleInfo,
