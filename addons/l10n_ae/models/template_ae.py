@@ -3,6 +3,17 @@ from odoo import models, Command
 from odoo.addons.account.models.chart_template import template
 
 
+_AE_STATE_MAPPING = {
+    'AZ': 'abu_dhabi',
+    'AJ': 'ajman',
+    'DU': 'dubai',
+    'FU': 'fujairah',
+    'RK': 'ras_al_khaima',
+    'SH': 'sharjah',
+    'UQ': 'umm_al_quwain',
+}
+
+
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
@@ -16,15 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ae', 'res.company')
     def _get_ae_res_company(self):
-        sales_tax_xmlid = {
-            'AZ': 'uae_sale_tax_5_abu_dhabi',
-            'AJ': 'uae_sale_tax_5_ajman',
-            'DU': 'uae_sale_tax_5_dubai',
-            'FU': 'uae_sale_tax_5_fujairah',
-            'RK': 'uae_sale_tax_5_ras_al_khaima',
-            'SH': 'uae_sale_tax_5_sharjah',
-            'UQ': 'uae_sale_tax_5_umm_al_quwain',
-        }.get(self.env.company.state_id.code, 'uae_sale_tax_5_dubai')
+        state_name = _AE_STATE_MAPPING.get(self.env.company.state_id.code, 'dubai')
+        sales_tax_xmlid = f'uae_sale_tax_5_{state_name}'
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ae',
@@ -68,15 +72,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ae', 'account.fiscal.position')
     def _get_ae_account_fiscal_position(self):
-        fiscal_position_xmlid = {
-            'AZ': 'account_fiscal_position_abu_dhabi',
-            'AJ': 'account_fiscal_position_ajman',
-            'DU': 'account_fiscal_position_dubai',
-            'FU': 'account_fiscal_position_fujairah',
-            'RK': 'account_fiscal_position_ras_al_khaima',
-            'SH': 'account_fiscal_position_sharjah',
-            'UQ': 'account_fiscal_position_umm_al_quwain',
-        }.get(self.env.company.state_id.code, 'account_fiscal_position_dubai')
+        state_name = _AE_STATE_MAPPING.get(self.env.company.state_id.code, 'dubai')
+        fiscal_position_xmlid = f'account_fiscal_position_{state_name}'
         return {
             fiscal_position_xmlid: {
                 'sequence': 1,
