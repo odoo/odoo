@@ -187,7 +187,7 @@ export const setupSelfPosEnv = async (
     // Removing `pos` and its dependent services to avoid conflicts during `self_order` data loading.
     // Both `pos` and `self_order` rely on `pos_data`, but some models required by `self_order` (e.g., `res.users`)
     // are missing when `pos` is loaded. Hence, these services are excluded.
-    const serviceNames = ["contextual_utils_service", "debug", "report", "pos"];
+    const serviceNames = ["debug", "report", "pos"];
     serviceNames.forEach((serviceName) => registry.category("services").remove(serviceName));
 
     initMockRpc();

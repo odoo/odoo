@@ -26,9 +26,10 @@ export class OpeningControlPopup extends Component {
         this.dialog = useService("dialog");
         this.state = proxy({
             notes: "",
-            openingCash: this.env.utils.formatCurrency(
+            openingCash: this.pos.formatCurrency(
                 this.pos.config._last_opening_balance || 0,
-                false
+                this.pos.config.currency_id.id,
+                { noSymbol: true }
             ),
             ordersByPreset: [],
         });
@@ -80,7 +81,13 @@ export class OpeningControlPopup extends Component {
             getPayload: (payload) => {
                 if (payload) {
                     const { total, moneyDetails, moneyDetailsNotes } = payload;
-                    this.state.openingCash = this.env.utils.formatCurrency(total, false);
+                    this.state.openingCash = this.pos.formatCurrency(
+                        total,
+                        this.pos.config.currency_id.id,
+                        {
+                            noSymbol: true,
+                        }
+                    );
                     if (moneyDetailsNotes) {
                         this.state.notes = moneyDetailsNotes;
                     }
@@ -91,13 +98,16 @@ export class OpeningControlPopup extends Component {
         });
     }
     handleInputChange() {
-        if (!this.env.utils.isValidFloat(this.state.openingCash)) {
+        if (!this.pos.isValidFloat(this.state.openingCash)) {
             return;
         }
         this.state.notes = "";
     }
     handleInputBlur() {
-        this.state.openingCash = this.env.utils.parseAndFormatCurrency(this.state.openingCash);
+        const parsed = parseFloat(this.state.openingCash);
+        this.state.openingCash = this.pos.formatCurrency(parsed, this.pos.config.currency_id.id, {
+            noSymbol: true,
+        });
     }
     get cashMethodCount() {
         return this.pos.config.payment_method_ids.filter((pm) => pm.type === "cash").length;

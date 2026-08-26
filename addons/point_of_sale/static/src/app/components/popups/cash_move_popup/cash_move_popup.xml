@@ -17,7 +17,7 @@
                     tModel="[this.state, 'amount']"
                     currencySymbol="this.pos.currency.symbol"
                     currencyPosition="this.pos.currency.position"
-                    isValid="(val) => this.env.utils.isValidFloat(val)"
+                    isValid="(val) => this.pos.isValidFloat(val)"
                     autofocus="true"
                     readonly="this.ui.isSmall"
                     onBlur="() => this.handleAmountBlur()"

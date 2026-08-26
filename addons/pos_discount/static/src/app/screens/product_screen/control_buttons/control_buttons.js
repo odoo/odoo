@@ -18,7 +18,7 @@ patch(ControlButtons.prototype, {
                 { name: "percent", symbol: "%" },
             ],
             getPayload: (num, type) => {
-                let value = this.env.utils.parseValidFloat(num.toString());
+                let value = this.pos.parseValidFloat(num.toString());
                 if (type === "percent") {
                     value = Math.max(0, Math.min(100, value));
                 }
@@ -26,7 +26,7 @@ patch(ControlButtons.prototype, {
             },
             formatDisplayedValue: (value, type) => {
                 if (type === "fixed") {
-                    return this.env.utils.formatCurrency(parseFloat(value));
+                    return this.pos.formatCurrency(parseFloat(value));
                 }
                 if (type === "percent") {
                     return `${value} %`;

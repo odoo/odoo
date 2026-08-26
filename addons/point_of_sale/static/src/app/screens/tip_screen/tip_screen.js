@@ -37,11 +37,11 @@ export class TipScreen extends Component {
     }
 
     get tipAmount() {
-        return this.env.utils.parseValidFloat(this.state.inputTipAmount) || 0;
+        return this.pos.parseValidFloat(this.state.inputTipAmount) || 0;
     }
 
     get overallAmount() {
-        return this.env.utils.formatCurrency(this.totalAmount + this.tipAmount);
+        return this.pos.formatCurrency(this.totalAmount + this.tipAmount);
     }
 
     get tipSubText() {
@@ -49,7 +49,7 @@ export class TipScreen extends Component {
             return _t("Includes a %s tip", this.state.selectedPercentage);
         }
         if (this.tipAmount > 0) {
-            return _t("With %s tip Included", this.env.utils.formatCurrency(this.tipAmount));
+            return _t("With %s tip Included", this.pos.formatCurrency(this.tipAmount));
         }
         return "";
     }
@@ -73,7 +73,7 @@ export class TipScreen extends Component {
             const tipAmount = (tip / 100) * this.totalAmount;
             return {
                 percentage: `${tip}%`,
-                amount: this.env.utils.formatCurrency(tipAmount),
+                amount: this.pos.formatCurrency(tipAmount),
                 inputTipAmount: tipAmount,
             };
         });
@@ -82,7 +82,7 @@ export class TipScreen extends Component {
     selectTip(tip = null) {
         this.state.selectedPercentage = tip?.percentage ?? null;
         this.state.inputTipAmount = tip?.percentage
-            ? this.env.utils.formatCurrency(tip.inputTipAmount, false)
+            ? this.pos.formatCurrency(tip.inputTipAmount, false)
             : "0";
     }
 
@@ -95,7 +95,7 @@ export class TipScreen extends Component {
         if (!this.pos.config.module_pos_restaurant) {
             await this.props?.finalizeValidation?.();
         }
-        const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
+        const amount = this.pos.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
         const serverId = order.isSynced && order.id;
 
@@ -121,7 +121,7 @@ export class TipScreen extends Component {
                 title: _t("Are you sure?"),
                 body: _t(
                     "%s is more than %s% of the order's total amount. Are you sure of this tip amount?",
-                    this.env.utils.formatCurrency(amount),
+                    this.pos.formatCurrency(amount),
                     maxTipPercentage
                 ),
             });

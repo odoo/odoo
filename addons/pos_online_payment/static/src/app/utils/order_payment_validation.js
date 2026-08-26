@@ -24,7 +24,7 @@ patch(OrderPaymentValidation.prototype, {
                     body: _t(
                         "Online payments cannot have a negative amount (%s: %s).",
                         line.payment_method_id.name,
-                        this.pos.env.utils.formatCurrency(amount)
+                        this.pos.formatCurrency(amount)
                     ),
                 });
                 return false;
@@ -36,8 +36,8 @@ patch(OrderPaymentValidation.prototype, {
                 title: _t("Invalid online payments"),
                 body: _t(
                     "The total amount of remaining online payments to execute (%s) doesn't correspond to the remaining unpaid amount of the order (%s).",
-                    this.pos.env.utils.formatCurrency(remainingAmount),
-                    this.pos.env.utils.formatCurrency(unpaidAmount)
+                    this.pos.formatCurrency(remainingAmount),
+                    this.pos.formatCurrency(unpaidAmount)
                 ),
             });
             return false;
@@ -123,7 +123,7 @@ patch(OrderPaymentValidation.prototype, {
                     this.order.selectPaymentline(onlinePaymentLine);
                     const qrCodeUrl = `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`;
                     const onlinePaymentData = {
-                        amount: this.pos.env.utils.formatCurrency(onlinePaymentLineAmount),
+                        amount: this.pos.formatCurrency(onlinePaymentLineAmount),
                         qrCode: generateQRCodeDataUrl(qrCodeUrl),
                     };
                     this.order.onlinePaymentData = onlinePaymentData;

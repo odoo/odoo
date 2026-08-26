@@ -7,7 +7,7 @@
                     <span t-out="this.props.title"/>
                     <span>
                         <span class="cash-sign me-1" t-out="this.props.total_amount &lt; 0 ? '-' : '+'" />
-                        <t t-out="this.env.utils.formatCurrency(Math.abs(this.props.total_amount))"/>
+                        <t t-out="this.pos.formatCurrency(Math.abs(this.props.total_amount))"/>
                     </span>
                 </div>
             </t>
@@ -17,7 +17,7 @@
                         <span t-out="payment.name"/>
                         <span>
                             <span class="cash-sign me-1" t-out="payment.amount &lt; 0 ? '-' : '+'" />
-                            <t t-out="this.env.utils.formatCurrency(Math.abs(payment.amount))"/>
+                            <t t-out="this.pos.formatCurrency(Math.abs(payment.amount))"/>
                         </span>
                     </div>
                 </div>

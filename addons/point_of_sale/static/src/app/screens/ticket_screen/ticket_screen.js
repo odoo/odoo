@@ -619,7 +619,7 @@ export class TicketScreen extends Component {
         return this.pos.getDate(order.date_order);
     }
     getTotal(order) {
-        return this.env.utils.formatCurrency(order.priceIncl);
+        return this.pos.formatCurrency(order.priceIncl);
     }
     getPartner(order) {
         return order.getPartnerName();
@@ -1046,7 +1046,7 @@ export class TicketScreen extends Component {
     async settleTips() {
         const promises = [];
         for (const order of this.getFilteredOrderList()) {
-            const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
+            const amount = this.pos.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
 
             if (!order.isSynced) {
                 logPosMessage(

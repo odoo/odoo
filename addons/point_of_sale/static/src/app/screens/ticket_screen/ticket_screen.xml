@@ -192,7 +192,7 @@
                                 <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
                                 <li t-if="!this.pos.isProductQtyZero(line.refundedQty)"
                                     class="info refund-note mt-1">
-                                    <strong t-out="this.env.utils.formatProductQty(line.refundedQty, false)" />
+                                    <strong t-out="this.pos.formatProductQty(line.refundedQty, false)" />
                                     <span> Refunded</span>
                                 </li>
                             </Orderline>

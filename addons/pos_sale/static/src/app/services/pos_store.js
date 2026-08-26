@@ -251,7 +251,7 @@ patch(PosStore.prototype, {
 
         const payload = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Down Payment"),
-            subtitle: _t("Due balance: %s", this.env.utils.formatCurrency(saleOrder.amount_unpaid)),
+            subtitle: _t("Due balance: %s", this.formatCurrency(saleOrder.amount_unpaid)),
             buttons: enhancedButtons().map((button) => ({
                 ...button,
                 class: `${colorClassMap[button.value] || ""}`,
@@ -260,7 +260,7 @@ patch(PosStore.prototype, {
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
                 isPercentage && buffer
-                    ? `(${this.env.utils.formatCurrency(
+                    ? `(${this.formatCurrency(
                           (saleOrder.amount_unpaid * parseFloat(buffer)) / 100
                       )})`
                     : "",

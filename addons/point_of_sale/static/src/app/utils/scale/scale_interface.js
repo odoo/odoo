@@ -162,12 +162,12 @@ export class ScaleInterface extends Reactive {
     }
 
     get unitPriceString() {
-        const priceString = this.env.utils.formatCurrency(this.product.unitPrice);
+        const priceString = this.pos.formatCurrency(this.product.unitPrice);
         return `${priceString} / ${this.product.unitOfMeasure}`;
     }
 
     /** @returns {string} */
     get totalPriceString() {
-        return this.env.utils.formatCurrency(this.netWeight * this.product.unitPrice);
+        return this.pos.formatCurrency(this.netWeight * this.product.unitPrice);
     }
 }

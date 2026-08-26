@@ -5,7 +5,7 @@
             <div t-if="state.id == 'waiting' and line.payment_method_id.payment_provider === 'cashmatic'"
                 class="d-flex align-items-center justify-content-between pb-3 px-4 fs-4">
                 <span>Cash dispensed</span>
-                <span t-out="this.env.utils.formatCurrency(line.payment_method_id.payment_interface.amountDispensed)"/>
+                <span t-out="this.pos.formatCurrency(line.payment_method_id.payment_interface.amountDispensed)"/>
             </div>
         </xpath>
     </t>

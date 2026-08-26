@@ -3,7 +3,6 @@ import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/pr
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { _t } from "@web/core/l10n/translation";
-import { formatCurrency } from "@web/core/currency";
 
 export class PaymentScreenStatus extends Component {
     static template = "point_of_sale.PaymentScreenStatus";
@@ -29,11 +28,11 @@ export class PaymentScreenStatus extends Component {
     }
 
     get tipText() {
-        return this.env.utils.formatCurrency(this.currentTip.amount);
+        return this.pos.formatCurrency(this.currentTip.amount);
     }
 
     get changeText() {
-        return this.env.utils.formatCurrency(this.props.order.getChange());
+        return this.pos.formatCurrency(this.props.order.getChange());
     }
 
     get isComplete() {
@@ -53,6 +52,6 @@ export class PaymentScreenStatus extends Component {
     }
 
     get amountText() {
-        return formatCurrency(this.order.remainingDueAmount, this.order.orderCurrency.id);
+        return this.pos.formatCurrency(this.order.remainingDueAmount);
     }
 }

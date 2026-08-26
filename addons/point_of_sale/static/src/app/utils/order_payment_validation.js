@@ -359,11 +359,11 @@ export default class OrderPaymentValidation {
                 body:
                     _t("Are you sure that the customer wants to  pay") +
                     " " +
-                    this.pos.env.utils.formatCurrency(this.order.amountPaid) +
+                    this.pos.formatCurrency(this.order.amountPaid) +
                     " " +
                     _t("for an order of") +
                     " " +
-                    this.pos.env.utils.formatCurrency(this.order.priceIncl) +
+                    this.pos.formatCurrency(this.order.priceIncl) +
                     " " +
                     _t('? Clicking "Confirm" will validate the payment.'),
                 confirm: () => this.validateOrder(true),

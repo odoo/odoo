@@ -95,7 +95,7 @@ export class PaymentCashdro extends PaymentInterface {
         const { totalin, totalout, operationid } = paymentResult.operation;
         const moneyIn = this.cashdroAmountToPosAmount(totalin);
         const moneyOut = Math.abs(this.cashdroAmountToPosAmount(totalout));
-        const netAmount = this.env.utils.roundCurrency(moneyIn - moneyOut);
+        const netAmount = this.pos.config.currency_id.round(moneyIn - moneyOut);
         if (netAmount == 0) {
             // Payment was cancelled
             if (this.cancellationResolver) {
@@ -158,7 +158,7 @@ export class PaymentCashdro extends PaymentInterface {
             amountInCents = parseInt(amountInCents);
         }
         const amount = amountInCents / Math.pow(10, this.pos.currency.decimal_places);
-        return this.env.utils.roundCurrency(amount);
+        return this.pos.config.currency_id.round(amount);
     }
 
     /** @param {string} message */

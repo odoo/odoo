@@ -66,12 +66,20 @@ export class ClosePosPopup extends Component {
         if (this.pos.config.cash_control) {
             const defaultCash = this.props.default_cash_details;
             initialState.payments[defaultCash.id] = {
-                counted: this.env.utils.formatCurrency(defaultCash.amount, false),
+                counted: this.pos.formatCurrency(
+                    defaultCash.amount,
+                    this.pos.config.currency_id.id,
+                    {
+                        noSymbol: true,
+                    }
+                ),
             };
         }
         this.props.non_cash_payment_methods.forEach((pm) => {
             initialState.payments[pm.id] = {
-                counted: this.env.utils.formatCurrency(pm.amount || 0, false),
+                counted: this.pos.formatCurrency(pm.amount || 0, this.pos.config.currency_id.id, {
+                    noSymbol: true,
+                }),
             };
         });
         return initialState;
@@ -99,7 +107,7 @@ export class ClosePosPopup extends Component {
             title: _t("Payments Difference"),
             body: _t(
                 "The maximum difference allowed is %s.\nPlease contact your manager to accept the closing difference.",
-                this.env.utils.formatCurrency(this.props.amount_authorized_diff)
+                this.pos.formatCurrency(this.props.amount_authorized_diff)
             ),
         });
     }
@@ -111,7 +119,7 @@ export class ClosePosPopup extends Component {
     canConfirm() {
         return Object.values(this.state.payments)
             .map((v) => v.counted)
-            .every(this.env.utils.isValidFloat);
+            .every(this.pos.isValidFloat);
     }
     async openDetailsPopup() {
         const action = _t("Cash control - closing");
@@ -122,7 +130,9 @@ export class ClosePosPopup extends Component {
             getPayload: (payload) => {
                 const { total, moneyDetailsNotes, moneyDetails } = payload;
                 this.state.payments[this.props.default_cash_details.id].counted =
-                    this.env.utils.formatCurrency(total, false);
+                    this.pos.formatCurrency(total, this.pos.config.currency_id.id, {
+                        noSymbol: true,
+                    });
                 if (moneyDetailsNotes) {
                     this.state.notes = moneyDetailsNotes;
                 }
@@ -135,7 +145,7 @@ export class ClosePosPopup extends Component {
         return this.report.doAction("point_of_sale.sale_details_report", [this.pos.session.id]);
     }
     setManualCashInput(amount) {
-        if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {
+        if (this.pos.isValidFloat(amount) && this.moneyDetails) {
             this.state.notes = "";
             this.moneyDetails = null;
         }
@@ -143,17 +153,25 @@ export class ClosePosPopup extends Component {
     handleCashCountBlur() {
         const counted = this.state.payments[this.props.default_cash_details.id].counted;
         this.setManualCashInput(counted);
-        this.state.payments[this.props.default_cash_details.id].counted =
-            this.env.utils.parseAndFormatCurrency(counted);
+        const parsed = parseFloat(counted);
+        const currency = this.pos.formatCurrency(parsed, this.pos.config.currency_id.id, {
+            noSymbol: true,
+        });
+        this.state.payments[this.props.default_cash_details.id].counted = currency;
     }
     handlePaymentCountBlur(paymentId) {
-        this.state.payments[paymentId].counted = this.env.utils.parseAndFormatCurrency(
-            this.state.payments[paymentId].counted
+        const parsed = parseFloat(this.state.payments[paymentId].counted);
+        this.state.payments[paymentId].counted = this.pos.formatCurrency(
+            parsed,
+            this.pos.config.currency_id.id,
+            {
+                noSymbol: true,
+            }
         );
     }
     getDifference(paymentId) {
         const counted = this.state.payments[paymentId].counted;
-        if (!this.env.utils.isValidFloat(counted)) {
+        if (!this.pos.isValidFloat(counted)) {
             return NaN;
         }
         const expectedAmount =

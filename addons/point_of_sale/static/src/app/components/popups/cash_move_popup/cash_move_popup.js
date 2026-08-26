@@ -56,7 +56,7 @@ export class CashMovePopup extends Component {
 
     async confirm() {
         const amount = parseFloat(this.state.amount);
-        const formattedAmount = this.env.utils.formatCurrency(amount);
+        const formattedAmount = this.pos.formatCurrency(amount);
         if (!amount) {
             this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount));
             return this.props.close();
@@ -107,15 +107,13 @@ export class CashMovePopup extends Component {
         this.inputRef?.()?.focus();
     }
     format(value) {
-        return this.env.utils.isValidFloat(value)
-            ? this.env.utils.formatCurrency(parseFloat(value))
-            : "";
+        return this.pos.isValidFloat(value) ? this.pos.formatCurrency(parseFloat(value)) : "";
     }
     _prepareTryCashInOutPayload(type, amount, reason, partnerId) {
         return [[this.pos.session.id], type, amount, reason, partnerId];
     }
     isValidCashMove() {
-        return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
+        return this.pos.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
     }
     async openDetails() {
         this.dialog.add(CashMoveListPopup, {
@@ -144,6 +142,6 @@ export class CashMovePopup extends Component {
         }
     }
     handleAmountBlur() {
-        this.state.amount = this.env.utils.parseAndFormatCurrency(this.state.amount);
+        this.state.amount = this.pos.formatCurrency(parseFloat(this.state.amount));
     }
 }

@@ -4,7 +4,6 @@ import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { localization } from "@web/core/l10n/localization";
-import { parseFloat as parseLocalizedFloat } from "@web/views/fields/parsers";
 import "@pos_discount/app/screens/product_screen/control_buttons/control_buttons";
 
 definePosModels();
@@ -20,11 +19,6 @@ test("global discount startingValue uses locale decimal separator", async () => 
         dialog: {
             add: (_, props) => {
                 capturedProps = props;
-            },
-        },
-        env: {
-            utils: {
-                parseValidFloat: parseLocalizedFloat,
             },
         },
     };

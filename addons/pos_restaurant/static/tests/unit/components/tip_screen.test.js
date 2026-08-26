@@ -3,6 +3,7 @@ import { TipScreen } from "@point_of_sale/app/screens/tip_screen/tip_screen";
 import { mountWithCleanup, MockServer } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { formatCurrency } from "@web/core/currency";
 
 definePosModels();
 
@@ -57,7 +58,7 @@ test("tipAmount", async () => {
 
 test("overallAmount", async () => {
     const { screen } = await setupScreen("5.50");
-    const expected = screen.env.utils.formatCurrency(screen.totalAmount + 5.5);
+    const expected = formatCurrency(screen.totalAmount + 5.5, screen.pos.config.currency_id.id);
     expect(screen.overallAmount).toBe(expected);
 });
 
@@ -68,7 +69,7 @@ test("tipSubText", async () => {
     screen.state.selectedPercentage = null;
     screen.state.inputTipAmount = "5.50";
     expect(screen.tipSubText).toBe(
-        "With " + screen.env.utils.formatCurrency(5.5) + " tip Included"
+        "With " + formatCurrency(5.5, screen.pos.config.currency_id.id) + " tip Included"
     );
 
     screen.state.inputTipAmount = "";
@@ -93,7 +94,7 @@ test("selectTip", async () => {
 
     screen.selectTip(tip);
     expect(screen.state.selectedPercentage).toBe("15%");
-    expect(screen.state.inputTipAmount).toBe(screen.env.utils.formatCurrency(5.5, false));
+    expect(screen.state.inputTipAmount).toBe(formatCurrency(5.5, false));
 
     screen.selectTip(null);
     expect(screen.state.selectedPercentage).toBe(null);

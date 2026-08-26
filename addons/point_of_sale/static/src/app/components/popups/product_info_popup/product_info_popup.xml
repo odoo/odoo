@@ -9,7 +9,7 @@
                         t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                         role="img"/>
                 </button>
-                <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.env.utils.formatCurrency(productInfo.all_prices.price_with_tax)"/>
+                <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.pos.formatCurrency(productInfo.all_prices.price_with_tax)"/>
                 <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
             </t>
             <div class="section-public-description mb-4 pb-4 border-bottom text-start" t-if="this.props.productTemplate.productDescriptionMarkup">
@@ -52,7 +52,7 @@
                                 Days
                             </span>
                             <span t-if="this._hasMarginsCostsAccessRights()">
-                                <t t-out="this.env.utils.formatCurrency(supplier.price)"/>
+                                <t t-out="this.pos.formatCurrency(supplier.price)"/>
                             </span>
                         </div>
                     </t>
@@ -64,7 +64,7 @@
                     <span>
                         <a class="text-primary text-decoration-underline" t-out="optional.name" t-on-click="() => this.searchProduct(optional.name)"/>
                             from
-                        <t t-out="this.env.utils.formatCurrency(optional.list_price)"/>
+                        <t t-out="this.pos.formatCurrency(optional.list_price)"/>
                     </span>
                 </div>
             </div>
@@ -73,14 +73,14 @@
                     <h3 class="section-title">Financials</h3>
                     <div class="grid gap-2">
                         <label class="fw-bold">Price excl. Tax:</label>
-                        <span><t t-out="this.env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></span>
+                        <span><t t-out="this.pos.formatCurrency(productInfo.all_prices.price_without_tax)"/></span>
                         <label class="fw-bold vat-label"><t t-out="this.vatLabel"/></label>
                         <span class="vat-value">
                             <t t-out="this.props.info.taxAmount"/>
                             (<t t-out="this.props.info.taxName"/>)
                         </span>
                         <label class="fw-bold">Price incl. Tax:</label>
-                        <span><t t-out="this.env.utils.formatCurrency(productInfo.all_prices.price_with_tax)"/></span>
+                        <span><t t-out="this.pos.formatCurrency(productInfo.all_prices.price_with_tax)"/></span>
                         <t t-if="this._hasMarginsCostsAccessRights()">
                             <label class="fw-bold">Cost:</label>
                             <span><t t-out="this.props.info.costCurrency"/></span>
@@ -91,7 +91,7 @@
                     <div class="grid gap-2 mt-3">
                         <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
                             <label class="fw-bold" t-out="pricelist.name"/>
-                            <span t-out="this.env.utils.formatCurrency(pricelist.price)"/>
+                            <span t-out="this.pos.formatCurrency(pricelist.price)"/>
                         </t>
                     </div>
                 </div>
