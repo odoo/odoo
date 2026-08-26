@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.account</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="ABA PayWay Payment Configuration" col="2">
+                    <group>
+                        <field name="payway_environment" string="Environment"/>
+                        <field 
+                            name="production_payway_merchant_id"
+                            string="Merchant ID"
+                            invisible="payway_environment != 'production'"
+                        />
+                        <field 
+                            name="production_payway_key"
+                            string="API Key"
+                            password="True"
+                            invisible="payway_environment != 'production'"
+                        />
+                        
+                        <field 
+                            name="sandbox_payway_merchant_id"
+                            string="Merchant ID"
+                            invisible="payway_environment != 'sandbox'"
+                        />
+                        <field 
+                            name="sandbox_payway_key"
+                            string="API Key"
+                            password="True"
+                            invisible="payway_environment != 'sandbox'"
+                        />
+                    </group>
+                    
+                    <group>
+                        <field 
+                            name="digital_qr_lifetime" 
+                            string="QR on screen expire time (minutes)" 
+                            invisible="payway_environment == 'disable'"
+                        />
+                        <field 
+                            name="bill_qr_lifetime" 
+                            string="QR on Bill expire time (minutes)" 
+                            invisible="payway_environment == 'disable'"
+                        />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
