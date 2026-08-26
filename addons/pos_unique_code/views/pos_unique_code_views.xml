@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pos_unique_code_list" model="ir.ui.view">
+        <field name="name">pos.unique.code.list</field>
+        <field name="model">pos.unique.code</field>
+        <field name="arch" type="xml">
+            <list string="Order Codes" editable="bottom" multi_edit="1">
+                <field name="unique_code"/>
+                <field name="is_used" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_unique_code_search" model="ir.ui.view">
+        <field name="name">pos.unique.code.search</field>
+        <field name="model">pos.unique.code</field>
+        <field name="arch" type="xml">
+            <search string="Order Codes">
+                <field name="unique_code"/>
+                <filter name="filter_available" string="Available" domain="[('is_used', '=', False)]"/>
+                <filter name="filter_used" string="Used" domain="[('is_used', '=', True)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_by_is_used" string="Status" domain="[]" context="{'group_by': 'is_used'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_pos_order_form_unique_code" model="ir.ui.view">
+        <field name="name">pos.order.form.unique.code</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <field name="is_edited" position="after">
+                <field name="unique_code" readonly="1" placeholder="No code used"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree_unique_code" model="ir.ui.view">
+        <field name="name">pos.order.list.unique.code</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="is_edited" position="after">
+                <field name="unique_code" readonly="1" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_pos_unique_code" model="ir.actions.act_window">
+        <field name="name">Order Codes</field>
+        <field name="res_model">pos.unique.code</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_filter_available': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first order code
+            </p><p>
+                An order code is 5 digits that a customer types to confirm one order,
+                in the kiosk as well as in the Point of Sale. Each code works only
+                once: it is ticked as Used as soon as an order goes through with it.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_unique_code"
+        parent="point_of_sale.menu_point_config_product"
+        action="action_pos_unique_code"
+        sequence="12"/>
+
+</odoo>
