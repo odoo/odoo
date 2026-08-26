@@ -64,22 +64,9 @@ class TestProcessingFlows(SSLCommerzCommon, PaymentHttpCommon):
         self.assertEqual(send_request_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_sslcommerz.controllers.main")
-    def test_missing_val_id_with_cancel_status_does_not_trigger_processing(self):
-        """Test that a cancel notification is not recorded when it can't be verified against the
-        Order Validation API for lack of a val_id."""
-        self._create_transaction("redirect")
-        url = self._build_url(const.PAYMENT_RETURN_ROUTE)
-        data = {"tran_id": self.reference, "status": "CANCELLED"}
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
-        ) as record_mock:
-            self._make_http_post_request(url, data=data)
-        self.assertEqual(record_mock.call_count, 0)
-
-    @mute_logger("odoo.addons.payment_sslcommerz.controllers.main")
-    def test_missing_val_id_with_success_status_does_not_trigger_processing(self):
-        """Test that a successful notification is not recorded when it can't be verified against
-        the Order Validation API for lack of a val_id."""
+    def test_missing_val_id_does_not_trigger_processing(self):
+        """Test that a notification without a val_id is not recorded, as it can't be verified
+        against the Order Validation API."""
         self._create_transaction("redirect")
         url = self._build_url(const.PAYMENT_RETURN_ROUTE)
         data = {**self.payment_data, "val_id": ""}

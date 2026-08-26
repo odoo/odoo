@@ -34,25 +34,17 @@ class PaymentTransaction(models.Model):
             return {}
 
         if self.payment_method_code in const.DIRECT_OPEN_PAYMENT_METHOD_CODES:
-            matching_gateway = next(
-                (
-                    gw
-                    for gw in session_data.get("desc", [])
-                    if gw.get("gw") == self.payment_method_code
-                ),
-                None,
-            )
-            if not matching_gateway:
+            available_gateways = {gw.get("gw") for gw in session_data.get("desc", [])}
+            if self.payment_method_code not in available_gateways:
                 self._set_error(self.env._("This payment method is currently unavailable."))
                 return {}
-            api_url = matching_gateway["redirectGatewayURL"]
+            api_url = session_data["redirectGatewayURL"]
+            url_params = payment_utils.extract_url_params(api_url)
+            url_params["cardname"] = self.payment_method_code
         else:
             api_url = session_data["GatewayPageURL"]
-        return {
-            "api_url": api_url,
-            "http_method": "get",
-            "url_params": payment_utils.extract_url_params(api_url),
-        }
+            url_params = payment_utils.extract_url_params(api_url)
+        return {"api_url": api_url, "http_method": "get", "url_params": url_params}
 
     def _sslcommerz_prepare_session_payload(self):
         """Create the payload for the hosted checkout session request.
@@ -76,7 +68,7 @@ class PaymentTransaction(models.Model):
             "ipn_url": urls.urljoin(base_url, const.IPN_ROUTE),
             "cus_name": self.partner_name or "",
             "cus_email": self.partner_email or "",
-            "product_name": "Online Payment",
+            "product_name": "Odoo Product",
             "product_category": "general",
             "product_profile": "non-physical-goods",
             "multi_card_name": const.PAYMENT_METHODS_MAPPING.get(pm_code, pm_code),

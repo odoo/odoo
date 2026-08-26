@@ -27,7 +27,7 @@ class TestPaymentTransaction(SSLCommerzCommon):
             "ipn_url": urls.urljoin(base_url, const.IPN_ROUTE),
             "cus_name": tx.partner_name,
             "cus_email": tx.partner_email,
-            "product_name": "Online Payment",
+            "product_name": "Odoo Product",
             "product_category": "general",
             "product_profile": "non-physical-goods",
             "multi_card_name": const.PAYMENT_METHODS_MAPPING[tx.payment_method_code],
