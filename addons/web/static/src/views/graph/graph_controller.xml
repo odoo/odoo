@@ -41,7 +41,6 @@
                 <span class="vr my-2 mx-2 text-600"/>
             </t>
             <t t-if="this.model.metaData.mode !== 'pie'">
-                <small class="align-self-center">Order</small>
                 <div class="btn-group o_switcher" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
                     <button class="oi btn btn-secondary o_graph_button o_sort_desc" data-icon="south" data-tooltip="Descending" aria-label="Descending"
                             t-on-click="() => this.toggleOrder('DESC')"
@@ -54,7 +53,6 @@
                 </div>
                 <span class="vr my-2 mx-2 text-600"/>
             </t>
-            <small class="align-self-center">Type</small>
             <div class="btn-group o_switcher" role="toolbar" aria-label="Change graph">
                 <button class="btn btn-secondary oi o_graph_button" data-icon="bar_chart" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
                         t-on-click="() => this.onModeSelected('bar')"
