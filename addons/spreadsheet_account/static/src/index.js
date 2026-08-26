@@ -5,11 +5,11 @@ import { getFirstAccountFunction, hasAccountingFormula } from "./utils";
 import { parseAccountingDate } from "./accounting_functions";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 
-const { cellMenuRegistry, featurePluginRegistry } = spreadsheet.registries;
+const { cellMenuRegistry, evaluationPluginRegistry } = spreadsheet.registries;
 const { astToFormula } = spreadsheet;
 const { isEvaluationError, toString, toBoolean } = spreadsheet.helpers;
 
-featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
+evaluationPluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 
 cellMenuRegistry.add("move_lines_see_records", {
     name: _t("See records"),
