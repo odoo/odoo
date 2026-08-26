@@ -81,14 +81,13 @@ patch(PosStore.prototype, {
                 // Try auto claiming rewards
                 const claimableRewards = order.getClaimableRewards(false, false, true);
                 let changed = false;
-                for (const { coupon_id, reward } of claimableRewards) {
+                for (const { coupon_id, reward, product } of claimableRewards) {
                     if (
                         reward.program_id.reward_ids.length === 1 &&
                         !reward.program_id.is_nominative &&
-                        (reward.reward_type !== "product" ||
-                            (reward.reward_type == "product" && !reward.multi_product))
+                        (reward.reward_type !== "product" || product)
                     ) {
-                        order._applyReward(reward, coupon_id);
+                        order._applyReward(reward, coupon_id, { product });
                         changed = true;
                     }
                 }
