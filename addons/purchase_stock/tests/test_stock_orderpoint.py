@@ -28,3 +28,20 @@ class TestStockWarehouseOrderpoint(HttpCase):
         ])
         self.env.user.company_ids = company_a
         self.start_tour('/odoo/replenishment', 'test_replenishment_supplier_multicompany_access', login='admin')
+
+    def test_replenishment_uom_placeholder_without_location(self):
+        """Ensure the replenishment UoM placeholder stays empty when no location is set."""
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        buy_route.product_selectable = True
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'route_ids': buy_route,
+        })
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].new({
+            'product_id': product.id,
+            'location_id': False,
+        })
+
+        self.assertFalse(orderpoint.replenishment_uom_id_placeholder)
