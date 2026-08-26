@@ -31,6 +31,14 @@ export function registerCallAction(id, definition) {
     callActionsRegistry.add(id, definition);
 }
 
+/**
+ * Shared `propsInline` for every call action: renders the action as a
+ * `btn-inCall` button when shown inline in {@link CallActionList}. Ignored
+ * when the same action is rendered inside a dropdown (e.g. the call menu),
+ * since `ActionDropdown` does not take a variant.
+ */
+export const callButtonPropsInline = { variant: () => "btn-inCall" };
+
 /** @type {CallActionDefinition} */
 export const muteAction = {
     badge: ({ store }) =>
@@ -71,7 +79,7 @@ export const muteAction = {
         }
     },
 };
-registerCallAction("mute", muteAction);
+registerCallAction("mute", { ...muteAction, propsInline: callButtonPropsInline });
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
@@ -87,8 +95,12 @@ export const quickActionSettings = {
     sequence: 15,
     sequenceGroup: 100,
 };
-registerCallAction("quick-voice-settings", quickActionSettings);
+registerCallAction("quick-voice-settings", {
+    ...quickActionSettings,
+    propsInline: callButtonPropsInline,
+});
 registerCallAction("deafen", {
+    propsInline: callButtonPropsInline,
     condition: ({ owner, store, channel }) =>
         channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
@@ -121,7 +133,7 @@ export const cameraOnAction = {
     sequence: 10,
     sequenceGroup: 120,
 };
-registerCallAction("camera-on", cameraOnAction);
+registerCallAction("camera-on", { ...cameraOnAction, propsInline: callButtonPropsInline });
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
@@ -137,7 +149,10 @@ export const quickVideoSettings = {
     sequence: 15,
     sequenceGroup: 120,
 };
-registerCallAction("quick-video-settings", quickVideoSettings);
+registerCallAction("quick-video-settings", {
+    ...quickVideoSettings,
+    propsInline: callButtonPropsInline,
+});
 /** @type {CallActionDefinition} */
 export const switchCameraAction = {
     condition: ({ channel, store }) =>
@@ -149,8 +164,9 @@ export const switchCameraAction = {
     sequence: 40,
     sequenceGroup: 100,
 };
-registerCallAction("switch-camera", switchCameraAction);
+registerCallAction("switch-camera", { ...switchCameraAction, propsInline: callButtonPropsInline });
 registerCallAction("raise-hand", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession?.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
@@ -161,6 +177,7 @@ registerCallAction("raise-hand", {
     sequenceGroup: 200,
 });
 registerCallAction("share-screen", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
@@ -176,6 +193,7 @@ registerCallAction("share-screen", {
     sequenceGroup: 200,
 });
 registerCallAction("fullscreen", {
+    propsInline: callButtonPropsInline,
     btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
@@ -189,6 +207,7 @@ registerCallAction("fullscreen", {
     sequence: 70,
 });
 registerCallAction("wide-view", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall &&
         !owner.env.pipWindow &&
@@ -203,6 +222,7 @@ registerCallAction("wide-view", {
     sequence: 72,
 });
 registerCallAction("minimize", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && store.rtc.isFullscreen && !owner.env.pipWindow,
     name: _t("Minimize"),
@@ -211,6 +231,7 @@ registerCallAction("minimize", {
     sequence: 80,
 });
 registerCallAction("picture-in-picture", {
+    propsInline: callButtonPropsInline,
     condition: ({ owner, channel, store }) =>
         channel?.isSelfInCall && !store.env?.isSmall && !owner.env.pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -230,6 +251,7 @@ registerCallAction("picture-in-picture", {
     sequence: 90,
 });
 registerCallAction("change-layout", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel, owner }) =>
         channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
     name: _t("Change Layout"),
@@ -250,8 +272,12 @@ export const acceptWithCamera = {
     sequence: 100,
     sequenceGroup: 300,
 };
-registerCallAction("accept-with-camera", acceptWithCamera);
+registerCallAction("accept-with-camera", {
+    ...acceptWithCamera,
+    propsInline: callButtonPropsInline,
+});
 registerCallAction("join-back", {
+    propsInline: callButtonPropsInline,
     btnClass: ({ owner }) =>
         attClassObjectToString({
             "text-nowrap pe-2 rounded-pill": true,
@@ -269,6 +295,7 @@ registerCallAction("join-back", {
     sequenceGroup: 300,
 });
 registerCallAction("join-with-camera", {
+    propsInline: callButtonPropsInline,
     btnClass: "text-nowrap",
     condition: ({ channel }) =>
         !channel?.isSelfInCall &&
@@ -299,7 +326,7 @@ export const joinAction = {
     sequence: 130,
     sequenceGroup: 300,
 };
-registerCallAction("join", joinAction);
+registerCallAction("join", { ...joinAction, propsInline: callButtonPropsInline });
 /** @type {CallActionDefinition} */
 export const rejectAction = {
     btnClass: ({ owner, channel }) =>
@@ -324,8 +351,9 @@ export const rejectAction = {
     sequence: 140,
     sequenceGroup: 300,
 };
-registerCallAction("reject", rejectAction);
+registerCallAction("reject", { ...rejectAction, propsInline: callButtonPropsInline });
 registerCallAction("disconnect", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel }) =>
         channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,

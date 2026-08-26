@@ -2,7 +2,7 @@ import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { callButtonPropsInline, useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
@@ -56,6 +56,7 @@ export class CallActionList extends Component {
                                   }),
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
+                                  propsInline: callButtonPropsInline,
                               },
                               sequenceGroup
                           ),
