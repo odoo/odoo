@@ -16,20 +16,25 @@ class TestMenu(common.TransactionCase):
         super(TestMenu, self).setUp()
         self.nb_website = self.env['website'].search_count([])
 
+    def _load_default_menu(self, xml_id, name, parent, **vals):
+        """ Simulate a default menu added through a module data file (no
+            ``website_id``). It goes through ``_load_records``, which mirrors it
+            on every website. Returns the created default (template) menu. """
+        return self.env['website.menu']._load_records([{
+            'xml_id': xml_id,
+            'values': dict(vals, name=name, parent_id=parent.id),
+        }])
+
     def test_01_menu_got_duplicated(self):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
 
-        self.menu_root = Menu.create({
-            'name': 'Root',
-        })
+        main_menu = self.env.ref('website.main_menu')
+        self.menu_root = self._load_default_menu('website.test_menu_root', 'Root', main_menu)
+        self.menu_child = self._load_default_menu('website.test_menu_child', 'Child', self.menu_root)
 
-        self.menu_child = Menu.create({
-            'name': 'Child',
-            'parent_id': self.menu_root.id,
-        })
-
-        self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
+        # Each default menu yields one template (no website_id) and one copy per website.
+        self.assertEqual(total_menu_items + 2 * (1 + self.nb_website), Menu.search_count([]), "A default menu loaded from data should be copied for every website")
 
     def test_02_menu_count(self):
         Menu = self.env['website.menu']
@@ -63,16 +68,18 @@ class TestMenu(common.TransactionCase):
 
         # Simulating website.menu created on module install (blog, shop, forum..) that will be created on default menu tree
         default_menu = self.env.ref('website.main_menu')
-        Menu.create({
-            'name': 'Sub Default Menu',
-            'parent_id': default_menu.id,
-        })
+        sub_default_menu = self._load_default_menu('website.test_sub_menu', 'Sub Default Menu', default_menu)
         self.assertEqual(total_menu_items + 1 + self.nb_website, Menu.search_count([]), "Creating a default child menu should create it as such and copy it on every website")
 
         # Ensure new website got a top menu
         total_menus = Menu.search_count([])
         Website.create({'name': 'new website'})
-        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstrapping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+
+        # Simulating website.menu created on module install (blog, shop, forum..) that will be created on a sub default menu
+        total_menu_items = Menu.search_count([])
+        self._load_default_menu('website.test_grandchild_menu', 'Grandchild Default Menu', sub_default_menu)
+        self.assertEqual(total_menu_items + 1 + (self.nb_website + 1), Menu.search_count([]), "Creating a default grandchild menu should create it as such and copy it on every website")
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']
@@ -87,13 +94,11 @@ class TestMenu(common.TransactionCase):
         existing_menus = Menu.search([])
 
         default_menu = self.env.ref('website.main_menu')
-        template_menu = Menu.create({
-            'parent_id': default_menu.id,
-            'name': 'Menu in english',
-            'url': 'turlututu',
-        })
+        template_menu = self._load_default_menu(
+            'website.test_translated_menu', 'Menu in english', default_menu, url='turlututu',
+        )
         new_menus = Menu.search([]) - existing_menus
-        specific1, specific2 = new_menus.with_context(lang='fr_FR') - template_menu
+        specific1, specific2 = (new_menus - template_menu).with_context(lang='fr_FR')
 
         # create fr_FR translation for template menu
         self.env.ref('base.lang_fr').active = True
@@ -123,8 +128,13 @@ class TestMenu(common.TransactionCase):
         total_menu_items = Menu.search_count([])
 
         default_menu = self.env.ref('website.main_menu')
+        self._load_default_menu('website.test_grandchild_menu', 'Grandchild Default Menu', default_menu.child_id[0])
+        self.assertEqual(total_menu_items + 1 + self.nb_website, Menu.search_count([]), "Creating a default grandchild menu should create it as such and copy it on every website")
+        default_menu.child_id[0].child_id[0].unlink()
+        self.assertEqual(total_menu_items, Menu.search_count([]), "Deleting a default menu item's child menu should delete its website copies (found through their derived external id). In this case, the default item menu's child menu and its copies on the websites")
+
         default_menu.child_id[0].unlink()
-        self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
+        self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its website copies (found through their derived external id). In this case, the default item menu and its copies on the websites")
 
     def test_06_menu_active(self):
         Menu = self.env['website.menu']
@@ -270,32 +280,31 @@ class TestMenu(common.TransactionCase):
 
     def test_07_menu_hierarchy_validation(self):
         Menu = self.env['website.menu']
+        website = self.env['website'].search([], limit=1)
+        top_menu = website.menu_id
+
+        def new_menu(name, **vals):
+            return Menu.create({
+                'name': name,
+                'website_id': website.id,
+                'parent_id': top_menu.id,
+                **vals,
+            })
 
         # Validation 1: Parent menu validation
-        self.main_menu = Menu.create({
-            'name': 'Main',
-        })
-        self.child_menu_1 = Menu.create({
-            'name': 'Child1',
-        })
+        self.main_menu = new_menu('Main')
+        self.child_menu_1 = new_menu('Child1')
         self.child_menu_1.parent_id = self.main_menu.id
 
         # Attempt to assign a second child menu as a child of the first child menu,
         # which should raise a UserError due to hierarchy restrictions.
-        self.child_menu_2 = Menu.create({
-            'name': 'Child2',
-        })
+        self.child_menu_2 = new_menu('Child2')
         with self.assertRaises(UserError):
             self.child_menu_2.parent_id = self.child_menu_1.id
 
         # Validation 2: Mega menu validation
-        self.mega_menu = Menu.create({
-            'name': 'Mega menu',
-            'is_mega_menu': True,
-        })
-        self.another_menu = Menu.create({
-            'name': 'Sample_menu',
-        })
+        self.mega_menu = new_menu('Mega menu', is_mega_menu=True)
+        self.another_menu = new_menu('Sample_menu')
 
         # Attempt to assign a parent to the mega menu and a child to it,
         # which should both raise UserErrors due to mega menu restrictions.
