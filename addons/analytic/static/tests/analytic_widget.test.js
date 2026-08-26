@@ -206,3 +206,45 @@ test("Analytic multi-edit: New Model dialog stays open", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect(".analytic_distribution_popup").toHaveCount(1);
 })
+
+
+test.tags("desktop");
+test("Analytic readonly list: unknown accounts don't trigger a save loop", async () => {
+    // a distribution pointing to an analytic account that doesn't exist anymore
+    env["account.analytic.line"].create({ analytic_distribution: { 9999: 100 }, amount: 7 });
+
+    let listLoads = 0;
+    onRpc("account.analytic.line", "web_search_read", () => {
+        listLoads++;
+        if (listLoads > 1) {
+            // saving the cleaned up json reloads the list, which reads the same invalid json
+            // again, which saves it again, ... bail out instead of looping forever
+            throw new Error("the readonly list should not be reloaded");
+        }
+    });
+    onRpc("account.analytic.line", "web_save", () => expect.step("web_save"));
+    onRpc("account.analytic.line", "write", () => expect.step("write"));
+
+    await mountView({
+        type: "list",
+        resModel: "account.analytic.line",
+        arch: `
+            <list multi_edit="1" default_order="id DESC">
+                <field name="account_id"/>
+                <field name="x_plan1_id"/>
+                <field name="x_plan2_id"/>
+                <field name="analytic_distribution" widget="analytic_distribution" options="{'multi_edit': True}"/>
+            </list>`,
+    });
+    await runAllTimers();
+    await animationFrame();
+
+    // every row is readonly, so the invalid json is left alone
+    expect.verifySteps([]);
+    expect(listLoads).toBe(1);
+    expect(".o_data_row").toHaveCount(7);
+    // the row with the missing account is rendered without any tag instead of blocking the list
+    expect(".o_data_row:nth-child(1) .o_field_analytic_distribution .o_tag").toHaveCount(0);
+    // the other rows are unaffected
+    expect(".o_data_row:nth-child(2) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Los Angeles");
+})
