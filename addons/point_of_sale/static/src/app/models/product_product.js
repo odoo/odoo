@@ -21,7 +21,7 @@ export class ProductProduct extends Base {
     }
 
     getImageUrl() {
-        return `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`;
+        return `/web/image?model=product.product&field=image_256&id=${this.id}&unique=${this.write_date}`;
     }
 
     get searchString() {
