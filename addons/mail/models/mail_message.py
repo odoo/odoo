@@ -8,6 +8,7 @@ import textwrap
 import typing
 from binascii import Error as binascii_error
 from collections import defaultdict
+from html import escape
 from lxml import html
 from typing import Self
 
@@ -1017,7 +1018,7 @@ class MailMessage(models.Model):
                 [("author_id", "in", self.env["res.partner"].sudo()._search([("name", "ilike", search_term)]))],
                 # sudo: mail.guest - allow searching by guest name
                 [("author_guest_id", "in", self.env["mail.guest"].sudo()._search([("name", "ilike", search_term)]))],
-                [("body", "ilike", search_term)],
+                [("body", "ilike", escape(search_term, quote=False))],
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
