@@ -1,9 +1,9 @@
 import { Domain } from "@web/core/domain";
 import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
-import { OdooUIPlugin } from "@spreadsheet/plugins";
+import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { deepEqual } from "@web/core/utils/objects";
 
-export class OdooChartCoreViewPlugin extends OdooUIPlugin {
+export class OdooChartCoreViewPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ (["getChartDataSource", "getOdooEnv"]);
 
     shouldChartUpdateReloadDataSource = false;
