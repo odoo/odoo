@@ -3361,6 +3361,106 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_free_product_tag_quantity_set_with_numpad(self):
+        """
+        Test that a free product reward defined by a product tag is claimed when
+        the quantity reaching the required points is set with the numpad, and not
+        only when the product is clicked.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        promo_tag = self.env['product.tag'].create({'name': 'Promo Item'})
+        self.env['product.product'].create([{
+            'name': 'Promo Item A',
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }, {
+            'name': 'Promo Item B',
+            'list_price': 5,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_tag_id': promo_tag.id,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': promo_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_free_product_tag_quantity_set_with_numpad",
+            login="pos_user",
+        )
+
+    def test_free_product_tag_quantity_from_gs1_barcode(self):
+        """
+        Test that a free product reward defined by a product tag is claimed when the
+        quantity reaching the required points comes from a GS1 barcode.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.main_pos_config.company_id.nomenclature_id = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.main_pos_config.fallback_nomenclature_id = self.env.ref('barcodes.default_barcode_nomenclature')
+
+        promo_tag = self.env['product.tag'].create({'name': 'Promo Item'})
+        self.env['product.product'].create([{
+            'name': 'Promo Item A',
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'barcode': '08431673020125',
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }, {
+            'name': 'Promo Item B',
+            'list_price': 5,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_tag_id': promo_tag.id,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': promo_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_free_product_tag_quantity_from_gs1_barcode",
+            login="pos_user",
+        )
+
     def test_discount_after_unknown_scan(self):
         """
         Make sure discount is still applied after scanning an unknow barcode
