@@ -9,6 +9,7 @@ import {
     start,
     startServer,
     step,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
@@ -53,6 +54,38 @@ test('display partner mention suggestions on typing "@"', async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
+});
+
+test("suggestion list closed by Escape stays closed when the composer re-renders", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-NavigableList-item", { text: "TestPartner" }); // wait for the fetched suggestions
+    triggerHotkey("Escape");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // Opening the emoji picker re-renders the composer without changing the
+    // suggestions: the list closed by the user has to stay closed.
+    await click("button[aria-label='Emojis']");
+    await contains(".o-EmojiPicker");
+    triggerHotkey("Escape");
+    await contains(".o-EmojiPicker", { count: 0 });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // Typing more characters re-opens the suggestions for the refined search.
+    await insertText(".o-mail-Composer-input", "Test");
+    await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
 test("can @user in restricted (group_public_id) channels", async () => {
