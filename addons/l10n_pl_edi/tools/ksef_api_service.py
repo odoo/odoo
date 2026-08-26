@@ -6,16 +6,15 @@ import time
 
 import requests
 from cryptography import x509
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import padding as sym_padding
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from odoo import fields
-from odoo.exceptions import UserError
-
 from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
-
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 30
@@ -364,28 +363,39 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def download_batch_status(self, batch_number):
-        return self._make_request("GET", f"{self.api_url}/invoices/exports/{batch_number}").json()
-
-    def download_batch_request(self, date_from, date_to, subject_type="Subject3"):
-        raw_symmetric_key, raw_iv, encryption_data = self._create_encryption_data()
-        payload = {
-            **encryption_data,
-            "filters": {
-                "subjectType": subject_type,
-                "dateRange": {
-                    "from": format_time(date_from),
-                    "to": format_time(date_to),
-                    "dateType": "Invoicing",
+    def download_batch_status(self, batch_ticket):
+        try:
+            _logger.info(batch_ticket)
+            response = self._make_request("GET", f"{self.api_url}/invoices/exports/{batch_ticket['number']}")
+            json_response = response.json()
+            _logger.info(json_response)
+            return {
+                'status': json_response['status']['code'],
+                'parts': {
+                    part['name']: {
+                        'name': part['name'],
+                        'url': part['url'],
+                        'method': (part['method'] or '').upper(),
+                        'number': part['ordinalNumber'],
+                        'batch_number': json_response['ordinalNumber'],
+                    }
+                    for part in json_response.get('package', {})['parts']
                 },
-            },
-        }
+                **batch_ticket,
+            }
+        except KSeFRateLimitError as e:
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
+
+    def download_batch_request(self, date_from, date_to, encryption_data, subject_type="Subject3"):
+        dates = {"from": format_time(date_from), "to": format_time(date_to), "dateType": "Invoicing"}
+        payload = {**encryption_data, "filters": {"subjectType": subject_type, "dateRange": dates}}
         try:
             response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
             return {
-                'batch_number': response.json().get('referenceNumber'),
-                'raw_symmetric_key': raw_symmetric_key,
-                'raw_iv': raw_iv,
+                'number': response.json().get('referenceNumber', False),
+                'encryption_data': encryption_data,
+                'date_from': fields.Datetime.to_string(date_from),
+                'date_to': fields.Datetime.to_string(date_to),
             }
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}

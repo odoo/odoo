@@ -1,25 +1,74 @@
 import base64
 import contextlib
+import io
 import json
 import logging
 import re
+import zipfile
+from decimal import Decimal
+from hashlib import sha256
+from pathlib import Path
 from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
-from hashlib import sha256
 from lxml import etree
 from stdnum.pl.nip import compact
-from decimal import Decimal
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
-
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
-
+from odoo.exceptions import UserError
+from odoo.tools import OrderedSet, float_compare, float_is_zero, float_repr
 
 KSEF_INTERVAL = 5
 _logger = logging.getLogger(__name__)
+
+
+class MultiPathStream(io.RawIOBase):
+    """Virtual stream that reads directly from a sequence of Path objects on demand."""
+    def __init__(self, paths):
+        self.paths = [Path(p) for p in paths]
+        self.sizes = [p.stat().st_size for p in self.paths]
+        self.total_size = sum(self.sizes)
+        self.pos = 0
+
+    def readable(self): return True
+    def seekable(self): return True
+    def tell(self): return self.pos
+
+    def seek(self, offset, whence=io.SEEK_SET):
+        if whence == io.SEEK_SET:
+            self.pos = offset
+        elif whence == io.SEEK_CUR:
+            self.pos += offset
+        elif whence == io.SEEK_END:
+            self.pos = self.total_size + offset
+        self.pos = max(0, min(self.pos, self.total_size))
+        return self.pos
+
+    def readinto(self, b):
+        if self.pos >= self.total_size:
+            return 0  # EOF
+
+        # Find which file part current position falls into
+        accumulated = 0
+        file_idx = 0
+        for idx, size in enumerate(self.sizes):
+            if accumulated + size > self.pos:
+                file_idx = idx
+                break
+            accumulated += size
+
+        file_offset = self.pos - accumulated
+        bytes_to_read = min(len(b), self.sizes[file_idx] - file_offset)
+
+        # Open and read directly from the exact file part
+        with self.paths[file_idx].open('rb') as f:
+            f.seek(file_offset)
+            data = f.read(bytes_to_read)
+
+        b[:len(data)] = data
+        self.pos += len(data)
+        return len(data)
 
 
 class AccountMove(models.Model):
@@ -678,150 +727,101 @@ class AccountMove(models.Model):
         return get_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
 
     def _l10n_pl_edi_get_last_download_date(self, company):
+        first_day = fields.Datetime.to_string(max(
+            fields.Date.today().replace(month=1, day=1),
+            fields.Date.from_string('2026-01-31'),
+        ))
         Param = self.env['ir.config_parameter'].sudo()
-        year_first_str = fields.Date(fields.Date.today().year, 1, 1).strftime('%Y/%m/%d')
-        param = Param.get_param(f'l10n_pl_edi.last_downloaded_date_{company.id}', year_first_str)
-        return fields.Date(param)
+        param_name = f'l10n_pl_edi.last_downloaded_date_{company.id}'
+        last_date = fields.Datetime.from_string(Param.get_param(param_name, first_day))
+        _logger.info("Last date: %s", last_date)
+        return last_date
 
     def _l10n_pl_edi_set_last_download_date(self, company, date):
         Param = self.env['ir.config_parameter'].sudo()
-        date_str = date.strftime('%Y/%m/%d')
+        date_str = fields.Datetime.to_string(date)
         return Param.set_param(f'l10n_pl_edi.last_downloaded_date_{company.id}', date_str)
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
 
-        def get_batch_status(service, batch_number, encryption_data):
-            batch_status = service.download_batch_status(batch_number)
-            batch_status['encryption'] = encryption_data
-            Attachment._l10n_pl_edi_set_batch(batch_number, batch_status)
-            return batch_status
+        def get_batch_status(service, batch_ticket):
+            batch_status = service.download_batch_status(batch_ticket)
+            if 'error' in batch_status:
+                _logger.info('error: %s', batch_ticket['error'])
+                return False
+            return Attachment._l10n_pl_edi_set_batch(batch_ticket['number'], json.dumps(batch_status))
 
         def get_next_batch(service, days=KSEF_INTERVAL):
+            date_from = self._l10n_pl_edi_get_last_download_date(company).date()
             today = fields.Date.today()
-            date_from = self._l10n_pl_edi_get_last_download_date(company)
-            if date_from <= fields.Date.today():
+            if date_from <= today:
                 date_to = min(today, date_from + relativedelta(days=days))
-                batch_data = service.download_batch_request(date_from, date_to)
-                if batch_number := batch_data.get('batch_number'):
-                    self._l10n_pl_edi_set_last_download_date(company, date_to)
-                    return get_batch_status(service, batch_number)
+                _symmetric_key, _raw_iv, encryption_data = service._create_encryption_data()
+                if batch_ticket := service.download_batch_request(date_from, date_to, encryption_data):
+                    if 'error' in batch_ticket:
+                        _logger.info('error: %s', batch_ticket['error'])
+                        return False
+                    return get_batch_status(service, batch_ticket)
 
-        def handle_batch(service, company, batch):
-            batch_data = json.loads(batch.raw.decode())
+        def batch_finished(company, batch_attachment, batch_data, parts_attachments):
+            Journal = self.env['account.journal'].with_context(default_move_type='in_invoice')
+            if paths := [Path(attachment._full_path(attachment.store_fname)) for attachment in parts_attachments]:
+                with zipfile.ZipFile(MultiPathStream(paths), 'r') as zip_ref:
+                    for zip_info in zip_ref.infolist():
+                        with zip_ref.open(zip_info) as source:
+                            filename = Path(zip_info.filename).name
+                            ext = Path(filename).suffix.lstrip('.').lower()
+                            attachment = Attachment.create({
+                                'name': filename,
+                                'type': 'binary',
+                                'mimetype': f'application/{ext}' if ext in ('json', 'xml') else 'text/plain',
+                                'raw': source.read(),
+                            })
+                            move = Journal._create_document_from_attachment(attachment.ids)
+                            move.l10n_pl_edi_number = batch_data['number']
+                            if self._can_commit():
+                                self.env.cr.commit()
+            date_to = fields.Datetime.from_string(batch_data['date_to'])
+            self._l10n_pl_edi_set_last_download_date(company, date_to)
+            (parts_attachments + batch_attachment).unlink()
+            return True
+
+        def handle_batch(service, company, batch_data):
             match batch_data.get('status'):
-                case 100:
-                    # retry get batch status
-                    encryption_data = batch_data.get('encryption')
-                    batch_number = batch_data.get('batch_number')
-                    get_batch_status(batch_number, encryption_data)
-                case 200:
-                    # save parts for download
-                    for part in batch_data.get('package', {}).get('Parts'):
-                        Attachment._l10n_pl_edi_set_part(
-                            company=company,
-                            number=part.get('ordinalNumber'),
-                            name=part.get('partName'),
-                            method=part.get('method'),
-                            url=part.get('url'),
-                        )
-                    # delete the batch, its role ends here
+                case 100:  # retry get batch status
+                    get_batch_status(service, batch_data)
+                case 200:  # save parts for download
+                    return Attachment._l10n_pl_edi_set_parts(company, batch_data['parts'])
+                case _:  # error
                     batch.unlink()
-                case _:
-                    # error
-                    batch.unlink()
+            return False
 
         def import_part(part):
-            pass
+            """ Import moves from downloaded parts"""
+            return True
 
-        def download_part(part):
-            pass
-
-        service = KsefApiService()
         Attachment = self.env['ir.attachment']
         companies = self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)])
         retrigger = False
         for company in companies:
-            # Get the batch for the next window
-            get_next_batch(service)
-            # Update batches states
-            if batches := Attachment._l10n_pl_edi_get_batches():
-                for batch in batches:
-                    handle_batch(service, company, batch)
-                    retrigger = True
-                if retrigger:
-                    break
-            # Download the missing parts
-            if parts := Attachment._l10n_pl_edi_get_parts(company, [('file_size', '=', 0)]):
-                for part in parts:
-                    download_part(part)
-                    retrigger = True
-                if retrigger:
-                    break
-            # Import the moves from downloaded parts
-            if parts := Attachment._l10n_pl_edi_get_parts(company, [('file_size', '=', 0)]):
-                for part in parts:
-                    import_part(part)
-                    retrigger = True
-                if retrigger:
-                    break
+            service = KsefApiService(company)
+            for batch in Attachment._l10n_pl_edi_get_batches():
+                batch_data = json.loads(batch.raw.decode())
+                if parts := handle_batch(service, company, batch_data):
+                    parts.filtered(lambda p: p.file_size == 0)._l10n_pl_edi_download_parts(batch_data)
+                    if parts.filtered(lambda p: p.file_size > 0) == parts:
+                        retrigger = batch_finished(company, batch, batch_data, parts)
+                else:
+                    retrigger = batch_finished(company, batch, batch_data, parts)
 
+            get_next_batch(service)
+
+        _logger.info("retrigger: %s", retrigger)
         if retrigger:
             self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')._trigger(
-                at=fields.Datetime.now() + relativedelta(minutes=10)
+                at=fields.Datetime.now() + relativedelta(seconds=KSEF_INTERVAL)
             )
-
-    def _get_last_processed_invoicing_date(self):
-        domain = [
-            *self._check_company_domain(self.env.company),
-            ('move_type', '=', 'in_invoice'),
-            ('invoice_date', '!=', False),
-            ('l10n_pl_edi_number', '!=', False),
-        ]
-        if last_processed_move := self.search_fetch(domain, field_names=['invoice_date'], order='invoice_date DESC', limit=1):
-            return fields.Datetime.to_datetime(last_processed_move.invoice_date)
-
-        return max(
-            fields.Datetime.from_string("2026-01-31 00:00:00"),
-            fields.Datetime.now() + relativedelta(years=-1),
-        )
-
-    def _l10n_pl_edi_batch_number(self, value=None):
-        # TODO: Create an empty attachment, that will be populated by the zipfile once ready
-        param_name = f'l10n_pl_edi_ksef.batch_number_{self.env.company_id}'
-        ParamSudo = self.env['ir.config_parameter'].sudo()
-        if value is None:
-            return ParamSudo.get_param(param_name, '')
-        return ParamSudo.set_param(param_name, value or '')
-
-    @api.model
-    def _l10n_pl_edi_download_bills_from_ksef(self):
-        """ Theoretical limits from official docs:
-            - bills: 10_000 per batch
-            - size: 1GB batch
-            - batches per access: 10
-            - batches per minute: 16
-            - batches per hour: 20
-            - date range: 3 months
-            I guess we don't want to download 1GB in a cron though.
-            Not sure we can ingest 500 invoices in a single cron trigger before it actually dies.
-            We will go month by `relativedelta(months=1)` for now
-        """
-        company = self.env.company
-        service = KsefApiService(company)
-
-        if batch_number := self._l10n_pl_edi_batch_number():
-            # TODO: download the batch
-            _logger.info(batch_number)
-            self._l10n_pl_edi_batch_number('')
-            return {'retry_after': 10}  # Batch downloaded, go download next month (if necessary)
-
-        date_from = self._get_last_processed_invoicing_date()
-        date_to = min(date_from + relativedelta(months=1), fields.Datetime.today())
-
-        response = service.get_request_download_batch(date_from, date_to)
-        if error := response.get('error'):
-            return error
 
     def _decode_fa3_ksef(self, invoice, file_data, new):
         xml_content = file_data.get('content')
