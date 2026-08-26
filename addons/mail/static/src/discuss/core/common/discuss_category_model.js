@@ -1,23 +1,19 @@
 import { fields, Record } from "@mail/model/export";
-import { effectWithCleanup } from "@mail/utils/common/misc";
 
 export class DiscussCategory extends Record {
     static _name = "discuss.category";
 
-    static new() {
-        /** @type {import("models").DiscussCategory} */
-        const category = super.new(...arguments);
-        category._registerDisposeFn(
-            effectWithCleanup(() => {
-                const busChannel = category.busChannel;
-                const busService = category.store.env.services.bus_service;
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.busChannel, this.store.env.services.bus_service],
+            function subscribeToBusChannel(busChannel, busService) {
                 if (busService && busChannel) {
                     busService.addChannel(busChannel);
                     return () => busService.deleteChannel(busChannel);
                 }
-            })
+            }
         );
-        return category;
     }
 
     /** @type {string} */

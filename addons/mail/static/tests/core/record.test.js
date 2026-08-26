@@ -1667,7 +1667,7 @@ test("a record is its proxy in a field declaration and in setup", async () => {
     expectRecord(message.readAuthorFromSetup()).toEqual(message.author);
 });
 
-test("an onChange registered in setup runs on the record proxy", async () => {
+test("an onChange registered in setup runs on the proxy and cleans up", async () => {
     (class Thread extends Record {
         static id = "name";
         static _name = "Thread";
@@ -1677,8 +1677,10 @@ test("an onChange registered in setup runs on the record proxy", async () => {
             super.setup(...arguments);
             this.onChange(
                 () => [this.messages.length],
-                () => expect.step(`${this.messages.length} ${this.messages[0]?.body ?? ""}`),
-                { initialRun: false }
+                () => {
+                    expect.step(`${this.messages.length} ${this.messages[0]?.body ?? ""}`);
+                    return () => expect.step("cleanup");
+                }
             );
         }
     }).register(localRegistry);
@@ -1690,6 +1692,9 @@ test("an onChange registered in setup runs on the record proxy", async () => {
     }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("general");
+    await expect.waitForSteps(["0 "]);
     thread.messages.add("hello");
-    await expect.waitForSteps(["1 hello"]);
+    await expect.waitForSteps(["cleanup", "1 hello"]);
+    thread.delete();
+    await expect.waitForSteps(["cleanup"]);
 });

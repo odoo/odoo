@@ -413,7 +413,7 @@ export class Record {
         const deps = record._.ensureScope().run(() =>
             computed(dependencies.bind(record), { equals: shallowEqual })
         );
-        const boundCallback = callback.bind(record);
+        const boundCallback = (...values) => callback.apply(record._proxy, values);
         let firstRun = true;
         let cleanup;
         record._registerDisposeFn(
