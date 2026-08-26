@@ -39,7 +39,7 @@ class ConsolidationRateMixin(models.AbstractModel):
             return SQL("1")
 
         date_to = fields.Date.to_date(self.env.context['date_to'])
-        _historical, _average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_to, date_to)
+        _historical, _average, _average_previous_year, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_to, date_to)
 
         raw_rates_alias = table._make_alias('raw_currencies')
         raw_rates_table = SQL("(SELECT %(current)s::jsonb AS current)", current=json.dumps(current))
