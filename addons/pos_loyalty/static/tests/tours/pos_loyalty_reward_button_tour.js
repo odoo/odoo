@@ -5,7 +5,7 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
 import { registry } from "@web/core/registry";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negateStep, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
@@ -347,5 +347,39 @@ registry.category("web_tour.tours").add("test_free_product_multiple_reward_produ
             ProductScreen.clickDisplayedProduct("Promo Item B"),
             ProductScreen.selectedOrderlineHas("Promo Item B", "4.00"),
             ProductScreen.totalAmountIs("40.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_free_product_tag_quantity_set_with_numpad", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Promo Item A"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00", "1.00").map(negateStep),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.selectedOrderlineHas("Promo Item A", "3.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00", "1.00"),
+            ProductScreen.totalAmountIs("20.00"),
+            ProductScreen.clickDisplayedProduct("Promo Item B"),
+            ProductScreen.totalAmountIs("25.00"),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.selectedOrderlineHas("Promo Item B", "3.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-5.00", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00", "1.00"),
+            ProductScreen.totalAmountIs("30.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_free_product_tag_quantity_from_gs1_barcode", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // Promo Item A, with an embedded quantity of 3.
+            scan_barcode("0108431673020125303"),
+            ProductScreen.selectedOrderlineHas("Promo Item A", "3.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00", "1.00"),
+            ProductScreen.totalAmountIs("20.00"),
         ].flat(),
 });
