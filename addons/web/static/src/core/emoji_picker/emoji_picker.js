@@ -198,6 +198,9 @@ export class EmojiPicker extends Component {
             this.emojiByCodepoints = Object.fromEntries(
                 this.emojis.map((emoji) => [emoji.codepoints, emoji])
             );
+            this.recentSnapshot = Object.entries(this.state.recent)
+                .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
+                .map(([codepoints]) => this.emojiByCodepoints[codepoints]);
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
@@ -352,9 +355,7 @@ export class EmojiPicker extends Component {
     }
 
     get recentEmojis() {
-        const recent = Object.entries(this.state.recent)
-            .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
-            .map(([codepoints]) => this.emojiByCodepoints[codepoints]);
+        const recent = this.recentSnapshot ?? [];
         if (this.searchTerm && recent.length > 0) {
             return fuzzyLookup(this.searchTerm, recent, (emoji) => [
                 emoji.name,
