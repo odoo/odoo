@@ -1076,7 +1076,6 @@ class HrApplicant(models.Model):
                 'target': 'new',
                 'context': {
                     'default_applicant_ids': self.ids,
-                    'active_test': False,
                     'hide_mail_template_management_options': True,
                 },
                 'views': [[False, 'form']],
@@ -1089,7 +1088,6 @@ class HrApplicant(models.Model):
             'target': 'new',
             'context': {
                 'default_applicant_ids': self.ids,
-                'active_test': False,
                 'hide_mail_template_management_options': True,
             },
             'views': [[False, 'form']]
