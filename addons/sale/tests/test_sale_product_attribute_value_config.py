@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
+from odoo import Command, fields
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueCommon
@@ -251,6 +251,58 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
         # CASE: the variant already exists, so it should return it
         self.assertEqual(variant, self.computer._create_product_variant(combination))
+
+    def test_sale_order_line_multiline_description_sequence(self):
+        """Free-text attributes must follow their configured attribute line
+        sequence in the SO line description, not always render last."""
+        attr_custom, attr_normal = self.env['product.attribute'].create([
+            {'name': 'Custom Engraving', 'create_variant': 'no_variant'},
+            {'name': 'Material', 'create_variant': 'no_variant'},
+        ])
+        val_custom, val_steel, val_gold = self.env['product.attribute.value'].create([
+            {'name': 'Engraving Text', 'attribute_id': attr_custom.id, 'is_custom': True},
+            {'name': 'Steel', 'attribute_id': attr_normal.id},
+            {'name': 'Gold', 'attribute_id': attr_normal.id},
+        ])
+
+        product = self.env['product.template'].create({
+            'name': 'Customizable Product',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attr_custom.id,
+                    "value_ids": [Command.set(val_custom.ids)],
+                    "sequence": 1,
+                }),
+                Command.create({
+                    'attribute_id': attr_normal.id,
+                    "value_ids": [Command.set((val_steel + val_gold).ids)],
+                    "sequence": 2,
+                }),
+            ],
+        })
+
+        ptav_custom = product.attribute_line_ids[0].product_template_value_ids
+        ptav_steel = product.attribute_line_ids[1].product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == val_steel
+        )
+
+        line = self.env['sale.order.line'].create({
+            'order_id': self.env['sale.order'].create({'partner_id': 1}).id,
+            'name': 'test',
+            'product_id': product.product_variant_id.id,
+            'product_no_variant_attribute_value_ids': [Command.set(ptav_steel.ids)],
+            'product_custom_attribute_value_ids': [
+                Command.create({
+                    'custom_product_template_attribute_value_id': ptav_custom.id,
+                    'custom_value': 'My Engraving',
+                })
+            ],
+        })
+
+        self.assertEqual(
+            line._get_sale_order_line_multiline_description_variants(),
+            '\nCustom Engraving: Engraving Text: My Engraving\nMaterial: Steel',
+        )
 
     def _add_keyboard_attribute(self):
         self.keyboard_attribute = self.env['product.attribute'].create({
