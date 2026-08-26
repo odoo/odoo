@@ -863,7 +863,7 @@
                                 <templates>
                                     <t t-name="card" class="row g-0 ps-0 pe-0">
                                         <t t-if="!record.display_type.raw_value">
-                                            <aside class="col-2 p-1">
+                                            <aside t-if="record.product_id.value" class="col-2 p-1">
                                                 <span t-att-title="record.product_id.value">
                                                     <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
                                                 </span>
@@ -875,7 +875,8 @@
                                                             title="This product is archived"
                                                             invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                                         />
-                                                        <field name="product_id" class="fw-bold"/>
+                                                        <field t-if="record.product_id.value" name="product_id" class="fw-bold"/>
+                                                        <field t-else="" name="name" class="fw-bold"/>
                                                     </div>
                                                     <div class="col-auto">
                                                         <field name="price_subtotal" class="fw-bolder float-end pe-1" widget="monetary"/>
