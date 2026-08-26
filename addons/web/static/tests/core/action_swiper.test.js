@@ -1,23 +1,20 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { beforeEach, expect, test } from "@odoo/hoot";
-import { hover, queryFirst } from "@odoo/hoot-dom";
-import { mockTouch } from "@odoo/hoot-mock";
+import { beforeEach, expect, hover, mockTouch, queryFirst, test } from "@odoo/hoot";
 import { Component, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineParams,
     mountWithCleanup,
-    patchWithCleanup,
     swipeLeft,
     swipeRight,
 } from "@web/../tests/web_test_helpers";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { browser } from "@web/core/browser/browser";
+import { patch } from "@web/core/utils/patch";
 
 beforeEach(() => {
     mockTouch(true);
-    patchWithCleanup(ActionSwiper, {
+    patch(ActionSwiper, {
         animationLength: 0,
     });
 });
@@ -44,10 +41,6 @@ test("render only its target if no props is given", async () => {
 
 test("render only its target on non-touch devices", async () => {
     mockTouch(false);
-    // mockTouch(false) don't work well with hasTouch() because browser.ontouchstart is null
-    patchWithCleanup(browser, {
-        ontouchstart: undefined,
-    });
     class Parent extends Component {
         props = useProps();
         static components = { ActionSwiper };

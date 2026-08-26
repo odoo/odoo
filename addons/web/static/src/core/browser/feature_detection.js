@@ -71,7 +71,7 @@ export function isDisplayStandalone() {
 }
 
 export function hasTouch() {
-    return browser.ontouchstart !== undefined || browser.matchMedia("(pointer:coarse)").matches;
+    return window.ontouchstart !== undefined || browser.matchMedia("(pointer:coarse)").matches;
 }
 
 export function maxTouchPoints() {

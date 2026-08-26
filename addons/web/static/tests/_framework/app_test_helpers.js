@@ -6,10 +6,10 @@ import {
     getCurrent,
     registerDebugInfo,
 } from "@odoo/hoot";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { App, Scope } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
 import { appTranslateFn } from "@web/core/l10n/translation";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { getTemplate } from "@web/core/templates";
@@ -17,7 +17,6 @@ import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { customDirectives, globalValues, makeEnv } from "@web/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
-import { patchWithCleanup } from "./patch_test_helpers";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -79,7 +78,7 @@ afterEach(function restoreMainRegistry() {
 });
 
 beforeEach(() => {
-    patchWithCleanup(App.apps, {
+    patch(App.apps, {
         add(app) {
             registerDebugInfo("app", app);
             if (!(app instanceof TestApp)) {

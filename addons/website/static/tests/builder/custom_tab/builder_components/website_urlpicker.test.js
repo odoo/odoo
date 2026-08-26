@@ -1,25 +1,16 @@
-import { after, before, expect, test } from "@odoo/hoot";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { addBuilderOption } from "@html_builder/../tests/helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { advanceTime } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
-let originalWindowOpen;
-function mockWindowOpen() {
-    originalWindowOpen = window.open;
-    window.open = (...args) => {
-        expect.step(`callWindowOpen ${args[0]}`);
-    };
-}
-function unmockWindowOpen() {
-    window.open = originalWindowOpen;
-}
 function mockGetSuggestedLinks(callback = undefined) {
     onRpc("/website/get_suggested_links", () => {
         callback?.();
@@ -59,11 +50,12 @@ function mockGetSuggestedLinks(callback = undefined) {
     });
 }
 
-before(() => {
-    mockWindowOpen();
-});
-after(() => {
-    unmockWindowOpen();
+beforeEach(() => {
+    patch(window, {
+        open(url) {
+            expect.step(`callWindowOpen ${url}`);
+        },
+    });
 });
 
 test("link button opens in new window if url not empty", async () => {

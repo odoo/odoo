@@ -4,6 +4,7 @@ import {
     defineMailModels,
     insertText,
     listenStoreFetch,
+    MENU_ACTIVE_IDS,
     onRpcBefore,
     openDiscuss,
     openMessagingMenu,
@@ -15,7 +16,6 @@ import {
     startServer,
     triggerEvents,
     waitStoreFetch,
-    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { Store } from "@mail/../tests/mock_server/store";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
@@ -28,12 +28,10 @@ import {
     Command,
     getService,
     mockService,
-    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
@@ -502,12 +500,7 @@ test("Counter is updated when receiving new message", async () => {
 });
 
 test("basic rendering", async () => {
-    patchWithCleanup(browser, {
-        Notification: {
-            ...browser.Notification,
-            permission: "denied",
-        },
-    });
+    mockPermission("notifications", "denied");
     await start();
     await contains(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     expect('.o_menu_systray .dropdown-toggle:has(i[aria-label="Messages"]):first').not.toHaveClass(

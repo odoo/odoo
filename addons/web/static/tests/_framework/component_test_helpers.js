@@ -5,7 +5,6 @@ import { getPopoverForTarget } from "@web/core/popover/popover";
 import { patch } from "@web/core/utils/patch";
 import { getMockEnv, getTestApp, makeTestApp } from "./app_test_helpers";
 import { makeMockServer, MockServer } from "./mock_server/mock_server";
-import { patchWithCleanup } from "./patch_test_helpers";
 import { isSmall } from "./ui_test_helpers";
 
 /**
@@ -164,7 +163,7 @@ export async function waitUntilIdle(appOrComponent) {
     }
 
     return new Promise((resolve) => {
-        const unpatch = patchWithCleanup(scheduler, {
+        const unpatch = patch(scheduler, {
             processTasks() {
                 const result = super.processTasks(...arguments);
                 if (isIdle()) {

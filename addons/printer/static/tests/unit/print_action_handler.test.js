@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { printJobs, } from "@printer/print_action_handler";
+import { beforeEach, describe, expect, mockFetch, test } from "@odoo/hoot";
+import { printJobs } from "@printer/print_action_handler";
+import { allowTranslations } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 
 describe.current.tags("headless");
@@ -14,7 +14,6 @@ beforeEach(() => {
 });
 
 const mockReportId = 42;
-
 
 const makeEposPrinter = (overrides = {}) => ({
     type: "epos",
@@ -49,7 +48,6 @@ const makeMockServices = () => ({
     },
 });
 
-
 const getHandler = () =>
     registry.category("ir.actions.report handlers").get("print_action_handler");
 
@@ -68,11 +66,9 @@ const makeMockEnv = (printerSettings = null) => ({
 describe("printJobs", () => {
     test("sends an epos job to the correct endpoint and resolves", async () => {
         const fetchCalls = [];
-        patchWithCleanup(window, {
-            fetch: async (url, params) => {
-                fetchCalls.push({ url, params });
-                return { text: async () => `<response success="true" code=""/>`, ok: true };
-            },
+        mockFetch((input, init) => {
+            fetchCalls.push({ url: input, params: init });
+            return `<response success="true" code=""/>`;
         });
 
         const printer = makeEposPrinter();
@@ -86,11 +82,9 @@ describe("printJobs", () => {
 
     test("sends a zpl job to /pstprnt in no-cors mode", async () => {
         const fetchCalls = [];
-        patchWithCleanup(window, {
-            fetch: async (url, params) => {
-                fetchCalls.push({ url, params });
-                return {};
-            },
+        mockFetch((input, init) => {
+            fetchCalls.push({ url: input, params: init });
+            return null;
         });
 
         const printer = makeZplPrinter();
@@ -105,11 +99,9 @@ describe("printJobs", () => {
 
     test("skips jobs whose type does not match the printer", async () => {
         const fetchCalls = [];
-        patchWithCleanup(window, {
-            fetch: async (url) => {
-                fetchCalls.push(url);
-                return {};
-            },
+        mockFetch((input) => {
+            fetchCalls.push(input);
+            return null;
         });
 
         const printer = makeZplPrinter();
@@ -122,9 +114,7 @@ describe("printJobs", () => {
 
     test("shows a danger notification when epos returns a non-success response", async () => {
         allowTranslations();
-        patchWithCleanup(window, {
-            fetch: async () => ({ text: async () => `<response success="false" code="ERROR_GENERAL"/>` }),
-        });
+        mockFetch(() => `<response success="false" code="ERROR_GENERAL"/>`);
 
         const printer = makeEposPrinter();
         const services = makeMockServices();
@@ -136,8 +126,8 @@ describe("printJobs", () => {
 
     test("shows a danger notification when fetch throws", async () => {
         allowTranslations();
-        patchWithCleanup(window, {
-            fetch: async () => { throw new Error("network error"); },
+        mockFetch(() => {
+            throw new Error("network error");
         });
 
         const printer = makeEposPrinter();
@@ -150,13 +140,11 @@ describe("printJobs", () => {
 
     test("retries on ERROR_WAIT_EJECT before succeeding", async () => {
         let callCount = 0;
-        patchWithCleanup(window, {
-            fetch: async () => {
-                callCount++;
-                const success = callCount > 1;
-                const code = success ? "" : "ERROR_WAIT_EJECT";
-                return { text: async () => `<response success="${success}" code="${code}"/>` };
-            },
+        mockFetch(() => {
+            callCount++;
+            const success = callCount > 1;
+            const code = success ? "" : "ERROR_WAIT_EJECT";
+            return `<response success="${success}" code="${code}"/>`;
         });
 
         const printer = makeEposPrinter();
@@ -169,11 +157,9 @@ describe("printJobs", () => {
 
     test("processes multiple jobs of matching type in sequence", async () => {
         const fetchCalls = [];
-        patchWithCleanup(window, {
-            fetch: async (url) => {
-                fetchCalls.push(url);
-                return { text: async () => `<response success="true" code=""/>` };
-            },
+        mockFetch((input) => {
+            fetchCalls.push(input);
+            return `<response success="true" code=""/>`;
         });
 
         const printer = makeEposPrinter();
@@ -184,7 +170,6 @@ describe("printJobs", () => {
         expect(notificationsReceived).toHaveLength(0);
     });
 });
-
 
 describe("printActionHandler", () => {
     const makeAction = (overrides = {}) => ({
@@ -229,9 +214,7 @@ describe("printActionHandler", () => {
     });
 
     test("returns true and calls onClose after a successful print", async () => {
-        patchWithCleanup(window, {
-            fetch: async () => ({ text: async () => `<response success="true" code=""/>` }),
-        });
+        mockFetch(() => `<response success="true" code=""/>`);
 
         const env = makeMockEnv({
             selectedPrinters: [makeEposPrinter()],
@@ -246,15 +229,16 @@ describe("printActionHandler", () => {
 
     test("prints to every selected printer", async () => {
         const fetchCalls = [];
-        patchWithCleanup(window, {
-            fetch: async (url) => {
-                fetchCalls.push(url);
-                return { text: async () => `<response success="true" code=""/>` };
-            },
+        mockFetch((input) => {
+            fetchCalls.push(input);
+            return `<response success="true" code=""/>`;
         });
 
         const env = makeMockEnv({
-            selectedPrinters: [makeEposPrinter({ ip_address: "1.1.1.1" }), makeEposPrinter({ ip_address: "2.2.2.2" })],
+            selectedPrinters: [
+                makeEposPrinter({ ip_address: "1.1.1.1" }),
+                makeEposPrinter({ ip_address: "2.2.2.2" }),
+            ],
         });
 
         await getHandler()(makeAction(), {}, env);

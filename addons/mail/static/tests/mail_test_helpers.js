@@ -8,14 +8,15 @@ import {
     before,
     expect,
     getFixture,
+    hover as hootHover,
     mockPermission,
+    queryFirst,
     registerDebugInfo,
+    resize,
     test,
 } from "@odoo/hoot";
-import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import {
     assignTestEnv,
-    MockServer,
     authenticate,
     defineModels,
     defineParams,
@@ -23,10 +24,10 @@ import {
     getService,
     makeMockServer,
     makeTestApp,
+    MockServer,
     mountWithCleanup,
     onRpc,
     parseViewProps,
-    patchWithCleanup,
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
@@ -44,6 +45,7 @@ import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { pick } from "@web/core/utils/objects";
+import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_utils";
@@ -52,7 +54,7 @@ import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as StoreService } from "@mail/core/common/store_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
-import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
+import { authenticateGuest, DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DiscussCallHistory } from "./mock_server/mock_models/discuss_call_history";
 import { DiscussCategory } from "./mock_server/mock_models/discuss_category";
@@ -96,12 +98,14 @@ import { Store } from "./mock_server/store";
 
 export * from "./mail_test_helpers_contains";
 
+const { AudioContext } = window;
+
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 mailGlobal.isInTest = true;
-patchWithCleanup(useService, {
+patch(useService, {
     handleCallWhenDestroyed() {
         // so that RPCs after tests do not throw error
         return new Promise(() => {});
@@ -189,10 +193,10 @@ export const mailModels = {
 export function onRpcBefore(route, callback) {
     if (typeof route === "string") {
         const handler = registry.category("mail.mock_rpc").get(route);
-        patchWithCleanup(handler, { before: callback });
+        patch(handler, { before: callback });
     } else {
         const onRpcBeforeGlobal = registry.category("mail.on_rpc_before_global").get(true);
-        patchWithCleanup(onRpcBeforeGlobal, { cb: route });
+        patch(onRpcBeforeGlobal, { cb: route });
     }
 }
 
@@ -205,7 +209,7 @@ export function onRpcBefore(route, callback) {
  */
 export function onRpcAfter(route, callback) {
     const handler = registry.category("mail.mock_rpc").get(route);
-    patchWithCleanup(handler, { after: callback });
+    patch(handler, { after: callback });
 }
 /** @type {Map<string, string>} */
 const globalArchs = new Map();
@@ -371,7 +375,7 @@ let discussAsTabId = 0;
  * }} [options]
  */
 export async function start(options) {
-    patchWithCleanup(Rtc.prototype, {
+    patch(Rtc.prototype, {
         start() {
             super.start();
             after(() => this.clear());
@@ -406,7 +410,7 @@ export async function start(options) {
         const ResUsers = pyEnv["res.users"];
         const store = new Store();
         ResUsers._init_store_data(store);
-        patchWithCleanup(session, {
+        patch(session, {
             storeData: store.as_dict(),
         });
         registerDebugInfo("session.storeData", session.storeData);
@@ -423,7 +427,7 @@ export async function start(options) {
         assignTestEnv({ discussAsTabId, selector });
         await makeTestApp({ forceNew: true });
     }
-    patchWithCleanup(SoundEffectsPlugin.prototype, {
+    patch(SoundEffectsPlugin.prototype, {
         _setAudioSrc(audio, srcPath) {
             audio["data-src"] = srcPath;
         },
@@ -489,7 +493,7 @@ function getSizeFromWidth(width) {
 /**
  * Adjust ui size either from given size (mapped to window breakpoints) or
  * width. This will impact uiService.{isSmall/size}, (wowl/legacy)
- * browser.innerWidth, (wowl) uiService.isSmall and. When a size is given, the browser
+ * window.innerWidth, (wowl) uiService.isSmall and. When a size is given, the browser
  * width is set according to the breakpoints that are used by the webClient.
  *
  * @param {Object} params parameters to configure the ui size.
@@ -504,7 +508,7 @@ export async function patchUiSize({ height, size, width }) {
     size = size === undefined ? getSizeFromWidth(width) : size;
     width = width || getWidthFromSize(size);
 
-    patchWithCleanup(uiUtils, {
+    patch(uiUtils, {
         getSize() {
             return size;
         },
@@ -514,7 +518,7 @@ export async function patchUiSize({ height, size, width }) {
 }
 
 function createAudioStream() {
-    const ctx = new window.AudioContext();
+    const ctx = new AudioContext();
     const dest = ctx.createMediaStreamDestination();
     after(() => {
         closeStream(dest.stream);
@@ -539,7 +543,7 @@ export function createVideoStream() {
 export function mockGetMedia() {
     const streams = [];
     // Mock permissions API to return "granted" by default.
-    patchWithCleanup(browser.navigator.permissions, {
+    patch(navigator.permissions, {
         async query() {
             return {
                 state: "granted",
@@ -549,7 +553,7 @@ export function mockGetMedia() {
             };
         },
     });
-    patchWithCleanup(browser.navigator.mediaDevices, {
+    patch(navigator.mediaDevices, {
         getUserMedia(constraints) {
             if (constraints.audio) {
                 const audioStream = createAudioStream();
@@ -597,14 +601,14 @@ export function mockBrowserFullscreen({ grant = true } = {}) {
         get: () => fullscreenElement,
     });
     after(() => delete document.fullscreenElement);
-    patchWithCleanup(document.body, {
+    patch(document.body, {
         async requestFullscreen() {
             if (grant) {
                 setFullscreenElement(document.body);
             }
         },
     });
-    patchWithCleanup(document, {
+    patch(document, {
         async exitFullscreen() {
             setFullscreenElement(null);
         },
@@ -652,8 +656,8 @@ export function mockPipWindow() {
             popoutIframe.remove();
         },
     };
-    patchWithCleanup(window, { documentPictureInPicture: false });
-    patchWithCleanup(browser, {
+    patch(window, { documentPictureInPicture: false });
+    patch(browser, {
         open: () => {
             popoutWindow.closed = false;
             outsideArea.append(popoutIframe);
@@ -697,7 +701,7 @@ export async function makeMockRtcNetwork({ env, channelId }) {
     };
     const { promise: rtcServiceIsListening, resolve: resolveRtcServiceIsListening } =
         Promise.withResolvers();
-    patchWithCleanup(Network.prototype, {
+    patch(Network.prototype, {
         addEventListener(name, f) {
             if (name === "update") {
                 resolveRtcServiceIsListening();
@@ -775,7 +779,7 @@ export async function makeMockRtcNetwork({ env, channelId }) {
 export function patchBrowserNotification(requestPermissionResult) {
     mockPermission("notifications", "prompt");
 
-    patchWithCleanup(Notification, {
+    patch(Notification, {
         requestPermission() {
             mockPermission("notifications", requestPermissionResult);
             return super.requestPermission();
@@ -790,7 +794,7 @@ function cloneRegistryWithCleanup(registry) {
 function prepareRegistry(registry, { keepContent = false } = {}) {
     const _addEventListener = registry.addEventListener.bind(registry);
     const _removeEventListener = registry.removeEventListener.bind(registry);
-    const patch = {
+    patch(registry, {
         content: keepContent ? { ...registry.content } : {},
         elements: null,
         entries: null,
@@ -801,8 +805,7 @@ function prepareRegistry(registry, { keepContent = false } = {}) {
                 _removeEventListener(type, callback);
             });
         },
-    };
-    patchWithCleanup(registry, patch);
+    });
 }
 
 export function prepareRegistriesWithCleanup() {
@@ -823,7 +826,7 @@ let nextObserveRenderResults = 0;
  * which render comes from what, usually the less with brief explanations the better.
  */
 export function prepareObserveRenders() {
-    patchWithCleanup(Component.prototype, {
+    patch(Component.prototype, {
         setup(...args) {
             const countRender = () => {
                 for (const result of observeRenderResults.values()) {
@@ -935,11 +938,11 @@ function convertChatHubParam(param) {
 }
 
 export function setupChatHub({ opened = [], folded = [] } = {}) {
-    browser.localStorage.setItem(CHAT_HUB_KEY, toChatHubData(opened, folded));
+    localStorage.setItem(CHAT_HUB_KEY, toChatHubData(opened, folded));
 }
 
 export function assertChatHub({ opened = [], folded = [] }) {
-    expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
+    expect(localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
 }
 
 export const STORE_FETCH_ROUTES = ["/mail/store"];
@@ -961,7 +964,7 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
     function isRegistered(name) {
         return namesToRegister.length === 0 || namesToRegister.includes(name);
     }
-    patchWithCleanup(StoreService.prototype, {
+    patch(StoreService.prototype, {
         async fetchStoreData(name, params) {
             const res = await super.fetchStoreData(...arguments);
             if (isRegistered(name)) {
@@ -1034,115 +1037,97 @@ export async function waitStoreFetch(
 export function userContext() {
     return { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] };
 }
-
-/**
- * @typedef VoiceMessagePatchResources
- * @property {AudioProcessor}
- */
-
-/** @returns {VoiceMessagePatchResources} */
-export function patchVoiceMessageAudio() {
-    const res = { audioProcessor: undefined };
-    const {
-        AnalyserNode,
-        AudioBufferSourceNode,
-        AudioContext,
-        AudioWorkletNode,
-        GainNode,
-        MediaStreamAudioSourceNode,
-    } = browser;
-    Object.assign(browser, {
-        AnalyserNode: class {
-            connect() {}
-            disconnect() {}
+class MockAnalyserNode {
+    connect() {}
+    disconnect() {}
+}
+class MockAudioBufferSourceNode {
+    buffer;
+    connect() {}
+    disconnect() {}
+    start() {}
+    stop() {}
+}
+class MockAudioContext {
+    audioWorklet = {
+        addModule(url) {},
+    };
+    currentTime;
+    destination;
+    sampleRate;
+    state;
+    async close() {}
+    createAnalyser() {
+        return new MockAnalyserNode();
+    }
+    createBufferSource() {
+        return new MockAudioBufferSourceNode();
+    }
+    createGain() {
+        return new MockGainNode();
+    }
+    createMediaStreamSource(microphone) {
+        return new MockMediaStreamAudioSourceNode();
+    }
+    decodeAudioData(...args) {
+        return new AudioContext().decodeAudioData(...args);
+    }
+    async resume() {}
+}
+class MockAudioWorkletNode {
+    port = {
+        onmessage(e) {},
+        postMessage(data) {
+            this.onmessage({ data, timeStamp: new Date().getTime() });
         },
-        AudioBufferSourceNode: class {
-            buffer;
-            constructor() {}
-            connect() {}
-            disconnect() {}
-            start() {}
-            stop() {}
-        },
-        AudioContext: class {
-            audioWorklet;
-            currentTime;
-            destination;
-            sampleRate;
-            state;
-            constructor() {
-                this.audioWorklet = {
-                    addModule(url) {},
-                };
-            }
-            async close() {}
-            /** @returns {AnalyserNode} */
-            createAnalyser() {
-                return new browser.AnalyserNode();
-            }
-            /** @returns {AudioBufferSourceNode} */
-            createBufferSource() {
-                return new browser.AudioBufferSourceNode();
-            }
-            /** @returns {GainNode} */
-            createGain() {
-                return new browser.GainNode();
-            }
-            /** @returns {MediaStreamAudioSourceNode} */
-            createMediaStreamSource(microphone) {
-                return new browser.MediaStreamAudioSourceNode();
-            }
-            /** @returns {AudioBuffer} */
-            decodeAudioData(...args) {
-                return new AudioContext().decodeAudioData(...args);
-            }
-        },
-        AudioWorkletNode: class {
-            port;
-            constructor(audioContext, processorName) {
-                this.port = {
-                    onmessage(e) {},
-                    postMessage(data) {
-                        this.onmessage({ data, timeStamp: new Date().getTime() });
-                    },
-                };
-                res.audioProcessor = this;
-            }
-            connect() {
-                this.port.postMessage();
-            }
-            disconnect() {}
-            process(allInputs) {
-                const inputs = allInputs[0][0];
-                this.port.postMessage(inputs);
-                return true;
-            }
-        },
-        GainNode: class {
-            connect() {}
-            close() {}
-            disconnect() {}
-        },
-        MediaStreamAudioSourceNode: class {
-            connect(processor) {}
-            disconnect() {}
-        },
-    });
-    after(() => {
-        Object.assign(browser, {
-            AnalyserNode,
-            AudioBufferSourceNode,
-            AudioContext,
-            AudioWorkletNode,
-            GainNode,
-            MediaStreamAudioSourceNode,
+    };
+    constructor(audioContext, processorName) {
+        currentAudioProcessor = this;
+        after(() => {
+            currentAudioProcessor = null;
         });
+    }
+    connect() {
+        this.port.postMessage();
+    }
+    disconnect() {}
+    process(allInputs) {
+        const inputs = allInputs[0][0];
+        this.port.postMessage(inputs);
+        return true;
+    }
+}
+class MockGainNode {
+    connect() {}
+    close() {}
+    disconnect() {}
+}
+class MockMediaStreamAudioSourceNode {
+    connect(processor) {}
+    disconnect() {}
+}
+
+/** @type {MockAudioWorkletNode | null} */
+let currentAudioProcessor = null;
+
+export function patchVoiceMessageAudio() {
+    patch(browser, {
+        AnalyserNode: MockAnalyserNode,
+        AudioBufferSourceNode: MockAudioBufferSourceNode,
+        AudioContext: MockAudioContext,
+        AudioWorkletNode: MockAudioWorkletNode,
+        GainNode: MockGainNode,
+        MediaStreamAudioSourceNode: MockMediaStreamAudioSourceNode,
     });
-    return res;
+    return {
+        get audioProcessor() {
+            return currentAudioProcessor;
+        },
+    };
 }
 
 export function mockPermissionsPrompt() {
-    patchWithCleanup(browser.navigator.permissions, {
+    patch(navigator.permissions, {
         async query() {
             return {
                 state: "prompt",

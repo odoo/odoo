@@ -1,20 +1,19 @@
 import { after } from "@odoo/hoot";
-import { serverState } from "./mock_server_state.hoot";
-import { patchWithCleanup } from "./patch_test_helpers";
-
 import {
     loadLanguages,
     translatedTerms,
     translatedTermsGlobal,
     translationLoaded,
 } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
+import { serverState } from "./mock_server_state.hoot";
 
 /**
  * @param {Record<string, string>} languages
  */
 export function installLanguages(languages) {
     serverState.multiLang = true;
-    patchWithCleanup(loadLanguages, {
+    patch(loadLanguages, {
         installedLanguages: Object.entries(languages),
     });
 }
@@ -33,10 +32,10 @@ export function patchTranslations(terms = {}) {
     allowTranslations();
     for (const addonName in terms) {
         if (!(addonName in translatedTerms)) {
-            patchWithCleanup(translatedTerms, { [addonName]: {} });
+            patch(translatedTerms, { [addonName]: {} });
         }
-        patchWithCleanup(translatedTerms[addonName], terms[addonName]);
-        patchWithCleanup(translatedTermsGlobal, terms[addonName]);
+        patch(translatedTerms[addonName], terms[addonName]);
+        patch(translatedTermsGlobal, terms[addonName]);
     }
 }
 
