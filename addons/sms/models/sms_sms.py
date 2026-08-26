@@ -172,6 +172,7 @@ class SmsSms(models.Model):
 
     def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""
+        self.sudo().sms_tracker_id._lock_tracking_records()
         sms_api = self.env.context.get('sms_api')
         if not sms_api:
             company = self._get_sms_company()
