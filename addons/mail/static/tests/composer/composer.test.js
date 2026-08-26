@@ -1134,13 +1134,17 @@ test("TAB/ARROW focuses 1st canned response suggestion", async () => {
     await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
     await triggerHotkey("Escape");
     await contains(".o-mail-NavigableList-item", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":", { replace: true });
+    await insertText(".o-mail-Composer-input", "", { replace: true });
+    await animationFrame(); // wait for the cleared search
+    await insertText(".o-mail-Composer-input", ":");
     await contains(".o-mail-NavigableList-item", { count: 2 });
     await triggerHotkey("ArrowDown");
     await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
     await triggerHotkey("Escape");
     await contains(".o-mail-NavigableList-active", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":", { replace: true });
+    await insertText(".o-mail-Composer-input", "", { replace: true });
+    await animationFrame(); // wait for the cleared search
+    await insertText(".o-mail-Composer-input", ":");
     await contains(".o-mail-NavigableList-item", { count: 2 });
     await triggerHotkey("ArrowUp");
     await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
