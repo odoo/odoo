@@ -839,10 +839,12 @@ export class FormatPlugin extends Plugin {
         }
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getEditableSelection();
-            if (!selection.isCollapsed) {
-                return;
+            if (
+                selection.isCollapsed ||
+                (selection.anchorNode === selection.focusNode && isZWS(selection.anchorNode))
+            ) {
+                this.applyPendingFormats();
             }
-            this.applyPendingFormats();
         }
     }
 

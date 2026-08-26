@@ -7,7 +7,7 @@ import {
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { fillEmpty, removeStyle, unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, removeStyle, toggleClass, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
     isPhrasingContent,
@@ -54,7 +54,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format", "delete"];
+    static dependencies = ["selection", "split", "history", "format", "delete", "domObserver"];
     static shared = [
         "colorElement",
         "removeAllColor",
@@ -140,6 +140,7 @@ export class ColorPlugin extends Plugin {
      * Discard pending color intents when the selection changes.
      */
     clearPendingColors() {
+        this.clearCaretColorReset();
         if (this.skipNextColorClear) {
             this.skipNextColorClear = false;
             return;
@@ -148,6 +149,7 @@ export class ColorPlugin extends Plugin {
     }
 
     applyPendingColors() {
+        this.clearCaretColorReset();
         for (const [mode, color] of Object.entries(this.activeColorInfo)) {
             this.applyColor(color, mode);
         }
@@ -176,6 +178,7 @@ export class ColorPlugin extends Plugin {
     }
 
     removeAllColor() {
+        this.activeColorInfo = {};
         const sel = this.dependencies.selection.getEditableSelection();
         if (sel.isCollapsed) {
             const el = closestElement(sel.anchorNode);
@@ -183,13 +186,15 @@ export class ColorPlugin extends Plugin {
             for (const mode of ["color", "backgroundColor"]) {
                 if (findUpTo(el, block, (node) => getColorOrClass(node, mode))) {
                     this.activeColorInfo[mode] = "";
+                    if (mode === "color") {
+                        this.setCaretColorReset(el);
+                    }
                 }
             }
             this.skipNextColorClear = true;
             this.trigger("on_color_requested_handlers");
             return;
         }
-        this.activeColorInfo = {};
         const colorModes = ["color", "backgroundColor"];
         const colorNodeProviders = this.getResource("color_target_providers");
         let someColorWasRemoved = true;
@@ -264,10 +269,10 @@ export class ColorPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        let targetedNodes;
+        let targetedNodes, zws;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
-            const zws = this.dependencies.format.getOrCreateZws();
+            zws = this.dependencies.format.getOrCreateZws();
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
@@ -444,22 +449,39 @@ export class ColorPlugin extends Plugin {
                 (!font.hasAttribute("style") || !color)
             ) {
                 const parent = font.parentNode;
-                if (
-                    font.childNodes.length === 1 &&
-                    isTextNode(font.firstChild) &&
-                    isZWS(font.firstChild)
-                ) {
-                    cursors.update(callbacksForCursorUpdate.remove(font));
-                    font.remove();
-                } else {
-                    cursors.update(callbacksForCursorUpdate.unwrap(font));
-                    unwrapContents(font);
+                cursors.update(callbacksForCursorUpdate.unwrap(font));
+                unwrapContents(font);
+                if (zws) {
+                    this.dependencies.selection.setSelection(
+                        {
+                            anchorNode: zws,
+                            anchorOffset: 0,
+                            focusNode: zws,
+                            focusOffset: 1,
+                        },
+                        { normalize: false }
+                    );
+                    return;
                 }
                 fillEmpty(parent);
                 fontsSet.delete(font);
             }
         }
         cursors.restore();
+    }
+
+    setCaretColorReset(el) {
+        this.dependencies.domObserver.ignore(() => toggleClass(el, "oe_default_caret_color", true));
+        this.caretColorResetElement = el;
+    }
+
+    clearCaretColorReset() {
+        if (this.caretColorResetElement) {
+            this.dependencies.domObserver.ignore(() =>
+                toggleClass(this.caretColorResetElement, "oe_default_caret_color", false)
+            );
+            delete this.caretColorResetElement;
+        }
     }
 
     convertEmptyColorToPendingIntent() {
