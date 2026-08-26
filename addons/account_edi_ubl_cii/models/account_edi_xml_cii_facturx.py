@@ -203,10 +203,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             line = line_vals['line']
             line_vals['unece_uom_code'] = self._get_uom_unece_code(line.product_uom_id)
 
-            if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
-                line_vals['billing_start'] = line.deferred_start_date
-                line_vals['billing_end'] = line.deferred_end_date
-
         # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
         # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
         billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
