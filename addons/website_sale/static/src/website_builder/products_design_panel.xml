@@ -158,8 +158,7 @@
                     <span t-out="style.label"/>
                 </div>
                 <BuilderSelectItem
-                        t-if="style.type == 'catalog' || style.type == 'list' &amp;&amp; this.props.showLists"
-                        id="style.id"
+                        id="style.id + (!showImages ? '_shortcut' : '')"
                         action="'composite'"
                         actionParam="[
                             {
@@ -210,9 +209,7 @@
                     label.translate="Preset"
                     tooltip.translate="Choose one pre-made preset and customise it as you wish"
                 >
-                    <t t-call="website_sale.ProductsDesignPanelPresets"
-                        label.translate="Presets"
-                        showImages="true"/>
+                    <t t-call="website_sale.ProductsDesignPanelPresets" showImages="true"/>
                 </BuilderRow>
 
                 <div class="o_wsale_design_panel_section_title ps-2 pt-2 pb-1 fw-bold">General</div>
