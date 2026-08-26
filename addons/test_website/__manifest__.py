@@ -50,4 +50,5 @@ models which only purpose is to run tests.""",
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'is_test_module': True,
 }

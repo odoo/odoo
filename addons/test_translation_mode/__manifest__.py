@@ -27,4 +27,5 @@ In the settings, a custom Weblate project can be targeted.""",
     'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'is_test_module': True,
 }

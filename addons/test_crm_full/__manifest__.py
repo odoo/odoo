@@ -20,4 +20,5 @@ backend. It notably includes IAP bridges modules to test their impact. """,
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'is_test_module': True,
 }
