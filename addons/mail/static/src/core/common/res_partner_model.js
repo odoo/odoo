@@ -61,7 +61,7 @@ export class ResPartner extends Record {
     phone;
     /** @type {string} */
     tz;
-    /** @type {luxon.DateTime} */
+    /** @type {import("luxon").DateTime} */
     offline_since = this.computed(() => {
         const dts = this.user_ids.map((u) => u.offline_since).filter((dt) => dt);
         return dts.length ? DateTime.max(...dts) : undefined;

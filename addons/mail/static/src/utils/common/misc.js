@@ -90,7 +90,7 @@ export function closeStream(stream) {
  *  greater than date2, and 0 if they are equal.
  */
 export function compareDatetime(date1, date2) {
-    if (date1?.ts === date2?.ts) {
+    if (date1?.valueOf() === date2?.valueOf()) {
         return 0;
     }
     if (!date1) {
@@ -99,7 +99,8 @@ export function compareDatetime(date1, date2) {
     if (!date2) {
         return 1;
     }
-    return date1.ts - date2.ts;
+    // an invalid date has no millis, and a NaN comparator makes the sort unstable
+    return date1.valueOf() - date2.valueOf() || 0;
 }
 
 /**

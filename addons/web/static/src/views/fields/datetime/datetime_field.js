@@ -15,7 +15,7 @@ import { DateTimeOperation } from "@web/model/relational_model/operation";
 const { DateTime } = luxon;
 
 /**
- * @typedef {luxon.DateTime} DateTime
+ * @typedef {import("luxon").DateTime} DateTime
  *
  * @typedef {import("../standard_field_props").StandardFieldProps & {
  *  endDateField?: string;

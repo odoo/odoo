@@ -210,7 +210,7 @@ export const fields = {
      *   behaviour of OWL reactive.
      * @param {(this: Record) => void} [param0.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
-     * @returns {luxon.DateTime}
+     * @returns {import("luxon").DateTime}
      */
     Date(param0) {
         return {
@@ -232,7 +232,7 @@ export const fields = {
      *   behaviour of OWL reactive.
      * @param {(this: Record) => void} [param0.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
-     * @returns {luxon.DateTime}
+     * @returns {import("luxon").DateTime}
      */
     Datetime(param0) {
         return {
