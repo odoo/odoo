@@ -375,3 +375,10 @@ class TestGroupsOdoo(common.TransactionCase):
         #
         with self.assertRaises(ValidationError, msg=f"User 'A User' cannot be at the same time in exclusive groups {e.name!r}, {g.name!r}"):
             user.group_ids += c
+
+    def test_groups_7_multi_external_id(self):
+        system = self.env.ref('base.group_system')
+        self.env['ir.model.data']._update_xmlids([{'xml_id': 'base.test_group_system', 'record': system}])
+        self.assertGreater(len(system._get_external_ids()[system.id]), 1, "Group with multiple xmlids")
+        self.definitions = self.env['res.groups']._get_group_definitions()
+        self.assertEqual(self.parse_repr('base.group_system'), self.parse_repr('base.test_group_system'))
