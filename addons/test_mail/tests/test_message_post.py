@@ -2426,6 +2426,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
             test_records.message_post_with_source(
                 test_template,
                 email_layout_xmlid='mail.test_layout',
+                force_send=True,  # force immediate sending, allowing to check emails, not default for batch posting
                 message_type='comment',
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             )

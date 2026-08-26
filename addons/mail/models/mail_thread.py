@@ -2769,12 +2769,13 @@ class MailThread(models.AbstractModel):
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         messages_all = self.env['mail.message']
-        for record in self:
+        # message_post (aka no template) does not support batch
+        for subset in [self] if template else self:
             if template:
                 composer = self.env['mail.compose.message'].with_context(
                     default_composition_mode='comment',
                     default_model=self._name,
-                    default_res_ids=record.ids,
+                    default_res_ids=subset.ids,
                     default_template_id=template.id,
                 ).create({
                     'message_type': message_type,
@@ -2784,8 +2785,8 @@ class MailThread(models.AbstractModel):
                 _mails_as_sudo, messages = composer._action_send_mail()
                 messages_all += messages
             else:
-                messages_all += record.message_post(
-                    body=bodies[record.id],
+                messages_all += subset.message_post(
+                    body=bodies[subset.id],
                     message_type=message_type,
                     subtype_id=subtype_id,
                     **kwargs
