@@ -184,9 +184,12 @@ class ResPartner(models.Model):
     @api.model
     @handle_demo
     def _pdp_annuaire_lookup_participant(self, edi_identification):
+        eas, _colon, pdp_identifier = edi_identification.partition(":")
+        if eas != '0225':
+            return None
+
         edi_mode = self.env.company._get_peppol_edi_mode()
         origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
-        pdp_identifier = edi_identification.partition(":")[2]
         query = parse.urlencode({'pdp_identifier': pdp_identifier})  # Note: the annuaire lookup is case-sensitive
         endpoint = f'{origin}/api/pdp/1/annuaire_lookup?{query}'
 
