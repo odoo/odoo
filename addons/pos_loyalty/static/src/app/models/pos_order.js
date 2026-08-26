@@ -832,19 +832,25 @@ patch(PosOrder.prototype, {
                     continue;
                 }
                 let unclaimedQty;
+                let rewardProduct;
                 if (reward.reward_type === "product") {
                     if (!reward.multi_product) {
-                        const product = reward.reward_product_id;
-                        if (!product) {
-                            continue;
-                        }
-                        unclaimedQty = this._computeUnclaimedFreeProductQty(
-                            reward,
-                            couponProgram.coupon_id,
-                            product,
-                            points
+                        rewardProduct = reward.reward_product_id;
+                    } else if (auto) {
+                        // A multi product reward is claimed on the line being worked on.
+                        rewardProduct = reward.reward_product_ids.find(
+                            (product) => product.id === this.getSelectedOrderline()?.product_id.id
                         );
                     }
+                    if (!rewardProduct) {
+                        continue;
+                    }
+                    unclaimedQty = this._computeUnclaimedFreeProductQty(
+                        reward,
+                        couponProgram.coupon_id,
+                        rewardProduct,
+                        points
+                    );
                     if (!unclaimedQty || unclaimedQty <= 0) {
                         continue;
                     }
@@ -853,6 +859,7 @@ patch(PosOrder.prototype, {
                     coupon_id: couponProgram.coupon_id,
                     reward: reward,
                     potentialQty: unclaimedQty,
+                    product: rewardProduct,
                 });
             }
         }
