@@ -58,14 +58,14 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         expected_document_values = {
             'document_type': 'submission',
-            'state': False,
+            'state': 'invalid',
             'errors': self._mock_format_document_generation_errors(mock_errors),
             'response_csv': False,
         }
         self.assertRecordValues(document, [expected_document_values])
 
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'invalid',
             'l10n_es_edi_verifactu_warning': expected_document_values['errors'],
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -91,7 +91,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
         errors = ["There is no Veri*Factu document for the refunded record."]
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'invalid',
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -125,7 +125,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         substitution_move._l10n_es_edi_verifactu_create_documents()
         errors = ["There is no Veri*Factu document for the substituted record.", "There is no Veri*Factu document for the reversal of the substituted record."]
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'invalid',
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -140,7 +140,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         substitution_move._l10n_es_edi_verifactu_create_documents()
         errors = ["There is no Veri*Factu document for the reversal of the substituted record."]
         expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_state': 'invalid',
             'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
@@ -524,6 +524,54 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
+    def test_get_state_distinguishes_invalid_from_rejected(self):
+        """A document that could never be generated (local error, no chain_index) must not be
+        confused with a document that was actually sent and rejected by the AEAT: they are
+        surfaced under different `l10n_es_edi_verifactu_state` values, but both should be
+        reachable through the same dashboard/search domain.
+        """
+        rejected_invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
+        with self._mock_last_document(None):
+            rejected_document = rejected_invoice._l10n_es_edi_verifactu_create_documents()[rejected_invoice]
+        with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_rejected_registration.json'):
+            rejected_document._send_as_batch()
+
+        check_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._check_record_values'
+        invalid_invoice = self._create_dummy_invoice(name='INV/2019/00007', invoice_date='2024-12-17')
+        with self._mock_last_document(None), mock.patch(check_function_path, return_value=["Problem"]):
+            invalid_document = invalid_invoice._l10n_es_edi_verifactu_create_documents()[invalid_invoice]
+
+        self.assertFalse(invalid_document.chain_index)
+        self.assertEqual(invalid_document.state, 'invalid')
+        self.assertRecordValues(rejected_invoice, [{'l10n_es_edi_verifactu_state': 'rejected'}])
+        self.assertRecordValues(invalid_invoice, [{'l10n_es_edi_verifactu_state': 'invalid'}])
+
+        dashboard_domain = [('l10n_es_edi_verifactu_state', 'in', ('rejected', 'invalid'))]
+        moves_with_errors = self.env['account.move'].search(dashboard_domain)
+        self.assertIn(rejected_invoice, moves_with_errors)
+        self.assertIn(invalid_invoice, moves_with_errors)
+
+    def test_generation_error_does_not_trigger_rejected_before(self):
+        """A local generation error (nothing was ever sent to the AEAT) must not be treated as a
+        previous rejection: the next submission attempt must not carry `Subsanacion: 'S'` /
+        `RechazoPrevio: 'X'`, which are reserved for records that the AEAT actually rejected.
+        """
+        check_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._check_record_values'
+        invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
+        with self._mock_last_document(None), mock.patch(check_function_path, return_value=["Problem"]):
+            invoice._l10n_es_edi_verifactu_create_documents()
+
+        self.assertEqual(invoice.l10n_es_edi_verifactu_state, 'invalid')
+
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        with self._mock_zeep_registration_operation_certificate_issue():
+            batch_dict, _info = document._send_as_batch()
+
+        registro_alta = batch_dict['RegistroFactura'][0]['RegistroAlta']
+        self.assertEqual(registro_alta['Subsanacion'], 'N')
+        self.assertNotIn('RechazoPrevio', registro_alta)
+
     def test_mark_for_next_batch(self):
         # Check that we can send immediately
         self.assertFalse(self._company_issuer.next_batch_time)
@@ -611,6 +659,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         invoice = self._create_dummy_invoice(name='INV/2019/00027', invoice_date='2024-12-30')
         document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.chain_index)
+        self.assertEqual(document.state, 'invalid')
         self.assertIn("prefix or suffix", document.errors)
 
     # -----------------------------------------------------------------------
