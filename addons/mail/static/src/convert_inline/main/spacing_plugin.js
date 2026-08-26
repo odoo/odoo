@@ -382,6 +382,17 @@ export class SpacingPlugin extends Plugin {
                 this.validateSpacingValue.bind(this),
             ],
         });
+        // allow inline phrasing content to have a positive padding if width is not 100%
+        // TODO EGGMAIL: could be improved by computing the available space and ensuring
+        // the element + spacing is smaller than that (box-sizing: content-box issue)
+        rules.allow(/^padding(-(top|right|bottom|left))?$/, {
+            when: [
+                ({ referenceNode }) =>
+                    !this.isBlock(referenceNode, { evaluateDisconnected: true }) ||
+                    isPhrasingContent(referenceNode),
+                this.validateSpacingValue.bind(this),
+            ],
+        });
         // HR can have a userAgent style which needs to be countered
         const isHR = ({ referenceNode }) => referenceNode.nodeName === "HR";
         // block HR margin no matter what, to make it "fail".
