@@ -5,7 +5,6 @@ from collections import defaultdict
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools.translate import mark_as_copy
 
 
 class ProductPricelist(models.Model):
@@ -24,7 +23,7 @@ class ProductPricelist(models.Model):
             '|', ('product_id', '=', None), ('product_id.active', '=', True),
         ]
 
-    name = fields.Char(string="Pricelist Name", required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string="Pricelist Name", required=True, translate=True)
 
     active = fields.Boolean(
         string="Active",

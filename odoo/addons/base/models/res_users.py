@@ -242,7 +242,7 @@ class ResUsers(models.Model):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False, user_writeable=True)
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False, copy=True, user_writeable=True)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False, user_writeable=True)
     email_domain_placeholder = fields.Char(compute="_compute_email_domain_placeholder")
     phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False, user_writeable=True)

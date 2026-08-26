@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.translate import mark_as_copy
 
 
 class ProjectProjectStage(models.Model):
@@ -13,7 +11,7 @@ class ProjectProjectStage(models.Model):
 
     active = fields.Boolean(default=True, export_string_translation=False)
     sequence = fields.Integer(default=50, export_string_translation=False)
-    name = fields.Char("Stage Name", required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char("Stage Name", required=True, translate=True)
     mail_template_id = fields.Many2one('mail.template', string='Email Template', domain=[('model', '=', 'project.project')],
         help="If set, an email will be automatically sent to the customer when the project reaches this stage.")
     fold = fields.Boolean('Folded',

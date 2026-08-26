@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.translate import mark_as_copy
 
 
 class AccountReconcileModelLine(models.Model):
@@ -101,7 +99,7 @@ class AccountReconcileModel(models.Model):
 
     # Base fields.
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Name', required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string='Name', required=True, translate=True)
     sequence = fields.Integer(required=True, default=10)
     company_id = fields.Many2one(
         comodel_name='res.company',

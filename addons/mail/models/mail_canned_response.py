@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.tools import LazyTranslate
+from odoo.tools.translate import mark_as_copy
 from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)
@@ -17,6 +18,7 @@ class MailCannedResponse(models.Model):
 
     source = fields.Char(
         "Shortcut", required=True, index="trigram",
+        copy=mark_as_copy('source'),
         help="Canned response that will automatically be substituted with longer content in your messages."
         " Type '::' followed by the name of your shortcut (e.g. ::hello) to use in your messages.",
     )
@@ -70,12 +72,6 @@ class MailCannedResponse(models.Model):
     def unlink(self):
         self._broadcast(delete=True)
         return super().unlink()
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        if "source" not in (default or {}):
-            return [dict(vals, source=self.env._("%s (copy)", rec.source)) for rec, vals in zip(self, vals_list)]
-        return vals_list
 
     def _broadcast(self, /, *, delete=False):
         stores = Store.Stores()

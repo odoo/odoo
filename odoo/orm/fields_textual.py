@@ -15,7 +15,7 @@ from odoo.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
 from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
-from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate
+from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate, mark_as_copy
 
 from .fields import Field, _logger
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
@@ -498,6 +498,10 @@ class Char(BaseString):
     """ Basic string field, can be length-limited, usually displayed as a
     single-line string in clients.
 
+    :param bool|callable copy: whether the field value should be copied when the
+        record is duplicated; default like in base field definition except that
+        a normal field named "name" will default to ``copy=mark_as_copy('name')``.
+
     :param int size: the maximum size of values stored for that field
 
     :param bool trim: states whether the value is trimmed or not (by default,
@@ -522,6 +526,13 @@ class Char(BaseString):
         super()._setup_attrs__(model_class, name)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
+
+    def _get_attrs(self, model_class, name):
+        attrs = super()._get_attrs(model_class, name)
+        if self.name in ('name', 'x_name') and attrs.get('translate', False) in (True, False) and 'copy' not in attrs:
+            # default name fields are copied with "(copy)" suffix
+            attrs['copy'] = mark_as_copy(self.name)
+        return attrs
 
     @property
     def _column_type(self):

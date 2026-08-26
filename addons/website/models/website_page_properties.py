@@ -196,7 +196,7 @@ class WebsitePageProperties(models.TransientModel):
     ]
 
     target_model_id = fields.Many2one('website.page')
-    name = fields.Char(related='target_model_id.name', readonly=False)
+    name = fields.Char(related='target_model_id.name', readonly=False, copy=True)
     url = fields.Char(related='target_model_id.url', readonly=False)
     website_indexed = fields.Boolean(related='target_model_id.website_indexed', readonly=False)
     visibility = fields.Selection(related='target_model_id.visibility', readonly=False)

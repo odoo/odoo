@@ -19,6 +19,7 @@ class MailAliasDomain(models.Model):
 
     name = fields.Char(
         'Name', required=True,
+        copy=True,
         help="Email domain e.g. 'example.com' in 'odoo@example.com'")
     company_ids = fields.One2many(
         'res.company', 'alias_domain_id', string='Companies',

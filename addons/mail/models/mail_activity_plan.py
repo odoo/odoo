@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class MailActivityPlan(models.Model):
@@ -58,11 +57,3 @@ class MailActivityPlan(models.Model):
         self.has_user_on_demand = False
         for plan in self.filtered('template_ids'):
             plan.has_user_on_demand = any(template.responsible_type == 'on_demand' for template in plan.template_ids)
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for plan, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", plan.name)
-        return vals_list

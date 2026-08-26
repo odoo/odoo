@@ -6,7 +6,6 @@ import itertools
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, RedirectWarning
 from odoo.tools import groupby, SQL
-from odoo.tools.translate import mark_as_copy
 
 
 class AccountAnalyticAccount(models.Model):
@@ -24,7 +23,6 @@ class AccountAnalyticAccount(models.Model):
         required=True,
         tracking=True,
         translate=True,
-        copy=mark_as_copy('name'),
     )
     code = fields.Char(
         string='Reference',

@@ -11,7 +11,6 @@ from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.models import Query, TableSQL
 from odoo.tools import SQL
-from odoo.tools.translate import mark_as_copy
 
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
@@ -38,7 +37,7 @@ class AccountAccount(models.Model):
             if account.account_type in ('asset_receivable', 'liability_payable') and not account.reconcile:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
-    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
     description = fields.Text(translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")

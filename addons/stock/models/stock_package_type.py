@@ -86,10 +86,6 @@ class StockPackageType(models.Model):
         for package_type in self:
             package_type.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", package_type.name)) for package_type, vals in zip(self, vals_list)]
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

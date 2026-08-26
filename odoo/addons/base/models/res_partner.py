@@ -611,13 +611,6 @@ class ResPartner(models.Model):
             if company != company.partner_id.company_id:
                 raise ValidationError(_('The company assigned to this partner does not match the company this partner represents.'))
 
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if default.get('name'):
-            return vals_list
-        return [dict(vals, name=self.env._("%s (copy)", partner.name)) for partner, vals in zip(self, vals_list)]
-
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         # return values in result, as this method is used by _fields_sync()

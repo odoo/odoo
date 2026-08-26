@@ -14,7 +14,6 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import SQL, convert
 from odoo.tools.misc import get_lang
-from odoo.tools.translate import mark_as_copy
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -68,7 +67,7 @@ class PosConfig(models.Model):
     def _default_partner(self):
         return self.sudo()._get_or_create_default_partner()
 
-    name = fields.Char(string='Point of Sale', required=True, translate=True, help="An internal identification of the point of sale.", copy=mark_as_copy('name'))
+    name = fields.Char(string='Point of Sale', required=True, translate=True, help="An internal identification of the point of sale.")
     preparation_printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string="Preparation Printers", domain="[('use_type', '=', 'preparation')]")
     receipt_printer_ids = fields.Many2many('pos.printer', 'pos_config_receipt_printer_rel', 'config_id', 'printer_id', string="Receipt Printers", domain="[('use_type', '=', 'receipt')]")
     use_order_printer = fields.Boolean('Order Printer')

@@ -11,7 +11,7 @@ class UtmCampaign(models.Model):
 
     active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Campaign Identifier', required=True, compute='_compute_name',
-                       store=True, readonly=False, precompute=True, translate=False)
+                       store=True, readonly=False, precompute=True, translate=False, copy=True)
     title = fields.Char(string='Campaign Name', required=True, translate=True)
 
     user_id = fields.Many2one(

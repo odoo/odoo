@@ -77,14 +77,6 @@ class PosPrinter(models.Model):
     timeout = fields.Integer(string="Connection Timeout (ms)", default=15000, help="Time in milliseconds before considering that the printer is not responding.")
     is_split_per_product = fields.Boolean(string='Split per product', help="Print one ticket for each product instead of one ticket grouping all products of the order.")
 
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for printer, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", printer.name)
-        return vals_list
-
     @api.depends('printer_type')
     def _compute_paper_size_keys(self):
         for record in self:

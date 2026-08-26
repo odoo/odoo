@@ -3,7 +3,6 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.translate import mark_as_copy
 
 
 class PosPreset(models.Model):
@@ -11,7 +10,7 @@ class PosPreset(models.Model):
     _inherit = ['pos.load.mixin']
     _description = 'Easily load a set of configuration options'
 
-    name = fields.Char(string='Label', required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string='Label', required=True, translate=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position')
     identification = fields.Selection([('none', 'Not required'), ('address', 'Address'), ('name', 'Name')], default="none", string='Identification', required=True)

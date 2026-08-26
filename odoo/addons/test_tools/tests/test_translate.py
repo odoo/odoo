@@ -584,10 +584,10 @@ class TestTranslation(TransactionCase):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy()
 
         category_no = category.with_context({})
-        self.assertEqual(category_no.name, 'Customers', "Duplication should copy all translations")
+        self.assertEqual(category_no.name, 'Customers (copy)', "Duplication should copy all translations")
 
         category_fr = category.with_context({'lang': 'fr_FR'})
-        self.assertEqual(category_fr.name, 'Clients', "Did not found translation for initial value")
+        self.assertEqual(category_fr.name, 'Clients (copie)', "Did not found translation for initial value")
 
     def test_103_duplicate_record_fr(self):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
@@ -636,9 +636,9 @@ class TestTranslation(TransactionCase):
         self.assertDictEqual(
             translations,
             {
-                'en_US': 'Customers',
-                'fr_FR': 'Clients',
-                'nl_NL': 'Klanten',
+                'en_US': 'Customers (copy)',
+                'fr_FR': 'Clients (copie)',
+                'nl_NL': 'Klanten (kopie)',
             },
             'English, French and Dutch translation should be copied, Chinese translation should be dropped'
         )
@@ -647,10 +647,10 @@ class TestTranslation(TransactionCase):
         category = self.customers.with_context({'lang': 'en_US'}).copy()
 
         category_no = category.with_context({})
-        self.assertEqual(category_no.name, 'Customers', "Duplication did not set untranslated value")
+        self.assertEqual(category_no.name, 'Customers (copy)', "Duplication did not set untranslated value")
 
         category_fr = category.with_context({'lang': 'fr_FR'})
-        self.assertEqual(category_fr.name, 'Clients', "Did not found translation for initial value")
+        self.assertEqual(category_fr.name, 'Clients (copie)', "Did not found translation for initial value")
 
     def test_108_search_en(self):
         CategoryEn = self.env['test_tools.partner.category'].with_context(lang='en_US')

@@ -29,7 +29,7 @@ class RestaurantFloor(models.Model):
     _inherit = ['pos.load.mixin']
 
     name = fields.Char('Floor Name', required=True)
-    pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
+    pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]", copy=False)
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
@@ -68,14 +68,6 @@ class RestaurantFloor(models.Model):
                     )
 
         return super().write(vals)
-
-    def copy_data(self, default=None):
-        default = dict(default or {}, pos_config_ids=[(5, 0, 0)])
-        vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for floor, vals in zip(self, vals_list):
-                vals['name'] = _("%s (copy)", floor.name)
-        return vals_list
 
     def deactivate_floor(self, session_id):
         draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])

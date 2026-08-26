@@ -6,7 +6,6 @@ import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools.translate import mark_as_copy
 
 
 class PosCategory(models.Model):
@@ -27,7 +26,7 @@ class PosCategory(models.Model):
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
-    name = fields.Char(string='Category Name', required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string='Category Name', required=True, translate=True)
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')

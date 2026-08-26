@@ -6,7 +6,6 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.translate import mark_as_copy
 
 
 class ProjectTaskType(models.Model):
@@ -22,7 +21,7 @@ class ProjectTaskType(models.Model):
         return not self.env.context.get('default_project_id', False) and self.env.uid
 
     active = fields.Boolean('Active', default=True, export_string_translation=False)
-    name = fields.Char(string='Stage Name', required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string='Stage Name', required=True, translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=lambda self: self._get_default_project_ids(),

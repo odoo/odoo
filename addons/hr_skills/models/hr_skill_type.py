@@ -4,7 +4,6 @@ from random import randint
 
 from odoo import _, api, fields, models, Command
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import mark_as_copy
 
 
 class HrSkillType(models.Model):
@@ -17,7 +16,7 @@ class HrSkillType(models.Model):
 
     active = fields.Boolean('Active', default=True)
     sequence = fields.Integer("Sequence")
-    name = fields.Char(required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(required=True, translate=True)
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
     skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels", copy=True)
     color = fields.Integer('Color', default=_get_default_color)

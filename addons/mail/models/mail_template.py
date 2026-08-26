@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, SQL, email_normalize, unique
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +34,7 @@ class MailTemplate(models.Model):
         return [('model', 'not in', abstract_models)]
 
     # description
-    name = fields.Char('Name', translate=True, copy=mark_as_copy('name'))
+    name = fields.Char('Name', translate=True)
     description = fields.Text(
         'Template Description', translate=True,
         help="This field is used for internal description of the template's usage.")

@@ -8,7 +8,6 @@ from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import expr_eval
-from odoo.tools.translate import mark_as_copy
 
 
 class DeliveryCarrier(models.Model):
@@ -32,7 +31,7 @@ class DeliveryCarrier(models.Model):
        (they are documented hereunder)
     """
 
-    name = fields.Char(string="Delivery Method", translate=True, required=True, copy=mark_as_copy('name'))
+    name = fields.Char(string="Delivery Method", translate=True, required=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type.

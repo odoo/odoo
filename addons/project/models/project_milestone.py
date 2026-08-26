@@ -18,7 +18,7 @@ class ProjectMilestone(models.Model):
     def _get_default_project_id(self):
         return self.env.context.get('default_project_id') or self.env.context.get('active_id')
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, copy=True)
     sequence = fields.Integer('Sequence', default=10)
     project_id = fields.Many2one('project.project', required=True, default=_get_default_project_id, domain=[('is_template', '=', False)], index=True, ondelete='cascade')
     deadline = fields.Date(tracking=True, copy=False)

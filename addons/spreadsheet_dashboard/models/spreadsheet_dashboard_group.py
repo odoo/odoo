@@ -1,6 +1,5 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
-from odoo.tools.translate import mark_as_copy
 
 
 class SpreadsheetDashboardGroup(models.Model):
@@ -8,7 +7,7 @@ class SpreadsheetDashboardGroup(models.Model):
     _description = 'Group of dashboards'
     _order = 'sequence'
 
-    name = fields.Char(required=True, translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(required=True, translate=True)
     dashboard_ids = fields.One2many('spreadsheet.dashboard', 'dashboard_group_id')
     published_dashboard_ids = fields.One2many('spreadsheet.dashboard', 'dashboard_group_id', domain=[('is_published', '=', True)])
     sequence = fields.Integer()

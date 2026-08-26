@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.addons.html_editor.tools import handle_history_divergence
-from odoo.tools.translate import mark_as_copy
 
 
 class HrJob(models.Model):
@@ -19,7 +17,7 @@ class HrJob(models.Model):
         ]
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Job Position', required=True, index='trigram', translate=True, copy=mark_as_copy('name'))
+    name = fields.Char(string='Job Position', required=True, index='trigram', translate=True)
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees',
         help='Expected number of employees for this job position after new recruitment.', groups="hr.group_hr_user")
