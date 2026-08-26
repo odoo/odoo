@@ -7,7 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='warehouse_config']/group" position="inside">
                 <group string="E-Transfer Note" invisible="l10n_vn_edi_country_code != 'VN'">
-                    <field name="l10n_vn_edi_sinvoice_symbol_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="l10n_vn_edi_sinvoice_symbol_id"
+                           context="{'default_company_id': company_id, 'default_usage': 'delivery_document'}"
+                           options="{'no_open': True, 'no_create': True}"/>
                 </group>
             </xpath>
         </field>
