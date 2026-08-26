@@ -51,6 +51,7 @@ import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
 import { SIZES } from "@web/core/ui/ui_utils";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -76,7 +77,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     static serviceDependencies = [
         "bus_service",
-        "number_buffer",
         "barcode_reader",
         "ui",
         "pos_data",
@@ -100,7 +100,6 @@ export class PosStore extends WithLazyGetterTrap {
     async setup(
         env,
         {
-            number_buffer,
             barcode_reader,
             ui,
             dialog,
@@ -113,7 +112,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     ) {
         this.env = env;
-        this.numberBuffer = number_buffer;
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.barcodeReader = barcode_reader;
         this.ui = ui;
         this.dialog = dialog;

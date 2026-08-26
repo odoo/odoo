@@ -2,6 +2,7 @@ import { animationFrame, press, tick, waitFor, queryAll, advanceTime } from "@od
 import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 export function normalizeText(text) {
     return text.replaceAll("\u00a0", " ").trim();
@@ -105,7 +106,7 @@ export async function enterNumpadValue(value) {
 }
 
 export async function sendBufferKeys(...keys) {
-    const numberBuffer = getService("number_buffer");
+    const numberBuffer = getService(PosNumberBufferPlugin);
     for (const key of keys.flat()) {
         numberBuffer.sendKey(key);
     }

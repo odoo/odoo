@@ -9,6 +9,8 @@ import {
 import { prepareRoundingVals } from "../accounting/utils";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+
 const { DateTime } = luxon;
 
 definePosModels();
@@ -797,7 +799,7 @@ describe("pos_store.js", () => {
 
     test("tip scenario with different decimal separators", async () => {
         const store = await setupPosEnv();
-        const numberBuffer = getService("number_buffer");
+        const numberBuffer = getService(PosNumberBufferPlugin);
         const order = store.addNewOrder();
 
         const fakeState = { buffer: "", toStartOver: false, lastSet: false };

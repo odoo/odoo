@@ -1,7 +1,8 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal, usePlugin } from "@odoo/owl";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -17,7 +18,7 @@ export class DebugWidget extends Component {
         this.pos = usePos();
         this.barcodeReader = useService("barcode_reader");
         this.notification = useService("notification");
-        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.dialog = useService("dialog");
         this.state = proxy({
             isOpen: false,
@@ -30,8 +31,8 @@ export class DebugWidget extends Component {
                 this.pos.device?.data?.unsynced_number_stack || []
             ),
         });
+        useBus(this.numberBuffer.bus, "buffer-update", this._onBufferUpdate.bind(this));
 
-        useBus(this.numberBuffer, "buffer-update", this._onBufferUpdate.bind(this));
         onMounted(() => {
             if (!this.importOrderInput()) {
                 return;

@@ -1,9 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { Component, useProps, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t, usePlugin } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Numpad, buttonsType } from "@point_of_sale/app/components/numpad/numpad";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
@@ -32,7 +32,7 @@ export class NumberPopup extends Component {
     });
 
     setup() {
-        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.numberBuffer.use({
             triggerAtInput: ({ buffer }) => (this.state.buffer = buffer),
         });

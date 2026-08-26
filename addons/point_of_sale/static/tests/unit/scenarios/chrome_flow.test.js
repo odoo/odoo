@@ -4,6 +4,7 @@ import { contains, getService } from "@web/../tests/web_test_helpers";
 import { setupAndMountPosApp, createTestProduct } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import * as Utils from "@point_of_sale/../tests/unit/ui_utils";
+import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 definePosModels();
 
@@ -64,7 +65,7 @@ test("FloatingOrderTour: floating orders preserve product quantities", async () 
     await Utils.cancelDialog();
     await waitFor(".product-screen");
     expect(order2.lines[0].qty).toBe(2);
-    const numberBuffer = getService("number_buffer");
+    const numberBuffer = getService(PosNumberBufferPlugin);
     expect(numberBuffer.get()).toBe("");
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
