@@ -120,25 +120,19 @@ export class Store extends BaseStore {
      * Start of the current minute, made again when the minute changes:
      * nothing observes the clock, so what shows a time reads this.
      */
-    get startOfMinute() {
-        return this.computedUntilStale(
-            "startOfMinute",
-            () => DateTime.now().startOf("minute"),
-            (startOfMinute) => startOfMinute.plus({ minutes: 1 }).diffNow().toMillis()
-        )();
-    }
+    startOfMinute = this.computedUntilStale(
+        () => DateTime.now().startOf("minute"),
+        (startOfMinute) => startOfMinute.plus({ minutes: 1 }).diffNow().toMillis()
+    );
 
     /**
      * Start of the current day, made again when the day changes: nothing
      * observes the clock, so what derives from today reads this.
      */
-    get startOfToday() {
-        return this.computedUntilStale(
-            "startOfToday",
-            () => DateTime.now().startOf("day"),
-            (startOfToday) => startOfToday.plus({ days: 1 }).diffNow().toMillis()
-        )();
-    }
+    startOfToday = this.computedUntilStale(
+        () => DateTime.now().startOf("day"),
+        (startOfToday) => startOfToday.plus({ days: 1 }).diffNow().toMillis()
+    );
 
     /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = fields.Attr([], { asProxy: true });

@@ -21,7 +21,6 @@ import {
     untrackFunctions,
 } from "./misc";
 import { RecordInternal } from "./record_internal";
-import { computedUntilStale } from "@mail/utils/common/signal";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
@@ -320,6 +319,22 @@ export class Record {
     }
 
     /**
+     * Declares a computed whose value goes stale on its own, a value read
+     * from the clock in particular: `msUntilStale` gives the delay after
+     * which the value is made again, or nothing to leave it as it is. The
+     * value is made again while it is read and schedules nothing once nobody
+     * reads it.
+     *
+     * @template T
+     * @param {() => T} compute
+     * @param {(value: T) => number|void} msUntilStale
+     * @returns {T}
+     */
+    computedUntilStale(compute, msUntilStale) {
+        return { ...this.computed(compute), msUntilStale };
+    }
+
+    /**
      * @param {Object|any} data
      * @param {Object} [options={}]
      * @param {boolean} [options.forceApply=true] Apply the data even when the
@@ -457,29 +472,6 @@ export class Record {
                 });
             })
         );
-    }
-
-    /**
-     * The `computedUntilStale` of this record kept under `key`, made on the
-     * first read so that a value nobody reads is never scheduled.
-     *
-     * @template T
-     * @param {string} key where the computed is kept, off the fields of the record
-     * @param {() => T} compute
-     * @param {(value: T) => number|void} msUntilStale
-     * @returns {() => T}
-     */
-    computedUntilStale(key, compute, msUntilStale) {
-        const record = this._raw;
-        const staleComputeds = (record._.staleComputeds ??= new Map());
-        let staleComputed = staleComputeds.get(key);
-        if (!staleComputed) {
-            staleComputed = record._.ensureScope().run(() =>
-                computedUntilStale(compute, msUntilStale)
-            );
-            staleComputeds.set(key, staleComputed);
-        }
-        return staleComputed;
     }
 
     /**

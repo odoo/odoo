@@ -11,6 +11,7 @@ import {
     technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
+import { computedUntilStale } from "@mail/utils/common/signal";
 import { RecordList } from "./record_list";
 import { Scope, computed, immediateEffect, markRaw, proxy, signal, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
@@ -97,13 +98,6 @@ export class RecordInternal {
      * @type {Set<Function>}
      */
     disposeFns = new Set();
-    /**
-     * Computeds of this record that go stale on their own, by the key their
-     * getter reads them under.
-     *
-     * @type {Map<string, () => any>|undefined}
-     */
-    staleComputeds;
     /**
      * Scope holding the owl computeds of this record, made on the first one and
      * disposed with the record.
@@ -229,30 +223,32 @@ export class RecordInternal {
 
     /**
      * @param {() => any} compute
+     * @param {(value: any) => number|void} [msUntilStale]
      * @returns {() => any} the computed holding the value
      */
-    makeComputed(compute) {
+    makeComputed(compute, msUntilStale) {
         const record = this.record;
         // the last computed value, answered while a write is being applied
         let heldValue;
         const { isUpdateInProgress } = record._rawStore._;
         const { isDeleted } = this;
-        return this.ensureScope().run(() =>
-            computed(function computeValue() {
-                if (isDeleted()) {
-                    return heldValue;
-                }
-                if (untrack(isUpdateInProgress)) {
-                    // Hold while a write is being applied: the relations this
-                    // reads are written one by one. onAdd, onDelete and onUpdate
-                    // run between writes, at depth 0, so they read fresh values.
-                    // Subscribe only while held, so the release computes once.
-                    void isUpdateInProgress();
-                    return heldValue;
-                }
-                heldValue = compute.call(record._proxy);
+        function computeValue() {
+            if (isDeleted()) {
                 return heldValue;
-            })
+            }
+            if (untrack(isUpdateInProgress)) {
+                // Hold while a write is being applied: the relations this
+                // reads are written one by one. onAdd, onDelete and onUpdate
+                // run between writes, at depth 0, so they read fresh values.
+                // Subscribe only while held, so the release computes once.
+                void isUpdateInProgress();
+                return heldValue;
+            }
+            heldValue = compute.call(record._proxy);
+            return heldValue;
+        }
+        return this.ensureScope().run(() =>
+            msUntilStale ? computedUntilStale(computeValue, msUntilStale) : computed(computeValue)
         );
     }
 
@@ -443,9 +439,9 @@ export class RecordInternal {
             let computedGetter = this.fieldsComputed.get(name);
             if (!computedGetter) {
                 // the declaration sits on the record until its first read
-                const { compute } = record[name];
+                const { compute, msUntilStale } = record[name];
                 delete record[name];
-                computedGetter = this.makeComputed(compute);
+                computedGetter = this.makeComputed(compute, msUntilStale);
                 this.fieldsComputed.set(name, computedGetter);
             }
             return computedGetter();
