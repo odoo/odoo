@@ -641,9 +641,20 @@ class DiscussChannel(models.Model):
             raise AccessError(
                 self.env._("Only the channel owner or database admins can convert a meeting to a chat."),
             )
+        old_names = {channel: channel.name for channel in self} if "name" in vals else {}
         result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
+        if old_names:
+            for channel in self:
+                if (
+                    channel.name != old_names[channel]
+                    and channel.channel_type in channel._types_notified_on_rename()
+                ):
+                    body = Markup(
+                        '<div data-oe-type="channel_rename" class="o_mail_notification">%s</div>'
+                    ) % (channel.name or channel.display_name)
+                    channel.message_post(body=body, subtype_xmlid="mail.mt_comment")
         return result
 
     def _sync_field_names(self, res):
@@ -1771,6 +1782,11 @@ class DiscussChannel(models.Model):
         on the channel """
         return ["chat", "group"]
 
+    def _types_notified_on_rename(self):
+        """ Return the channel types that post a channel rename notification message
+        when renamed """
+        return ["channel", "group"]
+
     def _types_allowing_unfollow(self):
         """ Return the channel types which allow leaving the channel, channel will be unpinned
         otherwise """
@@ -1789,8 +1805,6 @@ class DiscussChannel(models.Model):
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
-        body = Markup('<div data-oe-type="channel_rename" class="o_mail_notification">%s</div>') % name
-        self.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_comment")
 
     def channel_change_description(self, description):
         self.ensure_one()
