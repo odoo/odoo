@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime
 
 from odoo import _, api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import SQL
 
 
@@ -16,6 +17,7 @@ class ResPartner(models.Model):
 
     calendar_last_notif_ack = fields.Datetime(
         'Last notification marked as read from base Calendar', default=fields.Datetime.now)
+    meeting_until = fields.Datetime(compute="_compute_meeting_until")
 
     def _compute_meeting_count(self):
         result = self._compute_meeting()
@@ -102,6 +104,38 @@ class ResPartner(models.Model):
         }
         action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action
+
+    def _compute_meeting_until(self):
+        now = fields.Datetime.now()
+        self.meeting_until = False
+
+        attendees = self.env["calendar.attendee"].search_fetch(
+            [
+                ("state", "=", "accepted"),
+                ("event_id.show_as", "=", "busy"),
+                ("event_id.privacy", "not in", ["private", "confidential"]),
+                ("event_id.allday", "=", False),
+                ("event_id.stop", ">=", now),
+                ("partner_id", "in", self.ids),
+            ],
+            ["partner_id"],
+        )
+        attendees.event_id.fetch(["start", "stop"])
+
+        for partner, partner_attendees in attendees.grouped("partner_id").items():
+            meeting_until = now
+
+            for event in sorted(partner_attendees.event_id, key=lambda event: event.start):
+                if event.start > meeting_until:
+                    break
+                meeting_until = max(meeting_until, event.stop)
+
+            if meeting_until > now:
+                partner.meeting_until = meeting_until
+
+    def _store_partner_fields(self, res: Store.FieldList):
+        super()._store_partner_fields(res)
+        res.attr("meeting_until", predicate=lambda partner: partner.meeting_until, internal=True)
 
     def _get_busy_calendar_events(self, start_datetime, end_datetime):
         """Get a mapping from partner id to attended events intersecting with the time interval.

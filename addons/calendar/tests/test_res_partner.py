@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.tests.common import new_test_user, tagged, TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -117,3 +121,14 @@ class TestResPartner(TransactionCase):
         self.env.invalidate_all()
         c1_partner_seen_from_c2 = company1_user.partner_id.with_user(allcompany_user).with_company(company2)
         self.assertEqual(c1_partner_seen_from_c2.meeting_count, 1, "Should compute meeting count without access error as partner is accessible in all companies")
+
+    @freeze_time("2025-04-08 12:00:00")
+    def test_in_meeting_until(self):
+        event = self.env["calendar.event"].create({
+            "name": "Meeting",
+            "start": fields.Datetime.now(),
+            "stop": fields.Datetime.now() + relativedelta(hours=1),
+            "show_as": "busy",
+            "privacy": "public",
+        })
+        self.assertEqual(self.env.user.partner_id.meeting_until, event.stop)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-header')]" position="attributes">
+            <attribute name="t-att-class">{ 'py-1': !this.correspondentLocalDateTimeFormatted() and !this.thread.channel?.correspondentPartner?.meetingStatus }</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-threadTitle')]" position="attributes">
+            <attribute name="t-att-class">{ 'lh-sm': this.showsChatLocalDateTime or this.thread.channel?.correspondentPartner?.meetingStatus }</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-localDateTime')]" position="after">
+            <span t-if="this.thread.channel?.correspondentPartner?.meetingStatus" class="text-warning smaller fw-bold ms-1" t-out="this.thread.channel.correspondentPartner.meetingStatus"/>
+        </xpath>
+    </t>
+</templates>
