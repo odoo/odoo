@@ -171,6 +171,10 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             account_move._generate_and_send(sending_methods=['manual'])
         return account_move
 
+    def _adapt_expected_etree_to_installed_modules(self, expected_etree):
+        """ Hook for subclasses to adjust the expected etree based on which optional
+        modules are installed, before comparison. """
+
     def _assert_invoice_attachment(self, attachment, xpaths, expected_file_path):
         """
         Get attachment from a posted account.move, and asserts it's the same as the expected xml file.
@@ -182,6 +186,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
 
         expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
         expected_etree = etree.parse(expected_file_full_path).getroot()
+        self._adapt_expected_etree_to_installed_modules(expected_etree)
 
         modified_etree = self.with_applied_xpath(
             expected_etree,
