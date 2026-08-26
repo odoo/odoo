@@ -62,7 +62,9 @@ export class SearchBar extends Component {
     });
     root = signal.ref();
     facetContainerRef = signal.ref();
-    inputRef = signal.ref();
+    // The input element is either owned by the parent (`inputRef` prop, e.g. so it can
+    // focus it itself once mounted) or local, like `Dropdown.menuRef`.
+    inputRef = useProps.static("inputRef", t.signal(t.ref()).optional(() => signal.ref()));
 
     setup() {
         this.dialogService = useService("dialog");
