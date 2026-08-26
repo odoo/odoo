@@ -6,7 +6,7 @@ from psycopg2.errors import NotNullViolation
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, TransactionCase, HttpCase, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, sql
 from odoo import Command
 
 
@@ -269,6 +269,22 @@ class TestIrModelEdition(TransactionCase):
             form.related = 'id'
             self.assertEqual(form.ttype, 'integer')
 
+    def test_index_cleared_when_no_longer_allowed(self):
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_indexed_stored',
+            'field_description': 'Indexed stored',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'ttype': 'char',
+            'store': True,
+            'index': 'btree',
+        })
+
+        with self.debug_mode(), Form(field) as form:
+            form.store = False
+            self.assertFalse(form.index)
+
+        self.assertFalse(field.index)
+
     def test_delete_manual_models_with_base_fields(self):
         model = self.env["ir.model"].create({
             "model": "x_test_base_delete",
@@ -437,7 +453,7 @@ class TestCommonCustomFields(TransactionCase):
         super().setUp()
         self.env.transaction.will_change_registry()
 
-    def create_field(self, name, *, field_type='char'):
+    def create_field(self, name, *, field_type='char', **values):
         """ create a custom field and return it """
         model = self.env['ir.model'].search([('model', '=', self.MODEL)])
         field = self.env['ir.model.fields'].create({
@@ -445,6 +461,7 @@ class TestCommonCustomFields(TransactionCase):
             'name': name,
             'field_description': name,
             'ttype': field_type,
+            **values,
         })
         self.assertIn(name, self.env[self.MODEL]._fields)
         return field
@@ -460,6 +477,69 @@ class TestCommonCustomFields(TransactionCase):
 
 @tagged('at_install', '-post_install')
 class TestCustomFields(TestCommonCustomFields):
+    def test_index_types(self):
+        field = self.create_field('x_indexed', index=True)
+        self.assertEqual(field.index, 'btree')
+        self.assertEqual(self.env[self.MODEL]._fields[field.name].index, 'btree')
+
+        indexname = sql.make_index_name(self.env[self.MODEL]._table, field.name)
+        indexdef, _comment = sql.index_definition(self.env.cr, indexname)
+        self.assertNotIn(' WHERE ', indexdef)
+
+        field.index = 'btree_not_null'
+        self.assertEqual(self.env[self.MODEL]._fields[field.name].index, 'btree_not_null')
+        indexdef, _comment = sql.index_definition(self.env.cr, indexname)
+        self.assertIn(' WHERE ', indexdef)
+
+        field.index = True
+        self.assertEqual(field.index, 'btree')
+        indexdef, _comment = sql.index_definition(self.env.cr, indexname)
+        self.assertNotIn(' WHERE ', indexdef)
+
+        field.index = False
+        self.assertFalse(field.index)
+        self.assertTrue(sql.index_exists(self.env.cr, indexname))
+
+    def test_index_allowed_types(self):
+        field = self.create_field('x_index_options')
+        expected = ['btree', 'btree_not_null']
+        if self.registry.has_trigram:
+            expected.append('trigram')
+        self.assertEqual(field.allowed_index_types, expected)
+
+        field.store = False
+        self.assertFalse(field.allowed_index_types)
+
+        translated_field = self.create_field(
+            'x_translated_index_options',
+            translate='standard',
+        )
+        expected = ['trigram'] if self.registry.has_trigram else []
+        self.assertEqual(translated_field.allowed_index_types or [], expected)
+
+    def test_invalid_index_types(self):
+        with self.assertRaisesRegex(ValidationError, 'stored fields'):
+            self.create_field('x_not_stored', store=False, index='btree')
+
+        with self.assertRaisesRegex(ValidationError, 'Char, Text, and HTML'):
+            self.create_field('x_integer_trigram', field_type='integer', index='trigram')
+
+        with self.assertRaisesRegex(ValidationError, 'Translated fields'):
+            self.create_field('x_translated_btree', translate='standard', index='btree')
+
+        with self.assertRaisesRegex(ValidationError, 'stored fields'):
+            self.create_field(
+                'x_many2many_index',
+                field_type='many2many',
+                relation=self.COMODEL,
+                index='btree',
+            )
+
+    def test_trigram_requires_extension(self):
+        self.patch(self.registry, 'has_trigram', False)
+        with self.assertRaisesRegex(ValidationError, 'pg_trgm'):
+            self.create_field('x_trigram', index='trigram')
+
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):

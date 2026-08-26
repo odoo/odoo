@@ -52,7 +52,7 @@ class TestReflection(common.TransactionCase):
                         self.assertEqual(ir_field.help, field.help or False)
                         self.assertEqual(ir_field.ttype, field.type)
                         self.assertEqual(ir_field.state, 'manual' if field.manual else 'base')
-                        self.assertEqual(ir_field.index, bool(field.index))
+                        self.assertEqual(ir_field.index, 'btree' if field.index is True else field.index or False)
                         self.assertEqual(ir_field.store, bool(field.store))
                         self.assertEqual(ir_field.copied, bool(field.copy))
                         self.assertEqual(ir_field.related, field.related or False)

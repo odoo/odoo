@@ -58,7 +58,12 @@
                                                     <field name="required"/>
                                                     <field name="readonly"/>
                                                     <field name="store" groups="base.group_no_one"/>
-                                                    <field name="index" groups="base.group_no_one"/>
+                                                    <field name="allowed_index_types" invisible="1"/>
+                                                    <!-- necessary for the widget's option -->
+                                                    <field name="index" groups="base.group_no_one"
+                                                        widget="filterable_selection"
+                                                        options="{'whitelist_fname': 'allowed_index_types'}"
+                                                        readonly="state != 'manual'"/>
                                                     <field name="copied" groups="base.group_no_one"/>
                                                     <field name="state" groups="base.group_no_one"/>
                                                     <field name="modules" groups="base.group_no_one"/>
@@ -237,7 +242,12 @@
                                         <field name="required"/>
                                         <field name="readonly"/>
                                         <field name="store" groups="base.group_no_one"/>
-                                        <field name="index" groups="base.group_no_one"/>
+                                        <field name="allowed_index_types" invisible="1"/>
+                                        <!-- necessary for the widget's option -->
+                                        <field name="index" groups="base.group_no_one"
+                                            widget="filterable_selection"
+                                            options="{'whitelist_fname': 'allowed_index_types'}"
+                                            readonly="state != 'manual'"/>
                                         <field name="copied" groups="base.group_no_one"/>
                                         <field name="state" groups="base.group_no_one"/>
                                         <field name="modules" groups="base.group_no_one"/>
