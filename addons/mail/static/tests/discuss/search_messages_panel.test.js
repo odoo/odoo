@@ -335,14 +335,17 @@ test.tags("desktop");
 test("Search a message containing single quotes", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "<p>I can't do it</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "I can't do it");
-    await click(".o-sendMessageActive:enabled");
-    await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await contains(".o-mail-SearchMessageInput");
-    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "can't");
+    await insertText(".o-mail-SearchMessageInput input", "can't");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
 });
 
