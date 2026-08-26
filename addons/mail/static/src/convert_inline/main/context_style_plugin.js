@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { Rules } from "../core/rules_models";
+import { parseCssValue } from "../css_parsers";
 
 const COMPUTABLE_TABLE_CONTEXT_STYLE_PROPERTIES = [
     "color",
@@ -22,13 +23,69 @@ const TEXT_ALIGN_FIXABLE_VALUES = new Set(["start", "end"]);
 export class ContextStylePlugin extends Plugin {
     static id = "contextStyle";
     static dependencies = ["measurementSnapshot", "rules", "style"];
-    static shared = ["getContextNode", "getTableContextStyleInfo"];
+    static shared = [
+        "convertRemPropertyInfoToPx",
+        "convertRemValueToPx",
+        "getContextNode",
+        "getTableContextStyleInfo",
+    ];
+    resources = {
+        fix_raw_style_values_overrides: this.fixRemUnits.bind(this),
+    };
 
     setup() {
         // TODO EGGMAIL: evaluate rules redundancy with filter_content_plugin
         // and where these context rules should be defined (probably here)
         this.tableContextStyleRules = new Rules();
         this.provideTableContextStyleRules();
+    }
+
+    fixRemUnits({ element, propertyName, propertyInfo, styleInfo }) {
+        if (!propertyInfo.value.includes("rem")) {
+            return false;
+        }
+        if (
+            this.delegateTo("fix_rem_units_overrides", {
+                element,
+                propertyName,
+                propertyInfo,
+                styleInfo,
+            })
+        ) {
+            return true;
+        }
+        return this.convertRemPropertyInfoToPx({ element, propertyName, propertyInfo });
+    }
+
+    convertRemPropertyInfoToPx({ element, propertyName, propertyInfo }) {
+        let pxValue = this.convertRemValueToPx(propertyInfo.value);
+        if (pxValue === undefined) {
+            // TODO EGGMAIL: this does not handle shorthand properties where
+            // part of the value is in rem. To fix using fix_rem_units_overrides
+            // when issues arise.
+            pxValue = this.getStylePropertyValue(element, propertyName);
+        }
+        if (pxValue === "") {
+            return false;
+        }
+        propertyInfo.value = pxValue;
+        return true;
+    }
+
+    convertRemValueToPx(value) {
+        const { number, unit } = parseCssValue(value);
+        if (unit !== "rem") {
+            return;
+        }
+        const rootFontSize = this.getStylePropertyValue(
+            this.config.referenceDocument.body,
+            "font-size"
+        );
+        const fontSizeValue = parseCssValue(rootFontSize);
+        if (!fontSizeValue.number < 0 || fontSizeValue.unit !== "px") {
+            return;
+        }
+        return `${fontSizeValue.number * number}px`;
     }
 
     provideTableContextStyleRules() {

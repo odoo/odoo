@@ -18,6 +18,7 @@ export class ButtonStrategyPlugin extends Plugin {
 
     provideStyleRules(rules) {
         // TODO EGGMAIL: maybe fine tune and only accept some values
+        // check similar rule in spacing_plugin (more restrictive for inline elements)
 
         // some button may have width: 100%:
         // need to be alone in a paragraph

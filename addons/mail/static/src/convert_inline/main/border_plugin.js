@@ -62,8 +62,8 @@ export class BorderPlugin extends Plugin {
         });
     }
 
-    // TODO EGGMAIL: this does not modify "in place", however places where it
-    // would be useful need to do this in place => to think about
+    // TODO EGGMAIL: this function does not modify "in place", however places
+    // where it would be useful need to do this in place => to think about
     neutralizeBorders(styleInfo, referenceNode) {
         return this.filterStyleInfo(styleInfo, referenceNode, this.neutralizeBorderRules);
     }

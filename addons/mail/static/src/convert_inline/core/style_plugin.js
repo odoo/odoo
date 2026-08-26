@@ -1,6 +1,6 @@
 import { Plugin } from "../plugin";
 // import { withSequence } from "@html_editor/utils/resource";
-import { parseCssText, parseCssValue, parseSelector } from "@mail/convert_inline/css_parsers";
+import { parseCssText, parseSelector } from "@mail/convert_inline/css_parsers";
 import { registry } from "@web/core/registry";
 import { StyleInfo } from "./style_models";
 
@@ -62,21 +62,17 @@ export class StylePlugin extends Plugin {
 
     processCSSValues(element, styleInfo) {
         this.computeDynamicValues(element, styleInfo);
-        this.fixRemUnitSimpleValues(element, styleInfo);
+        this.fixRawStyleValues(element, styleInfo);
     }
 
-    fixRemUnitSimpleValues(element, styleInfo) {
-        for (const [propertyName, propertyInfo] of styleInfo) {
-            if (!propertyInfo.value.includes("rem")) {
-                continue;
-            }
-            // TODO EGGMAIL: this does not handle shorthand properties where
-            // part of the value is in rem. To fix when issues arise.
-            const value = parseCssValue(propertyInfo.value);
-            if (value.unit !== "rem") {
-                continue;
-            }
-            propertyInfo.value = this.getStylePropertyValue(element, propertyName);
+    fixRawStyleValues(element, styleInfo) {
+        for (const [propertyName, propertyInfo] of [...styleInfo]) {
+            this.delegateTo("fix_raw_style_values_overrides", {
+                element,
+                propertyName,
+                propertyInfo,
+                styleInfo,
+            });
         }
     }
 

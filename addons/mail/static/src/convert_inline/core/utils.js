@@ -49,6 +49,8 @@ export const DIMENSIONS = {
 
 export const ALLOWED_MOBILE_MARGINS_SIZES = [8, 16, 32];
 
+export const ALLOWED_SPACING_UNITS = new Set(["px", "em"]);
+
 /**
  * @param {string} propertyName shorthand property e.g. "border"
  * @param {Array<Array<string>>} suffixArrays e.g. [["top", "right"], ["width", "color"]]

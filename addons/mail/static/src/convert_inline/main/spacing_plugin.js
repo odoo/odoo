@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 import { SpacingNode } from "./spacing_models";
 import { withSequence } from "@html_editor/utils/resource";
-import { DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
+import { ALLOWED_SPACING_UNITS, DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
 
 const { DESKTOP } = DIMENSIONS;
 
@@ -58,6 +58,7 @@ export class SpacingPlugin extends Plugin {
         ),
         attribute_rules_processors: [[this.provideAttributeRules.bind(this), SpacingPlugin.id]],
         style_rules_processors: [[this.provideStyleRules.bind(this), SpacingPlugin.id]],
+        fix_rem_units_overrides: this.fixSpacingRemUnits.bind(this),
         merge_fact_overrides: this.mergeSpacingInfo.bind(this),
     };
 
@@ -65,6 +66,30 @@ export class SpacingPlugin extends Plugin {
         this.marginStyleRules = new Rules();
         this.paddingStyleRules = new Rules();
         this.provideSpacingStyleRules();
+    }
+
+    fixSpacingRemUnits({ element, propertyName, propertyInfo, styleInfo }) {
+        let getStyleInfo;
+        if (propertyName.startsWith("margin")) {
+            getStyleInfo = this.getMarginStyleInfo.bind(this);
+        } else if (propertyName.startsWith("padding")) {
+            getStyleInfo = this.getPaddingStyleInfo.bind(this);
+        } else {
+            return;
+        }
+        const partialStyleInfo = new StyleInfo();
+        partialStyleInfo.set(propertyName, propertyInfo);
+        const decomposedStyleInfo = getStyleInfo(partialStyleInfo, element);
+        if (decomposedStyleInfo.size === 0) {
+            return;
+        }
+        styleInfo.delete(propertyName);
+        for (const [propertyName, propertyInfo] of decomposedStyleInfo) {
+            if (this.convertRemPropertyInfoToPx({ element, propertyName, propertyInfo })) {
+                styleInfo.set(propertyName, propertyInfo);
+            }
+        }
+        return true;
     }
 
     addSpacingFacts(facts, { referenceNode }) {
@@ -151,18 +176,6 @@ export class SpacingPlugin extends Plugin {
                 // The margin spacing node is meant as a wrapper and replaces
                 // static margin by padding on the main wrapper cell.
                 setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
-            } else if (number > 0 && unit === "rem") {
-                const rootFontSize = this.getStylePropertyValue(
-                    this.config.referenceDocument.body,
-                    "font-size"
-                );
-                const fontSizeValue = parseCssValue(rootFontSize);
-                if (fontSizeValue.number > 0 && fontSizeValue.unit === "px") {
-                    setAttributes(
-                        { style: { [`padding-${side}`]: `${fontSizeValue.number * number}px` } },
-                        "cell"
-                    );
-                }
             }
         }
         if (isRelevant) {
@@ -188,18 +201,6 @@ export class SpacingPlugin extends Plugin {
             const { number, unit } = parseCssValue(value);
             if (number > 0 && (unit === "px" || unit === "em")) {
                 setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
-            } else if (number > 0 && unit === "rem") {
-                const rootFontSize = this.getStylePropertyValue(
-                    this.config.referenceDocument.body,
-                    "font-size"
-                );
-                const fontSizeValue = parseCssValue(rootFontSize);
-                if (fontSizeValue.number > 0 && fontSizeValue.unit === "px") {
-                    setAttributes(
-                        { style: { [`padding-${side}`]: `${fontSizeValue.number * number}px` } },
-                        "cell"
-                    );
-                }
             }
         }
         if (isRelevant) {
@@ -350,11 +351,14 @@ export class SpacingPlugin extends Plugin {
             const values = this.decomposeSpacingShorthandValue(propertyValue);
             return values.every((value) => {
                 const { number, unit } = parseCssValue(value);
-                return number !== undefined && (number === 0 || (number > 0 && unit === "px"));
+                return (
+                    number !== undefined &&
+                    (number === 0 || (number > 0 && ALLOWED_SPACING_UNITS.has(unit)))
+                );
             });
         } else {
             const { number, unit } = parseCssValue(propertyValue);
-            return number === 0 || (number > 0 && unit === "px");
+            return number === 0 || (number > 0 && ALLOWED_SPACING_UNITS.has(unit));
         }
     }
 
@@ -383,14 +387,21 @@ export class SpacingPlugin extends Plugin {
             ],
         });
         // allow inline phrasing content to have a positive padding if width is not 100%
-        // TODO EGGMAIL: could be improved by computing the available space and ensuring
-        // the element + spacing is smaller than that (box-sizing: content-box issue)
+        // of its container
         rules.allow(/^padding(-(top|right|bottom|left))?$/, {
             when: [
                 ({ referenceNode }) =>
                     !this.isBlock(referenceNode, { evaluateDisconnected: true }) ||
                     isPhrasingContent(referenceNode),
                 this.validateSpacingValue.bind(this),
+                ({ referenceNode }) => {
+                    const rawStyleInfo = this.getRawStyleInfo(referenceNode);
+                    // TODO EGGMAIL: could be improved by computing the available space and ensuring
+                    // the element + spacing is smaller than that (box-sizing: content-box issue)
+                    // but this is still not perfect as the width can be changed by a window
+                    // resize and the inline element can become too big with padding.
+                    return rawStyleInfo.getPropertyValue("width") !== "100%";
+                },
             ],
         });
         // HR can have a userAgent style which needs to be countered
