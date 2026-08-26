@@ -402,10 +402,11 @@ export class Record {
             // the dummy record collecting the field declarations has no internals
             return;
         }
+        // Resolve the proxy when the functions run, as `setup` registers before the proxy exists
         const deps = record._.ensureScope(record).run(() =>
-            computed(dependencies.bind(record), { equals: shallowEqual })
+            computed(() => dependencies.call(record._proxy), { equals: shallowEqual })
         );
-        const boundCallback = callback.bind(record);
+        const boundCallback = (...values) => callback.apply(record._proxy, values);
         let firstRun = true;
         let cleanup;
         record._registerDisposeFn(

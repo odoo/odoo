@@ -1,5 +1,3 @@
-import { effect, untrack } from "@odoo/owl";
-
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 
@@ -199,22 +197,6 @@ export const hasHardwareAcceleration = memoize(() => {
     }
     return true;
 });
-
-/**
- * @param {() => void} effectFn
- * @returns {() => void} A function to dispose the effect then invoke last returned cleanup function
- */
-export function effectWithCleanup(effectFn) {
-    let cleanup;
-    const disposeFn = effect(() => {
-        untrack(() => cleanup?.());
-        cleanup = effectFn();
-    });
-    return () => {
-        disposeFn();
-        untrack(() => cleanup?.());
-    };
-}
 
 /**
  * @param {HTMLElement} targetNode

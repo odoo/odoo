@@ -1644,3 +1644,37 @@ test("computed field first read by a component outlives that component", async (
     channel.count = 5;
     expect.verifySteps(["multiplicity:many"]);
 });
+
+test("an onChange registered in setup runs on the proxy and cleans up", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        static _name = "Thread";
+        name;
+        messages = fields.Many("Message", { inverse: "thread" });
+        setup() {
+            super.setup(...arguments);
+            this.onChange(
+                function () {
+                    return [this.messages.length];
+                },
+                function onMessagesChange() {
+                    expect.step(`${this.messages.length} ${this.messages[0]?.body ?? ""}`);
+                    return () => expect.step("cleanup");
+                }
+            );
+        }
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "body";
+        static _name = "Message";
+        body;
+        thread = fields.One("Thread", { inverse: "messages" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    await expect.waitForSteps(["0 "]);
+    thread.messages.add("hello");
+    await expect.waitForSteps(["cleanup", "1 hello"]);
+    thread.delete();
+    await expect.waitForSteps(["cleanup"]);
+});
