@@ -2,7 +2,7 @@ import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/c
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
-import { handleRPCError } from "./error_handlers";
+import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { ask } from "./make_awaitable_dialog";
 
 /**
@@ -203,6 +203,14 @@ export default class OrderPaymentValidation {
         }
     }
 
+    get canPrintReceipt() {
+        return (
+            this.order.nb_print === 0 &&
+            this.pos.config.autoPrint &&
+            (this.order.isToInvoice() ? this.order.finalized : true)
+        );
+    }
+
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
@@ -210,11 +218,8 @@ export default class OrderPaymentValidation {
             orderDone: true,
         });
 
-        if (this.order.nb_print === 0 && this.pos.config.autoPrint) {
-            const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
-            if (invoiced_finalized) {
-                await this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
-            }
+        if (this.canPrintReceipt) {
+            await this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
         }
     }
 

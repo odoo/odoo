@@ -220,14 +220,39 @@ patch(PosStore.prototype, {
             allocation.course.delete();
         }
     },
-    async mergeOrders(sourceOrder, destOrder) {
-        let whileGuard = 0;
-        // The merged order takes the destination's preset, so the source's fee lines
-        // are stale: drop them, the recompute below re-applies the fee on the merged
-        // base. A refund order keeps its own (see recomputeServiceFees).
-        if (!sourceOrder.isRefund && !destOrder.isRefund) {
-            sourceOrder.removeAllServiceFeeLines();
+    async _mergeLines(orphanLine, destinationLine, destOrder, sourceOrder, mergedCourses) {
+        let uuid;
+        const prepLines = orphanLine.prep_line_ids;
+        if (destinationLine) {
+            destinationLine.merge(orphanLine);
+            uuid = destinationLine.uuid;
+            this.handlePreparationLine(destinationLine, prepLines);
+        } else {
+            const serializedLine = { ...orphanLine.raw };
+            serializedLine.order_id = destOrder.id;
+            delete serializedLine.uuid;
+            delete serializedLine.id;
+            const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+            newLine.course_id = orphanLine.course_id?.id;
+            uuid = newLine.uuid;
+            if (orphanLine.course_id && mergedCourses) {
+                // Replace new line uuid in the merged courses
+                const course = mergedCourses[orphanLine.course_id.uuid];
+                if (course?.lines) {
+                    course.lines = course.lines.map((lineUuid) =>
+                        lineUuid === orphanLine.uuid ? uuid : lineUuid
+                    );
+                }
+            }
+            this.handlePreparationLine(newLine, prepLines);
         }
+        return uuid;
+    },
+    getLinesToMerge(sourceOrder, destinationOrder) {
+        return sourceOrder.lines;
+    },
+
+    async _mergeOrders(sourceOrder, destOrder) {
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
         const sourceLastPrint = sourceOrder.lastPrints.at(-1);
         // Sum the guest counts from both orders
@@ -238,40 +263,17 @@ patch(PosStore.prototype, {
             (l) => l.pos_order_id?.uuid === sourceOrder.uuid
         );
         this.handlePreparationOrder(destOrder, prepOrders);
-        while (sourceOrder.lines.length) {
-            const orphanLine = sourceOrder.lines[0];
+        const sourceLines = this.getLinesToMerge(sourceOrder, destOrder);
+        for (const orphanLine of sourceLines) {
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
-            let uuid = "";
-            const prepLines = orphanLine.prep_line_ids;
-            if (destinationLine) {
-                destinationLine.merge(orphanLine);
-                uuid = destinationLine.uuid;
-                this.handlePreparationLine(destinationLine, prepLines);
-            } else {
-                const serializedLine = { ...orphanLine.raw };
-                serializedLine.order_id = destOrder.id;
-                delete serializedLine.uuid;
-                delete serializedLine.id;
-                const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
-                newLine.course_id = orphanLine.course_id?.id;
-                uuid = newLine.uuid;
-                if (orphanLine.course_id && mergedCourses) {
-                    // Replace new line uuid in the merged courses
-                    const course = mergedCourses[orphanLine.course_id.uuid];
-                    if (course?.lines) {
-                        course.lines = course.lines.map((lineUuid) =>
-                            lineUuid === orphanLine.uuid ? uuid : lineUuid
-                        );
-                    }
-                }
-                this.handlePreparationLine(newLine, prepLines);
-            }
-
+            await this._mergeLines(
+                orphanLine,
+                destinationLine,
+                destOrder,
+                sourceOrder,
+                mergedCourses
+            );
             orphanLine.delete();
-            whileGuard++;
-            if (whileGuard > 1000) {
-                break;
-            }
         }
         if (destOrder.courses) {
             // Ensure unassigned lines in destOrder are linked to the last course
@@ -318,8 +320,17 @@ patch(PosStore.prototype, {
         ) {
             destOrder.pushLastPrints(combinedPrint);
         }
-        // Re-apply the fee on the merged base before syncing. The courses are only
-        // settled above, so the fee can be pinned to the last one.
+    },
+    async mergeOrders(sourceOrder, destOrder) {
+        // The merged order takes the destination's preset, so the source's fee lines
+        // are stale: drop them, the recompute below re-applies the fee on the merged
+        // base. A refund order keeps its own (see recomputeServiceFees).
+        if (!sourceOrder.isRefund && !destOrder.isRefund) {
+            sourceOrder.removeAllServiceFeeLines();
+        }
+        await this._mergeOrders(sourceOrder, destOrder);
+        // Re-apply the fee on the merged base before syncing. The courses are
+        // settled during the merge, so the fee can be pinned to the last one.
         destOrder.recomputeServiceFees();
         if (typeof destOrder.id === "number") {
             await this.syncAllOrders({ orders: [destOrder] });
@@ -449,7 +460,7 @@ patch(PosStore.prototype, {
         }
         return order;
     },
-    createOrderIfNeeded(data) {
+    createOrderIfNeeded(data = {}) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find((order) => order.isDirectSale);
             if (!order) {
@@ -766,7 +777,7 @@ patch(PosStore.prototype, {
         };
         document.addEventListener("click", onClickWhileTransfer);
     },
-    prepareOrderTransfer(order, destinationTable) {
+    async prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
         this.alert.dismiss();
 
@@ -792,7 +803,7 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (destinationTable) {
-            if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+            if (!(await this.prepareOrderTransfer(sourceOrder, destinationTable))) {
                 await this.syncAllOrders({ orders: [sourceOrder] });
                 return;
             }
@@ -806,7 +817,7 @@ patch(PosStore.prototype, {
     async mergeTableOrders(orderUuid, destinationTable) {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
-        if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+        if (!(await this.prepareOrderTransfer(sourceOrder, destinationTable))) {
             await this.syncAllOrders({ orders: [sourceOrder] });
             return;
         }
@@ -814,6 +825,7 @@ patch(PosStore.prototype, {
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
+        return destinationOrder;
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);

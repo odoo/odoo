@@ -24,9 +24,6 @@ Features include:
         'point_of_sale._assets_pos': [
             'pos_pine_labs/static/src/**/*',
         ],
-        'web.assets_unit_tests': [
-            'pos_pine_labs/static/tests/unit/data/**/*',
-        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

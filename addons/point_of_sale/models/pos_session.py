@@ -753,6 +753,7 @@ class PosSession(models.Model):
         invoice_list = []
         for order in self.order_ids.filtered(lambda o: o.is_singly_invoiced):
             invoice = {
+                'id': order.account_move.id,
                 'total': order.account_move.amount_total_signed,
                 'name': order.account_move.name,
                 'order_ref': order.pos_reference,
@@ -924,6 +925,7 @@ class PosSession(models.Model):
 
         # Build the out_receipt lines. Returns pm_data_list so we can
         # create the matching account.payment / statement line records after posting.
+        # TODO-manv: check if changes are valid with moda
         sale_orders = non_invoiced_orders.filtered(
             lambda order: not order.is_refund_or_negative() and order.amount_total >= 0,
         )
@@ -1015,6 +1017,10 @@ class PosSession(models.Model):
             refund,
             payments,
         )
+
+        # TODO-manv: check if changes are valid with moda
+        if not (lines_commands or payment_commands or extra_commands):
+            return self.env['account.move']
 
         # Ensure rounding method record is set on the invoice if needed
         rounding_method = self.config_id._get_rounding_method_for_invoice(orders)
