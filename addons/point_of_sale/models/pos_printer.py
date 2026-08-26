@@ -103,6 +103,19 @@ class PosPrinter(models.Model):
             if rec.use_type == "preparation" and rec.use_cashdrawer:
                 rec.use_cashdrawer = False
 
+    def _can_print_backend_receipt(self):
+        self.ensure_one()
+        return self.printer_type in ['epson_epos', 'obox'] and self.paper_size != 'label'
+
+    def _get_backend_receipt_format(self):
+        self.ensure_one()
+        return 'epos'
+
+    def _get_backend_print_data(self):
+        self.ensure_one()
+        printer_fields = ['name', 'printer_type', 'printer_ip', 'use_lna', 'paper_size', 'timeout']
+        return self.read(printer_fields, load=False)[0]
+
     @api.model
     def _load_pos_data_domain(self, data, config):
         return [('id', 'in', config.preparation_printer_ids.ids + config.receipt_printer_ids.ids)]
