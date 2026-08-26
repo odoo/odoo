@@ -1772,7 +1772,7 @@ class BaseModel(metaclass=MetaModel):
         query.order = self._read_group_orderby(order, groupby_terms, query)
         # GROUPING SET ((a, b), (a), ())
         grouping_sets_sql = [
-            SQL("(%s)", SQL(", ").join(groupby_terms[groupby_spec] for groupby_spec in grouping_set))
+            SQL("(%s)", SQL(", ").join(unique(groupby_terms[groupby_spec] for groupby_spec in grouping_set)))
             for grouping_set in grouping_sets
         ]
         query.groupby = SQL("GROUPING SETS (%s)", SQL(", ").join(unique(grouping_sets_sql)))
@@ -1792,9 +1792,13 @@ class BaseModel(metaclass=MetaModel):
         # grouping set defined by the user.
         aggregates_indexes = tuple(range(len(all_groupby_specs), len(all_groupby_specs) + len(aggregates)))
 
-        # Map each possible GROUPING() bitmask to its corresponding result list and value extractor.
-        # {GROUPING(...): (append_method, extractor_method)}
-        mask_grouping_mapping = {}
+        # Map each possible GROUPING() bitmask to the corresponding result lists and value
+        # extractors: several grouping sets can share the same bitmask (either because
+        # they are literally the same groupby list: [['foo'], ['foo']], or because one of them
+        # repeats a term [['foo'], ['foo', 'foo']], so a single SQL result row may need to
+        # be dispatched to more than one of them.
+        # {GROUPING(...): [(append_method, extractor_method), ...]}
+        mask_grouping_mapping = defaultdict(list)
 
         # Create a mapping from each unique SQL GROUP BY term to its bitmask value.
         # The terms are reversed to match the PostgreSQL logic where the bitmask was
@@ -1805,7 +1809,6 @@ class BaseModel(metaclass=MetaModel):
             for i, sql_groupby in enumerate(unique(reversed(groupby_terms.values())))
         }
 
-        mask_grouping_result_indexes = defaultdict(list)  # To manage "duplicated" groupby
         for result_index, groupby in enumerate(grouping_sets):
             # E.g. GROUPING SET ((a, b), (a), ())
             # GROUPING(a, b): a and b included = 0, a included = 1, b included = 2, none included = 3
@@ -1817,15 +1820,13 @@ class BaseModel(metaclass=MetaModel):
                 if sql_term not in sql_terms
             )
 
-            mask_grouping_result_indexes[groupby_mask].append(result_index)
-            if groupby_mask not in mask_grouping_mapping:
-                mask_grouping_mapping[groupby_mask] = (
-                    result[result_index].append,
-                    itemgetter_tuple(list(itertools.chain(
-                        (all_groupby_specs.index(groupby_spec) for groupby_spec in groupby),
-                        aggregates_indexes,
-                    ))),
-                )
+            mask_grouping_mapping[groupby_mask].append((
+                result[result_index].append,
+                itemgetter_tuple(list(itertools.chain(
+                    (all_groupby_specs.index(groupby_spec) for groupby_spec in groupby),
+                    aggregates_indexes,
+                ))),
+            ))
 
         aggregates_start_index = len(all_groupby_specs) + 1
         # Transpose rows to columns for efficient, column-wise post-processing.
@@ -1843,17 +1844,9 @@ class BaseModel(metaclass=MetaModel):
         #   [(a1, <aggregates>), (a2, <aggregates>), ...],
         #   [(<aggregates>)],
         # ]
-        for (append_method, extractor), *row in zip(dispatch_info, *columns, strict=True):
-            append_method(extractor(row))
-
-        # Manage groupbys targetting the same column(s), then having the same results
-        for duplicate_groups_indexes in mask_grouping_result_indexes.values():
-            if len(duplicate_groups_indexes) < 2:
-                continue
-            # The first index's result is the source for all others in this group
-            source_result_group = result[duplicate_groups_indexes[0]]
-            for duplicate_group_index in duplicate_groups_indexes[1:]:
-                result[duplicate_group_index] = source_result_group[:]
+        for append_extractors, *row in zip(dispatch_info, *columns, strict=True):
+            for append_method, extractor in append_extractors:
+                append_method(extractor(row))
 
         return result
 
