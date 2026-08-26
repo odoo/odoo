@@ -1381,6 +1381,9 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         return lambda move: base_getter(move) + tuple(_get_formatted_float_fields(move, f_name, float_precision) for f_name in float_fields)
 
+    def _should_update_quantity_on_merge(self):
+        return True
+
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
@@ -1435,8 +1438,10 @@ Please change the quantity done or the rounding precision in your settings.""",
             for pos_move in moves_by_neg_key.get(neg_key(neg_move), []):
                 new_total_value = pos_move.product_qty * pos_move.price_unit + neg_move.product_qty * neg_move.price_unit
                 # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
+                should_update_quantity = pos_move._should_update_quantity_on_merge()
                 if pos_move.uom_id.compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty)) >= 0:
-                    pos_move.product_uom_qty += neg_move.product_uom_qty
+                    if should_update_quantity:
+                        pos_move.product_uom_qty += neg_move.product_uom_qty
                     pos_move.write({
                         'price_unit': float_round(new_total_value / pos_move.product_qty, precision_digits=price_unit_prec) if pos_move.product_qty else 0,
                         'move_dest_ids': [Command.link(m.id) for m in neg_move.mapped('move_dest_ids') if m.location_id == pos_move.location_dest_id],
@@ -1444,12 +1449,13 @@ Please change the quantity done or the rounding precision in your settings.""",
                     })
                     merged_moves |= pos_move
                     moves_to_unlink |= neg_move
-                    if pos_move.uom_id.is_zero(pos_move.product_uom_qty):
+                    if pos_move.uom_id.is_zero(pos_move.product_uom_qty) or not should_update_quantity:
                         moves_to_cancel |= pos_move
                     break
                 neg_move.product_uom_qty += pos_move.product_uom_qty
                 neg_move.price_unit = float_round(new_total_value / neg_move.product_qty, precision_digits=price_unit_prec)
-                pos_move.product_uom_qty = 0
+                if should_update_quantity:
+                    pos_move.product_uom_qty = 0
                 moves_to_cancel |= pos_move
 
         # We are using propagate to False in order to not cancel destination moves merged in moves[0]
@@ -1745,6 +1751,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         return bool(not self.picking_id and self.picking_type_id)
 
+    def _process_negative_moves(self):
+        return self._assign_picking()
+
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         :param: merge: According to this boolean, a newly confirmed move will be merged
@@ -1829,7 +1838,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.picking_type_id = move.picking_type_id.return_picking_type_id
             # We are returning some products, we must take them in the source location
             move.procure_method = 'make_to_stock'
-        neg_r_moves._assign_picking()
+
+        if neg_r_moves:
+            neg_r_moves._process_negative_moves()
 
         # Call `_action_assign` on confirmed moves eligible for auto-assignment at confirmation.
         moves._filtered_for_assign()._action_assign()
@@ -2034,7 +2045,18 @@ Please change the quantity done or the rounding precision in your settings.""",
         return self._should_bypass_reservation() or self.picking_type_id.reservation_method == 'at_confirm' or (self.reservation_date and self.reservation_date <= fields.Date.context_today(self))
 
     def _filtered_for_assign(self):
-        return self.filtered(lambda move: (move.state in ('confirmed', 'partially_available') or move.origin_returned_move_id) and move._should_assign_at_confirm())
+        return self.filtered(lambda move:
+            move._should_assign_at_confirm()
+            and (
+                move.state in ('confirmed', 'partially_available')
+                or move.origin_returned_move_id
+                or (
+                    move.state == 'waiting'  # A waiting move can be assigned if one of its dependencies is already done.
+                    and move.procure_method == 'make_to_stock'
+                    and any(orig.state == 'done' for orig in move.move_orig_ids)
+                )
+            )
+        )
 
     def _get_picked_quantity(self):
         self.ensure_one()
