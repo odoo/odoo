@@ -168,6 +168,12 @@ class CalendarEvent(models.Model):
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
         and vice versa.""")
+    is_draft = fields.Boolean(string="Is draft",
+        help="""When True, this field mutes the notifications of the event. It allows to save the event without \
+        confirming it and avoids spamming attendees with update messages because some information was unknown at \
+        the creation of the event. When it is removed, it is offered to send invitations to all the attendees. To \
+        prevent event's flow issues, the draft state should be set at the creation of the event and never reset \
+        once it is removed.""")
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user, index='btree_not_null')
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -193,7 +199,7 @@ class CalendarEvent(models.Model):
     )
     show_as = fields.Selection(
         [('free', 'Available'),
-         ('busy', 'Busy')], 'Show as', default='busy', required=True,
+         ('busy', 'Busy')], 'Show as', compute='_compute_show_as', readonly=False, store=True,
         help="If the time is shown as 'busy', this event will be visible to other people with either the full \
         information or simply 'busy' written depending on its privacy. Use this option to let other people know \
         that you are unavailable during that period of time. \n If the event is shown as 'free', other users know \
@@ -315,10 +321,10 @@ class CalendarEvent(models.Model):
         'Access token should be unique',
     )
 
-    @api.onchange("allday")
-    def _onchange_allday(self):
+    @api.depends('allday', 'is_draft')
+    def _compute_show_as(self):
         for event in self:
-            event.show_as = 'free' if event.allday else 'busy'
+            event.show_as = 'free' if event.allday or event.is_draft else 'busy'
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -561,6 +567,15 @@ class CalendarEvent(models.Model):
         """
         return [True] * len(vals_list)
 
+    @api.constrains('is_draft', 'recurrency')
+    def _check_no_recurrent_draft(self):
+        """To avoid letting users reset the draft state and create event's flow issues, the "is_draft" field is not
+        displayed in the event form. Because of this, the propagation of the modifications of the draft state requires
+        undesired complexities. For this reason, draft recurrent events are not supported."""
+        for event in self:
+            if event.is_draft and event.recurrency:
+                raise ValidationError(_('A recurring event cannot be a draft.'))
+
     @api.depends('recurrence_id', 'recurrency')
     def _compute_rrule_type_ui(self):
         defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
@@ -755,6 +770,7 @@ class CalendarEvent(models.Model):
                 'meeting_activity_ids': vals.get('meeting_activity_ids', defaults.get('meeting_activity_ids')),
                 'allday': vals.get('allday', defaults.get('allday')),
                 'description': vals.get('description', defaults.get('description')),
+                'is_draft': vals.get('is_draft', defaults.get('is_draft')),
                 'name': vals.get('name', defaults.get('name')),
                 # when res_id is not defined or vals['res_id'] == 0, fallback on default
                 'res_id': vals.get('res_id') or defaults.get('res_id'),
@@ -807,8 +823,11 @@ class CalendarEvent(models.Model):
                 }
                 if values['description']:
                     activity_vals['note'] = values['description']
-                if values['name']:
-                    activity_vals['summary'] = values['name']
+                if values['name'] or values['is_draft']:
+                    if values['is_draft']:
+                        activity_vals['summary'] = _('[Draft] %s', values['name'])
+                    else:
+                        activity_vals['summary'] = values['name']
                 if values['start']:
                     activity_vals['date_deadline'] = self._get_activity_deadline_from_start(fields.Datetime.from_string(values['start']), values['allday'])
                 if values['user_id']:
@@ -871,7 +890,8 @@ class CalendarEvent(models.Model):
                 detached_events = event.with_context(skip_contact_description=True)._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.attendee_ids._send_invitation_emails()
+        if not self.env.context.get('disable_auto_send_invitation_emails'):
+            events.attendee_ids._send_invitation_emails()
 
         # update activities based on calendar event data, unless already prepared
         # above manually. Heuristic: a new command (0, 0, vals) is considered as
@@ -1010,7 +1030,7 @@ class CalendarEvent(models.Model):
         current_attendees = self.filtered('active').attendee_ids
         skip_attendee_notification = self.env.context.get('skip_attendee_notification')
         invited_attendees = self._get_new_invited_attendees(current_attendees, previous_attendees, vals)
-        if not skip_attendee_notification and invited_attendees:
+        if not (skip_attendee_notification or self.env.context.get('disable_auto_send_invitation_emails')) and invited_attendees:
             invited_attendees._send_invitation_emails()
         if not skip_attendee_notification and not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
@@ -1111,6 +1131,13 @@ class CalendarEvent(models.Model):
         self.env['calendar.alarm_manager']._notify_next_alarm(partner_ids)
         return result
 
+    def _action_unlink(self, recurrence_choice=None):
+        if len(self) == 1 and self.recurrency and recurrence_choice:
+            if self.user_id._has_any_active_synchronization():
+                return self.action_mass_archive(recurrence_choice)
+            return self.action_mass_deletion(recurrence_choice)
+        return self.unlink()
+
     def copy(self, default=None):
         """When an event is copied, the attendees should be recreated to avoid sharing the same attendee records
          between copies
@@ -1124,46 +1151,119 @@ class CalendarEvent(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
-    def action_unlink_event(self, attendee_id=None, recurrence=False):
+    def _action_confirm(self):
+        self.ensure_one()
+        self.is_draft = False
+
+    def action_open_confirm_wizard(self):
+        self.ensure_one()
+        action_open_confirm_wizard = self.action_open_invite_wizard(self.partner_ids, True) if self.start >= fields.Datetime.now() else {}
+        if not action_open_confirm_wizard:
+            self.with_context(disable_auto_send_invitation_emails=True)._action_confirm()
+        return action_open_confirm_wizard
+
+    def action_open_invite_wizard(self, partner_ids=None, is_confirmation_required=False, next_action=None):
+        """If needed, it displays a modal offering to send invitations to the event's attendees.
+
+        :param partner_ids: The ids of the partners to invite. If not set, all the partners of the event are invited.
+        :param is_confirmation_required: If True, the modal offers to confirm the event as well as sending out invitations.
+        :param next_action: The action to perform once the attendees are invited.
+        :return: Action to display the modal."""
+        self.ensure_one()
+        if not self.partner_ids or self.partner_ids == self.user_id.partner_id or self.user_id._has_any_active_synchronization():
+            return next_action
+        if not partner_ids:
+            partner_ids = self.partner_ids.ids
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'calendar.attendee.invite.wizard',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'name': _('Notify Attendees'),
+            'context': {
+                'default_calendar_attendee_ids': self.attendee_ids.filtered_domain([('partner_id', 'in', partner_ids)]).ids,
+                'default_is_confirmation_required': is_confirmation_required,
+                'dialog_size': 'small',
+                'next_action': next_action,
+            },
+        }
+
+    def action_open_archive_or_unlink_wizard(self, requested_action, next_action=None, recurrence_choice=None, send_email=True):
         """
-        Delete the event after displaying the delete wizard if necessary.
+        This method allows users to manage some actions related to the archiving or deletion from the frontend. If the event belongs to a recurrence,
+        then it shows a form offering to select which event of this one must be archived or deleted. If needed, it displays a wizard to approve the
+        sending of the cancellation emails to the attendees. This wizard also allows to edit the cancellation email if only one event has been selected.
 
-        :param attendee_id: The ID of the attendee for the event
-        :param recurrence: Boolean indicating if the event is recurring
-        :return: Action to delete the event
+        :param requested_action: The action requested from the interface triggering the method and can be "archive" or "unlink"
+        :param next_action: The action to perform once the events are unlinked or archived
+        :param recurrence_choice: The value specifying which events of the selected event's recurrence must be archived or unlinked
+            The value can be any of the fallowing:
+            - 'self_only' or None if the "Select Recurring events" has not be submitted: only the selected event
+            - 'futur_events': the selected event and future ones
+            - 'all_event': all events in the recurrence
+        :param send_email: If false, the method performs directly the action requested from the interface and do not offer to send cancellation emails
+        :return: Action to archive or unlink the event(s)
         """
-        if self.user_id._has_any_active_synchronization() or len(self.ids) > 1:
-            self.unlink()
-            return {
-                'type': 'ir.actions.act_url',
-                'target': 'self',
-                'url': '/odoo/calendar'
-            }
+        if not next_action:
+            next_action = {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
-        template = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
-        if not template:
-            self.unlink()
-            _logger.warning('Template "calendar.calendar_template_delete_event" was not found. Cannot send delete notifications.')
-            return {}
+        if not self.ids:
+            return next_action
 
-        if self.ids and (lang := template._render_lang(self.ids)[self.id]):
-            context = {
-                'default_use_template': bool(template),
-                'default_template_id': template.id,
-                'default_attendee_id': attendee_id,
-                'default_calendar_event_id': self.id,
-                'default_recurrence': recurrence,
-                'model_description': self.with_context(lang=lang),
-            }
-            return {
-                'name': _('Delete Event'),
-                'res_model': 'calendar.popover.delete.wizard',
-                'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
-                'type': 'ir.actions.act_window',
-                'context': context,
-                'target': 'new',
-                'views': [(False, 'form')],
-            }
+        if (
+            self.user_id._has_any_active_synchronization()
+            # Prevent archiving or unlinking a recurring event without displaying the "Select Recurring Events" form
+            # and specifying which events of the recurrence must be archived or unlinked.
+            and not (len(self.ids) == 1 and self.recurrency and not recurrence_choice)
+            or not send_email
+        ):
+            if requested_action == 'archive':
+                self.with_context(disable_auto_send_cancellation_emails=True).write({'active': False})
+            elif requested_action == 'unlink':
+                self._action_unlink(recurrence_choice)
+            return next_action
+
+        action_open_archive_or_unlink_wizard = {
+            'type': 'ir.actions.act_window',
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
+        if len(self) > 1:
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Notify attendees'),
+                'res_model': 'calendar.event.multi.archive.or.unlink.wizard',
+                'context': {
+                    'active_ids': self.ids,
+                    'active_model': 'calendar.event',
+                    'default_requested_action': requested_action,
+                    'dialog_size': 'small',
+                    'next_action': next_action,
+                },
+            })
+        elif self.recurrency and not recurrence_choice and requested_action:
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Select Recurring Event'),
+                'res_model': 'calendar.event.archive.or.unlink.wizard',
+                'context': {
+                    'default_calendar_event_id': self.id,
+                    'default_requested_action': requested_action,
+                    'form_view_ref': 'calendar.recurring_calendar_event_archive_or_unlink_wizard_view_form',
+                    'next_action': next_action,
+                },
+            })
+        else:
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Notify attendees'),
+                'res_model': 'calendar.event.archive.or.unlink.wizard',
+                'context': {
+                    'default_calendar_event_id': self.id,
+                    'default_recurrence_choice': recurrence_choice,
+                    'default_requested_action': requested_action,
+                    'form_view_ref': 'calendar.calendar_event_archive_or_unlink_wizard_view_form',
+                    'next_action': next_action,
+                },
+            })
+        return action_open_archive_or_unlink_wizard
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         # reading messages on private events requires write access, not just read access
@@ -1347,6 +1447,8 @@ class CalendarEvent(models.Model):
         elif recurrence_update_setting == 'future_events':
             future_events = self.recurrence_id.calendar_event_ids.filtered(lambda ev: ev.start >= self.start)
             future_events.unlink()
+        elif recurrence_update_setting == 'self_only':
+            self.unlink()
 
     def action_mass_archive(self, recurrence_update_setting):
         """
@@ -1390,8 +1492,11 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.meeting_activity_ids:
                 activity_values = {}
-                if 'name' in fields:
-                    activity_values['summary'] = event.name
+                if 'name' in fields or 'is_draft' in fields:
+                    if 'is_draft' in fields:
+                        activity_values['summary'] = _('[Draft] %s', event.name)
+                    else:
+                        activity_values['summary'] = event.name
                 if 'description' in fields:
                     activity_values['note'] = event.description
                 # protect against loops in case of ill-managed timezones
@@ -1840,6 +1945,8 @@ class CalendarEvent(models.Model):
     def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
         """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
         to be overridden."""
+        if 'is_draft' in update_vals and not update_vals['is_draft']:
+            return current_attendees
         return current_attendees - previous_attendees
 
     @api.model
