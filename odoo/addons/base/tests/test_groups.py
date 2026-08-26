@@ -758,3 +758,10 @@ class TestGroupsOdoo(common.TransactionCase):
 
         # this works because public user is inactive
         self.env.ref('base.group_public').implied_ids += self.test_group
+
+    def test_groups_7_multi_external_id(self):
+        system = self.env.ref('base.group_system')
+        self.env['ir.model.data']._update_xmlids([{'xml_id': 'base.test_group_system', 'record': system}])
+        self.assertGreater(len(system._get_external_ids()[system.id]), 1, "Group with multiple xmlids")
+        self.definitions = self.env['res.groups']._get_group_definitions()
+        self.assertEqual(self.parse_repr('base.group_system'), self.parse_repr('base.test_group_system'))
