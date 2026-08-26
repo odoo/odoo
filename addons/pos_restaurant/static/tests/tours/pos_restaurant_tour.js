@@ -135,6 +135,29 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // There should be 0 synced draft order as we already deleted -00002.
             FloorScreen.clickTable("5"),
             ProductScreen.orderIsEmpty(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            checkPreparationTicketData([{ name: "Coca-Cola", qty: 1 }]),
+            ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
+            checkPreparationTicketData([]),
+            checkPreparationTicketData([{ name: "Coca-Cola", qty: 1 }], { reprint: true }),
+            ProductScreen.clickDisplayedProduct("Water", true),
+            checkPreparationTicketData([{ name: "Water", qty: 1 }]),
+            ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlinesHaveNoChange(),
+            checkPreparationTicketData(
+                [
+                    { name: "Coca-Cola", qty: 1 },
+                    { name: "Water", qty: 1 },
+                ],
+                { reprint: true }
+            ),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.isShown(),
         ].flat(),
 });
 

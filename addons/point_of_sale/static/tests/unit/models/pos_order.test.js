@@ -12,6 +12,7 @@ test("uiState", async () => {
         unmerge: {},
         lineToRefund: {},
         displayed: true,
+        isReprinting: false,
         booked: false,
         screen_data: {},
         selected_orderline_uuid: undefined,
