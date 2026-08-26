@@ -6,7 +6,7 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='task_id']" position="after">
+                <xpath expr="//field[@name='name']" position="after">
                     <field name="order_id" string="Sales Order" filter_domain="['|', ('so_line', 'ilike', self), ('order_id', 'ilike', self)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
@@ -17,10 +17,8 @@
                         groups="sales_team.group_sale_salesman"/>
                     <separator/>
                 </xpath>
-                <xpath expr="//filter[@name='groupby_employee']" position="after">
+                <xpath expr="//filter[@name='groupby_task']" position="after">
                     <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}"
-                        groups="sales_team.group_sale_salesman"/>
-                    <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'reinvoice_move_id'}"
                         groups="sales_team.group_sale_salesman"/>
                     <filter string="Billing Type" name="groupby_billable_type" domain="[]"
                         context="{'group_by': 'billable_type'}" groups="sales_team.group_sale_salesman"/>
@@ -127,9 +125,6 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='mine']" position="attributes">
                 <attribute name="string">Mine</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='groupby_parent_task']" position="attributes">
-                <attribute name="invisible">True</attribute>
             </xpath>
         </field>
     </record>
