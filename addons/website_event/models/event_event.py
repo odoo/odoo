@@ -719,8 +719,8 @@ class EventEvent(models.Model):
             '@id': f'{self.website_absolute_url}/#event',
             'name': self.name,
             'url': self.website_absolute_url,
-            'startDate': self._to_iso_datetime(self.date_begin),
-            'endDate': self._to_iso_datetime(self.date_end),
+            'startDate': self._to_iso_datetime(self.date_begin, self.date_tz),
+            'endDate': self._to_iso_datetime(self.date_end, self.date_tz),
             'eventStatus': f'https://schema.org/{event_status}',
             **self._get_attendance_jsonld_vals(),
         }
@@ -767,9 +767,9 @@ class EventEvent(models.Model):
                 'value': ticket.seats_available,
             }
         if ticket.start_sale_datetime:
-            offer['validFrom'] = self._to_iso_datetime(ticket.start_sale_datetime)
+            offer['validFrom'] = self._to_iso_datetime(ticket.start_sale_datetime, self.date_tz)
         if ticket.end_sale_datetime:
-            offer['validThrough'] = self._to_iso_datetime(ticket.end_sale_datetime)
+            offer['validThrough'] = self._to_iso_datetime(ticket.end_sale_datetime, self.date_tz)
         if is_available:
             offer['url'] = f'{self.website_absolute_url}/register'
         return offer

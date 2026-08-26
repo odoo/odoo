@@ -3,6 +3,7 @@
 import re
 import urllib.parse
 from datetime import UTC, date, datetime
+from zoneinfo import ZoneInfo
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
@@ -418,10 +419,12 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         }
         return {'@type': 'PostalAddress', **postal} if postal else {}
 
-    def _to_iso_datetime(self, dt):
-        """Convert a date/datetime value to an ISO 8601 string in the user's timezone.
+    def _to_iso_datetime(self, dt, tz=None):
+        """Convert a date/datetime value to an ISO 8601 string.
 
         :param dt: Date or Datetime value, or a falsy value.
+        :param str tz: Optional name of the timezone to express the value in.
+            Datetime values are expressed in UTC when it is not provided.
         :return: ISO 8601 formatted string (seconds precision), or None if ``dt``
             is falsy or not a date/datetime.
         :rtype: str | None
@@ -430,7 +433,10 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
             return None
         # Datetime values are tz-naive UTC and must be localized
         if isinstance(dt, datetime):
-            return dt.replace(tzinfo=UTC).isoformat(timespec='seconds')
+            dt = dt.replace(tzinfo=UTC)
+            if tz:
+                dt = dt.astimezone(ZoneInfo(tz))
+            return dt.isoformat(timespec='seconds')
         # Date values have no time component and are serialized as-is
         if isinstance(dt, date):
             return dt.isoformat()
