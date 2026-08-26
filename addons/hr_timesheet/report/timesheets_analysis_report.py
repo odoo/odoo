@@ -28,10 +28,10 @@ class TimesheetsAnalysisReport(models.Model):
     message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids',
                                            search='_search_message_partner_ids', readonly=True)
 
-    @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
+    @api.depends('task_id.message_partner_ids')
     def _compute_message_partner_ids(self):
         for line in self:
-            line.message_partner_ids = line.task_id.message_partner_ids | line.project_id.message_partner_ids
+            line.message_partner_ids = line.task_id.message_partner_ids
 
     def _search_message_partner_ids(self, operator, value):
         return self.env['account.analytic.line']._search_message_partner_ids(operator, value)

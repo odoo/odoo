@@ -146,6 +146,15 @@ class ProjectProject(models.Model):
              "Other Rules:\n"
              "- Internal users can open a task from a direct link, even without project access.\n"
              "- Project admins have access to private projects, even if not followers.\n")
+    allowed_internal_user_ids = fields.Many2many(
+        comodel_name='res.users',
+        relation='project_allowed_internal_users_rel',
+        string='Team Members',
+        compute='_compute_allowed_internal_user_ids',
+        store=True,
+        readonly=False,
+        domain=lambda self: f"[('share', '=', False), ('group_ids', 'in', {self.env.ref('project.group_project_user').id}), ('company_ids', '=?', company_id)]"
+    )
     privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning', export_string_translation=False)
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date', copy=False)
@@ -297,6 +306,16 @@ class ProjectProject(models.Model):
                 project.company_id = project.account_id.company_id
             if not project.company_id and project.partner_id.company_id:
                 project.company_id = project.partner_id.company_id
+
+    @api.depends('user_id', 'company_id', 'privacy_visibility')
+    def _compute_allowed_internal_user_ids(self):
+        for project in self:
+            if project.company_id and project.allowed_internal_user_ids:
+                project.allowed_internal_user_ids = project.allowed_internal_user_ids.filtered(
+                    lambda u: project.company_id in u.company_ids
+                )
+            if project.user_id and project.privacy_visibility in ['followers', 'invited_users']:
+                project.allowed_internal_user_ids |= project.user_id
 
     @api.depends_context('company')
     @api.depends('company_id', 'company_id.resource_calendar_id')
