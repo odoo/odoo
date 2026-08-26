@@ -28,7 +28,14 @@ class ChatBubblePreview extends Component {
         return this.props.chatWindow.channel;
     }
 
+    get draftLabel() {
+        return _t("[Draft]");
+    }
+
     get previewText() {
+        if (this.channel.hasDraft) {
+            return this.channel.draftPreview;
+        }
         const lastMessage = this.channel.newestPersistentOfAllMessage;
         return lastMessage?.previewText || _t("This is the start of your conversation");
     }

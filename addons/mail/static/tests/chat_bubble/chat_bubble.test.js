@@ -201,6 +201,25 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await contains(".o-mail-ChatBubble-preview:text('Demo You: Hi')");
 });
 
+test("Hover on chat bubble shows draft indicator along with draft content", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await insertText(".o-mail-Composer-input", "Not sent yet");
+    await click(".o-mail-ChatWindow-header [title='Fold']");
+    await hover(".o-mail-ChatBubble[name='Marc']");
+    await contains(".o-mail-ChatBubble-preview .text-danger:text('[Draft]')");
+    await contains(".o-mail-ChatBubble-preview:text('Marc [Draft]Not sent yet')");
+});
+
 test("Hover on chat bubble shows message preview along with message seen indicator", async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Marc" });

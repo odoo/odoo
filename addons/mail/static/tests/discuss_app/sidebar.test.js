@@ -1,7 +1,9 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
 import {
     click,
     contains,
     defineMailModels,
+    focus,
     insertText,
     listenStoreFetch,
     openDiscuss,
@@ -26,6 +28,37 @@ import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
+
+test.tags("html composer");
+test("sidebar shows draft indicator and drafts are sorted first", async () => {
+    const pyEnv = await startServer();
+    const [zuluId] = pyEnv["discuss.channel"].create([
+        { name: "Zulu", channel_type: "channel" },
+        { name: "Alpha", channel_type: "channel" },
+    ]);
+    await start();
+    await openDiscuss(zuluId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello");
+    await contains(".o-mail-MessagingMenuItem-name", { textContent: "Zulu" });
+    await click(".o-mail-NotificationItem:has(:text('Alpha'))");
+    await contains(".o-mail-MessagingMenuItem-name", { textContent: "Zulu" });
+    await contains(".o-mail-NotificationItem:has(:text('Zulu')) .text-danger:text('[Draft]')");
+    await contains(".o-mail-MessagingMenuItem-body", { textContent: "Hello" });
+    await contains(".o-mail-NotificationItem:has(:text('Zulu'))", {
+        before: [".o-mail-NotificationItem:has(:text('Alpha'))"],
+    });
+    await click(".o-mail-NotificationItem:has(:text('Zulu'))");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello')");
+    await press("Enter");
+    await contains(".o-mail-MessagingMenuItem-name", { textContent: "Zulu" });
+});
 
 test("default thread rendering", async () => {
     const pyEnv = await startServer();

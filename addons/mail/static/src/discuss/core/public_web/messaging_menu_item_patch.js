@@ -63,6 +63,9 @@ const messagingMenuItemPatch = {
     get itemName() {
         return this.channel?.thread?.displayName ?? super.itemName;
     },
+    get itemPreviewText() {
+        return this.channel?.hasDraft ? this.channel.draftPreview : super.itemPreviewText;
+    },
     get itemPreviewThread() {
         return super.itemPreviewThread || this.channel?.thread;
     },

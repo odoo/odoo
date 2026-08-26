@@ -13,6 +13,9 @@
         </div>
         <t t-else="">$0</t>
     </xpath>
+    <xpath expr="//t[@t-set-slot='body']/span" position="before">
+        <span t-if="this.channel?.hasDraft" class="text-danger me-1" t-out="this.channel.draftLabel"/>
+    </xpath>
     <xpath expr="//t[@t-set-slot='icon']" position="inside">
         <CountryFlag t-if="this.channel?.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
     </xpath>
