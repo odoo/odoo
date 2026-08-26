@@ -235,6 +235,23 @@ export class SelfOrder extends Reactive {
         this.currentCategory = this.availableCategories[0];
     }
 
+    get topCategories() {
+        const topCategories = [];
+        for (const category of this.availableCategories) {
+            let topCategory = category;
+            for (const parent of category.allParents || []) {
+                if (!parent.self_order_available) {
+                    break;
+                }
+                topCategory = parent;
+            }
+            if (!topCategories.includes(topCategory)) {
+                topCategories.push(topCategory);
+            }
+        }
+        return topCategories.sort((a, b) => a.sequence - b.sequence);
+    }
+
     isCategoryAvailable(categId) {
         return this.availableCategories.find((c) => c.id === categId);
     }
@@ -545,9 +562,12 @@ export class SelfOrder extends Reactive {
     }
 
     initProducts() {
-        this.productCategories = this.config.limit_categories
+        const categories = this.config.limit_categories
             ? this.config.iface_available_categ_ids
             : this.models["pos.category"].getAll();
+        // Categories unavailable in self order are never displayed in the menu. Their products
+        // are still loaded so that they remain selectable as combo choices.
+        this.productCategories = categories.filter((c) => c.self_order_available);
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
         const excludedProductTemplateIds = new Set(

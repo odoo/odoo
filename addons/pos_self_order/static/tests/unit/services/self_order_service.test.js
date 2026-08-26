@@ -86,6 +86,20 @@ describe("initProducts", () => {
         expect(store.availableCategories).toHaveLength(13);
         expect(store.isCategoryAvailable(unAvailableCatg)).toBeEmpty();
     });
+
+    test("categories not available in self order are excluded", async () => {
+        const store = await setupSelfPosEnv();
+        const models = store.models;
+        models["pos.category"].get(200).self_order_available = false;
+        store.initData();
+        store.computeAvailableCategories();
+
+        expect(store.productCategories.some((c) => c.id === 200)).toBe(false);
+        expect(store.availableCategories.some((c) => c.id === 200)).toBe(false);
+        expect(store.isCategoryAvailable(200)).toBeEmpty();
+        // Its products are still loaded, so they stay selectable as combo choices.
+        expect(models["product.template"].get(220).self_order_available).toBe(true);
+    });
 });
 
 describe("initHardware", () => {

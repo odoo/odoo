@@ -3,12 +3,15 @@ import { PosCategory } from "@point_of_sale/../tests/unit/data/pos_category.data
 
 patch(PosCategory.prototype, {
     _load_pos_data_fields() {
-        return [...super._load_pos_data_fields()];
+        return [...super._load_pos_data_fields(), "self_order_available"];
     },
 });
 
 PosCategory._records = [
-    ...PosCategory._records,
+    ...PosCategory._records.map((record) => ({
+        ...record,
+        self_order_available: true,
+    })),
     {
         id: 200,
         name: "Miscellaneous",
@@ -19,6 +22,7 @@ PosCategory._records = [
         sequence: 1,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 201,
@@ -30,6 +34,7 @@ PosCategory._records = [
         sequence: 2,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 203,
@@ -41,6 +46,7 @@ PosCategory._records = [
         sequence: 3,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 204,
@@ -52,6 +58,7 @@ PosCategory._records = [
         sequence: 4,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 205,
@@ -63,6 +70,7 @@ PosCategory._records = [
         sequence: 5,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 206,
@@ -74,6 +82,7 @@ PosCategory._records = [
         sequence: 6,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 207,
@@ -85,6 +94,7 @@ PosCategory._records = [
         sequence: 7,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 208,
@@ -96,6 +106,7 @@ PosCategory._records = [
         sequence: 8,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
     {
         id: 209,
@@ -107,5 +118,6 @@ PosCategory._records = [
         sequence: 9,
         hour_until: 0.0,
         hour_after: 24.0,
+        self_order_available: true,
     },
 ];
