@@ -73,6 +73,9 @@ export class EmojiPicker extends Component {
         useAutofocus();
         onWillStart(async () => {
             await loadEmoji();
+            this.recentSnapshot = Object.entries(this.frequentEmojiService.all)
+                .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
+                .map(([codepoints]) => emojiLoader.map.get(codepoints));
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
@@ -223,9 +226,7 @@ export class EmojiPicker extends Component {
     }
 
     get recentEmojis() {
-        const recent = Object.entries(this.frequentEmojiService.all)
-            .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
-            .map(([codepoints]) => emojiLoader.map.get(codepoints));
+        const recent = this.recentSnapshot ?? [];
         if (this.searchTerm && recent.length > 0) {
             return fuzzyLookup(this.searchTerm, recent, (emoji) =>
                 [emoji.name].concat(emoji.keywords, emoji.emoticons, emoji.shortcodes)
