@@ -140,7 +140,11 @@ test("Searching messages shows spinner icon", async () => {
             "/discuss/channel/messages",
             {
                 channel_id: channelId,
-                fetch_params: { search_term: "message", before: false },
+                fetch_params: {
+                    search_term: "message",
+                    prettified_search_term: "message",
+                    before: false,
+                },
             },
         ],
     ]);
@@ -194,7 +198,11 @@ test("Clearing message input while pending search should empty message results",
             "/discuss/channel/messages",
             {
                 channel_id: channelId,
-                fetch_params: { search_term: "This is", before: false },
+                fetch_params: {
+                    search_term: "This is",
+                    prettified_search_term: "This is",
+                    before: false,
+                },
             },
         ],
     ]);
@@ -214,7 +222,11 @@ test("Clearing message input while pending search should empty message results",
             "/discuss/channel/messages",
             {
                 channel_id: channelId,
-                fetch_params: { search_term: "This is a message", before: false },
+                fetch_params: {
+                    search_term: "This is a message",
+                    prettified_search_term: "This is a message",
+                    before: false,
+                },
             },
         ],
     ]);
