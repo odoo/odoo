@@ -51,6 +51,16 @@ class PosSelfOrderController(http.Controller):
     def _verify_line_price(self, lines, pos_config, preset_id):
         lines.order_id.recompute_prices()
 
+    @http.route('/pos-self-order/get-order/<int:order_id>', auth='public', type='jsonrpc', website=True)
+    def get_order(self, access_token, order_id, order_access_token):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(self.env._("Your order does not exist or has been removed"))
+
+        return self._generate_return_values(pos_order, pos_config)
+
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
         pos_config = self._verify_pos_config(access_token)
