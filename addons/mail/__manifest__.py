@@ -224,8 +224,7 @@ For more specific needs, you may also assign custom-defined actions
             "mail/static/src/scss/discuss_print.scss",
         ],
         'mail.assets_discuss_public_test_tours': [
-            'web/static/lib/hoot-dom/**/*',
-            ('include', 'web_tour.engine'),
+            ('include', 'web_tour.tour_runner'),
             'mail/static/tests/tours/discuss_channel_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
             'mail/static/tests/tours/discuss_channel_call_action.js',

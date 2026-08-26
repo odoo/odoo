@@ -237,8 +237,7 @@
             'point_of_sale/static/src/backend/pos_res_partner_view/*',
         ],
         'point_of_sale.base_tests': [
-            "web/static/lib/hoot-dom/**/*",
-            ('include', 'web_tour.engine'),
+            ('include', 'web_tour.tour_runner'),
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [

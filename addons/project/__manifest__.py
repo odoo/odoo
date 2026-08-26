@@ -204,8 +204,7 @@
             'bus/static/src/**/*.js',
 
             # To be able to launch tour js in project sharing
-            ('include', 'web_tour.engine'),
-            'web/static/lib/hoot-dom/**/*',
+            ('include', 'web_tour.tour_runner'),
 
             ('include', 'html_editor.assets_editor'),
             'html_editor/static/src/backend/**/*',

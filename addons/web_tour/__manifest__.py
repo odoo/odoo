@@ -51,11 +51,13 @@ Odoo Web tours.
             'web_tour/static/src/tour_helpers/tour_helpers.js',
             ('include', 'web_tour.automatic')
         ],
-        'web_tour.engine': [
+        'web_tour.tour_runner': [
+            'web/static/lib/hoot-dom/**/*',
             'web_tour/static/src/tour_automatic/**/*',
             'web_tour/static/src/tour_helpers/**/*',
             'web_tour/static/src/tour_interactive/**/*',
             'web_tour/static/src/tour_pointer/**/*',
+            ('remove', 'web_tour/static/src/tour_pointer/tour_pointer.scss'),
             'web_tour/static/src/tour_recorder/**/*',
             'web_tour/static/src/tour_plugin.js',
             'web_tour/static/src/tour_schemas.js',
