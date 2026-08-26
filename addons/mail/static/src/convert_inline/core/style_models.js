@@ -7,7 +7,7 @@ export class StyleInfoMap extends Map {
     }
     assign(source, key) {
         const styleInfo = this.get(key);
-        styleInfo.merge(StyleInfo.from(source), styleInfo.maxSequence);
+        styleInfo.merge(StyleInfo.from(source), { sequence: styleInfo.maxSequence });
         return styleInfo;
     }
 }
@@ -45,8 +45,10 @@ export class StyleInfo extends Map {
         return styleInfo;
     }
 
-    dirty = true;
+    dirtySortedEntries = true;
+    dirtyIndexByPropertyName = true;
     sortedEntries = null;
+    indexByPropertyName = null;
     maxSequence = 0;
     getPropertyValue(propertyName) {
         return this.get(propertyName)?.value ?? "";
@@ -69,8 +71,12 @@ export class StyleInfo extends Map {
     removeProperty(propertyName) {
         return this.delete(propertyName);
     }
+    _setDirty() {
+        this.dirtySortedEntries = true;
+        this.dirtyIndexByPropertyName = true;
+    }
     set(key, value) {
-        this.dirty = true;
+        this._setDirty();
         if (typeof value === "string" || typeof value === "number") {
             value = { value };
         }
@@ -81,36 +87,45 @@ export class StyleInfo extends Map {
         return super.set(key, value);
     }
     delete() {
-        this.dirty = true;
+        this._setDirty();
         return super.delete(...arguments);
     }
     clear() {
-        this.dirty = true;
+        this._setDirty();
         return super.clear(...arguments);
     }
     /**
      * Merge the provided styleInfo assuming the provided
-     * properties take precedence at equal sequence and importance
+     * properties take precedence at equal sequence and importance,
+     * unless an index indicates the existing property comes later.
      *
      * @param {StyleInfo} styleInfo
-     * @param {number} [sequence]
+     * @param {Object} options
+     * @param {number} [options.sequence] incoming properties forced sequence
+     * @param {number} [options.index] incoming properties relative index
      */
-    merge(styleInfo, sequence) {
+    merge(styleInfo, { sequence, index } = {}) {
+        const indexByPropertyName = index !== undefined ? this.getIndexByPropertyName() : new Map();
         for (const [propertyName, propertyInfo] of styleInfo) {
             const thisPriority = this.getPropertyPriority(propertyName);
             const thisSequence = this.getPropertySequence(propertyName);
+            const thisIndex = indexByPropertyName.get(propertyName);
             const priority = styleInfo.getPropertyPriority(propertyName);
-            sequence =
+            const propertySequence =
                 sequence !== undefined ? sequence : styleInfo.getPropertySequence(propertyName);
+            const winsTie =
+                propertySequence > thisSequence ||
+                (propertySequence === thisSequence &&
+                    (index === undefined || thisIndex === undefined || index >= thisIndex));
             if (
                 !this.has(propertyName) ||
                 (priority && !thisPriority) ||
-                (priority === thisPriority && sequence >= thisSequence)
+                (priority === thisPriority && winsTie)
             ) {
                 this.set(
                     propertyName,
-                    Object.assign(new PropertyInfo(), propertyInfo, {
-                        sequence,
+                    Object.assign(new PropertyInfo(propertyInfo), {
+                        sequence: propertySequence,
                     })
                 );
             }
@@ -118,7 +133,7 @@ export class StyleInfo extends Map {
         return this;
     }
     getSortedEntries() {
-        if (this.dirty || !this.sortedEntries) {
+        if (this.dirtySortedEntries || !this.sortedEntries) {
             // Sort styleInfo entries by sequence, so that style properties from
             // rules with higher specificity come at the end. This is necessary
             // because e.g. a longhand property with higher specificity should
@@ -129,9 +144,22 @@ export class StyleInfo extends Map {
                 ([, propertyInfoA], [, propertyInfoB]) =>
                     propertyInfoA.sequence - propertyInfoB.sequence
             );
-            this.dirty = false;
+            this.dirtySortedEntries = false;
         }
         return this.sortedEntries;
+    }
+    getIndexByPropertyName() {
+        if (this.dirtyIndexByPropertyName || !this.indexByPropertyName) {
+            const indexByPropertyName = new Map();
+            let entryIndex = 0;
+            for (const [propertyName] of this) {
+                indexByPropertyName.set(propertyName, entryIndex);
+                entryIndex++;
+            }
+            this.indexByPropertyName = indexByPropertyName;
+            this.dirtyIndexByPropertyName = false;
+        }
+        return this.indexByPropertyName;
     }
     serialize(separator) {
         return this.getSortedEntries()

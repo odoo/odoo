@@ -83,12 +83,16 @@ export class SpacingPlugin extends Plugin {
         if (decomposedStyleInfo.size === 0) {
             return;
         }
+        const indexByPropertyName = styleInfo.getIndexByPropertyName();
+        const index = indexByPropertyName.get(propertyName);
         styleInfo.delete(propertyName);
+        const convertedStyleInfo = new StyleInfo();
         for (const [propertyName, propertyInfo] of decomposedStyleInfo) {
             if (this.convertRemPropertyInfoToPx({ element, propertyName, propertyInfo })) {
-                styleInfo.set(propertyName, propertyInfo);
+                convertedStyleInfo.set(propertyName, propertyInfo);
             }
         }
+        styleInfo.merge(convertedStyleInfo, { index });
         return true;
     }
 

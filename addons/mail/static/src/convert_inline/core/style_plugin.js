@@ -88,7 +88,7 @@ export class StylePlugin extends Plugin {
             // interpret computed values as declared values. In case of bug
             // use MSO-specific style values to force it to use computed
             // values (e.g. mso-line-height-rule:exactly; for line-height).
-            if (!this.isDynamicCSSValue(propertyInfo.value)) {
+            if (this.isDynamicCSSValue(propertyInfo.value)) {
                 const simpleVarsValue = this.getSimpleVarsValue(
                     propertyInfo.value,
                     element,
@@ -110,7 +110,7 @@ export class StylePlugin extends Plugin {
     }
 
     isDynamicCSSValue(value) {
-        return !value.includes("calc(") && !value.includes("var(");
+        return value.includes("calc(") || value.includes("var(");
     }
 
     splitSimpleVars(value) {
@@ -148,7 +148,7 @@ export class StylePlugin extends Plugin {
             }
             computedStyle ??= this.getComputedStyle(element);
             const partValue = computedStyle.getPropertyValue(part.simpleVar);
-            if (!this.isDynamicCSSValue(partValue)) {
+            if (this.isDynamicCSSValue(partValue)) {
                 const recursionValue = this.getSimpleVarsValue(partValue, element, computedStyle);
                 if (recursionValue === undefined) {
                     return;
@@ -160,7 +160,7 @@ export class StylePlugin extends Plugin {
             }
         }
         const recombination = valueParts.map((part) => part.value).join("");
-        if (this.isDynamicCSSValue(recombination)) {
+        if (!this.isDynamicCSSValue(recombination)) {
             // TODO EGGMAIL: Fix approximation: calc( or var( may be
             // part of a legit value, and other css functions may be
             // invalid for a given mail client.
@@ -191,10 +191,10 @@ export class StylePlugin extends Plugin {
         // Start sequence at 1 because 0 is reserved for default values
         let sequence = 1;
         for (const ruleInfo of ruleInfos) {
-            styleInfo.merge(ruleInfo.styleInfo, sequence);
+            styleInfo.merge(ruleInfo.styleInfo, { sequence });
             sequence++;
         }
-        styleInfo.merge(this.convertToStyleInfo(element.style), sequence);
+        styleInfo.merge(this.convertToStyleInfo(element.style), { sequence });
         this.processCSSValues(element, styleInfo);
         nodeToStyleInfo.set(element, styleInfo);
         return styleInfo;
