@@ -5,3 +5,20 @@
         color: white !important;
     }
 }
+
+// Strips the border and focus ring that Bootstrap's .btn draws on
+// hover/focus/active, so the button stays borderless when clicked.
+.btn-clear {
+    border-color: transparent !important;
+    box-shadow: none !important;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:active,
+    &.active {
+        border-color: transparent !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+}
