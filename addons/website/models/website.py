@@ -30,6 +30,12 @@ from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
 from odoo.tools import SQL, Query, sql as sqltools
 from odoo.tools.translate import _, xml_translate
+<<<<<<< 7b0fa1403bc8410c90b98b14bdb9977da3d37f25
+||||||| 4b3c29d30d1d21536697485956b4689f6b3d6c81
+from odoo.tools import escape_psql, pycompat
+=======
+from odoo.tools import SQL, escape_psql, pycompat
+>>>>>>> e68aa14c853e66cd495201cdbf57c5c89260ca1a
 
 logger = logging.getLogger(__name__)
 
@@ -2144,11 +2150,97 @@ class Website(models.Model):
 
             query = Query(self.env.cr, model._table, model._table_query)
 
+<<<<<<< 7b0fa1403bc8410c90b98b14bdb9977da3d37f25
             unaccent = self.env.registry.unaccent
             similarities = [
                 SQL("word_similarity(%(search)s, %(field)s)",
                     search=unaccent(SQL('%s', search)),
                     field=unaccent(model._field_to_sql(model._table, field, query)),
+||||||| 4b3c29d30d1d21536697485956b4689f6b3d6c81
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            # It gets the list of fields requested to search upon and that are
+            # actually not part of the requested model itself but part of a
+            # `inherits` model:
+            #     {
+            #       'name': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'url': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'another_field': {
+            #           'table': 'another_table',
+            #           'fname': 'record_id',
+            #       },
+            #     }
+            inherits_fields = {
+                inherits_model_fname: {
+                    'table': self.env[inherits_model_name]._table,
+                    'fname': inherits_field_name,
+                }
+                for inherits_model_name, inherits_field_name in model._inherits.items()
+                for inherits_model_fname in self.env[inherits_model_name]._fields.keys()
+                if inherits_model_fname in fields
+            }
+            similarities = []
+            for field in fields:
+                # Field might belong to another model (`inherits` mechanism)
+                table = inherits_fields[field]['table'] if field in inherits_fields else model._table
+                similarities.append(
+                    sql.SQL("word_similarity({search}, {field})").format(
+                        search=unaccent(sql.Placeholder('search')),
+                        field=unaccent(sql.SQL("{table}.{field}").format(
+                            table=sql.Identifier(table),
+                            field=sql.Identifier(field)
+                        )) if not model._fields[field].translate else
+                        unaccent(sql.SQL("COALESCE({table}.{field}->>{lang}, {table}.{field}->>'en_US')").format(
+                            table=sql.Identifier(table),
+                            field=sql.Identifier(field),
+                            lang=sql.Literal(lang)
+                        )),
+=======
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            # It gets the list of fields requested to search upon and that are
+            # actually not part of the requested model itself but part of a
+            # `inherits` model:
+            #     {
+            #       'name': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'url': {
+            #           'table': 'ir_ui_view',
+            #           'fname': 'view_id',
+            #       },
+            #       'another_field': {
+            #           'table': 'another_table',
+            #           'fname': 'record_id',
+            #       },
+            #     }
+            inherits_fields = {
+                inherits_model_fname: {
+                    'table': self.env[inherits_model_name]._table,
+                    'fname': inherits_field_name,
+                }
+                for inherits_model_name, inherits_field_name in model._inherits.items()
+                for inherits_model_fname in self.env[inherits_model_name]._fields.keys()
+                if inherits_model_fname in fields
+            }
+            similarities = []
+            for field in fields:
+                # Field might belong to another model (`inherits` mechanism)
+                table = inherits_fields[field]['table'] if field in inherits_fields else model._table
+                field_sql = SQL.identifier(table, field)
+                similarities.append(
+                    SQL("word_similarity(%(search)s, %(field)s)",
+                        search=unaccent(SQL("%s", search)),
+                        field=unaccent(field_sql) if not model._fields[field].translate else
+                        unaccent(SQL("COALESCE(%(field)s->>%(lang)s, %(field)s->>'en_US')", field=field_sql, lang=lang)),
+>>>>>>> e68aa14c853e66cd495201cdbf57c5c89260ca1a
                     )
                 for field in direct_fields
             ]
@@ -2185,6 +2277,7 @@ class Website(models.Model):
             similarities.extend(indirect_similarities)
             best_similarity = SQL('GREATEST(%(similarities)s)', similarities=SQL(', ').join(similarities))
 
+<<<<<<< 7b0fa1403bc8410c90b98b14bdb9977da3d37f25
             # Filter unpublished records for portal and public user for
             # performance.
             # TODO: Same for `active` field?
@@ -2202,6 +2295,84 @@ class Website(models.Model):
                 SQL.identifier(model._table, 'id'),
                 SQL('%s AS _best_similarity', best_similarity),
             ))
+||||||| 4b3c29d30d1d21536697485956b4689f6b3d6c81
+            best_similarity = sql.SQL('GREATEST({similarities})').format(
+                similarities=sql.SQL(', ').join(similarities)
+            )
+
+            where_clause = sql.SQL("")
+            # Filter unpublished records for portal and public user for
+            # performance.
+            # TODO: Same for `active` field?
+            filter_is_published = (
+                'is_published' in model._fields
+                and model._fields['is_published'].base_field.model_name == model_name
+                and not self.env.user.has_group('base.group_user')
+            )
+            if filter_is_published:
+                where_clause = sql.SQL("WHERE is_published")
+
+            from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            for table_to_join in {
+                field['table']: field['fname'] for field in inherits_fields.values()
+            }.items():  # Removes duplicate inherits model
+                from_clause = sql.SQL("""
+                    {from_clause}
+                    LEFT JOIN {inherits_table} ON {table}.{inherits_field} = {inherits_table}.id
+                """).format(
+                    from_clause=from_clause,
+                    table=sql.Identifier(model._table),
+                    inherits_table=sql.Identifier(table_to_join[0]),
+                    inherits_field=sql.Identifier(table_to_join[1]),
+                )
+            query = sql.SQL("""
+                SELECT {table}.id, {best_similarity} AS _best_similarity
+                {from_clause}
+                {where_clause}
+                ORDER BY _best_similarity desc
+                LIMIT 1000
+            """).format(
+                table=sql.Identifier(model._table),
+                best_similarity=best_similarity,
+                from_clause=from_clause,
+                where_clause=where_clause,
+            )
+            self.env.cr.execute(query, {'search': search})
+=======
+            best_similarity = SQL("GREATEST(%s)", SQL(", ").join(similarities))
+            # Rank only the records eligible for the provider domain, before the
+            # similarity LIMIT. The eligible ids are a sub-select (not fetched)
+            # to keep the domain's joins/aliases out of the similarity query.
+            eligible_query = model._search(AND(domain))
+            from_clause = SQL("%s", SQL.identifier(model._table))
+            # Specific handling for fields being actually part of another model
+            # through the `inherits` mechanism.
+            for inherits_table, inherits_field in {
+                field['table']: field['fname'] for field in inherits_fields.values()
+            }.items():  # Removes duplicate inherits model
+                from_clause = SQL(
+                    "%s LEFT JOIN %s ON %s = %s",
+                    from_clause,
+                    SQL.identifier(inherits_table),
+                    SQL.identifier(model._table, inherits_field),
+                    SQL.identifier(inherits_table, 'id'),
+                )
+            query = SQL("""
+                SELECT %(id)s, %(best_similarity)s AS _best_similarity
+                FROM %(from_clause)s
+                WHERE %(id)s IN %(eligible_ids)s
+                ORDER BY _best_similarity desc
+                LIMIT 1000
+            """,
+                id=SQL.identifier(model._table, 'id'),
+                best_similarity=best_similarity,
+                from_clause=from_clause,
+                eligible_ids=eligible_query.subselect(),
+            )
+            self.env.cr.execute(query)
+>>>>>>> e68aa14c853e66cd495201cdbf57c5c89260ca1a
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
