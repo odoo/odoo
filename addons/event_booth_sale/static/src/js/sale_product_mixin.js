@@ -13,7 +13,10 @@ const eventBoothSaleProductMixin = () => ({
         return this.props.record.data.service_tracking === "event_booth";
     },
     get hasConfigurationButton() {
-        return super.hasConfigurationButton || this.isEventBooth;
+        return (
+            super.hasConfigurationButton
+            || (!this.props.record.model.root.data.locked && this.isEventBooth)
+        );
     },
     onEditConfiguration() {
         if (this.isEventBooth) {
