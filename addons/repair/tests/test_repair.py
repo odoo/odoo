@@ -566,6 +566,7 @@ class TestRepair(common.TransactionCase):
         # update the quantity of the product in the stock
         self.env['stock.quant']._update_available_quantity(self.product_product_3, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_1, package_id=package_1)
         self.env['stock.quant']._update_available_quantity(self.product_product_3, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_2, package_id=package_2)
+        self.product_product_3.invalidate_recordset()
         self.assertEqual(self.product_product_3.qty_available, 2)
         # create a repair order
         repair_order = self.env['repair.order'].create({

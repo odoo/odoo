@@ -200,6 +200,16 @@ class TestStockValuation(TestStockValuationBase):
         self.assertTrue(move1.stock_valuation_layer_ids)
         self.assertFalse(move1.stock_valuation_layer_ids.account_move_id)
 
+    def test_change_consumable(self):
+        """ Changing the product type should empty the valuation"""
+        self.product1.is_storable = False
+        self._make_in_move(self.product1, 3, unit_cost=17)
+        self._make_in_move(self.product1, 1, unit_cost=23)
+        self._make_out_move(self.product1, 3)
+        self.product1.is_storable = True
+        self.assertFalse(self.product1.quantity_svl)
+        self.assertFalse(self.product1.value_svl)
+
     def test_fifo_perpetual_1(self):
         self.product1.categ_id.property_cost_method = 'fifo'
 
