@@ -51,7 +51,7 @@ class ResPartner(models.Model):
         if not column_exists(self.env.cr, 'res_partner', 'account_peppol_is_endpoint_valid'):
             create_column(self.env.cr, 'res_partner', 'account_peppol_is_endpoint_valid', 'boolean')
         if not column_exists(self.env.cr, 'res_partner', 'account_peppol_validity_last_check'):
-            create_column(self.env.cr, 'res_partner', 'account_peppol_validity_last_check', 'timestamp')
+            create_column(self.env.cr, 'res_partner', 'account_peppol_validity_last_check', 'date')
         return super()._auto_init()
 
     @api.model
