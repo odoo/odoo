@@ -257,7 +257,7 @@ patch(PosStore.prototype, {
                 class: `${colorClassMap[button.value] || ""}`,
             })),
             confirmButtonLabel: _t("Apply"),
-            formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
+            formatDisplayedValue: (x) => (isPercentage ? `${x} %` : x),
             feedback: (buffer) =>
                 isPercentage && buffer
                     ? `(${this.formatCurrency(
