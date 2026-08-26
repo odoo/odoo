@@ -1,6 +1,9 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { Component, proxy, useProps, t } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import {
+    MAX_SELF_ORDER_LINE_QTY,
+    useSelfOrder,
+} from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
 import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
@@ -50,8 +53,20 @@ export class ProductPage extends Component {
         if (!increase && currentQty === 1) {
             return;
         }
+        if (increase && this.isQuantityAtMaximum()) {
+            this.selfOrder.showMaxQtyNotification();
+            return;
+        }
 
-        return increase ? this.state.qty++ : this.state.qty--;
+        const result = increase ? this.state.qty++ : this.state.qty--;
+        if (increase && this.isQuantityAtMaximum()) {
+            this.selfOrder.showMaxQtyNotification();
+        }
+        return result;
+    }
+
+    isQuantityAtMaximum() {
+        return this.state.qty >= MAX_SELF_ORDER_LINE_QTY;
     }
 
     isProductAvailable() {

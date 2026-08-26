@@ -10,7 +10,8 @@
             <div class="o-so-tabular-nums py-2 m-0 px-4 h-100 border-top border-bottom text-bg-light fs-3 fw-bold" t-out="this.state.qty"/>
             <button type="button"
                     t-on-click="() => this.changeQuantity(true)"
-                    class="btn btn-light border">
+                    class="btn btn-light border"
+                    t-att-disabled="this.isQuantityAtMaximum()">
                     <i class="oi oi-fw" data-icon="add"/>
             </button>
         </div>

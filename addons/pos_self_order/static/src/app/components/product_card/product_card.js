@@ -1,7 +1,10 @@
 import { Component, useProps, t } from "@odoo/owl";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import {
+    MAX_SELF_ORDER_LINE_QTY,
+    useSelfOrder,
+} from "@pos_self_order/app/services/self_order_service";
 import { flyToCart } from "@pos_self_order/app/utils/ui_animations";
 import { formatProductName } from "@pos_self_order/app/utils";
 import { ProductInfoPopup } from "../product_info_popup/product_info_popup";
@@ -20,6 +23,13 @@ export class ProductCard extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+    }
+
+    isProductAtMaxQty() {
+        const tmplId = this.productTmpl.id;
+        return this.selfOrder.currentOrder?.lines.some(
+            (l) => l.product_id?.product_tmpl_id?.id === tmplId && l.qty >= MAX_SELF_ORDER_LINE_QTY
+        );
     }
 
     get isProductAvailable() {
@@ -68,7 +78,9 @@ export class ProductCard extends Component {
                 return;
             }
 
-            flyToCart(target);
+            if (!this.isProductAtMaxQty()) {
+                flyToCart(target);
+            }
             this.selfOrder.addToCart(
                 product,
                 1,
@@ -85,7 +97,9 @@ export class ProductCard extends Component {
 
         const isConfigurable = product.isConfigurableForSelfOrder;
         if (this.selfOrder.ordering && !isConfigurable) {
-            flyToCart(target);
+            if (!this.isProductAtMaxQty()) {
+                flyToCart(target);
+            }
             this.selfOrder.addToCart(product, 1);
         }
 

@@ -28,6 +28,8 @@ import { session } from "@web/session";
 
 const { DateTime } = luxon;
 
+export const MAX_SELF_ORDER_LINE_QTY = 5;
+
 export class SelfOrder extends Reactive {
     static serviceDependencies = [
         "notification",
@@ -406,6 +408,13 @@ export class SelfOrder extends Reactive {
         this.currentOrder.setTip(false);
     }
 
+    showMaxQtyNotification() {
+        this.notification.add(
+            _t("You can add up to %s quantity per product.", MAX_SELF_ORDER_LINE_QTY),
+            { type: "warning" }
+        );
+    }
+
     async addToCart(
         productTemplate,
         qty,
@@ -436,8 +445,21 @@ export class SelfOrder extends Reactive {
         );
 
         if (lineToMerge) {
+            const availableQty = MAX_SELF_ORDER_LINE_QTY - lineToMerge.qty;
+            if (availableQty <= 0) {
+                newLine.delete();
+                this.showMaxQtyNotification();
+                return;
+            }
+            if (newLine.qty > availableQty) {
+                newLine.setQuantity(availableQty);
+                this.showMaxQtyNotification();
+            }
             lineToMerge.setQuantity(lineToMerge.qty + newLine.qty);
             newLine.delete();
+        } else if (newLine.qty > MAX_SELF_ORDER_LINE_QTY) {
+            newLine.setQuantity(MAX_SELF_ORDER_LINE_QTY);
+            this.showMaxQtyNotification();
         }
     }
     async confirmationPage(screen_mode, device, access_token) {

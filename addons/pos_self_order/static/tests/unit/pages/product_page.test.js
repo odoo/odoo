@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -23,6 +23,19 @@ test("changeQuantity and isProductAvailable", async () => {
     // Quantity should not decrease below 1
     comp.changeQuantity(false);
     expect(comp.state.qty).toBe(1);
+
+    comp.state.qty = 4;
+    patchWithCleanup(store.notification, {
+        add(message, options) {
+            expect(message).toBe("You can add up to 5 quantity per product.");
+            expect(options).toEqual({ type: "warning" });
+            expect.step("notification");
+        },
+    });
+    comp.changeQuantity(true);
+    expect(comp.state.qty).toBe(5);
+    expect(comp.isQuantityAtMaximum()).toBe(true);
+    expect.verifySteps(["notification"]);
 });
 
 test("getProductPrice", async () => {

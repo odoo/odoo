@@ -266,7 +266,7 @@ describe("addToCart", () => {
         // with same Product
         store.addToCart(product5, 7, "");
         expect(store.currentOrder.lines).toHaveLength(1);
-        expect(store.currentOrder.lines[0].qty).toBe(9);
+        expect(store.currentOrder.lines[0].qty).toBe(5);
 
         // with diffrent Product
         store.addToCart(product6, 4, "");

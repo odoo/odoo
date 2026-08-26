@@ -37,6 +37,49 @@ test("changeQuantity", async () => {
     expect(order.lines).toHaveLength(1);
 });
 
+test("quantity is capped at five", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const line = order.lines[1];
+    const comp = await mountWithCleanup(CartPage, {});
+    order.uiState.lineChanges[line.uuid] = { qty: line.qty };
+    line.qty += 5;
+    await animationFrame();
+
+    expect(".o_self_cart_page button.pe-none").toHaveCount(1);
+    patchWithCleanup(store.notification, {
+        add(message, options) {
+            expect(message).toBe("You can add up to 5 quantity per product.");
+            expect(options).toEqual({ type: "warning" });
+        },
+    });
+    comp.changeQuantity(line, true);
+    expect(line.qty).toBe(7);
+});
+
+test("quantity cap notification is shown once for a combo", async () => {
+    const store = await setupSelfPosEnv();
+    const comboLine = await addComboProduct(store);
+    const comp = await mountWithCleanup(CartPage, {});
+    comboLine.qty = 4;
+    for (const childLine of comboLine.combo_line_ids) {
+        childLine.qty = 4;
+    }
+    patchWithCleanup(store.notification, {
+        add(message, options) {
+            expect(message).toBe("You can add up to 5 quantity per product.");
+            expect(options).toEqual({ type: "warning" });
+            expect.step("notification");
+        },
+    });
+
+    comp.changeQuantity(comboLine, true);
+
+    expect(comboLine.qty).toBe(5);
+    expect(comboLine.combo_line_ids.map((line) => line.qty)).toEqual([5, 5]);
+    expect.verifySteps(["notification"]);
+});
+
 test("pay", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
