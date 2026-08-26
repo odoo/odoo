@@ -26,6 +26,7 @@ const makeSession = ({
         debug: new URLSearchParams(location.search).get("debug"),
         lang,
     },
+    bus_info: { last_id: 0, worker_version: "test" },
     can_insert_in_spreadsheet: true,
     db,
     registry_hash: "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0",

@@ -16,7 +16,7 @@ except ImportError:
     ws = None
 
 from odoo.api import Environment
-from odoo.tests import new_test_user
+from odoo.tests import mute_logger, new_test_user
 
 from odoo.addons.bus import websocket as websocket_module
 from odoo.addons.bus.bus_dispatcher import BusDispatcher, ChannelTopic, dispatch
@@ -149,6 +149,7 @@ class TestWebsocketCaryall(WebsocketCase):
                 },
             )
 
+    @mute_logger("odoo.addons.bus.models.ir_websocket")
     def test_subscribe_non_integer_last(self):
         with patch.object(
             BusDispatcher,

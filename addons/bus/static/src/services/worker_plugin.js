@@ -23,12 +23,26 @@ export class WorkerPlugin extends Plugin {
         const promWithResolvers = Promise.withResolvers();
         this.workerInitPromise = promWithResolvers.promise;
         this._resolveWorkerInit = promWithResolvers.resolve;
+        if (!session.bus_info && session.websocket_worker_version) {
+            console.warn(
+                "'session.websocket_worker_version' is deprecated. Bus consumers should provide " +
+                    "'bus_info' instead, including the 'last_id' to start from, to ensure that no notifications " +
+                    "are missed between page load and subscription."
+            );
+            session.bus_info = { worker_version: session.websocket_worker_version };
+        }
     }
 
     startWorker() {
+        if (!session.bus_info) {
+            console.warn("Worker service cannot start: missing 'session.bus_info'.");
+            this._state.set(WORKER_STATE.FAILED);
+            this._resolveWorkerInit(false);
+            return;
+        }
         this._state.set(WORKER_STATE.INITIALIZING);
         let workerURL = `${this.params.serverURL()}/bus/websocket_worker_bundle?v=${
-            session.websocket_worker_version
+            session.bus_info.worker_version
         }`;
         if (this.params.serverURL() !== window.origin) {
             // Worker service can be loaded from a different origin than the
@@ -46,7 +60,7 @@ export class WorkerPlugin extends Plugin {
         this._registerHandler((ev) => {
             if (ev.data.type === "BASE:INITIALIZED") {
                 this._state.set(WORKER_STATE.INITIALIZED);
-                this._resolveWorkerInit();
+                this._resolveWorkerInit(true);
             }
         });
         if (this.isUsingSharedWorker) {
@@ -55,7 +69,7 @@ export class WorkerPlugin extends Plugin {
         this._send("BASE:INIT");
     }
 
-    /** @returns {Promise<void>} */
+    /** @returns {Promise<boolean>} */
     ensureWorkerStarted() {
         if (this._state() === WORKER_STATE.UNINITIALIZED) {
             this.startWorker();
@@ -72,7 +86,7 @@ export class WorkerPlugin extends Plugin {
             this.startWorker();
         } else if (this._state() === WORKER_STATE.INITIALIZING) {
             this._state.set(WORKER_STATE.FAILED);
-            this._resolveWorkerInit();
+            this._resolveWorkerInit(false);
             console.warn("Worker service failed to initialize: ", e);
         }
     }
@@ -110,6 +124,7 @@ export class WorkerPlugin extends Plugin {
         await this.workerInitPromise;
         if (this._state() === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot send message.");
+            return;
         }
         this._send(action, data);
     }
@@ -126,6 +141,7 @@ export class WorkerPlugin extends Plugin {
         await this.workerInitPromise;
         if (this._state() === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot register handler.");
+            return;
         }
         this._registerHandler(handler);
     }

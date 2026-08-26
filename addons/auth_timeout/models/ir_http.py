@@ -114,6 +114,8 @@ class IrHttp(models.AbstractModel):
         """
         if not self.env.user._is_public() and (timeout := self.env.user._get_lock_timeout_inactivity()):
             session_info["lock_timeout_inactivity"] = timeout
+            if not session_info.get("bus_info", {}).get("last_id"):
+                session_info["bus_info"] = self.env["ir.http"]._get_bus_session_info()
         return session_info
 
     def session_info(self):

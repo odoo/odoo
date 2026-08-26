@@ -9,7 +9,6 @@ from urllib.parse import urlparse
 from odoo import api, Command, fields, models, release, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
 BUFFER_TIME = 120  # Time in seconds between two sessions assigned to the same operator. Not enforced if the operator is the best suited.
@@ -624,9 +623,9 @@ class Im_LivechatChannel(models.Model):
         info['available'] = self._is_livechat_available()
         info['server_url'] = self.get_base_url()
         info["session_info"] = {
+            "bus_info": self.env["ir.http"]._get_bus_session_info(),
             "server_version": release.version,
             "server_version_info": release.version_info,
-            "websocket_worker_version": WebsocketConnectionHandler._VERSION,
         }
         if info['available']:
             info['options'] = self._get_channel_infos()

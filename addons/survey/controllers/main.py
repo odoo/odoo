@@ -264,6 +264,10 @@ class Survey(http.Controller):
             'is_html_empty': is_html_empty,
             'survey': survey_sudo,
             'answer': answer_sudo,
+            'extra_session_info': (
+                {'bus_info': request.env['ir.http']._get_bus_session_info()}
+                if answer_sudo.is_session_answer else {}
+            ),
             'post_submit_questions': answer_sudo._get_post_submit_questions(),
             'breadcrumb_pages': [{
                 'id': page.id,

@@ -107,7 +107,7 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
-        self.subscribe(websocket, wait_for_dispatch=False)
+        self.subscribe(websocket, last=self.env["bus.bus"]._bus_last_id(), wait_for_dispatch=False)
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_incoming_message(self):
@@ -124,7 +124,7 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
-        self.subscribe(websocket, wait_for_dispatch=False)
+        self.subscribe(websocket, last=self.env["bus.bus"]._bus_last_id(), wait_for_dispatch=False)
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_outgoing_message(self):

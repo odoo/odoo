@@ -60,7 +60,11 @@ class PaymentStatus(http.Controller):
         notification_channel = (
             f"payment_transaction_channel:{tx.id},{notification_access_token}"
         )
-        return {"tx": tx, "notification_channel": notification_channel}
+        return {
+            "tx": tx,
+            "notification_channel": notification_channel,
+            "extra_session_info": {"bus_info": request.env["ir.http"]._get_bus_session_info()},
+        }
 
     def get_payment_status_template_xmlid(self, tx):  # noqa: ARG002
         return "payment.payment_status"

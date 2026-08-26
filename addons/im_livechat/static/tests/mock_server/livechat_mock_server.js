@@ -2,6 +2,7 @@ import { parseRequestParams, registerRoute } from "@mail/../tests/mock_server/ma
 import { Store } from "@mail/../tests/mock_server/store";
 import { Command } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
+import { session } from "@web/session";
 
 /**
  * @template [T={}]
@@ -68,7 +69,7 @@ async function get_session(request) {
             },
             { id_data: { id: -1 } }
         );
-        return { store_data: store.as_dict(), channel_id: -1 };
+        return { bus_info: session.bus_info, store_data: store.as_dict(), channel_id: -1 };
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, {
         agent: agent,
@@ -82,7 +83,7 @@ async function get_session(request) {
         isLoaded: true,
         scrollUnread: false,
     });
-    return { store_data: store.as_dict(), channel_id: channelId };
+    return { bus_info: session.bus_info, store_data: store.as_dict(), channel_id: channelId };
 }
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
