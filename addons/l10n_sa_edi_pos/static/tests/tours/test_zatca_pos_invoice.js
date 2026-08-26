@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("ZATCA_invoice_not_mandatory_if_deposit"
                 content: "Set the pos_settle_due to True and open payment screen",
                 trigger: "body",
                 run: () => {
-                    posmodel.getOrder().is_settling_account = true;
+                    posmodel.getOrder().uiState.is_settling_account = true;
                     posmodel.navigate("PaymentScreen", { orderUuid: posmodel.selectedOrderUuid });
                 },
             },
@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("ZATCA_invoice_mandatory_if_regular_orde
                 content: "Set the pos_settle_due to False and open payment screen.",
                 trigger: "body",
                 run: () => {
-                    posmodel.getOrder().is_settling_account = false;
+                    posmodel.getOrder().uiState.is_settling_account = false;
                     posmodel.navigate("PaymentScreen", { orderUuid: posmodel.selectedOrderUuid });
                 },
             },
