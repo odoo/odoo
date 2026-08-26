@@ -15,7 +15,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.translate import _
-from odoo.tools import email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
+from odoo.tools import clean_context, email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
@@ -1968,7 +1968,8 @@ class CrmLead(models.Model):
 
         :return: newly-created partner browse record
         """
-        Partner = self.env['res.partner']
+        # Avoid propagating lead default values to res.partner creation.
+        Partner = self.env['res.partner'].with_context(clean_context(self.env.context))
         contact_name = self.contact_name
         if not contact_name:
             contact_name = parse_contact_from_email(self.email_from)[0] if self.email_from else False
