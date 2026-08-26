@@ -20610,6 +20610,31 @@ test(`multi_edit: edit field with operator with localization`, async () => {
 });
 
 test.tags("desktop");
+test(`multi_edit: float_time field with operation`, async () => {
+    // records have qux = 0.4, 13, -3, 9 (in hours)
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="qux" widget="float_time"/>
+            </list>
+        `,
+    });
+    await contains(`th .o-checkbox`).click();
+    await contains(`.o_data_cell[name=qux]`).click();
+    await edit("+=1h", { confirm: "tab" });
+    await waitFor(`.modal table [name=qux]`);
+    expect(`.modal .alert`).toHaveCount(1);
+    await contains(".modal footer button:contains(update)").click();
+    // each record is incremented individually, not overwritten with a single value
+    expect(`table tr:eq(1) td[name=qux]`).toHaveText("1h 24m");
+    expect(`table tr:eq(2) td[name=qux]`).toHaveText("14h");
+    expect(`table tr:eq(3) td[name=qux]`).toHaveText("-2h");
+    expect(`table tr:eq(4) td[name=qux]`).toHaveText("10h");
+});
+
+test.tags("desktop");
 test(`list_view: leave edition when click on searchbar dropdown`, async () => {
     await mountView({
         resModel: "foo",

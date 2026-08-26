@@ -23,12 +23,12 @@ const DECIMAL_SEPARATORS = ".,٫";
 const DECIMAL_SEPARATOR_REGEX = new RegExp(`.*([${DECIMAL_SEPARATORS}])[^${DECIMAL_SEPARATORS}]*`);
 const SINGLE_NUMBER_REGEX = new RegExp(`^[\\d${DECIMAL_SEPARATORS}'-]+$`);
 
-function evaluateMathematicalExpression(expr, context = {}) {
+function evaluateMathematicalExpression(expr, context = {}, parseTokenFn = parseFloat) {
     let safeEvalString = "";
     for (let v of expr.replace(/\s+/g, "").split(/([-+*/()^])/)) {
         if (!["+", "-", "*", "/", "(", ")", "^"].includes(v) && v.length) {
             // check if this is a float and take into account user delimiter preference
-            v = parseFloat(v);
+            v = parseTokenFn(v);
         }
         if (v === "^") {
             v = "**";
@@ -127,19 +127,31 @@ export function parseFloat(value, { allowOperation = false } = {}) {
  * Try to extract a float time from a string.
  * The float time can have two formats: float or integer:integer.
  *
+ * It also supports duration formulas, e.g. "=1h+30m-15m*2" to set an absolute
+ * value, or "+=30m" / "-=1h+15m" to increment/decrement the current value of
+ * the field.
+ *
  * @param {string} value
  * @param {UnitOfTime} [unit="hours"]
- * @returns {number} a float
+ * @returns {number|import("@web/model/relational_model/operation").Operation} a float or an Operation
  */
 export function parseFloatTime(value, unit = "hours") {
+    // Tolerate a trailing operator (e.g. "1h+"): the user is still typing.
+    const evaluateDurationFormula = (expr) =>
+        evaluateMathematicalExpression(expr.replace(/[-+*/]\s*$/, ""), {}, (v) =>
+            parseFloatTime(v, unit)
+        );
+
     value = value.trim();
-    let duration;
-    if (value.startsWith("=")) {
-        duration = { hours: 0, minutes: 0, seconds: 0 };
-        duration[unit] = evaluateMathematicalExpression(value.substring(1));
-    } else {
-        duration = parseDuration(value, unit);
+    const operation = ArithmeticOperation.parse(value, evaluateDurationFormula);
+    if (operation) {
+        return operation;
     }
+
+    if (value.startsWith("=")) {
+        return evaluateDurationFormula(value.substring(1));
+    }
+    let duration = parseDuration(value, unit);
 
     if (unit === "hours") {
         return duration.hours + duration.minutes / 60 + duration.seconds / 3600;
@@ -172,13 +184,13 @@ function parseDuration(value, unit = "hours") {
     const originalValue = value;
     value = normalizeTimeStr(value, true);
 
-    if (!value) {
-        return duration;
-    }
-
     if (value[0] === "-") {
         isNegative = true;
         value = value.substring(1);
+    }
+
+    if (!value) {
+        return duration;
     }
 
     value = value.replaceAll(" ", "");

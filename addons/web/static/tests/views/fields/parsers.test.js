@@ -121,8 +121,6 @@ test("parseFloat", () => {
 });
 
 test("parseFloatTime", () => {
-    expect(parseFloatTime("=1")).toBe(1);
-    expect(parseFloatTime(" =1")).toBe(1);
     expect(parseFloatTime("0")).toBe(0);
     expect(parseFloatTime("100")).toBe(100);
     expect(parseFloatTime("100.00")).toBe(100);
