@@ -571,6 +571,12 @@ describe("restaurant pos_store.js", () => {
         expect(order.internal_note).toBe('[{"text":"Hello world","colorIndex":0}]');
         expect(order.lines[0].note).toBe('[{"text":"Demo note","colorIndex":0}]');
         expect(order.pricelist_id.id).toBe(pricelist.id);
+
+        // The data read from the server does not contain the local change made above,
+        // so the order must stay dirty until it is actually sent to the server.
+        expect(order.isDirty()).toBe(true);
+        store.addPendingOrder([order.id]);
+        await store.syncAllOrders();
         expect(order.isDirty()).toBe(false);
     });
 
