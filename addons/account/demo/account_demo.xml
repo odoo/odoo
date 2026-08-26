@@ -35,6 +35,17 @@
             <value name="install_demo" eval="True"/>
         </function>
 
+        <!-- The main company's own localization is only instanciated at the very
+             end of the registry load, so give it a chart of accounts here whatever
+             its country: the demo data of the modules loaded in between needs one
+             (point_of_sale's onboarding scenarios require a bank journal). -->
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" eval="obj().env.ref('base.main_company')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+
         <!-- Payment Terms -->
 
         <record id="account_payment_term_advance" model="account.payment.term">
