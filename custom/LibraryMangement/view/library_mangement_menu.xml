@@ -1,0 +1,33 @@
+<odoo>
+    <record id="library_mangement_book_action" model="ir.actions.act_window">
+        <field name="name">Books Mangement Dashbord</field>
+        <field name="res_model">library.mangement.book</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="library_mangement_auther_action" model="ir.actions.act_window">
+        <field name="name">Auther Mangement Dashbord</field>
+        <field name="res_model">library.mangement.auther</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="library_mangement_customer_action" model="ir.actions.act_window">
+        <field name="name">Customer Mangement Dashbord</field>
+        <field name="res_model">library.mangement.customer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="library_mangement_borrow_action" model="ir.actions.act_window">
+        <field name="name">borrow Mangement Dashbord</field>
+        <field name="res_model">library.mangement.borrow</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="library_mangement_menu_root" name="Library Management">
+        <menuitem id="library_mangement_first_level_menu1" name="Borrowing and Returning Mangement">
+                <menuitem id="library_mangement_model_menu_action4" action="library_mangement_borrow_action"/>
+        </menuitem>
+        <menuitem id="library_mangement_first_level_menu" name="Library Mangement">
+                <menuitem id="library_mangement_model_menu_action" action="library_mangement_book_action"/>
+                <menuitem id="library_mangement_model_menu_action2" action="library_mangement_auther_action"/>
+                <menuitem id="library_mangement_model_menu_action3" action="library_mangement_customer_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>
