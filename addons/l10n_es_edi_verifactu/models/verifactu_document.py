@@ -171,13 +171,15 @@ class L10nEsEdiVerifactuDocument(models.Model):
     state = fields.Selection(
         string="Status",
         selection=[
+            ('invalid', "Invalid"),
             ('rejected', "Rejected"),
             ('registered_with_errors', "Registered with Errors"),
             ('accepted', "Accepted"),
         ],
         copy=False,
         readonly=True,
-        help="""- Rejected: Successfully sent to the AEAT, but it was rejected during validation
+        help="""- Invalid: The document could not be generated; nothing was sent to the AEAT
+                - Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
                 - Accepted: Registered by the AEAT without errors""",
     )
@@ -310,9 +312,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
             cancellation = last_registered_document.document_type == 'cancellation'
             return 'cancelled' if cancellation else last_registered_document.state
 
-        rejected_document = self.filtered(lambda doc: doc.state == 'rejected')[:1]
-        if rejected_document:
+        if self.filtered(lambda doc: doc.state == 'rejected'):
             return 'rejected'
+
+        if self.filtered(lambda doc: doc.state == 'invalid'):
+            return 'invalid'
 
         return False
 
@@ -520,6 +524,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
                     errors = [_("Error while chaining the document: %s", e)]
                     document_vals['errors'] = self._format_errors(error_title, errors)
                     _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(batch_dict, indent=4))
+
+        if document_vals.get('errors'):
+            document_vals['state'] = 'invalid'
 
         document = self.sudo().create(document_vals)
 
