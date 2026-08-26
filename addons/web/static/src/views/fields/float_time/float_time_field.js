@@ -5,6 +5,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { DurationParseError, InvalidNumberError, parseFloatTime } from "../parsers";
+import { Operation } from "@web/model/relational_model/operation";
 
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -79,7 +80,8 @@ export class FloatTimeField extends Component {
 
     parseOrClosePopover(value) {
         try {
-            return parseFloatTime(value, this.props.unit);
+            const parsed = this.parseValue(value);
+            return parsed instanceof Operation ? parsed.compute(this.value) : parsed;
         } catch (error) {
             if (
                 [EvalError, InvalidNumberError, DurationParseError].every(
@@ -96,9 +98,12 @@ export class FloatTimeField extends Component {
         return parseFloatTime(value, this.props.unit);
     }
 
+    get value() {
+        return this.props.record.data[this.props.name];
+    }
+
     get formattedValue() {
-        const value = this.props.record.data[this.props.name];
-        return formatFloatTime(value, this.formatOptions);
+        return formatFloatTime(this.value, this.formatOptions);
     }
 }
 
