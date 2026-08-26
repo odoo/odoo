@@ -82,17 +82,6 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             'cbc:ProfileID': {'_text': profile_id},
         })
 
-        # [BR-FR-05] Add mandatory notes with defaults if not already present
-        # Initialize / Listify 'cbc:Note'
-        existing_note = document_node.get('cbc:Note')
-        if not existing_note or not isinstance(document_node.get('cbc:Note'), list):
-            document_node['cbc:Note'] = [existing_note] if existing_note else []
-        # Add default notes
-        for code, default_content in invoice._l10n_fr_pdp_get_default_notes().items():
-            document_node['cbc:Note'].append({
-                '_text': f"#{code}#{default_content}",
-            })
-
         # Règles de gestion G1.52
         if vals['document_type'] == 'credit_note':
             document_node['cac:BillingReference'] = {

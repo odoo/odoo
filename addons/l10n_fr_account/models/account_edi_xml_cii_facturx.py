@@ -12,7 +12,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             {
                 'subject_code': code,
                 'content': content,
-            } for code, content in invoice._l10n_fr_pdp_get_default_notes().items()
+            } for code, content in invoice._l10n_fr_get_default_notes().items()
         ])
 
         return result

@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.tools import html2plaintext
 
 
 class AccountMove(models.Model):
@@ -27,3 +28,16 @@ class AccountMove(models.Model):
         super()._compute_show_delivery_date()
         for move in self.filtered(lambda m: m.country_code == 'FR'):
             move.show_delivery_date = move.is_sale_document()
+
+    def _l10n_fr_get_default_notes(self):
+        self.ensure_one()
+        # Mandatory / default notes for French e-invoicing [BR-FR-05]
+        # Only add them for French companies
+        if not self.company_id._invoice_is_french_company():
+            return {}
+        payment_term = self.invoice_payment_term_id
+        return {
+            'PMT': self.env._("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
+            'PMD': self.env._("Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date."),
+            'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else self.env._("No discount for early payment."),
+        }
