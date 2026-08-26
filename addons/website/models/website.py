@@ -2316,15 +2316,31 @@ class Website(models.CachedModel):
                         rel_table = direct_field.relation
                         rel_joinkey = direct_field.column2
                 subqueries.append(get_similarity_subquery(comodel, comodel_similarity_fields, id_column, rel_table, rel_joinkey))
+            # Rank only the records eligible for the provider domain, before the
+            # similarity LIMIT. The eligible ids are a sub-select (not fetched)
+            # to keep the domain's joins/aliases out of the similarity query.
             query = SQL("""
                 SELECT id,
                     MAX(similarity) as _best_similarity
-                FROM (%s) sub
+                FROM (%(subqueries)s) sub
+                WHERE id IN %(eligible_ids)s
                 GROUP BY id
                 ORDER BY _best_similarity DESC
                 LIMIT 1000
+<<<<<<< 1eec2d1104c63fb1211b27fbb70b3c53ff99add8
             """, SQL("\nUNION ALL\n").join(subqueries))  # UNION ALL allows to hit GIST indexes in subplans.
             ids = {row[0] for row in self.env.execute_query(query)}
+||||||| 1385a5997e921731e9a1c2ef87570f86a4c81c4a
+            """, SQL("\nUNION ALL\n").join(subqueries))  # UNION ALL allows to hit GIST indexes in subplans.
+            self.env.cr.execute(query)
+            ids = {row[0] for row in self.env.cr.fetchall()}
+=======
+            """,
+                subqueries=SQL("\nUNION ALL\n").join(subqueries),  # UNION ALL allows to hit GIST indexes in subplans.
+                eligible_ids=model._search(domain).subselect(),
+            )
+            ids = {row[0] for row in self.env.execute_query(query)}
+>>>>>>> fae67ec8631c8a60f09c4ec6065c5274003cbed1
             domain = Domain.AND([domain, Domain([('id', 'in', list(ids))])])
             records = model.search_read(domain, direct_fields, limit=limit)
             for record in records:
