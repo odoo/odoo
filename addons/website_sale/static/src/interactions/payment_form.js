@@ -25,16 +25,18 @@ patch(PaymentForm.prototype, {
     },
 
     start() {
-        // Display the payment error message if present in the URL.
+        // Display the payment message if present in the URL.
         const params = new URLSearchParams(window.location.search);
-        const errorMsg = params.get("error_msg");
-        if (errorMsg) {
-            // Clean the URL from the error message.
-            params.delete("error_msg");
+        const paymentMsg = params.get("payment_msg");
+        if (paymentMsg) {
+            const paymentMsgType = params.get("payment_msg_type") || "danger";
+            // Clean the URL from the payment message.
+            params.delete("payment_msg");
+            params.delete("payment_msg_type");
             history.replaceState(  // Avoid redirecting.
                 null, "", url(window.location.pathname, Object.fromEntries(params))
             );
-            this.services.notification.add(errorMsg, { type: "danger", sticky: true });
+            this.services.notification.add(paymentMsg, { type: paymentMsgType, sticky: true });
         }
     },
 

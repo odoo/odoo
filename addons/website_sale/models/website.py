@@ -786,11 +786,15 @@ class Website(models.Model):
                 self.sale_reset()
                 sale_order_sudo = SaleOrderSudo
 
-            if sale_order_sudo and (
-                sale_order_sudo.state != "draft"
-                or sale_order_sudo.get_portal_last_transaction().state
-                in {"pending", "authorized", "done"}
-                or sale_order_sudo.website_id != self
+            if (
+                sale_order_sudo
+                and not sale_order_sudo._is_awaiting_split_payment()
+                and (
+                    sale_order_sudo.state != "draft"
+                    or sale_order_sudo.get_portal_last_transaction().state
+                    in {"pending", "authorized", "done"}
+                    or sale_order_sudo.website_id != self
+                )
             ):
                 self.sale_reset()
                 sale_order_sudo = SaleOrderSudo
@@ -1174,8 +1178,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """ Provides a list of settings that should always be set on the default
+        """Provide a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
         of these settings are not already set on the new default website, they
         are copied from the previous default website."""
-        return super()._get_settings_to_copy_onto_new_default_website() + ['salesperson_id', 'salesteam_id']
+        return super()._get_settings_to_copy_onto_new_default_website() + [
+            "salesperson_id",
+            "salesteam_id",
+        ]

@@ -111,32 +111,30 @@
             t-att-data-order-id="order.id"
             t-att-data-order-tracking-info="json.dumps(order_tracking_info)"
         >
-            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
+            <t t-set="tx_sudo" t-value="order._get_portal_display_transaction()"/>
             <t
                 t-set="alert_class"
                 t-value="
                     (tx_sudo.state == 'pending' and 'alert-info') or
-                    (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
-                    (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
+                    (tx_sudo.state == 'done' and order._is_paid() and 'alert-success') or
+                    (tx_sudo.state == 'done' and not order._is_paid() and 'alert-warning') or
                     (tx_sudo.state == 'authorized' and 'alert-success') or
                     'alert-danger'"
             />
             <div
                 id="order_confirmation_banner"
-                t-if="tx_sudo"
-                t-attf-class="#{'' if tx_sudo._requires_payment_instructions() else 'alert ' + alert_class}"
+                t-if="tx_sudo and not tx_sudo._requires_payment_instructions()"
+                t-attf-class="alert #{alert_class}"
                 role="alert"
             >
-                <t t-set="status_message" t-value="tx_sudo._get_status_message(order=order)"/>
-                <t t-if="tx_sudo._requires_payment_instructions()">
-                    <div id="o_custom_payment_details">
-                        <t t-call="payment_custom.custom_payment_transfer_details"/>
-                    </div>
-                </t>
-                <t t-else="">
-                    <t t-out="status_message"/>
-                </t>
+                <t t-out="tx_sudo._get_status_message(order=order)"/>
             </div>
+            <t t-foreach="order._get_pending_action_transactions()" t-as="tx_sudo">
+                <t t-set="status_message" t-value="tx_sudo._get_status_message(order=order)"/>
+                <div id="o_custom_payment_details" class="mb-3">
+                    <t t-call="payment_custom.custom_payment_transfer_details"/>
+                </div>
+            </t>
         </div>
     </template>
 
