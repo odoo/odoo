@@ -112,6 +112,16 @@ class AccountMove(models.Model):
             else:
                 move.withholding_net_residual_amount_currency = move.amount_residual
 
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        base_line = super()._prepare_product_base_line_for_taxes_computation(product_line)
+        withholding_taxes = product_line.tax_ids.filtered('is_withholding_tax')
+        if self.origin_payment_id and withholding_taxes:
+            base_line['calculate_withholding_taxes'] = True
+            withholding_tax_line = self.line_ids.filtered(lambda line: line.tax_line_id in withholding_taxes)[:1]
+            if withholding_tax_line.name:
+                base_line['manual_tax_line_name'] = withholding_tax_line.name
+        return base_line
+
     def _prepare_payments_widget_reconciled_info(self, partial_info):
         res = super()._prepare_payments_widget_reconciled_info(partial_info)
         res['is_withhold'] = bool(partial_info['aml'].move_id.is_withhold_entry())

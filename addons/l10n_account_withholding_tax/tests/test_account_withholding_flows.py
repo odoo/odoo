@@ -1257,6 +1257,50 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'withholding_net_residual_amount_currency': 0.00,
         }])
 
+    @freeze_time('2026-01-01')
+    def test_withholding_tax_line_kept_when_resetting_the_payment_entry(self):
+        withholding_tax = self.percent_tax(-10, type_tax_use="purchase", is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': withholding_tax,
+            })],
+        })
+        bill.action_post()
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=bill.ids)\
+            .create({})
+        self.assertEqual(payment_register.withhold, 'withhold_pay')
+        self.assertTrue(payment_register.withholding_line_ids)
+        payment = payment_register._create_payments()
+        self.assertRecordValues(payment.move_id.line_ids, [
+            {'balance': -900.0, 'tax_ids': [], 'name': 'Manual Payment: BILL/2026/01/0001'},
+            {'balance': 1000.0, 'tax_ids': [], 'name': 'Manual Payment: BILL/2026/01/0001'},
+            {'balance': -100.0, 'tax_ids': [], 'name': 'WH Tax: 0001'},
+            {'balance': -1000.0, 'tax_ids': [], 'name': 'WH Base: 0001'},
+            {'balance': 1000.0, 'tax_ids': withholding_tax.ids, 'name': 'WH Base Counterpart: 0001'},
+        ])
+
+        # account.payment.register polluted the context with `skip_invoice_sync` so we rebrowse like
+        # would be the case through the webclient.
+        payment = self.env['account.payment'].browse(payment.id)
+        payment.action_draft()
+        payment.action_post()
+
+        # Should not change
+        self.assertRecordValues(payment.move_id.line_ids, [
+            {'balance': -900.0, 'tax_ids': [], 'name': 'Manual Payment: BILL/2026/01/0001'},
+            {'balance': 1000.0, 'tax_ids': [], 'name': 'Manual Payment: BILL/2026/01/0001'},
+            {'balance': -100.0, 'tax_ids': [], 'name': 'WH Tax: 0001'},
+            {'balance': -1000.0, 'tax_ids': [], 'name': 'WH Base: 0001'},
+            {'balance': 1000.0, 'tax_ids': withholding_tax.ids, 'name': 'WH Base Counterpart: 0001'},
+        ])
+
     def test_withhold_on_discounted_price(self):
         """ Test that the withholding tax is computed on the discounted price """
         withholding_tax = self.percent_tax(-10, type_tax_use="purchase", is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
