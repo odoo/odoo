@@ -916,7 +916,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 }
 
 function setupRecord(record, vals, uiState, isUpdate = false) {
+    const wasDirty = record._dirty;
     record.setup(vals);
+    if (isUpdate) {
+        record._dirty = wasDirty;
+    }
     if (uiState) {
         record.restoreState(uiState);
     } else if (!isUpdate) {
