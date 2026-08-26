@@ -86,7 +86,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     getImageUrl() {
         return this.image_128
-            ? `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`
+            ? `/web/image?model=product.template&field=image_256&id=${this.id}&unique=${this.write_date}`
             : false;
     }
 

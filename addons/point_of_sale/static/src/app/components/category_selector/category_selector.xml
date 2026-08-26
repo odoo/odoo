@@ -12,9 +12,9 @@
                         'justify-content-center': this.ui.isSmall
                     }"
                     class="category-button p-1 btn btn-light d-flex justify-content-around align-items-center rounded-3 gap-1 flex-shrink-0">
-                    <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width:40%;">
+                    <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 h-100" style="aspect-ratio: 1/1; max-width: 40%;">
                         <img t-if="category.imgSrc and !this.ui.isSmall" t-att-src="category.imgSrc"
-                            class="category-img-thumb h-100 rounded-3 object-fit-cover pe-none"
+                            class="category-img-thumb w-100 h-100 rounded-3 object-fit-cover pe-none"
                             alt="Category"
                         />
                     </div>
