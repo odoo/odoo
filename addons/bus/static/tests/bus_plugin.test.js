@@ -206,6 +206,8 @@ test("pass last notification id on initialization", async () => {
     await waitForChannels(["lambda"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications([firstEnv, "notifType", "beta"]);
+    // Simulate a fresh page load, which fetches the now up to date last id.
+    patchWithCleanup(session.bus_info, { last_id: 1 });
     await makeTestApp({ forceNew: true });
     startBusService();
     await expect.waitForSteps([`BUS:INITIALIZE_CONNECTION - 1`]);
@@ -257,7 +259,7 @@ test("websocket connects with URL corresponding to given serverURL", async () =>
     mockWebSocket((ws) => expect.step(ws.url));
     startBusService();
     await expect.waitForSteps([
-        `${serverURL.replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
+        `${serverURL.replace("http", "ws")}/websocket?version=${session.bus_info.worker_version}`,
     ]);
 });
 

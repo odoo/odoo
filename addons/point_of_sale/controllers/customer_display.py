@@ -22,6 +22,7 @@ class PosCustomerDisplay(http.Controller):
                     },
                     **request.env["ir.http"].get_frontend_session_info(),
                     **pos_config_sudo._get_customer_display_data(),
+                    'bus_info': request.env["ir.http"]._get_bus_session_info(),
                     'identifier': identifier,
                 },
                 'theme': kw.get('theme', 'light'),

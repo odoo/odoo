@@ -56,5 +56,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             'server_url': chatbot_script.get_base_url(),
             'chatbot_script': chatbot_script,
             'chatbot_test_store': store.as_dict(),
+            'session_info': {'bus_info': request.env['ir.http']._get_bus_session_info()},
             'title': self.env._("Test %s", chatbot_script.title),
         })
