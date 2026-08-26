@@ -1,0 +1,31 @@
+<templates xml:space="preserve">
+    <t t-name="task_manager.AwesomeDashboard">
+        <div class="task-container shadow">
+            <h2 class="title">📝 Task Manager</h2>
+
+            <div class="task-input">
+                <input type="text" t-model="state.newTask" placeholder="✍️ Add a new task..." />
+                <button class="btn-add" t-on-click="addTask" title="Add">＋ Add</button>
+            </div>
+
+            <ul class="task-list">
+                <t t-foreach="state.tasks" t-as="task" t-key="task.id">
+                    <li class="task-item">
+                        <label class="flex-grow">
+                            <input type="checkbox"
+                                   t-att-checked="task.is_done"
+                                   t-on-change="() => toggleTask(task)" />
+                            <span t-att-class="{done: task.is_done}">
+                                <t t-esc="task.name"/>
+                            </span>
+                        </label>
+
+                        <t t-if="task.is_done">
+                            <button class="btn-delete" t-on-click="() => this.deleteTask(task)">🗑️</button>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+</templates>
