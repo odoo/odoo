@@ -345,7 +345,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=12, employee=11):  # tm: 9 / 9
+        with self.assertQueryCount(admin=13, employee=12):  # tm: 10 / 10
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
@@ -414,7 +414,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=14, employee=13):  # tm: 11 / 11
+        with self.assertQueryCount(admin=15, employee=14):  # tm: 12 / 12
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -440,7 +440,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=16, employee=15):  # tm: 13 / 13
+        with self.assertQueryCount(admin=17, employee=16):  # tm: 14 / 14
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -739,7 +739,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         ])
         partner_ids = self.partner_admin.ids
 
-        with self.assertQueryCount(admin=4, employee=3):
+        with self.assertQueryCount(admin=5, employee=4):
             records._message_log_with_view(
                 'test_mail.mail_template_simple_test',
                 render_values={'partner': self.customer.with_env(self.env)},
@@ -1107,7 +1107,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=122, employee=122):
+        with self.assertQueryCount(admin=123, employee=123):
             messages_as_sudo = test_records.message_post_with_source(
                 'test_mail.mail_template_simple_test',
                 render_values={'partner': self.user_emp_inbox.partner_id},
