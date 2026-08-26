@@ -55,15 +55,16 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
 
     @users('Portal user')
     def test_project_allowed_portal_no_read(self):
-        self.project_pigs.privacy_visibility = 'portal'
+        self.project_pigs.privacy_visibility = 'invited_users'
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
-        self.project_pigs.privacy_visibility = 'followers'
-        with self.assertRaises(AccessError, msg="%s should not be able to read the project" % self.env.user.name):
+        with self.assertRaises(AccessError, msg="%s should not be able to read the project just by being a follower" % self.env.user.name):
             self.project_pigs.with_user(self.env.user).name
 
     @users('Internal user')
     def test_project_allowed_internal_read(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.write({
+            'allowed_internal_user_ids': [(4, self.env.user.id)]
+        })
         self.project_pigs.flush_model()
         self.project_pigs.invalidate_model()
         self.project_pigs.with_user(self.env.user).name
@@ -75,15 +76,16 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
 
     @users('Portal user')
     def test_task_allowed_portal_no_read(self):
-        self.project_pigs.privacy_visibility = 'portal'
+        self.project_pigs.privacy_visibility = 'invited_users'
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
-        self.project_pigs.privacy_visibility = 'followers'
-        with self.assertRaises(AccessError, msg="%s should not be able to read the task" % self.env.user.name):
+        with self.assertRaises(AccessError, msg="%s should not be able to read the task just by following the parent project" % self.env.user.name):
             self.task.with_user(self.env.user).name
 
     @users('Internal user')
     def test_task_allowed_internal_read(self):
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.write({
+            'allowed_internal_user_ids': [(4, self.env.user.id)]
+        })
         self.task.flush_model()
         self.task.invalidate_model()
         self.task.with_user(self.env.user).name
@@ -301,7 +303,7 @@ class TestPortalProject(TestProjectPortalCommon):
         pigs.write({'is_favorite': True})
 
     @mute_logger('odoo.addons.base.ir.ir_model')
-    def test_followers_project_access_rights(self):
+    def test_team_members_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
         # Do: Alfred reads project -> ko (employee ko followers)
@@ -317,7 +319,7 @@ class TestPortalProject(TestProjectPortalCommon):
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.with_user(self.user_public).read, ['user_id'])
 
-        pigs.message_subscribe(partner_ids=[self.user_projectuser.partner_id.id])
+        pigs.write({'allowed_internal_user_ids': [(4, self.user_projectuser.id)]})
 
         # Do: Alfred reads project -> ok (follower ok followers)
         donkey = pigs.with_user(self.user_projectuser)
@@ -330,12 +332,8 @@ class TestPortalProject(TestProjectPortalCommon):
         self.env['project.task'].with_user(self.user_projectuser).with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs task', 'project_id': pigs.id
         })
-        # not follower user should not be able to create a task
-        pigs.with_user(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_projectuser.partner_id.id])
-        self.assertRaises(AccessError, self.env['project.task'].with_user(self.user_projectuser).with_context({
-            'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
-
-        # Do: project user can create a task without project
+        # only team members users should be able to create a task
+        pigs.write({'allowed_internal_user_ids': [(3, self.user_projectuser.id)]})
         self.assertRaises(AccessError, self.env['project.task'].with_user(self.user_projectuser).with_context({
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 
@@ -480,7 +478,10 @@ class TestAccessRightsInvitedUsers(TestAccessRights):
                 'access_mode': 'view',
             })
         else:
-            self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+            # Internal users need to be added as team members
+            self.project_pigs.sudo().write({
+                'allowed_internal_user_ids': [(4, self.env.user.id)]
+            })
         self.assertEqual(
             self.project_pigs.with_user(self.env.user).name,
             'Pigs',

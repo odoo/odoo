@@ -1,9 +1,10 @@
 id,name,model_id,group_id/id,operation,domain
 project_project_manager_rule,Project: project manager: see all,project.project,project.group_project_manager,crud,
-project_public_members_rule,Project: employees: following required for follower-only projects,project.project,base.group_user,r,"['|',
-                                        ('privacy_visibility', 'in', ['employees', 'portal']),
-                                        ('message_partner_ids', 'in', [user.partner_id.id])
-                                    ]"
+project_public_members_rule,Project: employees: public project or team member,project.project,base.group_user,r,"[
+            '|',
+                ('privacy_visibility', 'in', ['employees', 'portal']),
+                ('allowed_internal_user_ids', 'in', user.id)
+        ]"
 project_project_rule_portal,Project: portal users: portal and collaborator,project.project,base.group_portal,r,"[
             '&',
                 ('privacy_visibility', 'in', ['invited_users', 'portal']),
