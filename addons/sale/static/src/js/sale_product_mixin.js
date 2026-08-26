@@ -64,7 +64,13 @@ export const saleProductMixin = () => ({
     },
 
     get hasConfigurationButton() {
-        return this.isConfigurableTemplate || this.isCombo;
+        return (
+            !this.props.record.model.root.data.locked
+            && (
+                this.isConfigurableTemplate
+                || this.isCombo
+            )
+        );
     },
 
     get isConfigurableTemplate() {

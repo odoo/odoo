@@ -12,7 +12,10 @@ const eventSaleProductMixin = () => ({
         return this.props.record.data.service_tracking === "event";
     },
     get hasConfigurationButton() {
-        return super.hasConfigurationButton || this.isEvent;
+        return (
+            super.hasConfigurationButton
+            || (!this.props.record.model.root.data.locked && this.isEvent)
+        );
     },
     onEditConfiguration() {
         if (this.isEvent) {
