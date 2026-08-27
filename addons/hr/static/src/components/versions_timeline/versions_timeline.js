@@ -51,6 +51,17 @@ export class VersionsTimeline extends StatusBarField {
         );
     }
 
+    isContractLineContinued(index) {
+        const item = this.items.inline[index];
+        const nextItem = this.items.inline[index + 1];
+        return Boolean(
+            item?.isInContract &&
+                item.isCurrentContract &&
+                nextItem?.isInContract &&
+                nextItem.isCurrentContract
+        );
+    }
+
     async createVersion(date) {
         await this.props.record.save();
         const version_id = await this.orm.call("hr.employee", "create_version", [
@@ -88,7 +99,7 @@ export class VersionsTimeline extends StatusBarField {
             return luxon.DateTime.fromISO(dateString).toFormat("MMM dd, yyyy");
         }
         const items = super.getAllItems();
-        if (!this.displayContractLines) {
+        if (!this.displayContractLines()) {
             return items;
         }
         const dataById = new Map(this.specialData.data.map((d) => [d.id, d]));
@@ -119,7 +130,7 @@ export class VersionsTimeline extends StatusBarField {
 export const versionsTimeline = {
     ...statusBarField,
     component: VersionsTimeline,
-    additionalClasses: ["o_field_statusbar", "d-flex", "gap-1"],
+    additionalClasses: ["o_field_statusbar", "o_records_timeline", "d-flex", "gap-1"],
 };
 
 registry.category("fields").add("versions_timeline", versionsTimeline);

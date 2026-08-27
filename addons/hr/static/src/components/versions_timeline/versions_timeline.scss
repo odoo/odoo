@@ -1,0 +1,35 @@
+// Bars navigating between the versions of a record (employee records, payroll
+// configurations, ...): unlike a statusbar, they don't show a record's state,
+// so only the version being displayed is highlighted.
+.o_records_timeline {
+    > .o_statusbar_status {
+        .o_arrow_button:not(.d-none) {
+            // Hovering a version used to paint it with the grey of the
+            // selected one, making the bar look like it had two selections:
+            // keep the hint lighter than the selected version.
+            &:not(.o_arrow_button_current) {
+                &:hover, &:focus {
+                    background-color: color-mix(in srgb, var(--o-statusbar-background-hover) 50%, transparent);
+                }
+            }
+
+            &.o_arrow_button_current {
+                --#{$prefix}btn-disabled-bg: var(--o-statusbar-background-active);
+                --#{$prefix}btn-disabled-border-color: var(--o-statusbar-background-active);
+            }
+        }
+
+        // Versions sharing the same contract are underlined by a single line,
+        // drawn in the space the bar leaves under its buttons. Each segment
+        // spans its own version and bridges the gap with the version displayed
+        // on its left, if any.
+        .o_contract_line {
+            top: calc(100% + var(--o-statusbar-padding) / 2);
+
+            // Bridges the gap the bar puts between two versions.
+            &.o_contract_line_continued {
+                margin-left: calc(-1 * #{map-get($spacers, 1)});
+            }
+        }
+    }
+}
