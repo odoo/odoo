@@ -14,62 +14,33 @@
             </div>
         </div>
 
-        <button t-ref="this.afterRef" position="replace">
-            <div class="o_arrow_button_wrapper">
-                <button
-                    t-ref="this.afterRef"
-                    type="button"
-                    class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
-                    t-att-disabled="this.props.isDisabled"
-                    aria-label="More..."
-                >
-                    ...
-                </button>
-            </div>
-        </button>
-
-        <button t-ref="this.beforeRef" position="replace">
-            <div class="o_arrow_button_wrapper">
-                <button
-                    t-ref="this.beforeRef"
-                    type="button"
-                    class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
-                    t-att-disabled="this.props.isDisabled"
-                    aria-label="More..."
-                >
-                    ...
-                </button>
-            </div>
-        </button>
-
         <t t-foreach="this.items.inline" position="replace">
             <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
-            <div class="o_arrow_button_wrapper position-relative">
-                <button
-                    type="button"
-                    class="btn btn-secondary o_arrow_button"
-                    t-att-class="{
-                        o_first: item_first,
-                        o_arrow_button_current: item.isSelected,
-                        o_last: item_last,
-                    }"
-                    t-att-disabled="this.props.isDisabled || item.isSelected"
-                    role="radio"
-                    t-att-aria-checked="item.isSelected.toString()"
-                    t-att-aria-current="item.isSelected and 'step'"
-                    t-att-data-value="item.value"
-                    t-on-click="() => this.selectItem(item)"
-                    t-att-data-tooltip="item.toolTip">
+                <div class="o_arrow_button_wrap position-relative">
+                    <button
+                        type="button"
+                        class="btn btn-secondary o_arrow_button"
+                        t-att-class="{
+                            o_first: item_first,
+                            o_arrow_button_current: item.isSelected,
+                            o_last: item_last,
+                        }"
+                        t-att-disabled="this.props.isDisabled || item.isSelected"
+                        role="radio"
+                        t-att-aria-checked="item.isSelected.toString()"
+                        t-att-aria-current="item.isSelected and 'step'"
+                        t-att-data-value="item.value"
+                        t-on-click="() => this.selectItem(item)"
+                        t-att-data-tooltip="item.toolTip">
                         <t t-out="item.label"/>
                     </button>
                     <span
-                            t-if="this.displayContractLines"
-                            class="o_contract_line position-absolute top-100 start-0 end-0 d-block"
-                            t-att-class="{
-                                'border-top border-primary': item.isInContract and item.isCurrentContract,
-                                'me-1': item_first,
-                                'ms-1': item_last,
-                            }"/>
+                        t-if="this.displayContractLines()"
+                        class="o_contract_line position-absolute start-0 end-0 d-block"
+                        t-att-class="{
+                            'border-top border-primary': item.isInContract and item.isCurrentContract,
+                            o_contract_line_continued: this.isContractLineContinued(item_index),
+                        }"/>
                 </div>
             </t>
         </t>
