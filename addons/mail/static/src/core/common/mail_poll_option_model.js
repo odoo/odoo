@@ -4,16 +4,9 @@ import { Record } from "@mail/model/record";
 export class MailPollOptionModel extends Record {
     static _name = "mail.poll.option";
 
-    static new() {
-        const option = super.new(...arguments);
-        option.fetchPollVotesCached = option.store.makeCachedFetchData("/mail/poll_option/votes", {
-            poll_option_id: option.id,
-        });
-        return option;
-    }
-
-    /** @type {ReturnType<import("models").Store['makeCachedFetchData']>} */
-    fetchPollVotesCached;
+    fetchPollVotesCached = this.computed(() =>
+        this.store.makeCachedFetchData("/mail/poll_option/votes", { poll_option_id: this.id })
+    );
     /** @type {number} */
     id;
     /** @type {number} */
