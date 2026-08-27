@@ -194,10 +194,11 @@ class HrEmployee(models.Model):
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
+        now = fields.Datetime.now()
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
-            ('date_from', '<=', fields.Datetime.now()),
-            ('date_to', '>=', fields.Datetime.now()),
+            ('date_from', '<=', now),
+            ('date_to', '>=', now),
             ('state', '=', 'validate'),
         ], order='date_to desc')
 
@@ -221,6 +222,40 @@ class HrEmployee(models.Model):
             'current_leave_state': False,
             'is_absent': False,
         })
+
+        # Public holidays aren't hr.leave records, but the employee should still be considered on leave.
+        # sudo: resource.calendar.leaves - accessing public holidays is allowed for all users
+        public_holiday_end = {
+            (company.id, calendar.id): date_to
+            for company, calendar, date_to in self.env['resource.calendar.leaves'].sudo()._read_group([
+                ('resource_id', '=', False),
+                ('count_as', '=', 'absence'),
+                ('company_id', 'in', no_data.company_id.ids),
+                ('date_from', '<=', now),
+                ('date_to', '>=', now),
+            ], ['company_id', 'calendar_id'], ['date_to:max'])
+        }
+        if not public_holiday_end:
+            return
+
+        leave_end_by_employee = {}
+        for employee in no_data:
+            calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
+            ends = [
+                public_holiday_end[key]
+                for key in {(employee.company_id.id, False), (employee.company_id.id, calendar.id)}
+                if key in public_holiday_end
+            ]
+            if ends:
+                leave_end_by_employee[employee.id] = max(ends)
+
+        if not leave_end_by_employee:
+            return
+
+        on_public_holiday = self.browse(leave_end_by_employee)
+        back_on = on_public_holiday._get_first_working_interval_batch(leave_end_by_employee)
+        for employee in on_public_holiday:
+            employee.leave_date_to = back_on.get(employee.id, leave_end_by_employee[employee.id]).date()
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
