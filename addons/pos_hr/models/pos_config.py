@@ -25,7 +25,8 @@ class PosConfig(models.Model):
         sudo_fields = ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')
         res = True
 
-        if 'advanced_employee_ids' not in vals:
+        preserve_current_advanced = 'advanced_employee_ids' not in vals
+        if preserve_current_advanced:
             vals['advanced_employee_ids'] = []
         pos_manager_group = self.sudo()._get_group_pos_manager()
         for config in self:
@@ -39,6 +40,8 @@ class PosConfig(models.Model):
                 target_user.action_create_employee()
                 allowed_employees = target_user.employee_id
 
+            if preserve_current_advanced:
+                allowed_employees |= config.advanced_employee_ids
             config_vals['advanced_employee_ids'] += [(4, emp.id) for emp in allowed_employees]
             sudo_vals = {
                 field_name: config_vals.pop(field_name)
