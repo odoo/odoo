@@ -2,7 +2,7 @@
 
 import functools
 import io
-import qrcode
+import logging
 import re
 import werkzeug.urls
 
@@ -13,6 +13,14 @@ from odoo.http import request
 from odoo.tools import BinaryBytes
 
 from odoo.addons.auth_totp.models.totp import ALGORITHM, DIGITS, TIMESTEP
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import qrcode
+except ImportError:
+    _logger.warning("The qrcode library is not installed, QR codes will not be displayed.")
+    qrcode = None
 
 compress = functools.partial(re.sub, r'\s', '')
 
@@ -33,6 +41,9 @@ class Auth_TotpWizard(models.TransientModel):
     @api.depends('user_id.login', 'user_id.company_id.display_name', 'secret')
     def _compute_qrcode(self):
         # TODO: make "issuer" configurable through config parameter?
+        if not qrcode:
+            _logger.error("The qrcode library is not installed, QR codes will not be displayed.")
+            return
         global_issuer = request and request.httprequest.host.split(':', 1)[0]
         for w in self:
             issuer = global_issuer or w.user_id.company_id.display_name
