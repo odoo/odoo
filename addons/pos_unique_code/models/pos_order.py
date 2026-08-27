@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 from .pos_unique_code import CODE_LENGTH
 
@@ -29,3 +29,7 @@ class PosOrder(models.Model):
         ):
             values['unique_code'] = code
         return values
+
+    @api.model
+    def _load_pos_preparation_data_fields(self):
+        return super()._load_pos_preparation_data_fields() + ['unique_code']
