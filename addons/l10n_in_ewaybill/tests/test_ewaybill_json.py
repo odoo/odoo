@@ -491,3 +491,12 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 expected,
                 "Indian EDI cancellation JSON values with remarks do not match the expected values",
             )
+
+    def test_ewaybill_access_accounting_user(self):
+        self.env.user.group_ids = self.env.ref('account.group_account_invoice')
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'account_move_id': self.invoice.id,
+            'mode': False,
+            'type_id': self.env.ref('l10n_in_ewaybill.type_tax_invoice_sub_type_supply').id,
+        })
+        self.assertTrue(ewaybill)
