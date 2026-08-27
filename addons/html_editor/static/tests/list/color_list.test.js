@@ -10,6 +10,7 @@ import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
 import { nodeSize } from "@html_editor/utils/position";
 import { ContrastPlugin } from "@html_editor/main/font/contrast_plugin";
+import { defineStyle } from "@web/../tests/web_test_helpers";
 
 test("should apply color to completely selected list item", async () => {
     await testEditor({
@@ -317,6 +318,11 @@ test("should remove color from partially selected text inside list item", async 
 });
 
 test("should remove data-original-color attribute with color on removeFormat", async () => {
+    defineStyle(`
+        :root {
+            --o-control-panel-background-color: rgb(248, 249, 250);
+        }
+    `);
     await testEditor({
         contentBefore: unformat(`
             <ol>
