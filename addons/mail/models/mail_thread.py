@@ -5325,13 +5325,6 @@ class MailThread(models.AbstractModel):
     def _store_target(self):
         return (self, "thread")
 
-    def _store_model_name_fields(self, res: Store.FieldList):
-        res.attr(
-            "modelName",
-            lambda thread: thread.env["ir.model"]._get(thread._name).display_name,
-        )
-        res.attr("display_name")
-
     # ------------------------------------------------------
     # CONTROLLERS SECURITY HELPERS
     # ------------------------------------------------------
