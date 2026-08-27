@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.exceptions import UserError
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSWithFiscalPosition(TestPoSCommon):
@@ -373,3 +373,49 @@ class TestPoSWithFiscalPosition(TestPoSCommon):
                 ],
             },
         })
+
+    def test_04_used_fp_can_be_updated_for_draft_order(self):
+        self.customer.write({'property_account_position_id': self.fpos.id})
+        self.open_new_session()
+        order_data = self.create_ui_order_data([(self.product1, 1)], payments=[(self.cash_pm1, 12.86)], customer=self.customer)
+        # the util `create_ui_order_data` sets tax_ids from FP map
+        # unlike orders created from frontend, which uses the original tax
+        order_data["lines"][0][-1]["tax_ids"] = [(6, 0, [self.taxes['tax7'].id])]
+
+        res = self.env['pos.order'].sync_from_ui([{**order_data, "state": "draft"}])
+        order = self.env["pos.order"].browse(res['pos.order'][0]['id'])
+
+        self.assertEqual(order.state, "draft")
+        self.assertEqual(order.lines.tax_ids_after_fiscal_position.ids, [self.new_tax_17.id])
+
+        self.fpos.tax_ids.write({"tax_dest_id": self.taxes["tax10"].id})
+        order.lines.invalidate_recordset()
+        self.assertEqual(order.lines.tax_ids_after_fiscal_position.ids, [self.taxes['tax10'].id])
+
+        self.fpos.tax_ids.unlink()
+        self.assertEqual(order.state, "draft")
+        self.assertEqual(order.lines.tax_ids.ids, [self.taxes['tax7'].id])
+        self.assertEqual(order.lines.tax_ids_after_fiscal_position.ids, [self.taxes['tax7'].id])
+
+    def test_05_used_fp_cannot_be_updated_for_processed_order(self):
+        self.customer.write({'property_account_position_id': self.fpos.id})
+        self.open_new_session()
+        order_data = self.create_ui_order_data([(self.product1, 1)], payments=[(self.cash_pm1, 12.86)], customer=self.customer)
+        # the util `create_ui_order_data` sets tax_ids from FP map
+        # unlike orders created from frontend, which uses the original tax
+        order_data["lines"][0][-1]["tax_ids"] = [(6, 0, [self.taxes['tax7'].id])]
+
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env["pos.order"].browse(res['pos.order'][0]['id'])
+
+        self.assertEqual(order.state, "paid")
+        self.assertEqual(order.lines.tax_ids_after_fiscal_position.ids, [self.new_tax_17.id])
+
+        with self.assertRaises(UserError):
+            self.fpos.tax_ids.unlink()
+        with self.assertRaises(UserError):
+            self.fpos.tax_ids.write({"tax_dest_id": self.taxes["tax10"].id})
+
+        self.assertEqual(order.state, "paid")
+        self.assertEqual(order.lines.tax_ids.ids, [self.taxes['tax7'].id])
+        self.assertEqual(order.lines.tax_ids_after_fiscal_position.ids, [self.new_tax_17.id])
