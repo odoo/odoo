@@ -697,7 +697,7 @@ class AccountPartialReconcile(models.Model):
         # passing add_caba_vals in the context to make sure that any exchange diff that would be created for
         # this cash basis move would set the field draft_caba_move_vals accordingly on the partial
         self.env['account.move.line'].with_context(add_caba_vals=True)._reconcile_plan(reconciliation_plan)
-        return moves
+        return moves.with_env(self.env)
 
     def _get_draft_caba_move_vals(self):
         self.ensure_one()
