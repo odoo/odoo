@@ -16,3 +16,4 @@ Tatsuki Kanda kanda@quartile.co https://github.com/kanda999
 Aung Ko Ko Lin lin@quartile.co https://github.com/AungKoKoLin1997
 Toshikimi Shigenobu nobu@quartile.co https://github.com/nobuQuartile
 Sayaka Yamada sayaka@quartile.co https://github.com/Sayaka-qrtl
+Shinnosuke Morita morita@quartile.co https://github.com/smorita7749
