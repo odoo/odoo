@@ -255,6 +255,8 @@ class configmanager:
                          help="reinitialize one or more modules (comma-separated list), requires -d")
         group.add_option("--with-demo", dest="with_demo", action='store_true', my_default=False,
                          help="install demo data in new databases")
+        group.add_option("--with-test-data", dest="with_test_data", action='store_true', my_default=False,
+                         help="install test data in new databases")
         group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', const=True,
                          nargs='?',  # ty:ignore[invalid-argument-type]
                          help="don't install demo data in new databases (default)")

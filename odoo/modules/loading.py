@@ -32,7 +32,7 @@ if typing.TYPE_CHECKING:
     from odoo.tests.result import OdooTestResult
     from .module_graph import ModuleNode
 
-    LoadKind = typing.Literal['data', 'demo']
+    LoadKind = typing.Literal['data', 'demo', 'test']
 
 _logger = logging.getLogger(__name__)
 
@@ -46,13 +46,18 @@ def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, pa
 
     :returns: Whether a file was loaded
     """
-    keys = ('init_xml', 'data') if kind == 'data' else ('demo',)
+    if kind == 'data':
+        keys = ('init_xml', 'data')
+    elif kind == 'test':
+        keys = ('test_data',)
+    else:
+        keys = ('demo',)
 
     files: set[str] = set()
     for k in keys:
         if k == 'init_xml' and package.manifest[k]:
             _logger.warning("module %s: key 'init_xml' is deprecated in Odoo 19.", package.name)
-        for filename in package.manifest[k]:
+        for filename in package.manifest.get(k, []):
             if filename in files:
                 _logger.warning("File %s is imported twice in module %s %s", filename, package.name, kind)
             files.add(filename)
@@ -215,6 +220,8 @@ def load_module_graph(
                 load_data(env, idref, 'init', kind='data', package=package)
                 if install_demo and package.demo_installable:
                     package.demo = load_demo(env, package, idref, 'init')
+                if tools.config.get('with_test_data'):
+                    package._data = load_data(env, idref, 'init', kind='test', package=package)
             else:  # 'upgrade' or 'reinit'
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.manifest))
