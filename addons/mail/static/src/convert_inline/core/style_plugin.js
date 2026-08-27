@@ -67,7 +67,7 @@ export class StylePlugin extends Plugin {
 
     fixRawStyleValues(element, styleInfo) {
         for (const [propertyName, propertyInfo] of [...styleInfo]) {
-            this.delegateTo("fix_raw_style_values_overrides", {
+            this.trigger("fix_raw_style_values_handlers", {
                 element,
                 propertyName,
                 propertyInfo,

@@ -63,7 +63,7 @@ export class SpacingPlugin extends Plugin {
         ),
         attribute_rules_processors: [[this.provideAttributeRules.bind(this), SpacingPlugin.id]],
         style_rules_processors: [[this.provideStyleRules.bind(this), SpacingPlugin.id]],
-        fix_raw_style_values_overrides: this.fixSpacingInline.bind(this),
+        fix_raw_style_values_handlers: this.fixSpacingInline.bind(this),
         fix_rem_units_overrides: this.fixSpacingRemUnits.bind(this),
         merge_fact_overrides: this.mergeSpacingInfo.bind(this),
     };

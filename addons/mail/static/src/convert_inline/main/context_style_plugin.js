@@ -30,7 +30,7 @@ export class ContextStylePlugin extends Plugin {
         "getTableContextStyleInfo",
     ];
     resources = {
-        fix_raw_style_values_overrides: this.fixRemUnits.bind(this),
+        fix_raw_style_values_handlers: this.fixRemUnits.bind(this),
     };
 
     setup() {
@@ -78,7 +78,7 @@ export class ContextStylePlugin extends Plugin {
             return;
         }
         const rootFontSize = this.getStylePropertyValue(
-            this.config.referenceDocument.body,
+            this.config.referenceDocument.documentElement,
             "font-size"
         );
         const fontSizeValue = parseCssValue(rootFontSize);
