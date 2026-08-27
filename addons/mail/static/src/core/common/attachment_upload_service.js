@@ -18,6 +18,7 @@ export class AttachmentUploadService {
         this.abortByAttachmentId = new Map();
         /** @type {Map<number, (value?: void) => void} */
         this.resolveUploadByAttachmentId = new Map();
+        this.deletingAttachmentIds = new Set();
         this.uploadingAttachmentIds = new Set();
         this._fileUploadBus = new EventBus();
         /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
@@ -135,7 +136,21 @@ export class AttachmentUploadService {
      * @param {Object} [options] see `removeAttachments`
      */
     async unlink(attachments, options) {
-        await this.store.removeAttachments(attachments, options);
+        const attachmentsToUnlink = attachments.filter((attachment) => {
+            if (this.deletingAttachmentIds.has(attachment.id)) {
+                return false;
+            }
+            this.deletingAttachmentIds.add(attachment.id);
+            return true;
+        });
+
+        try {
+            await this.store.removeAttachments(attachmentsToUnlink, options);
+        } finally {
+            for (const attachment of attachmentsToUnlink) {
+                this.deletingAttachmentIds.delete(attachment.id);
+            }
+        }
     }
 
     async upload(thread, composer, file, options) {
