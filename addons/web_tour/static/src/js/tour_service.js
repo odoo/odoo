@@ -1,10 +1,9 @@
-import { assertType, Component, markup, t, whenReady } from "@odoo/owl";
+import { assertType, Component, t, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { loadBundle } from "@web/core/assets";
-import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 import { tourState } from "@web_tour/js/tour_state";
 import {
     tourRecorderState,
@@ -80,7 +79,6 @@ export class TourService {
         this.effect = services["effect"];
         this.overlay = services["overlay"];
         this.toursEnabled = session?.tour_enabled;
-        this.removePointer = () => {};
         this.removeTourRecorder = () => {};
         this.addOnboardingItemInDebugMenu();
 
@@ -254,43 +252,20 @@ export class TourService {
             new TourAutomatic(tour).start();
         } else {
             await loadBundle("web_tour.interactive");
-            const { TourPointer } = odoo.loader.modules.get(
-                "@web_tour/js/tour_pointer/tour_pointer"
-            );
-            this.removePointer = this.overlay.add(
-                TourPointer,
-                {
-                    pointerState,
-                },
-                {
-                    sequence: 1100, // sequence based on bootstrap z-index values.
-                }
-            );
             const { TourInteractive } = odoo.loader.modules.get(
                 "@web_tour/js/tour_interactive/tour_interactive"
             );
-            new TourInteractive(tour).start(this.env, async () => {
-                this.removePointer();
-                tourState.clear();
-                browser.console.log("tour succeeded");
-                let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
-                if (message && window.DOMPurify) {
-                    message = window.DOMPurify.sanitize(message);
-                    this.effect.add({
-                        type: "rainbow_man",
-                        message: markup(message),
-                    });
-                }
-
-                const nextTour = await this.orm.call("web_tour.tour", "consume", [tour.name]);
-                if (nextTour) {
+            new TourInteractive(tour, {
+                orm: this.orm,
+                effect: this.effect,
+                overlay: this.overlay,
+                onChainNextTour: (nextTour) =>
                     this.startTour(nextTour.name, {
                         mode: "manual",
                         redirect: false,
                         rainbowManMessage: nextTour.rainbowManMessage,
-                    });
-                }
-            });
+                    }),
+            }).start(this.env);
         }
     }
 
@@ -310,7 +285,6 @@ export class TourService {
      * human. Useful to test that onboarding tours' pointer resolves correctly.
      */
     async startTour(name, options = {}) {
-        this.removePointer();
         this.removeTourRecorder();
 
         if (
