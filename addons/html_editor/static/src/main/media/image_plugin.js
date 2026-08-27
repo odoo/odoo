@@ -153,8 +153,8 @@ export class ImagePlugin extends Plugin {
 
         /** Handlers */
         on_selectionchange_handlers: withSequence(READ, this.updateImageParams.bind(this)),
-        on_undone_handlers: this.updateImageParams.bind(this),
-        on_redone_handlers: this.updateImageParams.bind(this),
+        on_history_commit_undone_handlers: this.updateImageParams.bind(this),
+        on_history_commit_redone_handlers: this.updateImageParams.bind(this),
         should_show_hint_predicates: (node) => {
             if (isElementOverlappingAnyFloatingImage(closestBlock(node))) {
                 return false;
