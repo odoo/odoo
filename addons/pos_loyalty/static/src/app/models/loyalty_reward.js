@@ -50,9 +50,14 @@ export class LoyaltyReward extends Base {
                 ? points
                 : Math.ceil(qty / this.reward_product_qty) * this.required_points;
 
+            // The attributes chosen for this reward (configurator), or else those of the same
+            // product already ordered: a free pizza keeps the "Extra cheese" of the paid one
             const sameProductLine = order
                 .getOrderlines()
                 .find((line) => !line.is_reward_line && line.product_id?.id === product.id);
+            const attributeValues = opts?.attribute_value_ids?.length
+                ? opts.attribute_value_ids
+                : sameProductLine?.attribute_value_ids || [];
 
             return [
                 {
@@ -61,8 +66,23 @@ export class LoyaltyReward extends Base {
                     price_unit: 0,
                     price_type: "manual",
                     tax_ids: linkTaxes(mapTaxes(product.taxes_id)),
-                    attribute_value_ids:
-                        sameProductLine?.attribute_value_ids.map((attr) => ["link", attr]) || [],
+                    attribute_value_ids: attributeValues.map((attr) => ["link", attr]),
+                    custom_attribute_value_ids: Object.entries(
+                        opts?.attribute_custom_values || {}
+                    ).reduce((acc, [id, cus]) => {
+                        if (cus === null || cus === undefined) {
+                            return acc;
+                        }
+                        acc.push([
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]);
+                        return acc;
+                    }, []),
                     is_reward_line: true,
                     reward_id: this,
                     points_cost: pointsCost,

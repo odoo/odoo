@@ -14,22 +14,24 @@ export class LandingPage extends Component {
         this.router = useService("router");
         this.dialog = useService("dialog");
 
-        onWillStart(() => {
-            if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-                const orders = this.selfOrder.models["pos.order"].getAll();
-                for (const order of orders) {
-                    order.delete();
-                }
-                this.selfOrder.selectedOrderUuid = null;
-                this.selfOrder.computeAvailableCategories();
-                this.selfOrder.resetCategorySelection();
-            }
-            this.selfOrder.rpcLoading = false;
-        });
+        onWillStart(this.onWillStart.bind(this));
 
         if (this.selfOrder.config._self_ordering_image_home_ids.length > 1) {
             useCarousel(this.carouselRef, 5);
         }
+    }
+
+    onWillStart() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+            const orders = this.selfOrder.models["pos.order"].getAll();
+            for (const order of orders) {
+                order.delete();
+            }
+            this.selfOrder.selectedOrderUuid = null;
+            this.selfOrder.computeAvailableCategories();
+            this.selfOrder.resetCategorySelection();
+        }
+        this.selfOrder.rpcLoading = false;
     }
 
     get currentLanguage() {
@@ -87,17 +89,7 @@ export class LandingPage extends Component {
             return;
         }
 
-        if (this.selfOrder.config.use_presets && !this.selfOrder.currentOrder.preset_id) {
-            const availablePresets = this.selfOrder.availablePresets;
-            if (availablePresets.length === 1) {
-                this.selfOrder.currentOrder.setPreset(availablePresets[0]);
-            } else if (availablePresets.length > 1) {
-                this.router.navigate("location");
-                return;
-            }
-        }
-
-        this.router.navigate("product_list");
+        this.selfOrder.startOrder();
     }
 
     openLanguages() {
