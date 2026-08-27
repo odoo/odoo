@@ -363,15 +363,7 @@ SNIPPET_DEFAULTS = {
         "template_key": (
             "website_sale.dynamic_filter_template_product_public_category_clickable_items"
         ),
-        "data_attributes": {
-            "snippet": "s_dynamic_snippet_category_list",
-            "show-parent": "true",
-            "columns": "4",
-            "rounded": "2",
-            "gap": "2",
-            "size": "medium",
-            "alignment": "center",
-        },
+        "data_attributes": {"snippet": "s_dynamic_snippet_category_list", "show-parent": "true"},
     },
 }
 
