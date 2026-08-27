@@ -400,6 +400,32 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertIn('error', data)
         self.assertEqual(data['error']['type'], 'delivery')
 
+    def test_process_order_email_and_mobile_kept_only_in_kiosk(self):
+        """Kiosk generates its preparation ticket client-side from the order data returned
+        by process-order, so email/mobile must not be stripped there. Mobile still has them
+        stripped: several devices can share the same order there, and shouldn't see each
+        other's contact info."""
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        self.pos_config.self_ordering_mode = 'kiosk'
+        order_data = self._create_order_data(
+            state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            device_type='kiosk', email='kiosk.customer@example.com', mobile='+32444444444',
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/kiosk', order_data)
+        self.assertEqual(data['pos.order'][0]['email'], 'kiosk.customer@example.com')
+        self.assertEqual(data['pos.order'][0]['mobile'], '+32444444444')
+
+        self.pos_config.self_ordering_mode = 'mobile'
+        order_data = self._create_order_data(
+            state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            device_type='mobile', email='mobile.customer@example.com', mobile='+32444444445',
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
+        self.assertNotIn('email', data['pos.order'][0])
+        self.assertNotIn('mobile', data['pos.order'][0])
+
     def test_free_delivery_threshold_edge_cases(self):
         """Test free delivery threshold at exactly the minimum, below, and above"""
         self.pos_config.self_ordering_mode = 'mobile'
