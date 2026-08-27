@@ -44,12 +44,6 @@ Note:
         'report/jp_account_report.xml',
         'data/report_layout.xml',
     ],
-    'other_files': [
-        # conditionally loaded from _register_hook when sale/purchase/stock are installed
-        'report/jp_sale_report.xml',
-        'report/jp_purchase_report.xml',
-        'report/jp_stock_report.xml',
-    ],
     'assets': {
         'web.report_assets_common': [
             'l10n_jp/static/src/scss/report_jp_standard.scss',

@@ -13,14 +13,13 @@ class TestJPPurchaseReport(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('ja_JP')
-        cls.ensure_installed('purchase')
         cls.other_currency = cls.setup_other_currency('JPY')
         cls.partner_a.lang = 'ja_JP'
         cls.other_currency.active = True
         cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
 
     def test_purchase_order_report_uses_honorific_and_currency_header(self):
-        purchase_order = self.env['purchase.order'].create({  # noqa: OLS03001
+        purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
             'order_line': [(0, 0, {
@@ -40,7 +39,7 @@ class TestJPPurchaseReport(AccountTestInvoicingCommon):
         self.assertIn('Amount (円)', text)
 
     def test_purchase_quotation_report_uses_honorific(self):
-        quotation = self.env['purchase.order'].create({  # noqa: OLS03001
+        quotation = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
             'order_line': [(0, 0, {
