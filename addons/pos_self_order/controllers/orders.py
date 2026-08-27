@@ -64,8 +64,10 @@ class PosSelfOrderController(http.Controller):
         orders = self.env['pos.order']._load_pos_self_data_read(order, config)
 
         for o in orders:
-            del o['email']
-            del o['mobile']
+            if config.self_ordering_mode != 'kiosk':
+                # Kiosk needs this data to print the preparation receipt
+                del o['email']
+                del o['mobile']
             o['partner_id'] = order._get_signed_self_partner_id(config, o['partner_id']) if o.get('partner_id') else False
 
         result = {
