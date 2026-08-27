@@ -1660,6 +1660,7 @@ class Float(Field[float]):
         return self._min_display_digits
 
     _related__digits = property(attrgetter('_digits'))
+    _related__min_display_digits = property(attrgetter('_min_display_digits'))
 
     def _description_digits(self, env):
         return self.get_digits(env)
