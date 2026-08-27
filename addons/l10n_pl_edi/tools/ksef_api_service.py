@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import json
 import logging
 import os
 import time
@@ -363,13 +364,15 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def download_batch_status(self, batch_ticket):
+    def download_batch_status(self, number):
         try:
-            _logger.info(batch_ticket)
-            response = self._make_request("GET", f"{self.api_url}/invoices/exports/{batch_ticket['number']}")
+            response = self._make_request("GET", f"{self.api_url}/invoices/exports/{number}")
             json_response = response.json()
-            _logger.info(json_response)
+
+            _logger.info("download_batch_status(%s): %s", number, json.dumps(json_response, indent=4))
+
             return {
+                'number': number,
                 'status': json_response['status']['code'],
                 'parts': {
                     part['name']: {
@@ -379,9 +382,8 @@ class KsefApiService:
                         'number': part['ordinalNumber'],
                         'batch_number': json_response['ordinalNumber'],
                     }
-                    for part in json_response.get('package', {})['parts']
+                    for part in json_response.get('package', {}).get('parts', [])
                 },
-                **batch_ticket,
             }
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
@@ -391,8 +393,12 @@ class KsefApiService:
         payload = {**encryption_data, "filters": {"subjectType": subject_type, "dateRange": dates}}
         try:
             response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
+            json_response = response.json()
+
+            _logger.info("download_batch_request(%s, %s): %s", date_from, date_to, json.dumps(json_response, indent=4))
+
             return {
-                'number': response.json().get('referenceNumber', False),
+                'number': json_response.get('referenceNumber', False),
                 'encryption_data': encryption_data,
                 'date_from': fields.Datetime.to_string(date_from),
                 'date_to': fields.Datetime.to_string(date_to),
