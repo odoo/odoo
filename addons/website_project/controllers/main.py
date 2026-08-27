@@ -52,9 +52,12 @@ class WebsiteForm(form.WebsiteForm):
             data['record']['email_from'] = values['email_from']
             if partner:
                 data['record']['partner_id'] = partner.id
+                custom_fields = ['partner_name', 'partner_company_name']
+                if request.env.user._is_public() or partner != request.env.user.partner_id:
+                    custom_fields.append('partner_phone')
                 custom = [
                    (field, data['record'].pop(field))
-                   for field in ['partner_name', 'partner_phone', 'partner_company_name']
+                   for field in custom_fields
                    if data['record'].get(field)
                 ]
                 data['custom'] += "\n" + "\n".join(["%s : %s" % c for c in custom])
