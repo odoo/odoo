@@ -8,27 +8,6 @@ export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };
 export class MessagingMenu extends Record {
     static singleton = true;
 
-    static new() {
-        /** @type {MessagingMenu} */
-        const menu = super.new(...arguments);
-        menu.initializeCountersFetcher = menu.store.makeCachedFetchData(
-            "/mail/messaging_menu/initialize_counters",
-            () => {
-                const filter_id_by_tab_id_by_record_type = {};
-                for (const tab of menu.allTabs) {
-                    if (tab.hidden) {
-                        continue;
-                    }
-                    filter_id_by_tab_id_by_record_type[tab.recordType] ??= {};
-                    filter_id_by_tab_id_by_record_type[tab.recordType][tab.id] =
-                        tab.defaultFilter?.id ?? null;
-                }
-                return { filter_id_by_tab_id_by_record_type };
-            }
-        );
-        return menu;
-    }
-
     bookmarkTab = fields.One("MessagingMenuTab", {
         compute() {
             if (this.store.self_user?.share !== false) {
@@ -58,6 +37,21 @@ export class MessagingMenu extends Record {
         eager: true,
     });
     globalCounter = this.computed(() => this._computeGlobalCounter());
+    initializeCountersFetcher = this.computed(() =>
+        this.store.makeCachedFetchData("/mail/messaging_menu/initialize_counters", () => {
+            const filter_id_by_tab_id_by_record_type = {};
+            for (const tab of this.allTabs) {
+                if (tab.hidden) {
+                    continue;
+                }
+                filter_id_by_tab_id_by_record_type[tab.recordType] ??= {};
+                filter_id_by_tab_id_by_record_type[tab.recordType][tab.id] =
+                    tab.defaultFilter?.id ?? null;
+            }
+            return { filter_id_by_tab_id_by_record_type };
+        })
+    );
+
     notificationTab = fields.One("MessagingMenuTab", {
         compute() {
             if (this.store.self_user?.notification_type !== "inbox") {

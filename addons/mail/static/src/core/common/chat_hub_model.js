@@ -32,20 +32,25 @@ export class ChatHub extends Record {
     WINDOW = 380; // same value as $o-mail-ChatWindow-width
 
     /** @returns {import("models").ChatHub} */
-    static new() {
-        /** @type {import("models").ChatHub} */
-        const chatHub = super.new(...arguments);
-        browser.addEventListener("storage", (ev) => {
-            if (ev.key === CHAT_HUB_KEY) {
-                chatHub.load(ev.newValue);
-            } else if (ev.key === null) {
-                chatHub.load();
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [],
+            () => {
+                const onStorage = (ev) => {
+                    if (ev.key === CHAT_HUB_KEY) {
+                        this.load(ev.newValue);
+                    } else if (ev.key === null) {
+                        this.load();
+                    }
+                };
+                browser.addEventListener("storage", onStorage);
+                this.load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined).then(() =>
+                    this._resolveInit()
+                );
+                return () => browser.removeEventListener("storage", onStorage);
             }
-        });
-        chatHub
-            .load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined)
-            .then(() => chatHub._resolveInit());
-        return chatHub;
+        );
     }
 
     compact = fields.Attr(false, { localStorage: true });
