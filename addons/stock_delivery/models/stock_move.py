@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class StockRoute(models.Model):
@@ -141,3 +142,13 @@ class StockMoveLine(models.Model):
         if self.carrier_id:
             return True
         return super()._should_set_package()
+
+    def _get_potential_existing_waves_extra_domain(self, domain_list, picking_type):
+        domain_list = super()._get_potential_existing_waves_extra_domain(domain_list, picking_type)
+        if picking_type.batch_group_by_carrier:
+            domain_list.append(Domain('picking_ids.carrier_id', 'in', self.carrier_id.ids))
+        return domain_list
+
+    def _is_new_potential_line_extra(self, potential_line, picking_type):
+        res = super()._is_new_potential_line_extra(potential_line, picking_type)
+        return res or (picking_type.batch_group_by_carrier and self.carrier_id != potential_line.carrier_id)
