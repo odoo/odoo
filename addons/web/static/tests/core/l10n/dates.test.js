@@ -19,6 +19,7 @@ import {
     serializeDate,
     serializeDateTime,
     strftimeToLuxonFormat,
+    toLocaleDateTimeString,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
@@ -446,6 +447,17 @@ test("deserializeDateTime with different numbering system", async () => {
 test("deserializeDateTime with different timezone", async () => {
     const date = DateTime.utc(2022, 2, 21, 16, 11, 42).setZone("Europe/Brussels");
     expect(deserializeDateTime("2022-02-21 16:11:42", { tz: "Europe/Brussels" }).c).toEqual(date.c);
+});
+
+test("toLocaleDateTimeString: showWeekday", async () => {
+    mockTimeZone(0);
+    const value = DateTime.fromISO("2022-01-07T15:30:00");
+
+    expect(toLocaleDateTimeString(value, {})).toBe("Jan 7, 2022, 3:30 PM");
+    expect(toLocaleDateTimeString(value, { showWeekday: true })).toBe("Fri, Jan 7, 2022, 3:30 PM");
+    expect(toLocaleDateTimeString(value, { showWeekday: true, showDate: false })).toBe(
+        "Fri 3:30 PM"
+    );
 });
 
 test("parseDate with short notations", async () => {

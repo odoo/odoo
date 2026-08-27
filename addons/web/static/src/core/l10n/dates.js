@@ -35,6 +35,9 @@ const { DateTime, Settings } = luxon;
  * @property {boolean} [showDate]
  *  Show the date in the final result.
  *  > Default: true.
+ * @property {boolean} [showWeekday]
+ *  Show the abbreviated weekday (e.g. "Mon") in the final result.
+ *  > Default: false.
  */
 
 /**
@@ -497,7 +500,7 @@ export function toLocaleDateString(value) {
  */
 export function toLocaleDateTimeString(
     value,
-    options = { showDate: true, showTime: true, showSeconds: false }
+    options = { showDate: true, showTime: true, showSeconds: false, showWeekday: false }
 ) {
     if (!value) {
         return "";
@@ -514,6 +517,9 @@ export function toLocaleDateTimeString(
     if (options.showTime === false) {
         delete format.hour;
         delete format.minute;
+    }
+    if (options.showWeekday) {
+        format.weekday = "short";
     }
     if (today().year === value.year) {
         delete format.year;
