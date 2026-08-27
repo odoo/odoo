@@ -17,11 +17,19 @@ for (const chartTypeBuilder of chartTypeRegistry.getAll()) {
         definition,
         dataSourceExtractor,
         sheetId,
-        eventHandlers
+        eventHandlers,
+        colorTheme
     ) => {
         const isOdoo = definition.dataSource?.type === "odoo";
         if (!isOdoo || !definition.dataSets?.length) {
-            return getRuntime(getters, definition, dataSourceExtractor, sheetId, eventHandlers);
+            return getRuntime(
+                getters,
+                definition,
+                dataSourceExtractor,
+                sheetId,
+                eventHandlers,
+                colorTheme
+            );
         }
         const data = hierarchical.includes(definition.type)
             ? dataSourceExtractor.extractHierarchicalData()
@@ -34,6 +42,13 @@ for (const chartTypeBuilder of chartTypeRegistry.getAll()) {
         }
         definition = { ...definition, dataSetStyles };
         delete definition.dataSets;
-        return getRuntime(getters, definition, dataSourceExtractor, sheetId, eventHandlers);
+        return getRuntime(
+            getters,
+            definition,
+            dataSourceExtractor,
+            sheetId,
+            eventHandlers,
+            colorTheme
+        );
     };
 }
