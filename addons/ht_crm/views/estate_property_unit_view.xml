@@ -1,0 +1,101 @@
+
+<odoo>
+    <!-- List view -->
+    <record id="view_estate_property_unit_list" model="ir.ui.view">
+        <field name="name">estate.property.unit.list</field>
+        <field name="model">estate.property.unit</field>
+        <field name="arch" type="xml">
+            <list>              
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="block"/>
+                <field name="floor"/>
+                <field name="unit_number"/>
+
+                <field name="unit_type_id"/>
+                <field name="net_area"/>
+                <field name="gross_area"/>
+
+                <field name="price" widget="monetary"/>
+                <field name="state"/>
+
+                <field name="currency_id" optional="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_estate_property_unit_form" model="ir.ui.view">
+        <field name="name">estate.property.unit.form</field>
+        <field name="model">estate.property.unit</field>
+        <field name="arch" type="xml">
+            <form string="Sản phẩm bất động sản">
+
+                <header>
+                    <field name="state"
+                        widget="statusbar"
+                        statusbar_visible="available,reserved,sold,resale,blocked"/>
+                </header>
+
+                <sheet>
+
+                    <!-- TITLE -->
+                    <div class="oe_title">
+                        <label for="product_code"/>
+                        <h1>
+                            <field name="product_code"
+                                placeholder="VD: A1-1205"/>
+                        </h1>
+
+                        <div class="text-muted">
+                            <field name="project_id"
+                                options="{'no_create_edit': False}"/>
+                        </div>
+                    </div>
+
+                    <!-- MAIN INFO -->
+                    <group string="Thông tin căn hộ" col="4">
+
+                        <group>
+                            <field name="block"/>
+                            <field name="floor"/>
+                            <field name="unit_number"/>
+                            <field name="unit_type_id"/>
+                        </group>
+
+                        <group>
+                            <field name="net_area"/>
+                            <field name="gross_area"/>
+                            <field name="priority"/>
+                        </group>
+
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+
+                            <field name="price"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"/>
+
+                            <field name="state"/>
+                        </group>
+
+                    </group>
+
+                    <!-- NOTE -->
+                    <notebook>
+
+                        <page string="Thông tin thêm">
+
+                            <group>
+                                <field name="name" readonly="1"/>
+                            </group>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+</odoo>

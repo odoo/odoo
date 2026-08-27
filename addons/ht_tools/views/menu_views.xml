@@ -1,0 +1,34 @@
+<odoo>
+    <record id="action_post" model="ir.actions.act_window">
+        <field name="name">HT Post</field>
+        <field name="res_model">tool.post</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_group" model="ir.actions.act_window">
+        <field name="name">HT Group</field>
+        <field name="res_model">tool.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_ht_tools"
+        name="HT Tools"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_post"
+        name="Danh sách bài viết"
+        parent="menu_ht_tools"
+        action="action_post"
+    />
+
+    <menuitem
+        id="menu_group"
+        name="Danh sách nhóm"
+        parent="menu_ht_tools"
+        action="action_group"
+    />
+
+</odoo>

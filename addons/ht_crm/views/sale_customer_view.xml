@@ -1,0 +1,121 @@
+
+<odoo>
+    <record id="view_customer_list" model="ir.ui.view">
+        <field name="name">sale.customer.list</field>
+        <field name="model">sale.customer</field>
+        <field name="arch" type="xml">
+            <list>
+                <!-- TRƯỜNG CƠ BẢN -->
+                <field name="name" width="auto"/>
+                <field name="date_of_birth" optional="hide"/>
+                <field name="id_number" width="auto"/>
+                <field name="email" width="auto"/>
+                <field name="phone" width="auto"/>
+                                
+                <field name="issue_date" optional="hide"/>
+                <field name="issue_place" optional="hide"/>
+                <field name="permanent_address_preview" string="Địa chỉ thường trú"/>
+                <field name="contact_address_preview" string="Địa chỉ liên lạc"/>
+
+                <!-- TRƯỜNG BỔ SUNG -->
+                <field name="type" optional="hide"/>
+                <field name="partner_platform" optional="hide"/>
+            </list> 
+        </field>
+    </record>
+
+    <record id="view_customer_form" model="ir.ui.view">
+        <field name="name">sale.customer.form</field>
+        <field name="model">sale.customer</field>
+
+        <field name="arch" type="xml">
+            <form string="Customer">
+                <header>
+                    
+                    <button name="button_test_odoobot" 
+                        string="Test OdooBot" 
+                        type="object" 
+                        class="btn-primary"/>
+                </header>
+                <sheet>
+
+                    <!-- TITLE -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên khách hàng..."/>
+                        </h1>
+                    </div>
+
+                    <!-- 🔹 THÔNG TIN CHÍNH -->
+                    <group string="Thông tin khách hàng">
+
+                        <group>
+
+                            <field name="partner_platform"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="type"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="salesperson_id"/>
+                            <field name="status"/>
+                            <field name="tier"/>
+
+                        </group>
+
+                    </group>
+
+                    <!-- 🔹 THÔNG TIN CÁ NHÂN -->
+                    <group string="Thông tin cá nhân">
+
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="id_number"/>
+                        </group>
+
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="issue_place"/>
+                        </group>
+
+                    </group>
+
+                    <!-- 🔹 ĐỊA CHỈ -->
+                    <group string="Địa chỉ">
+
+                        <field name="permanent_address"/>
+
+                        <field name="contact_address"/>
+
+                    </group>
+
+                    <!-- NOTEBOOK -->
+                    <notebook>
+                        <page string="Giao dịch">
+                            <field name="transaction_ids">
+                                <list limit="5">
+                                    <field name="product_id"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- PROJECT -->
+                        <page string="Dự án quan tâm">
+
+                            <field name="project_ids"
+                                widget="many2many_tags"/>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+</odoo>

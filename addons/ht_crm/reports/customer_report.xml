@@ -1,0 +1,39 @@
+<odoo>
+    <record id="view_customer_report_graph" model="ir.ui.view">
+        <field name="name">sale.customer.report.graph</field>
+        <field name="model">sale.customer.report</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="status"/>
+                <field name="customer_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <!-- Dự án -->
+    <record id="view_estate_project_unit_report_graph" model="ir.ui.view">
+        <field name="name">estate.project.unit.report.graph</field>
+        <field name="model">estate.project.unit.report</field>
+        <field name="arch" type="xml">
+            <graph string="Tình trạng căn hộ" type="bar">
+                <field name="project_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="unit_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_estate_project_unit_report_pivot" model="ir.ui.view">
+        <field name="name">estate.project.unit.report.pivot</field>
+        <field name="model">estate.project.unit.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Báo cáo dự án">
+                <field name="project_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="unit_count" type="measure"/>
+                <field name="avg_price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+</odoo>

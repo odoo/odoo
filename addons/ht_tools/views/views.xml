@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="ht_tools.list">
+      <field name="name">ht_tools list</field>
+      <field name="model">ht_tools.ht_tools</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="ht_tools.action_window">
+      <field name="name">ht_tools window</field>
+      <field name="res_model">ht_tools.ht_tools</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="ht_tools.action_server">
+      <field name="name">ht_tools server</field>
+      <field name="model_id" ref="model_ht_tools_ht_tools"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="ht_tools" id="ht_tools.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="ht_tools.menu_1" parent="ht_tools.menu_root"/>
+    <menuitem name="Menu 2" id="ht_tools.menu_2" parent="ht_tools.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="ht_tools.menu_1_list" parent="ht_tools.menu_1"
+              action="ht_tools.action_window"/>
+    <menuitem name="Server to list" id="ht_tools" parent="ht_tools.menu_2"
+              action="ht_tools.action_server"/>
+-->
+  </data>
+</odoo>
