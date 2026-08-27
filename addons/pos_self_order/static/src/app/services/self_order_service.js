@@ -32,14 +32,14 @@ import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_pr
 const { DateTime } = luxon;
 
 export class SelfOrder extends Reactive {
-    static serviceDependencies = ["notification", "router", "barcode", "bus_service", "dialog"];
+    static serviceDependencies = ["notification", "router", "bus_service", "dialog"];
 
     constructor(...args) {
         super();
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { notification, router, barcode, bus_service, dialog }) {
+    async setup(env, { notification, router, bus_service, dialog }) {
         this.data = usePlugin(PosDataPlugin);
         this.ticketPrinter = usePlugin(PosTicketPrinterPlugin);
         this.ticketPrinter.init(env);
@@ -48,7 +48,6 @@ export class SelfOrder extends Reactive {
         this.notification = notification;
         this.router = router;
         this.env = env;
-        this.barcode = barcode;
         this.bus = bus_service;
         this.dialog = dialog;
 
@@ -154,36 +153,52 @@ export class SelfOrder extends Reactive {
         this.data.connectWebSocket("REMOVE_ORDERS", (data) => {
             this.removeOrdersByAccessTokens(data.deleted_order_tokens);
         });
-        barcode.bus.addEventListener("barcode_scanned", (ev) => {
-            if (!this.ordering) {
-                this.notification.add(_t("We're currently closed"), {
-                    type: "danger",
-                });
+    }
+    async _barcodeProductAction(code) {
+        if (!this.ordering) {
+            this.notification.add(_t("We're currently closed"), {
+                type: "danger",
+            });
+            return;
+        }
+        if (this.getOrder() == null) {
+            return this.startOrder();
+        }
+        const product = this.models["product.product"].filter(
+            (p) => p.barcode === code.base_code
+        )?.[0];
+        if (!product) {
+            this.notification.add(_t("Product not found"), {
+                type: "danger",
+            });
+            return;
+        }
+        if (!product.self_order_available) {
+            this.notification.add(_t("Product is not available"), {
+                type: "danger",
+            });
+            return;
+        }
+        const productTemplate = product.product_tmpl_id;
+        if (productTemplate.isConfigurableForSelfOrder) {
+            this.router.navigate("product", { id: productTemplate.id });
+            return;
+        }
+        this.addToCart(productTemplate, 1, "", {}, {});
+        this.router.navigate("cart");
+    }
+
+    startOrder() {
+        if (this.hasPresets() && !this.currentOrder.preset_id) {
+            const availablePresets = this.availablePresets;
+            if (availablePresets.length === 1) {
+                this.currentOrder.setPreset(availablePresets[0]);
+            } else {
+                this.router.navigate("location");
                 return;
             }
-            const product = this.models["product.product"].filter(
-                (p) => p.barcode === ev.detail.barcode
-            )?.[0];
-            if (!product) {
-                this.notification.add(_t("Product not found"), {
-                    type: "danger",
-                });
-                return;
-            }
-            if (!product.self_order_available) {
-                this.notification.add(_t("Product is not available"), {
-                    type: "danger",
-                });
-                return;
-            }
-            const productTemplate = product.product_tmpl_id;
-            if (productTemplate.isConfigurableForSelfOrder) {
-                this.router.navigate("product", { id: productTemplate.id });
-                return;
-            }
-            this.addToCart(productTemplate, 1, "", {}, {});
-            this.router.navigate("cart");
-        });
+        }
+        this.router.navigate("product_list");
     }
 
     /**
@@ -469,7 +484,7 @@ export class SelfOrder extends Reactive {
 
         // When no payment methods redirect to confirmation page
         // the client will be able to pay at counter
-        if (!(this.hasPaymentMethod() && order.priceIncl)) {
+        if (!this.hasPaymentMethod() || this.currency.isZero(order.priceIncl)) {
             let screenMode = "pay";
 
             if (orderHasChanges) {
@@ -974,7 +989,9 @@ export class SelfOrder extends Reactive {
             }
         }
 
-        openOrder.recomputeChanges();
+        if (this.config.self_order_pay_after_meal === "meal") {
+            openOrder.recomputeChanges();
+        }
         for (const [uuid, refreshedQty] of refreshedBaselines) {
             if (openOrder.uiState.lineChanges[uuid]) {
                 openOrder.uiState.lineChanges[uuid].qty = refreshedQty;
@@ -1241,7 +1258,7 @@ export class SelfOrder extends Reactive {
                     if (line.isTipLine()) {
                         return acc;
                     }
-                    if (!line.combo_parent_id) {
+                    if (line.countInLineNotSend) {
                         acc.count += qty;
                     }
                     const prices = line.getPriceDetailsWithQty(qty);

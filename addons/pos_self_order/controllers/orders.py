@@ -47,7 +47,7 @@ class PosSelfOrderController(http.Controller):
 
         amount_total = order_ids.amount_total
 
-        if amount_total == 0:
+        if pos_config.currency_id.is_zero(amount_total):
             order_ids.state = 'paid'
             order_ids._process_saved_order(False)
             order_ids._send_self_order_receipt()
@@ -197,13 +197,9 @@ class PosSelfOrderController(http.Controller):
         pos_config = self._verify_pos_config(access_token)
         domain = [(False, '=', True)]
 
-        for data in order_access_tokens:
-            domain = Domain.OR([domain, ['&',
-                ('access_token', '=', data['access_token']),
-                '|',
-                ('write_date', '>', data.get('write_date')),
-                ('state', '!=', data.get('state')),
-            ]])
+        if order_access_tokens:
+            access_token_list = [data['access_token'] for data in order_access_tokens]
+            domain = Domain.OR([domain, [('access_token', 'in', access_token_list)]])
 
         if (
             table_identifier

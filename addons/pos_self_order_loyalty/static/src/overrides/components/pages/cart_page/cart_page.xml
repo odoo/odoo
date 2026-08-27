@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('o_self_footer')]/div[hasclass('o_self_container')]" position="attributes">
+            <attribute name="class" add="d-flex flex-row align-items-end" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('o_self_footer')]//div[hasclass('order-price')]" position="before">
+            <div class="d-flex flex-column align-items-start justify-content-end flex-grow-1 px-2">
+                <div t-foreach="this.selfOrder.getLoyaltyCards()" t-as="card" t-key="card_index" class="d-flex justify-content-between align-items-center gap-3">
+                    <span class="fw-bolder" t-out="card.program_id.portal_point_name"/>
+                    <div class="d-flex gap-1 fw-bold">
+                        <t t-set="won" t-value="this.roundPoints(card.program_id.getEarnedPoints(this.selfOrder.currentOrder))"/>
+                        <t t-set="spent" t-value="this.roundPoints(card.program_id.getSpentPoints(this.selfOrder.currentOrder))"/>
+                        <t t-set="balance" t-value="this.roundPoints(card.program_id.getAvailablePoints(this.selfOrder.currentOrder))"/>
+                        <t t-set="total_points" t-value="this.roundPoints(card.program_id.getNewBalance(this.selfOrder.currentOrder))"/>
+                        <span class="loyalty-points-balance" t-out="balance"/>
+                        <span t-if="won" class="loyalty-points-won text-success">+<t t-out="won"/></span>
+                        <span t-if="spent" class="loyalty-points-spent text-danger">-<t t-out="spent"/></span>
+                        <span class="text-muted mx-1">=</span>
+                        <span class="loyalty-points-total fw-bolder" t-out="total_points"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('order_note_container')]" position="after">
+            <div class="container o_self_container order_discount_container mb-2">
+                <hr/>
+                <div class="d-flex justify-content-between"
+                    t-on-click="this.onClickShowCode">
+                    <div class="d-flex align-items-center">
+                        <i class="oi p-1" data-icon="card_giftcard"/>
+                        <span class="fw-bolder" style="font-size: 1.1rem;">
+                            Add a discount code
+                        </span>
+                    </div>
+                    <div class="py-1 px-2">
+                        <i t-attf-class="fa {{ this.showCode() ? 'fa-chevron-up' : 'fa-chevron-down' }}"/>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-2" t-att-class="{'d-none': !this.showCode()}">
+                    <input type="text"
+                        class="form-control bg-white rounded-4 my-1"
+                        t-model="this.code"
+                        t-on-keydown="(ev) => this.onKeydownCodeInput(ev)"
+                        placeholder.translate="Enter your code"
+                    />
+                    <i t-if="this.applyCode.status == 'loading'" class="oi oi-spin m-3" data-icon="progress_activity"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('product-name')]" position="after">
+            <span t-if="line.is_reward_line" class="fst-italic" t-out="line.reward_id.description" />
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('price-total')]" position="before">
+            <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="this.displayBeforeDiscount">
+                Total discount: <t t-out="this.selfOrder.formatMonetary(this.getTotalDiscount())" />
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='left']" position="inside">
+            <RewardButton/>
+        </xpath>
+    </t>
+</templates>

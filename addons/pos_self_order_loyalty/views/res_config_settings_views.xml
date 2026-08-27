@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_menu" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_self_order_loyalty.view</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="pos_self_order.res_config_settings_view_form_menu"/>
+        <field name="arch" type="xml">
+            <setting id="pos-loyalty" position="attributes">
+                <attribute name="invisible">False</attribute>
+            </setting>
+        </field>
+    </record>
+</odoo>
