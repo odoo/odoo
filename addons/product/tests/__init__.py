@@ -10,6 +10,7 @@ from . import (
     test_pricelist_report,
     test_product_attribute_value_config,
     test_product_combo,
+    test_product_document,
     test_product_pricelist,
     test_product_rounding,
     test_seller,
