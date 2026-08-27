@@ -106,6 +106,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/discuss_public_templates.xml',
         'views/mail_alias_domain_views.xml',
         'views/mail_alias_views.xml',
+        'views/mail_attachment_views.xml',
         'views/mail_gateway_allowed_views.xml',
         'views/mail_guest_views.xml',
         'views/mail_message_reaction_views.xml',
@@ -217,6 +218,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/*.dark.scss',
         ],
         "web.assets_frontend": [
+            "mail/static/src/html_editor/common/state_file_model_patch.js",
             "mail/static/src/utils/common/format.js",
             "mail/static/src/utils/common/html.js",
         ],
@@ -294,6 +296,9 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             ('remove', 'web/static/src/**/*.dark.scss'),
+        ],
+        'mail.assets_markdown': [
+            'mail/static/src/markdown_assets/mail_markdown_assets.scss',
         ],
         'im_livechat.assets_embed_core': [
             ("include", "html_editor.assets_editor"),

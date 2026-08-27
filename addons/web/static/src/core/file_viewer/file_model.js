@@ -1,5 +1,17 @@
 import { url } from "@web/core/utils/urls";
 
+export const TEXT_MIMETYPES = [
+    "application/javascript",
+    "application/json",
+    "application/xml",
+    "text/css",
+    "text/csv",
+    "text/html",
+    "text/markdown",
+    "text/plain",
+    "text/xml",
+];
+
 /**
  * @template {new (...args: any[]) => any} T
  * @param {T} T
@@ -46,7 +58,7 @@ export const FileModelMixin = (T) =>
                         token = token.substring(0, amp);
                     }
                 }
-                return `https://www.youtube.com/embed/${token}`;
+                return `https://www.youtube.com/embed/${encodeURIComponent(token)}`;
             }
             return route;
         }
@@ -74,14 +86,7 @@ export const FileModelMixin = (T) =>
         }
 
         get isText() {
-            const textMimeType = [
-                "application/javascript",
-                "application/json",
-                "text/css",
-                "text/html",
-                "text/plain",
-            ];
-            return textMimeType.includes(this.mimetype);
+            return TEXT_MIMETYPES.includes(this.mimetype);
         }
 
         get isUrl() {
