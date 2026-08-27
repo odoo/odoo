@@ -207,7 +207,7 @@ class TestIrSequenceGenerate(BaseCase):
                 'suffix': '/%(y)s/%(doy)s/%(woy)s',
             })
             self.assertTrue(seq)
-            now = datetime.now()
+            now = datetime.now(env.tz)
             self.assertEqual(
                 env['ir.sequence'].next_by_code('test_sequence_type_8'),
                 now.strftime('%Y/%m/%d/1/%y/%j/%W'),
@@ -223,7 +223,7 @@ class TestIrSequenceGenerate(BaseCase):
                 'suffix': '/%(isoweek)s/%(weekday)s',
             })
             self.assertTrue(seq)
-            isoyear, isoweek, weekday = datetime.now().isocalendar()
+            isoyear, isoweek, weekday = datetime.now(env.tz).isocalendar()
             self.assertEqual(
                 env['ir.sequence'].next_by_code('test_sequence_type_9'),
                 f"{isoyear}/{isoyear % 100:02d}/1/{isoweek:02d}/{weekday % 7}",
