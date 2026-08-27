@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResPartner(models.Model):
@@ -52,3 +53,14 @@ class ResPartner(models.Model):
             stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases'), 'tagClass': 'o_tag_color_5'}
             data_list[partner.id].append(stat_info)
         return data_list
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_partner_in_account_move(self):
+        """ Prevent the deletion of a partner if it is used in a PO dropship address"""
+
+        po = self.sudo().env['purchase.order'].search_count([
+            ('dest_address_id', 'in', self.ids),
+            ('state', '!=', 'draft'),
+        ])
+        if po:
+            raise UserError(_("The partner cannot be deleted because it is used as a dropship address"))
