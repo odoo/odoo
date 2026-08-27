@@ -252,7 +252,7 @@
                     <t t-else="">Click to collapse all groups</t>
                 </div>
                 <div class="d-flex align-items-center">
-                    <span t-attf-class="o_group_caret oi me-1 {{group.isFolded ? 'arrow_right' : 'arrow_down' }}"
+                    <span class="o_group_caret oi oi-fw me-1" t-attf-data-icon="{{ group.isFolded ? 'arrow_right' : 'arrow_drop_down' }}"
                         t-attf-style="--o-list-group-level: {{this.getGroupLevel(group)}}"/>
                     <span>
                         <t t-out="this.odoomark(group.displayName)"/> <span class="ms-3 me-2 text-muted" t-out="this.getGroupText(group)"/>
