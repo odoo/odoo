@@ -2,9 +2,10 @@ import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { defineModels, fields, models, serverState } from "@web/../tests/web_test_helpers";
-import { setupEditor } from "./_helpers/editor";
+import { setupEditor, testEditor } from "./_helpers/editor";
+import { unformat } from "./_helpers/format";
 import { getContent } from "./_helpers/selection";
-import { insertText, undo } from "./_helpers/user_actions";
+import { deleteBackward, insertText, splitBlock, undo } from "./_helpers/user_actions";
 
 class ResUsers extends models.Model {
     _name = "res.users";
@@ -42,6 +43,25 @@ test("undo a 'Signature' command", async () => {
     );
     undo(editor);
     expect(getContent(el)).toBe("<p>abtest[]cd</p>");
+});
+
+test("should remove an emptied signature block", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <p>ab</p>
+            <div class="o-signature-container"><p>[]<br></p></div>`),
+        stepFunction: deleteBackward,
+        contentAfter: `<p>ab[]</p>`,
+    });
+});
+
+test("should insert a line break instead of splitting a signature block", async () => {
+    await testEditor({
+        contentBefore: `<div class="o-signature-container">ab[]cd</div>`,
+        stepFunction: splitBlock,
+        contentAfter: `<div class="o-signature-container">ab<br>[]cd</div>`,
+        config: { baseContainers: ["DIV"] },
+    });
 });
 
 describe("availability", () => {
