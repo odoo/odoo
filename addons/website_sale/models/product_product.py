@@ -77,9 +77,19 @@ class ProductProduct(models.Model):
     @api.depends("video_variant_url", "image_variant_1920", "product_tmpl_id.video_url")
     def _compute_video_url(self):
         for product in self:
-            product.video_url = product.video_variant_url or (
-                not product.image_variant_1920 and product.product_tmpl_id.video_url
-            )
+            product.video_url = product._get_own_video_url(product.image_variant_1920)
+
+    def _get_own_video_url(self, has_own_image):
+        """Return the video (own or inherited from the template) this variant should show,
+        given whether it has its own image (`has_own_image`).
+
+        Factored out of `_compute_video_url` so callers that already know, cheaply, whether
+        this variant has its own image (e.g. because they already loaded a smaller size of it
+        for another purpose) can reuse that instead of triggering `image_variant_1920`
+        specifically just for this check.
+        """
+        self.ensure_one()
+        return self.video_variant_url or (not has_own_image and self.product_tmpl_id.video_url)
 
     def _inverse_video_url(self):
         for product in self:
@@ -91,11 +101,14 @@ class ProductProduct(models.Model):
             elif product.video_variant_url:
                 # This variant had its own video: only clear that one.
                 product.video_variant_url = False
-            else:
+            elif len(product.product_tmpl_id.product_variant_ids) <= 1:
                 # This variant was only showing the template's fallback video (it never had an
-                # override of its own): clear that, since there is no other video left to fall
-                # back on.
+                # override of its own), and it is the template's only variant: clear that, since
+                # there is no other video left to fall back on.
                 product.product_tmpl_id.video_url = False
+            # Otherwise, this variant was only showing the template's fallback video, but other
+            # variants of the same template may still rely on it: leave it untouched, as clearing
+            # it here would silently remove the showcase video from every sibling variant too.
 
     @api.constrains("video_variant_url")
     def _check_valid_video_variant_url(self):
