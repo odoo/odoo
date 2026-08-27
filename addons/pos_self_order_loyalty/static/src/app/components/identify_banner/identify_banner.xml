@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Called by the popups offering to identify, in a component having `selfOrder` -->
+    <t t-name="pos_self_order_loyalty.IdentifyBanner">
+        <div class="o_self_identify_banner btn bg-light-pink w-75 d-flex justify-content-between align-items-center px-4" t-on-click.stop="() => this.onClick()" >
+            <h2 class="flex-basis-75 my-auto text-start">Already a member?</h2>
+            <button class="btn btn-lg btn-primary w-50 p-2 my-3 text-center">
+                Identify Yourself
+            </button>
+        </div>
+    </t>
+</templates>
