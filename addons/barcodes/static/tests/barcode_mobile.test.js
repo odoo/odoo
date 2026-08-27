@@ -3,11 +3,11 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { getActiveElement, queryFirst, keyDown, click } from "@odoo/hoot-dom";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { barcodeService } from "@barcodes/barcode_service";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
 import { Component, xml } from "@odoo/owl";
 
 beforeEach(() => {
-    patchWithCleanup(barcodeService, {
+    patchWithCleanup(BarcodePlugin, {
         maxTimeBetweenKeysInMs: 0,
         isMobileChrome: true,
     });

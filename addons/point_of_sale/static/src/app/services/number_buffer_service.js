@@ -1,9 +1,9 @@
-import { barcodeService } from "@barcodes/barcode_service";
 import { EventBus, onWillDestroy, useScope } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
+import { registry } from "@web/core/registry";
+import { localization } from "@web/core/l10n/localization";
 
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
@@ -156,7 +156,7 @@ class NumberBuffer extends EventBus {
         this.config = config;
         this.decimalPoint = config.decimalPoint || getDecimalPoint();
         this.maxTimeBetweenKeys = this.config.useWithBarcode
-            ? barcodeService.maxTimeBetweenKeysInMs
+            ? BarcodePlugin.maxTimeBetweenKeysInMs
             : 0;
     }
     _onKeyboardInput(event) {
