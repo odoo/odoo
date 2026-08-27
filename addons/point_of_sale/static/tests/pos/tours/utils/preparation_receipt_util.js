@@ -38,8 +38,22 @@ async function generateFireCourseReceipts() {
 }
 
 // Return rendered order change receipts that will be printed when clicking "Order" button
+<<<<<<< d8b9e135642250172decd128c4c87fe7a3e397cb
 export async function generatePreparationReceipts(opts = {}) {
     return await generateReceiptsToPrint(posmodel.getOrder(), opts);
+||||||| f1c0b4f89ca3ab6f6860a637bfaff9863bb52685
+export async function generatePreparationReceipts() {
+    return await generateReceiptsToPrint(posmodel.getOrder());
+=======
+export async function generatePreparationReceipts(reprint = false) {
+    const order = posmodel.getOrder();
+    if (reprint) {
+        order.uiState.isReprinting = true;
+    }
+    const receipts = await generateReceiptsToPrint(order);
+    order.uiState.isReprinting = false;
+    return receipts;
+>>>>>>> eeca4aadc351894a85bbafc182d522581d6af7aa
 }
 
 export function checkPreparationTicketData(
@@ -49,7 +63,12 @@ export function checkPreparationTicketData(
         invisibleInDom: [],
         lineOrder: [],
         fireCourse: false,
+<<<<<<< d8b9e135642250172decd128c4c87fe7a3e397cb
         cancelled: false,
+||||||| f1c0b4f89ca3ab6f6860a637bfaff9863bb52685
+=======
+        reprint: false,
+>>>>>>> eeca4aadc351894a85bbafc182d522581d6af7aa
     }
 ) {
     const check = async () => {
@@ -58,7 +77,13 @@ export function checkPreparationTicketData(
         if (opts.fireCourse) {
             tickets = await generateFireCourseReceipts();
         } else {
+<<<<<<< d8b9e135642250172decd128c4c87fe7a3e397cb
             tickets = await generatePreparationReceipts({ cancelled: opts.cancelled });
+||||||| f1c0b4f89ca3ab6f6860a637bfaff9863bb52685
+            tickets = await generatePreparationReceipts();
+=======
+            tickets = await generatePreparationReceipts(opts.reprint);
+>>>>>>> eeca4aadc351894a85bbafc182d522581d6af7aa
         }
 
         if (

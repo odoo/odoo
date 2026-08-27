@@ -65,8 +65,13 @@ export class PosOrder extends PosOrderAccounting {
             },
             requiredPartnerDetails: {},
             tip: { value: false, type: false },
+<<<<<<< d8b9e135642250172decd128c4c87fe7a3e397cb
             last_general_customer_note: this.general_customer_note || "",
             last_internal_note: this.internal_note || "",
+||||||| f1c0b4f89ca3ab6f6860a637bfaff9863bb52685
+=======
+            isReprinting: false,
+>>>>>>> eeca4aadc351894a85bbafc182d522581d6af7aa
         };
     }
 
