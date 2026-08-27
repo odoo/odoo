@@ -1665,10 +1665,6 @@ class TestAnyDomainSearchContext(TransactionCase):
 
     def test_any_domain_search_context_narrows_scan(self):
         partner = self.env.ref('base.main_partner')
-        decoys = self.env['ir.attachment'].create([
-            {'name': f'decoy{i}', 'res_model': 'res.partner', 'res_id': partner.id, 'raw': b'x'}
-            for i in range(5)
-        ])
         target = self.env['ir.attachment'].create({
             'name': 'target', 'res_model': 'res.partner', 'res_id': partner.id, 'raw': b'x',
         })
@@ -1690,24 +1686,21 @@ class TestAnyDomainSearchContext(TransactionCase):
         })
 
         Attachment = self.registry['ir.attachment']
-        original_search_fetch = Attachment.search_fetch
-        seen_ids = set()
+        original_res_access = Attachment._search_res_access
 
-        def spy(self, domain, *args, **kwargs):
-            result = original_search_fetch(self, domain, *args, **kwargs)
-            seen_ids.update(result.ids)
-            return result
+        def _search_res_access(s, operation, domain_operator):
+            domain = s.env.context.get('search_domain')
+            self.assertFalse(domain.is_true(), "search_domain is not constrained enough")
+            return original_res_access(s, operation, domain_operator)
 
-        with patch.object(Attachment, 'search_fetch', spy):
-            result = self.env['test_orm.attachment_link'].with_user(restricted_user).search(
-                [('attachment_id', 'in', [target.id])]
-            )
-
-        self.assertEqual(result, link)
-        self.assertFalse(
-            seen_ids & set(decoys.ids),
-            "the fallback scan should never look at attachments unrelated to the search",
+        self.enterContext(patch.object(Attachment, '_search_res_access', _search_res_access))
+        result = link.with_user(restricted_user).search(
+            [('attachment_id', 'in', [target.id])]
         )
+        self.assertEqual(result, link)
+
+        link.invalidate_model()
+        link.with_user(restricted_user).attachment_id  # just read it
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
