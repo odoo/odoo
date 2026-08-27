@@ -3,7 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 from odoo import Command, fields
-
+from odoo.exceptions import UserError
 
 from datetime import timedelta
 import pytz
@@ -976,3 +976,18 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertRecordValues(purchase_order.order_line, [
             {'price_unit': 100, 'discount': 10, 'price_unit_discounted': 90},
         ])
+
+    def test_prevent_partner_deletion(self):
+        """Check that alt PO correctly copies the original PO values"""
+        subcontractor, client = self.env["res.partner"].create([
+            {"name": "subcontractor"},
+            {"name": "client"},
+        ])
+
+        po = self.env["purchase.order"].create({
+            "partner_id": subcontractor.id,
+            "dest_address_id": client.id,
+        })
+        po.button_confirm()
+        with self.assertRaises(UserError):
+            client.unlink()
