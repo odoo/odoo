@@ -1307,6 +1307,22 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
+    def _get_non_video_images(self, limit):
+        """Return up to `limit` images from `_get_images` that aren't showcase videos.
+
+        Stops as soon as `limit` is reached instead of filtering the full list, so images
+        beyond what is actually needed are never read (avoids extra queries for products
+        that have no showcase video at all, the common case).
+        """
+        self.ensure_one()
+        images = []
+        for image in self._get_images():
+            if not image.video_url:
+                images.append(image)
+                if len(images) >= limit:
+                    break
+        return images
+
     def _get_product_page_documents(self, variant=None):
         self.ensure_one()
         docs = self.sudo().product_document_ids
