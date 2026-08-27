@@ -4,7 +4,6 @@ import {
     clickOnSave,
     switchToLang,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 
 const openSeoModal = () => [
     {
@@ -33,7 +32,6 @@ const saveSeoModal = () => [
         content: "Wait for SEO modal to close",
         trigger: "body:not(:has(.modal))",
     },
-    stepUtils.waitIframeIsReady(),
 ];
 
 registerWebsitePreviewTour(

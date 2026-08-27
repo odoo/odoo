@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_utils";
 import { clickOnEditAndWaitEditMode, clickOnSnippet } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("blog_context_and_social_media", {
@@ -56,7 +55,6 @@ registry.category("web_tour.tours").add("blog_context_and_social_media", {
         {
             trigger: "body:not(.o_builder_open)",
         },
-        stepUtils.waitIframeIsReady(),
         {
             content: "Click on the first article",
             trigger: ":iframe article[name='blog_post'] a.o_blog_post_title",

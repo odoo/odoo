@@ -2,7 +2,6 @@ import {
     clickOnEditAndWaitEditMode,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 
 /**
  * Global use case:
@@ -15,7 +14,6 @@ import { stepUtils } from "@web_tour/tour_utils";
  *
  */
 registerWebsitePreviewTour("full_screen_web_editor", {}, () => [
-    stepUtils.waitIframeIsReady(),
     {
         // open to the course
         trigger: ':iframe a:contains("Basics of Gardening")',

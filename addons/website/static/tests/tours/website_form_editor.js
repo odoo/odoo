@@ -8,7 +8,6 @@ import {
     changeOptionInPopover,
     unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
 // Visibility possible values:
@@ -1313,7 +1312,6 @@ registerWebsitePreviewTour(
         },
         ...addCustomField("char", "text", `Test1"'`, false),
         ...clickOnSave(),
-        stepUtils.waitIframeIsReady(),
         ...essentialFieldsForDefaultFormFillInSteps,
         {
             content: "Complete 'Your Question' field",

@@ -4,7 +4,6 @@ import {
     clickOnSave,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 
 function applyForAJob(jobName, application) {
     return [{
@@ -73,7 +72,6 @@ registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
 ]});
 
 registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {}, () => [
-    stepUtils.waitIframeIsReady(),
 {
     content: 'Go to the Guru job page',
     trigger: ':iframe a[href*="guru"]',

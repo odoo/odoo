@@ -4,7 +4,6 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 import { translationIsReady } from "@web/core/l10n/translation";
 
 function createNewPage() {
@@ -239,7 +238,7 @@ function switchLanguage(lang, timeout = 50000) {
 // TODO Such a step should not be needed, but test randomly fails without it.
 const awaitTranslationIsReady = {
     content: "Await translationIsReady",
-    trigger: "body",
+    trigger: ":iframe body[is-ready=true]",
     run: async () => {
         await translationIsReady;
     },
@@ -247,7 +246,6 @@ const awaitTranslationIsReady = {
 
 function openTranslate(timeout = 50000) {
     return [
-        stepUtils.waitIframeIsReady(),
         awaitTranslationIsReady,
         {
             content: "Open edit dropdown",
@@ -292,7 +290,6 @@ function saveTranslation(timeout = 50000) {
             trigger: "body:not(.o_builder_open)",
             timeout,
         },
-        stepUtils.waitIframeIsReady(),
         awaitTranslationIsReady,
     ];
 }

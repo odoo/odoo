@@ -1,4 +1,3 @@
-import { stepUtils } from "@web_tour/tour_utils";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
@@ -17,7 +16,6 @@ const clickOnImgAndWaitForLoad = [
     },
 ];
 const enterEditModeOfTestProduct = () => [
-    stepUtils.waitIframeIsReady(),
     {
         content: "Click on the product anchor",
         trigger: ":iframe a:contains('Test Remove Image')",

@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 
 import { omit } from "@web/core/utils/objects";
-import { stepUtils } from "@web_tour/tour_utils";
 
 export function addMedia() {
     return {
@@ -291,7 +290,10 @@ export function clickOnSave(timeout = 50000, withContains = true) {
             trigger: "body:not(.o_builder_open)",
             timeout,
         },
-        stepUtils.waitIframeIsReady(),
+        {
+            content: "Wait until the iframe is ready",
+            trigger: ":iframe body[is-ready=true]",
+        },
     ];
 }
 

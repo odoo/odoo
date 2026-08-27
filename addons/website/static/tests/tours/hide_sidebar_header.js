@@ -1,4 +1,3 @@
-import { stepUtils } from "@web_tour/tour_utils";
 import { clickOnSave, goToTheme, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -41,7 +40,6 @@ registerWebsitePreviewTour(
             trigger: ".hb-row[data-label='Show Header'] input[type='checkbox']",
             run: "click",
         },
-        stepUtils.waitIframeIsReady(),
         {
             content: "Check that the header has been hidden",
             trigger: ":iframe #wrapwrap:not(:has(:scope > header))",
