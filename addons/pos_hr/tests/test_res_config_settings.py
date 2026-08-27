@@ -2,6 +2,7 @@
 
 import odoo
 
+from odoo import Command
 from odoo.addons.pos_hr.tests.test_frontend import TestPosHrHttpCommon
 from odoo.addons.point_of_sale.tests.test_res_config_settings import TestConfigureShops
 
@@ -20,6 +21,21 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
 
         self.assertListEqual(self.main_pos_config.basic_employee_ids.ids, [])
         self.assertListEqual(self.main_pos_config.minimal_employee_ids.ids, [])
+
+    def test_advanced_employees_kept_on_later_write(self):
+        """
+        Another misc write on the same config, coming from an override,
+        should not drop the previously set advanced_employee_ids.
+        """
+        employees = self.env['hr.employee'].create([{'name': 'Employee A'}, {'name': 'Employee B'}])
+        config = self.main_pos_config.with_context(from_settings_view=True)
+
+        config.write({'advanced_employee_ids': [Command.link(emp.id) for emp in employees]})
+        advanced_employees = config.advanced_employee_ids
+        self.assertTrue(employees <= advanced_employees)
+
+        config.write({})
+        self.assertEqual(config.advanced_employee_ids, advanced_employees)
 
     def test_write_create_employee_if_none(self):
         """This test make sure that the employee set on advanced_employee_ids is from
