@@ -636,9 +636,63 @@ class ProductProduct(models.Model):
                 continue
             products_by_cost_method[product.cost_method].add(product.id)
         for cost_method, product_ids in products_by_cost_method.items():
+<<<<<<< a9cfd1260964af0e81a32436ec6308214a28884d
             products = self_ctx.env['product.product'].browse(product_ids)
+||||||| 06ea713b126486ba1ac3cee54ae291a75c9a3917
+            products = self.env['product.product'].browse(product_ids)
+=======
+            products = self.env['product.product'].sudo().browse(product_ids)
+>>>>>>> 20ec71af98aa9118465bd56ac67a7bf18f12dcc2
             if cost_method == 'standard':
                 continue
+<<<<<<< a9cfd1260964af0e81a32436ec6308214a28884d
+||||||| 06ea713b126486ba1ac3cee54ae291a75c9a3917
+
+            if extra_value is not None and extra_quantity is not None:
+                products_with_incremental_recompute = (
+                    self.env['product.product'].concat(extra_value.keys()) & products
+                ).with_context(
+                    allowed_company_ids=self.env.company.ids
+                )._with_valuation_context()
+                products_with_incremental_recompute.fetch(['qty_available'])
+                for product in products_with_incremental_recompute:
+                    added_value = extra_value.get(product)
+                    added_qty = extra_quantity.get(product)
+                    previous_qty = product.qty_available - added_qty
+                    if (
+                            product.uom_id.compare(previous_qty, 0) > 0
+                            and product.uom_id.compare(product.qty_available, 0) > 0
+                    ):
+                        new_avg_cost = (previous_qty * product.standard_price + added_value) / product.qty_available
+                    else:
+                        new_avg_cost = added_value / added_qty
+                    product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
+                products = products - products_with_incremental_recompute
+
+=======
+
+            if extra_value is not None and extra_quantity is not None:
+                products_with_incremental_recompute = (
+                    self.env['product.product'].concat(extra_value.keys()) & products
+                ).sudo().with_context(
+                    allowed_company_ids=self.env.company.ids
+                )._with_valuation_context()
+                products_with_incremental_recompute.fetch(['qty_available'])
+                for product in products_with_incremental_recompute:
+                    added_value = extra_value.get(product)
+                    added_qty = extra_quantity.get(product)
+                    previous_qty = product.qty_available - added_qty
+                    if (
+                            product.uom_id.compare(previous_qty, 0) > 0
+                            and product.uom_id.compare(product.qty_available, 0) > 0
+                    ):
+                        new_avg_cost = (previous_qty * product.standard_price + added_value) / product.qty_available
+                    else:
+                        new_avg_cost = added_value / added_qty
+                    product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
+                products = products - products_with_incremental_recompute
+
+>>>>>>> 20ec71af98aa9118465bd56ac67a7bf18f12dcc2
             if cost_method == 'fifo':
                 for product in products:
                     qty_available = product._with_valuation_context().qty_available
