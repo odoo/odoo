@@ -37,6 +37,24 @@ def format_product_stock_values(product, uom=None, free_qty=None, cart_qty=None,
     return {}
 
 
+def prepare_cac_widget_data(dm, stock_data, estimated_date):
+    """Format the data exposed to the Click & Collect widget for a given delivery method.
+
+    :param delivery.carrier dm: The delivery method.
+    :param dict stock_data: The product's formatted stock data for this delivery method.
+    :param str estimated_date: The delivery method's estimated delivery date, if any.
+    :return: The formatted delivery method values.
+    :rtype: dict
+    """
+    return {
+        "stock_data": stock_data,
+        "dm_id": dm.id,
+        "dm_name": dm.name,
+        "dm_type": dm.delivery_type,
+        "estimated_date": estimated_date or "",
+    }
+
+
 def calculate_partner_distance(partner1, partner2):
     """Calculate the Haversine distance between two partners.
 

@@ -17,10 +17,11 @@ class ProductTemplate(models.Model):
         res = super()._get_additional_combination_info(
             product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
         )
-        res["in_store_stock_data"] = {}
+        res["in_store_data"] = {}
+        res["delivery_data"] = {}
 
-        if not (product_or_template.is_product_variant and product_or_template.is_storable):
-            # Dynamic/Impossible combination or product whose stock is not tracked.
+        if not (product_or_template.is_product_variant and product_or_template.type == "consu"):
+            # Dynamic/Impossible combination or product that is not a Goods (e.g. a service).
             return res
 
         in_store_dm = website.sudo().in_store_dm_id
@@ -48,19 +49,41 @@ class ProductTemplate(models.Model):
             ("delivery_type", "!=", "in_store"),
         ])
         product_tags = product_or_template.all_product_tag_ids
+        country_id = order_sudo.partner_shipping_id.country_id
+        if not country_id and not self.env.user._is_public():
+            country_id = self.env.user.partner_id.country_id
+        if not country_id:
+            geoip_country_code = website._get_geoip_country_code()
+            if geoip_country_code:
+                country_id = self.env["res.country"].search(
+                    [("code", "=", geoip_country_code)], limit=1
+                )
         valid_delivery_methods = available_delivery_methods_sudo.filtered(
-            lambda dm: not (dm.excluded_tag_ids & product_tags)
+            lambda dm: (
+                not (dm.excluded_tag_ids & product_tags)
+                and (not dm.country_ids or country_id in dm.country_ids)
+            )
         )
         if valid_delivery_methods:
-            res["delivery_stock_data"] = utils.format_product_stock_values(
-                product_sudo,
-                warehouse_id=website.warehouse_id.id,
-                uom=uom,
-                cart_qty=cart_qty,
-                **kwargs,
+            # Suggest the fastest delivery method.
+            estimated_dates_by_dm = {
+                dm.id: dm._get_estimate_delivery_days()[:1] for dm in valid_delivery_methods
+            }
+            fastest_delivery_method = valid_delivery_methods.sorted(
+                key=lambda dm: (not estimated_dates_by_dm[dm.id], estimated_dates_by_dm[dm.id])
+            )[0]
+            fastest_estimated_dates = estimated_dates_by_dm[fastest_delivery_method.id]
+            res["delivery_data"] = utils.prepare_cac_widget_data(
+                fastest_delivery_method,
+                utils.format_product_stock_values(
+                    product_sudo,
+                    warehouse_id=website.warehouse_id.id,
+                    uom=uom,
+                    cart_qty=cart_qty,
+                    **kwargs,
+                ),
+                fastest_estimated_dates[0] if fastest_estimated_dates else "",
             )
-        else:
-            res["delivery_stock_data"] = {}
 
         # If C&C not excluded via tags, prepare the in-store stock data.
         if not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids):
@@ -69,7 +92,7 @@ class ProductTemplate(models.Model):
                 and order_sudo.carrier_id.delivery_type == "in_store"
                 and order_sudo.partner_shipping_id.pickup_location_data
             ):  # Get stock values for the product variant in the selected store.
-                res["in_store_stock_data"] = utils.format_product_stock_values(
+                in_store_stock_data = utils.format_product_stock_values(
                     product_sudo,
                     uom=uom,
                     warehouse_id=order_sudo.partner_shipping_id.pickup_location_data["id"],
@@ -77,7 +100,7 @@ class ProductTemplate(models.Model):
                     **kwargs,
                 )
             else:
-                res["in_store_stock_data"] = utils.format_product_stock_values(
+                in_store_stock_data = utils.format_product_stock_values(
                     product_sudo,
                     uom=uom,
                     free_qty=max(
@@ -87,5 +110,11 @@ class ProductTemplate(models.Model):
                     cart_qty=cart_qty,
                     **kwargs,
                 )
+            in_store_estimated_dates = in_store_dm._get_estimate_delivery_days()
+            res["in_store_data"] = utils.prepare_cac_widget_data(
+                in_store_dm,
+                in_store_stock_data,
+                in_store_estimated_dates[0] if in_store_estimated_dates else "",
+            )
 
         return res

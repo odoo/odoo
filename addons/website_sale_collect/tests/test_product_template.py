@@ -29,8 +29,8 @@ class TestProductTemplate(ClickAndCollectCommon):
                 pricelist=request.pricelist,
                 fiscal_position=request.fiscal_position,
             )
-        self.assertTrue(comb_info["delivery_stock_data"]["in_stock"])
-        self.assertTrue(comb_info["in_store_stock_data"]["in_stock"])
+        self.assertTrue(comb_info["delivery_data"]["stock_data"]["in_stock"])
+        self.assertTrue(comb_info["in_store_data"]["stock_data"]["in_stock"])
 
     def test_click_and_collect_unavailable_for_product_with_excluded_tag(self):
         """Pick Up in Store hidden when product has a tag excluded by the delivery method."""
@@ -46,4 +46,4 @@ class TestProductTemplate(ClickAndCollectCommon):
                 pricelist=request.pricelist,
                 fiscal_position=request.fiscal_position,
             )
-        self.assertFalse(combination_info.get("in_store_stock_data"))
+        self.assertFalse(combination_info.get("in_store_data"))

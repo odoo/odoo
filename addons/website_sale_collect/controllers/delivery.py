@@ -41,6 +41,13 @@ class InStoreDelivery(LocationSelector):
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         order_sudo.set_pickup_location(pickup_location_data)
 
+    @route()
+    def shop_set_delivery_method(self, dm_id=None, **kwargs):
+        """Override of `website_sale` to create the cart if called from product page."""
+        if not request.cart:
+            self.env.website._create_cart()
+        return super().shop_set_delivery_method(dm_id=dm_id, **kwargs)
+
     def _get_additional_delivery_context(self):
         """Override of `website_sale` to include the default pickup location data for in-store
         delivery methods with a single warehouse."""

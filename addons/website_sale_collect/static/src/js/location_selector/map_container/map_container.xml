@@ -7,6 +7,30 @@
                 <span t-out="this.props.taxRecomputationWarning" />
             </div>
         </button>
+
+        <LocationSchedule position="replace">
+            <div class="col-lg-7 d-flex flex-column gap-3 ps-lg-4">
+                <LocationSchedule openingHours="this.selectedLocation.opening_hours"/>
+                <div
+                    t-if="this.selectedLocation.closing_dates and this.selectedLocation.closing_dates.length"
+                    class="alert alert-danger small d-flex gap-2 mb-0 p-2"
+                    role="alert"
+                >
+                    <i class="oi lh-base" data-icon="event_busy" role="img"/>
+                    <span class="d-flex flex-column gap-1">
+                        <t t-foreach="this.selectedLocation.closing_dates" t-as="period" t-key="period_index">
+                            <span t-if="period.date_from === period.date_to">
+                                Exceptional closing on <strong t-out="this.formatClosingDate(period.date_from)"/>
+                            </span>
+                            <span t-else="">
+                                Exceptional closing from <strong t-out="this.formatClosingDate(period.date_from)"/>
+                                to <strong t-out="this.formatClosingDate(period.date_to)"/>
+                            </span>
+                        </t>
+                    </span>
+                </div>
+            </div>
+        </LocationSchedule>
     </t>
 
 </templates>
