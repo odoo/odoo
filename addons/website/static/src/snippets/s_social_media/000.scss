@@ -13,7 +13,7 @@
         margin: 0 .4rem 0 0;
     }
     a {
-        i.oi, span.fa, i.oi, span.oi, .social_media_img {
+        .oi, .social_media_img {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,13 +24,10 @@
                 font-size: calc(var(--oi-icon-size) * 0.4) !important;
             }
             // For non-stack layouts, also control the visual container
-            &.o_sm_custom_size:not(.oi-stack):not(.oi-stack) {
+            &.o_sm_custom_size:not(.oi-stack) {
                 width: var(--oi-icon-size) !important;
                 height: var(--oi-icon-size) !important;
                 line-height: var(--oi-icon-size) !important;
-            }
-            &[class*="o_cc"] {
-                background-color: var(--o-cc-bg);
             }
             &:not(.small_social_icon, .oi-2x, .oi-3x, .oi-4x, .oi-5x) {
                 &.rounded-circle,
