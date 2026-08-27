@@ -444,7 +444,7 @@ export class DomPlugin extends Plugin {
 
         // Insert the nodes.
         let insertedContent = [];
-        let isFirst = true;
+        const firstNode = nodes[0];
         for (const node of nodes) {
             const next = this.findNextInsertionReferenceNode(node, firstLeaf(refNode), marker);
             if (next) {
@@ -455,7 +455,9 @@ export class DomPlugin extends Plugin {
                 const shouldRemoveReference =
                     // Inserting a phrasing container (even nested) in an empty
                     // block should mean replacing that block.
-                    (isFirst && isEmptyBlock(refNode) && findDownTo(node, isPhrasingContainer)) ||
+                    (node === firstNode &&
+                        isEmptyBlock(refNode) &&
+                        findDownTo(node, isPhrasingContainer)) ||
                     // Inserting inline content before a fake line break will
                     // make it real. Remove it.
                     (wasFakeLineBreak && !isBlock(node));
@@ -465,7 +467,6 @@ export class DomPlugin extends Plugin {
                     refNode = marker;
                 }
             }
-            isFirst = false;
         }
         marker.remove();
 
