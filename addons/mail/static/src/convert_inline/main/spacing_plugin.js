@@ -16,6 +16,11 @@ import { ALLOWED_SPACING_UNITS, DIMENSIONS, DIRECTION_VARIANTS } from "../core/u
 const { DESKTOP } = DIMENSIONS;
 
 export const DEFAULT_SPACING_SEQUENCE = 20;
+// TODO EGGMAIL: RTL + language check (vertical)
+const SPACING_INLINE = {
+    start: "left",
+    end: "right",
+};
 
 /**
  * TODO EGGMAIL: handle vertical alignment? (should be done at a higher level),
@@ -58,6 +63,7 @@ export class SpacingPlugin extends Plugin {
         ),
         attribute_rules_processors: [[this.provideAttributeRules.bind(this), SpacingPlugin.id]],
         style_rules_processors: [[this.provideStyleRules.bind(this), SpacingPlugin.id]],
+        fix_raw_style_values_overrides: this.fixSpacingInline.bind(this),
         fix_rem_units_overrides: this.fixSpacingRemUnits.bind(this),
         merge_fact_overrides: this.mergeSpacingInfo.bind(this),
     };
@@ -66,6 +72,56 @@ export class SpacingPlugin extends Plugin {
         this.marginStyleRules = new Rules();
         this.paddingStyleRules = new Rules();
         this.provideSpacingStyleRules();
+    }
+
+    fixSpacingInline({ element, propertyName, propertyInfo, styleInfo }) {
+        if (!propertyName.match(/^(margin|padding)-inline(-(start|end))?$/)) {
+            return false;
+        }
+        const values = this.decomposeSpacingShorthandValue(propertyInfo.value);
+        if (values.length === 0 || values.length > 2) {
+            return false;
+        }
+        const spacing = propertyName.startsWith("margin") ? "margin" : "padding";
+        const ending = propertyName.split("-").at(-1);
+        const sequence = propertyInfo.sequence;
+        const priority = propertyInfo.priority;
+        const indexByPropertyName = styleInfo.getIndexByPropertyName();
+        const index = indexByPropertyName.get(propertyName);
+        styleInfo.delete(propertyName);
+        const fixedStyleInfo = new StyleInfo();
+        if (values.length === 1) {
+            if (ending === "inline") {
+                for (const side in SPACING_INLINE) {
+                    fixedStyleInfo.setProperty(
+                        `${spacing}-${side}`,
+                        values.at(0),
+                        priority,
+                        sequence
+                    );
+                }
+            } else {
+                fixedStyleInfo.setProperty(
+                    `${spacing}-${ending}`,
+                    values.at(0),
+                    priority,
+                    sequence
+                );
+            }
+        } else if (values.length === 2) {
+            let index = 0;
+            for (const side in SPACING_INLINE) {
+                fixedStyleInfo.setProperty(
+                    `${spacing}-${side}`,
+                    values.at(index),
+                    priority,
+                    sequence
+                );
+                index++;
+            }
+        }
+        styleInfo.merge(fixedStyleInfo, { index });
+        return true;
     }
 
     fixSpacingRemUnits({ element, propertyName, propertyInfo, styleInfo }) {
