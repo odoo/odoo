@@ -11,7 +11,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent, moveSelectionOutsideEditor } from "./_helpers/selection";
-import { undo } from "./_helpers/user_actions";
+import { redo, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { getMimetype } from "@html_editor/utils/image";
 
@@ -86,6 +86,31 @@ test("Can undo the image sizing", async () => {
 
     undo(editor);
     expect(queryOne("img").style.width).toBe("");
+});
+
+test("The image size shown in the toolbar updates with undo and redo", async () => {
+    const { editor } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    const sizeToggle = ".o-we-toolbar .dropdown-toggle[title='Resize image']";
+
+    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('100%')");
+    await animationFrame();
+    expect(queryOne(sizeToggle)).toHaveText("100%");
+
+    undo(editor);
+    await animationFrame();
+    expect(queryOne("img").style.width).toBe("");
+    expect(queryOne(sizeToggle)).toHaveText(queryOne("img").getBoundingClientRect().width + "px");
+
+    redo(editor);
+    await animationFrame();
+    expect(queryOne("img").style.width).toBe("100%");
+    expect(queryOne(sizeToggle)).toHaveText("100%");
 });
 
 test("Can change the padding of an image", async () => {
