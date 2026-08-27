@@ -71,15 +71,10 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         Update the cost shares
         Return the delivery
         """
-        stock_location = self.env['stock.location'].search([
-            ('company_id', '=', self.env.company.id),
-            ('name', '=', 'Stock'),
-        ])
-        customer_location = self.env.ref('stock.stock_location_customers')
-        type_out = self.env['stock.picking.type'].search([
-            ('company_id', '=', self.env.company.id),
-            ('name', '=', 'Delivery Orders')])
-        uom_unit = self.env.ref('uom.product_uom_unit')
+        stock_location = self.stock_location
+        customer_location = self.customer_location
+        type_out = self.picking_type_out
+        uom_unit = self.uom
         uom_litre = self.env.ref('uom.product_uom_litre')
 
         component01, component02 = self.env['product.product'].create([{
@@ -154,13 +149,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
                 with kit_form.bom_line_ids.edit(1) as line:
                     line.cost_share = 70
 
-        wizard_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-        wizard = wizard_form.save()
-        wizard.product_return_moves.quantity = 1
-        action = wizard.action_create_returns()
-        return_picking = self.env["stock.picking"].browse(action["res_id"])
-        return_picking.move_ids.move_line_ids.quantity = 1
-        return_picking.button_validate()
+        return_picking = self._make_return(delivery.move_ids, 1).picking_id
 
         self.assertEqual(return_picking.move_ids.filtered(lambda m: m.product_id == component01).value, 25)
         self.assertEqual(return_picking.move_ids.filtered(lambda m: m.product_id == component02).value, 75)
@@ -185,16 +174,12 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         # Setup Currency
         usd = self.env.ref('base.USD')
-        eur = self.env.ref('base.EUR')
-        eur.active = True
+        self._use_multi_currencies(rates=[(Datetime.today(), 2)])
+        eur = self.other_currency
         self.env['res.currency.rate'].create({
             'name': Datetime.today(),
             'currency_id': usd.id,
             'rate': 1})
-        self.env['res.currency.rate'].create({
-            'name': Datetime.today(),
-            'currency_id': eur.id,
-            'rate': 2})
 
         # Create Purchase
         po = self.env['purchase.order'].create({
@@ -230,7 +215,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         """
         eur = self.env.ref('base.EUR')
 
-        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_unit = self.uom
         uom_meter = self.env.ref('uom.product_uom_meter')
 
         kit, component = self.env['product.product'].create([
@@ -356,19 +341,14 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ('company_ids', 'in', self.env.company.id),
         ], limit=1)
         self.category_avco_auto.property_stock_account_production_cost_id = cost_of_production_account.id
-        final_product = self.env['product.product'].create({
-            'name': 'final product',
-            'is_storable': True,
-            'standard_price': 0,
-            'categ_id': self.category_avco_auto.id,
-            'route_ids': [(6, 0, self.env['stock.route'].search([('name', '=', 'Manufacture')], limit=1).ids)],
-        })
+        final_product = self.product_avco_auto
+        final_product.standard_price = 0
         comp_1, comp_2 = self.env['product.product'].create([{
             'name': name,
             'is_storable': True,
             'standard_price': 0,
             'categ_id': self.category_avco_auto.id,
-            'route_ids': [(4, self.env['stock.route'].search([('name', '=', 'Buy')], limit=1).id)],
+            'route_ids': [Command.set(self.warehouse.buy_pull_id.route_id.ids)],
         } for name in ('comp_1', 'comp_2')])
         final_product_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': final_product.product_tmpl_id.id,
@@ -418,14 +398,9 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
                     - C03, cost share 0% (Last line should round to reach 100%)
         Buy and receive 1 kit Giga Kit @ 1000
         """
-        avco_category = self.env['product.category'].create({
-            'name': 'AVCO',
-            'property_cost_method': 'average',
-            'property_valuation': 'real_time',
-        })
         component01, component02, component03, component04, component05 = self.env['product.product'].create([{
             'name': 'Component %s' % name,
-            'categ_id': avco_category.id,
+            'categ_id': self.category_avco_auto.id,
         } for name in ('01', '02', '03', '04', '05')])
 
         giga_kit, super_kit, kit, sub_kit, phantom_kit, triple_kit = self.env['product.product'].create([{
@@ -479,10 +454,9 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
                 Command.create({'product_id': component03.id, 'product_qty': 2, 'cost_share': 0}),
             ],
         }])
-        vendor = self.env['res.partner'].create({'name': 'Super vendor'})
         purchase_orders = self.env['purchase.order'].create([
             {
-                'partner_id': vendor.id,
+                'partner_id': self.vendor.id,
                 'order_line': [
                     Command.create({'product_id': super_kit.id, 'product_qty': qty, 'price_unit': 1000}),
                 ],
@@ -573,11 +547,6 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         Check that the cost share constraint is well behaved with respect to product attribute values:
         the sum of the cost share's of the bom of any product variant should either be 0% or 100%
         """
-        avco_category = self.env['product.category'].create({
-            'name': 'AVCO',
-            'property_cost_method': 'average',
-            'property_valuation': 'real_time',
-        })
         attributes = self.env['product.attribute'].create([
             {'name': name} for name in ('Size', 'Color')
         ])
@@ -597,7 +566,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         } for attribute in attributes])
         self.assertEqual(product_template.product_variant_count, 4)
         c1, c2, c3 = self.env['product.product'].create([
-            {'name': f'Comp {i + 1}', 'categ_id': avco_category.id} for i in range(3)
+            {'name': f'Comp {i + 1}', 'categ_id': self.category_avco_auto.id} for i in range(3)
         ])
 
         # Total cost share is 100% but in reality it is either 25% or 75% depending on the variant -> Invalid
@@ -879,11 +848,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         """
         Ensure the cost share is well computed when purchasing a kit with optional or variant specific lines
         """
-        avco_category = self.env['product.category'].create({
-            'name': 'AVCO',
-            'property_cost_method': 'average',
-            'property_valuation': 'real_time',
-        })
+        avco_category = self.category_avco_auto
         size_attribute = self.env['product.attribute'].create({'name': 'Size'})
         self.env['product.attribute.value'].create([{
             'name': name,
@@ -920,9 +885,8 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ]
         })
         # Purchase one variant for each sizes
-        vendor = self.env['res.partner'].create({'name': 'Super vendor'})
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': vendor.id,
+            'partner_id': self.vendor.id,
             'order_line': [
                 Command.create({'product_id': variant.id, 'product_qty': 1, 'price_unit': 1000}) for variant in product_template.product_variant_ids
             ],
@@ -1002,9 +966,8 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         # Upload the associated bill and process the valuation closing
         self._create_bill(kit, 1, 100)
-        correction_data = receipt.move_ids.company_id.action_close_stock_valuation()
+        closing_move = self._close()
         # Check that correction data's counter balance the move values rounding issue
-        closing_move = self.env['account.move'].browse(correction_data['res_id'])
         valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
         variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
         self.assertRecordValues(valuation_aml | variation_aml, [
