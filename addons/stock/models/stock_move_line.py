@@ -1460,7 +1460,7 @@ class StockMoveLine(models.Model):
         """Extend extra conditions here"""
         return True
 
-    def _is_new_potential_line_extra(self, potential_line):
+    def _is_new_potential_line_extra(self, potential_line, picking_type):
         """Extend extra conditions here"""
         return True
 
@@ -1621,7 +1621,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
                     or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, potential_line)) \
-                    or not line._is_new_potential_line_extra(potential_line):
+                    or not line._is_new_potential_line_extra(potential_line, picking_type):
                         continue
 
                     line_to_lines[line].add(potential_line.id)
