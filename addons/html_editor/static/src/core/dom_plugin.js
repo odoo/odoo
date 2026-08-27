@@ -184,17 +184,20 @@ export class DomPlugin extends Plugin {
 
                 // A. Unwrap the first and last blocks if needed.
                 const isFirstOrLastBlock = wasBlock && (index === 0 || index === nodes.length - 1);
+                let shouldUnwrap = false;
                 // Empty blocks would disappear if unwrapped.
-                let shouldUnwrap = isFirstOrLastBlock && !isEmptyBlock(node);
-                /** Inline content may arrive wrapped in a single base container
-                 * (@see wrapInlinesInBlocks call in { @see prepareClipboardData
-                 * }). In that case the wrapper is not meaningful structure.
-                 * eg, `p(a[]c) + p(b) = p(ab[]c) ≠ p(a)p(b)p(c)` */
-                const isSingleBaseContainer =
-                    nodes.length === 1 &&
-                    this.dependencies.baseContainer.isCandidateForBaseContainer(node);
-                if (shouldUnwrap && !isSingleBaseContainer) {
-                    if (nodes.length > 1 && isSelectionAtEdge) {
+                if (isFirstOrLastBlock && !isEmptyBlock(node)) {
+                    if (
+                        nodes.length === 1 &&
+                        this.dependencies.baseContainer.isCandidateForBaseContainer(node)
+                    ) {
+                        // Inline content may arrive wrapped in a single base
+                        // container (see `wrapInlinesInBlocks` call in
+                        // `prepareClipboardData`). In that case the wrapper is
+                        // not meaningful structure.
+                        // eg, `p(a[]c) + p(b) = p(ab[]c) ≠ p(a)p(b)p(c)`
+                        shouldUnwrap = true;
+                    } else if (nodes.length > 1 && isSelectionAtEdge) {
                         // At the edge of a block, the first inserted block has
                         // no left-side content to merge with.
                         // eg, `h1([]c) + p(a)p(b) = p(a)h1(bc) ≠ h1(abc)`
