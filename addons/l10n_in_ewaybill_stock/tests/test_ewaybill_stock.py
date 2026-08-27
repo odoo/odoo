@@ -42,6 +42,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
 
     @freeze_time('2024-04-26')
     def test_ewaybill_stock(self):
+        self.env.user.group_ids = [Command.set([self.env.ref('stock.group_stock_manager').id])]
         delivery_picking = self._create_stock_picking()
         ewaybill = self.env['l10n.in.ewaybill'].create({
             'picking_id': delivery_picking.id,
@@ -54,6 +55,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
             'fiscal_position_id': self.fp_in_inter_state.id,
         }])
         ewaybill.fiscal_position_id = self.fp_in_inter_state
+        self.env.user.group_ids = [Command.set([self.env.ref('stock.group_stock_user').id])]
         self.assertEqual(ewaybill.move_ids[0].ewaybill_tax_ids, self.igst_sale_5)
         expected_json = {
             'supplyType': 'O',
