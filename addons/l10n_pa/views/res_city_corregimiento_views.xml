@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_city_corregimiento_view_list" model="ir.ui.view">
+        <field name="name">l10n_pa.res.city.corregimiento.list</field>
+        <field name="model">l10n_pa.res.city.corregimiento</field>
+        <field name="arch" type="xml">
+            <list string="Corregimientos" editable="top" multi_edit="1">
+                <field name="name"/>
+                <field name="l10n_pa_code"/>
+                <field name="city_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="res_city_corregimiento_view_form" model="ir.ui.view">
+        <field name="name">l10n_pa.res.city.corregimiento.form</field>
+        <field name="model">l10n_pa.res.city.corregimiento</field>
+        <field name="arch" type="xml">
+            <form string="Corregimiento">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Bella Vista"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="l10n_pa_code" placeholder="e.g. 8-8-7"/>
+                        </group>
+                        <group>
+                            <field name="city_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_city_corregimiento_view_search" model="ir.ui.view">
+        <field name="name">l10n_pa.res.city.corregimiento.search</field>
+        <field name="model">l10n_pa.res.city.corregimiento</field>
+        <field name="arch" type="xml">
+            <search string="Search Corregimiento">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('l10n_pa_code', 'ilike', self)]"/>
+                <field name="city_id"/>
+                <group>
+                    <filter name="group_by_city" string="District" context="{'group_by': 'city_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_res_city_corregimiento" model="ir.actions.act_window">
+        <field name="name">Corregimientos</field>
+        <field name="res_model">l10n_pa.res.city.corregimiento</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a corregimiento
+            </p><p>
+                Corregimientos are the subdivisions of the Panamanian districts, each one
+                identified by its DGI code.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_res_city_corregimiento"
+        name="Corregimiento (PA)"
+        action="action_res_city_corregimiento"
+        parent="contacts.menu_localisation"
+        sequence="3"/>
+
+</odoo>
