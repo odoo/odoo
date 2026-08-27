@@ -9264,7 +9264,7 @@ test(`list view with nested groups`, async () => {
         "Value 1 4 records",
         "Value 2 2 records",
     ]);
-    expect(`.o_group_name .oi.arrow_right`).toHaveCount(2);
+    expect(`.o_group_name .oi[data-icon='arrow_right']`).toHaveCount(2);
     expect(`.o_group_header:eq(0) span:first`).toHaveStyle({ "--o-list-group-level": "0" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual(["16", "14"]);
 
@@ -9278,7 +9278,7 @@ test(`list view with nested groups`, async () => {
         "yop 1 record",
         "Value 2 2 records",
     ]);
-    expect(`.o_group_name .oi.arrow_down`).toHaveCount(1);
+    expect(`.o_group_name .oi[data-icon='arrow_drop_down']`).toHaveCount(1);
     expect(`.o_group_header:eq(1) span:first`).toHaveStyle({ "--o-list-group-level": "1" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual([
         "16",
@@ -9310,7 +9310,7 @@ test(`list view with nested groups`, async () => {
     await contains(`.o_group_header:eq(1)`).click();
     expect.verifySteps([]);
     expect(`.o_group_header`).toHaveCount(2);
-    expect(`.o_group_name .oi.arrow_right`).toHaveCount(2);
+    expect(`.o_group_name .oi[data-icon='arrow_right']`).toHaveCount(2);
     expect(`.o_data_row`).toHaveCount(0);
 });
 
