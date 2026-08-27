@@ -35,7 +35,7 @@
 </html>
     </template>
 
-    <template id="web.frontend_layout" name="Frontend Layout" inherit_id="web.layout" primary="True">
+    <template id="web.frontend_layout_base" name="Frontend Layout Base" inherit_id="web.layout" primary="True">
       <xpath expr="//head/meta[last()]" position="after">
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
       </xpath>
@@ -84,6 +84,16 @@
                 </footer>
             </div>
         </xpath>
+    </template>
+
+    <!-- Layout dispatcher: modules providing a richer frontend layout override
+         `frontend_layout_template` to substitute their own layout for every
+         caller at rendering time. -->
+    <template id="web.frontend_layout" name="Frontend Layout">
+        <t t-set="frontend_layout_template" t-value="'web.frontend_layout_base'"/>
+        <t t-call="{{ frontend_layout_template }}">
+            <t t-out="0"/>
+        </t>
     </template>
 
     <template id="brand_promotion_message" name="Brand Promotion Message">

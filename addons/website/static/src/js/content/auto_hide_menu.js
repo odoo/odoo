@@ -340,6 +340,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const header = document.querySelector("header#top");
     if (header) {
         const topMenu = header.querySelector(".top_menu");
+        // This runs on every frontend page. Portal pages rendered without a
+        // website layout still have a `header#top` (bare logo header) but no
+        // `.top_menu`, so bail out when it is absent.
+        if (!topMenu) {
+            return;
+        }
         const unfoldable = ".divider, .divider ~ li, .o_no_autohide_item, .js_language_selector";
         if (
             !topMenu.querySelector(`:scope > :not(${unfoldable})`) ||

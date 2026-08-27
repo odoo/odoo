@@ -78,7 +78,13 @@
     </li>
 </template>
 
-<template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
+<template id="frontend_layout" inherit_id="web.frontend_layout">
+    <xpath expr="//t[@t-set='frontend_layout_template']" position="after">
+        <t t-if="website" t-set="frontend_layout_template" t-value="'website.layout'"/>
+    </xpath>
+</template>
+
+<template id="layout" name="Main layout" inherit_id="portal.frontend_layout" primary="True">
     <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
             'lang': lang.replace('_', '-'),
@@ -1745,10 +1751,15 @@
 
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
-    <xpath expr="t[@t-call]" position="replace">
-        <t t-call="website.layout" head="head" disable_opengraph="disable_opengraph">
+    <!-- Wrap the login inside the website chrome, but only when a website is
+         available; otherwise keep the plain frontend layout of `web`. -->
+    <xpath expr="t[@t-call]" position="after">
+        <t t-if="website" t-call="website.layout" head="head" disable_opengraph="disable_opengraph">
             <div class="oe_website_login_container" t-out="0"/>
         </t>
+    </xpath>
+    <xpath expr="t[@t-call]" position="attributes">
+        <attribute name="t-if">not website</attribute>
     </xpath>
 </template>
 

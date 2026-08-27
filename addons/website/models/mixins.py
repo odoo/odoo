@@ -293,6 +293,10 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         :rtype: list[dict]
         """
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        if not website:
+            # Rendered outside of any website (e.g. an error page served on a
+            # host that matches no website): nothing to describe.
+            return []
         return [website._prepare_jsonld_vals()]
 
     def _render_jsonld(self, is_detail_page=False):

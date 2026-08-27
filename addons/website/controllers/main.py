@@ -192,6 +192,9 @@ class Website(Home):
         Most DBs will just have a website.page with '/' as URL and keep the
         homepage_url setting empty.
         """
+        if not self.env.website:
+            return super().index(**kw)
+
         homepage_url = self.env.website.homepage_url
         if homepage_url and homepage_url != '/':
             request.reroute(homepage_url)
@@ -252,7 +255,9 @@ class Website(Home):
 
     @http.route('/website/get_current_website_id', type='jsonrpc', auth="user", readonly=True)
     def get_current_website(self):
-        return self.env.context.get('host_id')
+        # The host may match no website at all (e.g. a domain configured on no
+        # website); the backend still needs one to edit, fallback on the default.
+        return self.env.context.get('host_id') or self.env.ref('base.default_website').id
 
     @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, readonly=True)
     def client_action_redirect(self, path='', **kw):
