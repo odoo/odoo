@@ -385,3 +385,31 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
         with MockRequest(self.env, website=self.website, sale_order_id=self.sale_order.id):
             minor_amount = websiteSaleDeliveryController.express_checkout_shipping_address_compute_taxes()
             self.assertEqual(minor_amount, expected_amount * 100)
+
+    def test_express_checkout_shipping_address_without_name(self):
+        """ Test that the anonymous express checkout partner is renamed when the express checkout
+            form doesn't send any shipping name.
+        """
+        self.sale_order.partner_id = self.user_demo.partner_id.id
+        session = self.authenticate(self.user_demo.login, self.user_demo.login)
+        session['sale_order_id'] = self.sale_order.id
+        root.session_store.save(session)
+        self.make_jsonrpc_request(
+            WebsiteSaleDeliveryController._express_checkout_delivery_route, params={
+                'partial_delivery_address': dict(self.express_checkout_anonymized_shipping_values),
+            }
+        )
+        self.assertIn(self.sale_order.name, self.sale_order.partner_shipping_id.name)
+
+        shipping_address = dict(self.express_checkout_shipping_values)
+        del shipping_address['name']
+        self.make_jsonrpc_request(
+            WebsiteSale._express_checkout_route, params={
+                'billing_address': dict(self.express_checkout_billing_values),
+                'shipping_address': shipping_address,
+            }
+        )
+        self.assertEqual(
+            self.sale_order.partner_shipping_id.name,
+            self.express_checkout_billing_values['name'],
+        )
