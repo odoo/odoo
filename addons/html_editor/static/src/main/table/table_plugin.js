@@ -54,6 +54,7 @@ function isUnremovableTableComponent(node, root) {
 
 /**
  * @typedef { Object } TableShared
+ * @property { TablePlugin['insertTable'] } insertTable
  * @property { TablePlugin['addColumn'] } addColumn
  * @property { TablePlugin['addRow'] } addRow
  * @property { TablePlugin['turnIntoHeader'] } turnIntoHeader

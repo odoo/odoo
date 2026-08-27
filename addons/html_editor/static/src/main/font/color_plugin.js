@@ -38,6 +38,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @property { ColorPlugin['removeAllColor'] } removeAllColor
  * @property { ColorPlugin['getElementColors'] } getElementColors
  * @property { ColorPlugin['applyColor'] } applyColor
+ * @property { ColorPlugin['getColorCombination'] } getColorCombination
  * @property { ColorPlugin['requestColor'] } requestColor
  * @property { ColorPlugin['getActiveColorInfo'] } getActiveColorInfo
  */

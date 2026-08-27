@@ -13,6 +13,7 @@ import { withSequence } from "../utils/resource";
  * @typedef { Object } FeffShared
  * @property { FeffPlugin['addFeff'] } addFeff
  * @property { FeffPlugin['removeFeffs'] } removeFeffs
+ * @property { FeffPlugin['surroundWithFeffs'] } surroundWithFeffs
  */
 
 /**
