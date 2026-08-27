@@ -202,7 +202,7 @@ export class ClosePosPopup extends Component {
         return true;
     }
     async closeSession() {
-        this.pos._resetConnectedCashier();
+        this.pos.accessRight.resetCashier();
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
         if (!syncSuccess) {

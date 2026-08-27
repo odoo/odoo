@@ -39,15 +39,6 @@ patch(PosStore.prototype, {
         }
         return super.openOrder;
     },
-    get defaultPage() {
-        if (this.config.module_pos_restaurant && this.config.default_screen === "tables") {
-            return {
-                page: "FloorScreen",
-                params: {},
-            };
-        }
-        return super.defaultPage;
-    },
     saveIfOrder() {
         if (!this.config.module_pos_restaurant) {
             return super.saveIfOrder(...arguments);

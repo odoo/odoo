@@ -22,7 +22,7 @@ test("selectCashier", async () => {
     const result = await comp.selectCashier();
     expect(result.name).toBe("Employee1");
     expect(result.id).toBe(3);
-    store.setCashier(result);
+    store.accessRight.setCashier(result);
     const value = store.accessRight.loggedCashier;
     expect(value.name).toBe("Employee1");
     expect(value.id).toBe(3);

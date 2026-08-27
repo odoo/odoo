@@ -9,7 +9,7 @@ definePosModels();
 test("showCreateProductButtonWithAdmin", async () => {
     const store = await setupPosEnv();
     const admin = store.models["hr.employee"].get(2);
-    store.setCashier(admin);
+    store.accessRight.setCashier(admin);
     const comp = await mountWithCleanup(Navbar, {});
     expect(comp.showCreateProductButton).toBe(true);
 });
@@ -17,13 +17,13 @@ test("showCreateProductButtonWithAdmin", async () => {
 test("showCreateProductButtonWithNonAdmin", async () => {
     const store = await setupPosEnv();
     const cashier = store.models["hr.employee"].get(3);
-    store.setCashier(cashier);
+    store.accessRight.setCashier(cashier);
     const comp = await mountWithCleanup(Navbar, {});
     expect(comp.showCreateProductButton).toBe(false);
     const restrictive = store.models["hr.employee"].get(4);
-    store.setCashier(restrictive);
+    store.accessRight.setCashier(restrictive);
     expect(comp.showCreateProductButton).toBe(false);
     const supervised = store.models["hr.employee"].get(4);
-    store.setCashier(supervised);
+    store.accessRight.setCashier(supervised);
     expect(comp.showCreateProductButton).toBe(false);
 });

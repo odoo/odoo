@@ -8,7 +8,7 @@ test("getCashierName", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const emp = store.models["hr.employee"].get(3);
-    store.setCashier(emp);
+    store.accessRight.setCashier(emp);
     const posOrder = store.getOrder();
     expect(posOrder.getCashierName()).toBe("Employee1");
 });

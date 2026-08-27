@@ -6,7 +6,7 @@ definePosModels();
 
 test("checkPin", async () => {
     const store = await setupPosEnv();
-    store.resetCashier();
+    store.accessRight.resetCashier();
     const emp = store.models["hr.employee"].get(2);
     const result = await store.accessRight.checkPin(emp, "1234");
     expect(result).toBe(true);
@@ -14,16 +14,16 @@ test("checkPin", async () => {
 
 test("selectCashier", async () => {
     const store = await setupPosEnv();
-    store.resetCashier();
+    store.accessRight.resetCashier();
     const emp = store.models["hr.employee"].get(2);
     // with correct pin
     const selected = await store.accessRight.selectCashier("1234", true);
     expect(selected.id).toBe(emp.id);
-    expect(store.hasLoggedIn).toBe(true);
+    expect(store.accessRight.hasLoggedIn()).toBe(true);
     expect(store.accessRight.loggedCashier.id).toBe(selected.id);
 
     // with wrong pin
-    store.resetCashier();
+    store.accessRight.resetCashier();
     const result = await store.accessRight.selectCashier("wrongpin", true);
     expect(result).toBeEmpty();
 });

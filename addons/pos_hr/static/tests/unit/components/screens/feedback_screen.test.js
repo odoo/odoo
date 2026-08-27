@@ -9,12 +9,12 @@ test("canEditPayment", async () => {
     const order = await getFilledOrder(store);
     order.state = "paid";
     const admin = store.models["hr.employee"].get(2);
-    store.setCashier(admin);
+    store.accessRight.setCashier(admin);
     expect(store.canEditPayment(order)).toBe(true);
     const emp = store.models["hr.employee"].get(3);
-    store.setCashier(emp);
+    store.accessRight.setCashier(emp);
     expect(store.canEditPayment(order)).toBe(false);
     const supervised = store.models["hr.employee"].get(5);
-    store.setCashier(supervised);
+    store.accessRight.setCashier(supervised);
     expect(store.canEditPayment(order)).toBe(false);
 });

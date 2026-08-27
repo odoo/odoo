@@ -1,35 +1,53 @@
-import { Plugin } from "@odoo/owl";
+import { Plugin, usePlugin, signal } from "@odoo/owl";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 
 export class PosAccessRightPlugin extends Plugin {
+    notification = usePlugin(NotificationPlugin);
+    dialog = usePlugin(DialogPlugin);
+    router = usePlugin(PosRouterPlugin);
+    hasLoggedIn = signal(false);
+
     setup() {
         this.cashier = null;
     }
-    init({ pos }) {
-        this.pos = pos;
+    init({ data }) {
+        this.data = data;
     }
-    cashierLogIn() {
-        const selectedScreen =
-            this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
-                ? this.pos.previousScreen
-                : this.pos.defaultPage;
-        const order = this.pos.getOrder();
-        if (!order && selectedScreen.page === "ProductScreen") {
-            this.pos.addNewOrder();
+
+    setCashier(user) {
+        if (!user) {
+            return;
         }
-        const params =
-            selectedScreen.page === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
-        this.pos.navigate(selectedScreen.page, params);
-        this.pos.hasLoggedIn = true;
+
+        this.cashier = user;
+        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
     }
+
+    resetCashier() {
+        this.cashier = false;
+        sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
+    }
+
+    get config() {
+        return this.data.models["pos.config"].get(odoo.pos_config_id);
+    }
+
+    get session() {
+        return this.data.models["pos.session"].get(odoo.pos_session_id);
+    }
+
     /**
      * Return the current cashier (in this case, the user)
      * @returns {name: string, id: int, role: string}
      */
     get loggedCashier() {
-        return this.pos.user;
+        return this.data.models["res.users"].getFirst();
     }
     get cashierUserId() {
-        return this.pos.user?.id;
+        const user = this.data.models["res.users"].getFirst();
+        return user.id;
     }
     // Overridden in `pos_planning` module to enrich employees with planning info (subtitles, sorting, etc.)
     getCashierSelectionList(employees) {
@@ -140,7 +158,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disablePriceButton() {
-        return true;
+        return false;
     }
 
     get canCancelOrder() {

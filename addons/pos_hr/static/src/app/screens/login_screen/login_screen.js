@@ -1,3 +1,5 @@
+/* global Sha1 */
+
 import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
@@ -17,9 +19,19 @@ patch(LoginScreen.prototype, {
             useAutofocus({ ref: this.autofocusRef });
             useListener(window, "keypress", async (ev) => {
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {
-                    await this.selectCashier(this.state.pin, true);
+                    await this.pos.accessRight.selectCashier(this.state.pin, true);
                 }
             });
+
+            this.pos.barcodeReader?.register(
+                {
+                    cashier: this.barcodeCashierAction.bind(this),
+                },
+                // exclusive
+                this.pos &&
+                    this.pos.router.currentScreen() === "LoginScreen" &&
+                    this.pos.config.module_pos_hr
+            );
         }
 
         onWillUnmount(() => {
@@ -27,8 +39,22 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async selectCashier(pin = false, login = false, list = false) {
-        return await this.pos.accessRight.selectCashier(pin, login, list);
+    async barcodeCashierAction(code) {
+        if (!this.config.module_pos_hr) {
+            return;
+        }
+        const employee = this.data.models["hr.employee"].find(
+            (emp) => emp._barcode === Sha1.hash(code.code)
+        );
+        if (
+            employee &&
+            employee !== this.loggedCashier &&
+            (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
+        ) {
+            this.pos.accessRight.setCashier(employee);
+            this.cashierLogIn();
+        }
+        return employee;
     },
     openRegister() {
         if (this.pos.config.module_pos_hr) {
@@ -47,7 +73,7 @@ patch(LoginScreen.prototype, {
             this.state.pin = "";
             this.pos.login = false;
         } else {
-            const employee = await this.selectCashier();
+            const employee = await this.pos.accessRight.selectCashier();
             if (employee && employee.user_id?.id === this.pos.user.id) {
                 super.clickBack();
                 return;

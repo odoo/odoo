@@ -248,9 +248,7 @@ export class ProductScreen extends Component {
             {
                 value: "price",
                 text: _t("Price"),
-                disabled:
-                    !this.pos.cashierHasPriceControlRights() ||
-                    !this.pos.accessRight.disablePriceButton,
+                disabled: this.pos.accessRight.disablePriceButton,
             },
             {
                 ...BACKSPACE,

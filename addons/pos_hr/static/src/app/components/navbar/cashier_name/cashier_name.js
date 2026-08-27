@@ -20,13 +20,10 @@ patch(CashierName.prototype, {
         }
         return super.cssClass;
     },
-    async selectCashier(pin = false, login = false, list = false) {
-        return await this.pos.accessRight.selectCashier(...arguments);
-    },
     async onCashierClick() {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
-        return this.selectCashier(false, true, true);
+        return this.pos.accessRight.selectCashier(false, true, true);
     },
 });

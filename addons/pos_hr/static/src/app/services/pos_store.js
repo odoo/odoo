@@ -8,7 +8,7 @@ patch(PosStore.prototype, {
         await super.setup(...arguments);
         if (this.config.module_pos_hr) {
             this.login = Boolean(odoo.from_backend) && !this.config.module_pos_hr;
-            if (!this.hasLoggedIn) {
+            if (!this.accessRight.hasLoggedIn()) {
                 this.navigate("LoginScreen");
             }
         }
@@ -31,9 +31,9 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_hr) {
             const savedCashier = this._getConnectedCashier();
             if (savedCashier) {
-                this.setCashier(savedCashier);
+                this.accessRight.setCashier(savedCashier);
             } else {
-                this.resetCashier();
+                this.accessRight.resetCashier();
             }
         } else {
             super.checkPreviousLoggedCashier(...arguments);
@@ -43,7 +43,7 @@ patch(PosStore.prototype, {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
             const saved_cashier = this._getConnectedCashier();
-            this.hasLoggedIn = saved_cashier ? true : false;
+            this.accessRight.hasLoggedIn.set(saved_cashier ? true : false);
         }
     },
     createNewOrder() {
@@ -54,28 +54,6 @@ patch(PosStore.prototype, {
         }
 
         return order;
-    },
-    setCashier(employee) {
-        super.setCashier(employee);
-
-        if (this.config.module_pos_hr) {
-            if (!this.data.network.offline && this.session?.id) {
-                this.data.write("pos.session", [this.session.id], {
-                    employee_id: employee.id,
-                });
-            } else {
-                this.employeeBuffer.push(employee);
-            }
-            const o = this.getOrder();
-            if (o && !o.getOrderlines().length) {
-                // Order without lines can be considered to be un-owned by any employee.
-                // We set the cashier on that order to the currently set employee.
-                o.employee_id = employee;
-            }
-            if (!this.cashierHasPriceControlRights() && this.numpadMode === "price") {
-                this.numpadMode = "quantity";
-            }
-        }
     },
     addLineToCurrentOrder(vals, opt = {}, configure = true) {
         vals.employee_id = false;
@@ -131,7 +109,7 @@ patch(PosStore.prototype, {
      */
     shouldShowOpeningControl() {
         if (this.config.module_pos_hr) {
-            return super.shouldShowOpeningControl(...arguments) && this.hasLoggedIn;
+            return super.shouldShowOpeningControl(...arguments) && this.accessRight.hasLoggedIn();
         }
         return super.shouldShowOpeningControl(...arguments);
     },

@@ -10,53 +10,25 @@ import { CashierSelectionPopup } from "@pos_hr/app/components/popups/cashier_sel
 patch(PosAccessRightPlugin.prototype, {
     setup() {
         super.setup(...arguments);
-    },
-    init() {
-        super.init(...arguments);
-        this.pos.barcodeReader?.register(
-            {
-                cashier: this.barcodeCashierAction.bind(this),
-            },
-            // exclusive
-            this.pos &&
-                this.pos.router.currentScreen() === "LoginScreen" &&
-                this.pos.config.module_pos_hr
-        );
-    },
-    async barcodeCashierAction(code) {
-        if (!this.pos.config.module_pos_hr) {
-            return;
-        }
-        const employee = this.pos.models["hr.employee"].find(
-            (emp) => emp._barcode === Sha1.hash(code.code)
-        );
-        if (
-            employee &&
-            employee !== this.loggedCashier &&
-            (!employee._pin || (await this.checkPin(employee)))
-        ) {
-            this.pos.setCashier(employee);
-            this.cashierLogIn();
-        }
-        return employee;
+        this.employeeBuffer = [];
     },
     async checkPin(employee, pin = false) {
         let inputPin = pin;
         if (!pin) {
-            inputPin = await makeAwaitable(this.pos.dialog, NumberPopup, {
+            inputPin = await makeAwaitable(this.dialog, NumberPopup, {
                 formatDisplayedValue: (x) => x.replace(/./g, "•"),
                 title: _t("Password?"),
             });
         } else {
             if (employee._pin !== Sha1.hash(inputPin)) {
-                inputPin = await makeAwaitable(this.pos.dialog, NumberPopup, {
+                inputPin = await makeAwaitable(this.dialog, NumberPopup, {
                     formatDisplayedValue: (x) => x.replace(/./g, "•"),
                     title: _t("Password?"),
                 });
             }
         }
         if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
-            this.pos.notification.add(_t("PIN not found"), {
+            this.notification.add(_t("PIN not found"), {
                 type: "warning",
                 title: _t(`Wrong PIN`),
             });
@@ -64,20 +36,33 @@ patch(PosAccessRightPlugin.prototype, {
         }
         return true;
     },
+    setCashier(employee) {
+        super.setCashier(employee);
+
+        if (this.config.module_pos_hr) {
+            if (!this.data.network.offline && this.session?.id) {
+                this.data.write("pos.session", [this.session.id], {
+                    employee_id: employee.id,
+                });
+            } else {
+                this.employeeBuffer.push(employee);
+            }
+        }
+    },
     async selectCashier(pin = false, login = false, list = false) {
-        if (!this.pos.config.module_pos_hr) {
+        if (!this.config.module_pos_hr) {
             return;
         }
 
         const wrongPinNotification = () => {
-            this.pos.notification.add(_t("PIN not found"), {
+            this.notification.add(_t("PIN not found"), {
                 type: "warning",
                 title: _t(`Wrong PIN`),
             });
         };
 
         let employee = false;
-        const allEmployees = this.pos.models["hr.employee"].filter(
+        const allEmployees = this.data.models["hr.employee"].filter(
             (employee) => employee.id !== this.loggedCashier?.id
         );
         const pinMatchEmployees = allEmployees.filter(
@@ -85,7 +70,7 @@ patch(PosAccessRightPlugin.prototype, {
         );
 
         if (!pinMatchEmployees.length && !pin) {
-            await ask(this.pos.dialog, {
+            await ask(this.dialog, {
                 title: _t("No Cashiers"),
                 body: _t("There is no cashier available."),
             });
@@ -96,7 +81,7 @@ patch(PosAccessRightPlugin.prototype, {
         }
 
         if (pinMatchEmployees.length > 1 || list) {
-            employee = await makeAwaitable(this.pos.dialog, CashierSelectionPopup, {
+            employee = await makeAwaitable(this.dialog, CashierSelectionPopup, {
                 currentCashier: this.loggedCashier || undefined,
                 employees: this.getCashierSelectionList(allEmployees),
             });
@@ -122,39 +107,35 @@ patch(PosAccessRightPlugin.prototype, {
         }
 
         if (login && employee) {
-            this.pos.hasLoggedIn = true;
-            this.pos.setCashier(employee);
+            this.hasLoggedIn.set(true);
+            this.setCashier(employee);
         }
 
-        const currentScreen = this.pos.router.currentScreen();
+        const currentScreen = this.router.currentScreen();
         if (currentScreen === "LoginScreen" && login && employee) {
-            const selectedScreen = this.pos.defaultPage;
+            const selectedScreen = this.router.defaultPage;
             const props = {
                 ...selectedScreen?.params,
-                orderUuid: this.pos.selectedOrderUuid,
             };
-            if (selectedScreen.page === "FloorScreen") {
-                delete props.orderUuid;
-            }
-            this.pos.navigate(selectedScreen.page, props);
+            this.router.navigate(selectedScreen.page, props);
         }
 
         return employee;
     },
     get loggedCashier() {
-        if (this.pos.config.module_pos_hr) {
+        if (this.config.module_pos_hr) {
             return this.cashier;
         }
         return super.loggedCashier;
     },
     get cashierUserId() {
-        if (this.pos.config.module_pos_hr) {
+        if (this.config.module_pos_hr) {
             return this.cashier.user_id ? this.cashier.user_id : null;
         }
         return super.cashierUserId;
     },
     hasEmployeeRole(roles = []) {
-        if (!this.pos.config.module_pos_hr) {
+        if (!this.config.module_pos_hr) {
             return true;
         }
         return roles.includes(this.cashier?._role);
@@ -235,7 +216,7 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get disablePriceButton() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+        return !this.config.restrict_price_control && !this.hasEmployeeRole(["manager", "cashier"]);
     },
     get canCancelOrder() {
         return this.hasEmployeeRole(["manager", "cashier"]);

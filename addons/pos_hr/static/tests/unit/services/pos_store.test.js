@@ -15,7 +15,7 @@ test("createNewOrder", async () => {
 test("employeeIsAdmin", async () => {
     const store = await setupPosEnv();
     const emp = store.models["hr.employee"].get(2);
-    store.setCashier(emp);
+    store.accessRight.setCashier(emp);
     expect(store.employeeIsAdmin).toBe(true);
 });
 test("_getConnectedCashier", async () => {
@@ -26,30 +26,30 @@ test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();
     store.models["pos.session"].getFirst().state = "opening_control";
     const emp = store.models["hr.employee"].get(2);
-    store.setCashier(emp);
-    store.hasLoggedIn = true;
+    store.accessRight.setCashier(emp);
+    store.accessRight.hasLoggedIn.set(true);
     expect(store.shouldShowOpeningControl()).toBe(true);
 });
 test("hasProductCreationAccess", async () => {
     const store = await setupPosEnv();
     const admin = store.models["hr.employee"].get(2);
-    store.setCashier(admin);
+    store.accessRight.setCashier(admin);
     expect(await store.hasProductCreationAccess).toBe(true);
     const emp = store.models["hr.employee"].get(3);
-    store.setCashier(emp);
+    store.accessRight.setCashier(emp);
     expect(await store.hasProductCreationAccess).toBe(false);
     const restrictive = store.models["hr.employee"].get(4);
-    store.setCashier(restrictive);
+    store.accessRight.setCashier(restrictive);
     expect(await store.hasProductCreationAccess).toBe(false);
     const supervised = store.models["hr.employee"].get(5);
-    store.setCashier(supervised);
+    store.accessRight.setCashier(supervised);
     expect(await store.hasProductCreationAccess).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const admin = store.models["hr.employee"].get(2);
-    store.setCashier(admin);
+    store.accessRight.setCashier(admin);
     const product_id = store.models["product.product"].get(5);
     const result = await store.addLineToCurrentOrder({
         product_id: product_id,
@@ -62,7 +62,7 @@ test("handleUrlParams prevents unauthorized access when POS is locked with pos_h
     store.config.module_pos_hr = true;
     odoo.from_backend = false;
 
-    store.resetCashier();
+    store.accessRight.resetCashier();
     expect(store.accessRight.cashier).toBe(false);
     expect(store.config.module_pos_hr).toBe(true);
     store.router.currentScreen.set("ProductScreen");
@@ -96,13 +96,13 @@ test("keybordInputRights", async () => {
     );
     expect(line.qty).toBe(3);
     const emp = store.models["hr.employee"].get(4);
-    store.setCashier(emp);
+    store.accessRight.setCashier(emp);
 
     const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
     orderSummary.numberBuffer._handleInput("-");
     expect(line.qty).toBe(3);
     const cashier = store.models["hr.employee"].get(3);
-    store.setCashier(cashier);
+    store.accessRight.setCashier(cashier);
     orderSummary.numberBuffer._handleInput("-");
     expect(line.qty).toBe(-3);
 });

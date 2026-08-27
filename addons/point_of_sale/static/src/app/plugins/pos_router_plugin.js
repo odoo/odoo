@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { signal, Plugin, computed } from "@odoo/owl";
+import { services } from "@web/core/services";
 
 const parseParams = (matches, paramSpecs) =>
     Object.fromEntries(
@@ -43,6 +44,20 @@ export class PosRouterPlugin extends Plugin {
 
         this.initRegisteredRoutes();
         this.matchURL();
+    }
+
+    init({ config }) {
+        this.config = config;
+    }
+
+    get defaultPage() {
+        const openOrder = this.config.models["pos.order"].filter((order) => !order.finalized);
+        return {
+            page: "ProductScreen",
+            params: {
+                orderUuid: openOrder.uuid,
+            },
+        };
     }
 
     initRegisteredRoutes() {

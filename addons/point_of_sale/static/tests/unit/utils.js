@@ -30,7 +30,7 @@ export const setupPosEnv = async () => {
     await makeTestApp();
     onRpc("/css", () => "");
     const store = getService("pos");
-    store.setCashier(store.user);
+    store.accessRight.setCashier(store.user);
     patchWithCleanup(store.router, {
         navigate(routeName, routeParams = {}) {
             this.currentScreen.set(routeName);
