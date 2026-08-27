@@ -1441,3 +1441,18 @@ class TestPurchase(AccountTestInvoicingCommon):
         )
 
         self.assertEqual(order.order_line.price_unit, 10.0)
+
+    def test_prevent_partner_deletion(self):
+        """Check that alt PO correctly copies the original PO values"""
+        subcontractor, client = self.env["res.partner"].create([
+            {"name": "subcontractor"},
+            {"name": "client"},
+        ])
+
+        po = self.env["purchase.order"].create([{
+            "partner_id": subcontractor.id,
+            "dest_address_id": client.id,
+        }])
+        po.button_confirm()
+        with self.assertRaises(UserError):
+            client.unlink()
