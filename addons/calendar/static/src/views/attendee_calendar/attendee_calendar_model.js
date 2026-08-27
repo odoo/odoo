@@ -20,6 +20,7 @@ export class AttendeeCalendarModel extends CalendarModel {
         super.setup(...arguments);
         this.dialog = services.dialog;
         this.rpc = rpc;
+        this.resetPartnerFilters = true;
     }
 
     /**
@@ -36,11 +37,21 @@ export class AttendeeCalendarModel extends CalendarModel {
             this.defaultDuration = default_duration;
             this._loaded = true;
         }
+        if (this.resetPartnerFilters) {
+            this.resetPartnerFilters = false;
+            await this.orm.call("calendar.filters", "init_user_filters", [], {
+                context: this.meta.context,
+            });
+            await this.debouncedLoad();
+        }
         return res;
     }
 
     get attendees() {
         return this.data.attendees;
+    }
+    get showMyCalendar() {
+        return user.settings.calendar_show_my;
     }
 
     /**
@@ -71,6 +82,15 @@ export class AttendeeCalendarModel extends CalendarModel {
         return await super.updateRecord(...arguments);
     }
 
+    async updateRecordFilters(fieldName, filters) {
+        this.keepLast.add(Promise.resolve());
+        const info = this.meta.filtersInfo[fieldName];
+        if (info && info.writeFieldName && info.writeResModel && info.filterFieldName) {
+            await this.orm.call(info.writeResModel, "update_user_filters", [filters]);
+        }
+        await this.debouncedLoad();
+    }
+
     /**
      * @override
      */
@@ -83,6 +103,85 @@ export class AttendeeCalendarModel extends CalendarModel {
             result.recurrence_update = partialRecord.recurrenceUpdate;
         }
         return result;
+    }
+
+    /**
+     * @override
+     */
+    computeFiltersDomain(data) {
+        // List authorized values for every field
+        // fields with an active "all" filter are skipped
+        const authorizedValues = {};
+        const avoidValues = {};
+
+        for (const [fieldName, filterSection] of Object.entries(data.filterSections)) {
+            const filterSectionInfo = this.meta.filtersInfo[fieldName];
+            const field = this.meta.fields[fieldName];
+            const isUserOrPartner = ["res.users", "res.partner"].includes(field.relation);
+            const userFieldName = field.relation === "res.partner" ? "partnerId" : "userId";
+            // Loop over subfilters to complete authorizedValues
+            for (const filter of filterSection.filters) {
+                if (filterSectionInfo.writeResModel) {
+                    if (!authorizedValues[fieldName]) {
+                        authorizedValues[fieldName] = [];
+                    }
+                    // Current user's partner is controlled separately by a checkbox linked to a setting
+                    if (isUserOrPartner && filter.value === user[userFieldName]) {
+                        continue;
+                    }
+                    if (filter.active) {
+                        authorizedValues[fieldName].push(filter.value);
+                    }
+                } else {
+                    if (!filter.active) {
+                        if (!avoidValues[fieldName]) {
+                            avoidValues[fieldName] = [];
+                        }
+                        avoidValues[fieldName].push(filter.value);
+                    }
+                }
+            }
+            if (filterSectionInfo.writeResModel && isUserOrPartner && this.showMyCalendar) {
+                if (!authorizedValues[fieldName]) {
+                    authorizedValues[fieldName] = [];
+                }
+
+                authorizedValues[fieldName].push(user[userFieldName]);
+            }
+        }
+
+        // Compute the domain
+        const domain = [];
+        for (const field in authorizedValues) {
+            domain.push([field, "in", authorizedValues[field]]);
+        }
+        for (const field in avoidValues) {
+            if (avoidValues[field].length > 0) {
+                domain.push([field, "not in", avoidValues[field]]);
+            }
+        }
+        return domain;
+    }
+
+    /**
+     * @override
+     */
+    makeContextDefaults(rawRecord) {
+        const context = super.makeContextDefaults(rawRecord);
+        const partnerSection = Object.values(this.data.filterSections).find(
+            (section) => this.meta.fields[section.fieldName]?.relation === "res.partner"
+        );
+
+        if (partnerSection) {
+            const partnerIds = partnerSection.filters
+                .filter((filter) => filter.active && filter.type === "record")
+                .map((filter) => filter.value);
+            if (this.showMyCalendar) {
+                partnerIds.push(user.partnerId);
+            }
+            context.default_partner_ids = [...new Set(partnerIds)];
+        }
+        return context;
     }
 
     /**

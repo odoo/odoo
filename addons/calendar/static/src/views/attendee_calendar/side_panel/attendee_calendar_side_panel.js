@@ -1,6 +1,7 @@
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { AttendeeCalendarFilterSection } from "../filter_section/attendee_calendar_filter_section";
 
 /**
  * Add the possibility to display/hide the user pending activities from the attendee calendar
@@ -9,12 +10,14 @@ import { user } from "@web/core/user";
 export class AttendeeCalendarSidePanel extends CalendarSidePanel {
     static components = {
         ...CalendarSidePanel.components,
+        FilterSection: AttendeeCalendarFilterSection,
     };
     static template = "calendar.AttendeeCalendarSidePanel";
 
     setup() {
         super.setup();
         this.state.activityFilterChecked = this.showActivities;
+        this.state.myCalendarFilterChecked = this.showMyCalendar;
     }
 
     get activityFilterName() {
@@ -27,6 +30,20 @@ export class AttendeeCalendarSidePanel extends CalendarSidePanel {
 
     get showActivityFilter() {
         return this.props.model.userActivitiesEnabled && this.props.model.scale !== "year";
+    }
+
+    get myCalendarFilterName() {
+        return user.name;
+    }
+
+    get showMyCalendar() {
+        return this.props.model.showMyCalendar;
+    }
+
+    async onToggleMyCalendarFilter() {
+        this.state.myCalendarFilterChecked = !this.state.myCalendarFilterChecked;
+        await user.setUserSettings("calendar_show_my", this.state.myCalendarFilterChecked);
+        await this.props.model.load();
     }
 
     async onToggleActivityFilter() {
