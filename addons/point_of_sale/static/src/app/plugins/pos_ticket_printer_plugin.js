@@ -287,9 +287,11 @@ export class PosTicketPrinterPlugin extends Plugin {
         order,
         formattedAmount,
         webFallback = true,
+        extraData = {},
     }) {
         const generator = this.getGenerator({ models: this.data.models, order });
         const data = generator.generateCashMoveData({ reason, translatedType, formattedAmount });
+        data.extra_data = { ...data.extra_data, ...extraData };
         const iframe = await this.generateIframe("point_of_sale.pos_cash_move_receipt", data);
         return await this.printWithFallback({ iframe, webFallback });
     }
