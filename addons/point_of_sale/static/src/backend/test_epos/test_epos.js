@@ -1,4 +1,4 @@
-import { Component, useProps } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -23,7 +23,10 @@ const EPSON_ERRORS = {
 
 export class TestEPos extends Component {
     static template = `point_of_sale.TestEPosButton`;
-    props = useProps(standardWidgetProps);
+    props = useProps({
+        ...standardWidgetProps,
+        printer_type: t.string().optional(),
+    });
 
     setup() {
         super.setup();
@@ -81,15 +84,16 @@ export class TestEPos extends Component {
     }
 
     async _testAllPrinters() {
-        const printersIds = this.props.record.data.receipt_printer_ids?._currentIds || [];
-        if (!printersIds.length) {
-            this.notification.add(_t("No receipt printers configured for this POS."), {
+        const fieldName = this.props.printer_type || "receipt_printer_ids";
+        const printerIds = this.props.record.data[fieldName]?.currentIds || [];
+        if (!printerIds.length) {
+            this.notification.add(_t("No printers configured for this POS."), {
                 type: "warning",
             });
             return;
         }
 
-        for (const p_id of printersIds) {
+        for (const p_id of printerIds) {
             await this._printTo(p_id);
         }
     }
@@ -173,5 +177,8 @@ export class TestEPos extends Component {
 
 export const TestEPosWidget = {
     component: TestEPos,
+    extractProps: ({ options }) => ({
+        printer_type: options?.printer_type,
+    }),
 };
 registry.category("view_widgets").add("point_of_sale_test_epos", TestEPosWidget);

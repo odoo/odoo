@@ -113,7 +113,6 @@ export class PosConfig extends models.ServerModel {
             payment_method_ids: [2, 1],
             company_has_template: true,
             current_user_id: 2,
-            other_devices: false,
             rounding_method: false,
             cash_rounding: false,
             only_round_cash_method: false,

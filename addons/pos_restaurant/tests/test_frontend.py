@@ -271,7 +271,6 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(order4.customer_count, 2)
         self.pos_config.write({
             'preparation_printer_ids': False,
-            'other_devices': False,
         })
         self.start_pos_tour('test_edit_payments_with_tip')
         edited_orders = self.env['pos.order'].search([], limit=2)
@@ -498,8 +497,6 @@ class TestFrontend(TestFrontendCommon):
             'preparation_printer_ids': [Command.set([preparation_printer.id])],
             'receipt_printer_ids': [Command.set([receipt_printer.id])],
             'iface_print_auto': True,
-            'other_devices': True,
-            'preparation_devices': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')
@@ -521,7 +518,6 @@ class TestFrontend(TestFrontendCommon):
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
             'use_order_printer': True,
             'preparation_printer_ids': [Command.set(pos_printer.ids)],
-            'other_devices': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing')
