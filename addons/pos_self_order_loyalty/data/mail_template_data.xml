@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="mail_template_self_otp" model="mail.template">
+            <field name="name">Self Order: Verification Code</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">{{ ctx.get('otp_code') }} is your verification code</field>
+            <field name="email_from">{{ object.company_id.email_formatted or user.company_id.email_formatted }}</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="description">Sent when a customer requests a one-time code to identify themselves in self-order.</field>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:0; background:#f5f5f4;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:#f5f5f4;">
+        <tr>
+            <td align="center" style="padding:32px 12px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="480" style="width:480px; max-width:100%; background:#ffffff; border:1px solid #e7e5e4; border-radius:6px;">
+                    <tr>
+                        <td style="padding:32px 32px 0 32px; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:15px; line-height:22px; color:#1c1917;">
+                            <p style="margin:0 0 8px 0;">
+                                Your verification code is:
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" style="padding:12px 32px 20px 32px;">
+                            <div style="font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace; font-size:34px; font-weight:600; letter-spacing:9px; color:#1c1917; padding:16px 8px 16px 17px; background:#fafaf9; border:1px solid #e7e5e4; border-radius:4px;">
+                                <t t-out="ctx.get('otp_code') or ''">000000</t>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0 32px 32px 32px; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:15px; line-height:22px; color:#1c1917;">
+                            <p style="margin:0 0 20px 0;">
+                                It expires in <t t-out="ctx.get('validity_minutes') or 10">10</t> minutes and can be used once.
+                            </p>
+                            <p style="margin:0; padding-top:20px; border-top:1px solid #e7e5e4; font-size:13px; line-height:20px; color:#78716c;">
+                                If you didn't ask for a code, you can ignore this message. Nobody can use it without your mailbox.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <table border="0" cellpadding="0" cellspacing="0" width="480" style="width:480px; max-width:100%;">
+                    <tr>
+                        <td align="center" style="padding:16px 8px 0 8px; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; line-height:18px; color:#a8a29e;">
+                            <t t-out="object.company_id.name or ''">YourCompany</t>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+            </field>
+        </record>
+</data>
+</odoo>

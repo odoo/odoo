@@ -1,0 +1,50 @@
+.btn-reward-glow {
+    background: linear-gradient(110deg, #f5b300 0%, #ffd766 45%, #fff1b8 50%, #ffd766 55%, #f5b300 100%);
+    background-size: 250% 100%;
+    color: #1f1a0e;
+}
+
+.roller {
+    --roller-h: 3rem;
+    height: var(--roller-h);
+    overflow: hidden;
+
+    ul {
+        animation: roll 4s ease-in-out infinite;
+    }
+
+    li {
+        height: var(--roller-h);
+    }
+}
+
+@keyframes roll {
+    0%, 40%  { transform: translateY(0); }
+    50%, 90% { transform: translateY(calc(-1 * var(--roller-h))); }
+    100%     { transform: translateY(calc(-2 * var(--roller-h))); }
+}
+
+// More specific than .roller to override its --roller-h
+.btn-reward .o_reward_avatar {
+    --roller-h: 2rem;
+    width: var(--roller-h);
+    height: var(--roller-h);
+    overflow: hidden;
+    font-size: 1rem;
+
+    li {
+        height: var(--roller-h);
+    }
+}
+
+// Compact square reward button, used in the top right corner of the mobile pages
+.o_self_reward_corner .btn-reward {
+    // !important to override the utility classes (px-3, h-100)
+    width: 2.75rem;
+    height: 2.75rem !important;
+    padding: 0 !important;
+    border-radius: $border-radius-lg !important;
+    justify-content: center;
+    // Icons at the same size as the category list one
+    font-size: inherit;
+}
