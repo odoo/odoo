@@ -7,7 +7,7 @@ export function showProductColumn(fieldName = "product_id") {
             run: "click",
         },
         {
-            isActive: ["desktop"],
+            isActive: ["desktop", "auto"],
             content: "Show product column",
             trigger: `.o-dropdown-item input[name="${fieldName}"]`,
             run: function ({ anchor }) {
@@ -15,6 +15,12 @@ export function showProductColumn(fieldName = "product_id") {
                     anchor.click();
                 }
             },
+        },
+        {
+            isActive: ["desktop", "manual"],
+            content: "Show product column",
+            trigger: `.o-dropdown-item input[name="${fieldName}"]`,
+            run: "click",
         },
         {
             isActive: ["desktop"],

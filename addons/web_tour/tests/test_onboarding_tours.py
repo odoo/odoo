@@ -13,7 +13,7 @@ class TestOnboardingTours(HttpCase):
         'sale_tour', 'purchase_tour', 'mass_mailing_tour',
         'frontdesk_tour', 'hr_expense_extract_tour', 'appointment_tour',
         'sale_subscription_tour', 'project_tour', 'helpdesk_tour',
-        'crm_tour',
+        'crm_tour', 'account_tour',
     ]
 
     def setUp(self):

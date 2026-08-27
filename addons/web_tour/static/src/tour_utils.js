@@ -229,9 +229,8 @@ export const stepUtils = {
     saveForm() {
         return [
             {
-                isActive: ["auto"],
                 content: "save form",
-                trigger: ".o_form_button_save:enabled",
+                trigger: ".o_form_button_save",
                 run: "click",
             },
             {
