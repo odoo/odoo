@@ -66,6 +66,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'parent_id',
     'portal_can_edit',
     'portal_can_advanced_edit',
+    'project_sharing_portal_user_ids'
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -206,7 +207,7 @@ class ProjectTask(models.Model):
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
         string='Assignees', context={'active_test': False}, tracking=3, default=_default_user_ids,
-        domain="['|', ('share', '=', False), '&', ('share', '=', True), ('followed_project_ids', '=', project_id), ('active', '=', True), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]", falsy_value_label=_lt("👤 Unassigned"))
+        domain="['|', ('share', '=', False), ('id', 'in', project_sharing_portal_user_ids), ('active', '=', True), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]", falsy_value_label=_lt("👤 Unassigned"))
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names', export_string_translation=False)
     # Second Many2many containing the actual personal stage for the current user
@@ -291,7 +292,11 @@ class ProjectTask(models.Model):
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True, export_string_translation=False)
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
-
+    project_sharing_portal_user_ids = fields.Many2many(
+        'res.users',
+        compute='_compute_project_sharing_portal_user_ids',
+        string="Assignable Portal Users"
+    )
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(compute='_compute_allow_recurring_tasks', export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
@@ -2237,6 +2242,16 @@ class ProjectTask(models.Model):
     # ---------------------------------------------------
     # Project Sharing
     # ---------------------------------------------------
+    @api.depends('project_id.collaborator_ids.access_mode', 'project_id.collaborator_ids.partner_id')
+    def _compute_project_sharing_portal_user_ids(self):
+        for task in self:
+            if not task.project_id:
+                task.project_sharing_portal_user_ids = False
+                continue
+            valid_collabs = task.project_id.sudo().collaborator_ids.filtered(
+                lambda c: c.access_mode in ['edit', 'advanced_edit']
+            )
+            task.project_sharing_portal_user_ids = valid_collabs.mapped('partner_id.user_ids').filtered('share')
 
     def project_sharing_toggle_is_follower(self):
         self.ensure_one()
@@ -2246,6 +2261,16 @@ class ProjectTask(models.Model):
         else:
             self.sudo().message_subscribe(self.env.user.partner_id.ids)
         return not is_follower
+
+    def action_project_sharing_toggle_assign(self):
+        self.ensure_one()
+        self.check_access('write')
+        user_ids_vals = [Command.unlink(self.env.user.id) if self.env.user in self.user_ids else Command.link(self.env.user.id)]
+        if self.env.user._is_portal():
+            res = self.sudo().write({'user_ids': user_ids_vals})
+        else:
+            res = self.write({'user_ids': user_ids_vals})
+        return res
 
     @api.depends('subtask_count', 'closed_subtask_count')
     def _compute_subtask_completion_percentage(self):

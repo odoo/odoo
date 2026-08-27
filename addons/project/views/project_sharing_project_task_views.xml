@@ -130,6 +130,16 @@
         <field name="arch" type="xml">
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
+                    <button name="action_project_sharing_toggle_assign"
+                        type="object"
+                        string="Assign To Me"
+                        class="btn-primary"
+                        invisible="context.get('portal_is_readonly') or uid in user_ids"/>
+                    <button name="action_project_sharing_toggle_assign"
+                        type="object"
+                        string="Remove Me"
+                        class="btn-secondary"
+                        invisible="context.get('portal_is_readonly') or uid not in user_ids"/>
                     <field name="stage_id" readonly="not context.get('portal_can_advanced_edit', False)" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id" />
                 </header>
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
