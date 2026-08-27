@@ -1,19 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 
 export const stepUtils = {
-    editSelectMenuInput(trigger, value) {
-        return [
-            {
-                content: "Make sure a SelectMenu has been opened",
-                trigger: `.o_select_menu_menu`,
-            },
-            {
-                trigger,
-                run: `edit ${value}`,
-            },
-        ];
-    },
-
     showAppsMenuItem() {
         return {
             isActive: ["community", "desktop"],
