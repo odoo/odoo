@@ -109,7 +109,6 @@ const findInsertionReferenceNode = ({ anchorNode: node, anchorOffset: offset }, 
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  *
  * @typedef {((parent: HTMLElement, blockToInsert: HTMLElement) => boolean | void)[]} is_parent_compatible_for_insertion_predicates
- * @typedef {((blockToInsert: HTMLElement, referenceBlock: HTMLElement) => boolean | void)[]} should_unwrap_edge_block_to_insert_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  *
  * @typedef {string[]} system_attributes
@@ -231,15 +230,11 @@ export class DomPlugin extends Plugin {
                         // without creating a nested block boundary inside the
                         // atomic container.
                         shouldUnwrap = true;
-                    } else {
-                        shouldUnwrap =
-                            // Allow other plugins to determine if the block
-                            // should be unwrapped.
-                            this.checkPredicates(
-                                "should_unwrap_edge_block_to_insert_predicates",
-                                node,
-                                refBlock
-                            ) ?? false;
+                    } else if (
+                        this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
+                        this.dependencies.baseContainer.isCandidateForBaseContainer(refBlock)
+                    ) {
+                        shouldUnwrap = true;
                     }
                 }
                 if (shouldUnwrap) {

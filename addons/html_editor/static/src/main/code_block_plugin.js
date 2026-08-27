@@ -54,11 +54,6 @@ export class CodeBlockPlugin extends Plugin {
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
-        should_unwrap_edge_block_to_insert_predicates: (blockToInsert, referenceBlock) => {
-            if (referenceBlock.nodeName === "PRE") {
-                return true;
-            }
-        },
     };
 
     blockFormatIsAvailable(selection) {
