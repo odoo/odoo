@@ -176,11 +176,7 @@ export class PresetInfoPopup extends Component {
     }
 
     setPartnerAndOrderName(partner) {
-        if (this.preset.needsPartner) {
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${this.state.name}`;
-        } else {
-            this.selfOrder.currentOrder.floating_order_name = this.state.name;
-        }
+        this.selfOrder.currentOrder.floating_order_name = this.state.name;
         this.selfOrder.currentOrder.partner_id = partner;
     }
 
