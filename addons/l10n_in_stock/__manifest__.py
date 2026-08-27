@@ -10,6 +10,7 @@
     'depends': [
         'l10n_in',
         'stock',
+        'stock_account',
     ],
     'data': [
         'views/report_stockpicking_operations.xml',
