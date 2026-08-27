@@ -10,7 +10,7 @@
                         <b t-out="this.props.partner.name or ''" />
                         <div class="company-field text-bg-muted" t-out="this.props.partner.parent_name or ''" />
                     </div>
-                    <div t-if="this.pos.cashier._role !== 'minimal'" class="d-flex justify-content-between align-items-center">
+                    <div t-if="this.pos.accessRight.canEditDetails" class="d-flex justify-content-between align-items-center">
                         <div class="partner-line-balance-mobile" t-if="this.props.isBalanceDisplayed" />
                         <Dropdown>
                             <button class="btn btn-ligth oi" data-icon="menu"/>
@@ -67,22 +67,20 @@
                         <span>UNSELECT</span>
                     </button>
                 </td>
-                <td class="edit-partner-button-cell align-middle">
-                    <t t-if="this.pos.cashier._role !== 'minimal'">
-                        <Dropdown>
-                            <button class="btn btn-light btn-lg lh-lg border float-end">
-                                <i class="oi oi-fw" data-icon="menu"/>
-                            </button>
-                            <t t-set-slot="content">
-                                <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
-                                    Edit Details
-                                </DropdownItem>
-                                <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
-                                    All Orders
-                                </DropdownItem>
-                            </t>
-                        </Dropdown>
-                    </t>
+                <td t-if="this.pos.accessRight.canEditDetails" class="edit-partner-button-cell align-middle">
+                    <Dropdown>
+                        <button class="btn btn-light btn-lg lh-lg border float-end">
+                            <i class="oi oi-fw" data-icon="menu"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
+                                Edit Details
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
+                                All Orders
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
                 </td>
             </tr>
         </t>

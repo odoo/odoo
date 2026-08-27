@@ -6,7 +6,7 @@ patch(ClosePosPopup.prototype, {
         if (!this.pos.config.module_pos_hr) {
             return super.hasUserAuthority();
         }
-        const cashier = this.pos.cashier;
+        const cashier = this.pos.accessRight.cashier;
         return (
             (cashier._role == "manager" && cashier._user_role == "admin") ||
             this.allowedDifference()

@@ -1,4 +1,5 @@
 import { test, expect } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
@@ -10,18 +11,17 @@ test("showSubPads", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const ticketScreen = await mountWithCleanup(TicketScreen);
-    ticketScreen.onClickOrder(order);
 
     const admin = store.models["hr.employee"].get(2);
-    store.setCashier(admin);
-    expect(ticketScreen.showSubPads).toBe(false);
-    const minimalEmp = store.models["hr.employee"].get(4);
-    store.setCashier(minimalEmp);
-    expect(ticketScreen.showSubPads).toBe(false);
+    const restrictiveEmp = store.models["hr.employee"].get(4);
 
     order.state = "paid";
+    ticketScreen.onClickOrder(order);
     store.setCashier(admin);
-    expect(ticketScreen.showSubPads).toBe(true);
-    store.setCashier(minimalEmp);
-    expect(ticketScreen.showSubPads).toBe(false);
+    await animationFrame();
+    expect(store.accessRight.canShowPads).toBe(true);
+    store.setCashier(restrictiveEmp);
+    ticketScreen.onClickOrder(order);
+    await animationFrame();
+    expect(store.accessRight.canShowPads).toBe(false);
 });

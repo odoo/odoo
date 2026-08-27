@@ -10,14 +10,6 @@
     </t>
 
     <t t-name="pos_hr.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='backend']" position="attributes">
-            <attribute name="t-if">this.showBackend</attribute>
-        </xpath>
-        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='close_register']" position="attributes">
-            <attribute name="t-if">
-                !this.pos.config.module_pos_hr or this.pos.employeeIsAdmin or this.pos.getCashierUserId() === this.pos.session.user_id?.id
-            </attribute>
-        </xpath>
         <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]//t[@t-name='close_register']" position="before">
             <t t-if="this.pos.config.module_pos_hr and this.ui.isSmall"
                 t-call="point_of_sale.BurgerDialogMenuButton"

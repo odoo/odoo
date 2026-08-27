@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                                 <div class="form-switch ms-4" onclick="event.stopPropagation()">
-                                    <input type="checkbox" class="form-check-input fs-4" t-att-checked="externalOrder.isChecked" t-on-click="() => externalOrder.onToggle()"/>
+                                    <input t-att-disabled="!this.pos.accessRight.disableToggleOrder" type="checkbox" class="form-check-input fs-4" t-att-checked="externalOrder.isChecked" t-on-click="() => externalOrder.onToggle()"/>
                                 </div>
                             </div>
                         </DropdownItem>

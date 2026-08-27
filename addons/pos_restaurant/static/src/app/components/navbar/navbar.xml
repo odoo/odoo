@@ -30,7 +30,7 @@
     <t t-name="pos_restaurant.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='backend']" position="before">
             <t t-call="point_of_sale.BurgerDialogMenuButton"
-                t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall and this.showEditPlanButton and this.pos.config.floor_ids.length"
+                t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall and this.pos.accessRight.showEditPlanButton and this.pos.config.floor_ids.length"
                 dataIcon="'edit_square'"
                 onClick="() => this.floorPlanStore.startEditMode()"
                 btnLabel.translate="Edit Plan"
