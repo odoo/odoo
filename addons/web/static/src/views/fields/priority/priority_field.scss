@@ -11,3 +11,12 @@
         }
     }
 }
+
+@media (pointer: fine) {
+    .o_list_view .o_field_widget .o_priority:not(:hover):not(:focus-within) > {
+        .o_priority_star:not(.oi-filled):first-child ~ [data-icon="star"],
+        .o_priority_star.oi-filled ~ .o_priority_star:not(.oi-filled) {
+            opacity: 0 !important;
+        }
+    }
+}
