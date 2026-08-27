@@ -1,4 +1,5 @@
 import { KanbanRenderer, kanbanRendererProps } from '@web/views/kanban/kanban_renderer';
+import { ProjectTaskColumnQuickCreate } from './project_task_column_quick_create';
 import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
 import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 import { useService } from '@web/core/utils/hooks';
@@ -11,6 +12,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         ...KanbanRenderer.components,
         KanbanRecord: ProjectTaskKanbanRecord,
         KanbanHeader: ProjectTaskKanbanHeader,
+        ProjectTaskColumnQuickCreate,
     };
 
     props = useProps({ ...kanbanRendererProps, hideKanbanStagesNocontent: t.any().optional() });
