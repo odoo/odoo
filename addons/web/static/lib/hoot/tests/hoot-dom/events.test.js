@@ -491,6 +491,47 @@ describe(parseUrl(import.meta.url), () => {
         expect.verifySteps(["pointerdown:0(1)@button", "pointerup:0@button", "click:0@button"]);
     });
 
+    test("click on touch: slow listener does not suppress the click", async () => {
+        mockTouch(true);
+
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
+
+        on("button", "pointerdown", () => advanceTime(600));
+
+        await hover("button");
+        monitorEvents("button");
+
+        await click("button");
+
+        expect.verifySteps([
+            "pointerdown:0(1)@button",
+            "focus@button",
+            "focusin@button",
+            "pointerup:0@button",
+            "click:0@button",
+        ]);
+    });
+
+    test("click on touch: a held pointer suppresses the click", async () => {
+        mockTouch(true);
+
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
+
+        await hover("button");
+        monitorEvents("button");
+
+        await pointerDown("button");
+        await advanceTime(600);
+        await pointerUp("button");
+
+        expect.verifySteps([
+            "pointerdown:0(1)@button",
+            "focus@button",
+            "focusin@button",
+            "pointerup:0@button",
+        ]);
+    });
+
     test("click: iframe", async () => {
         await mountForTest(/* xml */ `
             <button>Click me</button>
