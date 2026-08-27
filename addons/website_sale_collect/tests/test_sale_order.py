@@ -6,6 +6,7 @@ from unittest import skip
 from odoo.fields import Command
 from odoo.tests import tagged
 
+from odoo.addons.website_sale.controllers.delivery import Delivery
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 
@@ -284,3 +285,27 @@ class TestSaleOrder(ClickAndCollectCommon):
         order._set_delivery_method(self.in_store_dm)  # Create the delivery line.
         order._update_cart_taxes_and_prices()
         self.assertTrue(order.partner_shipping_id.pickup_location_data)
+
+    def test_switching_from_in_store_restores_delivery_address(self):
+        """Switching away from click-and-collect must restore the pickup address parent."""
+        so = self._create_in_store_delivery_order()
+        self.free_delivery.write({
+            "is_published": True,
+            "country_ids": self.country_us.ids,
+        })
+        self.partner.country_id = self.country_us
+        pickup_partner = self.env["res.partner"].create({
+            **self.dummy_partner_address_values,
+            "name": "Test Store",
+            "country_id": self.country_be.id,
+            "parent_id": self.partner.id,
+            "pickup_delivery_method_id": self.in_store_dm.id,
+            "pickup_location_data": {"id": self.warehouse.id, "name": "Test Store"},
+        })
+        so.partner_shipping_id = pickup_partner
+
+        with self.mock_request(sale_order_id=so.id) as request:
+            request.cart = so
+            Delivery().shop_set_delivery_method(dm_id=self.free_delivery.id)
+
+        self.assertEqual(so.partner_shipping_id, pickup_partner.parent_id)

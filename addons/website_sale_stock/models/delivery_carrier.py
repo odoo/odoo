@@ -17,6 +17,12 @@ class DeliveryCarrier(models.Model):
                 carrier, f"{carrier.delivery_type}_use_locations"
             ) and getattr(carrier, f"{carrier.delivery_type}_use_locations")
 
+    def _match_address(self, partner):
+        """Use the customer address when matching a generated pickup location."""
+        if partner.pickup_delivery_method_id:
+            partner = partner.parent_id
+        return super()._match_address(partner)
+
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """Return the pickup locations of the delivery method close to a given zip code.
 
