@@ -24,7 +24,7 @@ patch(PosStore.prototype, {
         });
     },
     get employeeIsAdmin() {
-        const cashier = this.getCashier();
+        const cashier = this.accessRight.loggedCashier;
         return cashier._role === "manager";
     },
     checkPreviousLoggedCashier() {
@@ -50,7 +50,7 @@ patch(PosStore.prototype, {
         const order = super.createNewOrder(...arguments);
 
         if (this.config.module_pos_hr) {
-            order.employee_id = this.getCashier();
+            order.employee_id = this.accessRight.loggedCashier;
         }
 
         return order;
@@ -81,11 +81,11 @@ patch(PosStore.prototype, {
         vals.employee_id = false;
 
         if (this.config.module_pos_hr) {
-            const cashier = this.getCashier();
+            const cashier = this.accessRight.loggedCashier;
 
             if (cashier && cashier.model.name === "hr.employee") {
                 const order = this.getOrder();
-                order.employee_id = this.getCashier();
+                order.employee_id = this.accessRight.loggedCashier;
             }
         }
 
@@ -97,23 +97,11 @@ patch(PosStore.prototype, {
      */
     getSyncAllOrdersContext(orders, options = {}) {
         const context = super.getSyncAllOrdersContext(orders, options);
-        const cashier = this.getCashier();
+        const cashier = this.accessRight.loggedCashier;
         if (cashier?.id) {
             context.current_cashier_id = cashier.id;
         }
         return context;
-    },
-    getCashier() {
-        if (this.config.module_pos_hr) {
-            return this.cashier;
-        }
-        return super.getCashier(...arguments);
-    },
-    getCashierUserId() {
-        if (this.config.module_pos_hr) {
-            return this.cashier.user_id ? this.cashier.user_id : null;
-        }
-        return super.getCashierUserId(...arguments);
     },
     async logEmployeeMessage(action, message) {
         if (!this.config.module_pos_hr) {
@@ -122,7 +110,7 @@ patch(PosStore.prototype, {
         }
         await this.data.call("pos.session", "log_partner_message", [
             this.session.id,
-            this.cashier.work_contact_id?.id,
+            this.accessRight.cashier.work_contact_id?.id,
             action,
             message,
         ]);
@@ -156,7 +144,7 @@ patch(PosStore.prototype, {
         return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
     },
     async handleUrlParams() {
-        if (this.config.module_pos_hr && !this.cashier) {
+        if (this.config.module_pos_hr && !this.accessRight.cashier) {
             if (this.router.currentScreen() !== "LoginScreen") {
                 this.router.navigate("LoginScreen", {});
             }

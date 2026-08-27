@@ -1,4 +1,3 @@
-import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
 import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
@@ -14,11 +13,6 @@ patch(LoginScreen.prototype, {
         });
 
         if (this.pos.config.module_pos_hr) {
-            this.cashierSelector = useCashierSelector({
-                onScan: (employee) => employee && this.selectOneCashier(employee),
-                exclusive: true,
-            });
-
             this.autofocusRef = signal.ref();
             useAutofocus({ ref: this.autofocusRef });
             useListener(window, "keypress", async (ev) => {
@@ -34,7 +28,7 @@ patch(LoginScreen.prototype, {
         });
     },
     async selectCashier(pin = false, login = false, list = false) {
-        return await this.cashierSelector(pin, login, list);
+        return await this.pos.accessRight.selectCashier(pin, login, list);
     },
     openRegister() {
         if (this.pos.config.module_pos_hr) {

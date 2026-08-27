@@ -11,7 +11,7 @@ export class CashierName extends Component {
         this.ui = useService("ui");
     }
     get avatar() {
-        const user_id = this.pos.getCashierUserId();
+        const user_id = this.pos.accessRight.cashierUserId;
         const id = user_id ? user_id : -1;
         return `/web/image/res.users/${id}/avatar_128`;
     }

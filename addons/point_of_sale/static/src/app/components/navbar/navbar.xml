@@ -61,13 +61,13 @@
                                 </span>
                             </div>
                             <div class="p-2 pos-burger-menu-items">
-                                <DropdownItem onSelected="() => this.openCustomerDisplay()">
+                                <DropdownItem t-if="this.pos.accessRight.canAccessCustomerDisplay" onSelected="() => this.openCustomerDisplay()">
                                     <i class="oi oi-fw" data-icon="desktop_windows" aria-hidden="true" /> Customer Display
                                 </DropdownItem>
-                                <DropdownItem t-if="!this.isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
+                                <DropdownItem t-if="!this.isDisplayStandalone and this.pos.accessRight.canInstallApp" onSelected="() => window.open(this.appUrl)">
                                     <i class="oi oi-fw" data-icon="download" aria-hidden="true" /> Install App
                                 </DropdownItem>
-                                <DropdownItem t-if="this.showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
+                                <DropdownItem t-if="this.showCashMoveButton and this.pos.accessRight.canCashMove" onSelected="() => this.pos.cashMove()">
                                     <i class="oi oi-fw" data-icon="payments" aria-hidden="true" /> Cash In/Out
                                 </DropdownItem>
                                 <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.pos.reloadData(true)">
@@ -76,19 +76,19 @@
                                 <DropdownItem t-if="this.showCreateProductButton" onSelected="() => this.pos.editProduct()">
                                     <i class="oi oi-fw" data-icon="add" aria-hidden="true" /> Create Product
                                 </DropdownItem>
-                                <DropdownItem t-if="this.showPrinterButton" onSelected="() => this.pos.ticketPrinter.selectPrinter(true)">
+                                <DropdownItem t-if="this.showPrinterButton and this.pos.accessRight.canSelectPrinter" onSelected="() => this.pos.ticketPrinter.selectPrinter(true)">
                                     <i class="oi oi-fw" data-icon="print" aria-hidden="true" /> Printers
                                 </DropdownItem>
                                 <DropdownItem t-if="this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
                                     <i class="oi oi-fw" data-icon="barcode" aria-hidden="true" /> <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
                                 </DropdownItem>
-                                <DropdownItem t-if="this.pos.ticketPrinter.hasReceiptPrinters" onSelected="() => this.showSaleDetails()">
+                                <DropdownItem t-if="this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport" onSelected="() => this.showSaleDetails()">
                                     <i class="oi oi-fw" data-icon="picture_as_pdf" aria-hidden="true" /> Print Report
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.closePos()">
+                                <DropdownItem t-if="this.pos.accessRight.canGoToBackend" onSelected="() => this.pos.closePos()">
                                     <i class="oi oi-fw" data-icon="chevron_left" aria-hidden="true" /> Backend
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.closeSession()">
+                                <DropdownItem t-if="this.pos.accessRight.canCloseSession" onSelected="() => this.pos.closeSession()">
                                     <i class="oi oi-fw" data-icon="key" aria-hidden="true" /> Close Register
                                 </DropdownItem>
                             </div>

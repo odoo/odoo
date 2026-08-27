@@ -25,6 +25,7 @@
                     onClick="this.clickTableGuests"/>
                 <!-- Split Button -->
                 <t t-call="point_of_sale.controlButton"
+                    t-if="this.pos.accessRight.canSplitOrder"
                     name="o_split_button"
                     icon="'content_copy'"
                     btnText.translate="Split"

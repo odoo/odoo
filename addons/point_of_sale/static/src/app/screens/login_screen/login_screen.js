@@ -23,25 +23,8 @@ export class LoginScreen extends Component {
     }
 
     selectUser() {
-        this.selectOneCashier(this.pos.user);
-    }
-    cashierLogIn() {
-        const selectedScreen =
-            this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
-                ? this.pos.previousScreen
-                : this.pos.defaultPage;
-        const order = this.pos.getOrder();
-        if (!order && selectedScreen.page === "ProductScreen") {
-            this.pos.addNewOrder();
-        }
-        const params =
-            selectedScreen.page === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
-        this.pos.navigate(selectedScreen.page, params);
-        this.pos.hasLoggedIn = true;
-    }
-    selectOneCashier(cashier) {
-        this.pos.setCashier(cashier);
-        this.cashierLogIn();
+        this.pos.setCashier(this.pos.user);
+        this.pos.accessRight.cashierLogIn();
     }
     get backBtnName() {
         return _t("Backend");

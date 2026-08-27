@@ -23,7 +23,7 @@ test("selectCashier", async () => {
     expect(result.name).toBe("Employee1");
     expect(result.id).toBe(3);
     store.setCashier(result);
-    const value = store.getCashier();
+    const value = store.accessRight.loggedCashier;
     expect(value.name).toBe("Employee1");
     expect(value.id).toBe(3);
 });

@@ -50,6 +50,7 @@ import { ComboSuggestion } from "../models/utils/combo_suggestion";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
 import { SIZES } from "@web/core/ui/ui_utils";
+import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 import { formatCurrency } from "@web/core/currency";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -71,6 +72,7 @@ export class PosStore extends WithLazyGetterTrap {
     feedbackScreenAutoSkipDelay = 1500;
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
+    accessRight = usePlugin(PosAccessRightPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -239,6 +241,13 @@ export class PosStore extends WithLazyGetterTrap {
         });
         this.checkAccessRight();
         await this.initCustomerDisplay();
+        this.initAccessRight();
+    }
+    // TODO : To be removed after full OWL3 migration
+    initAccessRight() {
+        this.accessRight.init({
+            pos: this,
+        });
     }
     formatCurrency(amount, currencyId = this.config.currency_id.id, opts = {}) {
         /**
@@ -400,7 +409,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.resetCashier();
         }
 
-        return !this.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
+        return !this.accessRight.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
     }
 
     get idleTimeout() {
@@ -466,7 +475,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     resetCashier() {
-        this.cashier = false;
+        this.accessRight.cashier = false;
         this._resetConnectedCashier();
     }
 
@@ -482,7 +491,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        this.cashier = user;
+        this.accessRight.cashier = user;
         this._storeConnectedCashier(user);
     }
 
@@ -1517,19 +1526,10 @@ export class PosStore extends WithLazyGetterTrap {
         this.device.saveUnusedNumber([order]);
         return this.data.localDeleteCascade(order);
     }
-
-    /**
-     * Return the current cashier (in this case, the user)
-     * @returns {name: string, id: int, role: string}
-     */
-    getCashier() {
-        return this.user;
-    }
-    getCashierUserId() {
-        return this.user?.id;
-    }
     cashierHasPriceControlRights() {
-        return !this.config.restrict_price_control || this.getCashier()._role == "manager";
+        return (
+            !this.config.restrict_price_control || this.accessRight.loggedCashier._role == "manager"
+        );
     }
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);

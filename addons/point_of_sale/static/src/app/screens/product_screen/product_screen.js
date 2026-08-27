@@ -151,7 +151,7 @@ export class ProductScreen extends Component {
             cursor: "move",
             tolerance: 10,
             connectGroups: false,
-            enable: () => this.canReorderProducts,
+            enable: () => this.canReorderProducts && this.pos.accessRight.canSortProducts,
             preventDrag: (element) => isNaN(Number(element.dataset.productId)),
             onDragStart: () => {
                 this.longPressHandlers.onMouseUp();
@@ -242,7 +242,7 @@ export class ProductScreen extends Component {
                 text: _t("%"),
                 disabled:
                     !this.pos.config.manual_discount ||
-                    this.pos.cashier._role === "minimal" ||
+                    !this.pos.accessRight.disableLinediscount ||
                     order?.getSelectedOrderline()?.isServiceFeeLine(),
             },
             {
@@ -250,14 +250,19 @@ export class ProductScreen extends Component {
                 text: _t("Price"),
                 disabled:
                     !this.pos.cashierHasPriceControlRights() ||
-                    this.pos.cashier._role === "minimal",
+                    !this.pos.accessRight.disablePriceButton,
             },
-            BACKSPACE,
+            {
+                ...BACKSPACE,
+                disabled:
+                    !this.pos.accessRight.disableBackSpaceButton &&
+                    !order.getSelectedOrderline()?.isDirty(),
+            },
         ]).map((button) => ({
             ...button,
             disabled:
                 button.disabled ||
-                (button.value === SWITCHSIGN.value && this.pos.cashier._role === "minimal") ||
+                (button.value === SWITCHSIGN.value && !this.pos.accessRight.canSwitchSign) ||
                 (order?.getSelectedOrderline()?.isServiceFeeLine() &&
                     order?.preset_id?.service_fee_type === "percent"),
             class: `

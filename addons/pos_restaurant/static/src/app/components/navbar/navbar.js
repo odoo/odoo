@@ -21,9 +21,6 @@ patch(Navbar.prototype, {
     onSwitchButtonClick() {
         this.floorPlanStore?.toggleFloorPlanStyle();
     },
-    get showEditPlanButton() {
-        return this.pos.showEditPlanButton;
-    },
     makeButtonBounce() {
         this.pos.shouldSetTable = true;
         setTimeout(() => (this.pos.shouldSetTable = false), 400);

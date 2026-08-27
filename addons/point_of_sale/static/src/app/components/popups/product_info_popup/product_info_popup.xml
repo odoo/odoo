@@ -4,7 +4,7 @@
         <t t-set="productInfo" t-value="this.props.info.productInfo"/>
         <Dialog contentClass="'product-info-popup'">
             <t t-set-slot="header">
-                <button t-on-click="this.toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
+                <button t-att-disabled="!this.pos.accessRight.disableToggleFavorite" t-on-click="this.toggleFavorite" class="border-0 bg-transparent mb-2">
                     <i class="oi oi-lg oi-fw" t-att-class="{'oi-filled': this.props.productTemplate.is_favorite}" data-icon="star"
                         t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                         role="img"/>
@@ -22,7 +22,7 @@
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center justify-content-between gap-2">
                         <h3 class="section-title">Inventory</h3>
-                        <button class="btn btn-lg lh-lg text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
+                        <button t-if="this.pos.accessRight.canSnooze" class="btn btn-lg lh-lg text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
                             <i class="oi me-1" data-icon="schedule" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
                             <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
                             <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
@@ -68,7 +68,7 @@
                     </span>
                 </div>
             </div>
-            <div class="financials-order d-grid gap-2 mt-3" style="grid-template-columns: repeat(2, 1fr);">
+            <div t-if="this.pos.accessRight.canAccessProductFinancials" class="financials-order d-grid gap-2 mt-3" style="grid-template-columns: repeat(2, 1fr);">
                 <div class="section-financials text-start">
                     <h3 class="section-title">Financials</h3>
                     <div class="grid gap-2">
@@ -116,7 +116,7 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
                     <button class="btn btn-primary w-50" t-on-click="this.props.close">Close</button>
-                    <button t-if="this.allowProductEdition" class="btn btn-secondary w-50" t-on-click="this.editProduct">Edit</button>
+                    <button t-if="this.pos.accessRight.allowProductEdition" class="btn btn-secondary w-50" t-on-click="this.editProduct">Edit</button>
                 </div>
             </t>
         </Dialog>
