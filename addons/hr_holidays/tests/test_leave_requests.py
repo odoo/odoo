@@ -155,6 +155,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(holidays_count_result['leaves_taken'], lt)
         self.assertEqual(holidays_count_result['virtual_leaves_taken'], vlt)
 
+    def _get_leave_messages(self, leave):
+        """ Returns the chatter messages posted on the given leave. """
+        return self.env['mail.message'].search([
+            ('model', '=', 'hr.leave'),
+            ('res_id', '=', leave.id),
+        ])
+
     @classmethod
     def set_employee_create_date(cls, _id, newdate):
         """ This method is a hack in order to be able to define/redefine the create_date
@@ -1590,7 +1597,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         Test mail notification flow when the leave type uses 'No Validation'.
         Ensures that:
         - The leave is automatically approved.
-        - A notification message is sent to the employee.
+        - The employee's manager is still notified about the absence.
         """
 
         # Create a leave request with a leave type that has 'no_validation' as its approval policy
@@ -1603,15 +1610,73 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'number_of_days': 1,
         })
 
-        mail_message = self.env['mail.message'].search([
-            ('res_id', '=', test_leave.id),
-        ], limit=1)
-
-        self.assertTrue(mail_message, "Expected a mail notification to be sent for automatically approved leave.")
-        self.assertEqual(
-            mail_message.preview,
+        messages = self._get_leave_messages(test_leave)
+        self.assertIn(
             "The time off has been automatically approved",
-            "The mail preview text should confirm automatic approval."
+            messages.mapped('preview'),
+            "The chatter should confirm the automatic approval.",
+        )
+        # The approver of this employee is their manager, so they must get the mail
+        self.assertTrue(
+            messages.filtered(lambda message: self.user_responsible.partner_id in message.partner_ids),
+            "The manager should be notified even though nobody had to approve the time off.",
+        )
+
+    def test_manager_notified_on_officer_auto_approved_leave(self):
+        """
+        Ensure that the manager is notified when a Time Off Officer requests time off for
+        themselves and the request is therefore approved automatically.
+        """
+        self.employee_hruser.leave_manager_id = self.user_responsible_id
+        # An officer can approve their own request, so it never waits for anyone
+        test_leave = self.env['hr.leave'].with_user(self.user_hruser_id).create({
+            'name': 'Test leave',
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 11),
+            'request_date_to': date(2022, 3, 11),
+            'number_of_days': 1,
+        })
+
+        self.assertEqual(test_leave.state, 'validate', "An officer's own request should be approved automatically.")
+        notifications = self._get_leave_messages(test_leave).filtered(
+            lambda message: self.user_responsible.partner_id in message.partner_ids,
+        )
+        self.assertTrue(notifications, "The manager should be notified about the automatically approved time off.")
+        # The mail must not ask for an approval that already happened
+        self.assertIn(
+            "I'm taking",
+            notifications[0].subject,
+            "The mail should tell the manager the time off is taken, not ask them to approve it.",
+        )
+        self.assertNotIn(
+            self.user_hruser.partner_id,
+            notifications.partner_ids,
+            "The requester should not be notified about their own time off.",
+        )
+
+    def test_manager_notified_without_hr_responsible(self):
+        """
+        Ensure that the manager is notified when a time off validated by the Time Off Officer
+        is requested and no HR responsible is set on the employee.
+        """
+        self.employee_emp.hr_responsible_id = False
+        test_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 11),
+            'request_date_to': date(2022, 3, 11),
+            'number_of_days': 1,
+        })
+
+        self.assertEqual(test_leave.state, 'confirm', "The request should wait for an approval.")
+        # With no HR responsible there is nobody to approve, but the manager still gets the mail
+        self.assertTrue(
+            self._get_leave_messages(test_leave).filtered(
+                lambda message: self.user_responsible.partner_id in message.partner_ids,
+            ),
+            "The manager should be notified even when no HR responsible can approve the time off.",
         )
 
     def test_mail_update_with_employee_approver(self):
