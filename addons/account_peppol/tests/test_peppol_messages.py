@@ -1006,3 +1006,34 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         all_peppol_responses = self.env['account.peppol.response'].search([])
         self.assertEqual(len(all_peppol_responses), 1)
+
+    def test_peppol_process_messages_status(self):
+        move = self.create_move(self.valid_partner)
+        move.peppol_message_uuid = self.MESSAGE_UUID
+        move.action_post()
+        response = self.env['account.peppol.response'].create({
+            'peppol_message_uuid': self.MESSAGE_UUID,
+            'response_code': 'AP',
+            'peppol_state': 'processing',
+            'move_id': move.id,
+        })
+        messages = [{
+            response.peppol_message_uuid: {
+                'state': 'done',
+                'document_type': 'Invoice',
+            }}, {
+            move.peppol_message_uuid: {
+                'state': 'done',
+                'document_type': 'Invoice',
+            }},
+        ]
+        uuid_to_record = [
+            {response.peppol_message_uuid: response},
+            {move.peppol_message_uuid: move},
+        ]
+
+        self.proxy_user._peppol_process_messages_status(messages[0], uuid_to_record[0])
+        self.assertEqual(response.peppol_state, 'done')
+        self.proxy_user._peppol_process_messages_status(messages[1], uuid_to_record[1])
+        self.assertEqual(move.peppol_move_state, 'done')
+        self.assertIn('Peppol status update:', move.message_ids[0].body)
