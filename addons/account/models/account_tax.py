@@ -363,11 +363,14 @@ class AccountTax(models.Model):
 
     @api.depends('account_move_line_ids', 'account_reconcile_model_line_ids')
     def _compute_is_used(self):
-        self.sudo().search([
+        used_taxes = set(self.sudo().search([
+            ('id', 'in', self.ids),
             '|',
             ('account_move_line_ids', '!=', False),
             ('account_reconcile_model_line_ids', '!=', False),
-        ]).is_used = True
+        ]))
+        for tax in self:
+            tax.is_used = tax in used_taxes
 
     @api.depends('is_used', 'repartition_line_ids.account_id', 'repartition_line_ids.sequence', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
     def _compute_repartition_lines_str(self):
