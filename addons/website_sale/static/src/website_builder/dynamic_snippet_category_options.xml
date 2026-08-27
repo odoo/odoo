@@ -41,7 +41,7 @@
                 </BuilderButtonGroup>
             </BuilderRow>
             <BuilderRow label.translate="Filters">
-                <BuilderSelect dataAttributeAction="'parentCategoryId'">
+                <BuilderSelect dataAttributeAction="'parentCategoryId'" preview="false">
                     <BuilderSelectItem
                         dataAttributeActionValue=""
                         title.translate="All Categories"
@@ -65,6 +65,7 @@
                 t-if="this.dynamicOptionParams.domState.parentCategoryId"
                 label.translate="Parent Category"
                 dataAttributeAction="'showParent'"
+                preview="false"
             >
                 <BuilderCheckbox dataAttributeActionValue="'true'"/>
             </BuilderRow>
@@ -73,6 +74,7 @@
                     id="'clickable_items_opt'"
                     action="'toggleClickable'"
                     classAction="'s_dynamic_category_clickable_items'"
+                    preview="false"
                 />
             </BuilderRow>
             <BuilderRow
@@ -110,7 +112,7 @@
                 />
             </BuilderRow>
             <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
-                <BuilderTextInput dataAttributeAction="'button'"/>
+                <BuilderTextInput dataAttributeAction="'button'" preview="false"/>
             </BuilderRow>
         </BuilderRow>
     </t>
