@@ -14,8 +14,6 @@ class HrTimeRule(models.Model):
     work_entry_type_id = fields.Many2one(
         domain="[('id', 'in', allowed_output_work_entry_type_ids)]",
     )
-    # output unit must be of equal or finer granularity than the condition unit:
-    # hour <= half_day <= day, so a day-condition rule may output day, half_day, or hour.
     allowed_output_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type',
         compute='_compute_allowed_output_work_entry_type_ids',
@@ -40,16 +38,6 @@ class HrTimeRule(models.Model):
             rule.allowed_output_work_entry_type_ids = rule.country_work_entry_type_ids.filtered(
                 lambda t: not t.requires_allocation and t.request_unit in allowed
             )
-
-    @api.constrains('work_entry_type_id', 'condition_work_entry_type_ids')
-    def _check_output_request_unit(self):
-        for rule in self:
-            if rule.work_entry_type_id and rule.work_entry_type_id not in rule.allowed_output_work_entry_type_ids:
-                raise ValidationError(self.env._(
-                    "Rule '%(name)s': output type '%(out)s' is not compatible with the condition time types.",
-                    name=rule.name,
-                    out=rule.work_entry_type_id.name,
-                ))
 
     @api.constrains('condition_work_entry_type_ids')
     def _check_condition_units_uniform(self):
@@ -104,7 +92,6 @@ class HrTimeRule(models.Model):
     def _resolve_output_intervals(self, intervals):
         """Resolve output intervals, then merge consecutive slices sharing a merge key."""
         resolved = super()._resolve_output_intervals(intervals)
-        # each element: (_OutIv, merge_key)
         merged = []
         for iv in resolved:
             mk = iv.rule._get_output_leave_merge_key(accumulated_pp=iv.pp)
@@ -144,19 +131,21 @@ class HrTimeRule(models.Model):
     def _apply_leave_output(self, excess, deficit, active_iv=None):
         new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
 
-        # accumulate days per (employee, allocation_type) before any DB writes so that
-        # multiple rules targeting the same allocation type in one transaction produce a
-        # single allocation record rather than one per rule.
         excess_by_key = defaultdict(float)
-        for employee, rule, excess_hours in excess_alloc:
+        log_by_source = defaultdict(float)
+
+        for employee, rule, excess_hours, source, log_source in excess_alloc:
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                 continue
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             alloc_days = excess_hours * rule.leave_compensation_rate / hours_per_day
             if alloc_days > 0:
                 excess_by_key[employee, rule.allocation_type_id] += alloc_days
+                log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] += alloc_days
 
+        alloc_by_key = {}
         alloc_create_vals = []
+        alloc_create_keys = []
         for (employee, alloc_type), alloc_days in excess_by_key.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', employee.id),
@@ -165,6 +154,7 @@ class HrTimeRule(models.Model):
             ], limit=1)
             if allocation:
                 allocation.number_of_days += alloc_days
+                alloc_by_key[employee, alloc_type] = allocation
             else:
                 alloc_create_vals.append({
                     'employee_id': employee.id,
@@ -172,18 +162,22 @@ class HrTimeRule(models.Model):
                     'number_of_days': alloc_days,
                     'state': 'confirm',
                 })
+                alloc_create_keys.append((employee, alloc_type))
         if alloc_create_vals:
             new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
             new_allocs.with_context(leave_skip_state_check=True).action_approve()
+            for key, alloc in zip(alloc_create_keys, new_allocs):
+                alloc_by_key[key] = alloc
 
         deficit_by_key = defaultdict(float)
-        for employee, rule, deficit_hours in deficit_alloc:
+        for employee, rule, deficit_hours, source, log_source in deficit_alloc:
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                 continue
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             deduct_days = deficit_hours * rule.leave_compensation_rate / hours_per_day
             if deduct_days > 0:
                 deficit_by_key[employee, rule.allocation_type_id] += deduct_days
+                log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] -= deduct_days
 
         for (employee, alloc_type), deduct_days in deficit_by_key.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([
@@ -193,8 +187,66 @@ class HrTimeRule(models.Model):
             ], limit=1)
             if allocation:
                 allocation.number_of_days = max(0, allocation.number_of_days - deduct_days)
+                alloc_by_key.setdefault((employee, alloc_type), allocation)
+
+        log_vals = []
+        for (source_model, source_id, employee, alloc_type), days in log_by_source.items():
+            allocation = alloc_by_key.get((employee, alloc_type))
+            if allocation and days:
+                log_vals.append({
+                    'source_model': source_model,
+                    'source_id': source_id,
+                    'allocation_id': allocation.id,
+                    'days': days,
+                })
+        if log_vals:
+            self.env['hr.time.rule.allocation.log'].sudo().create(log_vals)
 
         if all_source_ids:
             Leave = self.env['hr.leave'].sudo()
             sources = Leave.with_context(active_test=False).browse(list(all_source_ids))
             (sources | new_records).with_context(**Leave._time_rule_write_ctx)._create_resource_leave()
+
+    @api.model
+    def _reverse_allocation_credits(self, source_model, source_ids):
+        """subtract credits logged for the given source records."""
+        if not source_ids:
+            return
+        Log = self.env['hr.time.rule.allocation.log'].sudo()
+        logs = Log.search([
+            ('source_model', '=', source_model),
+            ('source_id', 'in', list(source_ids)),
+        ])
+        if not logs:
+            return
+        by_alloc = defaultdict(float)
+        for log in logs:
+            by_alloc[log.allocation_id] += log.days
+        errors = []
+        for allocation, days in by_alloc.items():
+            if not allocation.exists() or not days:
+                continue
+            wet = allocation.work_entry_type_id
+            allowed_floor = -wet.max_allowed_negative if wet.allows_negative else 0.0
+            remaining_after = allocation.virtual_remaining_leaves - days
+            if remaining_after < allowed_floor:
+                errors.append(self.env._(
+                    "Cannot reverse %(days).4g day(s) from '%(leave_type)s' allocation "
+                    "for %(employee)s: available balance is %(balance).4g day(s) and would "
+                    "drop to %(after).4g day(s), below the allowed minimum of %(floor).4g. "
+                    "Refuse or reduce taken leaves first, or adjust the allocation manually, "
+                    "then retry.",
+                    days=days,
+                    leave_type=wet.name,
+                    employee=allocation.employee_id.name,
+                    balance=allocation.virtual_remaining_leaves,
+                    after=remaining_after,
+                    floor=allowed_floor,
+                ))
+        if errors:
+            raise ValidationError('\n'.join(errors))
+        for allocation, days in by_alloc.items():
+            if not allocation.exists() or not days:
+                continue
+            allocation.number_of_days -= days
+        logs.unlink()

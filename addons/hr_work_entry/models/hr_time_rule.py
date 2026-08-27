@@ -549,13 +549,14 @@ class HrTimeRule(models.Model):
 
         active_iv: schedule-clipped pipeline intervals per source.
         Returns (new_records, all_source_ids, excess_alloc, deficit_alloc) where
-        excess_alloc / deficit_alloc are lists of (employee, rule, hours).
         """
         create_vals = []
         all_source_ids = set()
         dummy = self.env['resource.calendar']
-        excess_alloc = []
-        deficit_alloc = []
+        excess_alloc = []   # [employee, rule, hours, source, log_source]
+        deficit_alloc = []  # [employee, rule, hours, source, log_source]
+        # pending: (excess_alloc_index, create_vals_index) for output-record credits
+        _pending_log_sources = []
 
         for employee, by_source in deficit.items():
             tz = ZoneInfo(employee._get_tz())
@@ -593,7 +594,7 @@ class HrTimeRule(models.Model):
                                 slot_e = slot_s + timedelta(hours=remaining)
                             create_vals.append(source._get_time_rule_output_vals(rule, slot_s, slot_e, pp))
                             remaining -= (slot_e - slot_s).total_seconds() / 3600
-                        deficit_alloc.append((employee, rule, deficit_hours))
+                        deficit_alloc.append([employee, rule, deficit_hours, source, source])
 
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
@@ -606,7 +607,7 @@ class HrTimeRule(models.Model):
                     if iv.end > iv.start:
                         hours = (iv.end - iv.start).total_seconds() / 3600
                         for prev_rule in iv.acc:
-                            excess_alloc.append((employee, prev_rule, hours))
+                            excess_alloc.append([employee, prev_rule, hours, source, source])
 
                 output_intervals = self._resolve_output_intervals(intervals)
                 if not output_intervals:
@@ -626,7 +627,7 @@ class HrTimeRule(models.Model):
                     if extra_vals:
                         source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
                     for iv in output_intervals:
-                        excess_alloc.append((employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600))
+                        excess_alloc.append([employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600, source, source])
                     continue
 
                 start_field = source._time_rule_span_start_field
@@ -666,8 +667,8 @@ class HrTimeRule(models.Model):
                     for seg_s, seg_e, _ in remainder_segments:
                         create_vals.append(source._get_time_rule_remainder_vals(_to_utc(seg_s, tz), _to_utc(seg_e, tz))
                                            | {'work_entry_type_id': source_wet_id})
-                    # in-place first interval: count its hours for allocation
-                    excess_alloc.append((employee, first.rule, (first.end - first.start).total_seconds() / 3600))
+                    # in-place: source record IS the output (its WET/time_rule_id were changed);
+                    excess_alloc.append([employee, first.rule, (first.end - first.start).total_seconds() / 3600, source, source])
                     subsequent = output_intervals[1:]
                 else:
                     min_out_start_local = min(iv.start for iv in output_intervals)
@@ -680,8 +681,10 @@ class HrTimeRule(models.Model):
                     subsequent = output_intervals
 
                 for iv in subsequent:
+                    # new output record being created; log_source resolved to it after create()
+                    _pending_log_sources.append((len(excess_alloc), len(create_vals)))
                     create_vals.append(source._get_time_rule_output_vals(iv.rule, _to_utc(iv.start, tz), _to_utc(iv.end, tz), iv.pp))
-                    excess_alloc.append((employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600))
+                    excess_alloc.append([employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600, source, None])
 
         any_source = next(
             (src for by_source in excess.values() for src in by_source),
@@ -695,6 +698,9 @@ class HrTimeRule(models.Model):
             len(create_vals), any_source._name, len(all_source_ids),
         )
         new_records = self.env[any_source._name].sudo().with_context(**any_source._time_rule_write_ctx).create(create_vals)
+        # resolve pending log_sources: output records now have IDs; backfill into excess_alloc
+        for alloc_idx, create_idx in _pending_log_sources:
+            excess_alloc[alloc_idx][4] = new_records[create_idx]
         return new_records, all_source_ids, excess_alloc, deficit_alloc
 
     def _evaluate_period(self, start, stop, record_intervals, schedule):

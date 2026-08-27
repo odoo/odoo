@@ -1519,6 +1519,8 @@ class HrLeave(models.Model):
         state_unvalidated = 'state' in values and values['state'] != 'validate'
         if validated_leaves and state_unvalidated:
             validated_leaves._remove_resource_leave()
+            # reverse any allocation credits that the engine logged against these leaves as sources
+            self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', validated_leaves.ids)
 
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
@@ -1581,6 +1583,8 @@ class HrLeave(models.Model):
                 raise UserError(error_message % {'state': state_description_values.get(holiday.state)})
 
     def unlink(self):
+        # reverse engine allocation credits before the records disappear
+        self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', self.ids)
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         res = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
