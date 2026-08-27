@@ -2,10 +2,14 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useProps, t } from "@odoo/owl";
 
 export class ScrollButtonOption extends BaseOptionComponent {
     static id = "scroll_button_option";
     static template = "website.ScrollButtonOption";
+    props = useProps({
+        showThreeQuarterHeight: t.boolean().optional(true),
+    });
 
     setup() {
         super.setup();
