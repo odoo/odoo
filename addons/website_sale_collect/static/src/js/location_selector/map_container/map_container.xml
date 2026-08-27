@@ -7,6 +7,26 @@
                 <span t-out="this.props.taxRecomputationWarning" />
             </div>
         </button>
+
+        <xpath expr="//LocationSchedule[not(@wrapClass)]" position="replace">
+            <span class="d-flex gap-4 flex-wrap">
+                <LocationSchedule openingHours="this.selectedLocation.opening_hours"/>
+                <t
+                    t-call="website_sale_collect.locationSelector.exceptionalClosing"
+                    closingDates="this.selectedLocation.closing_dates"
+                />
+            </span>
+        </xpath>
+
+        <LocationSchedule wrapClass="'col-lg-7 flex-grow-1 flex-lg-grow-0 ps-lg-4'" position="replace">
+            <span class="col-lg-7 flex-grow-1 flex-lg-grow-0 ps-lg-4 d-flex gap-4 flex-wrap">
+                <LocationSchedule openingHours="this.selectedLocation.opening_hours"/>
+                <t
+                    t-call="website_sale_collect.locationSelector.exceptionalClosing"
+                    closingDates="this.selectedLocation.closing_dates"
+                />
+            </span>
+        </LocationSchedule>
     </t>
 
 </templates>

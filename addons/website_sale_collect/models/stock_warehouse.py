@@ -1,7 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import UTC, timedelta
+from zoneinfo import ZoneInfo
+
 from odoo import fields, models
+from odoo.tools import format_date
 from odoo.tools.misc import format_duration
+
+EXCEPTIONAL_CLOSING_DATES_LOOKUP_DAYS = 60
 
 
 class StockWarehouse(models.Model):
@@ -51,6 +57,33 @@ class StockWarehouse(models.Model):
                     f"{format_duration(att.hour_from)} - {format_duration(att.hour_to)}"
                 )
             pickup_location_values["opening_hours"] = opening_hours_dict
+            pickup_location_values["closing_dates"] = self._get_exceptional_closing_dates()
         else:
             pickup_location_values["opening_hours"] = {}
+            pickup_location_values["closing_dates"] = []
         return pickup_location_values
+
+    def _get_exceptional_closing_dates(self):
+        """Return the warehouse's exceptional closing periods.
+
+        :return: The exceptional closing periods, one per closing leave, sorted chronologically.
+        :rtype: list[dict]
+        """
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+        limit_date = today + timedelta(days=EXCEPTIONAL_CLOSING_DATES_LOOKUP_DAYS)
+        tz = ZoneInfo(self.opening_hours.company_id.tz or self.env.company.tz or "UTC")
+        leaves = self.opening_hours.global_leave_ids.filtered(
+            lambda leave: leave.count_as == "absence"
+        ).sorted("date_from")
+        closing_periods = []
+        for leave in leaves:
+            date_from = leave.date_from.replace(tzinfo=UTC).astimezone(tz).date()
+            date_to = leave.date_to.replace(tzinfo=UTC).astimezone(tz).date()
+            if date_to < today or date_from > limit_date:
+                continue
+            closing_periods.append({
+                "date_from": format_date(self.env, date_from),
+                "date_to": format_date(self.env, date_to),
+            })
+        return closing_periods

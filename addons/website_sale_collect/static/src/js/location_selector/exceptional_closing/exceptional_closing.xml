@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale_collect.locationSelector.exceptionalClosing">
+        <div
+            t-if="closingDates and closingDates.length"
+            class="o_location_selector_exceptional_closing d-flex flex-column gap-1"
+        >
+            <strong class="text-muted">Exceptional closing</strong>
+            <t t-foreach="closingDates" t-as="period" t-key="period_index">
+                <small t-if="period.date_from === period.date_to" t-out="period.date_from"/>
+                <small t-else="">From <t t-out="period.date_from"/> to <t t-out="period.date_to"/></small>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -102,6 +102,7 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
                                 "5": [],
                                 "6": [],
                             },
+                            "closing_dates": [],
                             "distance": 0.0,
                         }
                     ],
