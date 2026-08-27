@@ -1,6 +1,9 @@
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba, convertRgbToHsl } from "@web/core/utils/colors";
+
+const darkPaletteContentAdaptations = registry.category("website.dark_palette_content_adaptations");
 
 /**
  * Keep standard snippets and New Page templates readable with dark palettes.
@@ -121,5 +124,8 @@ export function adaptDarkPaletteContent(rootEl) {
             }
             break;
         }
+    }
+    for (const adaptContent of darkPaletteContentAdaptations.getAll()) {
+        adaptContent(rootEl);
     }
 }
