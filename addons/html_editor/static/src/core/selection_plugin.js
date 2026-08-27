@@ -181,6 +181,9 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['isNodeEditable'] } isNodeEditable
  * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
  * @property { SelectionPlugin['selectElement'] } selectElement
+ * @property { SelectionPlugin['editableDocumentHasFocus'] } editableDocumentHasFocus
+ * @property { SelectionPlugin['getCachedSelection'] } getCachedSelection
+ * @property { SelectionPlugin['setCachedSelection'] } setCachedSelection
  * @property { SelectionPlugin['stageSelection'] } stageSelection
  * @property { SelectionPlugin['stageFocus'] } stageFocus
  * @property { SelectionPlugin['serializeEditableSelection'] } serializeEditableSelection

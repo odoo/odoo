@@ -62,6 +62,7 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * @property { DeletePlugin['deleteSelection'] } deleteSelection
  * @property { DeletePlugin['deleteBackward'] } deleteBackward
  * @property { DeletePlugin['deleteForward'] } deleteForward
+ * @property { DeletePlugin['isUnremovable'] } isUnremovable
  */
 
 /**

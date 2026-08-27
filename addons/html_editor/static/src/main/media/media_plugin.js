@@ -24,6 +24,7 @@ export const ATTACHMENT_PENDING_RECORD_ID = "o_attachment_pending_record_id";
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
+ * @property { MediaPlugin['extractUnmappedAttachmentsIds'] } extractUnmappedAttachmentsIds
  */
 
 /**

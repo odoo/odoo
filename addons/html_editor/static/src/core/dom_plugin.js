@@ -79,6 +79,7 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
  * @property { DomPlugin['setBlock'] } setBlock
  * @property { DomPlugin['setTagName'] } setTagName
  * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
+ * @property { DomPlugin['wrapInlinesInBlocks'] } wrapInlinesInBlocks
  */
 
 /**
