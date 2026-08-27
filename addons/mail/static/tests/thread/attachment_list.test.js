@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -137,6 +138,35 @@ test("clicking on the delete attachment button multiple times should do the rpc 
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
+    await contains(".o-mail-Attachment-unlink", { count: 0 });
+    await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
+});
+
+test("clicking on the delete attachment button multiple times in composer should do the rpc only once", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    let resolveDelete;
+    const deletePromise = new Promise((resolve) => {
+        resolveDelete = resolve;
+    });
+    onRpcBefore("/mail/attachment/delete", async () => {
+        expect.step("attachment_unlink");
+        await deletePromise;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await inputFiles(".o-mail-Composer .o_input_file", [text]);
+    await contains(
+        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
+    );
+    await click(".o-mail-Attachment-unlink");
+    await click(".o-mail-Attachment-unlink");
+    resolveDelete();
+    // Let the pending deletion settle, so any extra rpc has been registered.
     await contains(".o-mail-Attachment-unlink", { count: 0 });
     await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
 });
