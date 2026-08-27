@@ -7,8 +7,61 @@
             grid-template-columns: repeat(calc(max(2, var(--DynamicCategory-columns) - 1)), 1fr);
         }
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             grid-template-columns: repeat(1, 1fr);
+        }
+    }
+
+    @each $level, $radius in (
+        0: 0,
+        1: var(--#{$prefix}border-radius-sm),
+        2: var(--#{$prefix}border-radius),
+        3: var(--#{$prefix}border-radius-lg),
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-xxl)
+    ) {
+        &.s_dynamic_category_rounded_#{$level} .o_category_container {
+            border-radius: $radius !important;
+        }
+    }
+
+    @for $level from 0 through 5 {
+        &.s_dynamic_category_gap_#{$level} .o_category_container {
+            gap: map-get($spacers, $level) !important;
+        }
+    }
+
+    @for $columns from 2 through 5 {
+        &.s_dynamic_category_columns_#{$columns} {
+            --DynamicCategory-columns: #{$columns};
+        }
+    }
+
+    @each $size, $span, $row in ((small, 2, 10vh), (medium, 2, 15vh), (large, 4, 15vh)) {
+        &.s_dynamic_category_size_#{$size} {
+            .o_category_container {
+                grid-auto-rows: minmax($row, auto);
+            }
+
+            [name="category_item"] {
+                grid-row: span $span;
+            }
+        }
+    }
+
+    // The parent category tile is taller, and twice as wide when there is room for it
+    [name="category_item"][data-is-parent] {
+        grid-row: span 4;
+        grid-column: span 2;
+
+        @include media-breakpoint-down(md) {
+            grid-column: span 1;
+        }
+    }
+
+    &.s_dynamic_category_size_small:not(.s_dynamic_category_columns_5) {
+        [name="category_item"][data-is-parent] {
+            grid-column: span 1;
         }
     }
 
@@ -20,11 +73,11 @@
         grid-row: span 4;
     }
 
-    .align_category_right > *:not(span) {
+    &.s_dynamic_category_alignment_right [name="category_overlay"] > *:not(span) {
         align-self: flex-end !important;
     }
 
-    .align_category_center {
+    &.s_dynamic_category_alignment_center [name="category_overlay"] {
         justify-content: center !important;
 
         > *:not(span) {
@@ -35,10 +88,6 @@
     .s_dynamic_category_item, .s_dynamic_category_wrapper_demo {
         border-radius: inherit;
         box-shadow: inherit;
-
-        @include media-breakpoint-down(sm) {
-            --DynamicCategory-max-column-span: 1;
-        }
     }
 
     &.s_dynamic_category_clickable_items {
