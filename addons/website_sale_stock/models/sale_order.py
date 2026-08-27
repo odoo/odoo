@@ -32,6 +32,17 @@ class SaleOrder(models.Model):
                     order.partner_shipping_id = order.partner_id
         return super().write(vals)
 
+    def _set_delivery_method(self, delivery_method, rate=None):
+        """Restore the customer address before rating a different delivery method.
+
+        Pickup methods replace `partner_shipping_id` with the pickup location. That address must
+        not be used to fetch rates for another method.
+        """
+        pickup_dm = self.partner_shipping_id.pickup_delivery_method_id
+        if pickup_dm and delivery_method and pickup_dm != delivery_method:
+            self.partner_shipping_id = self.partner_id
+        return super()._set_delivery_method(delivery_method, rate=rate)
+
     def action_open_delivery_wizard(self):
         """Override of `delivery` to include default values for pickup delivery methods."""
         res = super().action_open_delivery_wizard()
