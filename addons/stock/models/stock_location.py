@@ -13,6 +13,7 @@ from odoo.tools.translate import mark_as_copy
 
 class StockLocation(models.Model):
     _name = 'stock.location'
+    _inherit = ['barcode.uniqueness.mixin']
     _description = "Inventory Location"
     _parent_name = "location_id"
     _parent_store = True
