@@ -26,6 +26,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { usePositionHook } from "@html_editor/position_hook";
+import { findUpTo } from "@html_editor/utils/dom_traversal";
 
 const rad = Math.PI / 180;
 
@@ -43,6 +44,7 @@ export class ImageTransformation extends Component {
         this.isCurrentlyTransforming = false;
         this.document = this.props.document;
         this.image = this.props.image;
+        this.topDocument = this.iframe?.ownerDocument || this.document;
         this.transfoContainer = useRef("transfoContainer");
         this.transfoControls = useRef("transfoControls");
         this.transfoCenter = useRef("transfoCenter");
@@ -283,7 +285,20 @@ export class ImageTransformation extends Component {
         this.transfo.settings.rotationStep = 5;
     }
 
+    getScrollContainer() {
+        const isScrollable = (element) =>
+            element.scrollHeight > element.clientHeight &&
+            ["auto", "scroll"].includes(getComputedStyle(element).overflowY);
+
+        return (
+            findUpTo(this.iframe || this.props.editable, null, isScrollable) ||
+            this.topDocument.documentElement
+        );
+    }
+
     positionTransfoContainer() {
+        const scrollContainer = this.getScrollContainer();
+
         const settings = this.transfo.settings;
         const width = parseFloat(settings.css.width);
         const height = parseFloat(settings.css.height);
@@ -292,11 +307,24 @@ export class ImageTransformation extends Component {
 
         this.setImageTransformation(this.image);
 
+        // Clamp the container so it never overlaps elements above the editable
+        // (e.g. a breadcrumb).
+        const scrollRect = scrollContainer.getBoundingClientRect();
+        const frameElement = this.props.editable.ownerDocument.defaultView.frameElement;
+        const frameTop = frameElement ? frameElement.getBoundingClientRect().top : 0;
+        const scrollAbsTop =
+            scrollRect.top + this.props.editable.ownerDocument.defaultView.pageYOffset + frameTop;
+
+        const clampedTop = Math.max(settings.pos.top, scrollAbsTop);
+        const clampedHeight = Math.max(0, settings.pos.top + height - clampedTop);
+        const hiddenTop = clampedTop - settings.pos.top; // amount clipped off the top
+
         this.transfoContainer.el.style.position = "absolute";
         this.transfoContainer.el.style.width = width + "px";
-        this.transfoContainer.el.style.height = height + "px";
-        this.transfoContainer.el.style.top = settings.pos.top + "px";
+        this.transfoContainer.el.style.height = clampedHeight + "px";
+        this.transfoContainer.el.style.top = clampedTop + "px";
         this.transfoContainer.el.style.left = settings.pos.left + "px";
+        this.transfoContainer.el.style.overflow = "hidden";
 
         const controls = this.transfoControls.el;
 
@@ -304,6 +332,9 @@ export class ImageTransformation extends Component {
         controls.style.width = width + "px";
         controls.style.height = height + "px";
         controls.style.cursor = "move";
+        // shift controls up by the clipped amount so it still lines up with
+        // the (now shorter) container's top edge
+        controls.style.marginTop = -hiddenTop + "px";
 
         for (const child of controls.children) {
             child.style.transform =
