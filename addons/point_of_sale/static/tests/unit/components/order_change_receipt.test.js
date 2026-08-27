@@ -104,6 +104,96 @@ test("order change ticket renders general customer note section", async () => {
     expect(normalizeText(noteSection.textContent)).toInclude("Allergic to nuts");
 });
 
+test("order change ticket renders customer info for preset order with partner", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+
+    store.config.module_pos_restaurant = true;
+    renameProduct(product, "Burger");
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+
+    const partner = store.models["res.partner"].create({
+        id: 9301,
+        name: "Delivery Customer",
+        street: "77 Santa Barbara Rd",
+        street2: false,
+        city: "Pleasant Hill",
+        state_id: false,
+        country_id: false,
+        vat: false,
+        lang: "en_US",
+        phone: false,
+        zip: "94523",
+        email: "delivery.customer@example.com",
+        barcode: false,
+        write_date: "2025-07-03 12:38:12",
+        property_product_pricelist: false,
+        parent_name: false,
+        address: "77 Santa Barbara Rd Pleasant Hill",
+        invoice_emails: "",
+        fiscal_position_id: false,
+    });
+    order.partner_id = partner;
+    order.preset_id = store.models["pos.preset"].get(1);
+    order.email = partner.email;
+    order.mobile = "+1 555-123-4567";
+
+    const { tickets } = renderOrderChangeReceipt(store, order);
+    expect(tickets.length).toBeGreaterThan(0);
+
+    const customerInfo = tickets[0].querySelector("div[name='customer-info']");
+    expect(Boolean(customerInfo)).toBe(true, {
+        message: "Ticket should have customer-info section",
+    });
+    const text = normalizeText(customerInfo.textContent);
+    expect(text).toInclude("77 Santa Barbara Rd, Pleasant Hill, 94523");
+    expect(text).toInclude("+1 555-123-4567");
+    expect(text).toInclude("delivery.customer@example.com");
+});
+
+test("order change ticket omits customer info for orders without a preset", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+
+    store.config.module_pos_restaurant = true;
+    renameProduct(product, "Burger");
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+
+    const partner = store.models["res.partner"].create({
+        id: 9302,
+        name: "Counter Customer",
+        street: "1 Counter St",
+        street2: false,
+        city: "Counter City",
+        state_id: false,
+        country_id: false,
+        vat: false,
+        lang: "en_US",
+        phone: false,
+        zip: "00001",
+        email: "counter.customer@example.com",
+        barcode: false,
+        write_date: "2025-07-03 12:38:12",
+        property_product_pricelist: false,
+        parent_name: false,
+        address: "1 Counter St",
+        invoice_emails: "",
+        fiscal_position_id: false,
+    });
+    order.partner_id = partner;
+    // The default test config has `use_presets: true`, so a new order gets the config's
+    // default preset automatically; clear it to exercise a genuinely preset-less order.
+    order.preset_id = false;
+
+    const { tickets } = renderOrderChangeReceipt(store, order);
+    expect(tickets.length).toBeGreaterThan(0);
+    expect(Boolean(tickets[0].querySelector("div[name='customer-info']"))).toBe(false, {
+        message: "Ticket should not have customer-info section without a preset",
+    });
+});
+
 test("order change ticket renders multiple new lines", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();
