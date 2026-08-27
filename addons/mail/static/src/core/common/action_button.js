@@ -1,69 +1,45 @@
-import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { t, useProps } from "@odoo/owl";
+import { ActionBase } from "@mail/core/common/action_base";
 
-export class ActionButton extends Component {
+export class ActionButton extends ActionBase {
     static template = "mail.ActionButton";
-    static props = [
-        "action",
-        "attrs",
-        "style?",
-        "isInlineCircleButton",
-        "inMeetingViewCallButtonsFullscreen",
-        "fw?",
-        "isFirstInGroup?",
-        "isLastInGroup?",
-        "hasBtnBg?",
-        "odooControlPanelSwitchStyle?",
-        "onSelected",
-    ];
 
-    setup() {
-        super.setup();
-        this.store = useService("mail.store");
+    props = useProps({
+        ...ActionBase.propsSchema,
+        style: t.string().optional(),
+    });
+
+    get alignmentClass() {
+        return {
+            "d-flex align-items-center": this.props.isInlineCircleButton,
+        };
     }
 
-    get action() {
-        return this.props.action;
+    get borderClass() {
+        return {
+            "border-0": !this.hasBtnBg && this.action.icon,
+            "border-2": !this.hasBtnBg && !this.action.icon,
+        };
     }
 
-    get hasBtnBg() {
-        return (
-            this.props.odooControlPanelSwitchStyle ||
-            this.props.hasBtnBg ||
-            this.props.action.hasBtnBg
-        );
-    }
-
-    get btnClass() {
-        const action = this.action;
+    get roundnessClass() {
         const isInlineCircleButton = this.props.isInlineCircleButton;
-        return attClassObjectToString({
-            "o-first": this.props.isFirstInGroup,
-            "o-last": this.props.isLastInGroup,
-            active: action.isActive,
-            "o-odooControlPanelSwitchStyle": this.props.odooControlPanelSwitchStyle,
-            "o-hasBtnBg": this.hasBtnBg,
-            "bg-secondary":
-                action.isActive &&
-                !action.tags.includes("PRIMARY") &&
-                !action.tags.includes("DANGER") &&
-                !action.tags.includes("SUCCESS"),
-            "btn-secondary":
-                !action.tags.includes("PRIMARY") &&
-                !action.tags.includes("DANGER") &&
-                !action.tags.includes("SUCCESS"),
-            "btn-primary": action.tags.includes("PRIMARY"),
-            "btn-danger": action.tags.includes("DANGER"),
-            "btn-success": action.tags.includes("SUCCESS"),
-            "d-flex align-items-center": isInlineCircleButton,
-            "border-0": !this.hasBtnBg && action.icon,
-            "border-2": !this.hasBtnBg && !action.icon,
+        return {
             "rounded-circle": isInlineCircleButton,
             "rounded-start-3": !isInlineCircleButton && this.props.isFirstInGroup,
             "rounded-end-3": !isInlineCircleButton && this.props.isLastInGroup,
-            "o-mx-0_5": !this.hasBtnBg && !action.icon,
-            "px-1 py-2": this.props.inMeetingViewCallButtonsFullscreen,
+        };
+    }
+
+    get marginClass() {
+        return {
+            "o-mx-0_5": !this.hasBtnBg && !this.action.icon,
+        };
+    }
+
+    get paddingClass() {
+        const isInlineCircleButton = this.props.isInlineCircleButton;
+        return {
             "o-px-1_5 py-1":
                 (this.hasBtnBg && !isInlineCircleButton && !this.env.inMeetingView) ||
                 (!this.hasBtnBg && this.env.inComposer),
@@ -72,19 +48,21 @@ export class ActionButton extends Component {
                 this.hasBtnBg &&
                 isInlineCircleButton &&
                 !this.env.inChatWindow,
-            "o-px-0_5": !this.env.inMeetingView && !this.hasBtnBg && !action.icon,
+            "o-px-0_5": !this.env.inMeetingView && !this.hasBtnBg && !this.action.icon,
             "p-1": this.hasBtnBg && isInlineCircleButton && this.env.inChatWindow,
             "o-p-0_5": !this.env.inMeetingView && !this.hasBtnBg && !this.env.inComposer,
             "o-px-0_5 py-0": this.env.inMessage,
-            "o-text-white o-simulateDarkTheme": this.store.shouldSimulateDarkTheme(this),
-            "bg-transparent": this.store.shouldSimulateDarkTheme(this) && !this.hasBtnBg,
-            "o-inDiscussCall":
-                this.env?.inDiscussCallView ||
-                this.env?.inCallInvitation ||
-                this.env.isDiscussPipBanner ||
-                this.env?.inWelcomePage,
-            [action.btnClass ?? ""]: true,
-            [action.tagClassNames]: true,
-        });
+        };
+    }
+
+    get classObj() {
+        return {
+            ...super.classObj,
+            ...this.alignmentClass,
+            ...this.borderClass,
+            ...this.roundnessClass,
+            ...this.marginClass,
+            ...this.paddingClass,
+        };
     }
 }
