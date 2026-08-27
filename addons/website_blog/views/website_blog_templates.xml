@@ -273,9 +273,9 @@ list of filtered posts (by date or tag).
                     _record="_record"
                     snippet_autofocus="True"
                     use_filters="True"
-                    use_size="False"
+                    use_size="True"
                     display_opt_name.translate="Blog Post Cover"
-                    additionnal_classes.f="o_wblog_post_page_cover o_cc5 pt112 pb112">
+                    additionnal_classes.f="o_wblog_post_page_cover o_cc5">
                     <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title">
                             <!-- Title and subtitle -->
@@ -607,8 +607,8 @@ list of filtered posts (by date or tag).
         <t t-call="website.record_cover"
             _record="next_post"
             use_filters="True"
-            additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover o_cc5 pt112 pb112">
-            <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
+            additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover o_cc5">
+            <t t-set="_cp" t-value="json.loads(next_post.cover_properties)"/>
 
             <a id="o_wblog_next_post_info" class="d-none"
                 t-att-data-size="_cp.get('resize_class')"
@@ -623,22 +623,11 @@ list of filtered posts (by date or tag).
                     <div t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp" placeholder="Subtitle"/>
                 </div>
 
-                <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
+                <div t-attf-class="o_wblog_toggle mt-4 mb-n4">
                     <span class="h4 d-inline-block py-1 px-2 rounded-1 cursor-pointer">
                         <i class="oi oi-3x text-white" data-icon="keyboard_arrow_right" aria-label="Read next" title="Read Next"/>
                     </span>
                 </div>
-
-                <!-- Emulate the next post's cover's height. For non-auto covers,
-                the room that will be occupied by the 'scroll-down' link is temporary
-                occupied  by the loader circle. For auto covers, an empty <div>
-                creates enough separation.
-                -->
-                <div t-if="not next_cover_is_auto"
-                    class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
-                    <div class="rounded-circle bg-black-50"></div>
-                </div>
-                <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
             </div>
         </t>
     </div>
