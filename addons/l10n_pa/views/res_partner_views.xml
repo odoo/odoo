@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_partner_view_form_inherit_l10n_pa" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.l10n_pa</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="street2" position="after">
+                <field name="l10n_pa_corregimiento"
+                       placeholder="Corregimiento..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'PA'"
+                       readonly="type == 'contact' and parent_id"/>
+            </field>
+            <xpath expr="//div[@id='vat_div']" position="inside">
+                <label for="l10n_pa_dv" invisible="country_code != 'PA'"/>
+                <field name="l10n_pa_dv" placeholder="e.g. 00" class="oe_inline"
+                       invisible="country_code != 'PA'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

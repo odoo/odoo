@@ -2,14 +2,17 @@
 <odoo>
     <record id="base.partner_demo_company_pa" model="res.partner" forcecreate="1">
         <field name="name">PA Company</field>
-        <field name="vat">PA770023598</field>
+        <field name="vat">789012-1-789012</field>
+        <field name="l10n_pa_dv">47</field>
         <field name="street">Entrada Urbanización El Bosque</field>
+        <field name="l10n_pa_corregimiento" ref="correg_pa_8_10_2"/>
+        <field name="city_id" ref="city_pa_8_10"/>
         <field name="city">San Miguelito</field>
+        <field name="state_id" ref="base.state_pa_8"/>
         <field name="country_id" ref="base.pa"/>
-        <field name="zip">84365</field>
-        <field name="phone">+507 655-5911-9</field>
+        <field name="phone">+507 6555-5911</field>
         <field name="email">info@company.paexample.com</field>
-        <field name="website">www.paexample.com</field>
+        <field name="website">https://www.paexample.com</field>
     </record>
 
     <record id="base.demo_company_pa" model="res.company" forcecreate="1">
