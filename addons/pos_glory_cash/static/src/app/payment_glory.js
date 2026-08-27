@@ -121,7 +121,7 @@ export class PaymentGlory extends PaymentInterface {
             return false;
         }
 
-        if (this.paymentLine.amount < 0 && this.pos.getCashier()._role !== "manager") {
+        if (this.paymentLine.amount < 0 && this.pos.accessRight.loggedCashier._role !== "manager") {
             this.showError(_t("Only managers can withdraw cash from the cash machine."));
             return false;
         }

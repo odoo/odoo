@@ -2,6 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.SelectPartnerButton">
         <button class="set-partner btn btn-lg lh-lg"
+            t-att-disabled="!this.pos.accessRight.disablePartner"
             t-on-click="() => this.pos.selectPartner()"
             t-attf-class="
                 {{this.ui.isSmall and this.props.partner ? 'btn-outline-secondary active text-action' : 'btn-secondary'}}

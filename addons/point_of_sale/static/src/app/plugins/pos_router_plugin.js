@@ -34,7 +34,7 @@ export class PosRouterPlugin extends Plugin {
         };
     });
 
-    setup(env) {
+    setup() {
         this.popStateCallback = null;
         window.addEventListener("popstate", (event) => {
             this.matchURL();

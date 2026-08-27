@@ -6,7 +6,6 @@ import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { user } from "@web/core/user";
 import {
     Component,
     onMounted,
@@ -141,18 +140,14 @@ export class ProductScreen extends Component {
             ),
         });
 
-        this.canReorderProducts = false;
-        Promise.resolve(user.checkAccessRight("product.template", "write")).then((hasAccess) => {
-            this.canReorderProducts = hasAccess;
-        });
-
         useSortable({
             ref: this.productsRootRef,
             elements: ".product-sortable",
             cursor: "move",
             tolerance: 10,
             connectGroups: false,
-            enable: () => this.canReorderProducts,
+            enable: () =>
+                this.pos.accessRight.canReorderProducts && this.pos.accessRight.canSortProducts,
             preventDrag: (element) => isNaN(Number(element.dataset.productId)),
             onDragStart: () => {
                 this.longPressHandlers.onMouseUp();
@@ -243,22 +238,25 @@ export class ProductScreen extends Component {
                 text: _t("%"),
                 disabled:
                     !this.pos.config.manual_discount ||
-                    this.pos.cashier._role === "minimal" ||
+                    !this.pos.accessRight.disableLinediscount ||
                     order?.getSelectedOrderline()?.isServiceFeeLine(),
             },
             {
                 value: "price",
                 text: _t("Price"),
-                disabled:
-                    !this.pos.cashierHasPriceControlRights() ||
-                    this.pos.cashier._role === "minimal",
+                disabled: !this.pos.accessRight.disablePriceButton,
             },
-            BACKSPACE,
+            {
+                ...BACKSPACE,
+                disabled:
+                    !this.pos.accessRight.disableBackSpaceButton &&
+                    !order.getSelectedOrderline()?.isDirty(),
+            },
         ]).map((button) => ({
             ...button,
             disabled:
                 button.disabled ||
-                (button.value === SWITCHSIGN.value && this.pos.cashier._role === "minimal") ||
+                (button.value === SWITCHSIGN.value && !this.pos.accessRight.canSwitchSign) ||
                 (order?.getSelectedOrderline()?.isServiceFeeLine() &&
                     order?.preset_id?.service_fee_type === "percent"),
             class: `

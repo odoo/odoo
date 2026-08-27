@@ -18,19 +18,20 @@
             </div>
             <div class="o_pos_burger_menu_buttons d-grid gap-2">
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
+                   t-if="this.pos.accessRight.canAccessCustomerDisplay"
                    t-name="customer_display"
                    dataIcon="'desktop_windows'"
                    onClick="() => this.props.openCustomerDisplay()"
                    btnLabel.translate="Customer Display"
                 />
-                <t t-if="!this.isDisplayStandalone and this.pos.cashier._role != 'minimal'"
+                <t t-if="!this.isDisplayStandalone and this.pos.accessRight.canInstallApp"
                    t-call="point_of_sale.BurgerDialogMenuButton"
                    t-name="install-app"
                    dataIcon="'download'"
                    onClick="() => window.open(this.appUrl)"
                    btnLabel.translate="Install App"
                 />
-                <t t-if="this.showCashMoveButton and this.pos.cashier._role != 'minimal'"
+                <t t-if="this.showCashMoveButton and this.pos.accessRight.canCashMove"
                    t-call="point_of_sale.BurgerDialogMenuButton"
                    dataIcon="'payments'"
                    onClick="() => this.pos.cashMove()"
@@ -49,7 +50,7 @@
                    onClick="() => this.pos.editProduct()"
                    btnLabel.translate="Create Product"
                 />
-                <t t-if="this.showPrinterButton"
+                <t t-if="this.showPrinterButton and this.pos.accessRight.canSelectPrinter"
                    t-call="point_of_sale.BurgerDialogMenuButton"
                    dataIcon="'print'"
                    onClick="() => this.pos.ticketPrinter.selectPrinter(true)"
@@ -64,19 +65,21 @@
                    onClick="() => this.onClickScan()"
                    btnLabel="barcodeLabel"
                 />
-                <t t-if="this.pos.ticketPrinter.hasReceiptPrinters"
+                <t t-if="this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport"
                    t-call="point_of_sale.BurgerDialogMenuButton"
                    dataIcon="'picture_as_pdf'"
                    onClick="() => this.showSaleDetails()"
                    btnLabel.translate="Print Report"
                 />
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
+                   t-if="this.pos.accessRight.canGoToBackend" 
                    t-name="backend"
                    dataIcon="'chevron_left'"
                    onClick="() => this.pos.closePos()"
                    btnLabel.translate="Backend"
                 />
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
+                   t-if="this.pos.accessRight.canCloseSession"
                    t-name="close_register"
                    dataIcon="'key'"
                    onClick="() => this.pos.closeSession()"

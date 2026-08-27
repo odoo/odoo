@@ -1021,10 +1021,6 @@ patch(PosStore.prototype, {
         this.floorPlan?.selectFloorById(floor?.id);
     },
 
-    get showEditPlanButton() {
-        return true;
-    },
-
     get showSaveOrderButton() {
         return !this.getOrder().table_id && super.showSaveOrderButton;
     },

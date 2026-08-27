@@ -33,7 +33,7 @@ export class BurgerMenuDialog extends Component {
     }
 
     get showCreateProductButton() {
-        return this.pos.hasProductCreationAccess;
+        return this.pos.accessRight.hasProductCreationAccess;
     }
 
     get showPrinterButton() {

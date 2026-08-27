@@ -1,20 +1,11 @@
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { patch } from "@web/core/utils/patch";
-import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
 
 patch(CashierName.prototype, {
-    setup() {
-        super.setup(...arguments);
-        if (this.pos.config.module_pos_hr) {
-            this.cashierSelector = useCashierSelector({
-                onScan: (employee) => this.pos.setCashier(employee),
-            });
-        }
-    },
     //@Override
     get avatar() {
         if (this.pos.config.module_pos_hr) {
-            const cashier = this.pos.getCashier();
+            const cashier = this.pos.accessRight.loggedCashier;
             if (!(cashier && cashier.id)) {
                 return "";
             }
@@ -29,13 +20,10 @@ patch(CashierName.prototype, {
         }
         return super.cssClass;
     },
-    async selectCashier(pin = false, login = false, list = false) {
-        return await this.cashierSelector(...arguments);
-    },
     async onCashierClick() {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
-        return this.selectCashier(false, true, true);
+        return this.pos.selectCashier(false, true, true);
     },
 });

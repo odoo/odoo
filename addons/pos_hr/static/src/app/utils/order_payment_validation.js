@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(OrderPaymentValidation.prototype, {
     async validateOrder(isForceValidate) {
         if (this.pos.config.module_pos_hr) {
-            this.order.employee_id = this.pos.getCashier();
+            this.order.employee_id = this.pos.accessRight.loggedCashier;
         }
 
         await super.validateOrder(...arguments);

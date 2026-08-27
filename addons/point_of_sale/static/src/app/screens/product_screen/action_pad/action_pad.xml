@@ -26,7 +26,7 @@
                 <div class="mw-100 container validation" t-att-class="{'p-0': !this.showFastPaymentMethods}">
                     <div class="gap-2" t-attf-class="{{this.showFastPaymentMethods ? 'row' : 'd-flex'}}">
                         <BackButton t-if="this.pos.showBackButton() and !this.pos.config.module_pos_restaurant" class="{'col-3': this.showFastPaymentMethods}" onClick="() => this.pos.onClickBackButton()"/>
-                        <button class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
+                        <button t-att-disabled="!this.pos.accessRight.disableClickPayment" class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
                             t-attf-class="{{this.props.buttonClasses}} {{this.showFastPaymentMethods ? 'col-3' : ''}}" t-on-click="this.props.actionToTrigger" t-out="this.props.actionName" />
                         <t t-if="this.showFastPaymentMethods" t-foreach="this.pos.config.fast_payment_method_ids" t-as="paymentMethod" t-key="paymentMethod.id">
                             <button class="fast-pay-button col-3 button btn btn-secondary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"

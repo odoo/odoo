@@ -53,9 +53,6 @@ patch(BurgerMenuDialog.prototype, {
             this.floorPlanStore = useFloorPlanStore();
         }
     },
-    get showEditPlanButton() {
-        return this.pos.showEditPlanButton;
-    },
     onSwitchButtonClick() {
         this.floorPlanStore?.toggleFloorPlanStyle();
     },
