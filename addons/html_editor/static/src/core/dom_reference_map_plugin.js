@@ -46,6 +46,9 @@ export function nodeToTree(node) {
  * @property { DomReferenceMapPlugin['serializeTree'] } serializeTree
  * @property { DomReferenceMapPlugin['unserializeNode'] } unserializeNode
  */
+/**
+ * @typedef { ((serializableDescendants: Tree[], elem: Node) => Tree[])[] } serializable_descendants_processors
+ */
 export class DomReferenceMapPlugin extends Plugin {
     static id = "domReferenceMap";
     static dependencies = ["sanitize"];
