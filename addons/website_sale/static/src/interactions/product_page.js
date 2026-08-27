@@ -887,9 +887,9 @@ export class ProductPage extends Interaction {
             }
         }
 
-        document.querySelector('.oe_website_sale')
-            .querySelector('#product_stock_availability')
-            ?.remove();
+        this.el.querySelectorAll(
+            '.availability_message_' + combination.product_template
+        ).forEach(el => el.remove());
         if (combination.out_of_stock_message) {
             const outOfStockMessage = document.createElement('div');
             setElementContent(outOfStockMessage, combination.out_of_stock_message);
