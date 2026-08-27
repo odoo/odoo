@@ -1,4 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< 13d0fd98be89d9fabe05c1a233f1a5945412c5cd
+||||||| c11ca6d10cac99b367078823dafef46808346267
+import datetime
+=======
+import datetime
+import logging
+>>>>>>> b65ac34857f7d87277c869746cb4135f13169142
 
 import base64
 import freezegun
@@ -11,6 +18,7 @@ from odoo.exceptions import AccessError
 from odoo.tests import Form, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
+<<<<<<< 13d0fd98be89d9fabe05c1a233f1a5945412c5cd
 _logger = logging.getLogger(__name__)
 
 try:
@@ -18,6 +26,26 @@ try:
 except ImportError:
     _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
     vobject = None
+||||||| c11ca6d10cac99b367078823dafef46808346267
+import freezegun
+import pytz
+import re
+import base64
+import vobject
+=======
+import freezegun
+import pytz
+import re
+import base64
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
+>>>>>>> b65ac34857f7d87277c869746cb4135f13169142
 
 
 class TestCalendar(SavepointCaseWithUserDemo):
@@ -522,6 +550,256 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 'partner_id': self.partner_demo.id,
             }])
 
+<<<<<<< 13d0fd98be89d9fabe05c1a233f1a5945412c5cd
+||||||| c11ca6d10cac99b367078823dafef46808346267
+    def test_ics_file_with_videocall_location(self):
+        """ The videocall_location should be exported as a clickable URL in the ICS file. """
+        event = self.env['calendar.event'].create({
+            'name': 'Test Meeting with URL',
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'partner_ids': [Command.link(self.partner_demo.id)],
+            'videocall_location': 'https://meet.example.com/test-meeting',
+        })
+        ics_files = event._get_ics_file()
+        self.assertIn(event.id, ics_files)
+        cal = vobject.readOne(ics_files[event.id].decode('utf-8'))
+        self.assertTrue(hasattr(cal.vevent, 'url'))
+        self.assertEqual(cal.vevent.url.value, 'https://meet.example.com/test-meeting')
+
+    def test_ics_file_without_videocall_location(self):
+        """ The URL property should not be present when videocall_location is not set. """
+        event = self.env['calendar.event'].create({
+            'name': 'Test Meeting without URL',
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'partner_ids': [Command.link(self.partner_demo.id)],
+        })
+        ics_files = event._get_ics_file()
+        self.assertIn(event.id, ics_files)
+        cal = vobject.readOne(ics_files[event.id].decode('utf-8'))
+        self.assertFalse(hasattr(cal.vevent, 'url'))
+
+    def test_ics_file_videocall_location_preserves_location(self):
+        """ Exporting the videocall URL should not clobber the physical LOCATION field. """
+        event = self.env['calendar.event'].create({
+            'name': 'Test Meeting with Location and URL',
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'partner_ids': [Command.link(self.partner_demo.id)],
+            'location': 'Conference Room A',
+            'videocall_location': 'https://meet.example.com/room-a',
+        })
+        ics_files = event._get_ics_file()
+        cal = vobject.readOne(ics_files[event.id].decode('utf-8'))
+        self.assertTrue(hasattr(cal.vevent, 'location'))
+        self.assertEqual(cal.vevent.location.value, 'Conference Room A')
+        self.assertTrue(hasattr(cal.vevent, 'url'))
+        self.assertEqual(cal.vevent.url.value, 'https://meet.example.com/room-a')
+
+@tagged('post_install', '-at_install')
+class TestCalendarTours(HttpCaseWithUserDemo):
+    def test_calendar_month_view_start_hour_displayed(self):
+        """ Test that the time is displayed in the month view. """
+        self.start_tour("/odoo", 'calendar_appointments_hour_tour', login="demo")
+
+    def test_calendar_delete_tour(self):
+        """
+            Check that we can delete events with the "Everybody's calendars" filter.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/odoo/action-" + str(action_id.id)
+        self.start_tour(url, 'test_calendar_delete_tour', login='admin')
+        event = self.env['calendar.event'].search([('name', '=', 'Test Event')])
+        self.assertFalse(event) # Check if the event has been correctly deleted
+
+    def test_calendar_decline_tour(self):
+        """
+            Check that we can decline events.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        user_demo = self.user_demo
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        event.partner_ids = [Command.link(user_demo.partner_id.id)]
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/odoo/action-" + str(action_id.id)
+        self.start_tour(url, 'test_calendar_decline_tour', login='demo')
+        attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
+        self.assertEqual(attendee.state, 'declined') # Check if the event has been correctly declined
+
+    def test_calendar_decline_with_everybody_filter_tour(self):
+        """
+            Check that we can decline events with the "Everybody's calendars" filter.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        user_demo = self.user_demo
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        event.partner_ids = [Command.link(user_demo.partner_id.id)]
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/odoo/action-" + str(action_id.id)
+        self.start_tour(url, 'test_calendar_decline_with_everybody_filter_tour', login='demo')
+        attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
+        self.assertEqual(attendee.state, 'declined') # Check if the event has been correctly declined
+
+=======
+    @freezegun.freeze_time('2024-01-01 08:00:00')
+    def test_ics_file_videocall_location(self):
+        """ The videocall_location should be exported as a URL property in the invitation.ics
+        attachment sent to attendees, without overriding the physical LOCATION when both are set. """
+        if not vobject:
+            self.skipTest("`vobject` Python module is not installed.")
+
+        cases = [
+            ('no videocall_location', {}, False, False),
+            (
+                'videocall_location only',
+                {'videocall_location': 'https://meet.example.com/test-meeting'},
+                'https://meet.example.com/test-meeting',
+                False,
+            ),
+            (
+                'videocall_location and location',
+                {'location': 'Conference Room A', 'videocall_location': 'https://meet.example.com/room-a'},
+                'https://meet.example.com/room-a',
+                'Conference Room A',
+            ),
+        ]
+        for index, (description, values, expected_url, expected_location) in enumerate(cases):
+            with self.subTest(description=description):
+                partner = self.env['res.partner'].create({
+                    'name': f"Attendee {index}",
+                    'email': f"attendee-{index}@example.com",
+                })
+                self.env['calendar.event'].create({
+                    'name': 'Test Meeting',
+                    'start': datetime(2024, 1, 1, 10, 0),
+                    'stop': datetime(2024, 1, 1, 11, 0),
+                    'partner_ids': [Command.link(partner.id)],
+                    **values,
+                })
+                msg = self.env['mail.message'].sudo().search([('notified_partner_ids', 'in', partner.id)])
+                attachment = msg.attachment_ids.filtered(lambda attachment: attachment.name == 'invitation.ics')
+                self.assertEqual(len(attachment), 1, "The invitation email should have exactly one invitation.ics attachment")
+
+                vevent = vobject.readOne(attachment.raw.decode('utf-8')).vevent
+                self.assertEqual(vevent.getChildValue('url', False), expected_url)
+                self.assertEqual(vevent.getChildValue('location', False), expected_location)
+
+@tagged('post_install', '-at_install')
+class TestCalendarTours(HttpCaseWithUserDemo):
+    def test_calendar_month_view_start_hour_displayed(self):
+        """ Test that the time is displayed in the month view. """
+        self.start_tour("/odoo", 'calendar_appointments_hour_tour', login="demo")
+
+    def test_calendar_delete_tour(self):
+        """
+            Check that we can delete events with the "Everybody's calendars" filter.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/odoo/action-" + str(action_id.id)
+        self.start_tour(url, 'test_calendar_delete_tour', login='admin')
+        event = self.env['calendar.event'].search([('name', '=', 'Test Event')])
+        self.assertFalse(event) # Check if the event has been correctly deleted
+
+    def test_calendar_decline_tour(self):
+        """
+            Check that we can decline events.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        user_demo = self.user_demo
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        event.partner_ids = [Command.link(user_demo.partner_id.id)]
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/odoo/action-" + str(action_id.id)
+        self.start_tour(url, 'test_calendar_decline_tour', login='demo')
+        attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
+        self.assertEqual(attendee.state, 'declined') # Check if the event has been correctly declined
+
+    def test_calendar_decline_with_everybody_filter_tour(self):
+        """
+            Check that we can decline events with the "Everybody's calendars" filter.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        user_demo = self.user_demo
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+        event.partner_ids = [Command.link(user_demo.partner_id.id)]
+        action_id = self.env.ref('calendar.action_calendar_event')
+        url = "/odoo/action-" + str(action_id.id)
+        self.start_tour(url, 'test_calendar_decline_with_everybody_filter_tour', login='demo')
+        attendee = self.env['calendar.attendee'].search([('event_id', '=', event.id), ('partner_id', '=', user_demo.partner_id.id)])
+        self.assertEqual(attendee.state, 'declined') # Check if the event has been correctly declined
+
+>>>>>>> b65ac34857f7d87277c869746cb4135f13169142
     def test_default_duration(self):
         # Check the default duration depending on various parameters
         user_demo = self.user_demo
