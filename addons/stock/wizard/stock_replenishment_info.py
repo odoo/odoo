@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.dates
 from json import dumps
 from dateutil.relativedelta import relativedelta
 
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools.date_utils import get_month, subtract
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import get_lang, format_date
+from odoo.tools.misc import format_date
 
 
 class StockReplenishmentInfo(models.TransientModel):
@@ -22,8 +20,18 @@ class StockReplenishmentInfo(models.TransientModel):
     product_min_qty = fields.Float('Min', related='orderpoint_id.product_min_qty', readonly=False, related_sudo=False, required=True)
     product_max_qty = fields.Float('Max', related='orderpoint_id.product_max_qty', readonly=False, related_sudo=False, required=True)
     daily_demand = fields.Float("Demand is", related='orderpoint_id.daily_demand', readonly=False, related_sudo=False, required=True)
-    min_coverage = fields.Integer(compute='_compute_min_coverage', readonly=False)
-    replenish_frequency = fields.Integer(compute='_compute_replenish_frequency', readonly=False)
+    min_coverage = fields.Integer(
+        compute='_compute_min_coverage', readonly=False,
+        help="Days of demand covered by Minimum level:\n"
+             "Should be ≥ Replenishment Time - Sales Availability Time to avoid stock-outs during replenishment time.\n"
+             "Include extra days of safety to buffer unusual situations.\n\n"
+             "Green if > Replenishment Time - Sales Availability Time\n"
+             "Orange if = Replenishment Time - Sales Availability Time\n"
+             "Red if < Replenishment Time - Sales Availability Time")
+    replenish_frequency = fields.Integer(
+        compute='_compute_replenish_frequency', readonly=False,
+        help="Replenishment Frequency: choose how many days there are between replenishment requests to optimize the balance "
+             "between your storage costs and order costs and calculate your Maximum level.")
     qty_to_order = fields.Float(related='orderpoint_id.qty_to_order')
     json_lead_days = fields.Char(compute='_compute_json_lead_days')
     json_replenishment_graph = fields.Char(compute='_compute_json_replenishment_graph')

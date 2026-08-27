@@ -32,18 +32,19 @@
                                 <label class="o_form_label col-3" for="product_min_qty"/>
                                 <field name="product_min_qty" class="oe_inline"/>
                                 <field name="product_uom_name" class="oe_inline"/>
-                                <span invisible="daily_demand &lt;= 0.001" title="Choose how many days of demand are covered by the Minimum level based on the average daily demand.&#13;This number of days should at least be equal to Replenishment Lead Times - Availability Time to not run out of stock while waiting for a new replenishment to arrive. Include extra days of safety to buffer unusual situations.&#13;&#13;Green if &gt; Replenishment Lead Times - Availability Time&#13;Orange if = Replenishment Lead Times - Availability Time&#13;Red if &lt; Replenishment Lead Times - Availability Time">
+                                <span invisible="daily_demand &lt;= 0.001">
                                     (<span invisible="danger_level != 'success'" class="text-success"><field name="min_coverage" class="text-end o_small"/> days</span>
                                     <span invisible="danger_level != 'warning'" class="text-warning"><field name="min_coverage" class="text-end o_small"/> days</span>
-                                    <span invisible="danger_level != 'danger'" class="text-danger"><field name="min_coverage" class="text-end o_small"/> days</span>)
+                                    <span invisible="danger_level != 'danger'" class="text-danger"><field name="min_coverage" class="text-end o_small"/> days</span>
+                                    <label for="min_coverage" string=""/>)
                                 </span>
                             </div>
                             <div>
                                 <label class="o_form_label col-3" for="product_max_qty"/>
                                 <field name="product_max_qty" class="oe_inline"/>
                                 <field name="product_uom_name" class="oe_inline"/>
-                                <span invisible="daily_demand &lt;= 0.001" title="Replenishment Frequency: choose how many days there are between replenishment requests to optimize the balance between your storage costs and order costs and calculate your Maximum level.">
-                                    (<field name="replenish_frequency" class="text-end o_small"/> days)
+                                <span invisible="daily_demand &lt;= 0.001">
+                                    (<field name="replenish_frequency" class="text-end o_small"/> days<label for="replenish_frequency" string=""/>)
                                 </span>
                             </div>
                         </div>
