@@ -91,3 +91,18 @@ class TestProductRounding(ProductCommon):
         product_in_cad = product.with_context(pricelist=self.pricelist_cad.id)
         discount_cad = product_in_cad._get_contextual_discount()
         self.assertAlmostEqual(discount_cad, 0.0, places=6, msg="No discount should be applied for $100 product in Testing CAD.")
+
+    def test_list_price_min_display_digits_inherited_from_template(self):
+        template_field = self.env["product.template"]._fields["list_price"]
+        variant_field = self.env["product.product"]._fields["list_price"]
+        rendered_on_variant = self.env["ir.qweb.field.float"].record_to_html(
+            self.product, "list_price", {})
+        rendered_on_template = self.env["ir.qweb.field.float"].record_to_html(
+            self.product.product_tmpl_id, "list_price", {})
+        self.product.list_price = 19.5
+
+        self.assertEqual(
+            variant_field.get_min_display_digits(self.env),
+            template_field.get_min_display_digits(self.env),
+        )
+        self.assertEqual(rendered_on_variant, rendered_on_template)
