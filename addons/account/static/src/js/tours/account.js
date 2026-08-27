@@ -27,7 +27,6 @@ export const accountTourSteps = {
     },
     endSteps() {
         return [{
-            isActive: ["auto"],
             trigger: '.breadcrumb-item',
             run: "click",
         }];
@@ -46,18 +45,15 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=partner_id] input`,
         run: "edit Test Customer",
     },
     {
-        isActive: ["auto"],
         trigger: `body${accountTourSteps.draftInvoiceSelector} .o_m2o_dropdown_option a:contains('Create')`,
         content: _t("Select first partner"),
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: `body${accountTourSteps.draftInvoiceSelector} .modal-content button.btn-primary`,
         content: markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
         run: "click",
@@ -127,23 +123,24 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
+        isActive: ["manual"],
+        trigger: "button[name=document_layout_save]",
+        content: _t("Continue with the default document layout."),
+        run: "click",
+    },
+    {
         isActive: ["auto"],
-        trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
         content: "Wait for animation frame",
-        async run(helpers) {
-            await helpers.animationFrame();
-        },
+        trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
     },
     {
         // RecipientsInputTagsListPopover will not display if the customer already has an email address
         // unless it's possible to have optional steps, we will only use it for tests at the moment.
-        isActive: ["auto"],
         trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: "edit customer@example.com",
     },
     {
-        isActive: ["auto"],
         trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover .btn-primary`,
         content: _t("Validate."),
         run: "click",
