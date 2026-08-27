@@ -19,9 +19,9 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
+import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
 import { Tour, TourStep } from "./tour_models";
-import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
+import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";
 
 describe.current.tags("desktop");
 

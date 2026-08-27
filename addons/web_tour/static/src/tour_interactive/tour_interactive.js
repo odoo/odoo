@@ -1,9 +1,9 @@
-import { tourState } from "@web_tour/js/tour_state";
+import { tourState } from "@web_tour/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_utils";
-import { TourStepInteractive } from "@web_tour/js/tour_interactive/tour_step_interactive";
-import { TourInteractiveObserver } from "@web_tour/js/tour_interactive/tour_interactive_observer";
-import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
+import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
+import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
+import { pointerState } from "@web_tour/tour_pointer/tour_pointer";
 
 /**
  * @typedef ConsumeEvent
@@ -33,10 +33,11 @@ export class TourInteractive {
     }
 
     /**
-     * @param {import("@web_tour/js/tour_pointer/tour_pointer").TourPointer} pointer
+     * @param {import("@web_tour/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
+     * @returns {Promise<void>} resolves once the tour has fully ended.
      */
-    start(env, onTourEnd) {
+    async start(env, onTourEnd) {
         this.onTourEnd = onTourEnd;
         if (TourInteractive.observer) {
             TourInteractive.observer.disconnect();
@@ -48,9 +49,12 @@ export class TourInteractive {
             // eslint-disable-next-line no-debugger
             debugger;
         }
-        this.play();
         env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
         env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
+        return new Promise((resolve) => {
+            this.resolveStart = resolve;
+            this.play();
+        });
     }
 
     backward() {
@@ -76,6 +80,7 @@ export class TourInteractive {
         if (this.currentActionIndex === this.actions.length) {
             TourInteractive.observer.disconnect();
             this.onTourEnd();
+            this.resolveStart();
             return;
         }
 

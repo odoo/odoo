@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { getScrollParent, isInPage } from "@web_tour/js/utils/tour_utils";
+import { getScrollParent, isInPage } from "@web_tour/tour_pointer/tour_pointer_utils";
 
 const oppositeSides = {
     left: "right",

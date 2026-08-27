@@ -3,7 +3,7 @@ import { utils } from "@web/core/ui/ui_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { pick } from "@web/core/utils/objects";
 import { getTag } from "@web/core/utils/xml";
-import { TourHelpers } from "@web_tour/js/tour_helpers/tour_helpers";
+import { TourHelpers } from "@web_tour/tour_helpers/tour_helpers";
 
 /**
  * @typedef TourStep

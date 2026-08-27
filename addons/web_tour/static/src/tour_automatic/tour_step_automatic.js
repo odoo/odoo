@@ -1,6 +1,6 @@
 import * as hoot from "@odoo/hoot-dom";
-import { tourState } from "@web_tour/js/tour_state";
-import { TourStep } from "@web_tour/js/tour_step";
+import { tourState } from "@web_tour/tour_state";
+import { TourStep } from "@web_tour/tour_step";
 
 export class TourStepAutomatic extends TourStep {
     constructor(data, tour, index) {
