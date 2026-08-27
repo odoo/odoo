@@ -94,8 +94,6 @@ class ResConfigSettings(models.TransientModel):
     pos_limit_categories = fields.Boolean(related='pos_config_id.limit_categories', readonly=False)
     pos_manual_discount = fields.Boolean(related='pos_config_id.manual_discount', readonly=False)
     pos_only_round_cash_method = fields.Boolean(related='pos_config_id.only_round_cash_method', readonly=False)
-    pos_other_devices = fields.Boolean(related='pos_config_id.other_devices', readonly=False)
-    pos_preparation_devices = fields.Boolean(related='pos_config_id.preparation_devices', readonly=False)
     pos_payment_method_ids = fields.Many2many(related='pos_config_id.payment_method_ids', readonly=False)
     pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
@@ -230,15 +228,6 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'res_id': False,
             'context': {'pos_config_open_modal': True, 'pos_config_create_mode': True},
-        }
-
-    def action_pos_printer_dialog(self):
-        return {
-            'view_mode': 'form',
-            'res_model': 'pos.printer',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'res_id': False,
         }
 
     def pos_close_ui(self):
