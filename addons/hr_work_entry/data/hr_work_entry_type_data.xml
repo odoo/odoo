@@ -1722,6 +1722,45 @@
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
     </record>
+    <record id="l10n_be_work_entry_type_surplus_flexible_hours" model="hr.work.entry.type">
+        <field name="name">Surplus work flexibility hours</field>
+        <field name="code">FLX2670</field>
+        <field name="display_code">FLXSUW</field>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">working_time</field>
+        <field name="resource_calendar_selectable" eval="False"/>
+    </record>
+    <record id="l10n_be_work_entry_type_short_flexible_hours" model="hr.work.entry.type">
+        <field name="name">Short work flexibility hours</field>
+        <field name="code">FLX4670</field>
+        <field name="display_code">FLXSHW</field>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">working_time</field>
+        <field name="resource_calendar_selectable" eval="False"/>
+    </record>
+    <record id="l10n_be_work_entry_type_non_recoverable_flexible_hours" model="hr.work.entry.type">
+        <field name="name">Non-recoverable flexibility hours</field>
+        <field name="code">FLX4024</field>
+        <field name="display_code">FLXNR</field>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">working_time</field>
+        <field name="amount_rate">1.5</field>
+        <field name="resource_calendar_selectable" eval="False"/>
+    </record>
+    <record id="l10n_be_work_entry_type_non_work_flexible_hours" model="hr.work.entry.type">
+        <field name="name">Flexible hours not worked</field>
+        <field name="code">FLX46877</field>
+        <field name="display_code">FLXNW</field>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0</field>
+        <field name="resource_calendar_selectable" eval="False"/>
+    </record>
+
 
     <record id="l10n_be_work_entry_type_flexi_attendance" model="hr.work.entry.type">
         <field name="name">Flexi Attendance</field>
