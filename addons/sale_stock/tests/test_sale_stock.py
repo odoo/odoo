@@ -1649,6 +1649,35 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertRecordValues(out_picking.move_line_ids, [{'result_package_id': False}, {'result_package_id': package_2.id}])
 
+    def test_merged_destination_keeps_distinct_packages(self):
+        """
+        Check that a pack transfer and its backorder each keep their own package on the delivery order
+        """
+        warehouse = self.company_data.get('default_warehouse')
+        warehouse.delivery_steps = 'pick_pack_ship'
+
+        sale_order = self._get_new_sale_order()
+        sale_order.action_confirm()
+
+        pick = sale_order.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        pick.button_validate()
+
+        # Pack 5 out of 10 and backorder the rest: two pack moves feeding one merged ship move.
+        pack = sale_order.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pack_type_id)
+        pack.move_ids.quantity = 5.0
+        package_1 = pack.action_put_in_pack()
+        Form.from_action(self.env, pack.button_validate()).save().process()
+
+        backorder = pack.backorder_ids
+        package_2 = backorder.action_put_in_pack()
+        backorder.button_validate()
+
+        delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+        self.assertRecordValues(delivery.move_line_ids.sorted('id'), [
+            {'quantity': 5.0, 'result_package_id': package_1.id},
+            {'quantity': 5.0, 'result_package_id': package_2.id},
+        ])
+
     def test_inventory_admin_no_backorder_not_own_sale_order(self):
         sale_order = self._get_new_sale_order()
         sale_order.action_confirm()
