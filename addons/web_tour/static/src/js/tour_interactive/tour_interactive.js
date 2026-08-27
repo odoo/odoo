@@ -1,9 +1,10 @@
+import { markup } from "@odoo/owl";
 import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_utils";
 import { TourStepInteractive } from "@web_tour/js/tour_interactive/tour_step_interactive";
 import { TourInteractiveObserver } from "@web_tour/js/tour_interactive/tour_interactive_observer";
-import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
+import { TourPointer, pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 
 /**
  * @typedef ConsumeEvent
@@ -14,6 +15,7 @@ import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 
 export class TourInteractive {
     static observer = null;
+    static removePointer = () => {};
     mode = "manual";
     currentAction;
     currentActionIndex;
@@ -22,8 +24,17 @@ export class TourInteractive {
 
     /**
      * @param {Tour} data
+     * @param {Object} deps
+     * @param {import("@web/core/network/orm_service").ORM} deps.orm
+     * @param {import("@web/core/effects/effect_plugin").EffectPlugin} deps.effect
+     * @param {import("@web/core/overlay/overlay_plugin").OverlayPlugin} deps.overlay
+     * @param {(nextTour: Object) => void} deps.onChainNextTour
      */
-    constructor(data) {
+    constructor(data, { orm, effect, overlay, onChainNextTour }) {
+        this.orm = orm;
+        this.effect = effect;
+        this.overlay = overlay;
+        this.onChainNextTour = onChainNextTour;
         Object.assign(this, data);
         this.steps = this.steps.map((step) => new TourStepInteractive(step, this));
         this.actions = this.steps.flatMap((step) => step.actions);
@@ -33,16 +44,20 @@ export class TourInteractive {
     }
 
     /**
-     * @param {import("@web_tour/js/tour_pointer/tour_pointer").TourPointer} pointer
-     * @param {Function} onTourEnd
+     * @param {import("@web/env").OdooEnv} env
      */
-    start(env, onTourEnd) {
-        this.onTourEnd = onTourEnd;
+    start(env) {
+        TourInteractive.removePointer();
         if (TourInteractive.observer) {
             TourInteractive.observer.disconnect();
         }
         TourInteractive.observer = new TourInteractiveObserver(() => this._onMutation());
         TourInteractive.observer.observe(document.body);
+        TourInteractive.removePointer = this.overlay.add(
+            TourPointer,
+            { pointerState },
+            { sequence: 1100 } // sequence based on bootstrap z-index values.
+        );
         this.currentActionIndex = tourState.getCurrentIndex();
         if (this.config.debug && this.currentActionIndex === 0) {
             // eslint-disable-next-line no-debugger
@@ -75,7 +90,7 @@ export class TourInteractive {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
             TourInteractive.observer.disconnect();
-            this.onTourEnd();
+            this.finish();
             return;
         }
 
@@ -121,6 +136,28 @@ export class TourInteractive {
             return;
         }
         this.updatePointer();
+    }
+
+    async finish() {
+        TourInteractive.removePointer();
+        tourState.clear();
+        let message = this.config.rainbowManMessage || this.rainbowManMessage;
+        if (message && window.DOMPurify) {
+            message = window.DOMPurify.sanitize(message);
+            this.effect.add({
+                type: "rainbow_man",
+                message: markup(message),
+            });
+            if (this.config.robot) {
+                await hoot.waitFor(".o_reward_rainbow_man", { timeout: 10000 });
+            }
+        }
+        console.log("tour succeeded");
+
+        const nextTour = await this.orm.call("web_tour.tour", "consume", [this.name]);
+        if (nextTour) {
+            this.onChainNextTour(nextTour);
+        }
     }
 
     get hasConsumeEvent() {
