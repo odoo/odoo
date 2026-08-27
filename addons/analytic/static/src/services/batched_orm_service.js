@@ -60,7 +60,7 @@ class RequestBatcherORM extends ORM {
      */
     async read(resModel, resIds, fields, kwargs) {
         const records = await this.batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
-            super.read(resModel, resIds, fields, kwargs)
+            super.read.call(this.unscoped, resModel, resIds, fields, kwargs)
         );
         return records.filter((r) => resIds.includes(r.id));
     }
