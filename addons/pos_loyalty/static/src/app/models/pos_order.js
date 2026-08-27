@@ -321,7 +321,13 @@ patch(PosOrder.prototype, {
      * Removes the reward line from the order, calculates the available points on the program,
      * and then repplies the reward if possible
      */
-    recomputeReward(reward, qty, reward_product_id) {
+    recomputeReward(
+        reward,
+        qty,
+        reward_product_id,
+        attribute_value_ids = [],
+        attribute_custom_values = []
+    ) {
         const program = reward.program_id;
         if (!program) {
             return;
@@ -330,7 +336,12 @@ patch(PosOrder.prototype, {
         if (points < reward.required_points) {
             return;
         }
-        this.applyReward(reward, points, { qty, reward_product_id });
+        this.applyReward(reward, points, {
+            qty,
+            reward_product_id,
+            attribute_value_ids,
+            attribute_custom_values,
+        });
     },
     /**
      * Recomputes the automatically applied rewards on the order. For every auto program, the
@@ -377,10 +388,22 @@ patch(PosOrder.prototype, {
             const activeRewards = [...this.active_rewards].sort(
                 (a, b) => (Number(a.qty) || Infinity) - (Number(b.qty) || Infinity)
             );
-            for (const { reward_id, qty, reward_product_id } of activeRewards) {
+            for (const {
+                reward_id,
+                qty,
+                reward_product_id,
+                attribute_value_ids,
+                attribute_custom_values,
+            } of activeRewards) {
                 const reward = this.models["loyalty.reward"].get(reward_id);
                 if (reward) {
-                    this.recomputeReward(reward, qty, reward_product_id);
+                    this.recomputeReward(
+                        reward,
+                        qty,
+                        reward_product_id,
+                        attribute_value_ids,
+                        attribute_custom_values
+                    );
                 }
             }
 

@@ -17,14 +17,9 @@ class PosOrder(models.Model):
     active_payment_programs = fields.Json(default=list, copy=False)
     disabled_program_ids = fields.Json(default=list, copy=False)
 
-    def _process_saved_order(self, draft):
-        """
-        Override to update loyalty points and generate history lines
-        """
-        res = super()._process_saved_order(draft)
-        if not draft and self.state != 'cancel':
-            self._process_loyalty()
-
+    def action_pos_order_paid(self):
+        res = super().action_pos_order_paid()
+        self._process_loyalty()
         return res
 
     def read_pos_data(self, data, config):

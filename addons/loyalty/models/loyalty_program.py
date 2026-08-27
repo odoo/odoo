@@ -472,6 +472,7 @@ class LoyaltyProgram(models.Model):
                         "reward_point_mode": "unit",
                         "product_ids": first_sale_product,
                         "minimum_qty": 2,
+                        "minimum_amount": 0,
                     }),
                 ],
                 "reward_ids": [
