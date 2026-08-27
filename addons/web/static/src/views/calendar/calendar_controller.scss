@@ -61,6 +61,12 @@ $o-cw-filter-avatar-size: 20px;
     .o_calendar_sidepanel {
         width: $o-datetime-picker-reduced-width;
 
+        // Inlined in the panel: it spans the full width, the panel handles the
+        // horizontal spacing.
+        > .o_datetime_picker {
+            --DateTimePicker-padding: #{map-get($spacers, 2)} 0;
+        }
+
         .o_time_picker input {
             field-sizing: content;
         }
