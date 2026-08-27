@@ -49,7 +49,8 @@ class PosPrinter(models.Model):
         default='epson_epos',
         selection=[
             ('epson_epos', 'ePoS'),
-        ]
+            ('polling', 'Polling Printer'),
+        ],
     )
     use_type = fields.Selection(selection=[
         ('preparation', "Preparation"),
@@ -76,6 +77,32 @@ class PosPrinter(models.Model):
     paper_size_keys = fields.Char(compute='_compute_paper_size_keys')
     timeout = fields.Integer(string="Connection Timeout (ms)", default=15000, help="Time in milliseconds before considering that the printer is not responding.")
     is_split_per_product = fields.Boolean(string='Split per product', help="Print one ticket for each product instead of one ticket grouping all products of the order.")
+
+    polling_printer_webhook = fields.Char(
+        help="Provide this URL in EPSON printer advanced settings -> TM-i Settings -> Server Direct Print",
+        compute="_compute_polling_printer_webhook",
+    )
+
+    @api.depends()
+    def _compute_polling_printer_webhook(self):
+        db_uuid = self.env["ir.config_parameter"].sudo().get_str("database.uuid", "")[:30].strip()
+        for printer in self:
+            printer.polling_printer_webhook = (
+                f"{printer.get_base_url()}/pos/printer/polling/{printer.id}/{db_uuid}/get_print_jobs"
+                if printer.id
+                else False
+            )
+
+    queued_receipt_ids = fields.One2many("polling.printer.pending.receipt", "printer_id")
+
+    def push_polling_printer_receipt(self, receipt: str):
+        """Push a receipt to the print queue (Polling Printers specific)
+        """
+        self.ensure_one()
+        self.queued_receipt_ids.create({
+            "receipt": receipt,
+            "printer_id": self.id,
+        })
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -129,3 +156,13 @@ class PosPrinter(models.Model):
         for rec in self:
             if rec.paper_size not in rec.paper_size_keys.split(","):
                 rec.paper_size = '80'
+
+
+class PollingPrinterPendingReceipt(models.TransientModel):
+    _name = "polling.printer.pending.receipt"
+    _description = "PoS Receipt Queue, used by Polling Printers"
+    _transient_max_count = 30  # max queue length (vacuumed every 5 min)
+    _transient_max_hours = 0.1  # jobs kept for 6 min max (vacuumed every 5 min)
+
+    receipt = fields.Text(string="Receipt")
+    printer_id = fields.Many2one("pos.printer", string="POS Printer ID")
