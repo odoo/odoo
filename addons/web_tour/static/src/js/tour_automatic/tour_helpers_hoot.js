@@ -356,10 +356,16 @@ patch(TourHelpers.prototype, {
             throw new Error(`canvasNotEmpty is only suitable for canvas elements.`);
         }
         await hoot.waitUntil(() => {
+            if (!canvas || canvas.width === 0 || canvas.height === 0) {
+                return false;
+            }
             const context = canvas.getContext("2d");
+            if (!context) {
+                return false;
+            }
             const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
             const pixels = new Uint32Array(imageData.data.buffer);
-            return pixels.some((pixel) => pixel !== 0); // pixel is on
+            return pixels.some((pixel) => pixel !== 0);
         });
     },
 
