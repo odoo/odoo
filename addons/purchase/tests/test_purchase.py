@@ -1457,6 +1457,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         )
 
         self.assertEqual(order.order_line.price_unit, 10.0)
+<<<<<<< 4f27913c8c791ce39e58336ebba7aec49d0cde02
 
 
 @tagged('at_install', '-post_install')
@@ -1479,3 +1480,21 @@ class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
         po.button_confirm()
         po.action_receive()
         self.assertEqual(po.order_line.qty_received, 1)
+||||||| e27402004dfda3f319a6fbf050b8f40a3921ffdd
+=======
+
+    def test_prevent_partner_deletion(self):
+        """Check that alt PO correctly copies the original PO values"""
+        subcontractor, client = self.env["res.partner"].create([
+            {"name": "subcontractor"},
+            {"name": "client"},
+        ])
+
+        po = self.env["purchase.order"].create([{
+            "partner_id": subcontractor.id,
+            "dest_address_id": client.id,
+        }])
+        po.button_confirm()
+        with self.assertRaises(UserError):
+            client.unlink()
+>>>>>>> 4ab2b7ff8465760adef3af8fe71d46d1c0ee113b
