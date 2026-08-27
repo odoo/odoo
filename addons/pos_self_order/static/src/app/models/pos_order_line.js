@@ -60,4 +60,10 @@ patch(PosOrderline.prototype, {
             return prices.total_excluded;
         }
     },
+    get countInLineNotSend() {
+        return !this.combo_parent_id;
+    },
+    get imageUrl() {
+        return `/web/image/product.product/${this.product_id.id}/image_512?unique=${this.product_id.write_date}`;
+    },
 });

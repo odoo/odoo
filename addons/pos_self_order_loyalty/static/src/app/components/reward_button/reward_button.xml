@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.RewardButton">
+        <button
+            class="btn btn-secondary btn-lg h-100 d-flex align-items-center gap-2 btn-reward px-3 text-nowrap"
+            t-att-class="{
+                'btn-reward-glow': this.hasRewards and !this.showAvatarOnly,
+            }"
+            t-att-disabled="this.isDisabled"
+            t-on-click.stop="this.clickRewardButton"
+            >
+            <t t-if="this.router.activeSlot === 'cart'">
+                <t t-if="this.showAvatarOnly">
+                    <t t-call="pos_self_order_loyalty.RewardButtonSmallIcon"/>
+                </t>
+                <t t-else="">
+                    <t t-if="!this.selfOrder.currentOrder.getPartner()">
+                        <span class="text-truncate">Identify yourself</span>
+                    </t>
+                    <t t-else="">
+                        <span class="fs-3 text-truncate">Apply Rewards</span>
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-if="this.showAvatarOnly">
+                    <t t-call="pos_self_order_loyalty.RewardButtonSmallIcon"/>
+                </t>
+                <i t-else="" class="oi flex-shrink-0" data-icon="card_giftcard" aria-hidden="true"/>
+                <div class="position-relative" t-if="!this.showAvatarOnly">
+                    <t t-set="loyalty_points" t-value="this.getPartnerLoyaltyPoints()"/>
+                    <!-- in flow: sets the button's width and height -->
+                    <span class="d-block fs-3 px-1 invisible" aria-hidden="true">Claim your rewards</span>
+                    <!-- out of flow: centered on the ghost, may overflow into the padding -->
+                    <div class="position-absolute top-50 start-0 w-100 translate-middle-y">
+                        <t t-if="!this.selfOrder.currentOrder.getPartner() and !this.hasRewards">
+                            <span class="d-block text-truncate">Rewards</span>
+                        </t>
+                        <t t-else="">
+                            <div class="lh-1" t-att-class="{'roller': this.hasRewards}">
+                                <ul class="list-unstyled m-0 p-0 w-100">
+                                    <li class="d-flex flex-column justify-content-center">
+                                        <span class="fs-3 text-truncate" t-out="this.selfOrder.currentOrder.getPartner().name"/>
+                                        <span t-if="loyalty_points" class="fs-5 fw-normal text-truncate" t-out="loyalty_points"/>
+                                    </li>
+                                    <li t-if="this.hasRewards" class="d-flex align-items-center">
+                                        <span class="fs-3 px-1 text-truncate">Claim your rewards</span>
+                                    </li>
+                                    <li t-if="this.hasRewards" class="d-flex flex-column justify-content-center" aria-hidden="true">
+                                        <span class="fs-3 text-truncate" t-out="this.selfOrder.currentOrder.getPartner().name"/>
+                                        <span t-if="loyalty_points" class="fs-5 fw-normal text-truncate" t-out="loyalty_points"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </button>
+    </t>
+
+    <t t-name="pos_self_order_loyalty.RewardButtonSmallIcon">
+        <t t-set="partner" t-value="this.selfOrder.currentOrder.getPartner()"/>
+        <i t-if="!partner" class="oi" data-icon="account_circle" aria-hidden="true"/>
+        <span t-else="" class="o_reward_avatar d-block flex-shrink-0 rounded-circle fw-bold text-bg-primary"
+            t-att-class="{'roller': this.hasRewards}"
+            role="img" t-att-aria-label="this.loggedInLabel" t-att-title="this.loggedInLabel">
+            <!-- Same rolling animation as "Claim your rewards": initial, gift, initial (for a seamless loop) -->
+            <ul class="list-unstyled m-0 p-0 w-100">
+                <li class="d-flex align-items-center justify-content-center" t-out="this.partnerInitial"/>
+                <li t-if="this.hasRewards" class="d-flex align-items-center justify-content-center">
+                    <i class="oi" data-icon="card_giftcard" aria-hidden="true"/>
+                </li>
+                <li t-if="this.hasRewards" class="d-flex align-items-center justify-content-center" aria-hidden="true" t-out="this.partnerInitial"/>
+            </ul>
+        </span>
+    </t>
+</templates>

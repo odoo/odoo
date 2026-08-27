@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.SelectRewardPopup">
+        <div class="self_order_select_reward_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-info border border-white border-5">
+                                <i class="oi oi-2x" data-icon="card_giftcard"/>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-logout position-absolute top-0 start-0 m-1" t-if="this.selfOrder.currentOrder.getPartner()" t-on-click.stop="() => this.logout()">Log out</button>
+                            <button type="button" class="position-absolute top-0 end-0 p-3 btn-close" t-on-click.stop="() => this.props.close()"></button>
+                            <div class="mt-5 mt-md-4 d-flex flex-column align-items-center gap-2">
+                                <h1 t-out="this.props.title"></h1>
+                                <t t-if="!this.selfOrder.currentOrder.getPartner()">
+                                    <div class="btn bg-light-pink w-75 d-flex justify-content-between align-items-center px-4" t-on-click.stop="() => this.selfOrder.identifyCustomer()" >
+                                        <h2 class="flex-basis-75 my-auto text-start">Already a member?</h2>
+                                        <button class="btn btn-lg btn-primary w-50 p-2 my-3 text-center">
+                                            Identify Yourself
+                                        </button>
+                                    </div>
+                                    <br/>
+                                    <h2 class="text-center">Or claim your rewards</h2>
+                                    <br/>
+                                </t>
+                                <t t-else="">
+                                    <h3 class="text-center">Logged in as <t t-out="this.selfOrder.currentOrder.getPartner().name"/></h3>
+                                </t>
+                                <t t-if="this.showClaimedRewards">
+                                    <div class="d-flex flex-column align-items-center gap-2 w-100 px-2">
+                                        <div t-if="this.props.showDivisions" class="d-flex gap-2 align-items-center justify-content-between w-100">
+                                            <h2 class="flex-basis-75">Already claimed</h2>
+                                        </div>
+                                        <t t-foreach="this.claimedRewards" t-as="claimed" t-key="claimed.key">
+                                            <RewardCard reward="claimed.reward" claimed="true" claimedLabel="claimed.label"/>
+                                        </t>
+                                    </div>
+                                    <br/>
+                                </t>
+                                <t t-if="this.programs.length + this.promotionRewards.length &gt; 0">
+                                    <div t-foreach="this.programs" t-as="program" t-key="program.id" class="d-flex flex-column align-items-center gap-2 w-100 px-2">
+                                        <t t-set="rewards" t-value="this.getRewards(program)"/>
+                                        <t t-set="program_points" t-value="this.getProgramPoints(program)"/>
+                                        <div t-if="this.props.showDivisions" class="d-flex gap-2 align-items-center justify-content-between w-100">
+                                            <h2 class="flex-basis-75" t-out="program.name"/>
+                                            <h2 class="flex-basis-25 text-end" t-out="program.getDisplayPoints(this.selfOrder.currentOrder)"/>
+                                        </div>
+                                        <t t-foreach="rewards" t-as="reward" t-key="reward_index">
+                                            <RewardCard reward="reward" onClick="() => this.confirm(reward)"/>
+                                        </t>
+                                    </div>
+                                    <br/>
+                                    <div t-if="this.promotionRewards.length &gt; 0" class="d-flex flex-column align-items-center gap-2 w-100 px-2">
+                                        <div t-if="this.props.showDivisions" class="d-flex gap-2 align-items-center justify-content-between w-100">
+                                            <h2 class="flex-basis-75">Promotions</h2>
+                                        </div>
+                                        <t t-foreach="this.promotionRewards" t-as="reward" t-key="reward_index">
+                                            <RewardCard reward="reward" showPoints="false" onClick="() => this.confirm(reward)"/>
+                                        </t>
+                                    </div>
+                                </t>
+                                <div t-elif="this.showNoRewardText" class="o_view_nocontent">
+                                    <div class="o_nocontent_help">
+                                        <p class="o_view_nocontent_smiling_face">No Reward Available</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
