@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from re import search
 
 from odoo import http
@@ -7,6 +8,7 @@ from odoo.tests import HttpCase
 
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCommon
+from odoo.addons.website_project.controllers.main import WebsiteForm
 from odoo.addons.website.tools import MockRequest
 
 
@@ -80,3 +82,58 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         self.assertEqual(self.partner_1.name, 'Valid Lelitre')
         # The project's partner must remain unchanged
         self.assertEqual(self.project_portal.partner_id.name, 'Valid Lelitre')
+
+    def test_task_submission_partner_phone(self):
+        """ Submitting a task via Contact Us should set the value of partner_phone ONLY IF :
+        - It creates a new partner
+        - The associated partner is the currently connected user
+        """
+        self.authenticate(None, None)
+        users = self.env['res.users'].create([
+            {
+                'name': 'Jean Michel',
+                'login': 'jean@michel.com',
+            },
+            {
+                'name': 'Marie Dubois',
+                'login': 'marie@dubois.com',
+            }
+        ])
+        for user in users:
+            user.partner_id.email = user.login
+        users[0].partner_id.phone = '12345'
+        test_cases = [
+            # Public user with already existing partner's email => In description
+            (self.user_public, 'jean@michel.com', 'description'),
+            # Partner with its own email => In partner_phone
+            (users[0], 'jean@michel.com', 'partner_phone'),
+            # Partner with another partner's email => In description
+            (users[1], 'jean@michel.com', 'description'),
+            # Public user with a new email => In partner_phone
+            (self.user_public, 'new@email.com', 'partner_phone'),
+        ]
+        task_data = {
+            'name': 'New Task From Website',
+            'partner_name': 'Jean Michel',
+            'partner_phone': '6789',
+            'description': 'Hello',
+            'project_id': str(self.project_portal.id),
+        }
+        WebsiteFormController = WebsiteForm()
+        for user, email, phone_field in test_cases:
+            with self.subTest(user=user, email=email, phone_field=phone_field):
+                with MockRequest(self.env(user=user)) as request:
+                    request.params = {
+                        'email_from': email,
+                        'model_name': 'project.task',
+                        **task_data
+                    }
+                    response = WebsiteFormController.website_form('project.task', **task_data)
+                    new_task = self.env['project.task'].browse(json.loads(response.data).get('id'))
+                self.assertTrue(new_task.exists())
+                if phone_field == 'partner_phone':
+                    self.assertEqual(new_task.partner_phone, '6789')
+                else:
+                    self.assertIn('phone : 6789', str(new_task.description))
+                    self.assertEqual(new_task.partner_phone, '12345')
+            users[0].partner_id.phone = '12345'
