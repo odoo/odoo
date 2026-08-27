@@ -895,6 +895,7 @@ export function makeActionManager(env, router = _router) {
      * @param {UpdateStackOptions} options
      * @param {boolean} [options.clearBreadcrumbs=false]
      * @param {number} [options.index]
+     * @param {boolean} [options.keepDialogs=false]
      * @returns {Promise<Number>}
      */
     async function _updateUI(controller, options = {}) {
@@ -1013,7 +1014,7 @@ export function makeActionManager(env, router = _router) {
                     // The error occurred while rendering an existing controller,
                     // so go back to the previous controller, of the current faulty one.
                     // This occurs when clicking on a breadcrumbs.
-                    return restore(controllerStack[index - 1].jsId);
+                    return _restore(controllerStack[index - 1].jsId, { keepDialogs: true });
                 }
                 if (index === 0) {
                     // No previous controller to restore, so do nothing but display the error
@@ -1026,7 +1027,7 @@ export function makeActionManager(env, router = _router) {
                         // so go back to the last non faulty controller
                         // (the error will be shown anyway as the promise
                         // has been rejected)
-                        return restore(lastController.jsId);
+                        return _restore(lastController.jsId, { keepDialogs: true });
                     }
                 } else {
                     env.bus.trigger("ACTION_MANAGER:UPDATE", {});
@@ -1173,7 +1174,9 @@ export function makeActionManager(env, router = _router) {
             Component: ControllerComponent,
             componentProps: controller.props,
         };
-        dialogService.closeAll({ noReload: true });
+        if (!options.keepDialogs) {
+            dialogService.closeAll({ noReload: true });
+        }
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         await currentActionProm;
     }
@@ -1775,6 +1778,15 @@ export function makeActionManager(env, router = _router) {
      * @param {string} jsId
      */
     async function restore(jsId) {
+        return _restore(jsId);
+    }
+
+    /**
+     * @param {string} jsId
+     * @param {Object} [options]
+     * @param {boolean} [options.keepDialogs=false]
+     */
+    async function _restore(jsId, { keepDialogs = false } = {}) {
         await keepLast.add(Promise.resolve());
         let index;
         if (!jsId) {
@@ -1812,7 +1824,7 @@ export function makeActionManager(env, router = _router) {
             }
             Object.assign(controller, _getViewInfo(view, action, views, props));
         }
-        return _updateUI(controller, { index });
+        return _updateUI(controller, { index, keepDialogs });
     }
 
     /**

@@ -15,6 +15,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
+import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { WebClient } from "@web/webclient/webclient";
@@ -195,6 +196,23 @@ test("soft_reload a form view", async () => {
 
     await getService("action").doAction("soft_reload");
     expect.verifySteps(["read 2"]);
+});
+
+test("soft_reload closes the dialogs", async () => {
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`<Dialog title="'Fiscal Year'">content</Dialog>`;
+        props = useProps();
+    }
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    getService("dialog").add(CustomDialog);
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+
+    await getService("action").doAction("soft_reload");
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
 });
 
 test("soft_reload when there is no controller", async () => {
