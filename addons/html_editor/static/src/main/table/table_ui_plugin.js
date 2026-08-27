@@ -40,7 +40,7 @@ export class TableUIPlugin extends Plugin {
                 commandId: "openTablePicker",
             },
         ],
-        selectionchange_handlers: this.updateActiveCell.bind(this),
+        on_selectionchange_handlers: this.updateActiveCell.bind(this),
     };
 
     setup() {
