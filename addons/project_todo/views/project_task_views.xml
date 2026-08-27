@@ -65,11 +65,11 @@
                   js_class="todo_list">
                 <field name="state" widget="todo_done_checkmark" nolabel="1" width="20px"/>
                 <field name="name"/>
-                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user"/>
-                <field name="priority" widget="priority" optional="hidden" width="70px"/>
+                <field name="user_ids" optional="hidden" required="1" widget="many2many_avatar_user"/>
+                <field name="priority" widget="priority" optional="show" width="70px"/>
                 <field name="date_deadline" optional="show" widget="relative_date"/>
-                <field name="activity_ids" optional="show" widget="list_activity"/>
-                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" context="{'use_user_history': True}"/>
+                <field name="activity_ids" optional="hidden" widget="list_activity"/>
+                <field name="tag_ids" optional="hidden" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" context="{'use_user_history': True}"/>
                 <field name="personal_stage_type_id" string="Stage" optional="hide"/>
             </list>
         </field>
