@@ -1,6 +1,7 @@
 .o_bottom_sheet_body > .o_datetime_picker {
+    --DateTimePicker-padding: 0;
+
     width: 100%;
-    padding: 0!important;
 }
 
 .o_datetime_picker {
@@ -8,6 +9,8 @@
     --DateTimePicker__Template-columns: 4;
     --DateTimePicker__Day-template-rows: 6;
 
+    // Spacing knob for containers that inline the picker instead of floating it.
+    padding: var(--DateTimePicker-padding, #{map-get($spacers, 2)});
     width: $o-datetime-picker-width;
 
     &.o_datetime_picker_reduced {
