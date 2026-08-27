@@ -13,15 +13,14 @@ class TestJPStockReport(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('ja_JP')
-        cls.ensure_installed('stock')
         cls.partner_a.lang = 'ja_JP'
         cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
-        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)  # noqa: OLS03001
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.picking_type_out = cls.warehouse.out_type_id
         cls.customer_location = cls.picking_type_out.default_location_dest_id
 
     def test_delivery_slip_uses_honorific(self):
-        picking = self.env['stock.picking'].create({  # noqa: OLS03001
+        picking = self.env['stock.picking'].create({
             'name': 'JP-DEL-0001',
             'partner_id': self.partner_a.id,
             'picking_type_id': self.picking_type_out.id,

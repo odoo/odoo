@@ -13,7 +13,6 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('ja_JP')
-        cls.ensure_installed('sale')
         cls.env.user.group_ids |= cls.env.ref('sales_team.group_sale_salesman')
         cls.partner_a.lang = 'ja_JP'
         cls.jpy_currency = cls.env.ref('base.JPY')
