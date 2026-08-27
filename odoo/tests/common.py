@@ -9,6 +9,7 @@ import base64
 import binascii
 import concurrent.futures
 import contextlib
+import contextvars
 import difflib
 import importlib
 import inspect
@@ -114,6 +115,9 @@ DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
 DISABLE_TIMEOUTS = str2bool(os.getenv('ODOO_TEST_DISABLE_TIMEOUT', '0'))
+
+FORBIDDEN_CREATE_MODELS: frozenset[str] = frozenset()
+_allowed_create_models = contextvars.ContextVar('allowed_create_models', default=frozenset())
 
 IGNORED_MSGS = re.compile(r"""
     failed\ to\ fetch  # base error
@@ -591,6 +595,7 @@ class BaseCase(case.TestCase):
 
     _registry_patched = False
     _registry_readonly_enabled = True
+    _forbidden_create_models = FORBIDDEN_CREATE_MODELS
     test_cursor_lock_timeout: int = 3600 if DISABLE_TIMEOUTS else 20
 
     @classmethod
@@ -672,6 +677,19 @@ class BaseCase(case.TestCase):
 
     def cursor(self):
         return self.registry.cursor()
+
+    @classmethod
+    @contextmanager
+    def allow_model_create(cls, *model_names: str):
+        """Temporarily allow creates on models guarded as expensive in tests."""
+        unknown = set(model_names) - set(cls._forbidden_create_models)
+        if unknown:
+            raise ValueError(f"Models are not guarded against create: {', '.join(sorted(unknown))}")
+        token = _allowed_create_models.set(_allowed_create_models.get() | frozenset(model_names))
+        try:
+            yield
+        finally:
+            _allowed_create_models.reset(token)
 
     @property
     def uid(self):
@@ -1393,6 +1411,28 @@ class TransactionCase(BaseCase):
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
         cls.env.transaction._wrote__ = True  # isolate tests: avoid propagating cache on rollback
+
+        def guard_create(original_create, model_name):
+            @wraps(original_create)
+            def guarded_create(self, vals_list):
+                if model_name not in _allowed_create_models.get():
+                    raise AssertionError(
+                        f"Creating {model_name} records is disabled during tests because it is expensive. "
+                        "Reuse test data, or use allow_model_create() around the smallest necessary block."
+                    )
+                return original_create(self, vals_list)
+
+            return guarded_create
+
+        for model_name in sorted(cls._forbidden_create_models):
+            if model_name not in cls.registry:
+                raise ValueError(f"Unknown model guarded against create: {model_name}")
+            model_class = type(cls.env[model_name])
+            cls.startClassPatcher(patch.object(
+                model_class,
+                'create',
+                guard_create(model_class.create, model_name),
+            ))
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001

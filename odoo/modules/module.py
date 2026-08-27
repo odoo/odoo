@@ -89,6 +89,7 @@ _DEFAULT_MANIFEST = {
     'sequence': 100,
     'summary': '',
     'test': [],
+    'test_data': [],
     'theme_customizations': {},  # themes
     'update_xml': [],
     'uninstall_hook': '',
@@ -112,6 +113,8 @@ _logger = logging.getLogger(__name__)
 
 current_test: TestCase | None = None
 """The current test being run, if any"""
+
+TEST_DATA_ENABLED_PARAM = 'database.test_data_enabled'
 
 
 class UpgradeHook:

@@ -27,6 +27,7 @@ MANIFEST_DATA_KEYS = {
     'data',
     'demo',
     'other_files',
+    'test_data',
     *[k for k in _DEFAULT_MANIFEST if k.endswith('_xml')],
 }
 
