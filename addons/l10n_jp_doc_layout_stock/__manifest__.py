@@ -2,6 +2,7 @@
 {
     'name': 'Japan - Stock Document Layout',
     'category': 'Accounting/Localizations',
+    'author': 'Odoo S.A.',
     'depends': [
         'l10n_jp',
         'stock',
