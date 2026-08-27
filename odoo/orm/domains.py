@@ -1458,8 +1458,16 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
             and (isinstance(c.value, Domain) or c.operator == 'in')
         )
         if comodel_domain.is_false() and not search_domain.is_false():
-            # we don't know the condition, accept all
-            comodel_domain = Domain.TRUE
+            # we don't know the constraining condition
+            if field.type == 'many2one' and (field.store or field.compute_sql) and level > OptimizationLevel.BASIC:
+                # restrict using the whole domain
+                def restricted_domain_sql(table):
+                    sub_query = model.sudo()._search(search_domain, active_test=False, bypass_access=True)
+                    return SQL("%s IN %s", table.id, sub_query.subselect(sub_query.table[field.name]))
+                comodel_domain = Domain.custom(to_sql=restricted_domain_sql)
+            else:
+                # in general case, accept all
+                comodel_domain = Domain.TRUE
         comodel = comodel.with_context(search_domain=comodel_domain)
 
     domain = domain._optimize(comodel, level)
