@@ -2377,6 +2377,8 @@ class HrEmployee(models.Model):
         self.action_unarchive()
         self.departure_id.unlink()
 
+        self.employee_id.contract_date_end = self.departure_id.last_contract_date_end
+
     def _get_working_periods_by_field(self, start, stop, field_key):
         """
         Compute working periods for employees grouped by a related field.

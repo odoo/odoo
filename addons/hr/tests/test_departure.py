@@ -131,3 +131,20 @@ class TestDeparture(TestHrCommon):
             'departure_date': date(2025, 5, 30),
         }])
         self.assertEqual(self.employee.version_ids[1].departure_id, departure)
+
+    def test_departure_notice_contract_date(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'New Employee',
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+            'employee_type_id': self.env.ref('l10n_be_hr_payroll.l10n_be_contract_type_pfi').id,
+            'l10n_be_dimona_category': 'ivt',
+        })
+
+        departure = self.env['hr.employee.departure'].with_context(active_id=employee.id).create({
+            'dismissal_date': date(2025, 2, 1),
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+            'departure_description': 'PFI fired',
+        })
+
+        self.assertEqual(employee.contract_date_end, departure.departure_date)
