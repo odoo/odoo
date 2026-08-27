@@ -721,8 +721,6 @@ export async function runTests(options) {
         await __gcAndLogMemory(lastSuiteName, lastNumberTests);
     }
 
-    await stop();
-
     // Perform final cleanups
     moduleNamesCache.clear();
     serverModelCache.clear();
@@ -736,6 +734,9 @@ export async function runTests(options) {
     }
 
     await __gcAndLogMemory("tests done");
+
+    // Report last, as the server kills the browser on the result report.
+    await stop();
 }
 
 /**
