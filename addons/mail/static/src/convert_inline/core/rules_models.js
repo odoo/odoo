@@ -318,6 +318,7 @@ export class Rules {
             .filter((ruleResult) => ruleResult !== undefined);
         return results.length ? results.some(Boolean) : undefined;
     }
+    // TODO EGGMAIL: explain how a fixing rule can remove a property
     findFixingRule(fixingRules, ...args) {
         // TODO EGGMAIL: currently the first registered fixing rules wins.
         // evaluate if we need a more complex resolution mechanism.
