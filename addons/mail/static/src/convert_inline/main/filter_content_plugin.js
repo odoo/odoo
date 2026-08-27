@@ -190,7 +190,6 @@ export class FilterContentPlugin extends Plugin {
         rules.allow("table-layout", { when: isTable });
         rules.allow("empty-cells", { when: isTable });
         rules.allow("width", { when: isTable });
-        rules.require("width", { when: isTable, how: () => ({ propertyValue: "100%" }) });
         rules.require("max-width", {
             when: [isTable, ({ propertyValue }) => propertyValue !== "100%"],
             how: () => ({ propertyValue: "100%" }),
