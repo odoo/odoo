@@ -3763,3 +3763,14 @@ class TestStockValuation(TestStockValuationCommon):
         initial_balance = report_data['initial_balance']
         self.assertEqual(initial_balance['lines_by_account_id'][account_b.id]['value'], 100,
                          "Account B should show its 100 balance in the report data")
+
+    def test_consignment_valuation_for_lot_valuated_products(self):
+        """Test that consignment stock is excluded from valuation for lot-valuated products."""
+        products = (self.product_fifo | self.product_standard | self.product_avco)
+        products.write({'tracking': 'lot', 'lot_valuated': True})
+        for product in products:
+            self._make_in_move(product, 5, 10, lot_ids=self.env['stock.lot'].create({'name': f'{product.id}0001', 'product_id': product.id}))
+            self._make_in_move(product, 5, 10, owner_id=self.partner, lot_ids=self.env['stock.lot'].create({'name': f'{product.id}0002', 'product_id': product.id}))
+            self.assertEqual(product.total_value, 50.0)
+            self._make_out_move(product, 5)
+            self.assertEqual(product.total_value, 0.0)
