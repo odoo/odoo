@@ -42,9 +42,12 @@ export class UserSignaturePlugin extends Plugin {
         ],
 
         /** Predicates */
-        is_empty_predicates: this.isEmpty.bind(this),
-        unsplittable_node_predicates: (host) =>
-            host.nodeType === Node.ELEMENT_NODE && host.matches(`.${SIGNATURE_CLASS}`),
+        is_node_empty_predicates: this.isEmpty.bind(this),
+        is_node_splittable_predicates: (node) => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.matches(`.${SIGNATURE_CLASS}`)) {
+                return false;
+            }
+        },
     };
 
     cleanSignatures({ rootClone }) {
