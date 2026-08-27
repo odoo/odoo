@@ -798,7 +798,8 @@ font[class*='bg-'] {
                 line-height: $-size + $i;
             }
         }
-        // Default, if no background-color already selected
+        // Default, if no color or background-color already selected
+        color: $gray-900;
         background-color: $gray-100;
     }
     &.img-thumbnail {
@@ -812,6 +813,7 @@ font[class*='bg-'] {
         @extend .rounded-circle;
         border-width: ceil(1.4 * $border-width);
         border-style: solid;
+        color: unset;
         background: transparent;
     }
     &.border {
@@ -3639,6 +3641,12 @@ input[value*="data-oe-translation-source-sha"] {
 .s_social_media, .s_share {
     $-size: map-get($spacers, 5);
     a {
+        i.fa, .social_media_img {
+            &.o_cc {
+                color: var(--color);
+                background-color: var(--o-cc-bg);
+            }
+        }
         text-decoration: none;
         &:hover {
             text-decoration: none;
@@ -3676,12 +3684,20 @@ input[value*="data-oe-translation-source-sha"] {
             }
         }
     }
-    /*
-    This rule makes social media icons inherit the text color of their parent
-    container when no explicit color is set.
-    */
+
+    &:not(.no_icon_color) {
+        a {
+            i.fa, .social_media_img {
+                // Removes the default color so the icon inherits its parent’s
+                // color, where the icon’s official brand color is defined.
+                color: unset;
+            }
+        }
+    }
     &.no_icon_color {
         a {
+            // Unless a color is defined on the icon itself, as the icons with a
+            // background, it inherits the snippet’s text color.
             color: inherit !important;
         }
     }

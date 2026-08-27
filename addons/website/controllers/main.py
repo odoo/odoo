@@ -885,6 +885,7 @@ class Website(Home):
             raise NotFound()
 
         industry_id = int(industry_id)
+        is_dark_color_palette = is_dark == '1'
         palette = [color1, color2, color3, color4, color5]
         palette_map = {
             f'o-color-{index}': color
@@ -896,7 +897,7 @@ class Website(Home):
         final_html = self._load_configurator_preview_html(preview_url)
         final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
         final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
-        if is_dark == '1':
+        if is_dark_color_palette:
             preview_doc = html.document_fromstring(final_html)
             preview_doctype = preview_doc.getroottree().docinfo.doctype
             adapt_dark_palette_content(preview_doc)
@@ -910,7 +911,7 @@ class Website(Home):
         preview_overrides = self._get_configurator_preview_overrides(
             palette,
             final_html,
-            is_dark=is_dark == '1',
+            is_dark=is_dark_color_palette,
         )
         final_html = self._inject_configurator_preview_overrides(
             final_html,
