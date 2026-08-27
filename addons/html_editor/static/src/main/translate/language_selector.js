@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, signal } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -10,11 +10,12 @@ import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 
 export class LanguageSelector extends Component {
     static template = "html_editor.LanguageSelector";
-    static props = {
-        ...toolbarButtonProps,
-        onSelected: { type: Function },
-    };
     static components = { Dropdown, DropdownItem };
+
+    props = useProps({
+        ...toolbarButtonProps,
+        onSelected: t.function(),
+    });
 
     setup() {
         this.orm = useService("orm");

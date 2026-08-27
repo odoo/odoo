@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownCloser, useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -252,19 +252,16 @@ export class TextEffectOption extends BaseOptionComponent {
 export class TextEffectSelector extends Component {
     static template = "html_builder.TextEffectSelector";
     static components = { Dropdown, TextEffectOption };
-    static props = {
+    props = useProps({
         ...toolbarButtonProps,
-        config: {
-            type: Object,
-            shape: { editor: Object, editorBus: Object },
-        },
-        prepareTextEffectSelection: Function,
-        applyTextEffect: Function,
-        previewTextEffect: Function,
-        revertTextEffect: Function,
-        getState: Function,
-        updateState: Function,
-    };
+        config: t.object({ editor: t.object(), editorBus: t.object() }),
+        prepareTextEffectSelection: t.function(),
+        applyTextEffect: t.function(),
+        previewTextEffect: t.function(),
+        revertTextEffect: t.function(),
+        getState: t.function(),
+        updateState: t.function(),
+    });
 
     setup() {
         this.props.updateState();

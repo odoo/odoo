@@ -3,13 +3,12 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 export class ResetPasswordLinkButton extends Component {
     static template = "auth_signup.reset_password_link_button";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     setup() {
         super.setup();

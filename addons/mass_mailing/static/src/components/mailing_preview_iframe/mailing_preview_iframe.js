@@ -5,21 +5,20 @@ import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, signal, status, proxy } from "@odoo/owl";
+import { Component, onMounted, signal, status, proxy, useProps } from "@odoo/owl";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
 import { MailingPreviewDisplayModeToggle } from "../mailing_preview_mode_toggle/mailing_preview_mode_toggle";
 import { MassMailingPreviewRecordField } from "./mass_mailing_preview_record_field";
 
 export class MailingPreviewIframe extends Component {
     static template = "mass_mailing.MailingPreviewIframe";
-    static props = {
-        ...standardFieldProps,
-    };
 
     static components = {
         MassMailingPreviewRecordField,
         MailingPreviewDisplayModeToggle,
     };
+
+    props = useProps(standardFieldProps);
 
     iframeRef = signal.ref();
 
