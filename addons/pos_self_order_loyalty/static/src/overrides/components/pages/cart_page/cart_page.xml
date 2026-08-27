@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('o_self_footer')]/div[hasclass('o_self_container')]" position="attributes">
+            <attribute name="class" add="d-flex flex-row align-items-end" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('o_self_footer')]//div[hasclass('order-price')]" position="before">
+            <div class="d-flex flex-column align-items-start justify-content-end flex-grow-1 px-2">
+                <div t-foreach="this.selfOrder.getLoyaltyCards()" t-as="card" t-key="card_index" class="d-flex justify-content-between align-items-center gap-3">
+                    <span class="fw-bolder" t-out="card.program_id.portal_point_name"/>
+                    <div class="d-flex gap-1 fw-bold">
+                        <t t-set="won" t-value="this.roundPoints(card.program_id.getEarnedPoints(this.selfOrder.currentOrder))"/>
+                        <t t-set="spent" t-value="this.roundPoints(card.program_id.getSpentPoints(this.selfOrder.currentOrder))"/>
+                        <t t-set="balance" t-value="this.roundPoints(card.program_id.getAvailablePoints(this.selfOrder.currentOrder))"/>
+                        <t t-set="total_points" t-value="this.roundPoints(card.program_id.getNewBalance(this.selfOrder.currentOrder))"/>
+                        <span class="loyalty-points-balance" t-out="balance"/>
+                        <span t-if="won" class="loyalty-points-won text-success">+<t t-out="won"/></span>
+                        <span t-if="spent" class="loyalty-points-spent text-danger">-<t t-out="spent"/></span>
+                        <span class="text-muted mx-1">=</span>
+                        <span class="loyalty-points-total fw-bolder" t-out="total_points"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('order_note_container')]" position="after">
+            <div class="container o_self_container order_discount_container mb-2">
+                <hr/>
+                <div class="d-flex justify-content-between"
+                    t-on-click="this.onClickShowCode">
+                    <div class="d-flex align-items-center">
+                        <i class="oi p-1" data-icon="card_giftcard"/>
+                        <span class="fw-bolder" style="font-size: 1.1rem;">
+                            Add a discount code
+                        </span>
+                    </div>
+                    <div class="py-1 px-2">
+                        <i class="oi" t-attf-data-icon="expand_{{ this.showCode() ? 'less' : 'more' }}"/>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-2" t-att-class="{'d-none': !this.showCode()}">
+                    <input type="text"
+                        class="form-control bg-white rounded-4 my-1"
+                        t-model="this.code"
+                        t-on-keydown="(ev) => this.onKeydownCodeInput(ev)"
+                        placeholder.translate="Enter your code"
+                    />
+                    <i t-if="this.applyCode.status == 'loading'" class="oi oi-spin m-3" data-icon="progress_activity"/>
+                    <button class="btn btn-primary ms-2" t-on-click="() => this.applyCode.call()" t-att-disabled="this.applyCode.status == 'loading'">
+                        Apply
+                    </button>
+                    <button t-if="this.selfOrder.config.self_ordering_mode === 'mobile'" class="btn btn-secondary mobile-scanner ms-2" t-on-click.stop="() => this.openMobileScanner()">
+                        <i class="oi" data-icon="barcode" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('product-name')]" position="after">
+            <span t-if="line.is_reward_line" class="fst-italic" t-out="line.reward_id.description" />
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[hasclass('price-total')]" position="before">
+            <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="this.displayBeforeDiscount">
+                Total discount: <t t-out="this.selfOrder.formatMonetary(this.getTotalDiscount())" />
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='left']" position="inside">
+            <RewardButton t-if="this.selfOrder.kioskMode"/>
+        </xpath>
+        <!-- In mobile, the reward button goes in the top right row, next to the cancel button.
+             The row's t-if is changed last, the other xpaths rely on it to find the row. -->
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[@t-if='this.showCancelButton']/button" position="attributes">
+            <attribute name="t-if">this.showCancelButton</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[@t-if='this.showCancelButton']" position="inside">
+            <div t-if="!this.selfOrder.kioskMode" class="o_self_reward_corner flex-shrink-0">
+                <RewardButton/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_self_cart_page')]//div[@t-if='this.showCancelButton']" position="attributes">
+            <attribute name="t-if">this.showCancelButton or !this.selfOrder.kioskMode</attribute>
+            <attribute name="class" add="align-items-center gap-2" separator=" "/>
+        </xpath>
+    </t>
+</templates>

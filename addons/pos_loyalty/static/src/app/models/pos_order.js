@@ -321,7 +321,13 @@ patch(PosOrder.prototype, {
      * Removes the reward line from the order, calculates the available points on the program,
      * and then repplies the reward if possible
      */
-    recomputeReward(reward, qty, reward_product_id) {
+    recomputeReward(
+        reward,
+        qty,
+        reward_product_id,
+        attribute_value_ids = [],
+        attribute_custom_values = []
+    ) {
         const program = reward.program_id;
         if (!program) {
             return;
@@ -330,7 +336,12 @@ patch(PosOrder.prototype, {
         if (points < reward.required_points) {
             return;
         }
-        this.applyReward(reward, points, { qty, reward_product_id });
+        this.applyReward(reward, points, {
+            qty,
+            reward_product_id,
+            attribute_value_ids,
+            attribute_custom_values,
+        });
     },
     /**
      * Recomputes the automatically applied rewards on the order. For every auto program, the
@@ -377,10 +388,22 @@ patch(PosOrder.prototype, {
             const activeRewards = [...this.active_rewards].sort(
                 (a, b) => (Number(a.qty) || Infinity) - (Number(b.qty) || Infinity)
             );
-            for (const { reward_id, qty, reward_product_id } of activeRewards) {
+            for (const {
+                reward_id,
+                qty,
+                reward_product_id,
+                attribute_value_ids,
+                attribute_custom_values,
+            } of activeRewards) {
                 const reward = this.models["loyalty.reward"].get(reward_id);
                 if (reward) {
-                    this.recomputeReward(reward, qty, reward_product_id);
+                    this.recomputeReward(
+                        reward,
+                        qty,
+                        reward_product_id,
+                        attribute_value_ids,
+                        attribute_custom_values
+                    );
                 }
             }
 
@@ -466,7 +489,12 @@ patch(PosOrder.prototype, {
                 (line) => line.reward_id === reward && (!card || line.card_id === card)
             );
             const removedCodes = new Set(
-                linesToRemove.map((line) => line.card_id?.code).filter(Boolean)
+                linesToRemove
+                    .flatMap((line) => [
+                        line.card_id?.code,
+                        ...(line.reward_id?.program_id?.rule_ids || []).map((rule) => rule.code),
+                    ])
+                    .filter(Boolean)
             );
             // Deleting a line emits no event the fee listens to.
             const feeBaseChanged = linesToRemove.some((line) => line.isServiceFeeApplicable());
@@ -485,7 +513,12 @@ patch(PosOrder.prototype, {
                 (entry) => entry.reward_id !== reward?.id || (card && entry.card_id !== card.id)
             );
             const programId = reward?.program_id?.id;
-            if (programId && !this.disabled_program_ids.includes(programId)) {
+            const addedWithCode =
+                reward?.program_id?.trigger === "with_code" ||
+                ["coupons", "promo_code", "next_order_coupons"].includes(
+                    reward?.program_id?.program_type
+                );
+            if (programId && !addedWithCode && !this.disabled_program_ids.includes(programId)) {
                 this.disabled_program_ids = [...this.disabled_program_ids, programId];
             }
             this.recomputeRewards();
