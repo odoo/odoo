@@ -5,7 +5,7 @@
     <BuilderRow label="this.state.heightLabel">
         <BuilderButtonGroup action="'scrollButtonSectionHeightClass'">
             <BuilderButton id="'minheight_auto_opt'" actionParam="''" title.translate="Fit content">Auto</BuilderButton>
-            <BuilderButton actionParam="'o_three_quarter_height'" title.translate="75% of the screen">75%</BuilderButton>
+            <BuilderButton t-if="this.props.showThreeQuarterHeight" actionParam="'o_three_quarter_height'" title.translate="75% of the screen">75%</BuilderButton>
             <BuilderButton id="'full_height_opt'" actionParam="'o_full_screen_height'" title.translate="Full screen">100%</BuilderButton>
             <!-- A snippet can have .o_half_screen_height, but we don't want to offer it as an option, this is kept for compatibility -->
             <BuilderButton actionParam="'o_half_screen_height'" className="'d-none'">50%</BuilderButton>
@@ -50,7 +50,10 @@
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <scroll_button_option
             selector="section"
-            exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_facebook_page, .o_mega_menu > section, .s_appointments .s_dynamic_snippet_content, .s_bento_banner section[data-name='Card'], .s_floating_blocks, .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .s_dynamic_category, .s_dynamic_category .s_dynamic_snippet_title, .s_announcement_scroll, .o_no_scroll_button, .s_google_map, .s_map, .s_whatsapp"/>
+            exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_facebook_page, .o_mega_menu > section, .s_appointments .s_dynamic_snippet_content, .s_bento_banner section[data-name='Card'], .s_floating_blocks, .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .s_dynamic_category, .s_dynamic_category .s_dynamic_snippet_title, .s_announcement_scroll, .o_no_scroll_button, .s_google_map, .s_map, .s_whatsapp, .s_store_locator"/>
+        <scroll_button_option
+            selector=".s_store_locator"
+            props='{ "showThreeQuarterHeight": false }'/>
     </xpath>
 </t>
 
