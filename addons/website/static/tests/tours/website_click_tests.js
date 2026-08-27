@@ -6,7 +6,6 @@ import {
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 
 const cover = {
     id: "s_cover",
@@ -15,7 +14,6 @@ const cover = {
 };
 
 registerWebsitePreviewTour("website_click_tour", {}, () => [
-    stepUtils.waitIframeIsReady(),
     {
         content: "trigger a page navigation",
         trigger: ':iframe a[href="/contactus"]',

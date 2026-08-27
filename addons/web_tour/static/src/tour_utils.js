@@ -249,13 +249,6 @@ export const stepUtils = {
         ];
     },
 
-    waitIframeIsReady() {
-        return {
-            content: "Wait until the iframe is ready",
-            trigger: `:iframe body[is-ready=true]`,
-        };
-    },
-
     goToUrl(url) {
         return {
             isActive: ["auto"],

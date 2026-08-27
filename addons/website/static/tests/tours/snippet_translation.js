@@ -41,7 +41,6 @@ registerWebsitePreviewTour("snippet_translation", {}, () => [
 registry.category("web_tour.tours").add("snippet_translation_changing_lang", {
     steps: () => [
         stepUtils.goToUrl(getClientActionUrl()),
-        stepUtils.waitIframeIsReady(),
         {
             content: "Open dropdown language selector",
             trigger: ":iframe .js_language_selector button",

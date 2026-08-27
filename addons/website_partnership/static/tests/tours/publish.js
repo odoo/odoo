@@ -2,7 +2,6 @@
 
 import { registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
-import { stepUtils } from "@web_tour/tour_utils";
 /**
  * The purpose of these tours is to check whether Publish can or cannot be
  * used by the given current user.
@@ -11,10 +10,9 @@ import { stepUtils } from "@web_tour/tour_utils";
 registerWebsitePreviewTour('test_can_publish_partner', {
     edition: false,
 }, () => [
-    stepUtils.waitIframeIsReady(),
 {
     content: 'Open grade filter',
-    trigger: ':iframe .dropdown:has(.dropdown-item:contains("Grade Test")) button.dropdown-toggle:contains("All Categories")',
+    trigger: ':iframe body[is-ready=true] .dropdown:has(.dropdown-item:contains("Grade Test")) button.dropdown-toggle:contains("All Categories")',
     run: "click",
 }, {
     content: 'Filter on Grade Test', // needed if there are demo data
@@ -43,10 +41,9 @@ registerWebsitePreviewTour('test_can_publish_partner', {
 registerWebsitePreviewTour('test_cannot_publish_partner', {
     edition: false,
 }, () => [
-    stepUtils.waitIframeIsReady(),
 {
     content: 'Open grade filter',
-    trigger: ':iframe .dropdown:has(.dropdown-item:contains("Grade Test")) button.dropdown-toggle:contains("All Categories")',
+    trigger: ':iframe body[is-ready=true] .dropdown:has(.dropdown-item:contains("Grade Test")) button.dropdown-toggle:contains("All Categories")',
     run: "click",
 }, {
     content: 'Filter on Grade Test', // needed if there are demo data

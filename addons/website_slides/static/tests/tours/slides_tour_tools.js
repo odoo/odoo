@@ -1,5 +1,4 @@
 import { getDataURLFromFile } from "@web/core/utils/urls";
-import { stepUtils } from "@web_tour/tour_utils";
 
 /*
  * Constant
@@ -299,7 +298,6 @@ const addPdfToSection = function (sectionName, pageName, backend) {
             trigger: `${prefix} a.o_wslides_js_slides_list_slide_link:contains(Exercise)[href$="?fullscreen=1"]`,
             run: "click",
         },
-        stepUtils.waitIframeIsReady(),
         {
             content: "eLearning: check uploaded pdf presence and perform comparison",
             trigger: (backend ? ":iframe " : "") + ".o_wslides_fs_content :iframe #PDFSlideViewer",

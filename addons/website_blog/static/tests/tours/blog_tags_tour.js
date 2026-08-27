@@ -3,7 +3,6 @@ import {
     clickOnSave,
     clickOnSnippet,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 import { registry } from "@web/core/registry";
 
 /**
@@ -11,7 +10,6 @@ import { registry } from "@web/core/registry";
  */
 registry.category("web_tour.tours").add("blog_tags", {
     steps: () => [
-        stepUtils.waitIframeIsReady(),
         {
             content: "Go to the 'Post Test' blog",
             trigger: ":iframe article[name=blog_post] a:contains('Post Test')",

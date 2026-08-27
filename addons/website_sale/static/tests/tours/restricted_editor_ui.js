@@ -1,4 +1,3 @@
-import { stepUtils } from "@web_tour/tour_utils";
 import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour("website_sale.restricted_editor_ui", {}, () => [
@@ -23,7 +22,6 @@ registerWebsitePreviewTour("website_sale.restricted_editor_ui", {}, () => [
         trigger: ".o_menu_systray:not(:has(.form-switch)):not(:has(.o_website_edit_in_backend))",
         run: "click",
     },
-    stepUtils.waitIframeIsReady(),
     {
         content: "Navigate to the first product",
         trigger: ":iframe .oe_product_image_link",

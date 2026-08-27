@@ -1,6 +1,5 @@
 /** @odoo-module **/
 import { clickOnEditAndWaitEditMode, clickOnSave } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 import { registry } from "@web/core/registry";
 
 /**
@@ -176,7 +175,10 @@ const canEdit = () => [
 ];
 
 const cannotEdit = () => [
-    stepUtils.waitIframeIsReady(),
+    {
+        content: "Wait until the iframe is ready",
+        trigger: ":iframe body[is-ready=true]",
+    },
     {
         content: "Check Edit is not available",
         trigger: ".o_menu_systray:not(:has(.o_edit_website_container))",
