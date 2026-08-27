@@ -75,6 +75,7 @@ test("Pivot with a type different of ODOO is not converted", async function () {
     setCellContent(model, "A1", `=PIVOT.VALUE(1, "probability:avg")`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1, "measure", "probability:avg")`);
     const data = await freezeOdooData(model);
+    await animationFrame();
     const cells = data.sheets[0].cells;
     expect(cells.A1).toBe(`=PIVOT.VALUE(1,"probability:avg")`, {
         message: "the content is not replaced with the value",

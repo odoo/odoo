@@ -174,7 +174,8 @@ export async function freezeOdooData(model) {
     }
     data.lists = {};
     exportGlobalFiltersToSheet(model, data);
-    const newModel = new Model(data);
+    // the model must be created with config.mode !== "export_verification"
+    const newModel = new Model(data, /*do not evaluate here !*/);
     return newModel._exportData(true);
 }
 
