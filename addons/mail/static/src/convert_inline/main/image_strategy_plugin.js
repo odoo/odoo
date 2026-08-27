@@ -204,6 +204,9 @@ export class ImageStrategyPlugin extends Plugin {
         const spacingNodeArgs = needsFullWidthSpacing
             ? { refs: { root: { style: { width: "100%" } } } }
             : {};
+        // TODO EGGMAIL: padding node can also be supported in case the
+        // image is the only child of a paragraphRelatedElement (as for margins)
+        // the padding values should be merged with the margin values
         const paddingNode = this.buildPaddingNode(emailNode, spacingNodeArgs);
         if (paddingNode) {
             // image padding behaves like a margin (space around the image)

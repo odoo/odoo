@@ -11,6 +11,7 @@ export class MathPlugin extends Plugin {
         "areRectEqual",
         "closestValue",
         "computeRect",
+        "computeWithEpsilon",
         "pixelTolerance",
         "isNegativeZero",
         "isPositiveZero",
@@ -27,12 +28,28 @@ export class MathPlugin extends Plugin {
         "formatValue",
     ];
 
+    setup() {
+        this.epsilon = EPSILON;
+        this.useForcedEpsilon = false;
+    }
+
+    computeWithEpsilon(callback, epsilon = EPSILON) {
+        this.epsilon = epsilon;
+        this.useForcedEpsilon = true;
+        callback();
+        this.epsilon = EPSILON;
+        this.useForcedEpsilon = false;
+    }
+
     pixelTolerance() {
+        if (this.useForcedEpsilon) {
+            return this.epsilon;
+        }
         const dpr = this.config.referenceDocument.defaultView.devicePixelRatio;
         if (!Number.isFinite(dpr) || dpr <= 0) {
-            return EPSILON;
+            return this.epsilon;
         }
-        return EPSILON * Math.min(MAX_SCALE, Math.max(1, dpr));
+        return this.epsilon * Math.min(MAX_SCALE, Math.max(1, dpr));
     }
 
     areRectEqual(rect1, rect2) {

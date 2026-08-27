@@ -269,9 +269,16 @@ export class HybridFluidStrategyPlugin extends Plugin {
         const spacing = this.containerPadding(block.rect, cluster.rect);
         const deltaLeft = spacing.left - (paddingLeft ?? 0);
         const deltaRight = spacing.right - (paddingRight ?? 0);
-        const isResponsiveElementCandidate =
-            (!this.isZero(deltaLeft) && deltaLeft > 0) ||
-            (!this.isZero(deltaRight) && deltaRight > 0);
+        let isResponsiveElementCandidate;
+        this.computeWithEpsilon(() => {
+            // Ignore would be responsiveElements if delta is less than 3
+            // pixels, as some elements inside table cells were already
+            // identified to have a width difference up to 2 pixels with
+            // the cell, without any css instruction to justify it.
+            isResponsiveElementCandidate =
+                (!this.isZero(deltaLeft) && deltaLeft > 0) ||
+                (!this.isZero(deltaRight) && deltaRight > 0);
+        }, 3);
         if (isResponsiveElementCandidate) {
             return (
                 this.checkPredicates("is_responsive_element_predicates", {
