@@ -13,7 +13,7 @@ from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 from odoo.addons.mail.tools.alias_error import AliasError
-from odoo.addons.mail.tools.discuss import StoreVersion
+from odoo.addons.mail.tools.discuss import Store, StoreVersion
 
 _logger = logging.getLogger(__name__)
 
@@ -763,6 +763,13 @@ class Base(models.AbstractModel):
         return self.env['mail.message.subtype'].search([
             '&', ('hidden', '=', False),
             '|', ('res_model', '=', self._name), ('res_model', '=', False)])
+
+    def _store_model_name_fields(self, res: Store.FieldList):
+        res.attr(
+            "modelName",
+            lambda record: record.env["ir.model"]._get(record._name).display_name,
+        )
+        res.attr("display_name")
 
     # ------------------------------------------------------------
     # GATEWAY: NOTIFICATION

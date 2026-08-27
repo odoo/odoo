@@ -1580,6 +1580,30 @@ class TestNoThread(MailCommon, TestRecipients):
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('employee')
+    def test_store_notification_fields_mass_mail(self):
+        """ Mass mailing is supported on non-thread models, hence a sending
+        failure should push its notification update without crashing. """
+        test_record = self.test_record_nothread.with_env(self.env)
+        template = self.test_template.with_env(self.env)
+
+        composer = self.env['mail.compose.message'].create({
+            'composition_mode': 'mass_mail',
+            'model': test_record._name,
+            'res_ids': test_record.ids,
+            'template_id': template.id,
+        })
+        with self.mock_mail_gateway(), \
+             self.mock_send_email_delivery_exception([self.partner_1.email_formatted]):
+            composer.action_send_mail()
+
+        self.assertEqual(
+            self._new_mails.notification_ids.notification_status, 'exception',
+            'Sending should have failed, which triggers the bus update',
+        )
+        self.env.cr.precommit.run()
+
     @users('employee')
     def test_message_notify(self):
         """ Test notifying on non-thread models, using MailThread as an abstract
