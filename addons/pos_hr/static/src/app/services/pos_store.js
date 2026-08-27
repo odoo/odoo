@@ -13,7 +13,7 @@ patch(PosStore.prototype, {
             // Sent along every request made by the data service, so the backend
             // always knows which employee is currently using the POS.
             this.data.registerExecutionContext(() => {
-                const cashier = this.getCashier();
+                const cashier = this.accessRight.loggedCashier;
                 return cashier?.id ? { current_cashier_id: cashier.id } : {};
             });
             this.login = Boolean(odoo.from_backend) && !this.config.module_pos_hr;
@@ -184,7 +184,7 @@ patch(PosStore.prototype, {
             context.current_cashier_id = cashier.id;
         }
         return context;
-    }
+    },
     async logEmployeeMessage(action, message) {
         if (!this.config.module_pos_hr) {
             super.logEmployeeMessage(...arguments);

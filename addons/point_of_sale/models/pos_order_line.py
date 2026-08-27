@@ -7,7 +7,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, formatLang
 
 
 class PosOrderLine(models.Model):
@@ -138,22 +138,32 @@ class PosOrderLine(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if vals.get('qty') is not None and vals.get('qty') < self.qty:
-            vals['is_edited'] = True
-            body = _("%(product_name)s: Ordered quantity: %(old_qty)s", product_name=self.full_product_name, old_qty=self.qty)
-            body += Markup(" &rarr; ") + str(vals.get('qty'))
-            for line in self:
-                line.order_id.message_post(body=body)
+        if 'qty' in vals:
+            edited_lines = self.filtered(lambda line: vals['qty'] < line.qty)
+            edited_lines.is_edited = True
+            edited_lines._track_qty_change(formatLang(self.env, vals['qty']))
         return super().write(vals)
+
+    def _track_qty_change(self, new_qty):
+        """Log the new quantity of the lines, as displayed, in the chatter of their order."""
+        self.order_id._track_pos_values(
+            {
+                line: [(
+                    line.full_product_name or line.product_id.display_name,
+                    formatLang(self.env, line.qty),
+                    new_qty,
+                )]
+                for line in self
+            },
+            body=Markup('<p class="mb-0">%s</p>') % _("Ordered quantity:")
+        )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
         if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
             raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
-        for line in self:
-            line.order_id.has_deleted_line = True
-            body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
-            line.order_id.message_post(body=body)
+        self.order_id.has_deleted_line = True
+        self._track_qty_change(_("Removed"))
 
     @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _onchange_amount_line_all(self):
