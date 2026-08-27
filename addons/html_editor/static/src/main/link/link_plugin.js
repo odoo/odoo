@@ -28,6 +28,7 @@ import { session } from "@web/session";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
+/** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
  */
@@ -175,6 +176,15 @@ async function fetchAttachmentMetaData(url, ormService) {
  *      getProps: (props) => props;
  *  }[]} link_popovers
  * @typedef {((linkEl: HTMLAnchorElement) => void)[]} on_link_created_handlers
+ * @typedef {{
+ *      id: string;
+ *      label: string;
+ *      description: LazyTranslatedString;
+ *      attribute: string;
+ *      value: string;
+ *      isMultiValueAttr?: boolean;
+ *      requires?: string;
+ *  }[]} advanced_popover_options
  */
 
 export class LinkPlugin extends Plugin {

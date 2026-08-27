@@ -22,11 +22,6 @@ import { removeStyle } from "@html_editor/utils/dom";
 /** @typedef { (selection: EditorSelection, nodes: Node[]) => TranslatedString } TranslatedStringGetter */
 
 /**
- * @typedef {Object} ToolbarNamespace
- * @property {string} id
- * @property {(targetedNodes: Node[]) => boolean} isApplied
- *
- *
  * @typedef {Object} ToolbarGroup
  * @property {string} id
  * @property {string[]} [namespaces]
@@ -109,7 +104,10 @@ export const DISABLED_NAMESPACE = "disabled";
 
 /**
  * @typedef {ToolbarGroup[]} toolbar_groups
- * @typedef {ToolbarNamespace[]} toolbar_namespaces
+ */
+
+/**
+ * @typedef {((targetedNodes: Node[], editableSelection: EditorSelection) => string | undefined)[]} toolbar_namespace_providers
  * @typedef {string[]} expandable_toolbar_namespaces_providers
  */
 

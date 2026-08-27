@@ -5,7 +5,6 @@ import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
- * @typedef {import("./powerbox_plugin").PowerboxCategory} CommandGroup
  * @typedef {import("../core/selection_plugin").EditorSelection} EditorSelection
  */
 
