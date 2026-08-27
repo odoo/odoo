@@ -28,7 +28,7 @@ patch(GeneratePrinterData.prototype, {
                     receipt.order.table_stand_number
                 );
             } else if (!receipt.order.table_id) {
-                receipt.extra_data.order_label = false;
+                receipt.extra_data.order_label = receipt.order.floating_order_name || false;
             }
         }
         return receipts;
