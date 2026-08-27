@@ -76,7 +76,6 @@
                                     <field name="pos_payment_method_ids"
                                         colspan="4"
                                         widget="many2many_tags"
-                                        readonly="pos_has_active_session"
                                         required="pos_company_has_template"
                                         options="{'no_quick_create': True}"
                                         context="{'default_config_ids': [pos_config_id], 'form_view_ref': 'point_of_sale.action_pos_payment_method_form' }" />

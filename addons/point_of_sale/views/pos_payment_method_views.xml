@@ -18,19 +18,20 @@
                         <field name="image" class="oe_avatar" widget='image'/>
                     </div>
                     <group>
-                        <field name="type" widget="radio" options="{'horizontal': True}" />
+                        <field name="type" widget="radio" options="{'horizontal': True}" readonly="open_session_ids" />
                     </group>
                     <group name="Payment methods">
                         <group>
-                            <field name="journal_id" invisible="type not in ['cash', 'bank']" required="type in ['cash', 'bank']" placeholder="Leave empty to use the receivable account of customer" />
-                            <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" placeholder="Selection of outstanding account is required" />
-                            <field name="receivable_account_id" groups="account.group_account_readonly" invisible="type == 'pay_later'" widget="many2one" placeholder="PoS Config default partner receivable"/>
+                            <field name="journal_id" invisible="type not in ['cash', 'bank']" required="type in ['cash', 'bank']" readonly="open_session_ids" placeholder="Leave empty to use the receivable account of customer" />
+                            <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" readonly="open_session_ids" placeholder="Selection of outstanding account is required" />
+                            <field name="receivable_account_id" groups="account.group_account_readonly" invisible="type == 'pay_later'" widget="many2one" readonly="open_session_ids" placeholder="PoS Config default partner receivable"/>
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                             <field name="currency_ids"
                                 widget="many2many_tags"
                                 placeholder="Company currency"
                                 options="{'no_create': True}"
                                 invisible="type not in ['cash', 'bank']"
+                                readonly="open_session_ids"
                                 domain="[('active', '=', True)]"/>
                             <field name="config_ids" widget="many2many_tags" placeholder="No Point of Sale" />
                         </group>
