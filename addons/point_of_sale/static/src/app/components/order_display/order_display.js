@@ -36,7 +36,10 @@ export class OrderDisplay extends Component {
     get comboSortedLines() {
         return this.order.getOrderlines().reduce((acc, line) => {
             if (line.combo_line_ids?.length > 0) {
-                acc.push(line, ...line.combo_line_ids);
+                acc.push(line);
+                if (!line.uiState?.collapsed) {
+                    acc.push(...line.combo_line_ids);
+                }
             } else if (!line.combo_parent_id) {
                 acc.push(line);
             }
