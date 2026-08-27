@@ -3,11 +3,16 @@ import { Plugin } from "../plugin";
 import { StyleInfo } from "../core/style_models";
 import { parseCssValue } from "../css_parsers";
 import { ImageLayout, ImageLinkLayout } from "./image_models";
-import { isParagraphRelatedElement, isPhrasingContent } from "@html_editor/utils/dom_info";
+import {
+    isParagraphRelatedElement,
+    isPhrasingContent,
+    paragraphRelatedElements,
+} from "@html_editor/utils/dom_info";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { Rules } from "../core/rules_models";
+import { ElementLayout } from "../core/render_models";
 
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
@@ -23,7 +28,10 @@ export class ImageStrategyPlugin extends Plugin {
         "style",
     ];
     resources = {
-        element_layout_analysis_processors: [this.analyzeImageLayout.bind(this)],
+        element_layout_analysis_processors: [
+            this.analyzeImageLayout.bind(this),
+            this.addBottomUpConstraintsForImages.bind(this),
+        ],
         merge_email_node_overrides: this.discardImageEmailNodeInLink.bind(this),
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), ImageStrategyPlugin.id],
@@ -118,6 +126,39 @@ export class ImageStrategyPlugin extends Plugin {
             when: hasEmailImageSrc,
             how: () => ({ propertyValue: "cover" }),
         });
+    }
+
+    // TODO EGGMAIL: verify if this margin-auto handling should be
+    // applied on non-paragraph-related elements too
+    addBottomUpConstraintsForImages(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        if (!this.isImg({ referenceNode })) {
+            return defaultEmailNodeArguments;
+        }
+        const rawStyleInfo = this.getRawStyleInfo(referenceNode);
+        const marginStyleInfo = this.getMarginStyleInfo(rawStyleInfo, referenceNode);
+        if (
+            marginStyleInfo.getPropertyValue("margin-left") !== "auto" &&
+            marginStyleInfo.getPropertyValue("margin-right") !== "auto"
+        ) {
+            return defaultEmailNodeArguments;
+        }
+        const { analysis } = defaultEmailNodeArguments;
+        analysis.bottomUpConstraints.push((emailNode) => {
+            const { layout } = emailNode;
+            if (
+                !(layout instanceof ElementLayout) ||
+                !paragraphRelatedElements.includes(layout.tag) ||
+                emailNode.children.length !== 1 ||
+                (!emailNode.children.at(0).analysis.facts.isImage &&
+                    !emailNode.children.at(0).analysis.facts.isImageLink)
+            ) {
+                return;
+            }
+            const imageNode = emailNode.children.at(0);
+            const marginNode = this.buildMarginNode(imageNode);
+            emailNode.layout = marginNode.layout;
+        });
+        return defaultEmailNodeArguments;
     }
 
     refineImage(layout, { emailNode }) {

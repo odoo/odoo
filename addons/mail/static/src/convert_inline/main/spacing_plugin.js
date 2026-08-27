@@ -192,6 +192,19 @@ export class SpacingPlugin extends Plugin {
     // happen more globally (and requires handling (TODO)))
     //
     buildMarginNode(emailNode, spacingNodeArgs = {}) {
+        if (emailNode.layout.ancestorTag === "TABLE") {
+            // TODO EGGMAIL: maybe move in a separate plugin handling table issues?
+            const rootRef = emailNode.layout.getRef();
+            const { number, unit } = parseCssValue(rootRef.styleInfo.getPropertyValue("width"));
+            if (unit === "px" && number > 0) {
+                spacingNodeArgs.refs ??= {};
+                spacingNodeArgs.refs.root ??= {};
+                spacingNodeArgs.refs.root.style ??= {};
+                spacingNodeArgs.refs.root.style = StyleInfo.from(
+                    spacingNodeArgs.refs.root.style
+                ).merge(StyleInfo.from({ "table-layout": "fixed" }));
+            }
+        }
         const facts = emailNode.analysis.facts;
         // TODO EGGMAIL: discard negative paddings
         // for % values, use computed value in px (desktop mode) instead
@@ -221,6 +234,7 @@ export class SpacingPlugin extends Plugin {
         const referenceNode = emailNode.firstReferenceNode;
         if (
             referenceNode &&
+            this.isBlock(referenceNode) &&
             (styleInfo.getPropertyValue("margin-left") === "auto" ||
                 styleInfo.getPropertyValue("margin-right") === "auto")
         ) {
@@ -429,6 +443,9 @@ export class SpacingPlugin extends Plugin {
         });
     }
 
+    /**
+     * Style rules for nodes that do not allow the default spacing.
+     */
     provideStyleRules(rules) {
         // Allow paragraph-related elements to keep their top/bottom margins
         rules.allow(/^margin(-(top|bottom))?$/, {
