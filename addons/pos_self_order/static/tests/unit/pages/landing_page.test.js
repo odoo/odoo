@@ -19,7 +19,7 @@ test("navigates to product list when presets are disabled", async () => {
 });
 
 test("handles single and multiple available presets", async () => {
-    const store = await setupSelfPosEnv("mobile");
+    const store = await setupSelfPosEnv("mobile", "counter", "each", {}, true);
     store.config.use_presets = true;
     store.session.state = "opened";
 
@@ -48,7 +48,7 @@ test("handles single and multiple available presets", async () => {
 });
 
 test("includes table-service presets in QR/kiosk mode", async () => {
-    const store = await setupSelfPosEnv("mobile");
+    const store = await setupSelfPosEnv("mobile", "counter", "each", {}, true);
     store.config.use_presets = true;
     store.session.state = "opened";
 

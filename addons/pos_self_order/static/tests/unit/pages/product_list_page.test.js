@@ -7,7 +7,7 @@ import { definePosSelfModels } from "../data/generate_model_definitions";
 definePosSelfModels();
 
 test("selectProduct", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const models = store.models;
     const product = models["product.template"].get(5);
     const comp = await mountWithCleanup(ProductListPage, {});
