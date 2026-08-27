@@ -1192,6 +1192,7 @@ class AccountPaymentRegister(models.TransientModel):
         payments = self.env['account.payment']\
             .with_context(skip_invoice_sync=True)\
             .create([x['create_vals'] for x in to_process])
+        payments = payments.with_env(self.env)  # avoid propagating the 'skip_invoice_sync' context more than necessary
 
         for payment, vals in zip(payments, to_process):
             vals['payment'] = payment

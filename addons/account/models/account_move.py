@@ -5902,7 +5902,7 @@ class AccountMove(models.Model):
         if cancel:
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
 
-        return reverse_moves
+        return reverse_moves.with_env(self.env)
 
     def _can_be_unlinked(self):
         self.ensure_one()
