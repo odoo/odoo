@@ -1542,7 +1542,7 @@ class ProductTemplate(models.Model):
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
         tracking_data = {
-            "item_id": str(product.barcode or product.product_tmpl_id.id),
+            "item_id": str(product.default_code or product.product_tmpl_id.id),
             "item_name": self.with_context(display_default_code=False).display_name,
             "item_category": self.categ_id.name,
             "price": combination_info["price"],
@@ -1582,7 +1582,7 @@ class ProductTemplate(models.Model):
             price = price_vals.get("price_reduce", template.list_price)
             list_price = price_vals.get("base_price", price)
             tracking_data = {
-                "item_id": str(template.barcode or template.id),
+                "item_id": str(template.default_code or template.id),
                 "item_name": template.with_context(display_default_code=False).display_name,
                 "item_category": template.categ_id.name,
                 "item_list_name": item_list_name,
