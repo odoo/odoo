@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_confidence" name="Confidence Hero">
+    <section class="o_cc o_cc1 o_colored_level o_full_screen_height s_confidence overflow-hidden position-relative">
+        <div class="container h-100">
+            <div class="row align-items-center h-100">
+
+                <div class="col-12 col-lg-5 pt96 pb56">
+
+                    <div class="d-inline-flex align-items-center gap-3 mb-4">
+                        <t t-snippet-call="website.s_avatars" string="Avatars" hideMore.f="True" count.f="1,000+" labelText.translate="Trusted patients"/>
+                    </div>
+
+                    <h1 class="display-3 mb-4 fw-normal">
+                        Grow your<br/>practice with<br/><strong>confidence.</strong>
+                    </h1>
+
+                    <p class="lead mb-5">
+                        Everything stays accurate, organized and ready to use — so you always know what's happening and what's coming.
+                    </p>
+
+                    <a t-att-href="cta_btn_href" class="o_translate_inline btn btn-lg btn-primary rounded-circle mb-2">
+                    Book a session
+                    </a>
+
+                </div>
+                <div class="o_animate o_anim_fade_in o_visible o_animated s_col_no_resize col-12 col-lg-6 offset-lg-1 s_confidence_collage_col position-relative pb56" style="--confidence-scroll-speed: 5s;">
+                    <div class="s_confidence_source">
+                        <div class="s_confidence_track">
+                            <div class="position-relative rounded-3 overflow-hidden flex-shrink-0">
+                                <img src="/web/image/website.portrait_lg_1" class="w-100 h-100 object-fit-cover d-block oe_unremovable" alt=""/>
+                            </div>
+                            <div class="position-relative rounded-3 overflow-hidden flex-shrink-0">
+                                <img src="/web/image/website.portrait_lg_2" class="w-100 h-100 object-fit-cover d-block oe_unremovable" alt=""/>
+                            </div>
+                            <div class="position-relative rounded-3 overflow-hidden flex-shrink-0">
+                                <img src="/web/image/website.portrait_lg_3" class="w-100 h-100 object-fit-cover d-block oe_unremovable" alt=""/>
+                            </div>
+                        </div>
+                        <div class="s_confidence_track mobile-invisible">
+                            <div class="position-relative rounded-3 overflow-hidden flex-shrink-0">
+                                <img src="/web/image/website.portrait_lg_1" class="w-100 h-100 object-fit-cover d-block oe_unremovable" alt=""/>
+                            </div>
+                            <div class="position-relative rounded-3 overflow-hidden flex-shrink-0">
+                                <img src="/web/image/website.portrait_lg_2" class="w-100 h-100 object-fit-cover d-block oe_unremovable" alt=""/>
+                            </div>
+                            <div class="position-relative rounded-3 overflow-hidden flex-shrink-0">
+                                <img src="/web/image/website.portrait_lg_3" class="w-100 h-100 object-fit-cover d-block oe_unremovable" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_confidence_000_scss" name="Confidence 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_confidence/000.scss</path>
+</asset>
+
+</odoo>

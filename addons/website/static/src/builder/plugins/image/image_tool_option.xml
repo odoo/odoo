@@ -4,5 +4,15 @@
         <xpath expr="//MediaSizeOption" position="attributes">
             <attribute name="t-if" add="!this.env.getEditingElement().closest('.o_card_img_wrapper')" separator=" and "/>
         </xpath>
+        <!-- Hide the image "Size" option in the Confidence snippet -->
+        <xpath expr="//MediaSizeOption" position="attributes">
+            <attribute name="t-if" add="!this.env.getEditingElement().closest('.s_confidence')" separator=" and "/>
+        </xpath>
+    </t>
+    <t t-inherit="html_builder.ImageAndFaOption" t-inherit-mode="extension">
+        <!-- Hide the image "Alignment" option in the Confidence snippet -->
+        <xpath expr="//BuilderRow[@label.translate='Alignment']" position="attributes">
+            <attribute name="t-if" add="!this.env.getEditingElement().closest('.s_confidence')" separator=" and "/>
+        </xpath>
     </t>
 </templates>

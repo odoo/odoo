@@ -1,0 +1,29 @@
+.o_snippet_preview_wrap [data-snippet="s_love"] .s_love_source .s_love_track {
+    transform: translateY(-70px);
+}
+
+.o_snippet_preview_wrap:where(:hover, :focus-visible) [data-snippet="s_love"] .s_love_source {
+    .s_love_track_up {
+        animation: o-love-preview-up 6s ease-in-out infinite;
+    }
+    .s_love_track_down {
+        animation: o-love-preview-down 6s ease-in-out infinite;
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .o_snippet_preview_wrap:where(:hover, :focus-visible) [data-snippet="s_love"] .s_love_source {
+        .s_love_track_down {
+            animation: o-love-preview-down 6s ease-in-out infinite;
+        }
+    }
+}
+
+@keyframes o-love-preview-up {
+    0%, 100% { transform: translateY(-70px); }
+    50% { transform: translateY(-140px); }
+}
+@keyframes o-love-preview-down {
+    0%, 100% { transform: translateY(-70px); }
+    50% { transform: translateY(0); }
+}
