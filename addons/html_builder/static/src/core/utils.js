@@ -4,11 +4,11 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
-    onWillUpdateProps,
     proxy,
     status,
     toRaw,
     useEffect,
+    useOnChange,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -116,13 +116,15 @@ export function useBuilderComponent() {
     };
     updateEditingElements();
     oldEnv.editorBus.addEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
-    onWillUpdateProps(async (nextProps) => {
-        if (comp.props.applyTo !== nextProps.applyTo) {
-            applyTo = nextProps.applyTo;
+    useOnChange(
+        () => [comp.props.applyTo],
+        async (newApplyTo) => {
+            applyTo = newApplyTo;
             oldEnv.editorBus.trigger("UPDATE_EDITING_ELEMENT");
             await oldEnv.triggerDomUpdated();
-        }
-    });
+        },
+        {initialRun: false},
+    );
     onWillDestroy(() => {
         oldEnv.editorBus.removeEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
     });
@@ -474,6 +476,7 @@ export function useSelectableLtrRtlComponent({
     isLabelLinkedToContent,
     getItemState = () => {},
 }) {
+    const comp = useComponent();
     const env = useEnv();
     if (ltrRtlMapping && env.selectableContext) {
         const ltrRtlMappedItem = {
@@ -483,11 +486,8 @@ export function useSelectableLtrRtlComponent({
             langDir: env.langDir,
         };
         env.selectableContext.addLtrRtlMappedItem(ltrRtlMappedItem);
-
-        onWillStart(() => {
-            env.selectableContext.updateLtrRtlMappedItem(ltrRtlMappedItem);
-        });
-        onWillUpdateProps(async () => {
+        useEffect(() => {
+            Object.values(comp.props);
             env.selectableContext.updateLtrRtlMappedItem(ltrRtlMappedItem);
         });
         onWillDestroy(() => {
@@ -497,6 +497,7 @@ export function useSelectableLtrRtlComponent({
 }
 
 function usePrepareAction(getAllActions) {
+    const comp = useComponent();
     const env = useEnv();
     const getAction = env.editor.shared.builderActions.getAction;
     const asyncActions = [];
@@ -522,23 +523,27 @@ function usePrepareAction(getAllActions) {
             );
             resolve();
         });
-        onWillUpdateProps(async ({ actionParam, actionValue }) => {
-            onReady = new Promise((r) => {
-                resolve = r;
-            });
-            // TODO: should we support updating actionId?
-            await Promise.all(
-                asyncActions.map((obj) =>
-                    obj.action.prepare({
-                        ...obj.descr,
-                        actionParam: convertParamToObject(actionParam),
-                        editingElement: env.getEditingElement(),
-                        actionValue,
-                    })
-                )
-            );
-            resolve();
-        });
+        useOnChange(
+            () => [comp.props.actionParam, comp.props.actionValue],
+            async (actionParam, actionValue) => {
+                onReady = new Promise((r) => {
+                    resolve = r;
+                });
+                // TODO: should we support updating actionId?
+                await Promise.all(
+                    asyncActions.map((obj) =>
+                        obj.action.prepare({
+                            ...obj.descr,
+                            actionParam: convertParamToObject(actionParam),
+                            editingElement: env.getEditingElement(),
+                            actionValue,
+                        })
+                    )
+                );
+                resolve();
+            },
+            { initialRun: false },
+        );
     }
     return onReady;
 }
@@ -945,11 +950,13 @@ export function useInputBuilderComponent({
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
     const canTimeout = useCanTimeout(getAllActions);
 
-    onWillUpdateProps((nextProps) => {
-        if ("default" in nextProps) {
-            defaultValue = nextProps.default;
-        }
-    });
+    useOnChange(
+        () => [comp.props.default],
+        (newDefaultValue) => {
+            defaultValue = newDefaultValue;
+        },
+        { initialRun: false },
+    );
 
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
