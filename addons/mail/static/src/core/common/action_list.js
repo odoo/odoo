@@ -1,9 +1,9 @@
-import { attClassObjectToString } from "@mail/utils/common/format";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel } from "@mail/core/common/action";
+import { ActionButton } from "@mail/core/common/action_button";
+import { ActionDropdown } from "@mail/core/common/action_dropdown";
 import { useService } from "@web/core/utils/hooks";
 
 const actionListProps = [
@@ -23,7 +23,7 @@ const actionListPropsSchema = {
 };
 
 class Action extends Component {
-    static components = { Action, DropdownItem };
+    static components = { Action, ActionButton, ActionDropdown };
     static template = "mail.Action";
 
     get ActionList() {
@@ -44,8 +44,6 @@ class Action extends Component {
             ...actionListPropsSchema,
         });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
-        this.attClassObjectToString = attClassObjectToString;
         if (this.props.action.definition?.isMoreAction) {
             onWillUnmount(() => {
                 this.props.action.dropdownState.close();
@@ -55,14 +53,6 @@ class Action extends Component {
 
     get action() {
         return this.props.action;
-    }
-
-    get hasBtnBg() {
-        return (
-            this.props.odooControlPanelSwitchStyle ||
-            this.props.hasBtnBg ||
-            this.props.action.hasBtnBg
-        );
     }
 
     get isInlineCircleButtonValue() {

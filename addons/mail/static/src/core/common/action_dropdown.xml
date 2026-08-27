@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActionDropdown">
+    <t t-set="isInlineCircleButton" t-value="this.props.isInlineCircleButton"/>
+    <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inMeetingViewCallButtonsFullscreen"/>
+    <DropdownItem class="'o-mail-ActionList-button btn btn-group-item position-relative ' + this.btnClass + ' d-flex align-items-center dropdown-item_active_noarrow ' + (this.ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.props.onSelected(ev)" attrs="this.props.attrs">
+        <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
+            templateParams="this.action.icon.params"/>
+        <i t-elif="this.action.icon" class="oi" t-att-class="{ 'o-fs-small': this.props.dropdown, 'oi-fw': this.props.fw, 'oi-lg': inMeetingViewCallButtonsFullscreen, 'py-1': inMeetingViewCallButtonsFullscreen and !isInlineCircleButton }" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
+        <i t-elif="this.props.dropdown" class="oi oi-fw opacity-0" data-icon="question_mark" t-att-class="this.props.fw ? 'oi-fw' : ''"/>
+        <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
+        <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>
+        <t t-if="this.action.extraContentComponent" t-component="this.action.extraContentComponent" t-props="this.action.extraContentComponentProps"/>
+    </DropdownItem>
+</t>
+
+</templates>
