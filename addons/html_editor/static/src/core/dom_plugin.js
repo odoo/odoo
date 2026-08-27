@@ -22,6 +22,7 @@ import {
     isTextNode,
     isElement,
     isContentEditable,
+    getDeepestEditablePosition,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -34,8 +35,8 @@ import {
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { childNodeIndex, nodeSize, leftPos } from "../utils/position";
-import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { childNodeIndex, nodeSize, leftPos, rightPos } from "../utils/position";
+import { callbacksForCursorUpdate, normalizeCursorPosition } from "@html_editor/utils/selection";
 import {
     baseContainerGlobalSelector,
     createBaseContainer,
@@ -508,7 +509,17 @@ export class DomPlugin extends Plugin {
         if (elementToEnter) {
             this.dependencies.selection.setCursorEnd(elementToEnter);
         } else if (lastNode) {
-            this.dependencies.selection.setSelectionAfter(lastNode, { normalize: false });
+            // Set the selection after the last inserted node.
+            let position = rightPos(lastNode);
+            position = normalizeCursorPosition(position[0], position[1], "right");
+            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
+                // Correct the position if it happens to be in the editable root.
+                position = getDeepestEditablePosition(...position);
+            }
+            this.dependencies.selection.setSelection(
+                { anchorNode: position[0], anchorOffset: position[1] },
+                { normalize: false }
+            );
         }
 
         return insertedContent;
