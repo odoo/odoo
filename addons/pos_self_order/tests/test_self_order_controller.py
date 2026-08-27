@@ -350,6 +350,67 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertIn('error', data)
         self.assertEqual(data['error']['type'], 'delivery')
 
+    def test_validate_partner_returns_address_fields(self):
+        """The kiosk generates the preparation ticket client-side from the partner
+        returned by this endpoint, so it must contain more than just the id, otherwise
+        the delivery/takeout address is missing on the kiosk prep ticket."""
+        self.pos_config.self_ordering_mode = 'kiosk'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'preset_id': self.delivery_preset.id,
+            'name': 'New Customer',
+            'phone': '+32444444444',
+            'street': 'New St 1',
+            'zip': '1000',
+            'city': 'Test City',
+            'country_id': self.env.ref('base.be').id,
+            'state_id': False,
+            'email': 'new.customer@example.com',
+        }
+
+        data = self.make_request_to_controller('/pos-self-order/validate-partner', params)
+        partner_data = data['res.partner'][0]
+        self.assertEqual(partner_data['street'], 'New St 1')
+        self.assertEqual(partner_data['city'], 'Test City')
+        self.assertEqual(partner_data['zip'], '1000')
+
+        # Existing partner branch must also return the full address.
+        params['partner_id'] = partner_data['id']
+        data = self.make_request_to_controller('/pos-self-order/validate-partner', params)
+        partner_data = data['res.partner'][0]
+        self.assertEqual(partner_data['street'], 'New St 1')
+        self.assertEqual(partner_data['city'], 'Test City')
+        self.assertEqual(partner_data['zip'], '1000')
+
+    def test_process_order_email_and_mobile_kept_only_in_kiosk(self):
+        """Kiosk generates its preparation ticket client-side from the order data returned
+        by process-order, so email/mobile must not be stripped there. Mobile still has them
+        stripped: several devices can share the same order there, and shouldn't see each
+        other's contact info."""
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        self.pos_config.self_ordering_mode = 'kiosk'
+        order_data = self._create_order_data(
+            state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            device_type='kiosk', email='kiosk.customer@example.com', mobile='+32444444444',
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/kiosk', order_data)
+        self.assertEqual(data['pos.order'][0]['email'], 'kiosk.customer@example.com')
+        self.assertEqual(data['pos.order'][0]['mobile'], '+32444444444')
+
+        self.pos_config.self_ordering_mode = 'mobile'
+        order_data = self._create_order_data(
+            state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            device_type='mobile', email='mobile.customer@example.com', mobile='+32444444445',
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
+        self.assertNotIn('email', data['pos.order'][0])
+        self.assertNotIn('mobile', data['pos.order'][0])
+
     def test_free_delivery_threshold_edge_cases(self):
         """Test free delivery threshold at exactly the minimum, below, and above"""
         self.pos_config.self_ordering_mode = 'mobile'
