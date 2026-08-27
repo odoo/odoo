@@ -586,16 +586,17 @@ class SaleOrderLine(models.Model):
                     **line._get_pricelist_kwargs(),
                 )
 
+    def has_manual_price(self):
+        # `line.currency_id` can be False for NewId records
+        currency = (
+            self.currency_id
+            or self.company_id.currency_id
+            or self.env.company.currency_id
+        )
+        return currency.compare_amounts(self.technical_price_unit, self.price_unit)
+
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_price_unit(self):
-        def has_manual_price(line):
-            # `line.currency_id` can be False for NewId records
-            currency = (
-                line.currency_id
-                or line.company_id.currency_id
-                or line.env.company.currency_id
-            )
-            return currency.compare_amounts(line.technical_price_unit, line.price_unit)
 
         force_recompute = self.env.context.get('force_price_recomputation')
         for line in self:
@@ -607,7 +608,7 @@ class SaleOrderLine(models.Model):
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
-                (not force_recompute and has_manual_price(line))
+                (not force_recompute and line.has_manual_price())
                 or line.qty_invoiced > 0
                 or (line.product_id.expense_policy == 'cost' and line.is_expense)
             ):

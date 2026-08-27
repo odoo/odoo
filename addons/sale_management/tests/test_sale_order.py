@@ -622,3 +622,47 @@ class TestSaleOrder(SaleManagementCommon):
                 self.sale_order.id, line.id, input_quantity=1
             )
         self.assertEqual(line.price_unit, 80.0)
+
+    def test_optional_lines_price_not_recomputed_with_pricelist_on_portal_manual_changes(self):
+        """Test that optional line prices are NOT recomputed based on pricelist quantity rules if the unit price was modified"""
+
+        pricelist = self.env["product.pricelist"].create({
+            "name": "Qty-based Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.optional_product.product_tmpl_id.id,
+                    "min_quantity": 1,
+                    "compute_price": "fixed",
+                    "fixed_price": 100.0,
+                }),
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.optional_product.product_tmpl_id.id,
+                    "min_quantity": 3,
+                    "compute_price": "fixed",
+                    "fixed_price": 80.0,
+                }),
+            ],
+        })
+        self.sale_order.write({
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.optional_product.id, "product_uom_qty": 1}),
+            ],
+        })
+
+        line = self._get_optional_product_lines(self.sale_order)
+        self.assertEqual(line.price_unit, 100.0)
+        line.write({"price_unit": 67})  # Simulate a manual change by excluding technical_price_unit
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=4
+            )
+        self.assertEqual(line.price_unit, 67.0)
