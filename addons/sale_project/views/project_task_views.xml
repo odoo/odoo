@@ -320,17 +320,9 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_search_form_project_base"/>
         <field name="arch" type="xml">
-            <field name="partner_id" position="after">
-                <field name="sale_order_id"
-                    filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"
-                    invisible="context.get('template_project')"/>
-            </field>
             <field name="partner_id" position="attributes">
                 <attribute name="invisible">context.get('hide_partner') or context.get('template_project')</attribute>
             </field>
-            <filter name="customer" position="attributes">
-                <attribute name="invisible">context.get('hide_partner') or context.get('template_project')</attribute>
-            </filter>
         </field>
     </record>
 

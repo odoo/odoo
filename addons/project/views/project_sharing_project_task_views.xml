@@ -318,7 +318,7 @@
                     <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', 'today')]"/>
                 </filter>
             </filter>
-            <filter name="create_date" position="after">
+            <filter name="groupby_priority" position="after">
                 <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
             </filter>
         </field>

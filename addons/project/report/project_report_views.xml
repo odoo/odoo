@@ -68,6 +68,9 @@
                 <search position="attributes">
                     <attribute name="string">Tasks Analysis</attribute>
                 </search>
+                <filter name="groupby_priority" position="before">
+                    <filter string="Creation Date" name="create_date" context="{'group_by': 'create_date'}"/>
+                </filter>
             </field>
         </record>
 

@@ -9,16 +9,19 @@
                 <search string="Tasks">
                     <field name="name" string="Tasks" filter_domain="[('name', 'ilike', self)]"/>
                     <field name="tag_ids"/>
-                    <field name="stage_id"/>
-                    <field name="milestone_id" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
+                    <field name="milestone_id" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True) or not context.get('default_project_id')"/>
                     <field name="partner_id" operator="child_of" invisible="context.get('template_project')"/>
+                    <field name="stage_id"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator invisible="context.get('default_project_id')"/>
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
                     <separator groups="project.group_project_task_dependencies" invisible="not context.get('allow_task_dependencies', True)"/>
-                    <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies" invisible="not context.get('allow_task_dependencies', True)"/>
-                    <separator/>
-                    <filter string="Creation Date" name="creation_date_filter" date="create_date"/>
+                    <filter name="priority" string="Priority">
+                        <filter string="Urgent" domain="[('priority', '=', '3')]" name="urgent_priority"/>
+                        <filter string="High" domain="[('priority', '=', '2')]" name="high_priority"/>
+                        <filter string="Medium" domain="[('priority', '=', '1')]" name="medium_priority"/>
+                        <filter string="Low" domain="[('priority', '=', '0')]" name="low_priority"/>
+                    </filter>
                     <separator/>
                     <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
@@ -28,16 +31,13 @@
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d'), ('date_last_stage_update', '&lt;', 'today')]"/>
                     </filter>
                     <separator/>
+                    <filter string="Creation Date" name="creation_date_filter" date="create_date"/>
+                    <separator/>
                     <filter string="Templates" context="{'render_task_templates': True, 'default_is_template': True}" name="templates" domain="[('has_template_ancestor', '=', True)]"/>
                     <group>
-                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
-                        <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
                         <filter string="Priority" name="groupby_priority" context="{'group_by': 'priority'}"/>
-                        <filter string="Tags" name="tags" context="{'group_by': 'tag_ids'}"/>
-                         <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"
-                            invisible="context.get('template_project')"/>
-                        <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Date" name="create_date" context="{'group_by': 'create_date'}"/>
+                        <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True) or not context.get('default_project_id')"/>
+                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                     </group>
                 </search>
             </field>
@@ -51,21 +51,16 @@
             <field name="mode">primary</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                 <field name="stage_id" position="before">
+                 <field name="name" position="after">
                     <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                    <field name="project_id" string="Project" invisible="context.get('default_project_id')"/>
                 </field>
-                <field name="stage_id" position="after">
-                    <field name="project_id" string="Project"/>
-                </field>
-                <field name="partner_id" position="after">
-                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                <filter name="unassigned" position="before">
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
-                </field>
-                <filter name="stage" position="before">
-                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
                 </filter>
-                <filter name="stage" position="after">
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                <filter name="groupby_priority" position="before">
+                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" invisible="context.get('default_project_id')"/>
                 </filter>
             </field>
         </record>
@@ -78,16 +73,17 @@
             <field name="mode">primary</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <filter name="creation_date_filter" position="after">
-                    <field name="activity_user_id" string="Activities of"/>
-                    <field name="activity_type_id" string="Activity type"/>
+                <filter name="priority" position="after">
                     <filter string="Deadline" name="date_deadline" date="date_deadline">
+                        <separator/>
                         <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
                         <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', 'today')]"/>
                     </filter>
                 </filter>
-                <filter name="create_date" position="after">
+                <filter name="groupby_priority" position="after">
                     <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
+                </filter>
+                <filter name="stage" position="after">
                     <separator/>
                     <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}"/>
                 </filter>
