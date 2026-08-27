@@ -4,13 +4,11 @@
 <t t-name="mail.ActionButton">
     <t t-set="isInlineCircleButton" t-value="this.props.isInlineCircleButton"/>
     <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inMeetingViewCallButtonsFullscreen"/>
-    <button class="o-mail-ActionList-button btn btn-group-item position-relative" t-ref="this.props.action.actionRef" t-att-class="this.btnClass" t-att="Object.assign(this.props.attrs, { 'title': this.props.action.name })" t-on-click="(ev) => this.props.onSelected(ev)" t-att-data-hotkey="this.props.action.hotkey" t-att-style="this.props.style">
+    <button class="o-mail-ActionList-button btn btn-group-item position-relative o-inline" t-ref="this.props.action.actionRef" t-att-class="this.btnClass" t-att="Object.assign(this.props.attrs, { 'title': this.props.action.name })" t-on-click="(ev) => this.props.onSelected(ev)" t-att-data-hotkey="this.props.action.hotkey" t-att-style="this.props.style">
         <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
             templateParams="this.action.icon.params"/>
-        <i t-elif="this.action.icon" class="oi" t-att-class="{ 'o-fs-small': this.props.dropdown, 'oi-fw': this.props.fw, 'oi-lg': inMeetingViewCallButtonsFullscreen, 'py-1': inMeetingViewCallButtonsFullscreen and !isInlineCircleButton }" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
-        <i t-elif="this.props.dropdown" class="oi oi-fw opacity-0" data-icon="question_mark" t-att-class="this.props.fw ? 'oi-fw' : ''"/>
-        <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
-        <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>
+        <i t-elif="this.action.icon" class="oi" t-att-class="{ 'oi-fw': this.props.fw, 'oi-lg': inMeetingViewCallButtonsFullscreen, 'py-1': inMeetingViewCallButtonsFullscreen and !isInlineCircleButton }" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
+        <span t-if="this.action.name and (!this.action.icon or this.action.inlineName)" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-out="this.action.inlineName or this.action.name"/>
         <t t-if="this.action.extraContentComponent" t-component="this.action.extraContentComponent" t-props="this.action.extraContentComponentProps"/>
         <t t-if="this.props.action.badge" t-call="mail.Action.badge"
             extraBadgeClass="'position-absolute me-n1 mt-n1 end-0'"/>

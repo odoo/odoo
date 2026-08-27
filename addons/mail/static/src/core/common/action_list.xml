@@ -48,14 +48,12 @@
     <t t-if="this.action.component and this.action.componentCondition" t-component="this.action.component" t-props="this.action.componentProps"/>
     <ActionDropdown t-elif="this.props.dropdown" action="this.action" attrs="attrs"
         isInlineCircleButton="isInlineCircleButton" inMeetingViewCallButtonsFullscreen="inMeetingViewCallButtonsFullscreen"
-        dropdown="this.props.dropdown" fw="this.props.fw" inline="this.props.inline"
-        isFirstInGroup="this.props.isFirstInGroup" isLastInGroup="this.props.isLastInGroup"
+        fw="this.props.fw" isFirstInGroup="this.props.isFirstInGroup" isLastInGroup="this.props.isLastInGroup"
         hasBtnBg="this.props.hasBtnBg" odooControlPanelSwitchStyle="this.props.odooControlPanelSwitchStyle"
         onSelected="(ev) => this.onSelected(this.action, ev)"/>
     <ActionButton t-else="" action="this.action" attrs="attrs" style="this.props.style"
         isInlineCircleButton="isInlineCircleButton" inMeetingViewCallButtonsFullscreen="inMeetingViewCallButtonsFullscreen"
-        dropdown="this.props.dropdown" fw="this.props.fw" inline="this.props.inline"
-        isFirstInGroup="this.props.isFirstInGroup" isLastInGroup="this.props.isLastInGroup"
+        fw="this.props.fw" isFirstInGroup="this.props.isFirstInGroup" isLastInGroup="this.props.isLastInGroup"
         hasBtnBg="this.props.hasBtnBg" odooControlPanelSwitchStyle="this.props.odooControlPanelSwitchStyle"
         onSelected="(ev) => this.onSelected(this.action, ev)"/>
 </t>
