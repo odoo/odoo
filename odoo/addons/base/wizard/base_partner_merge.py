@@ -372,6 +372,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         values_by_company = defaultdict(dict)   # {company: vals}
         for column in model_fields:
             field = dst_partner._fields[column]
+            if not field.copy:
+                continue
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
