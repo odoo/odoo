@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="report_training_record_document">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2>Training Record</h2>
+
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <th>Name</th>
+                  <td><span t-field="o.name"/></td>
+                </tr>
+                <tr>
+                  <th>Quantity</th>
+                  <td><span t-field="o.quantity"/></td>
+                </tr>
+                <tr>
+                  <th>Training Date</th>
+                  <td><span t-field="o.training_date"/></td>
+                </tr>
+                <tr>
+                  <th>Partner</th>
+                  <td><span t-field="o.partner_id"/></td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>
+                    <span t-if="o.is_completed">Completed</span>
+                    <span t-else="">Not Completed</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+</odoo>
