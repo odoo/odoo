@@ -73,9 +73,6 @@ class PosPaymentMethod(models.Model):
             'capture': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/capture',
         }
 
-    def _is_write_forbidden(self, fields):
-        return super(PosPaymentMethod, self)._is_write_forbidden(fields - {'adyen_latest_response'})
-
     def get_latest_adyen_status(self):
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group('point_of_sale.group_pos_user'):

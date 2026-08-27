@@ -777,17 +777,28 @@ class PosConfig(models.Model):
         if ('use_order_printer' in vals and not vals['use_order_printer']):
             vals['preparation_printer_ids'] = [fields.Command.clear()]
 
-        bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
-
         self._preprocess_x2many_vals_from_settings_view(vals)
         vals = self._keep_new_vals(vals)
+
+        if 'payment_method_ids' in vals:
+            for config in self:
+                opened_session = config.session_ids.filtered(lambda s: s.state != 'closed')
+                if not opened_session:
+                    continue
+                new_ids = set(config._fields['payment_method_ids'].convert_to_cache(vals['payment_method_ids'], config))
+                removed_pms = config.payment_method_ids.filtered(lambda pm: pm.id not in new_ids)
+                if removed_pms:
+                    raise UserError(_(
+                        "You cannot remove %(pms)s from %(config)s while it has an open session.",
+                        pms=', '.join(removed_pms.mapped('name')),
+                        config=config.name,
+                    ))
+
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():
                 if key in vals:
-                    if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
-                        continue
                     # Allow activating a pos config even if it has an open session, but don't allow deactivating it.
                     if key == 'active' and vals['active']:
                         continue
@@ -878,7 +889,7 @@ class PosConfig(models.Model):
         return new_vals
 
     def _get_forbidden_change_fields(self):
-        return ['module_pos_restaurant', 'payment_method_ids', 'active']
+        return ['module_pos_restaurant', 'active']
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them

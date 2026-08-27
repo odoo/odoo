@@ -32,11 +32,6 @@ class PosPaymentMethod(models.Model):
     def _get_terminal_provider_selection(self):
         return super()._get_terminal_provider_selection() + [('dpopay', 'DPO Pay')]
 
-    def _is_write_forbidden(self, fields):
-        # Allow the modification of these fields even if a pos_session is open
-        whitelisted_fields = {'dpopay_bearer_token', 'dpopay_payment_mode'}
-        return super()._is_write_forbidden(fields - whitelisted_fields)
-
     def _get_transaction_type(self):
         if self.dpopay_payment_mode == 'momo':
             return 'pushPaymentDpoMomoSale'
