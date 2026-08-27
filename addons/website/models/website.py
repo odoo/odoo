@@ -1325,6 +1325,10 @@ class Website(models.Model):
 
         pages = self._get_website_pages(domain)
 
+        # Only fetch the fields needed below: lazily reading a view field would
+        # prefetch arch_db arch_prev for every page and may end in a out-of-memory error.
+        pages.view_id.fetch(['name', 'priority', 'write_date'])
+
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
