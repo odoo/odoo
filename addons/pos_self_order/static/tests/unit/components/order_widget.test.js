@@ -22,6 +22,11 @@ test("buttonToShow", async () => {
     // With valid payment method
     models["pos.payment.method"].create({ payment_provider: "stripe" });
     expect(comp.buttonToShow).toMatchObject({ label: "Pay", disabled: false });
+    // With zero amount order
+    store.currentOrder.lines.forEach((line) => {
+        line.price_unit = 0;
+    });
+    expect(comp.buttonToShow).toMatchObject({ label: "Order", disabled: false });
 });
 
 test("lineNotSend", async () => {
@@ -73,7 +78,7 @@ test("shouldGoBack", async () => {
 });
 
 test("presetBtnName", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
     const order = await getFilledSelfOrder(store);
 
