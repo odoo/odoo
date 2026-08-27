@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_saleorder_document_optional_products" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//t[@t-set='lines_to_report']" position="after">
+        <t t-if="doc.state not in ['draft', 'sent']">
+            <t t-set="lines_to_report"
+               t-value="lines_to_report.filtered(
+                   lambda line: (not line.parent_id and not line.is_optional)
+                                or line.product_uom_qty > 0
+               )"/>
+        </t>
+    </xpath>
+</template>
+</odoo>
