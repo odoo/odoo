@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
+        <img name="preselected_product_image" position="attributes">
+            <attribute name="class" remove="img-thumbnail rounded" add="o_wsale_product_thumb" separator=" "/>
+        </img>
         <span name="sale_combo_configurator_title" position="attributes">
             <attribute name="class" remove="h4" add="h5" separator=" "/>
         </span>

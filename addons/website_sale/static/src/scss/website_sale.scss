@@ -169,7 +169,6 @@
             --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-border-width: #{$border-width};
             --o-wsale-filmstrip-item-bg: transparent;
-            --o-wsale-filmstrip-item-image-bg: #{$gray-100};
 
             --o-wsale-filmstrip-item-border-color-hover: color-mix(in srgb, var(--o-border-color), black 30%);
         }
@@ -235,7 +234,6 @@
             --o-wsale-filmstrip-item-text-align: center;
             --o-wsale-filmstrip-item-text-wrap: wrap;
             --o-wsale-filmstrip-item-bg: transparent;
-            --o-wsale-filmstrip-item-image-bg: transparent;
             --o-wsale-filmstrip-item-placeholder-display: block;
             --o-wsale-filmstrip-item-word-break: break-word;
 
@@ -268,7 +266,6 @@
             --o-wsale-filmstrip-item-text-align: center;
             --o-wsale-filmstrip-item-text-wrap: wrap;
             --o-wsale-filmstrip-item-bg: transparent;
-            --o-wsale-filmstrip-item-image-bg: transparent;
             --o-wsale-filmstrip-item-placeholder-display: block;
             --o-wsale-filmstrip-item-word-break: break-word;
 
@@ -317,8 +314,8 @@
             --o-wsale-filmstrip-item-font-weight: #{$headings-font-weight};
             --o-wsale-filmstrip-item-text-wrap: wrap;
             --o-wsale-filmstrip-item-color: #{$white};
-            --o-wsale-filmstrip-item-bg: #{transparent};
-            --o-wsale-filmstrip-item-image-bg: transparent;
+            --o-wsale-filmstrip-item-bg: var(--wsale-product-thumb-bg, #{$gray-100});
+            --o-wsale-filmstrip-item-image-bg: var(--wsale-product-thumb-bg, #{$gray-100});
             --o-wsale-filmstrip-item-placeholder-display: block;
             --o-wsale-filmstrip-item-word-break: break-word;
 
@@ -442,7 +439,8 @@
                         position: var(--o-wsale-filmstrip-item-image-position);
                         width: var(--o-wsale-filmstrip-item-image-width, 2.5rem);
                         height: var(--o-wsale-filmstrip-item-image-height);
-                        background-color: var(--o-wsale-filmstrip-item-image-bg, #{$body-bg});
+                        background-color: var(--o-wsale-filmstrip-item-image-bg, transparent);
+                        border-radius: MIN(var(--o-wsale-opt-border-radius, var(--border-radius)), 20%);
                         aspect-ratio: 1/1;
                         transition: all .15s ease-in-out;
                         overflow: hidden;
@@ -1502,6 +1500,12 @@ $-product-radius-map: (
     }
 }
 
+.o_product_detail_img_wrapper {
+    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+    border-radius: var(--o-wsale-product-image-radius);
+    overflow: hidden;
+}
+
 // ==== Grid image styling
 .o_wsale_product_page_grid_column .o_product_detail_img_wrapper {
     aspect-ratio: var(--o-wsale-product-image-ratio);
@@ -1561,22 +1565,22 @@ $-product-radius-map: (
                     height: auto;
                     text-indent: unset;
                     transition: none;
-                    border: $border-width solid $border-color;
+                    border: 0;
 
                     &,
                     & > div,
                     & > div > img {
-                        border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
+                        border-radius: MIN(var(--o-wsale-opt-border-radius, var(--border-radius)), 20%);
                         aspect-ratio: var(--o-wsale-product-image-ratio);
+                    }
+
+                    & > div {
+                        background-color: var(--wsale-product-thumb-bg, #{$gray-100});
                     }
 
                     .o_product_video_thumb {
                         @include o-position-absolute(0, 0, 0, 0);
                         line-height: 64px;
-                    }
-
-                    &.active {
-                        border-color: map-get($theme-colors, 'primary');
                     }
 
                     &:where(:not(:hover)) {
@@ -1877,7 +1881,7 @@ $-product-radius-map: (
 // Unified product image aspect ratios
 
 %o-wsale-shop-thumb {
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     aspect-ratio: var(--o-wsale-shop-thumb-aspect-ratio, 1);
 }

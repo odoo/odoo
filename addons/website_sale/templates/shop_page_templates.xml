@@ -33,7 +33,7 @@
                     >
                         <i
                             class="css_attribute_preview_thumbnail cursor-pointer d-block"
-                            t-att-style="'background:url(%s); background-size:cover; background-position: center center;' % previewed_ptav['variant_image_url']"
+                            t-att-style="'background-image:url(%s); background-size:cover; background-position: center center;' % previewed_ptav['variant_image_url']"
                             t-att-title="ptav.name"
                         />
                     </div>
@@ -62,12 +62,12 @@
                         class="d-flex"
                     >
                         <div
-                            t-attf-class="css_attribute_image size_small cursor-pointer d-block rounded bg-body #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                            t-attf-class="css_attribute_image size_small cursor-pointer d-block #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                             t-att-title="ptav.name"
                         >
                             <div
-                                class="o_bg_img_center w-100 h-100 rounded-1"
-                                t-att-style="'background-image:url(/web/image/product.attribute.value/%s/image);' % ptav.product_attribute_value_id.id"
+                                class="o_bg_img_center w-100 h-100"
+                                t-att-style="'background-image:url(/web/image/product.attribute.value/%s/image); background-size:cover; background-position: center center;' % ptav.product_attribute_value_id.id"
                             />
                         </div>
                     </div>
@@ -448,7 +448,7 @@
                                     t-attf-class="o_wsale_products_grid_table grid
                                         {{grid_md_allow_custom_cols and 'o_wsale_products_grid_table_md'}}
                                         {{website.shop_opt_products_design_classes}}"
-                                    t-attf-style="--o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}; --o-wsale-products-grid-gap: {{gap}};"
+                                    t-attf-style="--o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}; --o-wsale-products-grid-gap: {{gap}}; {{website.shop_opt_products_thumb_bg and ('--wsale-product-thumb-bg: ' + website.shop_opt_products_thumb_bg + ';') or ''}}"
                                     t-att-data-name="grid_block_name"
                                 >
                                     <t t-foreach="bins" t-as="tr_product">
@@ -670,7 +670,7 @@
     <template id="website_sale.filter_image_attributes" name="Image attributes in Filter">
         <t t-foreach="pavs_per_attribute[a]" t-as="v">
             <label
-                t-attf-class="css_attribute_image size_small position-relative rounded-3 bg-body text-center cursor-pointer #{'active' if v.id in attrib_set else ''} #{'custom_value' if v.is_custom else ''} #{'transparent' if (not v.is_custom and not v.html_color) else ''}"
+                t-attf-class="css_attribute_image size_small position-relative text-center cursor-pointer #{'active' if v.id in attrib_set else ''} #{'custom_value' if v.is_custom else ''} #{'transparent' if (not v.is_custom and not v.html_color) else ''}"
             >
                 <input
                     type="checkbox"
@@ -681,7 +681,7 @@
                     class="w-100 h-100 opacity-0 cursor-pointer"
                 />
                 <div
-                    class="oe_img_bg o_bg_img_center position-absolute top-0 w-100 h-100 rounded-1"
+                    class="oe_img_bg o_bg_img_center position-absolute top-0 w-100 h-100"
                     t-att-style="'background-image:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % v.id if v.image else ''"
                 />
             </label>
@@ -1131,7 +1131,7 @@
                                 <div
                                     t-if="c.image_128"
                                     name="o_wsale_filmstrip_image"
-                                    class="o_wsale_filmstrip_image oe_img_bg o_bg_img_center rounded"
+                                    class="o_wsale_filmstrip_image oe_img_bg o_bg_img_center"
                                     t-attf-style="background-image:url('data:image/png;base64, #{c.image_128.to_base64()}')"
                                     t-att-alt="c.name"
                                     role="img"
@@ -1140,7 +1140,7 @@
                                 <div
                                     t-else=""
                                     name="o_wsale_filmstrip_placeholder"
-                                    class="o_wsale_filmstrip_image o_wsale_filmstrip_placeholder oe_img_bg o_bg_img_center rounded"
+                                    class="o_wsale_filmstrip_image o_wsale_filmstrip_placeholder oe_img_bg o_bg_img_center"
                                     role="img"
                                     aria-label="Category image"
                                 />

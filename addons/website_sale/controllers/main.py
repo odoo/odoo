@@ -1980,6 +1980,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "shop_ppr",
             "shop_default_sort",
             "shop_gap",
+            "shop_opt_products_thumb_bg",
             "shop_opt_products_design_classes",
             "product_page_container",
             "product_page_image_layout",
