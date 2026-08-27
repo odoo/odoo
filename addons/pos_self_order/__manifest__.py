@@ -111,7 +111,7 @@
             'point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.js',
             'point_of_sale/static/src/app/plugins/pos_number_buffer_plugin.js',
             'mail/static/src/core/common/sound_effects_plugin.js',  # Needed by pos_number_buffer_plugin
-            'point_of_sale/static/src/app/services/pos_ticket_printer_service.js',
+            'point_of_sale/static/src/app/plugins/pos_ticket_printer_plugin.js',
             'point_of_sale/static/src/app/components/popups/retry_print_popup/**',
             'point_of_sale/static/src/app/components/popups/text_input_popup/**',
             "pos_self_order/static/src/app/**/*",
@@ -125,7 +125,7 @@
             "point_of_sale/static/src/app/models/data_service_options.js",
             "point_of_sale/static/src/app/models/utils/indexed_db.js",
             "point_of_sale/static/src/app/models/related_models/**/*",
-            "point_of_sale/static/src/app/services/data_service.js",
+            "point_of_sale/static/src/app/plugins/pos_data_plugin.js",
             "point_of_sale/static/src/app/models/**/*",
             "pos_restaurant/static/src/app/models/restaurant_table.js",
             "point_of_sale/static/src/app/utils/numbers.js",

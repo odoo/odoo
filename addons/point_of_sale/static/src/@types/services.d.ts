@@ -4,8 +4,6 @@ declare module "services" {
     import { alertService } from "@point_of_sale/app/services/alert_service";
     import { barcodeReaderService } from "@point_of_sale/app/services/barcode_reader_service";
     import { contextualUtilsService } from "@point_of_sale/app/services/contextual_utils_service";
-    import { PosDataService } from "@point_of_sale/app/services/data_service";
-    import { posTicketPrinterService } from "@point_of_sale/app/services/pos_ticket_printer_service";
     import { posService } from "@point_of_sale/app/services/pos_store";
     import { renderService } from "@point_of_sale/app/services/render_service";
     import { reportService } from "@point_of_sale/app/services/report_service";
@@ -16,8 +14,6 @@ declare module "services" {
         contextual_utils_service: typeof contextualUtilsService;
         customer_display_service: typeof customerDisplayService;
         pos: typeof posService;
-        pos_data: typeof PosDataService;
-        pos_ticket_printer: typeof posTicketPrinterService;
         report: typeof reportService;
     }
 }

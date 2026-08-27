@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { browser } from "@web/core/browser/browser";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
@@ -135,3 +136,5 @@ export class PosRouterPlugin extends Plugin {
         });
     }
 }
+
+services.add(PosRouterPlugin);

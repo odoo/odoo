@@ -51,6 +51,9 @@ import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
 import { SIZES } from "@web/core/ui/ui_utils";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
+import { PosDataPlugin } from "../plugins/pos_data_plugin";
+import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
+import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
@@ -80,12 +83,9 @@ export class PosStore extends WithLazyGetterTrap {
         "bus_service",
         "barcode_reader",
         "ui",
-        "pos_data",
         "dialog",
         "notification",
-        "pos_ticket_printer",
         "action",
-        "alert",
         "mail.sound_effects",
     ];
 
@@ -100,18 +100,12 @@ export class PosStore extends WithLazyGetterTrap {
      */
     async setup(
         env,
-        {
-            barcode_reader,
-            ui,
-            dialog,
-            notification,
-            pos_ticket_printer,
-            bus_service,
-            pos_data,
-            action,
-            alert,
-        }
+        { number_buffer, barcode_reader, ui, dialog, notification, bus_service, action }
     ) {
+        this.data = usePlugin(PosDataPlugin);
+        this.alert = usePlugin(PosAlertPlugin);
+        this.ticketPrinter = usePlugin(PosTicketPrinterPlugin);
+        this.ticketPrinter.init(env);
         const debugMode = usePlugin(DebugModePlugin);
 
         this.env = env;
@@ -119,11 +113,8 @@ export class PosStore extends WithLazyGetterTrap {
         this.barcodeReader = barcode_reader;
         this.ui = ui;
         this.dialog = dialog;
-        this.ticketPrinter = pos_ticket_printer;
         this.bus = bus_service;
-        this.data = pos_data;
         this.action = action;
-        this.alert = alert;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
         this.pushOrderMutex = new Mutex();
@@ -3005,7 +2996,7 @@ export class PosStore extends WithLazyGetterTrap {
                 this.snoozeTracker.setSnoozes(this.config.pos_snooze_ids);
             }
         });
-        if (this.data.isDataLoadedFromCache()) {
+        if (this.data.dataLoadedFromCache()) {
             try {
                 const snoozes = await this.data.searchRead("pos.snooze", [
                     ["pos_config_id", "=", this.config.id],

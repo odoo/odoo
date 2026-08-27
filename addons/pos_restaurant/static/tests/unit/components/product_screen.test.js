@@ -92,6 +92,7 @@ describe("Mobile Pay Button", () => {
         });
 
         expect(Boolean(screen.swapButton)).toBe(false);
+        await click("button:contains(In)");
         expect("button:contains('cart')").toHaveClass("btn-primary");
         expect(".pay-button:contains('Pay')").toHaveCount(1);
         expect(".pay-button:contains('Pay')").toHaveClass("btn-secondary");

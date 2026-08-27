@@ -1,8 +1,7 @@
 import { Component, useProps, t, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-class Alert extends Component {
+export class Alert extends Component {
     static template = xml`
         <div t-attf-class="alert pos-navbar-height fixed-top py-3 px-1 mt-2 lh-sm alert-{{this.props.type}} fade show d-flex align-items-center justify-content-center rounded {{this.ui.isSmall ? 'w-100': 'w-50 fs-5 m-auto'}}" role="alert">
             <strong class="flex-grow-1 text-center" t-out="this.props.message" />
@@ -20,30 +19,3 @@ class Alert extends Component {
         this.ui = useService("ui");
     }
 }
-
-export const alertService = {
-    dependencies: ["overlay"],
-    start(env, { overlay }) {
-        let dismiss = undefined;
-
-        const add = (message, options = {}, overlayOptions = {}) => {
-            dismiss?.();
-            dismiss = overlay.add(
-                Alert,
-                {
-                    message,
-                    ...options,
-                    onClose: () => {
-                        dismiss?.();
-                        options.onClose?.();
-                    },
-                },
-                overlayOptions
-            );
-        };
-
-        return { add, dismiss: () => dismiss?.() };
-    },
-};
-
-registry.category("services").add("alert", alertService);

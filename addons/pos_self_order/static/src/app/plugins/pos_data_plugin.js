@@ -1,9 +1,9 @@
-import { PosData } from "@point_of_sale/app/services/data_service";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
 
-export const unpatchSelf = patch(PosData.prototype, {
+export const unpatchSelf = patch(PosDataPlugin.prototype, {
     async loadInitialData() {
         if (odoo.debug === "assets") {
             window.performance.mark("pos_data_service_init");

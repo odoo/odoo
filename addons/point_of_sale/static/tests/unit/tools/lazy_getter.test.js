@@ -14,6 +14,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
+import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
 
 /**
  * @param {string} value
@@ -143,6 +145,21 @@ class Root extends Component {
 test("each getter should only be called once and only when needed", async () => {
     clearRegistry(registry.category("services"));
 
+    patchWithCleanup(PosDataPlugin.prototype, {
+        _onWillStart() {
+            return false;
+        },
+    });
+
+    patchWithCleanup(PosTicketPrinterPlugin.prototype, {
+        initDefaultPrinter() {
+            return false;
+        },
+        initPrinters() {
+            return false;
+        },
+    });
+
     patchWithCleanup(AppStore.prototype, {
         get ab() {
             unorderedStep("ab");
@@ -198,6 +215,21 @@ test("each getter should only be called once and only when needed", async () => 
 
 test("only dependent components rerender", async () => {
     clearRegistry(registry.category("services"));
+
+    patchWithCleanup(PosDataPlugin.prototype, {
+        _onWillStart() {
+            return false;
+        },
+    });
+
+    patchWithCleanup(PosTicketPrinterPlugin.prototype, {
+        initDefaultPrinter() {
+            return false;
+        },
+        initPrinters() {
+            return false;
+        },
+    });
 
     patchWithCleanup(WithStore.prototype, {
         trackRender() {

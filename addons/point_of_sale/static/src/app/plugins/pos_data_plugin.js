@@ -1,68 +1,70 @@
-import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
-import { registry } from "@web/core/registry";
+import { signal, Plugin, usePlugin, markRaw, proxy, onWillStart, useListener } from "@odoo/owl";
+import { BusPlugin } from "@bus/services/bus_plugin";
+import { ORM } from "@web/core/orm_plugin";
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw, proxy, usePlugin } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
-import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registerPythonTemplate } from "../utils/convert_python_template";
+import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
 
-export class PosData {
-    static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+export class PosDataPlugin extends Plugin {
+    // Must stay above LocalizationPlugin (10) since loading records needs translations.
+    static sequence = 20;
 
     debugMode = usePlugin(DebugModePlugin);
+    bus = usePlugin(BusPlugin);
+    orm = usePlugin(ORM);
+    syncInProgress = signal(false);
+    dataLoadedFromCache = signal(false);
+    localUnsyncedPaidOrderUuids = signal.Set(new Set()); // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
+    network = proxy({
+        warningTriggered: false,
+        offline: false,
+        loading: true,
+        unsyncData: [],
+    });
 
-    async setup(env, { orm, bus_service }) {
-        this.orm = orm;
-        this.bus = bus_service;
+    setup() {
         this.relations = [];
-        this.custom = {};
-        this.syncInProgress = false;
-        this.dataLoadedFromCache = false;
+        this.channels = [];
+        this.records = {};
+
         this.mutex = markRaw(new Mutex());
         this.indexedDBMutex = markRaw(new Mutex());
-        this.records = {};
         this.opts = new DataServiceOptions();
-        this.channels = [];
         this.debouncedSynchronizeLocalDataInIndexedDB = debounce(
             this.synchronizeLocalDataInIndexedDB.bind(this),
             300
         );
 
-        this.network = proxy({
-            warningTriggered: false,
-            offline: false,
-            loading: true,
-            unsyncData: [],
-        });
+        this.initializeWebsocket();
+        useListener(window, "offline", () => this.checkConnectivity());
+        useListener(window, "online", () => this.checkConnectivity());
+        this.bus.addEventListener("BUS:CONNECT", this.reconnectWebSocket.bind(this));
 
-        // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
-        // Used by the beforeunload guard to prevent data loss on accidental page close/reload.
-        this.localUnsyncedPaidOrderUuids = new Set();
+        onWillStart(async () => this._onWillStart());
+    }
 
+    async _onWillStart() {
         if (!navigator.onLine) {
             await this.checkConnectivity();
         }
 
-        this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
         await this.initializeDataRelation();
-
-        browser.addEventListener("online", () => this.checkConnectivity());
-        browser.addEventListener("offline", () => this.checkConnectivity());
-        this.bus.addEventListener("BUS:CONNECT", this.reconnectWebSocket.bind(this));
     }
 
     async initializeDeviceIdentifier() {
@@ -242,7 +244,7 @@ export class PosData {
 
                 if (model === "pos.order") {
                     const idbOrdersByUuid = new Map(records.map((r) => [r[key], r]));
-                    for (const trackedUuid of [...this.localUnsyncedPaidOrderUuids]) {
+                    for (const trackedUuid of [...this.localUnsyncedPaidOrderUuids()]) {
                         const idbRecord = idbOrdersByUuid.get(trackedUuid);
                         if (!idbRecord) {
                             logPosMessage(
@@ -260,7 +262,7 @@ export class PosData {
                             // Remove guard when either:
                             // - the order is confirmed in IndexedDB in paid state (safe on reload), or
                             // - the order is no longer unsynced in memory (synced to server).
-                            this.localUnsyncedPaidOrderUuids.delete(trackedUuid);
+                            this.localUnsyncedPaidOrderUuids().delete(trackedUuid);
                         } else {
                             logPosMessage(
                                 "IndexedDB",
@@ -403,7 +405,7 @@ export class PosData {
         this.dependencies = dependencies;
         this.fields = fields;
         this.relations = relations;
-        this.models = models;
+        this.models = proxy(models);
     }
 
     async loadInitialData() {
@@ -429,7 +431,7 @@ export class PosData {
             await this.initIndexedDB(params);
             localData = await this.getCachedServerDataFromIndexedDB();
         }
-        this.dataLoadedFromCache = true;
+        this.dataLoadedFromCache.set(true);
 
         try {
             if (!this.network.offline) {
@@ -449,7 +451,7 @@ export class PosData {
                 params = this.getFieldsAndRelations(data);
                 localStorage.setItem(key, JSON.stringify(params));
                 await this.initIndexedDB(params);
-                this.dataLoadedFromCache = true;
+                this.dataLoadedFromCache.set(true);
             }
         } catch (error) {
             return this.handleLoadingDataError(error, localData);
@@ -966,7 +968,7 @@ export class PosData {
     }
 
     async syncData() {
-        this.syncInProgress = true;
+        this.syncInProgress.set(true);
 
         await this.mutex.exec(async () => {
             while (this.network.unsyncData.length > 0) {
@@ -982,7 +984,7 @@ export class PosData {
             }
         });
 
-        this.syncInProgress = false;
+        this.syncInProgress.set(false);
     }
 
     async loadServerOrders(domain) {
@@ -1191,17 +1193,8 @@ export class PosData {
     }
 
     isDataLoadedFromCache() {
-        return this.dataLoadedFromCache;
+        return this.dataLoadedFromCache();
     }
 }
 
-export const PosDataService = {
-    dependencies: PosData.serviceDependencies,
-    async start(env, deps) {
-        const data = new PosData();
-        await data.setup(env, deps);
-        return proxy(data);
-    },
-};
-
-registry.category("services").add("pos_data", PosDataService);
+services.add(PosDataPlugin);

@@ -2,7 +2,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 import { setupAndMountPosApp } from "@point_of_sale/../tests/unit/utils";
 import { test, waitFor } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { unpatchSelf } from "@pos_self_order/app/services/data_service";
+import { unpatchSelf } from "@pos_self_order/app/plugins/pos_data_plugin";
 import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
 
 definePosModels();
