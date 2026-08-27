@@ -1330,10 +1330,15 @@ class Field[T]:
             ))
         # Mark computed fields to recompute
         if to_compute and self.compute:
-            _logger.info("Prepare computation of %s", self)
             cr.execute(SQL('SELECT id FROM %s WHERE %s IS NULL', SQL.identifier(model._table), SQL.identifier(self.name)))
             records = model.browse(row[0] for row in cr.fetchall())
+            self._init_column_notify_compute(records)
             model.env.add_to_compute(self, records)
+
+    def _init_column_notify_compute(self, records):
+        _logger.info("Prepare computation of %s in %s records", self, len(records))
+        if len(records) > 100000:
+            _logger.warning("%s: %s records will be computed", self, len(records))
 
     ############################################################################
     #
