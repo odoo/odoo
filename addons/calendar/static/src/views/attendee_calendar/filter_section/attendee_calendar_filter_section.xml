@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarFilterSection">
+        <div
+            t-if="this.section.canAddFilter"
+            class="o_calendar_filter d-flex flex-column gap-1 my-2"
+            t-att-data-name="this.section.fieldName"
+        >
+            <label
+                t-if="this.section.label"
+                class="o_cw_filter_label fw-bolder text-truncate"
+                for="attendees_autocomplete"
+            >
+                <t t-out="this.section.label"/>
+            </label>
+
+            <div class="o_field_widget o_field_many2many_tags o_input d-flex flex-wrap align-items-center gap-1 w-100">
+                <TagsList tags="this.attendeeTags" tagLimit="8" t-slot-scope="tag">
+                    <t t-if="tag.img">
+                        <AvatarTag imageUrl="tag.img" onDelete="tag.onDelete" text="tag.text" cssClass="'o_calendar_filter_item_' + tag.resId"/>
+                    </t>
+                    <t t-else="">
+                        <BadgeTag text="tag.text" color="tag.colorIndex" onDelete="tag.onDelete" cssClass="'o_calendar_filter_item_' + tag.resId"/>
+                    </t>
+                </TagsList>
+
+                <div class="o_field_many2many_selection flex-grow-1">
+                    <Many2XAutocomplete
+                        id="'attendees_autocomplete'"
+                        activeActions="{}"
+                        autoSelect="true"
+                        context="this.section.context"
+                        fieldString="this.section.label"
+                        getDomain="() => this.attendeeDomain"
+                        isToMany="true"
+                        placeholder="this.attendeeTags.length ? '' : '+ Add attendee'"
+                        resModel="'res.partner'"
+                        update="(records) => this.onFilterUpdate(records)"
+                        value="''"
+                    />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
