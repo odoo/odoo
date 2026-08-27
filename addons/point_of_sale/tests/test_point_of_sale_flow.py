@@ -1,6 +1,7 @@
 import copy
 import odoo
 
+from lxml import html
 from unittest.mock import patch
 from odoo import fields
 from odoo.fields import Command
@@ -529,6 +530,42 @@ class TestPointOfSaleFlow(CommonPosTest):
             {'amount': -50.0, 'payment_method_id': cash_payment_method.id, 'is_change': True},
             {'amount': 500.0, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
         ])
+
+    def test_payment_changes_tracked_in_chatter(self):
+        order, _refund = self.create_backend_pos_order({
+            'line_data': [{'product_id': self.ten_dollars_no_tax.product_variant_id.id, 'qty': 1}],
+        })
+
+        def _get_tracked_changes():
+            """ Values and labels of the last chatter entry tracking a change of `record`, as displayed. """
+            self.env.flush_all()
+            self.env.cr.precommit.run()  # tracking messages are only created when the cursor pre-commits
+            order.invalidate_recordset(['message_ids'])
+            message = order.message_ids.sorted('id')[-1]
+            return ' '.join(
+                text.strip().replace('\xa0', ' ')
+                for text in html.fromstring(message.body).itertext()
+                if text.strip()
+            )
+
+        order.write({'payment_ids': [
+            Command.create({'payment_method_id': self.cash_payment_method.id, 'amount': 4}),
+            Command.create({'payment_method_id': self.bank_payment_method.id, 'amount': 6}),
+        ]})
+        self.assertEqual(
+            _get_tracked_changes(),
+            'Payment changes: $ 0.00 → $ 4.00 (Cash) $ 0.00 → $ 6.00 (Bank)',
+        )
+
+        # The customer pays everything in cash instead:
+        # the PoS removes both payments and creates a new one for the whole amount.
+        order.write({'payment_ids': [Command.delete(payment.id) for payment in order.payment_ids] + [
+            Command.create({'payment_method_id': self.cash_payment_method.id, 'amount': 10}),
+        ]})
+        self.assertEqual(
+            _get_tracked_changes(),
+            'Payment changes: $ 4.00 → $ 10.00 (Cash) $ 6.00 → Removed (Bank)',
+        )
 
     def test_paid_order_resync_replays_payment_deletion(self):
         """Editing the payments of an already paid order and syncing it twice must
@@ -1405,8 +1442,10 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
         order.lines[0].qty = 1
         order.lines[1].unlink()
-        logged_messages = order.message_ids.mapped('body')
+        order._track_finalize()
         self.assertTrue(order.is_edited)
-        self.assertEqual(len(logged_messages), 2)
-        self.assertIn('Twenty dollars no tax: Deleted line (quantity: 1.0)', logged_messages[0])
-        self.assertIn('Ten dollars no tax: Ordered quantity: 2.0 → 1', logged_messages[1])
+        self.assertEqual(len(order.message_ids), 1, "The changes made to the lines must be logged in a single entry")
+        edit_log = ' '.join(text.strip() for text in html.fromstring(order.message_ids.body).itertext() if text.strip())
+        self.assertIn('Ordered quantity:', edit_log)
+        self.assertIn('2.00 → 1.00 (Ten dollars no tax)', edit_log)
+        self.assertIn('1.00 → Removed (Twenty dollars no tax)', edit_log)

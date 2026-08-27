@@ -315,10 +315,7 @@ class TestUi(TestPosHrHttpCommon):
 
     def test_pos_hr_chatter_author(self):
         """Ensure PoS chatter entries are authored by the cashier performing the action."""
-        self.main_pos_config.write({
-            'order_edit_tracking': True,
-            'advanced_employee_ids': [Command.set(self.admin.ids)],
-        })
+        self.main_pos_config.write({'advanced_employee_ids': [Command.set(self.admin.ids)]})
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         session = self.main_pos_config.current_session_id
 
