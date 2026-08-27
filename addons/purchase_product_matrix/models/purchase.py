@@ -95,9 +95,9 @@ class PurchaseOrder(models.Model):
                     if not default_po_line_vals:
                         OrderLine = self.env['purchase.order.line']
                         default_po_line_vals = OrderLine.default_get(OrderLine._fields.keys())
-                    last_sequence = self.order_line[-1:].sequence
-                    if last_sequence:
-                        default_po_line_vals['sequence'] = last_sequence
+                        insert_sequence = self._get_matrix_insert_sequence(grid.get('insert_index'))
+                        if insert_sequence:
+                            default_po_line_vals['sequence'] = insert_sequence
                     new_lines.append((0, 0, dict(
                         default_po_line_vals,
                         product_id=product.id,
@@ -112,6 +112,25 @@ class PurchaseOrder(models.Model):
                 # Recompute prices for new/modified lines:
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     line._product_id_change()
+
+    def _get_matrix_insert_sequence(self, insert_index):
+        """Compute the sequence to assign to a new line so it lands at ``insert_index`` in
+        the current display order, shiffting the sequence if needed.
+        """
+        sorted_lines = self.order_line.sorted(lambda line: (line.sequence, line.id))
+        if insert_index is None or not (0 <= insert_index < len(sorted_lines)):
+            return sorted_lines[-1].sequence + 1 if sorted_lines else False
+        if insert_index == 0:
+            return sorted_lines[0].sequence - 1
+
+        previous_sequence = sorted_lines[insert_index - 1].sequence
+        required_sequence = previous_sequence + 2
+        for line in sorted_lines[insert_index:]:
+            if line.sequence >= required_sequence:
+                break
+            line.sequence = required_sequence
+            required_sequence += 2
+        return previous_sequence + 1
 
     def _get_matrix(self, product_template):
         def has_ptavs(line, sorted_attr_ids):
