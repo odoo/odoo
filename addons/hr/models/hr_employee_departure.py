@@ -44,6 +44,7 @@ class HrEmployeeDeparture(models.Model):
     )
     apply_immediately = fields.Boolean(compute="_compute_apply_immediately")
     apply_date = fields.Date(readonly=True)
+    last_contract_date_end = fields.Date(groups='hr.group_hr_user')
 
     @api.depends('dismissal_date')
     def _compute_departure_date(self):
@@ -109,10 +110,18 @@ class HrEmployeeDeparture(models.Model):
         res = super().create(vals_list)
         for departure in res:
             version = departure.employee_id._get_version(departure.departure_date)
+            departure.last_contract_date_end = version.contract_date_end
+            vals = {
+                "departure_id": departure.id,
+            }
+            if version.contract_date_start:
+                vals.update({
+                    "contract_date_end": departure.departure_date,
+                })
             departure.employee_id.version_ids.filtered(
                 lambda v: v.contract_date_start == version.contract_date_start
-                and v.contract_date_end == version.contract_date_end,
-            ).write({"departure_id": departure.id})
+                and v.contract_date_end == version.contract_date_end
+            ).with_context(sync_contract_dates=True).write(vals)
         return res
 
     def _cron_apply_departure(self):
@@ -171,8 +180,6 @@ class HrEmployeeDeparture(models.Model):
             if departure.employee_id.active:
                 emp_to_archive += employee
 
-            if employee.sudo().contract_date_start:
-                employee.sudo().write({'contract_date_end': departure.departure_date})
             employee.version_ids.filtered(lambda v: v.date_version > departure.departure_date).unlink()
 
         emp_to_archive.action_archive()

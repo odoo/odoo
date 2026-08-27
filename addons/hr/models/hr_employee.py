@@ -2376,6 +2376,7 @@ class HrEmployee(models.Model):
     def action_cancel_departure(self):
         self.ensure_one()
         self.action_unarchive()
+        self.employee_id.contract_date_end = self.departure_id.last_contract_date_end
         self.departure_id.unlink()
 
     def _get_working_periods_by_field(self, start, stop, field_key):
