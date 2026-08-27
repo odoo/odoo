@@ -9,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 import {
     LocationSelectorDialog
 } from "@website_sale_stock/js/location_selector/location_selector_dialog/location_selector_dialog";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 
 export class PickupLocationMany2OneField extends Many2OneField {
@@ -26,6 +27,13 @@ export class PickupLocationMany2OneField extends Many2OneField {
     }
 
     async onSelectLocation(ev) {
+        if (!this.countryId) {
+            this.dialog.add(AlertDialog, {
+                title: "Missing country field",
+                body: "A country is required for the delivery address in order to load pickup points.",
+            });
+            return;
+        }
         await this.props.record.save();
         this.dialog.add(LocationSelectorDialog, {
             ...this._getLocationSelectorDialogProps(),
@@ -105,7 +113,7 @@ export const pickupLocationField = {
     relatedFields: [
         { name: "pickup_location_data" },
         { name: "zip" },
-        { name: "country_id" },
+        { name: "country_id", type: "many2one" },
     ]
 };
 
