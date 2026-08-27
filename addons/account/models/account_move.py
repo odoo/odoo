@@ -792,6 +792,7 @@ class AccountMove(models.Model):
         "(name, journal_id) WHERE (state = 'posted'AND name != '/')",
         "Another entry with the same name already exists.",
     )
+    _journal_id_date_idx = models.Index('(journal_id, date)')
     _journal_id_company_id_idx = models.Index('(journal_id, company_id, date)')
     # used in <account.journal>._query_has_sequence_holes
     _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap IS TRUE)')
