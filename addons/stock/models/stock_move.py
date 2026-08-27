@@ -16,6 +16,12 @@ from odoo.tools.misc import clean_context, OrderedSet, groupby
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
 
+FORECAST_MOVE_FIELDS = [
+    'state', 'quantity', 'product_uom', 'product_id',
+    'product_qty', 'location_id', 'date',
+]
+
+
 class StockMove(models.Model):
     _name = "stock.move"
     _description = "Stock Move"
@@ -2471,6 +2477,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             to_visit = self.browse(move_dest_ids)
             to_visit.fetch(['move_dest_ids'])
             move_dest_ids = set(to_visit.move_dest_ids.ids)
+        if self.env.context.get('forecast_availability_only'):
+            self.browse(seen).fetch(FORECAST_MOVE_FIELDS)
 
     def _rollup_move_origs_fetch(self):
         seen = set(self.ids)
@@ -2481,6 +2489,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             to_visit = self.browse(move_orig_ids)
             to_visit.fetch(['move_orig_ids'])
             move_orig_ids = set(to_visit.move_orig_ids.ids)
+        if self.env.context.get('forecast_availability_only'):
+            # Otherwise the first `move.state` read falls back to a full-record
+            # read of every move in the chain, for all of its columns.
+            self.browse(seen).fetch(FORECAST_MOVE_FIELDS)
 
     def _rollup_move_dests(self, seen=False):
         if not seen:
@@ -2510,7 +2522,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         :rtype: defaultdict
         """
         wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
-        forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False)
+        # Only the lines of the moves in `self` are read back below, so let the report
+        # take its fast path and skip formatting the rest.
+        report = self.env['stock.forecasted_product_product'].with_context(
+            forecast_availability_only=True,
+            forecast_availability_move_ids=frozenset(self._ids),
+        )
+        forecast_lines = report._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False)
         result = defaultdict(lambda: (0.0, False))
         for line in forecast_lines:
             move_out = line.get('move_out')
