@@ -2132,3 +2132,31 @@ class TestPackagePropagation(TestPackingCommon):
             ('location_id', '=', self.pack_location.id),
         ])
         self.assertFalse(pack.move_line_ids.result_package_id, 'Should not have the reusable package')
+
+    def test_assign_merged_destination_keeps_distinct_packages(self):
+        """
+        Check that a pack transfer and its backorder each keep their own package on the delivery order
+        """
+        consumable = self.env['product.product'].create({'name': 'Consu', 'is_storable': False})
+        pick = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.pick_type_id.id,
+            'move_ids': [Command.create({'name': consumable.name, 'product_id': consumable.id, 'product_uom_qty': 10.0})],
+        })
+        pick.action_confirm()
+        pick.button_validate()
+
+        # Pack 5 out of 10 and backorder the rest: two pack moves feeding one ship.
+        pack = pick.move_ids.move_dest_ids.picking_id
+        pack.move_ids.move_line_ids.quantity = 5.0
+        package_1 = pack.action_put_in_pack()
+        Form.from_action(self.env, pack.button_validate()).save().process()
+
+        backorder = pack.backorder_ids
+        package_2 = backorder.action_put_in_pack()
+        backorder.button_validate()
+
+        delivery = pack.move_ids.move_dest_ids.picking_id
+        self.assertRecordValues(delivery.move_line_ids.sorted('id'), [
+            {'quantity': 5.0, 'result_package_id': package_1.id},
+            {'quantity': 5.0, 'result_package_id': package_2.id},
+        ])
