@@ -27,6 +27,11 @@
                                 </div>
                                 <div t-if="extra_data.get('order_label')" name="order-label" class="text-large" t-out="extra_data['order_label']" />
                             </div>
+                            <div t-if="extra_data.get('customer')" name="customer-info" class="text-small">
+                                <div t-if="extra_data['customer'].get('address')" t-out="extra_data['customer']['address']" />
+                                <div t-if="extra_data['customer'].get('phone')" t-out="extra_data['customer']['phone']" />
+                                <div t-if="extra_data['customer'].get('email')" t-out="extra_data['customer']['email']" />
+                            </div>
                             <div name="order-reference" t-out="order['pos_reference']" />
                         </div>
                         <hr style="border: none; border-top: 4px dashed black;"/>
