@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
+import { Component, computed, t, useProps } from "@odoo/owl";
 import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
@@ -20,36 +20,37 @@ export class ExpressionEditor extends Component {
         update: t.function(),
     });
 
-    setup() {
-        onWillStart(() => this.onPropsUpdated(this.props));
-        onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
-    }
+    filteredFields = computed(() =>
+        Object.fromEntries(
+            Object.entries(this.props.fields).filter(
+                ([_, fieldDef]) => fieldDef.type !== "properties"
+            )
+        )
+    );
 
-    async onPropsUpdated(props) {
-        this.filteredFields = Object.fromEntries(
-            Object.entries(props.fields).filter(([_, fieldDef]) => fieldDef.type !== "properties")
-        );
+    tree = computed(() => {
         try {
-            this.tree = treeFromExpression(props.expression, {
-                getFieldDef: (name) => this.getFieldDef(name, props),
+            return treeFromExpression(this.props.expression, {
+                getFieldDef: (name) => this.getFieldDef(name),
                 distributeNot: !this.isDebugMode,
                 generateSmartDates: false,
             });
         } catch {
-            this.tree = null;
+            return null;
         }
-    }
+    });
 
-    getFieldDef(name, props = this.props) {
+    getFieldDef(name) {
         if (typeof name === "string") {
-            return props.fields[name] || null;
+            return this.props.fields[name] || null;
         }
         return null;
     }
 
     getDefaultCondition() {
-        const defaultPath = getDefaultPath(this.filteredFields);
-        const fieldDef = this.filteredFields[defaultPath];
+        const filteredFields = this.filteredFields();
+        const defaultPath = getDefaultPath(filteredFields);
+        const fieldDef = filteredFields[defaultPath];
         const operator = getExpressionDisplayedOperators(fieldDef)[0];
         const value = getDefaultValue(fieldDef, operator);
         return condition(fieldDef.name, operator, value);
@@ -77,12 +78,12 @@ export class ExpressionEditor extends Component {
                 update,
                 resModel: this.props.resModel,
                 readonly: false,
-                filter: (fieldDef) => fieldDef.name in this.filteredFields,
+                filter: (fieldDef) => fieldDef.name in this.filteredFields(),
                 showDebugInput: false,
                 followRelation: false,
                 isDebugMode: this.isDebugMode,
             }),
-            isSupported: (value) => [0, 1].includes(value) || value in this.filteredFields,
+            isSupported: (value) => [0, 1].includes(value) || value in this.filteredFields(),
             // by construction, all values received by the path editor are O/1 or a field (name) in this.props.fields.
             // (see _leafFromAST in condition_tree.js)
             stringify: (value) => this.props.fields[value].string,

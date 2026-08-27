@@ -3,9 +3,9 @@
 
     <t t-name="web.ExpressionEditor">
         <div class="o_expression_editor w-100" aria-atomic="true">
-            <t t-if="this.tree">
+            <t t-if="this.tree()">
                 <TreeEditor resModel="this.props.resModel"
-                    tree="this.tree"
+                    tree="this.tree()"
                     isDebugMode="this.isDebugMode"
                     update.bind="this.update"
                     getDefaultCondition.bind="this.getDefaultCondition"

@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
+import { Component, asyncComputed, onWillStart, signal, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
@@ -35,59 +35,70 @@ export class DomainSelector extends Component {
     static components = { TreeEditor, CheckBox };
     props = useProps(domainSelectorProps);
 
+    includeArchived = signal(false);
+
     setup() {
         this.fieldService = useService("field");
         this.treeProcessor = useService("tree_processor");
 
-        this.tree = null;
-        this.showArchivedCheckbox = false;
-        this.includeArchived = false;
-
-        onWillStart(() => this.onPropsUpdated(this.props));
-        onWillUpdateProps((np) => this.onPropsUpdated(np));
+        this.info = asyncComputed(() => this.loadInfo(), {
+            initial: { tree: null, showArchivedCheckbox: false },
+        });
+        onWillStart(async () => {
+            await this.info.currentPromise();
+        });
     }
 
-    async onPropsUpdated(p) {
+    async loadInfo() {
+        // Reactive reads have to happen on the synchronous path: anything read
+        // after the first `await` is not tracked as a dependency.
+        const { domain: rawDomain, isDebugMode, resModel } = this.props;
         let domain;
-        let isSupported = true;
         try {
-            domain = new Domain(p.domain);
+            domain = new Domain(rawDomain);
         } catch {
-            isSupported = false;
-        }
-        if (!isSupported) {
-            this.tree = null;
-            this.showArchivedCheckbox = false;
-            this.includeArchived = false;
-            return;
+            this.includeArchived.set(false);
+            return { tree: null, showArchivedCheckbox: false };
         }
 
         const [tree, { fieldDef: activeFieldDef }] = await Promise.all([
-            this.treeProcessor.treeFromDomain(p.resModel, domain, !p.isDebugMode),
-            this.fieldService.loadFieldInfo(p.resModel, "active"),
+            this.treeProcessor.treeFromDomain(resModel, domain, !isDebugMode),
+            this.fieldService.loadFieldInfo(resModel, "active"),
         ]);
 
-        this.tree = tree;
-        this.showArchivedCheckbox = this.getShowArchivedCheckBox(Boolean(activeFieldDef), p);
+        const info = {
+            tree,
+            showArchivedCheckbox: this.getShowArchivedCheckBox(Boolean(activeFieldDef), this.props),
+        };
 
-        this.includeArchived = false;
-        if (this.showArchivedCheckbox) {
-            if (this.tree.type === "connector" && this.tree.value === "&") {
-                this.tree.children = this.tree.children.filter((child) => {
+        let includeArchived = false;
+        if (info.showArchivedCheckbox) {
+            if (info.tree.type === "connector" && info.tree.value === "&") {
+                info.tree.children = info.tree.children.filter((child) => {
                     if (areEqualTrees(child, ARCHIVED_CONDITION)) {
-                        this.includeArchived = true;
+                        includeArchived = true;
                         return false;
                     }
                     return true;
                 });
-                if (this.tree.children.length === 1) {
-                    this.tree = this.tree.children[0];
+                if (info.tree.children.length === 1) {
+                    info.tree = info.tree.children[0];
                 }
-            } else if (areEqualTrees(this.tree, ARCHIVED_CONDITION)) {
-                this.includeArchived = true;
-                this.tree = connector("&");
+            } else if (areEqualTrees(info.tree, ARCHIVED_CONDITION)) {
+                includeArchived = true;
+                info.tree = connector("&");
             }
         }
+        this.includeArchived.set(includeArchived);
+        return info;
+    }
+
+    get tree() {
+        return this.info().tree;
+    }
+
+    get showArchivedCheckbox() {
+        return this.info().showArchivedCheckbox;
     }
 
     getShowArchivedCheckBox(hasActiveField, props) {
@@ -126,7 +137,7 @@ export class DomainSelector extends Component {
     }
 
     toggleIncludeArchived() {
-        this.includeArchived = !this.includeArchived;
+        this.includeArchived.set(!this.includeArchived());
         this.update(this.tree);
     }
 
@@ -144,7 +155,7 @@ export class DomainSelector extends Component {
         this.props.update(domain, true);
     }
     update(tree) {
-        const archiveDomain = this.includeArchived ? ARCHIVED_DOMAIN : `[]`;
+        const archiveDomain = this.includeArchived() ? ARCHIVED_DOMAIN : `[]`;
         const domain = tree
             ? Domain.and([domainFromTree(tree), archiveDomain]).toString()
             : archiveDomain;

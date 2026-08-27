@@ -1,5 +1,4 @@
-import { render } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
+import { Component, asyncComputed, onWillStart, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cloneTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
@@ -39,43 +38,64 @@ export class TreeEditor extends Component {
         this.fieldService = useService("field");
         this.treeProcessor = useService("tree_processor");
         this.hasTouch = hasTouch();
-        onWillStart(() => this.onPropsUpdated(this.props));
-        onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
+        // The normalized tree and the editor info derived from it are resolved
+        // together, so a render can never pair one with a stale version of the
+        // other (e.g. a tree holding a path that `getFieldDef` doesn't know yet).
+        this.info = asyncComputed(() => this.loadInfo());
+        onWillStart(async () => {
+            await this.info.currentPromise();
+        });
     }
 
-    async onPropsUpdated(props) {
-        if (this.tree) {
-            this.previousTree = this.tree;
+    async loadInfo() {
+        // Reactive reads have to happen on the synchronous path: anything read
+        // after the first `await` is not tracked as a dependency.
+        const { defaultConnector, readonly, resModel } = this.props;
+        let tree = cloneTree(this.props.tree);
+        if (shallowEqual(tree, TRUE_TREE)) {
+            tree = connector(defaultConnector);
+        } else if (tree.type !== "connector") {
+            tree = connector(defaultConnector, [tree]);
         }
-        this.tree = cloneTree(props.tree);
-        if (shallowEqual(this.tree, TRUE_TREE)) {
-            this.tree = connector(props.defaultConnector);
-        } else if (this.tree.type !== "connector") {
-            this.tree = connector(props.defaultConnector, [this.tree]);
+        // The local tree can hold state that does not survive a round trip
+        // through the parent (virtual operators, in-progress edits), so keep the
+        // current object when the incoming one is an equivalent round trip of it.
+        if (this.previousTree && areEquivalentTrees(tree, this.previousTree)) {
+            tree = this.previousTree;
         }
+        this.previousTree = tree;
 
-        if (this.previousTree && areEquivalentTrees(this.tree, this.previousTree)) {
-            this.tree = this.previousTree;
-            this.previousTree = null;
-        }
-
-        await this.prepareInfo(props);
-    }
-
-    async prepareInfo(props) {
         const [fieldDefs, getFieldDef] = await Promise.all([
-            this.fieldService.loadFields(props.resModel),
-            this.treeProcessor.makeGetFieldDef(props.resModel, this.tree),
+            this.fieldService.loadFields(resModel),
+            this.treeProcessor.makeGetFieldDef(resModel, tree),
         ]);
-        this.getFieldDef = getFieldDef;
-        this.defaultCondition = props.getDefaultCondition(fieldDefs);
+        return {
+            tree,
+            getFieldDef,
+            // Read after an `await` on purpose: function props are reference
+            // stable (`.bind` implies `.alike`), and subscribing to them would
+            // only add noise.
+            defaultCondition: this.props.getDefaultCondition(fieldDefs),
+            getConditionDescription: readonly
+                ? await this.treeProcessor.makeGetConditionDescription(resModel, tree)
+                : null,
+        };
+    }
 
-        if (props.readonly) {
-            this.getConditionDescription = await this.treeProcessor.makeGetConditionDescription(
-                props.resModel,
-                this.tree
-            );
-        }
+    get tree() {
+        return this.info()?.tree;
+    }
+
+    get defaultCondition() {
+        return this.info()?.defaultCondition;
+    }
+
+    getFieldDef(path) {
+        return this.info()?.getFieldDef(path);
+    }
+
+    getConditionDescription(node) {
+        return this.info().getConditionDescription(node);
     }
 
     get className() {
@@ -216,8 +236,8 @@ export class TreeEditor extends Component {
             // no interesting changes for parent
             // this means that the parent might not render the domain selector
             // but we need to udpate editors
-            await this.prepareInfo(this.props);
-            render(this);
+            this.info.refresh();
+            await this.info.currentPromise();
         }
         this.notifyChanges();
     }
