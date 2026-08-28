@@ -830,6 +830,8 @@ class configmanager:
         if self['test_enable'] and not self['test_tags']:
             self._runtime_options['test_tags'] = "+standard"
         self._runtime_options['test_enable'] = bool(self['test_tags'])
+        if self['test_enable']:
+            self._runtime_options['with_test_data'] = True
         if self._runtime_options['test_enable']:
             self._runtime_options['stop_after_init'] = True
             if not self['db_name']:
