@@ -39,6 +39,7 @@ DATA_DIRS = {
     'security',
     'template',
     'templates',
+    'test_data',
     'views',
     'wizard',
     'wizards',
