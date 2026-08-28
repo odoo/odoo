@@ -383,7 +383,7 @@ class ProductProduct(models.Model):
         moves_domain = Domain([
             ('product_id', 'in', self._as_query()),
             ('company_id', '=', self.env.company.id),
-            '|', '|', ('is_in', '=', True), ('is_dropship', '=', True), ('is_out', '=', True)
+            '|', ('is_in', '=', True), ('is_out', '=', True)
         ])
         if lot:
             moves_domain &= Domain([
@@ -419,7 +419,7 @@ class ProductProduct(models.Model):
             order='product_id, date, id'
         )
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
+        move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
 
         product, valuation_from_date = False, False
@@ -464,11 +464,9 @@ class ProductProduct(models.Model):
                         average_cost = next_change.value
                         value = average_cost * quantity
                         next_change = next(price_changes, None)
-                    if move.is_in or move.is_dropship:
+                    if move.is_in:
                         in_qty = move._get_valued_qty()
                         in_value = move.value
-                        if move.is_dropship:
-                            in_value = move.sudo()._get_value(forced_std_price=average_cost)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0
@@ -481,7 +479,7 @@ class ProductProduct(models.Model):
                         elif previous_qty <= 0:
                             average_cost = in_value / in_qty if in_qty else average_cost
                             value = average_cost * quantity
-                    if move.is_out or move.is_dropship:
+                    if move.is_out:
                         out_qty = move._get_valued_qty()
                         out_value = out_qty * average_cost
                         if lot:

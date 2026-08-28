@@ -19,7 +19,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not super()._use_inventory_valuation():
             return False
-        return all(not m._is_dropshipped() for m in self.cogs_move_ids)
+        return bool(self.cogs_move_ids)
 
     def _stock_account_prepare_cogs_vals(self):
         """ Values of the two COGS journal items (interim + expense) of the invoice line. """
