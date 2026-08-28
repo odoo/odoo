@@ -232,7 +232,11 @@ class TestAllowedUsers(TestAccessRights):
         self.task.message_subscribe(partner_ids=[self.portal.partner_id.id])
         self.assertNotIn(self.user.partner_id, self.task.message_partner_ids, "Internal user should have been removed from allowed users")
         self.project_pigs.write({'privacy_visibility': 'employees'})
-        self.assertNotIn(self.portal.partner_id, self.task.message_partner_ids, "Portal user should have been removed from allowed users")
+        self.assertIn(
+            self.portal.partner_id,
+            self.task.message_partner_ids,
+            "Portal user should NOT be removed from allowed users per the new spec"
+        )
 
     def test_write_task(self):
         self.user.group_ids |= self.env.ref('project.group_project_user')
