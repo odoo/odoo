@@ -4,6 +4,7 @@ import {
     onPatched,
     onWillUnmount,
     proxy,
+    signal,
     t,
     untrack,
     useEffect,
@@ -416,31 +417,32 @@ export function useMessageScrolling({
 
 export class MessageSelectionState {
     selectedMessageId;
-    data = new Set();
+    /** @type {import("@odoo/owl").Signal<Set<number>>} */
+    data = signal.Set(new Set(), { type: t.number() });
 
     clearSelected() {
-        this.data.delete(this.selectedMessageId);
+        this.data().delete(this.selectedMessageId);
     }
 
     /** @param {import("models").Message} message */
     isSelected(message) {
-        return this.data.has(message.id);
+        return this.data().has(message.id);
     }
 
     /** @param {import("models").Message} message */
     setSelected(message) {
         this.clearSelected();
-        this.data.add(message.id);
+        this.data().add(message.id);
         this.selectedMessageId = message.id;
     }
 
     get size() {
-        return this.data.size;
+        return this.data().size;
     }
 }
 
 export function useMessageSelection() {
-    return proxy(new MessageSelectionState());
+    return new MessageSelectionState();
 }
 
 export function useMicrophoneVolume() {

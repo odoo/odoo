@@ -186,12 +186,12 @@ export class StoreInternal extends RecordInternal {
     }
     /** @param {RecordList<Record>} recordList */
     sortRecordList(recordList, func) {
-        const recordProxies = recordList._.data.map((record) => record._proxy);
+        const recordProxies = recordList._.data().map((record) => record._proxy);
         recordProxies.sort(func);
         const records = recordProxies.map((recordProxy) => recordProxy._raw);
-        const hasChanged = recordList._.data.some((record, i) => record !== records[i]);
+        const hasChanged = recordList._.data().some((record, i) => record !== records[i]);
         if (hasChanged) {
-            recordList._.data = records;
+            recordList._.data.set(records);
         }
     }
     /**

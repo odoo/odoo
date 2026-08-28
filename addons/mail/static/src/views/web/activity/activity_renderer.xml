@@ -39,7 +39,7 @@
                                 <DropdownItem closingMode="'none'" onSelected="() => this.toggleDisplayColumn(type.id)">
                                     <CheckBox
                                         onChange="() => this.toggleDisplayColumn(type.id)"
-                                        value="this.storageActiveColumns[type.id]"
+                                        value="this.storageActiveColumns().get(type.id)"
                                         name="type.name"
                                     >
                                         <t t-out="type.name"/>
