@@ -12,10 +12,40 @@ from odoo.tools import SQL, frozendict, parse_date
 _logger = logging.getLogger(__name__)
 
 try:
-    from num2words import num2words
+    from num2words import num2words, CONVERTER_CLASSES as NUM2WORDS_CONVERTER_CLASSES
 except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
+    NUM2WORDS_CONVERTER_CLASSES = {}
+
+
+def _num2words_plain_cardinal(number, lang):
+    # No currency-aware data available for (lang, currency): fall back to a
+    # plain cardinal conversion, combined with the currency's own (single-form,
+    # non-inflected) translated unit/subunit label.
+    try:
+        return num2words(number, lang=lang).title()
+    except NotImplementedError:
+        return num2words(number, lang='en').title()
+
+
+def _num2words_currency_amount(number, lang, currency_code, subunit, fallback_label):
+    # Prefer num2words' own currency-aware inflection when it has data for this
+    # (lang, currency) pair: it knows the grammatical gender and plural forms of
+    # amounts that a single translated label can't express.
+    converter = NUM2WORDS_CONVERTER_CLASSES.get(lang) or NUM2WORDS_CONVERTER_CLASSES.get(lang[:2])
+    forms = converter and converter.CURRENCY_FORMS.get(currency_code)
+    if not forms:
+        return _num2words_plain_cardinal(number, lang), fallback_label
+    label_forms = forms[1] if subunit else forms[0]
+    try:
+        label = converter.pluralize(number, label_forms)
+    except NotImplementedError:
+        # Language doesn't implement a plural rule: fall back to the generic
+        # singular (1) / plural (everything else) distinction.
+        label = label_forms[0] if number == 1 else label_forms[-1]
+    words = (converter._cents_verbose if subunit else converter._money_verbose)(number, currency_code)
+    return words, label
 
 
 class ResCurrency(models.CachedModel):
@@ -216,11 +246,6 @@ class ResCurrency(models.CachedModel):
 
     def amount_to_text(self, amount):
         self.ensure_one()
-        def _num2words(number, lang):
-            try:
-                return num2words(number, lang=lang).title()
-            except NotImplementedError:
-                return num2words(number, lang='en').title()
 
         if num2words is None:
             logging.getLogger(__name__).warning("The library 'num2words' is missing, cannot render textual amounts.")
@@ -228,20 +253,23 @@ class ResCurrency(models.CachedModel):
 
         integral, _sep, fractional = f"{amount:.{self.decimal_places}f}".partition('.')
         integer_value = int(integral)
-        lang = tools.get_lang(self.env)
+        lang = tools.get_lang(self.env).iso_code
+
+        integral_amount, currency_unit = _num2words_currency_amount(integer_value, lang, self.name, False, self.currency_unit_label)
         if self.is_zero(amount - integer_value):
             return self.env._(
                 '%(integral_amount)s %(currency_unit)s',
-                integral_amount=_num2words(integer_value, lang=lang.iso_code),
-                currency_unit=self.currency_unit_label,
+                integral_amount=integral_amount,
+                currency_unit=currency_unit,
             )
         else:
+            fractional_amount, currency_subunit = _num2words_currency_amount(int(fractional or 0), lang, self.name, True, self.currency_subunit_label)
             return self.env._(
                 '%(integral_amount)s %(currency_unit)s and %(fractional_amount)s %(currency_subunit)s',
-                integral_amount=_num2words(integer_value, lang=lang.iso_code),
-                currency_unit=self.currency_unit_label,
-                fractional_amount=_num2words(int(fractional or 0), lang=lang.iso_code),
-                currency_subunit=self.currency_subunit_label,
+                integral_amount=integral_amount,
+                currency_unit=currency_unit,
+                fractional_amount=fractional_amount,
+                currency_subunit=currency_subunit,
             )
 
     def format(self, amount):

@@ -111,6 +111,49 @@ class TestResCurrency(TransactionCase):
         self.assertNotEqual(amount_test, amount_target,
                             "Amount in text should not depend on float representation")
 
+    def test_amount_to_text_currency_aware_inflection_uk_ua(self):
+        """ amount_to_text should delegate to num2words' own currency-aware
+        inflection (gender and plural forms) when it has data for the (lang,
+        currency) pair, while keeping Odoo's own sentence shape: the
+        zero-fraction clause is still dropped, and the two clauses are still
+        joined with the translatable "and" rather than num2words' own
+        separator. """
+        uk_lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'uk_UA')])
+        uk_lang.active = True
+
+        uah = self.env.ref('base.UAH').with_context(lang='uk_UA')
+
+        # gendered/pluralized based on the amount, no zero-subunit clause
+        self.assertEqual(uah.amount_to_text(1.0), "одна гривня")
+        self.assertEqual(uah.amount_to_text(2.0), "дві гривні")
+        self.assertEqual(uah.amount_to_text(5.0), "п'ять гривень")
+        # Odoo's own "and" joiner is kept, not num2words' ", " separator
+        self.assertEqual(uah.amount_to_text(21.56), "двадцять одна гривня and п'ятдесят шість копійок")
+
+        # currencies num2words has no data for keep using the old
+        # label-based fallback (unaffected by this change)
+        aaa = self.env['res.currency'].create({
+            'name': 'AAA',
+            'symbol': 'AAA',
+            'currency_unit_label': 'Aaa Unit',
+            'currency_subunit_label': 'Aaa Subunit',
+        }).with_context(lang='uk_UA')
+        self.assertEqual(aaa.amount_to_text(1.0), "Один Aaa Unit")
+
+    def test_amount_to_text_currency_aware_inflection_fr_fr(self):
+        """ Same as test_amount_to_text_currency_aware_inflection, but with a
+        Latin-script language: French singular/plural agreement ("un euro" vs
+        "deux euros") also comes from num2words' data, not from Odoo's static,
+        non-inflected currency_unit_label/currency_subunit_label. """
+        fr_lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
+        fr_lang.active = True
+
+        eur = self.env.ref('base.EUR').with_context(lang='fr_FR')
+
+        self.assertEqual(eur.amount_to_text(1.0), "un euro")
+        self.assertEqual(eur.amount_to_text(2.0), "deux euros")
+        self.assertEqual(eur.amount_to_text(21.56), "vingt et un euros et cinquante-six centimes")
+
     def test_rounding_04(self):
         """ check that proper rounding is performed for float persistence """
         currency = self.env.ref('base.EUR')
