@@ -2734,7 +2734,9 @@ class Application:
         """
 
         netloc, path = urlparse(url)[1:3]
-        path = os.path.normpath(os.path.normcase(path))
+        # os.path.normpath rewrites '/' as '\\' on Windows, breaking path.split('/').
+        # Replace os.sep with '/' to retain valid URL path segment splitting.
+        path = os.path.normpath(os.path.normcase(path)).replace(os.sep, '/')
         try:
             path_netloc, module, static, resource = path.split('/', 3)
         except ValueError:
