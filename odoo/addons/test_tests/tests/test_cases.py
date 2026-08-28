@@ -5,6 +5,8 @@ import requests
 import threading
 
 from odoo.http import route, Controller, request
+from odoo.modules.module import TEST_DATA_ENABLED_PARAM
+from odoo.tests import loader
 from odoo.tests.common import HttpCase, tagged, ChromeBrowser, TEST_CURSOR_COOKIE_NAME, Like, TransactionCase
 from odoo.tools import config
 from unittest.mock import patch
@@ -44,6 +46,43 @@ class TestTransactionCase(TransactionCase):
         self.assertEqual(pid, partner.id, "ref() should resolve xid to database ID")
         partner2 = self.browse_ref(xid)
         self.assertEqual(partner, partner2, "browse_ref() should resolve xid to browse records")
+
+
+@tagged('at_install', '-post_install')
+class TestForbiddenCreate(TransactionCase):
+    _forbidden_create_models = frozenset({'test_testing_utilities.c'})
+
+    def test_create_is_forbidden(self):
+        with self.assertRaisesRegex(AssertionError, 'Creating test_testing_utilities.c records is disabled'):
+            self.env['test_testing_utilities.c'].create({'name': 'forbidden'})
+
+    def test_create_escape_hatch(self):
+        with self.allow_model_create('test_testing_utilities.c'):
+            record = self.env['test_testing_utilities.c'].create({'name': 'allowed'})
+        self.assertTrue(record)
+
+        with self.assertRaisesRegex(AssertionError, 'Creating test_testing_utilities.c records is disabled'):
+            self.env['test_testing_utilities.c'].create({'name': 'forbidden again'})
+
+    def test_escape_hatch_rejects_unguarded_models(self):
+        with self.assertRaisesRegex(ValueError, 'Models are not guarded against create: res.partner'):
+            with self.allow_model_create('res.partner'):
+                pass
+
+
+@tagged('at_install', '-post_install')
+class TestTestDataValidation(TransactionCase):
+
+    def test_disabled_database_is_rejected(self):
+        self.env['ir.config_parameter'].sudo().set_bool(TEST_DATA_ENABLED_PARAM, False)
+        with self.assertRaisesRegex(RuntimeError, 'Tests require a database created with --with-test-data'):
+            loader._assert_test_data_loaded(self.env)
+
+    def test_unsynchronized_module_is_rejected(self):
+        base = self.env['ir.module.module'].search([('name', '=', 'base')])
+        base.test_data = False
+        with self.assertRaisesRegex(RuntimeError, 'Update the following modules: base'):
+            loader._assert_test_data_loaded(self.env)
 
 
 class TestHttpCase(HttpCase):

@@ -829,8 +829,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_branch(self):
         # Test the auto-installation of a chart template (including demo data) on a branch
-        # Create a new main company, because install_demo doesn't do anything when reloading data
-        company = self.env['res.company'].create([{'name': 'Test Company'}])
+        company = self.company
         branch = self.env['res.company'].create([{
             'name': 'Test Branch',
             'parent_id': company.id,
@@ -1196,7 +1195,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         self.assertFalse(account.code)
 
     def test_install_module_partial_data(self):
-        company = self.env['res.company'].create({'name': 'Test Company'})
+        company = self.company
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
 

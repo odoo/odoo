@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <record id="test_user" model="res.users">
+        <field name="name">Test User</field>
+        <field name="company_id" ref="test_company"/>
+            <field name="company_ids" eval="[Command.link(ref('test_company'))]"/>
+        <field name="login">test</field>
+        <field name="password">test</field>
+    </record>
+</data>

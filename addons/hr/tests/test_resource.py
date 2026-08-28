@@ -104,12 +104,11 @@ class TestResource(TestHrCommon):
         """ Ensure that all the hr infos needed to display the avatar popover card
             are available on the model resource.resource, even if the employee is archived
         """
-        user = self.env['res.users'].create([{
-            'name': 'Test user',
-            'login': 'test',
+        user = self.env.ref('base.test_user')
+        user.write({
             'email': 'test@odoo.perso',
             'phone': '+32488990011',
-        }])
+        })
         department = self.env['hr.department'].create([{
             'name': 'QA',
         }])

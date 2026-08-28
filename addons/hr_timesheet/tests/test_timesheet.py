@@ -752,10 +752,7 @@ class TestTimesheet(TestCommonTimesheet):
             'employee_id': self.empl_employee.id,
         })
         self.assertEqual(timesheet.user_id, self.empl_employee.user_id)
-        new_user = self.env['res.users'].create({
-            'name': 'Test user',
-            'login': 'test',
-        })
+        new_user = self.env.ref('base.test_user')
         self.empl_employee.user_id = new_user
         self.assertEqual(timesheet.user_id, new_user)
 
