@@ -3,15 +3,14 @@ import base64
 import io
 import json
 import math
-from datetime import datetime
 from io import BytesIO
 
 import qrcode
 from PIL import Image
 
-from odoo import _, api, models, modules
+from odoo import _, api, fields, models, modules
 from odoo.tools.image import image_data_uri
-from odoo.tools.misc import format_datetime
+from odoo.tools.misc import format_datetime, format_time
 
 
 def _get_str_notes(note):
@@ -37,6 +36,25 @@ class PosOrderReceipt(models.AbstractModel):
     _name = 'pos.order.receipt'
     _description = 'Point of Sale Order Receipt Generator'
 
+    def _order_receipt_tz(self):
+        """Receipts must use the shop timezone, since the rendering user (self ordering user, public user, OdooBot, ...) can be in a different tz"""
+        self.ensure_one()
+        return self.company_id.sudo().tz or self.env.context.get('tz') or self.env.user.tz or 'UTC'
+
+    def _order_receipt_preset_datetime(self):
+        """Mirror of the JS presetDateTime getter: show only the hour if pickup is same day as order."""
+        self.ensure_one()
+        if not self.preset_time:
+            return False
+
+        receipt_tz = self._order_receipt_tz()
+        in_shop_tz = self.with_context(tz=receipt_tz)
+        preset_day = fields.Datetime.context_timestamp(in_shop_tz, self.preset_time).date()
+        order_day = fields.Datetime.context_timestamp(in_shop_tz, self.date_order).date() if self.date_order else False
+        if preset_day == order_day:
+            return format_time(self.env, self.preset_time, tz=receipt_tz, time_format='short')
+        return format_datetime(self.env, self.preset_time, tz=receipt_tz)
+
     @api.model
     def _order_receipt_format_currency(self, amount, currency=None):
         if currency:
@@ -59,16 +77,17 @@ class PosOrderReceipt(models.AbstractModel):
 
     def _get_common_extra_data(self):
         company = self.company_id
+        receipt_tz = self._order_receipt_tz()
         return {
             'vat_label': company.country_id.vat_label or _("Tax ID"),
-            'preset_datetime': format_datetime(self.env, self.preset_time) if self.preset_time else False,
+            'preset_datetime': format_datetime(self.env, self.preset_time, tz=receipt_tz) if self.preset_time else False,
             'partner_vat_label': self.partner_id.country_id.vat_label if self.partner_id.country_id else _("Tax ID"),
             'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
             'prices': self._order_receipt_generate_taxe_data(),
             'cashier_name': self._order_receipt_generate_cashier_name(),
             'company_state_name': company.state_id.name if company.state_id else False,
             'company_country_name': company.country_id.name if company.country_id else False,
-            'formated_date_order': format_datetime(self.env, self.date_order),
+            'formated_date_order': format_datetime(self.env, self.date_order, tz=receipt_tz),
         }
 
     def _order_receipt_generate_taxe_data(self):
@@ -431,6 +450,7 @@ class PosOrderReceipt(models.AbstractModel):
             receipts_data = self._split_receipts_per_product(receipts_data)
 
         receipts = []
+        receipt_tz = self._order_receipt_tz()
         for change in receipts_data:
             receipts.append({
                 **self._get_common_record_data(),
@@ -440,11 +460,11 @@ class PosOrderReceipt(models.AbstractModel):
                     'prefix': _("Order"),
                     'order_label': self.floating_order_name,
                     "reprint": False,
-                    "time": datetime.now().strftime("%H:%M"),
+                    "time": format_datetime(self.env, fields.Datetime.now(), tz=receipt_tz, dt_format='HH:mm'),
                     "internal_note": _get_str_notes(change.get("internal_note")) or False,
                     "general_customer_note": _get_str_notes(change.get("general_customer_note")) or False,
                     "employee_name": self.user_id.name,  # PoS HR not needed, this will only be used by self order.
-                    "preset_time": self.preset_time.strftime("%H:%M") if self.preset_time else False,
+                    "preset_time": self._order_receipt_preset_datetime(),
                 },
                 "conditions": {
                     "module_pos_restaurant": self.config_id.module_pos_restaurant,
