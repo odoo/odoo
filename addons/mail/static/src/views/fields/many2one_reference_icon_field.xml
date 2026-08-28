@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="mail.Many2OneReferenceIconField">
+        <span class="d-inline-flex align-items-center">
+            <i t-if="this.relation" class="oi oi-fw me-2" t-att-class="this.modelIconClass" t-att-data-icon="this.modelIcon" aria-hidden="true"/>
+            <span class="flex-grow-1">
+                <Many2One t-props="this.m2oProps"/>
+            </span>
+        </span>
+    </t>
+</templates>
