@@ -11,8 +11,9 @@
 }
 
 .o_account_dashboard_kpis {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    grid-auto-rows: 1fr;
     gap: $o-kanban-record-margin * 2;
     width: 100%;
     min-width: 0;
@@ -27,7 +28,9 @@
     }
 
     @include media-breakpoint-down(md) {
-        flex-wrap: nowrap;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(12rem, 1fr);
+        grid-template-columns: none;
         gap: map-get($spacers, 2);
         padding-inline: map-get($spacers, 2);
         scroll-padding-inline: map-get($spacers, 2);
@@ -42,7 +45,6 @@
     border: $border-width solid $border-color;
     border-radius: $border-radius-lg;
     background-color: $o-view-background-color;
-    flex: 1 0 12rem;
     scroll-snap-align: start;
 
     &:not(:disabled):hover {
