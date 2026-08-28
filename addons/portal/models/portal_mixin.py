@@ -19,9 +19,9 @@ class PortalMixin(models.AbstractModel):
     access_warning = fields.Text("Access warning", compute="_compute_access_warning")
 
     def _search_access_token(self, operator, value):
-        if operator == 'in' and len(value) == 1:
-            return [('access_token', 'in', value)]
-        raise NotImplementedError
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return [('access_token', operator, value)]
 
     def _compute_access_warning(self):
         for mixin in self:
