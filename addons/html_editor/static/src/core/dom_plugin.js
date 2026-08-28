@@ -23,6 +23,7 @@ import {
     isElement,
     isContentEditable,
     getDeepestEditablePosition,
+    isEmpty,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -168,10 +169,13 @@ export class DomPlugin extends Plugin {
             const isEditableBlock = isBlock(editableContext);
             const doesEditableAllowParagraphRelatedElements =
                 allowsParagraphRelatedElements(editableContext);
+            const isInEmpty = !isTextNode(sel.focusNode) && isEmpty(sel.focusNode);
             const isSelectionAtStart =
-                firstLeaf(refBlock) === sel.anchorNode && sel.anchorOffset === 0;
+                isInEmpty || (firstLeaf(refBlock) === sel.anchorNode && sel.anchorOffset === 0);
             const isSelectionAtEnd =
-                lastLeaf(refBlock) === sel.focusNode && sel.focusOffset === nodeSize(sel.focusNode);
+                isInEmpty ||
+                (lastLeaf(refBlock) === sel.focusNode &&
+                    sel.focusOffset === nodeSize(sel.focusNode));
 
             let previousWasBlock = false;
             let previousDidUnwrap = false;
