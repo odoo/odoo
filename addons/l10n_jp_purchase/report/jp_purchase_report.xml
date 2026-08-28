@@ -12,14 +12,14 @@
             </xpath>
 
             <xpath expr="//th[@name='th_price_unit']" position="attributes">
-                <attribute name="class">text-end text-nowrap</attribute>
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
             </xpath>
             <xpath expr="//th[@name='th_price_unit']/strong" position="replace">
                 <strong>Unit Price<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></strong>
             </xpath>
 
             <xpath expr="//th[@name='th_subtotal']" position="attributes">
-                <attribute name="class">text-end text-nowrap</attribute>
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
             </xpath>
             <xpath expr="//th[@name='th_subtotal']/strong" position="replace">
                 <strong>Amount<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></strong>
