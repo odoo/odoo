@@ -172,20 +172,40 @@ class SaleOrderLine(models.Model):
         if refund_account_moves:
             credited_timesheet_domain = [('timesheet_invoice_id.state', '=', 'posted'), ('timesheet_invoice_id', 'in', refund_account_moves.ids)]
             timesheet_domain = expression.OR([timesheet_domain, credited_timesheet_domain])
-        domain = expression.AND([domain, timesheet_domain])
+        eligible_timesheets_domain = expression.AND([domain, timesheet_domain])
+        domain = eligible_timesheets_domain
+        outside_period_domain = []
         if start_date:
             domain = expression.AND([domain, [('date', '>=', start_date)]])
+            outside_period_domain.append([('date', '<', start_date)])
         if end_date:
             domain = expression.AND([domain, [('date', '<=', end_date)]])
+            outside_period_domain.append([('date', '>', end_date)])
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
+        lines_with_timesheets_outside_period = {
+            line.id
+            for line, __ in self.env['account.analytic.line'].sudo()._read_group(
+                expression.AND([
+                    eligible_timesheets_domain,
+                    [('so_line', 'in', lines_by_timesheet.ids)],
+                    expression.OR(outside_period_domain),
+                ]),
+                ['so_line'],
+                ['__count'],
+            )
+        } if outside_period_domain else set()
 
         for line in lines_by_timesheet:
-            # A period only selects which delivered hours are candidates; qty_delivered
-            # - qty_invoiced remains the authoritative quantity still due.
-            qty_to_invoice = max(0.0, min(
-                mapping.get(line.id, 0.0),
-                line.qty_delivered - line.qty_invoiced,
-            ))
+            period_qty = mapping.get(line.id, 0.0)
+            qty_to_invoice = line.qty_delivered - line.qty_invoiced
+            # Only cap the remaining quantity when the period excludes eligible timesheets.
+            # Otherwise, use it entirely to absorb rounding from previous invoices.
+            if (start_date or end_date) and (
+                period_qty <= 0.0
+                or line.id in lines_with_timesheets_outside_period
+            ):
+                qty_to_invoice = min(period_qty, qty_to_invoice)
+            qty_to_invoice = max(0.0, qty_to_invoice)
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             elif start_date or end_date:
