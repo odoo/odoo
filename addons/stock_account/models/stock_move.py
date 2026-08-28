@@ -107,10 +107,10 @@ class StockMove(models.Model):
                 continue
             move.is_dropship = move._is_dropshipped() or move._is_dropshipped_returned()
 
-    @api.depends('is_in', 'is_out', 'is_dropship')
+    @api.depends('state', 'move_line_ids')
     def _compute_is_valued(self):
         for move in self:
-            move.is_valued = move.is_in or move.is_out or move.is_dropship
+            move.is_valued = move.is_in or move.is_out
 
     def _compute_origin_company_id(self):
         self.origin_company_id = False
@@ -388,7 +388,7 @@ class StockMove(models.Model):
 
         for move in self:
             move = move.with_company(move.company_id)
-            if move.is_dropship or move.is_in:
+            if move.is_in:
                 products_to_recompute.add(move.product_id.id)
                 if move.product_id.lot_valuated:
                     if any(not ml.lot_id for ml in move.move_line_ids):
@@ -396,7 +396,6 @@ class StockMove(models.Model):
                             "A lot/serial number is required for product '%s' as it has lot valuation enabled.",
                             move.product_id.display_name))
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
-            if move.is_in or move.is_dropship:
                 move.value = move.sudo()._get_value()
                 continue
             # Outgoing moves
@@ -805,3 +804,24 @@ class StockMove(models.Model):
         """ Overriden in `sale_stock` & `purchase_stock`
         """
         return []
+
+    def _get_price_unit_delivery(self, product=None):
+        """ Computes the unit price for a set of moves, using a weighted average between
+        dropshipped and non dropshipped moves.
+        """
+        dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
+        dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
+        dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
+        regular_moves = self - dropship_moves
+        regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
+        regular_price_unit = regular_moves._get_price_unit(product=product)
+        total_quantity = dropship_quantity + regular_quantity
+        if not total_quantity:
+            return self._get_price_unit()
+        return (dropship_quantity * dropship_price_unit + regular_quantity * regular_price_unit) / total_quantity
+
+    def _get_price_unit_dropshipped(self):
+        """ Returns the unit price to value the dropshipped moves."""
+        total_value = sum(m._get_value() for m in self)
+        total_qty = sum(m._get_valued_qty() for m in self)
+        return total_value / total_qty if total_qty else 0
