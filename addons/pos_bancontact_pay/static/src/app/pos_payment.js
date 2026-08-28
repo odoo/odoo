@@ -2,8 +2,8 @@ import { patch } from "@web/core/utils/patch";
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
 
 patch(PosPayment.prototype, {
-    getQrPopupProps(customerDisplay = false) {
-        const base = super.getQrPopupProps(...arguments);
+    getQrPopupProps() {
+        const base = super.getQrPopupProps();
         const lang = this.pos_order_id?.user_id?.lang?.split("_")?.[0];
         const supportedLanguages = ["fr", "nl"];
         const frameLanguage = lang && supportedLanguages.includes(lang) ? lang : "fr";
@@ -17,9 +17,6 @@ patch(PosPayment.prototype, {
 
         if (isPaymentSuccessful) {
             this.setPaymentStatus("waitingScan");
-            if (this.payment_method_id.bancontact_usage === "display") {
-                this.updateCustomerDisplayQrCode(this.qr_code);
-            }
         } else {
             this.setPaymentStatus("retry");
         }
@@ -28,18 +25,10 @@ patch(PosPayment.prototype, {
         return false;
     },
 
-    handlePaymentCancelResponse(isCancelSuccessful) {
-        if (isCancelSuccessful) {
-            this.updateCustomerDisplayQrCode(null);
-        }
-        return super.handlePaymentCancelResponse(...arguments);
-    },
-
     forceDone() {
         super.forceDone(...arguments);
         if (this.payment_provider === "bancontact_pay") {
             this.qr_code = false;
-            this.updateCustomerDisplayQrCode(null);
         }
     },
 
@@ -48,7 +37,6 @@ patch(PosPayment.prototype, {
         if (this.payment_provider === "bancontact_pay") {
             this.bancontact_id = false;
             this.qr_code = false;
-            this.updateCustomerDisplayQrCode(null);
         }
     },
 });

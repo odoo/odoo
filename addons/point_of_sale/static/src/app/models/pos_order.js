@@ -197,6 +197,10 @@ export class PosOrder extends PosOrderAccounting {
         return this.is_refund === true;
     }
 
+    get isSelfOrder() {
+        return this.source === "mobile" || this.source === "kiosk";
+    }
+
     get adjustableTipLine() {
         return this.payment_ids.find((p) => p.canBeAdjusted());
     }

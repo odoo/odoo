@@ -48,6 +48,25 @@ test("pay", async () => {
     expect(order.lines[0].id).toBeOfType("number");
 });
 
+test("pay blocked when cannot proceed", async () => {
+    const store = await setupSelfPosEnv();
+    await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    patchWithCleanup(store, {
+        async canProceedToPay() {
+            return false;
+        },
+        async confirmOrder() {
+            expect.step("confirmOrder");
+        },
+    });
+
+    await comp.pay();
+    expect.verifySteps([]);
+    expect(store.rpcLoading).toBe(false);
+});
+
 test("canChangeQuantity", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
@@ -146,7 +165,7 @@ test("add note button is not shown in kiosk mode", async () => {
     Utils.checkNoOrderNote();
 });
 
-test("pay opens combo suggestion popup and applies a direct combo", async () => {
+test("opens combo suggestion popup and applies a direct combo", async () => {
     const store = await setupSelfPosEnv();
     const combo1 = store.models["product.combo"].get(1);
 
@@ -181,7 +200,7 @@ test("pay opens combo suggestion popup and applies a direct combo", async () => 
     expect(store.pendingComboConversion).toBe(null);
 });
 
-test("pay opens combo suggestion popup and applies repeated single-free combos", async () => {
+test("opens combo suggestion popup and applies repeated single-free combos", async () => {
     const store = await setupSelfPosEnv();
     const combo1 = store.models["product.combo"].get(1);
 
@@ -217,7 +236,7 @@ test("pay opens combo suggestion popup and applies repeated single-free combos",
     expect(store.pendingComboConversion).toBe(null);
 });
 
-test("pay opens combo suggestion popup and redirects upsell combos to combo selection", async () => {
+test("opens combo suggestion popup and redirects upsell combos to combo selection", async () => {
     const store = await setupSelfPosEnv();
     await store.addToCart(store.models["product.template"].get(8), 1);
     await store.addToCart(store.models["product.template"].get(10), 1);

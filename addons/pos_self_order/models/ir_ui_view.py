@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import api, models
 
 
 class IrUiView(models.Model):
@@ -17,3 +17,7 @@ class IrUiView(models.Model):
             })
 
         return read_records
+
+    @api.model
+    def _get_xml_ids_to_load(self):
+        return super()._get_xml_ids_to_load() + ['pos_self_order.DynamicQrReceipt']

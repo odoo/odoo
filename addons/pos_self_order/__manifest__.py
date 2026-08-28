@@ -20,6 +20,7 @@
         "views/point_of_sale_dashboard.xml",
         'receipt/pos_order_receipt.xml',
         'receipt/pos_order_change_receipt.xml',
+        'receipt/dynamic_qr_receipt.xml',
         'security/ir.access.csv',
     ],
     "demo": [
@@ -142,6 +143,7 @@
             "pos_self_order/static/tests/tours/**/*",
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
             "point_of_sale/static/tests/generic_helpers/dialog_util.js",
+            "point_of_sale/static/tests/generic_helpers/notification_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
             "point_of_sale/static/tests/pos/tours/utils/chrome_util.js",
         ],

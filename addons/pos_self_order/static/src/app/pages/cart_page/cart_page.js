@@ -423,9 +423,8 @@ export class CartPage extends Component {
     }
 
     getLineChangeQty(line) {
-        const currentQty = line.qty;
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
-        return !lastChange ? currentQty : currentQty - lastChange.qty;
+        return !lastChange ? line.qty : line.getPendingQtyDelta();
     }
 
     async pay() {
@@ -436,12 +435,18 @@ export class CartPage extends Component {
             config.use_presets && presets.length > 1
                 ? this.selfOrder.currentOrder.preset_id?.service_at
                 : config.self_ordering_service_mode;
+        const isTableService = orderingMode === "table" || orderingMode === "dynamic_qr";
         const useTiming =
             config.use_presets &&
             presets.length > 0 &&
             this.selfOrder.currentOrder.preset_id?.use_timing;
 
         if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+            return;
+        }
+
+        const canProceed = await this.selfOrder.canProceedToPay();
+        if (!canProceed) {
             return;
         }
 
@@ -467,7 +472,7 @@ export class CartPage extends Component {
             zip: partner.zip,
         });
 
-        if (!isValidRequiredInfo && orderingMode !== "table") {
+        if (!isValidRequiredInfo && !isTableService) {
             let result = null;
 
             // Show timing selection popup only if preset uses timing

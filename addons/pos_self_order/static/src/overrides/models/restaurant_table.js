@@ -5,14 +5,4 @@ patch(RestaurantTable.prototype, {
     get isShareable() {
         return super.isShareable || this.module_pos_restaurant;
     },
-    getOrders() {
-        const orders = super.getOrders();
-        const selfOrdering = this.models["pos.order"].filter(
-            (o) =>
-                o.self_ordering_table_id?.id === this.id &&
-                o.table_id?.id !== this.id &&
-                (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
-        );
-        return [...orders, ...selfOrdering];
-    },
 });

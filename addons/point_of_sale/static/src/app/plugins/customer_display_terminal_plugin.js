@@ -38,8 +38,8 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
 
     /**
      * @param {Object} [context] - what this terminal talks with and for:
-     *   `bus`, `identifier`, `configId`, `accessToken`, `models`, `scale` and
-     *   `GeneratePrinterData`. Called again to hand over late dependencies.
+     *   `bus`, `identifier`, `configId`, `accessToken`, `models`, `scale`,
+     *   `GeneratePrinterData` and `getQrData`. Called again to hand over late dependencies.
      */
     init(context = {}) {
         Object.assign(this.context, context);
@@ -95,21 +95,16 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
      * @returns {Object} Data payload for the customer display.
      */
     _buildDisplayPayload(order) {
-        const { models, GeneratePrinterData } = this.context;
+        const { models, GeneratePrinterData, getQrData } = this.context;
         const generator = new GeneratePrinterData({ models, order });
         const _formatCurrency = (amount) => formatCurrency(amount, order.currency.id);
 
         const orderData = generator.generateReceiptData();
         const scale = this.context.scale;
 
-        const qrPaymentData = order.getSelectedPaymentline()?.getQrPopupProps(true);
-        if (qrPaymentData?.amount) {
-            qrPaymentData.amount = _formatCurrency(qrPaymentData.amount);
-        }
-
         return {
             ...orderData,
-            qrPaymentData,
+            qrData: getQrData?.() || null,
             displayScreenSaver: false,
             amountSettlements: order.remainingDueAmount !== order.totalDue && {
                 label: order.remainingDueLabel,

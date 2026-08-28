@@ -204,6 +204,16 @@ class PosSelfOrderController(http.Controller):
                 ('write_date', '>', data.get('write_date')),
                 ('state', '!=', data.get('state')),
             ]])
+
+        if (
+            table_identifier
+            and pos_config.self_ordering_service_mode == 'table'
+            and pos_config.self_ordering_pay_after == 'meal'
+        ):
+            table = pos_config.env['restaurant.table'].search([('identifier', '=', table_identifier)], limit=1)
+            if table:
+                domain = Domain.OR([domain, ['&', ('table_id', '=', table.id), ('state', '=', 'draft')]])
+
         orders = pos_config.env['pos.order'].search(domain)
         access_tokens = set({o.get('access_token') for o in order_access_tokens})
         # Do not use session.order_ids, it may fail if there is shared sessions
@@ -337,7 +347,12 @@ class PosSelfOrderController(http.Controller):
         The restaurant.table record is also returned with reduced privileges.
         """
         pos_config = self._verify_pos_config(access_token)
-        table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
+
+        if pos_config.self_ordering_service_mode == 'dynamic_qr':
+            table_sudo = self._verify_dynamic_qr_order_authorization(pos_config, order)
+        else:
+            table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
+
         preset = request.env['pos.preset'].sudo().browse(order.get('preset_id'))
         is_takeaway = order and pos_config.use_presets and preset and preset.service_at != 'table'
         if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not is_takeaway:
@@ -347,6 +362,16 @@ class PosSelfOrderController(http.Controller):
         user = pos_config.self_ordering_default_user_id
         table = table_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
         return pos_config, table
+
+    def _verify_dynamic_qr_order_authorization(self, pos_config, order):
+        existing_order = request.env['pos.order'].sudo().search([('uuid', '=', order.get('uuid'))], limit=1)
+        if not existing_order or existing_order.config_id != pos_config:
+            raise Unauthorized("Self-order is disabled for this table; scan the QR code provided by the staff")
+        if existing_order.state != 'draft':
+            raise Unauthorized("This order has already been paid; ask our staff for a new QR code")
+        if not order.get('access_token') or not consteq(existing_order.access_token or '', order.get('access_token')):
+            raise Unauthorized("Invalid order access token")
+        return existing_order.table_id.sudo()
 
     @http.route(['/pos-self/ping'], type='jsonrpc', auth='public')
     def pos_ping(self, access_token):

@@ -7,6 +7,7 @@ import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
+import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 
 registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_out", {
     steps: () => [
@@ -66,6 +67,22 @@ registry.category("web_tour.tours").add("test_self_order_table_no_more_sharing-m
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("self_order_mobile_join_via_qr", {
+    steps: () =>
+        [
+            Utils.clickBtn("My Order"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            CartPage.clickBack(),
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend", {
     steps: () =>
         [
@@ -87,5 +104,60 @@ registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend",
             },
             Utils.clickBtn("Order Now"),
             ProductPage.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("self_order_mobile_pay_warns_on_stale_cart", {
+    steps: () =>
+        [
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+            {
+                content: "Simulate another device changing the order's qty server-side",
+                trigger: "body",
+                run: async () => {
+                    const line = posmodel.currentOrder.lines[0];
+                    await rpc(`/pos-self-order/test-modify-line-qty-from-backend/`, {
+                        line_id: line.id,
+                        qty: 5,
+                    });
+                },
+            },
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Fanta"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Fanta", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            Notification.has(
+                "Your order was just updated. Please review your cart before paying.",
+                "warning"
+            ),
+            Utils.clickBtn("Order"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+            Utils.clickBtn("My Order"),
+            CartPage.checkProduct("Coca-Cola", "12.65", "5"),
+            CartPage.checkProduct("Fanta", "2.53", "1"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("self_order_mobile_dynamic_qr_blocked", {
+    steps: () =>
+        [
+            {
+                content: "The staff-QR-only banner is shown",
+                trigger:
+                    ".o-self-closed:contains('Self-ordering is only available through the QR code provided by our staff. You can still view the menu.')",
+            },
+            Utils.clickBtn("Order Now"),
+            {
+                content: "No ordering action is available without a valid QR-joined order",
+                trigger: Utils.negate(".o_pos_landing_footer"),
+            },
         ].flat(),
 });

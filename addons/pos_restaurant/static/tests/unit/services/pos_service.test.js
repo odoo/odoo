@@ -5,6 +5,7 @@ import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_valid
 import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { waitUntil } from "@odoo/hoot-dom";
+import { FloorPlan } from "@pos_restaurant/app/screens/floor_screen/floor_plan/floor_plan";
 
 const { DateTime } = luxon;
 
@@ -392,7 +393,7 @@ describe("restaurant pos_store.js", () => {
         expect(orders.length).toBe(2);
     });
 
-    test("prepareOrderTransfer", async () => {
+    test("prepareOrderTransfer moves the order into an empty destination table", async () => {
         const store = await setupPosEnv();
         const tableSrc = store.models["restaurant.table"].get(1);
         const tableDst = store.models["restaurant.table"].get(2);
@@ -401,6 +402,69 @@ describe("restaurant pos_store.js", () => {
         expect(result).toBe(false);
         expect(order.table_id).toBe(tableDst);
         expect(store.getOrder()).toBe(order);
+    });
+
+    describe("mergeOrder", () => {
+        test("blocks transferring a self-order", async () => {
+            const store = await setupPosEnv();
+            const tableSrc = store.models["restaurant.table"].get(2);
+            const tableDst = store.models["restaurant.table"].get(3);
+            store.addNewOrder({ table_id: tableSrc, source: "mobile" });
+            let notified = null;
+            patchWithCleanup(store.notification, {
+                add: (message, options) => {
+                    notified = { message, options };
+                },
+            });
+            let callRelatedCalled = false;
+            patchWithCleanup(store.data, {
+                callRelated: () => {
+                    callRelatedCalled = true;
+                },
+            });
+
+            const result = FloorPlan.prototype.mergeOrder.call(
+                { pos: store, notification: store.notification },
+                { record: tableSrc },
+                { record: tableDst },
+                "right"
+            );
+
+            expect(result).toBe(false);
+            expect(callRelatedCalled).toBe(false);
+            expect(notified.options).toEqual({ type: "danger" });
+        });
+
+        test("blocks merging into a table with an active self-order", async () => {
+            const store = await setupPosEnv();
+            const tableSrc = store.models["restaurant.table"].get(2);
+            const tableDst = store.models["restaurant.table"].get(3);
+            store.addNewOrder({ table_id: tableSrc });
+            store.addNewOrder({ table_id: tableDst, source: "kiosk" });
+            let notified = null;
+            patchWithCleanup(store.notification, {
+                add: (message, options) => {
+                    notified = { message, options };
+                },
+            });
+            let callRelatedCalled = false;
+            patchWithCleanup(store.data, {
+                callRelated: () => {
+                    callRelatedCalled = true;
+                },
+            });
+
+            const result = FloorPlan.prototype.mergeOrder.call(
+                { pos: store, notification: store.notification },
+                { record: tableSrc },
+                { record: tableDst },
+                "right"
+            );
+
+            expect(result).toBe(false);
+            expect(callRelatedCalled).toBe(false);
+            expect(notified.options).toEqual({ type: "danger" });
+        });
     });
 
     test("transferOrder", async () => {

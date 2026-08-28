@@ -171,9 +171,9 @@ export class PaymentSafaricom extends PaymentInterface {
             return false;
         }
 
-        // Show the QR on the customer display. `uiState` is not a tracked
-        // field, so the dispatch has to be asked for explicitly.
-        line.updateCustomerDisplayQrCode("data:image/png;base64," + qrCode);
+        // Shows the QR on the customer display too, via the selected
+        // in-progress payment line fallback.
+        line.qr_code = "data:image/png;base64," + qrCode;
 
         try {
             const transaction = await makeAwaitable(
@@ -201,7 +201,7 @@ export class PaymentSafaricom extends PaymentInterface {
             return true;
         } finally {
             // Clear QR payment data from customer display
-            line.updateCustomerDisplayQrCode(null);
+            line.qr_code = null;
         }
     }
 }

@@ -69,6 +69,7 @@ export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
     feedbackScreenAutoSkipDelay = 1500;
+    _customerDisplayQrData = null;
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
 
@@ -1931,6 +1932,10 @@ export class PosStore extends WithLazyGetterTrap {
         return this.models["pos.order"].filter((o) => !o.finalized);
     }
 
+    get disableForSelfOrder() {
+        return this.getOrder()?.isSelfOrder;
+    }
+
     // To be used in the context of closing the POS
     // Saves the order locally and try to send it to the backend.
     // If there is an error show a popup
@@ -2516,11 +2521,9 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
-        payment.updateCustomerDisplayQrCode(generateQRCodeDataUrl(qrCodeValue));
         payment.qr_code = generateQRCodeDataUrl(qrCodeValue, { useThemeQr: true });
         return await ask(this.env.services.dialog, payment.getQrPopupProps(), {}, QRPopup).then(
             (result) => {
-                payment.updateCustomerDisplayQrCode(null);
                 payment.qr_code = false;
                 return result;
             }
@@ -3100,6 +3103,7 @@ export class PosStore extends WithLazyGetterTrap {
             models: this.models,
             scale: this.scale,
             bus: this.bus,
+            getQrData: () => this.customerDisplayQrData,
         });
         // model-event map that should trigger a customer display update.
         const customerDisplayEventListeners = {
@@ -3125,6 +3129,37 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             this.customerDisplay.sendOrder(this.getOrder());
         }
+    }
+
+    /**
+     * Sets (or clears, when `qrCode` is falsy) the QR code shown on the customer
+     * display, standing in for any payment-line QR that would otherwise be shown.
+     */
+    updateCustomerDisplayQrData(
+        qrCode,
+        { title = _t("Scan the QR for payment"), payment, extra = {} } = {}
+    ) {
+        this._customerDisplayQrData = qrCode
+            ? {
+                  title,
+                  ...(payment ? payment.getQrPopupProps() : {}),
+                  ...extra,
+                  qrCode,
+              }
+            : null;
+        this.debounceUpdateCustomerDisplay();
+    }
+
+    get customerDisplayQrData() {
+        if (this._customerDisplayQrData) {
+            return this._customerDisplayQrData;
+        }
+        // No QR was explicitly pushed: default to the selected payment line's own
+        // QR code while it's mid-processing (e.g. a terminal waiting to be scanned).
+        const payment = this.getOrder()?.getSelectedPaymentline();
+        return payment?.isProcessing() && payment.qr_code
+            ? { title: _t("Scan the QR for payment"), ...payment.getQrPopupProps() }
+            : null;
     }
 
     getSnoozeCountdown(activeSnooze) {

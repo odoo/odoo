@@ -36,6 +36,8 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_pos_self_order_service_mode(self):
         if self.pos_self_ordering_service_mode == 'counter':
             self.pos_self_ordering_pay_after = "each"
+        elif self.pos_self_ordering_service_mode == 'dynamic_qr':
+            self.pos_self_ordering_pay_after = "meal"
 
     @api.onchange("pos_self_ordering_default_language_id", "pos_self_ordering_available_language_ids")
     def _onchange_pos_self_order_kiosk_default_language(self):
@@ -66,6 +68,8 @@ class ResConfigSettings(models.TransientModel):
 
         if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
             self.pos_self_ordering_pay_after = "each"
+        elif self.pos_self_ordering_service_mode == 'dynamic_qr' and self.pos_self_ordering_mode == 'mobile':
+            self.pos_self_ordering_pay_after = "meal"
 
     def custom_link_action(self):
         self.ensure_one()
@@ -116,7 +120,7 @@ class ResConfigSettings(models.TransientModel):
             for table in table_ids:
                 table_number = table.table_number
                 floor_name = table.floor_id.name
-                url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
+                url = url_unquote(self.pos_config_id._get_self_order_url(table_id=table.id))
                 qr_images.append({
                     'images': self.pos_config_id._generate_single_qr_code__(url),
                     'name': f"{floor_name} - {table_number}",

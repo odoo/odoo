@@ -98,7 +98,7 @@ export class LandingPage extends Component {
             const availablePresets = this.selfOrder.availablePresets;
             if (availablePresets.length === 1) {
                 this.selfOrder.currentOrder.setPreset(availablePresets[0]);
-            } else {
+            } else if (availablePresets.length > 1) {
                 this.router.navigate("location");
                 return;
             }

@@ -6,7 +6,8 @@
                 icon="'link'"
                 btnText.translate="Quotation / Order"
                 btnClasses="'btn-secondary '"
-                onClick="() =>   this.onClickQuotation()">
+                onClick="() =>   this.onClickQuotation()"
+                disabled="this.pos.disableForSelfOrder">
             </t>
         </xpath>
     </t>

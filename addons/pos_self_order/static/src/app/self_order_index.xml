@@ -7,6 +7,9 @@
         <div t-elif="this.selfOrder.isSelfSnoozed" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
             Self-ordering is temporarily paused.
         </div>
+        <div t-elif="this.selfOrder.isDynamicQrBlocked" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
+            Self-ordering is only available through the QR code provided by our staff. You can still view the menu.
+        </div>
         <div t-if="this.selfOrder.rpcLoading">
             <LoadingOverlay />
         </div>

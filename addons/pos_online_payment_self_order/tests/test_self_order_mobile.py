@@ -67,8 +67,45 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_mobile_online_payment_meal")
+
         self_route_table = self.pos_config._get_self_order_route(floor.table_ids[0].id)
         self.start_tour(self_route_table, "self_mobile_online_payment_meal_table")
+
+    def test_online_payment_self_dynamic_qr(self):
+        """
+        Verify that we can pay online after joining a dynamic_qr order via its order-specific URL.
+        """
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'self_ordering_service_mode': 'dynamic_qr',
+            'self_order_online_payment_method_id': self.online_payment_method.id,
+        })
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
+        self.pos_config.write({
+            'floor_ids': [(6, 0, [floor.id])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        table = floor.table_ids[0]
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'table_id': table.id,
+            'preset_id': self.in_preset.id,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+        })
+        order._ensure_access_token()
+        self_route_order = self.pos_config._get_self_order_route(order=order)
+        self.start_tour(self_route_order, "self_mobile_online_payment_meal_dynamic_qr")
 
     def test_online_payment_kiosk_qr_code(self):
         """

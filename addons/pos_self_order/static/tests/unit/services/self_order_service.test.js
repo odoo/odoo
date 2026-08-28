@@ -7,10 +7,17 @@ import {
 } from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 import { definePosSelfModels } from "../data/generate_model_definitions";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, onRpc, MockServer } from "@web/../tests/web_test_helpers";
 
 definePosSelfModels();
+
+const setOrderIdentifier = (token) => {
+    const url = new URL(browser.location.href);
+    url.searchParams.set("order_identifier", token);
+    history.replaceState({}, "", url);
+};
 
 test("currentOrder", async () => {
     const store = await setupSelfPosEnv();
@@ -21,15 +28,487 @@ test("currentOrder", async () => {
     expect(orders).toHaveLength(1);
     expect(order.id).toBe(orders[0].id);
 
-    // no Selected Order
     store.selectedOrderUuid = false;
     expect(store.currentOrder.id).toBe(orders[0].id);
     expect(store.selectedOrderUuid).toBe(orders[0].uuid);
 
-    // no Order
     orders[0].delete();
     expect(models["pos.order"].length).toBe(0);
     expect(store.currentOrder.id).toBe(models["pos.order"].getAll()[0].id);
+});
+
+describe("currentTable", () => {
+    test("dynamic_qr mode returns the current order's bound table", async () => {
+        const store = await setupSelfPosEnv("mobile", "dynamic_qr", "meal");
+        const order = await getFilledSelfOrder(store);
+
+        expect(store.currentTable).toBe(null);
+
+        const table = store.models["restaurant.table"].getFirst();
+        order.table_id = table;
+        expect(store.currentTable?.id).toBe(table.id);
+    });
+
+    test("other modes returns the table matching the router identifier", async () => {
+        const store = await setupSelfPosEnv("mobile", "table", "each");
+        await getFilledSelfOrder(store);
+        const table = store.models["restaurant.table"].getFirst();
+        table.identifier = "test-table-identifier";
+
+        expect(store.currentTable).toBe(null);
+
+        store.router.addTableIdentifier(table);
+        expect(store.currentTable?.id).toBe(table.id);
+    });
+});
+
+describe("currentTableIdentifier", () => {
+    test("dynamic_qr mode returns the current order's bound table identifier", async () => {
+        const store = await setupSelfPosEnv("mobile", "dynamic_qr", "meal");
+        const order = await getFilledSelfOrder(store);
+        const table = store.models["restaurant.table"].getFirst();
+        table.identifier = "bound-table-identifier";
+
+        expect(store.currentTableIdentifier).toBe(null);
+
+        order.table_id = table;
+        expect(store.currentTableIdentifier).toBe("bound-table-identifier");
+    });
+
+    test("other modes fall back to the router identifier", async () => {
+        const store = await setupSelfPosEnv("mobile", "table", "each");
+        await getFilledSelfOrder(store);
+        const table = store.models["restaurant.table"].getFirst();
+        table.identifier = "test-table-identifier";
+
+        expect(store.currentTableIdentifier).toBe(null);
+
+        store.router.addTableIdentifier(table);
+        expect(store.currentTableIdentifier).toBe("test-table-identifier");
+    });
+});
+
+describe("availablePresets", () => {
+    test("dynamic_qr mode", async () => {
+        const store = await setupSelfPosEnv("mobile", "dynamic_qr", "meal", {}, true);
+        expect(store.availablePresets.map((preset) => preset.id)).toEqual([20, 22]);
+    });
+
+    test("kiosk mode", async () => {
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+        const allPresets = store.models["pos.preset"].getAll();
+
+        expect(store.availablePresets.length).toBe(allPresets.length);
+    });
+
+    test("table mode", async () => {
+        const store = await setupSelfPosEnv("mobile", "table", "each", {}, true);
+        const allPresets = store.models["pos.preset"].getAll();
+        const table = store.models["restaurant.table"].getFirst();
+        table.identifier = "test-table-identifier";
+
+        // No table identifier
+        expect(store.availablePresets.length).toBe(allPresets.length - 2);
+        expect(store.availablePresets).not.toInclude(store.models["pos.preset"].get(20));
+        expect(store.availablePresets).not.toInclude(store.models["pos.preset"].get(22));
+
+        // Has table identifier
+        store.router.addTableIdentifier(table);
+        expect(store.availablePresets.length).toBe(allPresets.length);
+    });
+
+    test("shop closed", async () => {
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, false);
+        store.ordering = true;
+
+        const presetIds = store.availablePresets.map((preset) => preset.id).sort((a, b) => a - b);
+        expect(presetIds).toEqual([2, 5, 23]);
+    });
+});
+
+describe("initMobileData", () => {
+    test("order_identifier in the url validates and selects the order in dynamic_qr mode", async () => {
+        const store = await setupSelfPosEnv("mobile", "dynamic_qr", "meal", {}, true);
+        const order = await getFilledSelfOrder(store);
+        store.selectedOrderUuid = null;
+        setOrderIdentifier(order.access_token);
+
+        await store.initMobileData();
+
+        expect(store.selectedOrderUuid).toBe(order.uuid);
+        expect(store.ordering).toBe(true);
+    });
+
+    test("order_identifier pointing to a no longer draft order is not selected nor validated", async () => {
+        const store = await setupSelfPosEnv("mobile", "dynamic_qr", "meal", {}, true);
+        const order = await getFilledSelfOrder(store);
+        order.state = "paid";
+        store.selectedOrderUuid = order.uuid;
+        setOrderIdentifier(order.access_token);
+
+        await store.initMobileData();
+
+        expect(store.selectedOrderUuid).toBe(null);
+        expect(store.ordering).toBe(false);
+    });
+
+    test("order_identifier is ignored entirely outside dynamic_qr mode", async () => {
+        const store = await setupSelfPosEnv("mobile", "table", "meal", {}, true);
+        const order = await getFilledSelfOrder(store);
+        store.selectedOrderUuid = null;
+        setOrderIdentifier(order.access_token);
+
+        await store.initMobileData();
+
+        expect(store.selectedOrderUuid).toBe(null);
+        expect(store.ordering).toBe(true);
+    });
+});
+
+describe("_computePendingDeltas", () => {
+    test("returns a delta only for synced lines whose local qty differs from their last-synced baseline", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        order.recomputeChanges();
+
+        expect(store._computePendingDeltas().size).toBe(0);
+
+        const line = order.lines[0];
+        line.qty += 2;
+
+        const pendingDeltas = store._computePendingDeltas();
+        expect(pendingDeltas.size).toBe(1);
+        expect(pendingDeltas.get(line)).toBe(2);
+    });
+
+    test("ignores lines that were never synced at all", async () => {
+        const store = await setupSelfPosEnv();
+        await getFilledSelfOrder(store);
+
+        expect(store._computePendingDeltas().size).toBe(0);
+    });
+});
+
+describe("_reapplyPendingDeltas", () => {
+    test("reapplies the delta on top of the refreshed qty and restores it as the new baseline", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        order.recomputeChanges();
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        line.qty = syncedQty + 1;
+        const pendingDeltas = store._computePendingDeltas();
+
+        line.qty = syncedQty + 2;
+        store._reapplyPendingDeltas(order, pendingDeltas);
+
+        expect(line.qty).toBe(syncedQty + 3);
+        expect(order.uiState.lineChanges[line.uuid].qty).toBe(syncedQty + 2);
+    });
+
+    test("removes the line instead of going negative when the reapplied delta would drop qty to 0 or below", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        order.recomputeChanges();
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        line.qty = syncedQty - 2;
+        const pendingDeltas = store._computePendingDeltas();
+
+        line.qty = 1;
+        store._reapplyPendingDeltas(order, pendingDeltas);
+
+        expect(order.lines.find((l) => l.uuid === line.uuid)).toBeEmpty();
+    });
+
+    test("ignores deltas for lines belonging to a different order", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        order.recomputeChanges();
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        line.qty = syncedQty + 1;
+        const pendingDeltas = store._computePendingDeltas();
+
+        const otherOrder = store.models["pos.order"].create({});
+        store._reapplyPendingDeltas(otherOrder, pendingDeltas);
+
+        expect(line.qty).toBe(syncedQty + 1);
+    });
+});
+
+describe("_syncedOrderSnapshot", () => {
+    test("changes when a synced line's qty changes", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+
+        const before = store._syncedOrderSnapshot(order);
+        await store.sendDraftOrderToServer();
+        const [line1, line2] = order.lines;
+
+        line1.qty += 1;
+
+        const after = store._syncedOrderSnapshot(order);
+        expect(after).not.toBe(before);
+        expect(JSON.parse(after)).toEqual([
+            order.state,
+            order.general_customer_note,
+            [
+                [line1.id, line1.product_id.id, line1.qty, line1.price_unit],
+                [line2.id, line2.product_id.id, line2.qty, line2.price_unit],
+            ],
+        ]);
+    });
+
+    test("changes when the order's general_customer_note changes", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+
+        const before = store._syncedOrderSnapshot(order);
+        order.general_customer_note = "no onions";
+        const after = store._syncedOrderSnapshot(order);
+
+        expect(after).not.toBe(before);
+    });
+
+    test("ignores a line's customer_note (self-order cannot set per-line notes)", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        const [line1] = order.lines;
+
+        const before = store._syncedOrderSnapshot(order);
+        line1.customer_note = "no onions";
+        const after = store._syncedOrderSnapshot(order);
+
+        expect(after).toBe(before);
+    });
+
+    test("ignores lines that were never synced", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        const before = store._syncedOrderSnapshot(order);
+        await store.sendDraftOrderToServer();
+        const [line1, line2] = order.lines;
+
+        const product = store.models["product.template"].get(8);
+        await store.addToCart(product, 1);
+
+        const after = store._syncedOrderSnapshot(order);
+        expect(after).not.toBe(before);
+        expect(JSON.parse(after)).toEqual([
+            order.state,
+            order.general_customer_note,
+            [
+                [line1.id, line1.product_id.id, line1.qty, line1.price_unit],
+                [line2.id, line2.product_id.id, line2.qty, line2.price_unit],
+            ],
+        ]);
+    });
+});
+
+describe("canProceedToPay", () => {
+    test("returns true without refreshing when the order has no access_token yet", async () => {
+        const store = await setupSelfPosEnv();
+        const product = store.models["product.template"].get(5);
+        await store.addToCart(product, 1);
+
+        expect(store.currentOrder.access_token).toBe(undefined);
+        expect(await store.canProceedToPay()).toBe(true);
+    });
+
+    test("returns true and does not warn when nothing changed server-side", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        patchWithCleanup(store.notification, {
+            add: () => expect.step("notification"),
+        });
+
+        expect(await store.canProceedToPay()).toBe(true);
+        expect.verifySteps([]);
+    });
+
+    test("returns false and warns when the order changed server-side", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        const line = order.lines[0];
+        MockServer.env["pos.order.line"].write([line.id], { qty: line.qty + 5 });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        patchWithCleanup(store.notification, {
+            add: () => expect.step("notification"),
+        });
+
+        expect(await store.canProceedToPay()).toBe(false);
+        expect.verifySteps(["notification"]);
+    });
+
+    test("returns false and warns when the order became paid server-side with an unchanged cart", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        MockServer.env["pos.order"].write([order.id], { state: "paid" });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        patchWithCleanup(store.notification, {
+            add: () => expect.step("notification"),
+        });
+
+        expect(await store.canProceedToPay()).toBe(false);
+        expect.verifySteps(["notification"]);
+    });
+
+    test("returns true and does not warn when only a line's customer_note changes server-side", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        const line = order.lines[0];
+        MockServer.env["pos.order.line"].write([line.id], { customer_note: "no onions" });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        patchWithCleanup(store.notification, {
+            add: () => expect.step("notification"),
+        });
+
+        expect(await store.canProceedToPay()).toBe(true);
+        expect.verifySteps([]);
+    });
+
+    test("returns false and warns when the order's general note changed server-side", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        MockServer.env["pos.order"].write([order.id], { general_customer_note: "no onions" });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        patchWithCleanup(store.notification, {
+            add: () => expect.step("notification"),
+        });
+
+        expect(await store.canProceedToPay()).toBe(false);
+        expect.verifySteps(["notification"]);
+    });
+});
+
+describe("getUserDataFromServer", () => {
+    test("pushOrphanedLines (default): merges another local draft's lines into openOrder and deletes it", async () => {
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+        const ownOrder = await getFilledSelfOrder(store);
+        expect(ownOrder.lines.length).toBe(2);
+
+        const openOrderId = MockServer.env["pos.order"].create({
+            config_id: store.config.id,
+            session_id: store.session.id,
+            access_token: "open-order-token",
+            state: "draft",
+        });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([openOrderId], {}, store.config.id)
+        );
+
+        await store.getUserDataFromServer(["open-order-token"]);
+
+        const openOrder = store.models["pos.order"].find(
+            (o) => o.access_token === "open-order-token"
+        );
+        expect(store.selectedOrderUuid).toBe(openOrder.uuid);
+        expect(store.models["pos.order"].find((o) => o.uuid === ownOrder.uuid)).toBe(undefined);
+        expect(openOrder.lines.length).toBe(2);
+    });
+
+    test("pushOrphanedLines: false deletes another local draft without merging its lines", async () => {
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+        const ownOrder = await getFilledSelfOrder(store);
+
+        const openOrderId = MockServer.env["pos.order"].create({
+            config_id: store.config.id,
+            session_id: store.session.id,
+            access_token: "open-order-token",
+            state: "draft",
+        });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([openOrderId], {}, store.config.id)
+        );
+
+        await store.getUserDataFromServer(["open-order-token"], { pushOrphanedLines: false });
+
+        const openOrder = store.models["pos.order"].find(
+            (o) => o.access_token === "open-order-token"
+        );
+        expect(store.selectedOrderUuid).toBe(openOrder.uuid);
+        expect(store.models["pos.order"].find((o) => o.uuid === ownOrder.uuid)).toBe(undefined);
+        expect(openOrder.lines.length).toBe(0);
+    });
+
+    test("prefers the draft matching the requested token over an arbitrary other draft", async () => {
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+        const requestedId = MockServer.env["pos.order"].create({
+            config_id: store.config.id,
+            session_id: store.session.id,
+            access_token: "requested-token",
+            state: "draft",
+        });
+        const otherId = MockServer.env["pos.order"].create({
+            config_id: store.config.id,
+            session_id: store.session.id,
+            access_token: "other-token",
+            state: "draft",
+        });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([otherId, requestedId], {}, store.config.id)
+        );
+
+        await store.getUserDataFromServer(["requested-token"]);
+
+        const requestedOrder = store.models["pos.order"].find(
+            (o) => o.access_token === "requested-token"
+        );
+        expect(store.selectedOrderUuid).toBe(requestedOrder.uuid);
+    });
+
+    test("multiple requested tokens: the first wins, neither is treated as an orphan", async () => {
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+        const firstId = MockServer.env["pos.order"].create({
+            config_id: store.config.id,
+            session_id: store.session.id,
+            access_token: "first-token",
+            state: "draft",
+        });
+        const secondId = MockServer.env["pos.order"].create({
+            config_id: store.config.id,
+            session_id: store.session.id,
+            access_token: "second-token",
+            state: "draft",
+        });
+        onRpc("/pos-self-order/get-user-data/", () =>
+            // Backend returns second order then first order
+            MockServer.env["pos.order"].read_pos_data([secondId, firstId], {}, store.config.id)
+        );
+
+        await store.getUserDataFromServer(["first-token", "second-token"]);
+
+        const order1 = store.models["pos.order"].find((o) => o.access_token === "first-token");
+        const order2 = store.models["pos.order"].find((o) => o.access_token === "second-token");
+        expect(store.selectedOrderUuid).toBe(order1.uuid);
+        expect(order2).not.toBeEmpty();
+    });
 });
 
 describe("initProducts", () => {
@@ -327,7 +806,7 @@ describe("addToCart", () => {
     });
 });
 
-test("sendDraftOrderToServer", async () => {
+test("syncs the local draft order and its lines, reusing the same order", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
 

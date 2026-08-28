@@ -875,4 +875,97 @@ describe("pos_store.js", () => {
         await store.setTip(numberBuffer.getFloat());
         expect(order.tip_amount).toBe(2.5);
     });
+
+    describe("updateCustomerDisplayQrData", () => {
+        test("sets, clears, and merges extra data", async () => {
+            const store = await setupPosEnv();
+            const qrCode = "https://example.com/qr-code";
+
+            store.updateCustomerDisplayQrData(qrCode, { extra: { amount: 10 } });
+            expect(store.customerDisplayQrData).toEqual({
+                title: "Scan the QR for payment",
+                qrCode,
+                amount: 10,
+            });
+
+            store.updateCustomerDisplayQrData(null);
+            expect(store.customerDisplayQrData).toBe(null);
+
+            store.updateCustomerDisplayQrData("correct-qr", {
+                extra: { qrCode: "stale-qr", amount: 10 },
+            });
+            expect(store.customerDisplayQrData).toEqual({
+                title: "Scan the QR for payment",
+                qrCode: "correct-qr",
+                amount: 10,
+            });
+
+            // title overrides the default
+            store.updateCustomerDisplayQrData(qrCode, { title: "Custom title" });
+            expect(store.customerDisplayQrData).toEqual({ title: "Custom title", qrCode });
+        });
+
+        test("merges payment props, explicit qrCode wins", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            const paymentMethod = store.models["pos.payment.method"].get(1);
+            const payment = createPaymentLine(store, order, paymentMethod, { qr_code: "stale-qr" });
+
+            store.updateCustomerDisplayQrData("fresh-qr", { payment });
+
+            expect(store.customerDisplayQrData).toEqual({
+                title: "Scan the QR for payment",
+                ...payment.getQrPopupProps(),
+                qrCode: "fresh-qr",
+            });
+        });
+    });
+
+    describe("customerDisplayQrData", () => {
+        test("falls back to the selected in-progress payment line", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            const paymentMethod = store.models["pos.payment.method"].get(1);
+            const payment = createPaymentLine(store, order, paymentMethod, {
+                qr_code: "data:image/png;base64,qr",
+                payment_status: "waitingScan",
+            });
+
+            // Not selected
+            order.selectPaymentline(undefined);
+            expect(store.customerDisplayQrData).toBe(null);
+
+            // Selected and in progress.
+            order.selectPaymentline(payment);
+            expect(store.customerDisplayQrData).toEqual({
+                title: "Scan the QR for payment",
+                ...payment.getQrPopupProps(),
+            });
+
+            // No longer in progress
+            payment.payment_status = "done";
+            expect(store.customerDisplayQrData).toBe(null);
+        });
+
+        test("an explicit value takes precedence over the fallback", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            const paymentMethod = store.models["pos.payment.method"].get(1);
+            const payment = createPaymentLine(store, order, paymentMethod, {
+                qr_code: "data:image/png;base64,qr",
+                payment_status: "waitingScan",
+            });
+            order.selectPaymentline(payment);
+
+            store._customerDisplayQrData = {
+                title: "Custom",
+                qrCode: "data:image/png;base64,explicit",
+            };
+
+            expect(store.customerDisplayQrData).toEqual({
+                title: "Custom",
+                qrCode: "data:image/png;base64,explicit",
+            });
+        });
+    });
 });

@@ -62,6 +62,7 @@
                                 </button>
                                 <button class="btn btn-lg btn-secondary w-100 transfer-split-order"
                                     t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
+                                    t-att-disabled="this.pos.disableForSelfOrder"
                                     t-on-click="this.transferSplittedOrder">
                                     Transfer
                                 </button>

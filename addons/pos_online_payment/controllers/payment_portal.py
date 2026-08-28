@@ -127,6 +127,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         amount_to_pay = self._get_amount_to_pay(pos_order_sudo)
         if not self._is_valid_amount(amount_to_pay, currency_id):
+            if exit_route:
+                return request.redirect(exit_route)
             rendering_context['amount'] = False
             return self._render_pay(rendering_context)
         rendering_context['amount'] = amount_to_pay
@@ -182,7 +184,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not partner_sudo:
             return self._redirect_login()
 
-        self._validate_transaction_kwargs(kwargs)
+        self._validate_transaction_kwargs(kwargs, additional_allowed_keys=("override_pending_payment",))
         if kwargs.get('is_validation'):
             raise UserError(
                 _("A validation payment cannot be used for a Point of Sale online payment."))
@@ -210,9 +212,35 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Ignore the currency provided by the customer
         kwargs['currency_id'] = currency_id.id
 
+        pos_order_sudo.env.cr.execute("SELECT id FROM pos_order WHERE id = %s FOR UPDATE", (pos_order_sudo.id,))
+        pos_order_sudo.invalidate_recordset()
+
         amount_to_pay = self._get_amount_to_pay(pos_order_sudo)
         if not self._is_valid_amount(amount_to_pay, currency_id):
-            raise ValidationError(_("There is nothing to pay for this order."))
+            return {
+                'state': 'error',
+                'state_message': _("There is nothing to pay for this order."),
+                'pos_online_payment_nothing_to_pay': True,
+                'exit_route': exit_route,
+            }
+
+        pending_tx_sudo = request.env['payment.transaction'].sudo().search([
+            ('pos_order_id', '=', pos_order_sudo.id),
+            ('state', 'in', ('draft', 'pending')),
+        ])
+        if pending_tx_sudo and not kwargs.get('override_pending_payment'):
+            return {
+                'state': 'error',
+                'state_message': _(
+                    "It looks like a payment for this order is already being processed "
+                    "— maybe from this device, maybe from another. If you continue, "
+                    "you risk to pay the order twice. Only continue if you're sure the "
+                    "earlier attempt was abandoned.",
+                ),
+                'pos_online_payment_conflict': True,
+                'exit_route': exit_route,
+            }
+
         if tools.float_compare(kwargs['amount'], amount_to_pay, precision_rounding=currency_id.rounding) != 0:
             raise ValidationError(
                 _("The amount to pay has changed. Please refresh the page."))

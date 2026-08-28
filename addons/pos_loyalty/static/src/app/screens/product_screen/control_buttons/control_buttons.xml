@@ -12,6 +12,7 @@
                     icon="'credit_card'"
                     btnText.translate="eWallet Refund"
                     onClick="() => this.onClickWalletRefund()"
+                    disabled="this.pos.disableForSelfOrder"
                     t-if="_orderTotal lt 0">
                 </t>
                 <t t-call="point_of_sale.controlButton"
@@ -19,12 +20,14 @@
                     icon="'credit_card'"
                     btnText.translate="eWallet Pay"
                     onClick="() => this.onClickWalletPay()"
+                    disabled="this.pos.disableForSelfOrder"
                     t-if="_orderTotal gt 0 and _eWalletRewards gte 1">
                 </t>
                 <t t-call="point_of_sale.controlButton"
                     btnClasses="'btn-secondary disabled'"
                     icon="'credit_card'"
                     btnText.translate="eWallet"
+                    disabled="this.pos.disableForSelfOrder"
                     t-if="_orderTotal == 0 or (_orderTotal gte 0 and _eWalletRewards lt 1)">
                 </t>
             </t>
@@ -39,7 +42,7 @@
                 iconClasses="'oi-filled ' + (this.nbrRewards() ? 'o_reward-icon-active' : '')"
                 btnText.translate="Reward"
                 btnClasses="'btn-secondary ' + (this.nbrRewards() ? 'active' : 'disabled')"
-                disabled="!this.nbrRewards()"
+                disabled="!this.nbrRewards() || this.pos.disableForSelfOrder"
                 onClick="() => this.clickRewards()">
             </t>
         </xpath>

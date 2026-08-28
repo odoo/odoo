@@ -1,16 +1,70 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+from datetime import datetime, timedelta
 from unittest.mock import patch
-from datetime import timedelta, datetime
-
-from odoo import Command, fields
 
 import odoo.tests
+from odoo import Command, fields
+
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestSelfOrderController(SelfOrderCommonTest):
+    def test_dynamic_qr_order_authorization(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'self_ordering_service_mode': 'dynamic_qr',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+            'preset_id': self.in_preset.id,
+            'table_id': self.pos_table_1.id,
+        })
+
+        def attempt(uuid=None, access_token=None):
+            order_data = self._create_order_data(
+                state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            )
+            order_data['order']['uuid'] = order.uuid if uuid is None else uuid
+            order_data['order']['access_token'] = order.access_token if access_token is None else access_token
+            response = self.url_open(
+                '/pos-self-order/process-order/mobile',
+                json.dumps({'jsonrpc': '2.0', 'params': order_data}),
+                method='POST',
+                headers={'Content-Type': 'application/json'},
+            )
+            return response.json()
+
+        # Wrong access token.
+        data = attempt(access_token='wrong-token')
+        self.assertIn('Invalid order access token', data['error']['data']['message'])
+
+        # Unknown order uuid.
+        data = attempt(uuid='does-not-exist')
+        self.assertIn('Self-order is disabled', data['error']['data']['message'])
+
+        # Order belongs to a different pos.config.
+        other_config = self.env['pos.config'].create({'name': 'Other config'})
+        order.config_id = other_config.id
+        data = attempt()
+        self.assertIn('Self-order is disabled', data['error']['data']['message'])
+        order.config_id = self.pos_config.id
+
+        # Order is no longer draft.
+        order.state = 'paid'
+        data = attempt()
+        self.assertIn('already been paid', data['error']['data']['message'])
+
     def test_get_orders_by_access_token(self):
         self.cola.taxes_id = False
         self.pos_config.self_ordering_mode = 'mobile'

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.DynamicQrPopup">
+        <Dialog size="'sm'" contentClass="'o_qr_popup rounded-5 p-2'" header="false">
+            <div class="d-flex flex-column align-items-center">
+                <h2 class="border-bottom border-dark w-75 text-center pb-1">Scan to join the order</h2>
+                <div class="qr-container my-2 w-75">
+                    <img t-att-src="this.props.qrCode" class="qr-code w-100" alt="QR Code"/>
+                </div>
+                <div><a t-att-href="this.props.url" target="_blank">Open self-order on this device</a></div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex align-items-center justify-content-center w-100 mt-2">
+                    <button class="btn btn-primary btn-lg mx-2" t-on-click="() => this.printQrCode()">Print</button>
+                    <button class="btn btn-secondary btn-lg mx-2" t-on-click="this.props.close">Close</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>
