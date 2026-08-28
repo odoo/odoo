@@ -14,13 +14,6 @@ class AccountMoveLine(models.Model):
     def _compute_cogs_move_ids(self):
         self.cogs_move_ids = False
 
-    def _use_inventory_valuation(self):
-        # EXTENDS 'account': dropshipped (or, via `repair`, already-accounted) lines never touch stock.
-        self.ensure_one()
-        if not super()._use_inventory_valuation():
-            return False
-        return all(not m._is_dropshipped() for m in self.cogs_move_ids)
-
     def _stock_account_prepare_cogs_vals(self):
         """ Values of the two COGS journal items (interim + expense) of the invoice line. """
         self.ensure_one()
