@@ -13,7 +13,7 @@ from odoo.addons.sale.controllers import portal as sale_portal
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
-    @route("/my/order/return_data", type="jsonrpc", auth="user", readonly=True)
+    @route("/my/order/return_data", type="jsonrpc", auth="public", readonly=True)
     def my_order_return_data(self, order_id, access_token):
         """Prepare return details of order depending on deliveries.
 
@@ -63,7 +63,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         return return_data
 
-    @route("/my/orders/<int:order_id>/download_return_label", type="http", auth="user")
+    @route("/my/orders/<int:order_id>/download_return_label", type="http", auth="public")
     def order_return_label(
         self, order_id, access_token=None, return_details=None, return_reason_id=None
     ):
