@@ -2,83 +2,108 @@
 <templates xml:space="preserve">
 
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
-        <div class="border rounded p-3 w-100">
-            <t t-set="inStoreAvailable" t-value="this.state.inStoreStockData?.in_stock"/>
-            <div
+        <t t-set="inStoreAvailable" t-value="this.state.inStoreStockData?.in_stock"/>
+        <div
+            class="o_wsale_collect_switch d-flex flex-column flex-md-row gap-1 w-100 bg-o-color-3"
+            role="radiogroup"
+            aria-label="Shipping method"
+        >
+            <label
                 name="click_and_collect_availability"
-                t-on-click="() => inStoreAvailable ? this.openLocationSelector() : null"
-                t-att-class="inStoreAvailable ? 'cursor-pointer' : ''"
+                class="o_wsale_collect_option flex-fill w-100 w-md-50 p-3 cursor-pointer"
+                t-on-click="() => inStoreAvailable and !this.state.selectedLocationData.id
+                    ? this.openLocationSelector() : null"
             >
-                <div class="h6">
-                    <i class="oi oi-fw text-muted" data-icon="location_on"/>
+                <input
+                    type="radio"
+                    class="visually-hidden"
+                    name="o_wsale_collect_mode"
+                    checked="checked"
+                    t-on-click.stop="() => {}"/>
+                <div class="mb-1 small text-muted">
+                    <i class="oi oi-fw me-1" data-icon="storefront"/>
+                    Store Pickup
+                </div>
+                <strong class="d-block mb-2 small">
                     <t
                         t-if="this.state.selectedLocationData.id"
                         t-out="this.state.selectedLocationData.name"
                     />
-                    <t t-else="" t-out="this.props.deliveryMethodName"/>
-                </div>
-                <div class="d-flex justify-content-between">
+                    <t t-else="">Select a Store</t>
+                </strong>
+                <div class="d-flex justify-content-between align-items-center gap-2 small">
                     <t t-call="website_sale_collect.StockAvailabilityMessage"
                         available="inStoreAvailable"
                         stockData="this.state.inStoreStockData"
                         hasOutOfStockMessage="this.state.hasOutOfStockMessage"
                         outOfStockMessage="this.state.outOfStockMessage"
                     />
-                    <a t-if="this.props.showSelectStoreButton and inStoreAvailable" role="button" href="#">
-                        <t t-if="this.state.selectedLocationData.id">Change store</t>
-                        <t t-else="">Select store</t>
+                    <a
+                        t-if="inStoreAvailable and this.state.selectedLocationData.id"
+                        role="button"
+                        href="#"
+                        class="text-primary"
+                        t-att-title="this.props.showSelectStoreButton
+                            ? 'Change store' : 'See the store on the map'"
+                        t-on-click.prevent.stop="() => this.openLocationSelector()"
+                    >
+                        <i
+                            class="oi oi-fw"
+                            t-att-data-icon="this.props.showSelectStoreButton
+                                ? 'edit_square' : 'location_on'"
+                        />
                     </a>
                 </div>
-            </div>
-            <div
+            </label>
+            <label
                 name="delivery_availability"
                 t-if="Object.keys(this.state.deliveryStockData || {}).length !== 0"
-                class="flex-row"
+                class="o_wsale_collect_option d-flex flex-column flex-fill w-100 w-md-50 p-3 cursor-pointer"
             >
-                <hr/>
-                <div class="h6">
-                    <i class="oi oi-fw text-muted" data-icon="local_shipping"/>
-                    Delivery
+                <input type="radio" class="visually-hidden" name="o_wsale_collect_mode"/>
+                <div class="mb-1 small text-muted">
+                    <i class="oi oi-fw me-1" data-icon="local_shipping"/>
+                    Shipping
+                </div>
+                <strong class="d-block mb-2 small">
+                    Standard Delivery
                     <i
-                        class="oi cursor-pointer ms-1"
+                        class="d-none d-sm-inline oi cursor-pointer ms-1"
                         data-icon="info"
                         data-tooltip="Restrictions may apply"
                         data-tooltip-delay="0"
                     />
+                </strong>
+                <div class="mt-auto small">
+                    <t t-call="website_sale_collect.StockAvailabilityMessage"
+                        available="this.state.deliveryStockData.in_stock"
+                        stockData="this.state.deliveryStockData"
+                        hasOutOfStockMessage="this.state.hasOutOfStockMessage"
+                        outOfStockMessage="this.state.outOfStockMessage"
+                    />
                 </div>
-                <t t-call="website_sale_collect.StockAvailabilityMessage"
-                    available="this.state.deliveryStockData.in_stock"
-                    stockData="this.state.deliveryStockData"
-                    hasOutOfStockMessage="this.state.hasOutOfStockMessage"
-                    outOfStockMessage="this.state.outOfStockMessage"
-                />
-            </div>
+            </label>
         </div>
     </t>
 
     <t t-name="website_sale_collect.StockAvailabilityMessage">
         <t t-if="available &amp;&amp; stockData.quantity > 0 &amp;&amp; stockData.show_quantity">
-            <div class="text-muted">
-                <i class="oi oi-fw oi-filled text-warning me-1" data-icon="circle"/>
+            <div class="text-warning">
                 <t t-out="stockData.quantity"/> <t t-out="stockData.uom_name"/>
                 in stock
             </div>
         </t>
         <div
             t-elif="hasOutOfStockMessage &amp;&amp; (!available || stockData.quantity &lt;= 0)"
-            class="d-flex align-items-baseline text-wrap gap-1 text-muted"
+            t-att-class="'text-wrap ' + (available ? 'text-success' : 'text-danger')"
         >
-            <i
-                t-att-class="'oi oi-fw oi-filled ' + (available ? 'text-success' : 'text-danger')"
-                data-icon="circle"
-            />
             <t t-out="outOfStockMessage"/>
         </div>
-        <div t-elif="available" class="text-muted">
-            <i class="oi oi-fw oi-filled text-success" data-icon="circle"/> Available
+        <div t-elif="available" class="text-success">
+            Available
         </div>
-        <div t-else="" class="text-muted">
-            <i class="oi oi-fw oi-filled text-danger" data-icon="circle"/> Not available
+        <div t-else="" class="text-danger">
+            Not available
         </div>
     </t>
 
