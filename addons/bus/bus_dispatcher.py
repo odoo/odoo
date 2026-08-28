@@ -465,7 +465,10 @@ class BusDispatcher(threading.Thread):
         ):
             return False
         del self._topic_by_channel[topic._channel]
-        self._pending_topics_by_db.get(topic._dbname, set()).discard(topic)
+        if topics := self._pending_topics_by_db.get(topic._dbname):
+            topics.discard(topic)
+            if not topics:
+                del self._pending_topics_by_db[topic._dbname]
         return True
 
     def _claim(self, dbname: str):
