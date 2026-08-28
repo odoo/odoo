@@ -1294,7 +1294,8 @@ class SaleOrder(models.Model):
             return False
 
         if not self._has_deliverable_products():
-            return bool(self.order_line)  # Empty cart => block the customer
+            # Empty cart => block the customer
+            return any(line for line in self.order_line if not line.is_delivery)
 
         # Uses list comprehension to ensure all products are checked and potential alerts are saved.
         if not all([sol._check_availability() for sol in self.order_line]):  # noqa: C419

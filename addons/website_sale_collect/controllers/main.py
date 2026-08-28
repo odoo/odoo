@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Date
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -17,17 +18,26 @@ class WebsiteSaleCollect(WebsiteSale):
         order_sudo = request.cart
         selected_location_data = {}
         single_location = len(in_store_dm_sudo.warehouse_ids) == 1
-        if (
-            order_sudo.carrier_id.delivery_type == "in_store"
-            and order_sudo.partner_shipping_id.pickup_location_data
-        ):
+        is_in_store_selected = order_sudo.carrier_id.delivery_type == "in_store"
+        estimated_dates = [
+            Date.from_string(date) for date in in_store_dm_sudo._get_estimate_delivery_days()
+        ]
+
+        if is_in_store_selected and order_sudo.partner_shipping_id.pickup_location_data:
             selected_location_data = order_sudo.partner_shipping_id.pickup_location_data
+            selected_location_data.update(
+                **order_sudo.warehouse_id._prepare_pickup_availability_data(estimated_dates=estimated_dates)
+            )
         elif single_location:
-            default_wh = in_store_dm_sudo.warehouse_ids[0]
-            selected_location_data = default_wh._prepare_pickup_location_data()
+            warehouse_sudo = in_store_dm_sudo.warehouse_ids[0]
+            selected_location_data = warehouse_sudo._prepare_pickup_location_data(
+                estimated_dates=estimated_dates
+            )
+
         res.update({
             "selected_location_data": selected_location_data,
             "show_select_store_button": not single_location,
+            "is_in_store_selected": is_in_store_selected,
             "zip_code": (  # Define the zip code.
                 order_sudo.partner_shipping_id.zip
                 or selected_location_data.get("zip_code")
@@ -39,7 +49,6 @@ class WebsiteSaleCollect(WebsiteSale):
                 or request.geoip.country_code
                 or ""
             ),
-            "delivery_method": in_store_dm_sudo,
         })
         return res
 

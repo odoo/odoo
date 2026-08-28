@@ -13,6 +13,9 @@
         <MapContainer position="attributes">
             <attribute name="taxRecomputationWarning">taxRecomputationWarning</attribute>
         </MapContainer>
+        <xpath expr="//section[hasclass('o_location_selector_view')][MapContainer]" position="attributes">
+            <attribute name="class" add="overflow-y-auto" separator=" "/>
+        </xpath>
     </t>
 
     <t t-inherit="website_sale_stock.locationSelector.searchbar" t-inherit-mode="extension">
