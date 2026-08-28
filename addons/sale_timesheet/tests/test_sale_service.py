@@ -545,7 +545,9 @@ class TestSaleService(TestCommonSaleTimesheet):
         allocated_hours_for_uom = {
             'day': 8.0,
             'hour': 1.0,
+            'minute': 0.02,
             'unit': 1.0,
+            'ton': 0.0,
         }
 
         project = self.project_global.copy({'tasks': False})
@@ -583,7 +585,11 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         tasks = project.task_ids
         for task in tasks:
-            self.assertEqual(task.allocated_hours, allocated_hours_for_uom[task.sale_line_id.name])
+            self.assertEqual(
+                task.allocated_hours,
+                allocated_hours_for_uom[task.sale_line_id.name],
+                "A unit of measure unrelated to time should not allocate hours on the task",
+            )
 
     def test_add_product_analytic_account(self):
         """ When we have a project with an analytic account and we add a product to the task,
@@ -719,6 +725,24 @@ class TestSaleService(TestCommonSaleTimesheet):
         so_copy.action_confirm()
         self.assertEqual(allocated_hours, so_copy.project_ids.allocated_hours,
                          "Timesheet encoding shouldn't affect hours allocated.")
+
+    def test_non_working_time_uom_to_hours_on_sale_order_confirmation(self):
+        """ A line sold in a unit of measure unrelated to time allocates nothing on the project. """
+        self.env['sale.order.line'].create([{
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 8,
+            'product_uom_id': self.env.ref('uom.product_uom_hour').id,
+        }, {
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 2,
+            'product_uom_id': self.env.ref('uom.product_uom_ton').id,
+        }])
+        self.sale_order.action_confirm()
+
+        self.assertEqual(self.sale_order.project_ids.allocated_hours, 8,
+                         "Only the line sold in hours should be allocated on the project.")
 
     def test_compute_project_and_task_button_with_ts(self):
         """ This test ensures that the button are correctly computed when there is a timesheet service product on a SO. The behavior was not modified in sale_timesheet, but since
