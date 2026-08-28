@@ -1862,3 +1862,26 @@ test("a computed until stale should recompute value when stale", async () => {
     expect(thread.label).toBe("label 1");
     expect.verifySteps(["compute 1"]);
 });
+
+test("a record made while the store is made reads the true store", async () => {
+    localRegistry.remove("Store");
+    (class TestStore extends Store {
+        static _name = "Store";
+        thread = fields.One("Thread", { compute: () => ({ name: "boot" }), eager: true });
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        static _name = "Thread";
+        name;
+        messages = fields.Many("Message", { inverse: "thread" });
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "id";
+        static _name = "Message";
+        id;
+        thread = fields.One("Thread", { inverse: "messages" });
+    }).register(localRegistry);
+    const store = await start();
+    expect(store.thread.name).toBe("boot");
+    expect(store.thread.messages._store).toBe(store);
+});
