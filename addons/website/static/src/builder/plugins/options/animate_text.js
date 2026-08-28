@@ -42,7 +42,7 @@ export class AnimateText extends Component {
         animateOptionProps: t.object(animateOptionProps),
         getAnimatedTextOrCreateDefault: t.function(),
         isActive: t.function(),
-        isDisabled: t.function(),
+        isDisabled: t.boolean(),
     });
 
     root = signal.ref();
@@ -92,6 +92,5 @@ export class AnimateText extends Component {
 
     updateState() {
         this.state.isActive = this.props.isActive();
-        this.state.isDisabled = this.props.isDisabled();
     }
 }

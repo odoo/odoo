@@ -51,10 +51,10 @@ export class AnimateOptionPlugin extends Plugin {
                     config: this.config.getAnimateTextConfig(),
                     getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
                     isActive: this.isAnimatedTextActive.bind(this),
-                    isDisabled: this.isAnimatedTextDisabled.bind(this),
                     animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
                 },
                 isAvailable: isHtmlContentSupported,
+                isDisabled: this.isAnimatedTextDisabled.bind(this),
             },
         ],
         toolbar_namespace_providers: [
