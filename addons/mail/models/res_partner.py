@@ -57,6 +57,15 @@ class ResPartner(models.Model):
     def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
 
+    def _search_commercial_partners(self, active_test=True):
+        """Return all partners belonging to self's commercial entity, the
+        commercial entity itself included.
+        """
+        self.ensure_one()
+        return self.env['res.partner'].with_context(active_test=active_test).search(
+            [('id', 'child_of', self.commercial_partner_id.id)],
+        )
+
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
