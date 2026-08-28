@@ -15,6 +15,7 @@
         'views/event_templates.xml',
         'views/event_track_templates_agenda.xml',
         'views/event_track_templates_list.xml',
+        'views/event_track_templates_location_display.xml',
         'views/event_track_templates_reminder.xml',
         'views/event_track_templates_page.xml',
         'views/event_track_templates_proposal.xml',
@@ -40,6 +41,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            'website_event_track/static/src/scss/event_track_location_display.scss',
             'website_event_track/static/src/scss/event_track_templates.scss',
             'website_event_track/static/src/scss/event_track_templates_online.scss',
             'website_event_track/static/src/scss/pwa_frontend.scss',

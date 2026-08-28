@@ -29,11 +29,11 @@
             </div>
             <div t-if="is_live" class="o_wevent_location_display_live_details mt-5">
                 <div class="d-flex flex-wrap gap-4">
-                    <t t-call="website_event_track_location_display.event_track_location_display_speaker"/>
+                    <t t-call="website_event_track.event_track_location_display_speaker"/>
                 </div>
             </div>
             <div t-else="" class="d-flex gap-4 flex-wrap mt-4">
-                <t t-call="website_event_track_location_display.event_track_location_display_speaker"/>
+                <t t-call="website_event_track.event_track_location_display_speaker"/>
             </div>
         </div>
     </article>
@@ -58,7 +58,7 @@
             <div t-att-class="'mt-5' if live_status in ('none', 'finished') else None">
                 <span class="badge bg-primary text-uppercase font-monospace mb-3 fs-5" t-out="formatted_track_day_label"/>
                 <div t-attf-class="o_wevent_location_display_upcoming_list border rounded px-4 #{'bg-black-25 text-white' if location_display_background_url else ''}">
-                    <t t-call="website_event_track_location_display.event_track_location_display_track" track="next_track" is_live="False"/>
+                    <t t-call="website_event_track.event_track_location_display_track" track="next_track" is_live="False"/>
                 </div>
             </div>
         </section>
@@ -77,7 +77,7 @@
         t-att-data-current-time="current_time_label"
         t-attf-class="o_wevent_location_display_content d-flex flex-column flex-grow-1 #{'pt-4 pt-lg-5' if live_status == 'live' else ''}">
         <t t-if="live_status in ('none', 'finished')">
-            <t t-call="website_event_track_location_display.event_track_location_display_empty_state"/>
+            <t t-call="website_event_track.event_track_location_display_empty_state"/>
         </t>
         <t t-elif="live_status in ('live', 'gap')">
             <section class="o_wevent_location_display_live"
@@ -87,7 +87,7 @@
                     <h2 id="o_wevent_location_display_upcoming_title" class="my-3 h1">
                         <span class="o_wevent_location_display_live_badge d-inline-block align-middle me-2 bg-danger rounded-pill"/>Live Now
                     </h2>
-                    <t t-call="website_event_track_location_display.event_track_location_display_track" track="live_track" is_live="True"/>
+                    <t t-call="website_event_track.event_track_location_display_track" track="live_track" is_live="True"/>
                 </t>
                 <div t-elif="live_status == 'gap'">
                     <h2 id="o_wevent_location_display_live_title" class="display-4-fs">Nothing planned right now</h2>
@@ -99,13 +99,13 @@
                 <h2 id="o_wevent_location_display_upcoming_title" class="my-3">Coming up</h2>
                 <div t-attf-class="o_wevent_location_display_upcoming_list border rounded px-4 #{'bg-black-25 text-white' if location_display_background_url else ''}">
                     <t t-foreach="upcoming_tracks" t-as="track">
-                        <t t-call="website_event_track_location_display.event_track_location_display_track" is_live="False" is_last="track_last"/>
+                        <t t-call="website_event_track.event_track_location_display_track" is_live="False" is_last="track_last"/>
                     </t>
                 </div>
             </section>
             <t t-elif="live_status == 'live'">
                 <t t-set="empty_section_classes" t-value="'mt-5'"/>
-                <t t-call="website_event_track_location_display.event_track_location_display_empty_state"/>
+                <t t-call="website_event_track.event_track_location_display_empty_state"/>
             </t>
         </t>
     </main>
@@ -132,7 +132,7 @@
                     <h1 class="h2 mb-0"><i class="oi me-2" data-icon="location_on" aria-hidden="true"/><t t-out="location_name"/></h1>
                 </div>
             </header>
-            <t t-call="website_event_track_location_display.event_track_location_display_content"/>
+            <t t-call="website_event_track.event_track_location_display_content"/>
             <div class="o_wevent_location_display_fade position-fixed bottom-0 start-0 end-0" aria-hidden="true"/>
             <div class="o_wevent_location_display_refresh_status position-fixed end-0 bottom-0 z-1 m-2 px-2 py-1 text-warning-emphasis small fw-semibold d-none"
                 role="status">

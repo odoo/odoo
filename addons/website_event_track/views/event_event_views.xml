@@ -14,6 +14,11 @@
                         icon="mic">
                     <field name="track_count" string="Tracks" widget="statinfo"/>
                 </button>
+                <button name="action_view_track_locations" type="object" class="oe_stat_button" icon="location_on">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Track Locations</span>
+                    </div>
+                </button>
             </div>
             <xpath expr="//*[label[@for='website_menu']]" position="after">
                 <span>
@@ -25,6 +30,10 @@
                     <label for="website_track_proposal" string="Allow Track Proposals" />
                 </span>
             </xpath>
+            <field name="badge_image" position="after">
+                <field name="location_display_background"/>
+                <field name="location_display_upcoming_track_count"/>
+            </field>
         </field>
     </record>
 

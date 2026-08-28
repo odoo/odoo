@@ -23,7 +23,6 @@ class ResConfigSettings(models.TransientModel):
     module_pos_event = fields.Boolean("Tickets with PoS")
     module_website_event_track = fields.Boolean("Tracks and Agenda")
     module_website_event_track_live = fields.Boolean("Live Mode")
-    module_website_event_track_location_display = fields.Boolean("Location Display")
     module_website_event_track_quiz = fields.Boolean("Quiz on Tracks")
     module_website_event_exhibitor = fields.Boolean("Advanced Sponsors")
     use_event_barcode = fields.Boolean(string="Use Event Barcode", help="Enable or Disable Event Barcode functionality.", config_parameter='event.use_event_barcode')
@@ -55,7 +54,6 @@ class ResConfigSettings(models.TransientModel):
             if not config.module_website_event_track:
                 config.module_website_event_track_live = False
                 config.module_website_event_track_quiz = False
-                config.module_website_event_track_location_display = False
 
     def _check_google_maps_static_api_secret(self):
         for config in self:
