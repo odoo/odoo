@@ -36,7 +36,7 @@
     </t>
 
     <t t-name="web.SearchBar.NormalFacetIcon">
-        <div class="o_searchview_facet_label d-flex position-relative rounded-2 p-1 small"
+        <div class="o_searchview_facet_label d-flex align-items-center position-relative rounded-2 p-1 small"
             t-att-role="facet.domain ? 'button' : 'img'"
             t-att-class="{
                 'o_facet_groupby': facet.type == 'groupBy',
@@ -44,24 +44,23 @@
                 'o_facet_favorite': facet.type == 'favorite'
             }"
             >
-            <i t-if="facet.icon" class="oi oi-fw oi-filled align-middle" t-att-data-icon="facet.icon" role="image"/>
+            <i t-if="facet.icon" class="oi oi-fw oi-filled" t-att-data-icon="facet.icon" role="image"/>
             <small t-else="" class="px-1 lh-1 fw-bold" t-out="facet.title"/>
 
             <!-- Editable facets' overlay -->
             <span t-if="facet.domain"
-                  class="o_facet_overlay position-absolute start-0 top-0 bottom-0 end-0 d-flex p-1 w-100 justify-content-center opacity-0 opacity-100-hover border border-transparent rounded"
+                  class="o_facet_overlay position-absolute start-0 top-0 bottom-0 end-0 d-flex p-1 w-100 align-items-center justify-content-center opacity-0 opacity-100-hover rounded-2"
                   t-att-class="{
-                        'o_facet_no_icon pe-2': !facet.icon,
+                        'o_facet_no_icon': !facet.icon,
                         'text-bg-primary': facet.type == 'field' || facet.type == 'filter',
                   }"
             >
-                <i class="oi oi-fw oi-filled align-content-around" data-icon="edit"/>
+                <i class="oi oi-fw oi-filled" data-icon="edit"/>
             </span>
             <span t-if="this.env.searchModel.canOrderByCount and facet.type === 'groupBy' and !this.env.searchModel.orderByCount"
-                class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
-                t-att-class="{'px-2 transition-base': !facet.icon}"
+                class="position-absolute start-0 top-0 bottom-0 end-0 d-flex align-items-center justify-content-center bg-inherit rounded-2 opacity-0 opacity-100-hover"
                 >
-                <i class="oi oi-fw ms-1 mt-1" data-icon="swap_vert"/>
+                <i class="oi oi-fw" data-icon="swap_vert"/>
             </span>
         </div>
     </t>
