@@ -207,12 +207,9 @@ export class RecordListInternal {
      */
     proxyGet(name, recordListProxy) {
         const recordList = this.recordList;
-        if (name === "data") {
-            return this.data();
-        }
         if (
             typeof name === "symbol" ||
-            Object.keys(recordList).includes(name) ||
+            (name !== "length" && Object.hasOwn(recordList, name)) ||
             Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
         ) {
             let res = Reflect.get(recordList, name, recordListProxy);
@@ -230,9 +227,9 @@ export class RecordListInternal {
         if (name === "length") {
             return this.data().length;
         }
-        if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
+        const index = parseInt(name);
+        if (!window.isNaN(index)) {
             // support for "array[index]" syntax
-            const index = parseInt(name);
             return this.data()[index]?._proxy;
         }
         // Attempt an unimplemented array method call
@@ -284,8 +281,6 @@ export class RecordListInternal {
                     self.data().length = newLength;
                     self.syncLength();
                 }
-            } else if (name === "data") {
-                self.data.set(val);
             } else {
                 return Reflect.set(recordList, name, val, recordListProxy);
             }
@@ -296,7 +291,7 @@ export class RecordListInternal {
         this.owner._.fieldsComputeInNeed.set(this.name, true);
     }
     /**
-     * Sync reclist.data length with array length, as to not introduce confusion while debugging
+     * Sync the data length with the array length, as to not introduce confusion while debugging
      */
     syncLength() {
         this.recordList.length = this.data().length;
