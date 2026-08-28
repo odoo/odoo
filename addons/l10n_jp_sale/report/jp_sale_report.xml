@@ -12,17 +12,14 @@
 
             <xpath expr="//th[@name='th_priceunit']" position="replace">
                 <t t-set="jp_currency_label" t-value="doc.currency_id.name if doc.currency_id.name != 'JPY' else '円'"/>
-                <th name="th_priceunit" class="text-end text-nowrap" t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'">
-                    <span t-out="'Unit Price (%s)' % jp_currency_label"/>
-                </th>
-                <th name="th_priceunit" class="text-end text-nowrap" t-else="">
-                    Unit Price
+                <th name="th_priceunit" class="text-end text-nowrap">
+                    <span>Unit Price<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></span>
                 </th>
             </xpath>
 
             <xpath expr="//th[@name='th_subtotal']/span" position="replace">
-                <span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="'Amount (%s)' % jp_currency_label"/>
-                <span t-else="">Amount</span>
+                <t t-set="jp_currency_label" t-value="doc.currency_id.name if doc.currency_id.name != 'JPY' else '円'"/>
+                <span>Amount<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></span>
             </xpath>
         </template>
     </data>
