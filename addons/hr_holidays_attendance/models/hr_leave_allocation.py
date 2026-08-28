@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import pytz
 from datetime import datetime
 
 from odoo import api, fields, models, _
@@ -97,9 +97,11 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         if level.frequency != 'hourly' or level.frequency_hourly_source != 'attendance':
             return super()._get_accrual_plan_level_work_entry_prorata(level, start_period, start_date, end_period, end_date)
+        calendar = self.employee_id.resource_calendar_id or self.employee_company_id.resource_calendar_id
+        tz = pytz.timezone(calendar.tz or self.employee_id.tz or 'UTC')
         datetime_min_time = datetime.min.time()
-        start_dt = datetime.combine(start_date, datetime_min_time)
-        end_dt = datetime.combine(end_date, datetime_min_time)
+        start_dt = tz.localize(datetime.combine(start_date, datetime_min_time)).astimezone(pytz.utc).replace(tzinfo=None)
+        end_dt = tz.localize(datetime.combine(end_date, datetime_min_time)).astimezone(pytz.utc).replace(tzinfo=None)
 
         # Search for any attendance overlapping the window
         attendances = self.env['hr.attendance'].sudo().search([
@@ -110,6 +112,16 @@ class HolidaysAllocation(models.Model):
 
         total_worked_hours = 0.0
         for attendance in attendances:
-            total_worked_hours += attendance._get_worked_hours_in_range(start_dt, end_dt)
+            worked_hours = attendance._get_worked_hours_in_range(start_dt, end_dt)
+            unapproved_overtime = max(0.0, attendance.overtime_hours - attendance.validated_overtime_hours)
+            if worked_hours and unapproved_overtime:
+                total_attendance_hours = attendance.worked_hours or attendance._get_worked_hours_in_range(attendance.check_in, attendance.check_out)
+                if total_attendance_hours:
+                    # Overtime is stored as an amount on the attendance, not as explicit
+                    # sub-intervals. Split refused overtime proportionally so it is not
+                    # subtracted more than once across multiple accrual windows.
+                    unapproved_overtime *= min(1.0, worked_hours / total_attendance_hours)
+                worked_hours = max(0.0, worked_hours - unapproved_overtime)
+            total_worked_hours += worked_hours
 
         return total_worked_hours
