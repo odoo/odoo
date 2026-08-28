@@ -1477,16 +1477,27 @@ class Many2many(_RelationalMulti):
                 self.read(records.browse(missing_ids))
 
         # determine new relation {x: ys}
-        old_relation = {record.id: set(record[self.name]._ids) for record in records.sudo()}
+        #
+        # sudo() is only needed to see the full DB relation for a *stored*
+        # field. For a non-stored, context-dependent field (e.g.
+        # depends_context('uid')), it reads/caches a different bucket than
+        # the one being written, which can poison it with a stale empty
+        # value.
+        relation_records = records.sudo() if self.store else records
+        old_relation = {record.id: set(record[self.name]._ids) for record in relation_records}
         if records.env.context.get('active_test', True):
             old_inactive_relation = {
                 record.id: set(record[self.name]._ids) - old_relation[record.id]
-                for record in records.sudo().with_context(active_test=False)
+                for record in relation_records.with_context(active_test=False)
             }
         else:
             old_inactive_relation = None
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
-        inaccessible_coids = set() if model.env.su else set(records.sudo()[self.name]._ids) - set(records[self.name]._ids)
+        inaccessible_coids = (
+            set()
+            if not self.store or model.env.su
+            else set(records.sudo()[self.name]._ids) - set(records[self.name]._ids)
+        )
         added_ids = set()
 
         # operations on new relation

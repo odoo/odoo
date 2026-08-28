@@ -81,3 +81,16 @@ class Many2manyCase(TransactionCase):
         # check that otherwise, attachments are filtered
         self.patch(field, 'bypass_search_access', False)
         self.assertEqual(record.m2m_attachment_ids, attachment.browse())
+
+    def test_non_stored_many2many_write_keeps_previous_values(self):
+        user = new_test_user(self.env, 'non_stored_m2m_user')
+        tag1, tag2 = self.env['test_orm.multi.tag'].create([{'name': 'Tag 1'}, {'name': 'Tag 2'}])
+        record = self.env['test_orm.non_stored_m2m'].create({}).with_user(user)
+
+        record.write({'tag_ids': [Command.link(tag1.id)]})
+        self.env.invalidate_all()
+        self.assertEqual(record.tag_ids, tag1)
+
+        record.write({'tag_ids': [Command.link(tag2.id)]})
+        self.env.invalidate_all()
+        self.assertEqual(record.tag_ids, tag1 + tag2)
