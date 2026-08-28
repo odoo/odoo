@@ -463,6 +463,7 @@ class ProductProduct(models.Model):
             template = product.product_tmpl_id
             if len(template.with_context(active_test=False).product_variant_ids) == 1 and not template.has_configurable_attributes:
                 template.list_price = product.lst_price
+                product.invalidate_recordset(['list_price'])
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
