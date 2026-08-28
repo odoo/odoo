@@ -61,6 +61,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': self.purchase_order.ids,
+            'default_accrual_type': 'bill_to_receive',
         }).create({
             'account_id': self.account_expense.id,
             'date': '2020-01-01',
@@ -118,6 +119,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': self.purchase_order.ids,
+            'default_accrual_type': 'billed_not_received',
         }).create({
             'account_id': self.company_data['default_account_expense'].id,
             'date': '2020-01-02',
@@ -221,6 +223,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
+            'default_accrual_type': 'billed_not_received',
         }).create({
             'account_id': account_receivable.id,
             'date': '2025-05-31',
@@ -246,6 +249,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
+            'default_accrual_type': 'billed_not_received',
         }).create({
             'account_id': account_receivable.id,
             'date': fields.Date.today() - relativedelta(days=7),
@@ -271,6 +275,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
+            'default_accrual_type': 'billed_not_received',
         }).create({
             'account_id': account_receivable.id,
             'date': fields.Date.today() - relativedelta(days=1),
@@ -296,6 +301,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
+            'default_accrual_type': 'billed_not_received',
         }).create({
             'account_id': account_receivable.id,
             'date': fields.Date.today(),
@@ -327,6 +333,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': self.purchase_order.ids,
+            'default_accrual_type': 'bill_to_receive',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.context_today(self),

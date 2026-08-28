@@ -23,6 +23,16 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     def _get_default_date(self):
         return date_utils.get_month(fields.Date.context_today(self))[0] - relativedelta(days=1)
 
+    accrual_type = fields.Selection(
+        string="Accrual Type",
+        selection=[
+            ('bill_to_receive', "Bills to receive"),
+            ('billed_not_received', "Billed not received"),
+            ('invoice_to_be_issued', "Invoices to be issued"),
+            ('invoiced_not_delivered', "Invoiced not delivered"),
+        ],
+        required=True,
+    )
     company_id = fields.Many2one('res.company', default=_get_default_company)
     journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -47,13 +57,37 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         help='Utility field to express amount currency')
     account_id = fields.Many2one(
         comodel_name='account.account',
+        compute='_compute_account_id',
         required=True,
+        readonly=False,
+        store=True,
         string='Accrual Account',
         check_company=True,
         domain="[('account_type', '=', 'liability_current')] if context.get('active_model') in ['purchase.order', 'purchase.order.line'] else [('account_type', '=', 'asset_current')]",
     )
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
+    duplicate_entry_id = fields.Many2one(comodel_name='account.move', compute='_compute_duplicate_entry')
+    duplicate_price_total = fields.Monetary(related='duplicate_entry_id.amount_total')
+
+    @api.depends('company_id', 'accrual_type')
+    def _compute_account_id(self):
+        for record in self:
+            if record.account_id:
+                continue
+
+            accrual_type = record.accrual_type
+            company_id = record._get_default_company() or self.env.company.id
+
+            if accrual_type and company_id:
+                key = f'account_accrued_orders_wizard.last_account_{accrual_type}_{company_id}'
+
+                if last_account_id := self.env['ir.config_parameter'].sudo().get_int(key):
+                    if account := self.env['account.account'].browse(last_account_id).exists():
+                        record.account_id = account
+                        continue
+
+            record.account_id = False
 
     @api.depends('date', 'amount')
     def _compute_display_amount(self):
@@ -79,7 +113,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 ('type', '=', 'general')
             ], limit=1)
 
-    @api.depends('date', 'journal_id', 'account_id', 'amount')
+    @api.depends('date', 'journal_id', 'account_id', 'amount', 'accrual_type')
     def _compute_preview_data(self):
         for record in self:
             preview_vals = [self.env['account.move']._move_dict_to_preview_vals(
@@ -98,6 +132,22 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     'columns': preview_columns,
                 },
             })
+
+    @api.depends('date', 'journal_id', 'preview_data')
+    def _compute_duplicate_entry(self):
+        for record in self:
+            if not record.preview_data:
+                record.duplicate_entry_id = False
+                continue
+
+            data = json.loads(record.preview_data)
+            ref = data['groups_vals'][0]['group_name'].split(', ')[1]
+            record.duplicate_entry_id = self.env['account.move'].search([
+                ('date', '=', record.date),
+                ('journal_id', '=', record.journal_id.id),
+                ('ref', '=', ref),
+                ('state', 'in', ('draft', 'posted')),
+            ], order='id desc', limit=1)
 
     def _get_computed_account(self, order, product, is_purchase):
         accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
@@ -355,9 +405,13 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         for values in price_diff_values:
             move_lines.append(Command.create(values))
 
-        move_type = _('Expense') if is_purchase else _('Revenue')
+        ref = None
+        if accrual_type_string := dict(self._fields['accrual_type']._description_selection(self.env)).get(self.accrual_type):
+            date = format_date(self.env, self.date)
+            ref = _("%(accrual_type)s entry as of %(date)s", accrual_type=accrual_type_string, date=date)
+
         move_vals = {
-            'ref': _('Accrued %(entry_type)s entry as of %(date)s', entry_type=move_type, date=format_date(self.env, self.date)),
+            'ref': ref,
             'name': '/',
             'journal_id': self.journal_id.id,
             'date': self.date,
@@ -379,8 +433,28 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     def create_entries(self):
         self.ensure_one()
 
+        if (accrual_type := self.accrual_type) and self.account_id:
+            key = f'account_accrued_orders_wizard.last_account_{accrual_type}_{self.company_id.id}'
+            self.env['ir.config_parameter'].sudo().set_int(key, self.account_id.id)
+
         if self.reversal_date <= self.date:
             raise UserError(_('Reversal date must be posterior to date.'))
+
+        # Try to unlink the duplicate entry and its reversal
+        if self.duplicate_entry_id:
+            original_reverse_entry = self.env['account.move'].search([
+                ('reversed_entry_id', '=', self.duplicate_entry_id.id),
+            ])
+
+            moves_to_delete = self.duplicate_entry_id | original_reverse_entry
+            moves_to_delete._unlink_or_reverse(default_values_list=[
+                {
+                    'ref': _("Reversal of: %s", move.ref),
+                    'date': self.date if move == self.duplicate_entry_id else self.reversal_date,
+                }
+                for move in moves_to_delete
+            ])
+
         move_vals, orders_with_entries = self._compute_move_vals()
         move = self.env['account.move'].create(move_vals)
         move._post()
@@ -399,6 +473,18 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             'view_mode': 'list,form',
             'domain': [('id', 'in', (move | reverse_move).ids)],
         }
+
+    def open_duplicate(self):
+        self.ensure_one()
+        if self.duplicate_entry_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Duplicate Entry',
+                'res_model': 'account.move',
+                'res_id': self.duplicate_entry_id.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
 
     @api.model
     def _get_product_expense_and_stock_var_accounts(self, product):

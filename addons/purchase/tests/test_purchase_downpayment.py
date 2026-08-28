@@ -110,6 +110,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
             active_model='purchase.order',
             active_ids=po.ids,
+            default_accrual_type='bill_to_receive',
         ).create({
             'account_id': self.company_data['default_account_expense'].id,
             'date': fields.Date.today(),

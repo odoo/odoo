@@ -94,6 +94,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': '2020-01-01',
@@ -151,6 +152,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
+            'default_accrual_type': 'invoiced_not_delivered',
         }).create({
             'account_id': self.company_data['default_account_expense'].id,
             'date': '2020-01-02',
@@ -225,6 +227,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -263,6 +266,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_2.id],
+            'default_accrual_type': 'invoiced_not_delivered',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -344,6 +348,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order.line',
             'active_ids': sale_order.order_line.ids,
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -427,6 +432,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order.line',
             'active_ids': sale_order.order_line.ids,
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -499,6 +505,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -566,6 +573,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -593,6 +601,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order_1.id],
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -640,6 +649,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context(
             active_model='sale.order',
             active_ids=sale_order.ids,
+            default_accrual_type='invoice_to_be_issued',
         ).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
@@ -707,6 +717,7 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         wizard = self.env['account.accrued.orders.wizard'].with_context({
             'active_model': 'sale.order',
             'active_ids': (sale_order_1 | sale_order_2).ids,
+            'default_accrual_type': 'invoice_to_be_issued',
         }).create({
             'account_id': self.account_expense.id,
             'date': fields.Date.today(),
