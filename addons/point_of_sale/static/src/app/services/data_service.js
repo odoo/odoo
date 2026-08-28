@@ -419,18 +419,6 @@ export class PosData extends Reactive {
 
         this.models.loadConnectedData(data, this.modelToLoad);
         this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
-        this.sanitizeData();
-    }
-
-    async sanitizeData() {
-        const order_to_delete = this.models["pos.order"].filter((order) =>
-            order.lines.some((line) => line.is_reward_line && !line.coupon_id && !line.reward_id)
-        );
-        for (const order of order_to_delete) {
-            for (let i = order.lines.length - 1; i >= 0; i--) {
-                order.lines[i].delete();
-            }
-        }
     }
 
     async loadFieldsAndRelations() {
