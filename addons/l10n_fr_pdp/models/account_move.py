@@ -455,11 +455,12 @@ class AccountMove(models.Model):
         'state',
     )
     def _compute_l10n_fr_pdp_flow_10_operation_type(self):
+        matched_map = self._l10n_fr_pdp_get_matched_transactions_map()
         for move in self:
             if move.state == 'draft' or not move.company_id.l10n_fr_f10_enable_reporting:
                 move.l10n_fr_pdp_flow_10_operation_type = None
                 continue
-            matched = move._l10n_fr_pdp_get_matched_transactions()
+            matched = matched_map.get(move.id)
             tagret_move = matched[0] if matched else move
             if tagret_move._l10n_fr_pdp_is_purchase():
                 move.l10n_fr_pdp_flow_10_operation_type = 'purchase'
@@ -479,13 +480,20 @@ class AccountMove(models.Model):
         'state',
     )
     def _compute_l10n_fr_pdp_flow_10_report_type(self):
+        matched_map = self._l10n_fr_pdp_get_matched_transactions_map()
+        start_dates = {
+            company: company._pdp_get_flow_10_start_date()
+            for company in self.company_id
+        }
         for move in self:
+            start_date = start_dates.get(move.company_id)
+            matched = matched_map.get(move.id)
             if (
                 move.state == 'draft'
                 or not move.company_id.l10n_fr_f10_enable_reporting
-                or not move.company_id._pdp_get_flow_10_start_date()
-                or move.date < move.company_id._pdp_get_flow_10_start_date()
-                or not move._l10n_fr_pdp_get_transaction_type()  # is b2bi or b2c
+                or not start_date
+                or move.date < start_date
+                or not move._l10n_fr_pdp_get_transaction_type(matched)  # is b2bi or b2c
             ):
                 move.l10n_fr_pdp_flow_10_report_type = None
                 continue
@@ -494,7 +502,7 @@ class AccountMove(models.Model):
             if is_purchase or is_sale:
                 move.l10n_fr_pdp_flow_10_report_type = 'transaction'
             elif move.move_type == 'entry':
-                if move._l10n_fr_pdp_get_matched_transactions():
+                if matched:
                     move.l10n_fr_pdp_flow_10_report_type = 'payment'
                 else:
                     if move.l10n_fr_pdp_sent_in_flow_ids:
@@ -516,6 +524,25 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # Business Methods
     # -------------------------------------------------------------------------
+
+    def _l10n_fr_pdp_get_matched_transactions_map(self):
+        entries = self.filtered(lambda move: move.move_type == 'entry')
+        if not entries:
+            return {}
+        counterparts_per_payment = {
+            move.id: move._get_reconciled_amls().move_id
+            for move in entries
+        }
+        eligible = self.browse().union(*counterparts_per_payment.values()).filtered(
+            lambda move: move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
+                move._is_downpayment()
+                or any(tax.tax_exigibility == 'on_payment' for tax in move.invoice_line_ids.tax_ids)
+            )
+        )
+        return {
+            move_id: counterparts & eligible
+            for move_id, counterparts in counterparts_per_payment.items()
+        }
 
     def _l10n_fr_pdp_get_matched_transactions(self):
         """If self is a payment move, this method returns the transactions it's paying."""
@@ -580,11 +607,13 @@ class AccountMove(models.Model):
             referenced += self.debit_origin_id
         return referenced
 
-    def _l10n_fr_pdp_get_transaction_type(self):
+    def _l10n_fr_pdp_get_transaction_type(self, matched_moves=None):
         """Classify invoice for PDP reporting: b2c, b2bi, or False (domestic B2B)."""
         self.ensure_one()
 
-        if matched_moves := self._l10n_fr_pdp_get_matched_transactions():
+        if matched_moves is None:
+            matched_moves = self._l10n_fr_pdp_get_matched_transactions()
+        if matched_moves:
             # if payment, get matched move transaction type
             move = matched_moves[0]
         else:
