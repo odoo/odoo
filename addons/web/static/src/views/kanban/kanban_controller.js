@@ -22,7 +22,7 @@ import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
-import { useProgressBar } from "./progress_bar_hook";
+import { ProgressBarState, useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
 import {
@@ -57,6 +57,7 @@ export class KanbanController extends Component {
         CogMenu: KanbanCogMenu,
         SelectionBox,
     };
+    static ProgressBarStateClass = ProgressBarState;
     props = useProps({
         ...standardViewProps,
         editable: t.boolean().optional(),
@@ -116,10 +117,13 @@ export class KanbanController extends Component {
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
-                archInfo.progressAttributes,
-                this.model,
-                this.progressBarAggregateFields,
-                activeBars
+                {
+                    progressAttributes: archInfo.progressAttributes,
+                    model: this.model,
+                    aggregateFields: this.progressBarAggregateFields,
+                    activeBars: activeBars,
+                },
+                this.constructor.ProgressBarStateClass
             );
         }
         this.headerButtons = archInfo.headerButtons;
