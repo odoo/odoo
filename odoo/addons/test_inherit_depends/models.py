@@ -3,6 +3,6 @@
 from odoo import models
 
 
-class PublishedFoo(models.Model):
-    _name = 'test_new_api.foo'
-    _inherit = ['test_new_api.foo', 'test_inherit.mixin']
+class Test_New_ApiMove_Line(models.Model):
+    _name = 'test_new_api.move'
+    _inherit = ['test_new_api.move', 'test_inherit.mixin']
