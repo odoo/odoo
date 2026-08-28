@@ -40,7 +40,7 @@ function _groupsToAggregateValues(groups, groupBy, fields, domain) {
     });
 }
 
-class ProgressBarState {
+export class ProgressBarState {
     constructor(progressAttributes, model, aggregateFields, activeBars = {}) {
         this.progressAttributes = progressAttributes;
         this.model = model;
@@ -362,9 +362,12 @@ class ProgressBarState {
     }
 }
 
-export function useProgressBar(progressAttributes, model, aggregateFields, activeBars) {
+export function useProgressBar(
+    { progressAttributes, model, aggregateFields, activeBars },
+    ProgressBarStateClass = ProgressBarState
+) {
     const progressBarState = proxy(
-        new ProgressBarState(progressAttributes, model, aggregateFields, activeBars)
+        new ProgressBarStateClass(progressAttributes, model, aggregateFields, activeBars)
     );
 
     const onWillLoadRoot = model.hooks.onWillLoadRoot;
