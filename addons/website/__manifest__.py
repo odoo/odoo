@@ -333,6 +333,7 @@
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
+            'portal/static/src/scss/portal.edit.*',
             'website/static/src/**/*.edit.*',
             'website/static/src/core/website_edit_service.js',
         ],
@@ -523,6 +524,7 @@
             'website/static/src/components/googleplaces_autocomplete/*',
             ('remove', 'website/static/src/builder/**/*.edit.*'),
             'website/static/src/js/send_mail_form.js',
+            'google_recaptcha/static/src/xml/recaptcha.xml',
         ],
         'html_builder.iframe_add_dialog': [
             'website/static/src/snippets/**/*.preview.scss',
