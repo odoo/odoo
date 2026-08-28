@@ -558,9 +558,135 @@ export class PosDataPlugin extends Plugin {
             },
             []
         );
+<<<<<<< 45f3f69b2991901995d22d07f3b36895b3351b72:addons/point_of_sale/static/src/app/plugins/pos_data_plugin.js
     }
 
     async initializeDataRelation() {
+||||||| 159f15bb18718f2b5fe83861608fca1010b12aae:addons/point_of_sale/static/src/app/services/data_service.js
+        this.sanitizeData();
+    }
+
+    async sanitizeData() {
+        const order_to_delete = this.models["pos.order"].filter((order) =>
+            order.lines.some((line) => line.is_reward_line && !line.coupon_id && !line.reward_id)
+        );
+        for (const order of order_to_delete) {
+            for (let i = order.lines.length - 1; i >= 0; i--) {
+                order.lines[i].delete();
+            }
+        }
+    }
+
+    async loadFieldsAndRelations() {
+        const key = `pos_data_params_${odoo.pos_config_id}`;
+        if (this.network.offline) {
+            return JSON.parse(localStorage.getItem(key));
+        }
+
+        try {
+            const params = await this.orm.call("pos.session", "load_data_params", [
+                odoo.pos_session_id,
+            ]);
+            localStorage.setItem(key, JSON.stringify(params));
+            return params;
+        } catch {
+            return JSON.parse(localStorage.getItem(key));
+        }
+    }
+
+    async intializeDataRelation() {
+        // Here the order is important. loadFieldsAndRelations will load all the information
+        // about the models loaded in the PoS. Then initIndexedDB needs it to update/create
+        // the indexedDB. loadInitialData needs indexedDB, so it comes at the end.
+        const modelClasses = {};
+        const fields = {};
+        const relations = {};
+        const dataParams = await this.loadFieldsAndRelations();
+        await this.initIndexedDB(dataParams);
+
+        for (const [model, values] of Object.entries(dataParams)) {
+            relations[model] = values.relations;
+            fields[model] = values.fields;
+        }
+
+        for (const posModel of registry.category("pos_available_models").getAll()) {
+            const pythonModel = posModel.pythonModel;
+            const extraFields = posModel.extraFields || {};
+
+            modelClasses[pythonModel] = posModel;
+            relations[pythonModel] = {
+                ...relations[pythonModel],
+                ...extraFields,
+            };
+        }
+
+        const { models } = createRelatedModels(relations, modelClasses, this.opts);
+
+        this.fields = fields;
+        this.relations = relations;
+        this.models = models;
+
+        if (odoo.debug === "assets") {
+            window.performance.mark("pos_data_service_init");
+        }
+
+=======
+    }
+
+    async loadFieldsAndRelations() {
+        const key = `pos_data_params_${odoo.pos_config_id}`;
+        if (this.network.offline) {
+            return JSON.parse(localStorage.getItem(key));
+        }
+
+        try {
+            const params = await this.orm.call("pos.session", "load_data_params", [
+                odoo.pos_session_id,
+            ]);
+            localStorage.setItem(key, JSON.stringify(params));
+            return params;
+        } catch {
+            return JSON.parse(localStorage.getItem(key));
+        }
+    }
+
+    async intializeDataRelation() {
+        // Here the order is important. loadFieldsAndRelations will load all the information
+        // about the models loaded in the PoS. Then initIndexedDB needs it to update/create
+        // the indexedDB. loadInitialData needs indexedDB, so it comes at the end.
+        const modelClasses = {};
+        const fields = {};
+        const relations = {};
+        const dataParams = await this.loadFieldsAndRelations();
+        await this.initIndexedDB(dataParams);
+
+        for (const [model, values] of Object.entries(dataParams)) {
+            relations[model] = values.relations;
+            fields[model] = values.fields;
+        }
+
+        for (const posModel of registry.category("pos_available_models").getAll()) {
+            const pythonModel = posModel.pythonModel;
+            const extraFields = posModel.extraFields || {};
+
+            modelClasses[pythonModel] = posModel;
+            relations[pythonModel] = {
+                ...relations[pythonModel],
+                ...extraFields,
+            };
+        }
+
+        const { models } = createRelatedModels(relations, modelClasses, this.opts);
+
+        this.fields = fields;
+        this.relations = relations;
+        this.models = models;
+
+        if (odoo.debug === "assets") {
+            window.performance.mark("pos_data_service_init");
+        }
+
+>>>>>>> 0b723fde8addc0d9d3fe3ca90e466ebcffd3d7a9:addons/point_of_sale/static/src/app/services/data_service.js
         await this.initData();
         await this.getLocalDataFromIndexedDB();
         this.initListeners();
