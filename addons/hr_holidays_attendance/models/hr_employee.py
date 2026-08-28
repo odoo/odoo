@@ -36,7 +36,7 @@ class HrEmployee(models.Model):
                 ('state', 'in', ['confirm', 'validate', 'validate1']),
             ],
             groupby=['employee_id'],
-            aggregates=['number_of_hours_display:sum'],
+            aggregates=['number_of_hours:sum'],
         ):
             diff_by_employee[employee] -= hours
         return diff_by_employee

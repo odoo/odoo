@@ -52,7 +52,7 @@ class HrLeaveReport(models.Model):
                     allocation.employee_id as employee_id,
                     allocation.name as name,
                     allocation.number_of_days as number_of_days,
-                    allocation.number_of_hours_display as number_of_hours,
+                    allocation.number_of_hours as number_of_hours,
                     v.department_id as department_id,
                     allocation.work_entry_type_id as work_entry_type_id,
                     allocation.state as state,

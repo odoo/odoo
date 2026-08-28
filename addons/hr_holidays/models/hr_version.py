@@ -120,15 +120,15 @@ class HrVersion(models.Model):
 
         if 'resource_calendar_id' in vals:
             # Hour-based allocations store their duration in number_of_days, from
-            # which the accrued hours (number_of_hours_display) are derived using
+            # which the accrued hours (number_of_hours) are derived using
             # the employee's hours per day. When the working schedule changes
             # number_of_days is left stale: the next accrual adds to it and
-            # number_of_hours_display is then recomputed at the new hours per day,
+            # number_of_hours is then recomputed at the new hours per day,
             # revaluing the hours accrued under the old schedule and losing part of
             # the balance. Recompute number_of_days now from the still-correct
-            # number_of_hours_display so the accrued hours are preserved. It is set
+            # number_of_hours so the accrued hours are preserved. It is set
             # explicitly rather than through the compute graph because
-            # number_of_days and number_of_hours_display depend on each other and
+            # number_of_days and number_of_hours depend on each other and
             # the recomputation order is not guaranteed.
             allocations = self.env['hr.leave.allocation'].search([
                 ('employee_id', 'in', self.employee_id.ids),
@@ -137,7 +137,7 @@ class HrVersion(models.Model):
             for allocation in hour_allocations:
                 hours_per_day = allocation.employee_id._get_hours_per_day(allocation.date_from)
                 if hours_per_day:
-                    allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+                    allocation.number_of_days = allocation.number_of_hours / hours_per_day
 
         return result
 

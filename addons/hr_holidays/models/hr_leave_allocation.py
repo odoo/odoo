@@ -105,8 +105,8 @@ class HrLeaveAllocation(models.Model):
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
-    number_of_hours_display = fields.Float(
-        'Duration (hours)', default_export_compatible=True, compute='_compute_number_of_hours_display', store=True,
+    number_of_hours = fields.Float(
+        'Duration (hours)', default_export_compatible=True, compute='_compute_number_of_hours', store=True,
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
@@ -216,6 +216,12 @@ class HrLeaveAllocation(models.Model):
     def _compute_leaves(self):
         date_from = fields.Date.context_today(self)
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from, ignore_future=True)[0]
+        self._set_leaves_from_consumption_data(employee_days_per_allocation)
+
+    def _set_leaves_from_consumption_data(self, employee_days_per_allocation):
+        """Assign max_leaves/leaves_taken/virtual_remaining_leaves from an already-fetched
+        _get_consumed_leaves() result, so extensions can reuse the same fetch (see
+        l10n_be_hr_payroll)."""
         for allocation in self:
             origin = allocation._origin
             virtual_leave = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]
@@ -229,17 +235,17 @@ class HrLeaveAllocation(models.Model):
             allocation.number_of_days_display = allocation.number_of_days
 
     @api.depends('number_of_days', 'employee_id')
-    def _compute_number_of_hours_display(self):
+    def _compute_number_of_hours(self):
         for allocation in self:
             if not allocation.employee_id:
                 continue
-            allocation.number_of_hours_display = (allocation.number_of_days * allocation.employee_id._get_hours_per_day(allocation.date_from))
+            allocation.number_of_hours = (allocation.number_of_days * allocation.employee_id._get_hours_per_day(allocation.date_from))
 
-    @api.depends('number_of_hours_display', 'number_of_days_display')
+    @api.depends('number_of_hours', 'number_of_days_display')
     def _compute_duration_display(self):
         for allocation in self:
             allocation.duration_display = '%g %s' % (
-                (float_round(allocation.number_of_hours_display, precision_digits=2)
+                (float_round(allocation.number_of_hours, precision_digits=2)
                 if allocation.type_request_unit == 'hour'
                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
@@ -289,14 +295,14 @@ class HrLeaveAllocation(models.Model):
                     default_work_entry_type_id = self._default_work_entry_type_id()
                 allocation.work_entry_type_id = default_work_entry_type_id
 
-    @api.depends('work_entry_type_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit', 'employee_id')
+    @api.depends('work_entry_type_id', 'number_of_hours', 'number_of_days_display', 'type_request_unit', 'employee_id')
     def _compute_number_of_days(self):
         for allocation in self:
             allocation_unit = allocation.type_request_unit
             if allocation_unit != 'hour':
                 allocation.number_of_days = allocation.number_of_days_display
             elif allocation_unit == 'hour' and allocation.employee_id:
-                allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_id._get_hours_per_day(allocation.date_from)
+                allocation.number_of_days = allocation.number_of_hours / allocation.employee_id._get_hours_per_day(allocation.date_from)
 
     @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
     def _check_negative_allocation(self):
@@ -318,8 +324,8 @@ class HrLeaveAllocation(models.Model):
                 ('date_to', '>=', allocation.date_from),
             ]
             is_hour_allocation = allocation.type_request_unit == 'hour'
-            aggregate_field = 'number_of_hours_display' if is_hour_allocation else 'number_of_days'
-            current_amount = allocation.number_of_hours_display if is_hour_allocation else allocation.number_of_days
+            aggregate_field = 'number_of_hours' if is_hour_allocation else 'number_of_days'
+            current_amount = allocation.number_of_hours if is_hour_allocation else allocation.number_of_days
             negative_total, = self.env['hr.leave.allocation']._read_group(domain, aggregates=[f'{aggregate_field}:sum'])[0]
             total_negative = -(current_amount + (negative_total or 0))
             max_negative = allocation.work_entry_type_id.max_allowed_negative
@@ -745,7 +751,7 @@ class HrLeaveAllocation(models.Model):
         fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
         if self.work_entry_type_id.unit_of_measure == 'hour':
-            res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
+            res = float_round(fake_allocation.number_of_hours - self.number_of_hours, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
         fake_allocation._discard_fake_allocation()
@@ -805,7 +811,7 @@ class HrLeaveAllocation(models.Model):
         for allocation in self:
             allocation.display_name = _("Allocation of %(work_entry_type)s: %(amount).2f %(unit)s to %(target)s",
                 work_entry_type=allocation.work_entry_type_id.sudo().name,
-                amount=allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
+                amount=allocation.number_of_hours if allocation.type_request_unit == 'hour' else allocation.number_of_days,
                 unit=_('hours') if allocation.type_request_unit == 'hour' else _('days'),
                 target=allocation.employee_id.name,
             )
@@ -882,7 +888,7 @@ class HrLeaveAllocation(models.Model):
 
         self.add_follower(employee_id)
 
-        tracked_fields = {'number_of_days_display', 'number_of_hours_display', 'state', 'date_to'}
+        tracked_fields = {'number_of_days_display', 'number_of_hours', 'state', 'date_to'}
         tracked_updates = tracked_fields.intersection(values)
         if not tracked_updates:
             res = super().write(values)
@@ -1036,7 +1042,7 @@ class HrLeaveAllocation(models.Model):
             'nextcall': False,
             'number_of_days': 0.0,
             'number_of_days_display': 0.0,
-            'number_of_hours_display': 0.0,
+            'number_of_hours': 0.0,
             'already_accrued': False,
             'carried_over_days_expiration_date': False,
             'expiring_carryover_days': 0

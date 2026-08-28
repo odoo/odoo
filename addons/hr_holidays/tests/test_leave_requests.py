@@ -552,7 +552,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             "Timezone should be be adapted on the employee leave"
         )
 
-    def test_number_of_hours_display(self):
+    def test_number_of_hours(self):
         # Test that the field number_of_hours_dispay doesn't change
         # after time off validation, as it takes the attendances
         # minus the resource leaves to compute that field.
@@ -620,7 +620,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave2.action_approve()
         self.assertEqual(leave2.number_of_hours, 4)
 
-    def test_number_of_hours_display_flexible_calendar(self):
+    def test_number_of_hours_flexible_calendar(self):
         # Test that the field number_of_hours_dispay do change for flexible calendars
         calendar = self.env['resource.calendar'].create({
             'name': 'Full Time 24h/8day',
@@ -735,7 +735,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(leave5.number_of_hours, 10)
 
-    def test_number_of_hours_display_global_leave(self):
+    def test_number_of_hours_global_leave(self):
         # Check that the field number_of_hours
         # takes the global leaves into account, even
         # after validation
