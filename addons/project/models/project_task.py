@@ -2353,7 +2353,7 @@ class ProjectTask(models.Model):
             error_notification['params']['message'] = self.env._('Task templates cannot be shared.')
             return error_notification
         if self.project_privacy_visibility in ['followers', 'employees']:
-            error_notification['params']['message'] = self.env._('Sharing is not available with this project visibility setting.')
+            error_notification['params']['message'] = self.env._('This project can’t be shared with external people.')
             return error_notification
         return self.env['ir.actions.actions']._for_xml_id('project.portal_share_action')
 
