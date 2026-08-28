@@ -258,14 +258,32 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         }
         self._check_results(expected_aml, 4, all_amls)
 
-    def test_dropship_bill_standard_price_update(self):
-        """ Test that the price of the product is updated when the bill has a different
-        price than the Purchase order
+    def test_dropship_average_no_std_price_impact(self):
+        """ Test that a dropship move does not impact the avco computation of the
+        standard price
         """
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self._dropship_product1(bill_price=15)
-        self.assertEqual(self.product1.standard_price, 15)
+        # in move @ 10
+        in_move = self.env['stock.move'].create({
+            'product_id': self.product1.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom_qty': 1,
+            'value_manual': 10,
+        })
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.move_line_ids.quantity = 1
+        in_move.picked = True
+        in_move._action_done()
+        self.assertEqual(self.product1.standard_price, 10)
+
+        # dropship @ 8
+        self._dropship_product1(bill_price=8)
+
+        # check that standard price is still 10
+        self.assertEqual(self.product1.standard_price, 10)
 
     def test_dropship_return_to_internal_location_is_valued(self):
         """Returning a dropshipped delivery into the company's own stock, instead

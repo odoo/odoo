@@ -72,9 +72,7 @@ class TestLotValuation(TestStockValuationCommon):
         # Dropship: product goes supplier->customer (not via stock)
         # Net effect: lots have 0 stock, so total_value = 0
         self.assertEqual(self.lot1.total_value, 0)
-        self.assertEqual(self.lot1.standard_price, 5)
         self.assertEqual(self.lot2.total_value, 0)
-        self.assertEqual(self.lot2.standard_price, 5)
         self.assertEqual(self.product.total_value, 0)
 
     def test_real_time_valuation(self):
