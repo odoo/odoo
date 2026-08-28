@@ -162,7 +162,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalaccept"
                                 href="#"
-                                t-att-class="'btn btn-primary' if not sale_order.transaction_ids else 'btn btn-light'"
+                                t-att-class="'btn btn-primary' if not sale_order._is_payment_started() else 'btn btn-light'"
                             >
                                 <t t-if="not sale_order.signature
                                              and sale_order._has_to_be_paid()
@@ -301,10 +301,9 @@
                         Your order is not in a state to be rejected.
                     </div>
 
-                    <t t-set="current_tx" t-value="sale_order.get_portal_last_transaction()"/>
-                    <!-- hide state header when invoice is posted for current transaction. -->
-                    <t t-if="current_tx and not (len(current_tx.invoice_ids) == 1 and current_tx.invoice_ids.state == 'posted')">
-                        <t t-call="payment.state_header" tx="current_tx"/>
+                    <!-- Direct feedback on the payment the visitor has just made, if any. -->
+                    <t t-if="feedback_tx_sudo">
+                        <t t-call="payment.state_header" tx="feedback_tx_sudo"/>
                     </t>
 
                     <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissible d-print-none" role="alert">
@@ -335,7 +334,14 @@
                             </a>
                         </t>
                         <t t-elif="sale_order._has_to_be_paid()">
-                            <a role="button" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'btn btn-lg rounded %s' % ('btn-light' if sale_order.transaction_ids else 'btn-primary')">
+                            <a
+                                role="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalaccept"
+                                href="#"
+                                t-att-class="'btn btn-lg rounded %s' % ('btn-light'
+                                    if sale_order._is_payment_started() else 'btn-primary')"
+                            >
                                 <t t-if="not sale_order.signature">Accept &amp; Pay</t>
                                 <t t-else="">Pay Now</t>
                             </a>
@@ -413,7 +419,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalaccept"
                                 href="#"
-                                t-att-class="'btn flex-grow-1 ' + ('btn-primary' if not sale_order.transaction_ids else 'btn-light')">
+                                t-att-class="'btn flex-grow-1 ' + ('btn-primary' if not sale_order._is_payment_started() else 'btn-light')">
                                 <t t-if="not sale_order.signature
                                         and sale_order._has_to_be_paid()
                                         and not payment_amount">Accept &amp; Pay</t>
@@ -647,16 +653,6 @@
                             target="_blank">
                             <i class="oi" data-icon="download"/>
                         </a>
-                    </div>
-                </div>
-                <div class="d-flex flex-column align-items-end flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0"
-                    id="transaction_info">
-                    <div
-                        t-if="sale_order.get_portal_last_transaction() and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error"
-                        t-att-data-order-id="sale_order.id">
-                        <t t-if="sale_order.transaction_ids">
-                            <t t-call="payment.state_header" tx="sale_order.get_portal_last_transaction()"/>
-                        </t>
                     </div>
                 </div>
             </div>

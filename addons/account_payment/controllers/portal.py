@@ -6,6 +6,7 @@ from odoo.http import request
 
 from odoo.addons.account.controllers import portal
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.controllers.payment_status import PaymentStatus
 from odoo.addons.payment.controllers.portal import PaymentPortal
 
 
@@ -15,6 +16,11 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         # EXTENDS account
 
         values = super()._invoice_get_page_view_values(invoice, access_token, amount=amount, **kwargs)
+
+        # The payment the visitor has just made, if any, to give them direct feedback on it.
+        values['feedback_tx_sudo'] = PaymentStatus._get_monitored_transaction(invoice.env).filtered(
+            lambda tx: invoice in tx.invoice_ids
+        )
 
         if not invoice._has_to_be_paid():
             # Do not compute payment-related stuff if given invoice doesn't have to be paid.

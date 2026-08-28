@@ -96,10 +96,25 @@ class AccountMove(models.Model):
             errors.append(_("There are pending transactions for this invoice."))
         return '\n'.join(errors)
 
-    @api.private
-    def get_portal_last_transaction(self):
-        self.ensure_one()
-        return self.with_context(active_test=False).sudo().transaction_ids._get_last()
+    def _get_payment_status(self):
+        # EXTENDS 'account'
+        status = super()._get_payment_status()
+        if status not in ('not_paid', 'partial'):
+            return status  # The accounting entries already answer the question.
+
+        # Consider every transaction rather than the last one: with several transactions, the last
+        # one alone can't tell whether an earlier payment is still securing part of the amount.
+        transactions = self.with_context(active_test=False).sudo().transaction_ids
+        if any(tx.state == 'authorized' for tx in transactions):
+            return 'authorized'
+        if any(
+            tx.state == 'pending' and tx.provider_code not in ('none', 'custom')
+            for tx in transactions
+        ):
+            # A pending transaction on a custom provider (e.g. a wire transfer) only means that the
+            # customer said they would pay, so it isn't reported as a payment in progress.
+            return 'pending'
+        return status
 
     def payment_action_capture(self):
         """ Capture all transactions linked to this invoice. """

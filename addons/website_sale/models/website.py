@@ -804,8 +804,7 @@ class Website(models.Model):
 
             if sale_order_sudo and (
                 sale_order_sudo.state != "draft"
-                or sale_order_sudo.get_portal_last_transaction().state
-                in {"pending", "authorized", "done"}
+                or sale_order_sudo._is_payment_started()
                 or sale_order_sudo.website_id != self
             ):
                 self.sale_reset()
