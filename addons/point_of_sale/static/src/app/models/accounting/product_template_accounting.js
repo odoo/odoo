@@ -133,7 +133,7 @@ export class ProductTemplateAccounting extends Base {
 
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
-                price = this.getPrice(rule.base_pricelist_id, quantity, 0, true, variant);
+                price = this.getPrice(rule.base_pricelist_id, quantity, price_extra, true, variant);
             }
         } else if (rule.base === "standard_price") {
             price = standardPrice;
