@@ -101,6 +101,11 @@ class PaymentTransaction(models.Model):
         payload = {"out_trade_no": self.reference}
         result = self._send_api_request("POST", "/trade/v1/query", data=payload)
         if result.get("respcd") != "0000":
+            _logger.info(
+                "QFPay: Failed to query transaction data for %s: %s",
+                self.reference,
+                result.get("respmsg") or result.get("resperr"),
+            )
             return None
 
         payment_data = next(iter(result.get("data") or []), None)

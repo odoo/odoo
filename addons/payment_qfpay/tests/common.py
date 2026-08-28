@@ -19,7 +19,6 @@ class QFPayCommon(PaymentCommon):
         cls.mock_intent_response = {
             "respcd": "0000",
             "payment_intent": "mock-payment-intent-token",
-            "intent_expiry": "2026-12-31 23:59:59",
         }
         cls.webhook_data = {
             "out_trade_no": cls.reference,

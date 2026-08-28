@@ -84,21 +84,16 @@ class PaymentProvider(models.Model):
         sorting by key and joining in query format.
 
         :param dict data: Optional mapping used to build the signing string.
-        :param str|bytes signing_string: Optional raw signing input before app key.
+        :param bytes signing_string: Optional raw signing input before app key.
         :return: The calculated signature.
         :rtype: str
         """
-        if signing_string:
-            if isinstance(signing_string, bytes):
-                signing_input = signing_string
-            else:
-                signing_input = str(signing_string).encode("utf-8")
-        else:
+        if signing_string is None:
             data = data or {}
             items = sorted([(k, str(v)) for k, v in data.items()])
-            signing_input = "&".join(f"{k}={v}" for k, v in items).encode("utf-8")
+            signing_string = "&".join(f"{k}={v}" for k, v in items).encode("utf-8")
 
-        payload = signing_input + (self.qfpay_app_key or "").encode("utf-8")
+        payload = signing_string + (self.qfpay_app_key or "").encode("utf-8")
         return hashlib.md5(payload).hexdigest().upper()
 
     # === REQUEST HELPERS === #

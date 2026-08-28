@@ -68,3 +68,22 @@ class TestProcessingFlows(QFPayCommon, PaymentHttpCommon):
 
         self.assertEqual(signature_check_mock.call_count, 1)
         self.assertEqual(record_mock.call_count, 1)
+
+    @mute_logger("odoo.addons.payment_qfpay.controllers.main", "odoo.addons.payment.utils")
+    def test_webhook_notification_with_invalid_signature_rejects_processing(self):
+        """Test that a webhook with an invalid signature does not process the transaction."""
+        self._create_transaction("direct")
+        url = self._build_url(const.WEBHOOK_ROUTE)
+
+        with patch(
+            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+        ) as record_mock:
+            response = self.url_open(
+                url,
+                data=self.webhook_raw_body,
+                headers={"Content-Type": "application/json", "X-QF-SIGN": "invalid_signature"},
+                method="POST",
+            )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(record_mock.call_count, 0)

@@ -5,11 +5,6 @@ import { PaymentForm } from "@payment/interactions/payment_form";
 import { QFPayWalletDialog } from "@payment_qfpay/qfpay_wallet_dialog/qfpay_wallet_dialog";
 
 patch(PaymentForm.prototype, {
-    setup() {
-        super.setup();
-        this._paymentCancelled = false; // Track whether the user dismissed the wallet dialog.
-    },
-
     // #=== DOM MANIPULATION ===#
 
     /**
@@ -64,25 +59,22 @@ patch(PaymentForm.prototype, {
                         txcurrcd: processingValues.txcurrcd,
                         returnUrl: processingValues.return_url,
                         onPaymentComplete: resolve,
+                        onPaymentError: reject,
                     },
                     {
                         onClose: () => {
-                            this._paymentCancelled = true;
                             this._enableButton();
-                            reject();
+                            resolve();
                         },
                     }
                 );
             });
         } catch (error) {
-            if (!this._paymentCancelled) {
-                this._displayErrorDialog(
-                    _t("Payment Error"),
-                    error?.message || _t("An unexpected error occurred during payment.")
-                );
-                this._enableButton();
-            }
+            this._displayErrorDialog(
+                _t("Payment Error"),
+                error?.message || _t("An unexpected error occurred during payment.")
+            );
+            this._enableButton();
         }
-        this._paymentCancelled = false;
     },
 });

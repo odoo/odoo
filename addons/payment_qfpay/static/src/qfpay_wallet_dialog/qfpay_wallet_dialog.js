@@ -21,6 +21,7 @@ export class QFPayWalletDialog extends Component {
         txcurrcd: String,
         returnUrl: String,
         onPaymentComplete: Function,
+        onPaymentError: Function,
     };
 
     walletRef = signal.ref();
@@ -52,7 +53,7 @@ export class QFPayWalletDialog extends Component {
                     );
                 qfpayInstance
                     .confirmWalletPayment({ return_url: this.props.returnUrl })
-                    .then(this.props.onPaymentComplete);
+                    .then(this.props.onPaymentComplete, this.props.onPaymentError);
                 return () => qfpayInstance.destroy();
             },
             () => []
