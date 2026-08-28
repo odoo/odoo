@@ -34,6 +34,9 @@ stocks as Venezuela does with out invoices.
 
 If you install this module, and select Custom chart a basic chart will be proposed,
 but you will need set manually account defaults for taxes.
+
+The proposed chart follows SENIAT practice, with VAT rates of 0%, 8%, 16%
+and 31%.
 """,
     'depends': [
         'account',
