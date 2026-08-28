@@ -364,7 +364,7 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def download_batch_status(self, number):
+    def download_batch_status(self, number, date_from, date_to):
         try:
             response = self._make_request("GET", f"{self.api_url}/invoices/exports/{number}")
             json_response = response.json()
@@ -374,13 +374,17 @@ class KsefApiService:
             return {
                 'number': number,
                 'status': json_response['status']['code'],
+                'date_from': fields.Datetime.to_string(date_from),
+                'date_to': fields.Datetime.to_string(date_to),
                 'parts': {
-                    part['name']: {
-                        'name': part['name'],
+                    part['partName']: {
+                        'name': part['partName'],
                         'url': part['url'],
                         'method': (part['method'] or '').upper(),
                         'number': part['ordinalNumber'],
-                        'batch_number': json_response['ordinalNumber'],
+                        'size': part['partSize'],
+                        'unencrypted_size': part['encryptedPartSize'],
+                        'batch_number': number,
                     }
                     for part in json_response.get('package', {}).get('parts', [])
                 },
@@ -388,7 +392,7 @@ class KsefApiService:
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
 
-    def download_batch_request(self, date_from, date_to, encryption_data, subject_type="Subject3"):
+    def download_batch_request(self, date_from, date_to, encryption_data, subject_type="Subject1"):
         dates = {"from": format_time(date_from), "to": format_time(date_to), "dateType": "Invoicing"}
         payload = {**encryption_data, "filters": {"subjectType": subject_type, "dateRange": dates}}
         try:

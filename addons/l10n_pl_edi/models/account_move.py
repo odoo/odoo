@@ -1,13 +1,10 @@
 import base64
 import contextlib
-# import io
 import json
 import logging
 import re
-# import zipfile
 from decimal import Decimal
 from hashlib import sha256
-# from pathlib import Path
 from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
@@ -19,9 +16,19 @@ from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 from odoo.exceptions import UserError
 from odoo.tools import OrderedSet, float_compare, float_is_zero, float_repr
 
-KSEF_WINDOW = 1
+KSEF_CURRENT_WINDOW = 3
+KSEF_WINDOW = 30
 KSEF_INTERVAL = 1
+KSEF_FIRST_DAY = fields.Date.from_string('2026-01-31')
 _logger = logging.getLogger(__name__)
+
+
+def today_datetime():
+    return fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+
+def unpack(x, *fields):
+    return [x.get(field) for field in fields]
 
 
 class AccountMove(models.Model):
@@ -679,43 +686,49 @@ class AccountMove(models.Model):
 
         return get_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
 
-    # def _l10n_pl_edi_get_last_download_date(self, company):
-    #     first_day = fields.Datetime.to_string(max(
-    #         fields.Date.today().replace(month=1, day=1),
-    #         fields.Date.from_string('2026-01-31'),
-    #     ))
-    #     Param = self.env['ir.config_parameter'].sudo()
-    #     param_name = f'l10n_pl_edi.last_downloaded_date_{company.id}'
-    #     last_date = fields.Datetime.from_string(Param.get_param(param_name, first_day))
-    #     _logger.info("Last date: %s", last_date)
-    #     return last_date
+    def _decode_fa3_ksef(self, invoice, file_data, new):
+        xml_content = file_data.get('content')
+        move_vals = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
 
-    # def _l10n_pl_edi_set_last_download_date(self, company, date):
-    #     Param = self.env['ir.config_parameter'].sudo()
-    #     date_str = fields.Datetime.to_string(date)
-    #     return Param.set_param(f'l10n_pl_edi.last_downloaded_date_{company.id}', date_str)
+        if move_vals:
+            invoice.write(move_vals)
+            return True
+
+        return False
+
+    def _get_edi_decoder(self, file_data, new=False):
+        if file_data.get('type') == 'xml' and file_data.get('xml_tree') is not None:
+            tree = file_data['xml_tree']
+            kod_node = tree.find('.//{*}KodFormularza')
+            if kod_node is not None and kod_node.get('kodSystemowy') == 'FA (3)':
+                return self._decode_fa3_ksef
+
+        return super()._get_edi_decoder(file_data, new=new)
+
+    def _l10n_pl_edi_move_back_date(self, date=None, days=KSEF_WINDOW):
+        return max(KSEF_FIRST_DAY, date + relativedelta(days=-days))
+
+    def _l10n_pl_edi_get_last_historic_date(self, company):
+        return max(
+            fields.Date.from_string(
+                self.env['ir.config_parameter'].sudo().get_param(
+                    f'l10n_pl_edi.last_historic_date_{company.id}',
+                    self._l10n_pl_edi_move_back_date(fields.Date.today(), days=KSEF_CURRENT_WINDOW)
+                )
+            ),
+            KSEF_FIRST_DAY,
+        )
+
+    def _l10n_pl_edi_move_last_historic_date(self, company):
+        return self.env['ir.config_parameter'].sudo().set_param(
+            f'l10n_pl_edi.last_historic_date_{company.id}',
+            fields.Date.to_string(
+                self._l10n_pl_edi_move_back_date(self._l10n_pl_edi_get_last_historic_date(company)),
+            ),
+        )
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
-
-        # def get_batch_status(service, batch_ticket):
-        #     batch_status = service.download_batch_status(batch_ticket)
-        #     if 'error' in batch_status:
-        #         _logger.info('error: %s', batch_ticket['error'])
-        #         return False
-        #     return Attachment._l10n_pl_edi_set_batch(batch_ticket['number'], json.dumps(batch_status))
-
-        # def get_next_batch(service, days=KSEF_INTERVAL):
-        #     date_from = self._l10n_pl_edi_get_last_download_date(company).date()
-        #     today = fields.Date.today()
-        #     if date_from <= today:
-        #         date_to = min(today, date_from + relativedelta(days=days))
-        #         _symmetric_key, _raw_iv, encryption_data = service._create_encryption_data()
-        #         if batch_ticket := service.download_batch_request(date_from, date_to, encryption_data):
-        #             if 'error' in batch_ticket:
-        #                 _logger.info('error: %s', batch_ticket['error'])
-        #                 return False
-        #             return get_batch_status(service, batch_ticket)
 
         # def batch_finished(company, batch_attachment, batch_data, parts_attachments):
         #     Journal = self.env['account.journal'].with_context(default_move_type='in_invoice')
@@ -740,98 +753,103 @@ class AccountMove(models.Model):
         #     (parts_attachments + batch_attachment).unlink()
         #     return True
 
-        # def handle_batch(service, company, batch_data):
-        #     match batch_data.get('status'):
-        #         case 100:  # retry get batch status
-        #             get_batch_status(service, batch_data)
-        #         case 200:  # save parts for download
-        #             return Attachment._l10n_pl_edi_set_parts(company, batch_data['parts'])
-        #         case _:  # error
-        #             batch.unlink()
-        #     return False
-
-        # def import_part(part):
-        #     """ Import moves from downloaded parts"""
-        #     return True
-
-        retrigger = False
+        info = dict.fromkeys(('to_delete', 'to_download', 'retriggered', 'retrigger', 'retry_after'), False)
         for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
-            # retrigger |= self._l10n_pl_edi_request_bills_recent(company)
-            # retrigger |= self._l10n_pl_edi_request_bills_historic(company)
-            retrigger |= self._l10n_pl_edi_process_batches(company)
 
-        _logger.info("retrigger: %s", retrigger)
-        if retrigger:
+            self._l10n_pl_edi_check_batches(company, info)
+
+            if not info['retriggered']:
+                self._l10n_pl_edi_request_bills_recent(company, info)
+            if info.get('retry_after'):
+                continue
+
+            self._l10n_pl_edi_request_bills_historic(company, info)
+            if info.get('retry_after'):
+                continue
+
+            self._l10n_pl_edi_download_batches(company, info['to_download'])
+            info['to_delete'].unlink()
+
+        if info['retrigger']:
+            seconds = info.get('retry_after') or (KSEF_INTERVAL * 60)
+            _logger.info("Retriggering (%ss)...", seconds)
             self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')._trigger(
-                at=fields.Datetime.now() + relativedelta(seconds=KSEF_INTERVAL)
+                at=fields.Datetime.now() + relativedelta(seconds=seconds)
             )
 
-    def _l10n_pl_edi_request_bills_recent(self, company):
+    def _l10n_pl_edi_download_batches(self, company, batches):
+        for batch in batches:
+            batch_data = json.loads(batch.raw.decode())
+            name, date_from, date_to = batch.name, batch_data['date_from'], batch_data['date_to']
+            _logger.info("KSeF batch %s, %s - %s", name, date_from, date_to)
+            for part_name, values in batch_data['parts'].items():
+                _logger.info("%s:%s", part_name, values)
+
+    def _l10n_pl_edi_request_bills_recent(self, company, info):
         """ Always download all recent invoices, no matter if we already have a batch for that period.
             When we'll run this cron every interval, we'll just skip all the moves we already have.
             Keep this interval small, so the download will be small.
         """
         date_to = fields.Date.context_today(self)
-        date_from = date_to + relativedelta(days=-KSEF_WINDOW)
-        return self._l10n_pl_edi_request_batch(company, date_from, date_to)
+        date_from = date_to + relativedelta(days=-KSEF_CURRENT_WINDOW)
+        return self._l10n_pl_edi_request_batch(company, date_from, date_to, info)
 
-    def _l10n_pl_edi_request_batch(self, company, date_from, date_to):
+    def _l10n_pl_edi_request_batch(self, company, date_from, date_to, info):
         service = KsefApiService(company)
         _symmetric_key, _raw_iv, encryption_data = service._create_encryption_data()
         if batch_ticket := service.download_batch_request(date_from, date_to, encryption_data):
-            if 'error' in batch_ticket:
-                _logger.info('error: %s', batch_ticket['error'])
-                return False
+            if error := batch_ticket.get('error'):
+                info['retrigger'] = True
+                info['retry_after'] = error.get('retry_after')
+                return error
             batch_number = batch_ticket['number']
-            if batch_status := service.download_batch_status(batch_number):
+            if batch_status := service.download_batch_status(batch_number, date_from, date_to):
                 batch_status_json = json.dumps(batch_status, indent=4)
                 self.env['ir.attachment']._l10n_pl_edi_create_batch(batch_number, batch_status_json)
             if self._can_commit():
                 self.env.cr.commit()
-        return bool(batch_ticket)
 
-    def _l10n_pl_edi_request_bills_historic(self, company):
-        return False
+    def _l10n_pl_edi_request_bills_historic(self, company, info):
+        date_to = self._l10n_pl_edi_get_last_historic_date(company)
+        if date_to > KSEF_FIRST_DAY:
+            date_from = self._l10n_pl_edi_move_back_date(date_to)
+            if error := self._l10n_pl_edi_request_batch(company, date_from, date_to, info):
+                info['retrigger'] = True
+                info['retry_after'] = error.get('retry_after')
+                return
+            self._l10n_pl_edi_move_last_historic_date(company)
+            # If we have more, retrigger this for later, so we get another slice
+            info['retrigger'] = date_from >= KSEF_FIRST_DAY
 
-    def _l10n_pl_edi_process_batches(self, company):
+    def _l10n_pl_edi_check_batches(self, company, info):
         service = KsefApiService(company)
-        for batch in self.env['ir.attachment']._l10n_pl_edi_get_batches():
+        to_download = to_delete = Attachment = self.env['ir.attachment']
+        retriggered, retrigger = False, info['retrigger']
+        for batch in Attachment._l10n_pl_edi_get_batches():
             batch_data = json.loads(batch.raw.decode())
-            number, status, parts = batch_data['number'], batch_data['status'], batch_data['parts']
-            match status:
+            is_old = batch.create_date < today_datetime()
+            retriggered |= not is_old
+            match batch_data['status']:
                 case 200:
-                    if not parts:
-                        _logger.info("KSeF batch '%s' is empty, unlinking...", batch_data['number'])
-                        batch.unlink()
-                        continue
-                    for part in batch_data['parts']:
-                        _logger.info(json.dumps(part, indent=4))
-                    return True
+                    # Set as to download, and to delete if old
+                    if is_old:
+                        to_delete |= batch
+                    to_download |= batch
                 case 100:
                     # Ask for a new state
-                    if batch_status := service.download_batch_(number):
+                    number, date_from_str, date_to_str = unpack(batch_data, 'number', 'date_from', 'date_to')
+                    date_from, date_to = fields.Datetime.from_string(date_from_str), fields.Datetime.from_string(date_to_str)
+                    if batch_status := service.download_batch_status(number, date_from, date_to):
                         batch.raw = json.dumps(batch_status, indent=4).encode()
-                    return True
+                        retrigger = True
                 case _:
-                    # error!
-                    pass
-        return False
-
-    def _decode_fa3_ksef(self, invoice, file_data, new):
-        xml_content = file_data.get('content')
-        move_vals = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
-
-        if move_vals:
-            invoice.write(move_vals)
-            return True
-
-        return False
-
-    def _get_edi_decoder(self, file_data, new=False):
-        if file_data.get('type') == 'xml' and file_data.get('xml_tree') is not None:
-            tree = file_data['xml_tree']
-            kod_node = tree.find('.//{*}KodFormularza')
-            if kod_node is not None and kod_node.get('kodSystemowy') == 'FA (3)':
-                return self._decode_fa3_ksef
-
-        return super()._get_edi_decoder(file_data, new=new)
+                    # Warn the user and then delete
+                    date_from, date_to, error = batch_data['date_from'], batch_data['date_to'], batch_data.get('error')
+                    _logger.error("KSeF batch %s..%s has failed download: %s", date_from, date_to, error)
+                    to_delete |= batch
+        return info.update({
+            'to_delete': to_delete,
+            'to_download': to_download,
+            'retriggered': retriggered,
+            'retrigger': retrigger,
+        })

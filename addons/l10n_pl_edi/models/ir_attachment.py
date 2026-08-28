@@ -33,9 +33,9 @@ class IrAttachment(models.Model):
             'raw': payload or b'',
         })
 
-    def _l10n_pl_edi_get_batches(self, batch_number="%"):
+    def _l10n_pl_edi_get_batches(self):
         return self.search([
-            ('name', 'ilike', f'ksef_batch_{batch_number}.json'),
+            ('name', 'ilike', 'ksef_batch_%.json'),
             ('type', '=', 'binary'),
             ('mimetype', '=', 'application/json'),
             ('res_model', '=', 'ir.cron'),

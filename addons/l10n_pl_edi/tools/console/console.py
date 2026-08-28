@@ -193,6 +193,11 @@ class KsefApiService:
     def __init__(self, mode="test", cache_dir="."):
         assert mode != "prod"  # FFS, dont use in production
 
+        self.script_dir = Path(__file__).resolve().parent
+        self.cert_dir = self.script_dir.parent.parent / "tests" / "certificate"
+        self.cert_path = self.cert_dir / "l10n_pl_edi_test.pem"
+        self.key_path = self.cert_dir / "l10n_pl_edi_test.key"
+
         self.mode = mode
         self.api_url = (
             "https://api.ksef.mf.gov.pl/v2"
@@ -210,6 +215,7 @@ class KsefApiService:
         self.batch_reference = None
         self.export_symmetric_key = None
         self.export_iv = None
+        self.nip = None
 
         self.load_cache()
 
@@ -223,6 +229,11 @@ class KsefApiService:
             "export_symmetric_key_b64": b64(self.export_symmetric_key) if self.export_symmetric_key else None,
             "export_iv_b64": b64(self.export_iv) if self.export_iv else None,
             "updated_at": datetime.now(timezone.utc).isoformat(),
+            "nip": extract_nip_from_cert(self.cert_path),
+            "script_dir": str(self.script_dir),
+            "cert_dir": str(self.cert_dir),
+            "cert_path": str(self.cert_path),
+            "key_path": str(self.key_path),
         }
         self.cache_file.write_text(json.dumps(data, indent=2))
 
@@ -233,6 +244,7 @@ class KsefApiService:
         self.access_token = data.get("access_token")
         self.refresh_token = data.get("refresh_token")
         self.session_id = data.get("session_id")
+        self.nip = data.get("nip")
         if data.get("raw_symmetric_key_b64"):
             self.raw_symmetric_key = base64.b64decode(data["raw_symmetric_key_b64"])
         if data.get("raw_iv_b64"):
@@ -489,6 +501,7 @@ class KsefApiService:
                 },
             },
         }
+        print(f"get_request_download_batch: {json.dumps(json_data, indent=4)}")
         res = self._make_request("POST", endpoint, json=json_data).json()
         self.batch_reference = res.get("referenceNumber")
         self.save_cache()
@@ -1065,12 +1078,7 @@ def main():
     service = KsefApiService(mode="test")
     password = "Qwertyuiop@12345"
 
-    script_dir = Path(__file__).resolve().parent
-    cert_dir = script_dir.parent.parent / "tests" / "certificate"
-    cert_path = cert_dir / "l10n_pl_edi_test.pem"
-    key_path = cert_dir / "l10n_pl_edi_test.key"
-
-    menu_actions = get_menu_actions(service, cert_path, key_path, password)
+    menu_actions = get_menu_actions(service, service.cert_path, service.key_path, password)
 
     os.system("clear")
     while True:
