@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="product.ProductCatalogSearchPanel">
-    <t t-if="this.uiService.isSmall">
-        <t t-call="product.SearchPanel.MobileDrawer" />
-    </t>
-    <t t-else="">
-        <t t-if="this.state.sidebarExpanded" t-call="web.SearchPanel.Regular" />
-        <t t-else="" t-call="web.SearchPanel.Sidebar" />
-    </t>
+<t t-name="product.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+    <xpath expr="//t[@t-call='web.SearchPanel.Small']" position="replace">
+        <t t-call="product.SearchPanel.MobileDrawer"/>
+    </xpath>
 </t>
 
 <t t-name="product.SearchPanel.MobileDrawer">
     <div class="o_catalog_search_panel_mobile">
         <button
-            class="o_catalog_search_panel_toggle btn btn-secondary d-flex align-items-center gap-2"
+            class="btn btn-secondary d-flex align-items-center gap-2 m-2"
             title="Open filters"
             aria-label="Open filters"
             t-on-click="() => this.openMobileDrawer()"
         >
-            <i class="oi oi-lg oi-panel-right"/>
+            <i class="oi oi-lg" data-icon="right_panel_open"/>
         </button>
 
         <div
@@ -35,7 +31,7 @@
                     <b>Filters</b>
                     <button
                         type="button"
-                        class="btn-close"
+                        class="btn btn-close"
                         aria-label="Close"
                         t-on-click="() => this.closeMobileDrawer()"
                     />

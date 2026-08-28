@@ -2,7 +2,6 @@ import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 export class ProductCatalogSearchPanel extends SearchPanel {
     static template = "product.ProductCatalogSearchPanel";
-    static subTemplates = SearchPanel.subTemplates;
 
     setup() {
         super.setup();

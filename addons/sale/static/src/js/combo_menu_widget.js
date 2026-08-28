@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
@@ -9,16 +9,14 @@ import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
 export class ComboMenuWidget extends Component {
     static template = "sale.ComboMenuWidget";
     static components = { Dropdown, DropdownItem };
-    static props = { ...standardWidgetProps };
+    props = useProps(standardWidgetProps);
 
     setup() {
         this.orm = useService("orm");
         this.dialog = useService("dialog");
 
-        this.state = proxy({ comboProducts: [] });
-
         onWillStart(async () => {
-            this.state.comboProducts = await this.orm.searchRead(
+            this.comboProducts = await this.orm.searchRead(
                 "product.product",
                 [["type", "=", "combo"]],
                 ["id", "display_name"],
@@ -31,9 +29,9 @@ export class ComboMenuWidget extends Component {
     }
 
     async onComboProductSelected(product) {
-        const comboLineRecord = await this.orderLineList.addNewRecord({ mode: "readonly" });
-        await comboLineRecord.update({
-            product_id: { id: product.id, display_name: product.display_name },
+        const comboLineRecord = await this.orderLineList.addNewRecord({
+            mode: "readonly",
+            context: { default_product_id: product.id },
         });
 
         await openComboConfigurator({ dialog: this.dialog, comboLineRecord, edit: false });

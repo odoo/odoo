@@ -1,7 +1,6 @@
 import { rpc } from "@web/core/network/rpc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { uuid } from "@web/core/utils/strings";
-
 import { ComboConfiguratorDialog } from "@sale/js/combo_configurator_dialog/combo_configurator_dialog";
 import { ProductCombo } from "@sale/js/models/product_combo";
 import { clearSelectedComboItems, serializeComboItem } from "@sale/js/sale_utils";
@@ -20,7 +19,7 @@ import { clearSelectedComboItems, serializeComboItem } from "@sale/js/sale_utils
 export async function openComboConfigurator({
     dialog,
     comboLineRecord,
-    edit,
+    edit = false,
     selectedComboItems = [],
     additionalRpcParams = {},
     additionalDialogProps = {},
@@ -46,7 +45,7 @@ export async function openComboConfigurator({
     };
     const discard = () => saleOrder.order_line.delete(comboLineRecord);
 
-    if (edit) {
+    if (!edit) {
         const preselectedComboItems = comboChoices
             .map(combo => combo.preselectedComboItem)
             .filter(Boolean);

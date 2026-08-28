@@ -8,12 +8,11 @@ import {
     getSectionRecords,
     sectionAndNoteFieldOne2Many,
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
+import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
+import { clearSelectedComboItems, getSelectedComboItems } from "@sale/js/sale_utils";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-
-import { openComboConfigurator } from "@sale/js/combo_configurator_utils";
-import { clearSelectedComboItems, getSelectedComboItems } from "@sale/js/sale_utils";
 import { useService } from "@web/core/utils/hooks";
 
 function getComboRecords(listRecords, record) {

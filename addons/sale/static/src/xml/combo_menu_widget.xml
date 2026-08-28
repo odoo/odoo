@@ -7,12 +7,12 @@
                 Combo
             </button>
             <t t-set-slot="content">
-                <t t-if="!this.state.comboProducts.length">
+                <t t-if="!this.comboProducts.length">
                     <DropdownItem tag="'span'" class="'text-muted'">
                         No Combo Product Available
                     </DropdownItem>
                 </t>
-                <t t-foreach="this.state.comboProducts" t-as="product" t-key="product.id">
+                <t t-foreach="this.comboProducts" t-as="product" t-key="product.id">
                     <DropdownItem
                         tag="'button'"
                         class="'btn btn-link'"

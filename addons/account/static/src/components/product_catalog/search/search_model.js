@@ -12,8 +12,8 @@ export class AccountProductCatalogSearchModel extends SearchModel {
     async load(config) {
         await super.load(config);
 
-        this.showSections = config.context.show_sections;
-        if (!this.showSections) {
+        const showSections = config.context.show_sections;
+        if (!showSections) {
             return;
         }
 

@@ -7,7 +7,12 @@
                 Discounts
             </button>
             <t t-set-slot="content">
-                <DropdownItem t-if="this.state.canManualDiscount" tag="'button'" class="'btn btn-link'" onSelected="() => this.openDiscountWizard()">
+                <DropdownItem
+                    t-if="this.canAddManualDiscount"
+                    tag="'button'"
+                    class="'btn btn-link'"
+                    onSelected="() => this.doActionButton('object', 'action_open_discount_wizard')"
+                >
                     Manual Discount
                 </DropdownItem>
             </t>

@@ -19,12 +19,7 @@
         "views/sale_loyalty_menus.xml",
         "security/ir.access.csv",
     ],
-    "assets": {
-        "web.assets_backend": [
-            "sale_loyalty/static/src/js/discount_menu_widget.js",
-            "sale_loyalty/static/src/xml/discount_menu_widget.xml",
-        ]
-    },
+    "assets": {"web.assets_backend": ["sale_loyalty/static/src/xml/discount_menu_widget.xml"]},
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",
     "license": "LGPL-3",
