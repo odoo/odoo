@@ -11,5 +11,21 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="mail_activity_log_view_form_hr" model="ir.ui.view">
+            <field name="name">hr.activity.log.view.form</field>
+            <field name="model">mail.activity.schedule</field>
+            <field name="inherit_id" ref="mail.mail_activity_log_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='contact_id']" position="after">
+                    <field name="employee_id" nolabel="1" class="w-100"
+                        domain="employee_id_domain"
+                        required="res_model_selection == 'hr.employee'"
+                        invisible="res_model_selection != 'hr.employee'"
+                        options="{'no_create': True}"
+                        placeholder="Choose an Employee"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
