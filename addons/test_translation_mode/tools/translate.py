@@ -4,6 +4,7 @@ import json
 import re
 
 import odoo.tools.translate as translate
+from odoo.http import request
 
 
 """
@@ -47,7 +48,30 @@ original_PoFileReader__iter__ = translate.PoFileReader.__iter__
 original_XMLDataFileReader__iter__ = translate.XMLDataFileReader.__iter__
 
 
+def is_translation_mode_active_for_current_db():
+    """
+    Verifies if 'test_translation_mode' is installed and active in the registry
+    for the database operating on the current thread.
+
+    HTTP Requests (Web client & RPC calls)
+    """
+    # 1. HTTP Request Context (Web Client / RPC)
+    if request and hasattr(request, 'env') and request.env:
+        return 'test_translation_mode' in request.env.registry._init_modules
+
+    # 2. Active ORM Environment Context (CLI, Shell, Module Updates, ORM Operations)
+    # TODO?
+
+    # 3. Thread-bound Database Name (Crons, Workers, Background Tasks)
+    # TODO?
+
+    return False
+
+
 def contextualize_entry(entry: str):
+    # GUARD: If current DB does NOT have the module active, return unmodified entry
+    if not is_translation_mode_active_for_current_db():
+        return entry
     translation = entry.get('value', "")
     if translation and RE_CONTEXTUALIZED_TRANSLATION.match(translation):
         return entry
