@@ -59,4 +59,18 @@
             </filter>
         </field>
     </record>
+
+    <record id="view_pos_order_tree_consolidated" model="ir.ui.view">
+        <field name="name">pos.order.list.consolidated.l10n_my_myinvois</field>
+        <field name="model">pos.order</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <!-- The orders are listed in the order in which they are reported on the consolidated invoice. -->
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">sequence_number asc</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
