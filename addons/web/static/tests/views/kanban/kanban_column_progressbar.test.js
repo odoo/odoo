@@ -655,20 +655,19 @@ test("column progressbars on archiving records update counter", async () => {
         message: "the counter progressbars should be correctly displayed",
     });
 
-    // archive all records of the second columns
+    // archive all records of the second columns except one
     await keyDown("alt");
     await animationFrame();
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(1)").click();
     await keyUp("alt");
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
-    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(3)").click();
     await contains(".o_cp_action_menus button").click();
     await contains(".o_menu_item:contains(Archive)").click();
     await contains(".modal-footer .btn-primary").click();
 
-    expect(getKanbanCounters()).toEqual(["-4", "0"]);
+    expect(getKanbanCounters()).toEqual(["-4", "17"]);
     expect(queryAll(".progress-bar.o_bar_has_records", { root: getKanbanColumn(1) })).toHaveCount(
-        0,
+        1,
         {
             message: "the counter progressbars should have been correctly updated",
         }
@@ -1406,8 +1405,7 @@ test("progress bar with aggregates: Archive all in a column", async () => {
     expect(getKanbanCounters()).toEqual(["268", "15"]);
     def.resolve();
     await animationFrame();
-    expect(getKanbanColumnTooltips(1)).toEqual([]);
-    expect(getKanbanCounters()).toEqual(["268", "0"]);
+    expect(getKanbanCounters()).toEqual(["268"]);
 });
 
 test.tags("desktop");

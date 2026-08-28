@@ -72,6 +72,7 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
  *  countLimit?: number;
  *  groupsLimit?: number;
  *  defaultOrderBy?: string[];
+ *  defaultGroupBy?: string[];
  *  maxGroupByDepth?: number;
  *  multiEdit?: boolean;
  *  groupByInfo?: Record<string, unknown>;
@@ -159,6 +160,7 @@ export class RelationalModel extends Model {
         this.initialGroupsLimit = params.groupsLimit;
         this.initialCountLimit = params.countLimit || this.constructor.DEFAULT_COUNT_LIMIT;
         this.defaultOrderBy = params.defaultOrderBy;
+        this.defaultGroupBy = params.defaultGroupBy;
         this.maxGroupByDepth = params.maxGroupByDepth;
         this.groupByInfo = params.groupByInfo || {};
         this.multiEdit = params.multiEdit;
@@ -685,21 +687,29 @@ export class RelationalModel extends Model {
                     config.groups[group.value] &&
                     !groups.some((g) => JSON.stringify(g.value) === JSON.stringify(group.value))
                 ) {
-                    const aggregates = Object.assign({}, group.aggregates);
-                    for (const key in aggregates) {
-                        // the `array_agg_distinct` aggregator's value is an array
-                        aggregates[key] = Array.isArray(aggregates[key]) ? [] : 0;
+                    const groupByFieldName = config.groupBy[0];
+                    const isDefaultGroupBy =
+                        this.defaultGroupBy && this.defaultGroupBy.includes(groupByFieldName);
+                    const hasGroupExpand =
+                        config.fields[groupByFieldName.split(":")[0]].group_expand;
+
+                    if (isDefaultGroupBy || hasGroupExpand) {
+                        const aggregates = Object.assign({}, group.aggregates);
+                        for (const key in aggregates) {
+                            // the `array_agg_distinct` aggregator's value is an array
+                            aggregates[key] = Array.isArray(aggregates[key]) ? [] : 0;
+                        }
+                        groups.splice(
+                            index,
+                            0,
+                            Object.assign({}, group, {
+                                count: 0,
+                                length: 0,
+                                records: [],
+                                aggregates,
+                            })
+                        );
                     }
-                    groups.splice(
-                        index,
-                        0,
-                        Object.assign({}, group, {
-                            count: 0,
-                            length: 0,
-                            records: [],
-                            aggregates,
-                        })
-                    );
                 }
             });
         }

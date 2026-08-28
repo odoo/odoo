@@ -1106,6 +1106,9 @@ class Field[T]:
     def _description_falsy_value_label(self, env) -> str | None:
         return env._(self.falsy_value_label) if self.falsy_value_label else None # pylint: disable=gettext-variable
 
+    def _description_group_expand(self, env) -> bool:
+        return bool(self.group_expand)
+
     def is_editable(self) -> bool:
         """ Return whether the field can be editable in a view. """
         return not self.readonly
