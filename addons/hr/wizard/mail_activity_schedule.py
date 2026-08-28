@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -10,6 +12,8 @@ class MailActivitySchedule(models.TransientModel):
     _inherit = 'mail.activity.schedule'
 
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
+    employee_id = fields.Many2one('hr.employee', compute='_compute_employee_id', readonly=False, store=False)
+    employee_id_domain = fields.Char(compute='_compute_employee_id_domain', export_string_translation=False)
     plan_department_filterable = fields.Boolean(compute='_compute_plan_department_filterable')
 
     @api.depends('department_id')
@@ -52,3 +56,44 @@ class MailActivitySchedule(models.TransientModel):
                 else:
                     scheduler.plan_date = planned_due_date
         super(MailActivitySchedule, self - todo)._compute_plan_date()
+
+    @api.depends('res_model_selection', 'employee_id_domain')
+    def _compute_employee_id(self):
+        for scheduler in self:
+            if scheduler.employee_id or scheduler.res_model_selection != 'hr.employee':
+                continue
+            domain = literal_eval(scheduler.employee_id_domain)
+            scheduler.employee_id = self.env.context.get('default_employee_id') or scheduler.env['hr.employee'].search(
+                domain, limit=1,
+            )
+
+    @api.depends_context('log_contact_id')
+    def _compute_employee_id_domain(self):
+        if not self.env.user.has_group('hr.group_hr_user'):
+            # keep an always-empty domain: the user has no access to employees
+            self.employee_id_domain = Domain.FALSE
+            return
+        if contact_id := self.env.context.get('log_contact_id'):
+            contact = self.env['res.partner'].browse(contact_id)
+            domain = [
+                ('id', 'in', contact.employee_ids.ids),
+                ('company_id', 'in', self.env.companies.ids),
+            ]
+        else:
+            domain = []
+        self.employee_id_domain = domain
+
+    def _get_partner_from_target(self):
+        if self.res_model == 'hr.employee':
+            employee = self._get_applied_on_records()
+            return employee.work_contact_id
+        return super()._get_partner_from_target()
+
+    def _get_res_model_fields(self):
+        return {**super()._get_res_model_fields(), 'hr.employee': 'employee_id'}
+
+    def _selection_res_model(self):
+        res = super()._selection_res_model()
+        if self.env.user.has_group('hr.group_hr_user'):
+            res += [('hr.employee', self.env._("Employee"))]
+        return res
