@@ -62,11 +62,6 @@ def data_method_provider(chart_template_name, country_code):
                     'account_type': 'asset_receivable',
                     'non_trade': True,
                 },
-                f'{external_id_prefix}test_account_advance_payment_tax_template': {
-                    'name': f'{external_id_prefix}advance tax payment',
-                    'code': '411900',
-                    'account_type': 'asset_current',
-                },
                 f'{external_id_prefix}test_account_tax_payable_template': {
                     'name': f'{external_id_prefix}tax payable',
                     'code': '451200',
@@ -95,9 +90,6 @@ def data_method_provider(chart_template_name, country_code):
                     'name': f"{external_id_prefix}Taxes",
                     'sequence': 0,
                     'country_id': country,
-                    'tax_payable_account_id': f'{external_id_prefix}test_account_tax_payable_template',
-                    'tax_receivable_account_id': f'{external_id_prefix}test_account_tax_receivable_template',
-                    'advance_tax_payment_account_id': f'{external_id_prefix}test_account_advance_payment_tax_template',
                 },
             },
             'account.tax': {
@@ -199,14 +191,6 @@ class TestMultiVAT(AccountTestInvoicingCommon):
             tax_group = self.env["account.chart.template"].ref(xml_id)
             with self.subTest(xml_id=xml_id, country_code=country_code):
                 self.assertEqual(tax_group.country_id.code, country_code)
-
-        local_tax_group = self.env["account.chart.template"].ref('tax_group_taxes')
-        foreign_tax_group = self.env["account.chart.template"].ref('foreign_tax_group_taxes')
-        for field in ('tax_payable_account_id', 'tax_receivable_account_id', 'advance_tax_payment_account_id'):
-            with self.subTest(field=field):
-                self.assertTrue(foreign_tax_group[field], "This account should have been set")
-                self.assertNotEqual(foreign_tax_group[field], local_tax_group[field],
-                                    "A copy of the local tax group account should have been created and set")
 
     def test_tax_data_should_be_consistent(self):
         # Ensure the correct country is set

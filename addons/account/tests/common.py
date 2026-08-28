@@ -356,8 +356,16 @@ class AccountTestInvoicingCommon(ProductCommon):
                     *account_company_domain,
                     ('account_type', '=', 'liability_payable')
                 ], limit=1),
-            'default_tax_account_receivable': company.account_purchase_tax_id.tax_group_id.tax_receivable_account_id,
-            'default_tax_account_payable': company.account_sale_tax_id.tax_group_id.tax_payable_account_id,
+            'default_tax_account_receivable': AccountAccount.search([
+                    *account_company_domain,
+                    ('account_type', '=', 'asset_receivable'),
+                    ('non_trade', '=', True),
+                ], limit=1),
+            'default_tax_account_payable': AccountAccount.search([
+                    *account_company_domain,
+                    ('account_type', '=', 'liability_payable'),
+                    ('non_trade', '=', True),
+                ], limit=1),
             'default_account_assets': AccountAccount.search([
                     *account_company_domain,
                     ('account_type', '=', 'asset_fixed')
