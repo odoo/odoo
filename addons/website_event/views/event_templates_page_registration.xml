@@ -544,10 +544,10 @@
                                         <t t-set="limit_per_order" t-value="ticket._get_current_limit_per_order(event_slot if event_slot else False)[ticket.id]"/>
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and seats_available_slot_tickets.get(ticket.id, 0) or 0"/>
                                         <t t-set="seats_available_slot" t-value="event_slot and event_slot.seats_available or 0"/>
-                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and not ticket.seats_limited and limit_per_order) or min(limit_per_order or seats_available_slot_ticket, seats_available_slot_ticket)"/>
-                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or seats_available_slot, seats_available_slot)"/>
-                                        <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited and limit_per_order) or min(limit_per_order or ticket.seats_available, ticket.seats_available)"/>
-                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or event.seats_available, event.seats_available)"/>
+                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and not ticket.seats_limited and limit_per_order) or min(limit_per_order, seats_available_slot_ticket)"/>
+                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order, seats_available_slot)"/>
+                                        <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited and limit_per_order) or min(limit_per_order, ticket.seats_available)"/>
+                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order, event.seats_available)"/>
                                         <t t-set="seats_max_event_or_slot" t-value="seats_max_slot if event_slot else seats_max_event"/>
                                         <t t-set="seats_max" t-value="seats_available_slot_tickets and seats_max_slot_ticket or min(seats_max_ticket, seats_max_event_or_slot)"/>
                                         <t t-set="max_input_value" t-value="event.EVENT_MAX_TICKETS if seats_max > event.EVENT_MAX_TICKETS else (0 if 0 > seats_max else seats_max)"/>
@@ -620,11 +620,11 @@
                                     <div class="o_wevent_registration_single_select w-auto ms-auto">
                                         <t t-set="limit_per_order" t-value="tickets._get_current_limit_per_order(event_slot if event_slot else False)[tickets.id] if tickets else event.EVENT_MAX_TICKETS"/>
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and tickets and seats_available_slot_tickets.get(tickets.id, 0) or 0"/>
-                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and ((not tickets.seats_limited and limit_per_order) if tickets else event.EVENT_MAX_TICKETS)) or min(limit_per_order or seats_available_slot_ticket, seats_available_slot_ticket)"/>
+                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and ((not tickets.seats_limited and limit_per_order) if tickets else event.EVENT_MAX_TICKETS)) or min(limit_per_order, seats_available_slot_ticket)"/>
                                         <t t-set="seats_available_slot" t-value="event_slot and event_slot.seats_available or 0"/>
-                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or seats_available_slot, seats_available_slot)"/>
-                                        <t t-set="seats_max_ticket" t-value="((not tickets or not tickets.seats_limited) and limit_per_order) or min(limit_per_order or tickets.seats_available, tickets.seats_available)"/>
-                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or event.seats_available, event.seats_available)"/>
+                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order, seats_available_slot)"/>
+                                        <t t-set="seats_max_ticket" t-value="((not tickets or not tickets.seats_limited) and limit_per_order) or min(limit_per_order, tickets.seats_available)"/>
+                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order, event.seats_available)"/>
                                         <t t-set="seats_max_event_or_slot" t-value="seats_max_slot if event_slot else seats_max_event"/>
                                         <t t-set="seats_max" t-value="(seats_available_slot_tickets and seats_max_slot_ticket or min(seats_max_ticket, seats_max_event_or_slot)) if tickets else seats_max_event_or_slot"/>
                                         <t t-set="max_input_value" t-value="event.EVENT_MAX_TICKETS if seats_max > event.EVENT_MAX_TICKETS else (0 if 0 > seats_max else seats_max)"/>
