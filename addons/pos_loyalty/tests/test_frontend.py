@@ -3221,7 +3221,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'issued': 60.0,
             })]
         })
-        with freeze_time(date.today() - timedelta(days=1)):
+        with freeze_time(date.today() - timedelta(days=2)):
             gift_card_expired = self.env['loyalty.card'].create({
                 'program_id': gift_card_program.id,
                 'code': 'gift_card_expired',
