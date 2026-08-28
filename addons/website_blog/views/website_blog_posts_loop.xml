@@ -342,7 +342,7 @@ according to the enabled options.
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}">
         <t t-call="website.record_cover"
             _record="blog_post"
-            additionnal_classes.f="o_cc3 #{_ratio_classes or 'ratio ratio-16x9'} h-auto overflow-hidden #{_cover_classes}">
+            additionnal_classes.f="#{_ratio_classes or 'ratio ratio-16x9'} h-auto overflow-hidden #{_cover_classes}">
             <!-- 'Unpublished' badge -->
             <small t-if="not blog_post.website_published" t-attf-class="o_wblog_unpublished badge bg-danger w-auto h-auto mt-2 me-2 #{_badge_classes}">
                 <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
