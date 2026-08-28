@@ -66,10 +66,29 @@ test("Extra price is shown when no pricelist rule applies", async () => {
     expect(".price_extra").toHaveCount(1);
 });
 
-test("Extra price is hidden when a fixed pricelist rule prices the product", async () => {
-    // A fixed rule replaces the whole price of the product, extra prices included,
-    // so the 1.00 of "Sprinkles" is never charged and must not be advertised.
-    await mountConfigurator({ compute_price: "fixed", fixed_price: 10 });
+test("Extra price is hidden when a fixed pricelist rule targets that specific variant", async () => {
+    const store = await setupPosEnv();
+    const productTemplate = store.models["product.template"].get(60);
+    store.models["product.template.attribute.value"].get(8).price_extra = 10;
+
+    const pricelist = store.models["product.pricelist"].create({ name: "Fixed Variant Pricelist" });
+    const rule = store.models["product.pricelist.item"].create({
+        pricelist_id: pricelist,
+        product_id: store.models["product.product"].get(60),
+        compute_price: "fixed",
+        fixed_price: 15,
+    });
+    pricelist.update({ item_ids: [rule] });
+    store.addNewOrder().setPricelist(pricelist);
+
+    await mountWithCleanup(ProductConfiguratorPopup, {
+        props: {
+            productTemplate: productTemplate,
+            getPayload: () => {},
+            close: () => {},
+        },
+    });
+
     expect(".price_extra").toHaveCount(0);
 });
 
