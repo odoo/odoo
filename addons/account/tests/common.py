@@ -238,16 +238,19 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def setup_independent_company(cls, **kwargs):
-        if cls.env.registry.loaded:
-            # Only create a new company for post-install tests
-            return cls._create_company(name='company_1_data', **kwargs)
-        else:
-            cls.env['account.tax.group'].create({
-                'name': 'Test tax group',
-                'company_id': cls.env.company.id,
-            })
-            cls.env.company.country_id = cls.quick_ref('base.be')
-        return super().setup_independent_company(**kwargs)
+        company = super().setup_independent_company(**kwargs)
+        if cls.country_code:
+            country = cls.env['res.country'].search([('code', '=', cls.country_code.upper())])
+            if not country:
+                raise ValueError('Invalid country code')
+            company.sudo().country_id = country
+            company.sudo().currency_id = country.currency_id
+        cls._use_chart_template(company, cls.chart_template)
+        cls.env['account.tax.group'].sudo().create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+        })
+        return company
 
     @classmethod
     def setup_independent_user(cls):
@@ -258,7 +261,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             password='accountman',
             email='accountman@test.com',
             group_ids=cls.get_default_groups().ids,
-            company_id=cls.env.company.id,
+            company_id=cls.company.id,
         )
 
     @classmethod

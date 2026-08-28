@@ -28,11 +28,15 @@ class BaseCommon(TransactionCase):
         # Hack to use with_context and avoid manual context dict modification
         cls.env = cls.env['base'].with_context(**cls.default_env_context()).env
 
-        # setup_independent_user() must run before setup_independent_company():
-        # some overrides (e.g. account) create the independent company using
-        # cls.env, so cls.env must already point to the independent user by
-        # then. Otherwise, the company ends up being assigned to the shared
-        # superuser instead of the test user.
+        # setup_independent_company() must run before setup_independent_user():
+        # some overrides (e.g. account) create the independent user with
+        # company_id=cls.company.id, so cls.company must already be set by
+        # then. Note that cls.env still points to the shared admin user at
+        # this point: don't pin allowed_company_ids on it here, or later
+        # multi-company checks (e.g. setup_other_company()) will keep
+        # evaluating against this stale snapshot instead of the test user's
+        # live company_ids.
+        cls.company = company = cls.setup_independent_company()
         independent_user = cls.setup_independent_user()
         if independent_user:
             cls.env = cls.env(user=independent_user)
@@ -40,14 +44,8 @@ class BaseCommon(TransactionCase):
         else:
             cls.env.user.group_ids += cls.get_default_groups()
 
-        company = cls.setup_independent_company() or cls.env.company
-        if company is not cls.env.company:
-            # avoid using the context to assign companies
-            cls.env.user.company_id = company
-            cls.env.user.company_ids = [Command.set(company.ids)]
-        else:
-            cls.setup_main_company()
-
+        cls.env.user.company_ids = [Command.set(company.ids)]
+        cls.env.user.company_id = company
         if cls._test_user_groups:
             cls._test_user = new_test_user(
                 cls.env,
@@ -128,7 +126,7 @@ class BaseCommon(TransactionCase):
 
     @classmethod
     def setup_independent_company(cls, **kwargs):
-        return None
+        return cls.env.ref('base.test_company')
 
     @classmethod
     def setup_independent_user(cls):
@@ -137,10 +135,6 @@ class BaseCommon(TransactionCase):
     @classmethod
     def get_default_groups(cls):
         return cls.env.ref('base.group_user_regular')
-
-    @classmethod
-    def setup_main_company(cls, currency_code='USD'):
-        cls._use_currency(cls.env.company, currency_code)
 
     @classmethod
     def _enable_currency(cls, currency_code):
