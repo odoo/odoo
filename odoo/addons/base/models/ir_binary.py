@@ -5,7 +5,7 @@ from mimetypes import guess_extension
 import werkzeug.http
 
 from odoo import models
-from odoo.exceptions import MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.http.stream import Stream
 from odoo.tools import file_open, replace_exceptions
@@ -85,6 +85,17 @@ class IrBinary(models.AbstractModel):
 
         return Stream.from_binary_field(record, field_name)
 
+    def _get_filename_from_record(self, record, field_name):
+        common_fields = ('filename', '_name', '_fname', '_file')
+        if field_name == 'name' or field_name.endswith(common_fields):
+            return record[field_name]
+        # Try with the user's access rights
+        try:
+            return record.sudo(False)[field_name]
+        except AccessError:
+            pass
+        return False
+
     def _get_stream_from(
         self, record, field_name='raw', filename=None, filename_field='name',
         mimetype=None, default_mimetype='application/octet-stream',
@@ -138,9 +149,8 @@ class IrBinary(models.AbstractModel):
             if filename:
                 stream.download_name = filename
             elif filename_field in record:
-                field = record._fields[filename_field]
-                if 'name' in filename_field or record.sudo(False).has_field_access(field, 'read'):
-                    stream.download_name = record[filename_field]
+                stream.download_name = self._get_filename_from_record(record, filename_field)
+
             if not stream.download_name:
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
