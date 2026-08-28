@@ -15,7 +15,7 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         cls.env['res.lang']._activate_lang('ja_JP')
         cls.partner_a.lang = 'ja_JP'
         cls.env.ref('base.JPY').active = True
-        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
+        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jis_standard')
 
     def test_invoice_report_uses_jp_honorific_and_currency_header(self):
         invoice = self._create_invoice_one_line(

@@ -16,7 +16,7 @@ class TestJPPurchaseReport(AccountTestInvoicingCommon):
         cls.other_currency = cls.setup_other_currency('JPY')
         cls.partner_a.lang = 'ja_JP'
         cls.other_currency.active = True
-        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
+        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jis_standard')
 
     def test_purchase_order_report_uses_honorific_and_currency_header(self):
         purchase_order = self.env['purchase.order'].create({
