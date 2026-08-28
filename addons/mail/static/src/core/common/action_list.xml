@@ -3,16 +3,21 @@
 
 <t t-name="mail.ActionList">
     <div class="o-mail-ActionList flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': this.props.inline,'flex-column': !this.props.inline }">
-        <t t-set="groupAttClass" t-value="{
-            [this.props.groupClass]: true,
-            'flex-column w-100 bg-transparent': !this.props.inline,
-            'o-inline rounded-3': this.props.inline,
-            'o-rounded-bubble': this.props.inline and !this.hasBtnBg,
-        }"/>
         <t t-foreach="this.groups()" t-as="group" t-key="group_index">
-            <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
-                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
-            </span>
+            <t t-if="group.length">
+                <t t-set="firstActionInGroup" t-value="group[0]"/>
+                <t t-set="groupDescription" t-value="firstActionInGroup.actions?.actionGroupDescriptions.get(firstActionInGroup.sequenceGroup)"/>
+                <span class="o-mail-ActionList-group btn-group" t-att-class="{
+                    [this.props.groupClass]: true,
+                    'flex-column w-100 bg-transparent': !this.props.inline,
+                    'o-inline rounded-3': this.props.inline,
+                    'o-rounded-bubble': this.props.inline and !this.hasBtnBg,
+                    'o_switcher': this.props.odooControlPanelSwitchStyle and group.length gt 1 and this.props.inline and groupDescription?.tags?.includes('INLINE_SWITCHER_LOOK'),
+                }">
+                    <span class="smaller text-muted ms-1" t-if="this.props.dropdown and groupDescription?.name" t-out="groupDescription?.name"/>
+                    <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
+                </span>
+            </t>
             <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>
         </t>
     </div>
@@ -52,11 +57,11 @@
         'o-odooControlPanelSwitchStyle': this.props.odooControlPanelSwitchStyle,
         'o-hasBtnBg': this.hasBtnBg,
         'o-inline': this.props.inline,
-        'bg-secondary': this.action.isActive and !this.action.tags.includes('PRIMARY') and !this.action.tags.includes('DANGER') and !this.action.tags.includes('SUCCESS'),
         'btn-secondary': !this.action.tags.includes('PRIMARY') and !this.action.tags.includes('DANGER') and !this.action.tags.includes('SUCCESS'),
         'btn-primary': this.action.tags.includes('PRIMARY'),
         'btn-danger': this.action.tags.includes('DANGER'),
         'btn-success': this.action.tags.includes('SUCCESS'),
+        'o_btn_circle': this.props.inline and isInlineCircleButton,
     })"/>
     <!-- alignment -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
@@ -73,6 +78,7 @@
     <!-- roundness -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
+        'rounded-3':       this.props.dropdown,
         'rounded-circle':  this.props.inline and  isInlineCircleButton,
         'rounded-start-3': this.props.inline and !isInlineCircleButton and this.props.isFirstInGroup,
         'rounded-end-3':   this.props.inline and !isInlineCircleButton and this.props.isLastInGroup,
@@ -87,12 +93,7 @@
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
         'px-1 py-2': inMeetingViewCallButtonsFullscreen,
-        'o-px-1_5 py-1': this.props.inline   and  ((this.hasBtnBg and !isInlineCircleButton and !this.env.inMeetingView) or (!this.hasBtnBg and this.env.inComposer)),
-        'o-p-1_5':       this.props.inline   and  !this.env.inMeetingView and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
         'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,
-        'p-1':           this.props.inline   and  this.hasBtnBg and isInlineCircleButton and this.env.inChatWindow,
-        'o-p-0_5':       this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.env.inComposer,
-        'o-px-0_5 py-0': this.props.inline   and  this.env.inMessage,
         'px-3 py-2':     this.props.dropdown and   this.ui.isSmall,
         'px-2 py-1':     this.props.dropdown and  !this.ui.isSmall,
     })"/>
@@ -132,7 +133,7 @@
 </t>
 
 <t t-name="mail.Action.badge">
-    <span class="o-fw-600 badge p-0 rounded-circle d-flex justify-content-center align-items-center" t-attf-class="{{ extraBadgeClass }}" t-att-class="{ 'bg-warning o-discuss-warningBadge': this.action.tags.includes('WARNING_BADGE'), 'o-discuss-badge': this.action.tags.includes('IMPORTANT_BADGE') }" style="aspect-ratio: 1; font-size: 0.6rem;">
+    <span class="fw-bold badge p-0 rounded-circle d-flex justify-content-center align-items-center" t-attf-class="{{ extraBadgeClass }}" t-att-class="{ 'bg-warning o-discuss-warningBadge': this.action.tags.includes('WARNING_BADGE'), 'o-discuss-badge': this.action.tags.includes('IMPORTANT_BADGE') }" style="aspect-ratio: 1; font-size: 0.6rem;">
         <i t-if="this.action.badgeIcon" class="oi" t-att-class="this.action.badgeIconClass" t-att-data-icon="this.action.badgeIcon"/><span t-elif="this.action.badgeText" t-out="this.action.badgeText"/>
     </span>
 </t>

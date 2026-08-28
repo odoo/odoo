@@ -115,6 +115,14 @@ export class DeviceSelect extends Component {
         }
     }
 
+    /** @param {PointerEvent} ev */
+    onPointerdownButton(ev) {
+        if (ev.button !== 0) {
+            return;
+        }
+        this.showPermissionDialog(this.props.kind);
+    }
+
     /**
      * @param {MouseEvent} ev
      * @param {Object} [param1={}]

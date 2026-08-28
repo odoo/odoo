@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 <t t-name="mail.DiscussSearch">
     <div class="o-mail-DiscussSearch align-self-stretch d-flex align-items-center gap-1" t-attf-class="{{ this.class }}">
-        <div class="o-mail-DiscussSearch-inputContainer h-100 border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 rounded-2">
+        <div class="o-mail-DiscussSearch-inputContainer h-100 border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1 rounded-pill">
             <div class="d-flex w-100 align-items-center gap-2 ps-2">
                 <i class="oi smaller opacity-50" data-icon="search"/>
-                <input class="form-control rounded-2 border-0 bg-inherit ps-0 lh-1" t-att-value="this.searchTerm()" t-on-input="(ev) => this.searchTerm.set(ev.target.value)" placeholder="Search" t-on-keydown="this.onKeydownSearch" t-ref="this.searchInput"/>
+                <input class="form-control rounded-pill rounded-start-0 border-0 bg-inherit ps-0 lh-1" t-att-value="this.searchTerm()" t-on-input="(ev) => this.searchTerm.set(ev.target.value)" placeholder="Search" t-on-keydown="this.onKeydownSearch" t-ref="this.searchInput"/>
             </div>
             <button t-if="this.searchTerm()" class="btn btn-sm btn-link text-muted p-1 o-me-0_5 position-absolute top-50 end-0 translate-middle-y" title="Clear search" t-on-click="this.onClearSearch">
                 <i class="oi oi-filled" data-icon="cancel"/>

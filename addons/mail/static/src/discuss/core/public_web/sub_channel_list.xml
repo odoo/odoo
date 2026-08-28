@@ -4,9 +4,9 @@
         <ActionPanel close="this.props.close" title.translate="Threads" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'forum'">
             <t t-set-slot="header">
                 <div class="d-flex align-items-center my-0">
-                    <div class="input-group input-group-sm ms-1 my-2">
+                    <div class="input-group input-group-sm ms-1 my-2 gap-2">
                         <SearchInput search="this.search" placeholder.translate="Search by name" autofocus="true"/>
-                        <button t-if="this.props.channel.canCreateSubChannels" class="btn btn-primary smaller" aria-label="Create Thread" t-on-click="this.onClickCreate">Create</button>
+                        <button t-if="this.props.channel.canCreateSubChannels" class="btn btn-primary rounded-3 ps-1" aria-label="Create Thread" t-on-click="this.onClickCreate"><i class="oi oi-fw me-1 opacity-75" data-icon="add"/>Create</button>
                     </div>
                 </div>
             </t>

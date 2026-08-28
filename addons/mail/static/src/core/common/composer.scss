@@ -43,6 +43,15 @@
         margin-top: map-get($spacers, 1) * 6 / 4;
     }
 
+    &.o-focused {
+        .o-mail-Composer-mainActions button:not(.active) {
+            opacity: 85%;
+
+            &:disabled {
+                opacity: 50%;
+            }
+        }
+    }
     &:not(.o-focused) {
         .o-mail-Composer-input::placeholder {
             opacity: 50%;
@@ -56,6 +65,10 @@
 .o-mail-Composer-actions {
 
     button {
+        --btn-border-color: transparent;
+        --btn-hover-border-color: transparent;
+        --btn-active-bg: var(--btn-hover-bg);
+
         &.o-small {
             margin: 0 !important;
             padding: map-get($spacers, 1) !important;
@@ -65,9 +78,8 @@
             padding: map-get($spacers, 2) !important;
         }
         &.o-sendMessageActive {
-            background-color: lighten($primary, 7.5%);
-            outline: 1px solid $primary;
-            outline-offset: -1px;
+            --btn-bg: #{lighten($primary, 7.5%)};
+            --btn-border-color: #{$primary};
             opacity: 100% !important;
             &:focus-visible {
                 outline: darken($o-action, 15%) solid 1px;
@@ -76,10 +88,12 @@
         i[data-icon="send"] {
             transform: translate(1px);
         }
-        &:hover, &:focus {
+        &:hover, &:focus, &.active {
             opacity: 100% !important;
             color: var(--mail-Composer-actionHoverColor, black);
-            backdrop-filter: invert(.025);
+            &::before {
+                backdrop-filter: invert(.025);
+            }
         }
         &.o-mail-Composer-send.btn-link:not(:disabled) {
             background-color: rgba($o-action, .75);
@@ -92,9 +106,6 @@
                 transform: translate(-1px);
                 scale: .85;
             }
-        }
-        &.rounded-circle {
-            aspect-ratio: 1;
         }
     }
 }
@@ -194,10 +205,10 @@
 }
 
 .o-mail-Composer-inputContainer {
-    --border-color: #{rgba($dark, .15)};
+    --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
 
     &:has(textarea:focus) {
-        --border-color: #{rgba($o-component-active-border, var(--mail-Composer-focusedOpacity, .65))};
+        --border-color: #{rgba($o-component-active-border, .65)};
     }
 
     &:has(.o-mail-Composer-html:focus) {
@@ -207,6 +218,10 @@
 
 .o-mail-Composer-pickerContainer.o-active {
     height: 50vh;
+}
+
+.o-mail-Composer-replyingToJumpClickable:hover {
+    backdrop-filter: contrast(.8);
 }
 
 .o-mail-Composer-suggestionList:has(.o-open) {

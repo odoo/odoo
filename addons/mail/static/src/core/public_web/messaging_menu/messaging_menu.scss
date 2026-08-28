@@ -1,9 +1,5 @@
-.o-mail-MessagingMenu .o-dropdown.o-dropdown-caret::after {
-    display: none;
-}
-
-.o-mail-MessagingMenu-searchContainer {
-    padding-top: var(--MessagingMenu-searchContainer-padding-top, 0);
+.o-mail-MessagingMenu {
+    background-color: $o-view-background-color;
 }
 
 .o-mail-NotificationItem-counterArea:not(:empty) {
@@ -28,10 +24,6 @@
     transform: translate(0, 25%) !important;
 }
 
-.o-mail-MessagingMenu-tabCounter.o-count {
-    background-color: $gray-400 !important;
-}
-
 .o-discuss-badge.o-mail-MessagingMenu-tabUnread {
     --o-discuss-badge-bg: #{transparent};
     opacity: 50%;
@@ -39,8 +31,8 @@
 }
 
 .o-mail-MessagingMenu-navbar {
+    background-color: $o-webclient-background-color;
     width: 4.5rem;
-    background-color: $white;
 }
 
 .o-mail-MessagingMenu-filters {
@@ -54,16 +46,25 @@
 
 .o-mail-MessagingMenu-filter {
     --btn-hover-color: #{$body-color};
-    --btn-border-color: #{$border-color};
-    --btn-hover-border-color: #{$border-color};
+    --btn-border-color: #{var(--mail-MessagingMenu-filterBorderColor, #{$border-color})};
+    --btn-hover-border-color: #{var(--mail-MessagingMenu-filterBorderColor, #{$border-color})};
 
     &.o-active {
         --btn-color: #{$o-enterprise-action-color};
         --btn-hover-color: #{$o-enterprise-action-color};
-        --btn-bg: #{rgba($o-enterprise-action-color, 0.12)};
-        --btn-hover-bg: #{rgba($o-enterprise-action-color, 0.12)};
-        --btn-border-color: #{rgba($o-enterprise-action-color, 0.35)};
-        --btn-hover-border-color: #{rgba($o-enterprise-action-color, 0.35)};
+        --btn-bg: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12))};
+        --btn-hover-bg: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12))};
+        --btn-border-color: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35))};
+        --btn-hover-border-color: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35))};
+    }
+}
+
+.o-mail-MessagingMenu-searchRow {
+    // Keep the quick-action toggle button on its plain primary color while its
+    // dropdown is open, instead of Bootstrap's pale ".show" active shade.
+    .btn-primary.show {
+        --btn-active-bg: var(--btn-bg);
+        --btn-active-color: var(--btn-color);
     }
 }
 

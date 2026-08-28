@@ -58,18 +58,18 @@
                     </span>
                 </span>
                 <span t-if="this.showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
-                    <span class="o-fw-600 p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
+                    <span class="fw-bold p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
                 </span>
                 <!-- Top Right -->
                 <div class="o-discuss-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex align-items-center w-50 flex-row-reverse gap-1 m-2" t-att-class="{ 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened, 'mw-25': this.props.isSidebarItem or this.props.inset }">
-                    <CallDropdown t-if="this.isContextMenuAvailable and ((!this.isMobileOS and this.rootHover.isHover) or (this.isMobileOS and !this.props.minimized))" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
+                    <Dropdown t-if="this.isContextMenuAvailable and (this.contextMenuDropdownState.isOpen or (!this.isMobileOS and this.rootHover.isHover) or (this.isMobileOS and !this.props.minimized))" state="this.contextMenuDropdownState" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu ' + this.store.discussDropdownMenuClass(this)">
                         <button class="o-discuss-CallParticipantCard-contextButton h-100 d-flex justify-content-center align-items-center rounded-pill border-0 o-py-0_5 o-py-1_5 m-0 smaller o-discuss-CallParticipantCard-iconBlackBg" title="Participant options">
                             <i class="oi" data-icon="expand_more"/>
                         </button>
                         <t t-set-slot="content">
                             <CallContextMenu rtcSession="this.rtcSession"/>
                         </t>
-                    </CallDropdown>
+                    </Dropdown>
                     <span t-if="this.isPinned" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="Pinned" aria-label="Pinned">
                         <i class="oi" data-icon="push_pin"/>
                     </span>
@@ -104,7 +104,7 @@
                     <span t-if="this.showConnectionState" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" t-att-title="this.rtcSession.connectionState">
                         <i class="oi text-warning" data-icon="warning"/>
                     </span>
-                    <span t-if="this.showLiveLabel or (this.rtcSession.is_screen_sharing_on and this.props.minimized and !this.isOfActiveCall)" class="user-select-none rounded-pill smaller text-bg-danger d-flex align-items-center o-px-1_5 o-fw-600" t-att-class="{ 'o-px-2_5 py-1': !this.isSmall }" title="live" aria-label="live">
+                    <span t-if="this.showLiveLabel or (this.rtcSession.is_screen_sharing_on and this.props.minimized and !this.isOfActiveCall)" class="user-select-none rounded-pill smaller text-bg-danger d-flex align-items-center o-px-1_5 fw-bold" t-att-class="{ 'o-px-2_5 py-1': !this.isSmall }" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>

@@ -15,7 +15,7 @@
                         t-on-click="() => this.onChange(option[0])"
                     >
                         <t t-if="option[2]">
-                            <span class="oi oi-filled pe-1" t-att-data-icon="option[2]"/>
+                            <span class="oi pe-1" t-att-data-icon="option[2]"/>
                         </t>
                         <span t-out="option[1]" t-att-value="this.stringify(option[0])"/>
                     </span>

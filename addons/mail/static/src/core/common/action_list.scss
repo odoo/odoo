@@ -2,18 +2,28 @@
     --o-mail-ActionList-icon-opacity: 65%;
 
     .o-mail-ActionList-group:has(.rounded-circle.o-hasBtnBg) {
-        gap: map-get($spacers, 1);
+        --o-btn-circle-height: 32px;
+        gap: map-get($spacers, 3) - map-get($spacers, 1);
+
+        .o-mail-ChatWindow-header & {
+            --o-btn-circle-height: 26px;
+        }
     }
 
     button {
         z-index: 1;
         --btn-disabled-opacity: 0.25;
 
-        &:not(.o-hasBtnBg) {
-            background-color: inherit;
+        &:not(.o-hasBtnBg):not(.active) {
+            --btn-bg: transparent;
+            --btn-border-color: transparent;
+            --btn-hover-bg: transparent;
+            --btn-hover-border-color: transparent;
         }
 
         &.o-simulateDarkTheme {
+            --gradient: transparent;
+
             &.o-hasBtnBg:hover {
                 filter: brightness(1.3);
             }
@@ -25,10 +35,6 @@
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
                 opacity: var(--o-mail-ActionList-Button-opacity);
-
-                &:where(.rounded-circle) {
-                    aspect-ratio: 1;
-                }
 
                 &:hover,
                 &:focus,
@@ -61,8 +67,7 @@
             color: white !important;
         }
 
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item,
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
+        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item {
             i {
                 opacity: 100%;
                 background: var(--btn-bg);
@@ -73,6 +78,7 @@
                 border-radius: 100%;
                 padding: 0.4em;
                 box-sizing: content-box;
+                font-size: 0.7em !important;
             }
 
             &:hover,
@@ -81,21 +87,6 @@
                     background: var(--btn-hover-bg);
                     color: var(--btn-hover-color);
                 }
-            }
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
-            font-size: 0.7em !important;
-            &:is([data-icon="phone"], [data-icon="videocam"])::before {
-                transform: translateY(1px);
-            }
-        }
-
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
-            font-size: 0.9em !important;
-
-            &[data-icon="phone"]::before {
-                transform: translateY(.5px);
             }
         }
 

@@ -2,7 +2,7 @@ import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
@@ -32,7 +32,6 @@ export class CallDropdown extends Component {
         });
         useListener(this.window, "click", (ev) => this.onClickAway(ev), { capture: true });
         useListener(this.window, "keydown", (ev) => this.onKeydown(ev));
-        useSubEnv({ inCallDropdown: { close: () => this.close() } });
         this.navigation = useNavigation(this.menuRef, {
             isNavigationAvailable: () => this.isOpen(),
             getItems: () => {

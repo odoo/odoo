@@ -1,6 +1,5 @@
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
-import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { useHover } from "@mail/utils/common/hooks";
@@ -23,11 +22,13 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static components = { CallParticipantVideo, CallContextMenu, CallDropdown, TalkingAudioBars };
+    static components = { CallParticipantVideo, CallContextMenu, Dropdown, TalkingAudioBars };
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
     rtc;
@@ -64,6 +65,7 @@ export class CallParticipantCard extends Component {
         });
         this.ui = useService("ui");
         this.rootHover = useHover(this.root);
+        this.contextMenuDropdownState = useDropdownState();
         this.isMobileOS = isMobileOS();
         this.dragPos = undefined;
         this.isDrag = false;

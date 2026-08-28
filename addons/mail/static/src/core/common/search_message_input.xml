@@ -10,7 +10,7 @@
                 placeholder="this.inputPlaceholder"
             />
             <Dropdown t-if="this.env.inChatter">
-                <button class="btn btn-outline-secondary ms-2" aria-label="Filter Messages" title="Filter Messages">
+                <button class="btn btn-secondary ms-2" aria-label="Filter Messages" title="Filter Messages">
                     <i class="oi oi-filled" data-icon="filter_alt" role="img"/>
                 </button>
                 <t t-set-slot="content">
@@ -22,7 +22,7 @@
                     </t>
                 </t>
             </Dropdown>
-            <button t-if="this.env.inChatter" class="btn btn-outline-secondary ms-2" t-on-click="() => this.props.closeSearch?.()" aria-label="Close button">
+            <button t-if="this.env.inChatter" class="btn btn-secondary ms-2" t-on-click="() => this.props.closeSearch?.()" aria-label="Close button">
                 <i class="oi o_searchview_icon cursor-pointer" data-icon="close_small" role="img" aria-label="Close search" title="Close"/>
             </button>
         </div>

@@ -8,15 +8,15 @@ export class AutoresizeInput extends Component {
         autofocus: t.boolean().optional(false),
         className: t.string().optional(""),
         enabled: t.boolean().optional(true),
+        inputRef: t.signal(t.instanceOf(HTMLInputElement)).optional(() => signal.ref()),
         onValidate: t.function([t.string()]).optional(() => () => {}),
         placeholder: t.string().optional(""),
         value: t.signal(t.string()),
     });
 
-    inputRef = signal.ref();
-
     setup() {
         super.setup();
+        this.inputRef = this.props.inputRef;
         this.value = signal("");
         useEffect(() => this.value.set(this.props.value() || ""));
         this.isFocused = signal(false);

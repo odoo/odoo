@@ -4,7 +4,7 @@
 <t t-name="mail.Composer">
     <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
     <t t-set="partitionedActions" t-value="this.composerActions.partition"/>
-    <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble flex-shrink-0'"/>
+    <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex rounded-4 flex-shrink-0'"/>
     <div class="d-print-none" t-ref="this.rootRef">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
                 t-att-class="{
@@ -18,7 +18,7 @@
                     'o-editing': this.props.composer.message,
                     'o-chatWindow mx-2 my-1': this.env.inChatWindow,
                     'mb-2': this.env.inChatWindow and !this.props.composer.message,
-                    'o-discussApp pt-1 ps-2 pe-4 o-pb-2_5': this.env.inDiscussApp,
+                    'o-discussApp pt-1 ps-2 pe-4': this.env.inDiscussApp,
                     'o-disabled': this.props.disabled,
                 }" t-attf-class="{{ this.props.className }}">
             <FileUploader t-if="this.allowUpload" multiUpload="this.isMultiUpload" onUploaded.bind="(data) => { this.attachmentUploader.uploadData(data) }">
@@ -30,14 +30,14 @@
                 <img class="o-mail-Composer-avatar mx-auto o_avatar rounded-3" t-att-src="(this.thread?.effectiveSelf or this.message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader min-w-0">
-                <div t-if="this.props.composer.replyToMessage" class="text-truncate small p-2">
-                    <span class="cursor-pointer" t-on-click="() => this.env.messageHighlight?.highlightMessage(this.props.composer.replyToMessage)">
+                <div t-if="this.props.composer.replyToMessage" class="text-truncate small p-2 align-items-center d-flex">
+                    <span class="o-mail-Composer-replyingToJumpClickable cursor-pointer px-2 rounded-pill" t-on-click="() => this.env.messageHighlight?.highlightMessage(this.props.composer.replyToMessage)">
                         Replying to <b t-out="this.props.composer.replyToMessage.authorName"/>
                     </span>
                     <span t-if="this.props.composer.replyToMessage.thread?.notEq(this.props.composer.thread)">
                         on: <b><t t-out="this.props.composer.replyToMessage.thread.displayName"/></b>
                     </span>
-                    <i class="oi oi-lg oi-filled rounded-circle p-0 ms-1 cursor-pointer" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
+                    <i class="oi oi-lg rounded-circle p-0 cursor-pointer opacity-50 opacity-100-hover" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
                 </div>
                 <span t-if="this.props.composer.message and this.ui.isSmall" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
                     <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL">
@@ -47,7 +47,7 @@
                 </span>
             </div>
             <div class="o-mail-Composer-coreMain min-w-0 d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : this.extended or this.props.composer.message }">
-                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 min-w-0 overflow-x-hidden border o-rounded-bubble"
+                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 min-w-0 overflow-x-hidden border rounded-4"
                     t-att-class="{
                         'o-iosPwa': this.isIosPwa,
                         'align-self-stretch' : this.extended,
@@ -60,7 +60,7 @@
                     </div>
                     <div class="position-relative flex-grow-1 min-w-0">
                         <t t-set="inputClasses" t-value="{
-                            'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
+                            'o-mail-Composer-inputStyle form-control border-0 rounded-4': true,
                             'o-mobile': this.isMobileOS,
                             'ps-2': partitionedActions.other.length === 0,
                             'text-muted': this.props.composer.restoredFromFullComposer,

@@ -83,7 +83,6 @@ export class CallContextMenu extends Component {
             channel_id: channelId,
             member_id: memberId,
         });
-        this.env.inCallDropdown?.close();
     }
 
     togglePin() {
@@ -92,7 +91,6 @@ export class CallContextMenu extends Component {
         } else {
             this.channel?.pin(this.props.rtcSession);
         }
-        this.env.inCallDropdown?.close();
     }
 
     toggleLocallyMute() {

@@ -8,8 +8,8 @@
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>
                 <span t-if="this.member().isInvitationPending" class="ms-2 pe-1 text-truncate smaller fst-italic text-muted">Invitation Pending</span>
             </div>
-            <i t-if="this.member().channel_role === 'owner'" class="oi oi-filled ms-1 text-warning lh-sm" data-icon="star" role="img" title="Channel Owner" aria-label="Channel Owner"/>
-            <i t-if="this.member().channel_role === 'admin'" class="oi oi-filled ms-1 text-primary lh-sm" data-icon="star" role="img" title="Channel Admin" aria-label="Channel Admin"/>
+            <i t-if="this.member().channel_role === 'owner'" class="oi ms-1 text-warning lh-sm" data-icon="crown_f" role="img" title="Owner" aria-label="Owner"/>
+            <i t-if="this.member().channel_role === 'admin'" class="oi ms-1 opacity-75 lh-sm" data-icon="crown" role="img" title="Admin" aria-label="Admin"/>
             <span class="o-discuss-ChannelMember-callIndicators ms-auto d-flex align-items-center o-gap-0_5 ps-2">
                 <span t-if="this.member().in(this.member().channel_id.invited_member_ids)" class="oi p-1 opacity-75" data-icon="person_add"/>
                 <span t-if="this.member().rtcSession?.is_muted and !this.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="mic_off"/>
@@ -21,7 +21,7 @@
                 'd-flex': this.showingActions.isOpen or this.store.useMobileView,
             }">
                 <Dropdown state="this.showingActions" position="'bottom-end'" menuClass="'my-1 ' + this.store.discussDropdownMenuClass(this)">
-                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-DiscussApp-sidebarBgColor border" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
+                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-DiscussApp-sidebarBgColor border border-dark" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
                         <i role="img" class="oi oi-fw oi-lg" data-icon="more_horiz"/>
                     </button>
                     <t t-set-slot="content">

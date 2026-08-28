@@ -18,9 +18,12 @@
 
 .o-mail-ChatHub-bubbleBtn {
     padding: 0 !important;
-    border: none !important;
     border-radius: 50%;
     box-shadow: $box-shadow-sm;
+
+    &:not(.o-bordered) {
+        border: none !important;
+    }
 }
 
 .o-mail-ChatHub-hiddenAvatar {
@@ -82,7 +85,6 @@
 
 .o-mail-ChatHub-option {
     &:hover, &.o-active {
-        background-color: $o-gray-300;
         cursor: pointer;
     }
 }
@@ -91,23 +93,14 @@
     font-size: 15px;
     width: 24px !important;
     height: 24px !important;
-    border: $border-width solid transparent !important;
+    --border-opacity: var(--mail-ChatHub-optionsBtnUnfocusedBorderOpacity, .35);
 
-    &.o-bubblesHover {
-        border-color: mix($o-gray-200, $o-gray-300) !important;
-
-        i {
-            opacity: 50%;
-        }
+    &.o-bubblesHover i {
+        opacity: 50%;
     }
 
-    &:hover {
-        border-color: $o-gray-300 !important;
-    }
-    &.show {
-        border-color: mix($o-gray-300, $o-gray-400) !important;
-    }
     &:hover, &.show {
+        --border-opacity: .9;
         i {
             opacity: 100%;
         }

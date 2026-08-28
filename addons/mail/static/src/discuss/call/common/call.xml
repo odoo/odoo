@@ -10,7 +10,6 @@
             'rounded-2': !this.rtc.isFullscreen and !this.props.isPip and this.isActiveCall,
             'o-hasVideo': this.channel.videoCount > 0,
             'o-selfInCall': this.isActiveCall,
-            'border-bottom': !this.isActiveCall,
         }" t-ref="this.rootRef">
             <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="this.onMouseleaveMain">
                 <PttAdBanner t-if="!this.props.compact"/>
@@ -53,6 +52,7 @@
                 <div t-if="this.bottomNotifications.length" class="o-discuss-Call-bottomNotifications position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': this.rtc.isFullscreen, 'ps-2 pb-2': !this.rtc.isFullscreen }">
                     <span class="o-discuss-Call-notification text-bg-light shadow-lg rounded-1 m-1" t-att-class="{ 'p-3 fs-4': this.rtc.isFullscreen, 'p-2': !this.rtc.isFullscreen }" t-foreach="this.bottomNotifications" t-as="notification" t-key="notification.id" t-out="notification.text"/>
                 </div>
+                <div t-if="!this.isActiveCall" class="w-100"><hr class="border-top border-dark" t-att-class="{ 'ms-2 me-3': this.env.inDiscussApp, 'mx-1': this.env.inChatWindow }" style="--border-opacity: .75;"/></div>
             </div>
             <div t-if="this.state.sidebar and this.channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
                 <CallParticipantCard t-foreach="this.sidebarCards" t-as="cardData" t-key="cardData.key"
