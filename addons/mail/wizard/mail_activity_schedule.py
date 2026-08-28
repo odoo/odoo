@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import logging
 from markupsafe import Markup
 
@@ -97,6 +98,18 @@ class MailActivitySchedule(models.TransientModel):
         readonly=False, store=True)
     # used in both (plan- and activity- based)
     activity_user_id_fname = fields.Char('User Field', help="Field name of the user to choose on the record")
+    # logging an activity on the document of the user's choice, e.g. a call that took
+    # place (see `mail.activity.schedule.call`)
+    activity_type_id_domain = fields.Char(
+        compute='_compute_activity_type_id_domain', export_string_translation=False)
+    contact_id = fields.Many2one(
+        'res.partner', compute='_compute_contact_id',
+        readonly=False, store=False)
+    contact_id_domain = fields.Char(
+        compute='_compute_contact_id_domain', export_string_translation=False)
+    res_model_selection = fields.Selection(
+        selection='_selection_res_model', string="Related Model",
+        inverse='_inverse_res_model_selection', store=False)
 
     @api.depends('res_model')
     def _compute_res_model_id(self):
@@ -104,6 +117,7 @@ class MailActivitySchedule(models.TransientModel):
         for scheduler in self.filtered('res_model'):
             scheduler.res_model_id = self.env['ir.model']._get_id(scheduler.res_model)
 
+    @api.depends(lambda self: ('res_model_selection', *self._get_res_model_fields().values()))
     @api.depends_context('active_ids')
     def _compute_res_ids(self):
         context = self.env.context
@@ -113,6 +127,13 @@ class MailActivitySchedule(models.TransientModel):
                 scheduler.res_ids = f"{context['active_ids']}"
             elif not active_res_ids and context.get('active_id'):
                 scheduler.res_ids = f"{[context['active_id']]}"
+        fields_map = self._get_res_model_fields()
+        for scheduler in self:
+            field_name = fields_map.get(scheduler.res_model_selection)
+            if not field_name:
+                continue
+            record = scheduler[field_name]
+            scheduler.res_ids = f"{[record.id]}" if record else False
 
     @api.depends('res_model_id', 'res_ids')
     def _compute_company_id(self):
@@ -312,6 +333,32 @@ class MailActivitySchedule(models.TransientModel):
             if scheduler.activity_type_id.default_user_id or scheduler.activity_type_id.default_role_id:
                 scheduler.activity_role_id = scheduler.activity_type_id.default_role_id
 
+    @api.depends_context('log_activity_category')
+    @api.depends('res_model_selection')
+    def _compute_activity_type_id_domain(self):
+        category = self.env.context.get('log_activity_category')
+        for scheduler in self:
+            # res_model is not reliable here, compute it from res_model_selection instead
+            res_model = scheduler._get_res_model_from_selection(scheduler.res_model_selection)
+            domain = Domain('res_model', '=', res_model) | Domain('res_model', '=', False)
+            if category:
+                domain &= Domain('category', '=', category)
+            scheduler.activity_type_id_domain = domain
+
+    @api.depends_context('log_contact_id')
+    def _compute_contact_id(self):
+        self.contact_id = self.env.context.get('log_contact_id')
+
+    @api.depends_context('log_contact_id')
+    def _compute_contact_id_domain(self):
+        # the call may be logged on any contact of the commercial entity of the
+        # contact it was made with, not just on that contact itself
+        if contact := self.env['res.partner'].browse(self.env.context.get('log_contact_id')):
+            domain = [('id', 'in', contact._search_commercial_partners().ids)]
+        else:
+            domain = []
+        self.contact_id_domain = domain
+
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)
                     'plan_id', 'plan_on_demand_user_id',  # plan specific
@@ -462,6 +509,71 @@ class MailActivitySchedule(models.TransientModel):
             'user_id': self.activity_user_id.id,
             'role_id': self.activity_role_id.id,
         })
+
+    # ------------------------------------------------------------
+    # CALL LOGGING API
+    # ------------------------------------------------------------
+
+    @api.model
+    def _get_field_selection_for_model(self, model_name, res_id):
+        """ The context pre-filling the wizard with the given record, ``None`` when no
+        record type of the wizard accepts it. """
+        if model_name == 'res.partner':
+            # res.partner is already handled by the default context of the log actions
+            return None
+        wizard = self.new()
+        fields_map = wizard._get_res_model_fields()
+        for value, _label in wizard._selection_res_model():
+            if wizard._get_res_model_from_selection(value) != model_name:
+                continue
+            field_name = fields_map.get(value)
+            # a record type may restrict what its field offers: only pre-select a
+            # record its own domain accepts
+            domain_field = f'{field_name}_domain'
+            if domain_field in wizard._fields:
+                domain = ast.literal_eval(wizard[domain_field] or '[]')
+                if not self.env[model_name].search_count(
+                    Domain('id', '=', res_id) & Domain(domain), limit=1,
+                ):
+                    # The record is out of this option's domain: skip it and
+                    # try the next option mapping to the same model, e.g. a
+                    # plain ``sale.order`` failing the ``sale.subscription``
+                    # domain still matches the ``sale.order`` option.
+                    continue
+            return {
+                f'default_{field_name}': res_id,
+                'default_res_model_selection': value,
+            }
+        return None
+
+    def _get_partner_from_target(self):
+        """ The partner of the record the activity is logged on, void when it has none. """
+        record = self._get_applied_on_records()
+        if self.res_model == 'res.partner':
+            return record
+        if 'partner_id' in record._fields:
+            return record.partner_id
+        return self.env['res.partner']
+
+    def _get_res_model_fields(self):
+        """ The field holding the record of each record type, which a module adding one
+        of its own overrides. """
+        return {'res.partner': 'contact_id'}
+
+    def _get_res_model_from_selection(self, selection_key):
+        """ The model a record type applies on, which a module whose record type is not
+        a model of its own overrides. """
+        return selection_key
+
+    def _inverse_res_model_selection(self):
+        """ Sync res_model when the user changes res_model_selection """
+        for scheduler in self.filtered('res_model_selection'):
+            scheduler.res_model = scheduler._get_res_model_from_selection(scheduler.res_model_selection)
+
+    def _selection_res_model(self):
+        """ The record types the wizard offers, which a module adding one of its own
+        overrides. """
+        return [('res.partner', _("Contact"))]
 
     # ------------------------------------------------------------
     # TOOLS
