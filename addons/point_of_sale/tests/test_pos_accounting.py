@@ -2070,16 +2070,14 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.close_session()
 
-        self.assertTrue(session.sales_move_id)
-        self.assertEqual(session.sales_move_id.journal_id, self.pos_config.journal_id)
-        self.assertEqual(session.sales_move_id.move_type, 'out_invoice')
-        self.assertEqual(session.sales_move_id.amount_total, 10.6)
+        self.assertTrue(session.sale_move_ids)
+        self.assertEqual(session.sale_move_ids.journal_id, self.pos_config.journal_id)
+        self.assertEqual(session.sale_move_ids.move_type, 'out_invoice')
+        self.assertEqual(session.sale_move_ids.amount_total, 10.6)
         self.assertEqual(session.account_move_count, 2)
-        self.assertEqual(session.closing_move_count, 0)
 
         self._closing_journal_misc()
         self.assertEqual(session.account_move_count, 2)
-        self.assertEqual(session.closing_move_count, 0)
 
     def _closing_journal_misc(self):
         misc_journal = self.env['account.journal'].create({
@@ -2132,18 +2130,16 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.close_session()
 
-        self.assertTrue(session.sales_move_id)
-        self.assertEqual(session.sales_move_id.journal_id, misc_journal)
-        self.assertEqual(session.sales_move_id.move_type, 'entry')
-        self._assert_closing_entry_amounts(session.sales_move_id, -10.0, -0.6, 10.6)
+        self.assertTrue(session.sale_move_ids)
+        self.assertEqual(session.sale_move_ids.journal_id, misc_journal)
+        self.assertEqual(session.sale_move_ids.move_type, 'entry')
+        self._assert_closing_entry_amounts(session.sale_move_ids, -10.0, -0.6, 10.6)
         self.assertEqual(session.account_move_count, 1)
-        self.assertEqual(session.closing_move_count, 1)
         self.assertEqual(session._get_invoice_account_moves(), invoiced_order.account_move)
-        self.assertEqual(session._get_closing_account_moves(), session.sales_move_id)
+        self.assertEqual(session._get_closing_account_moves(), session.sale_move_ids)
 
         self.pos_config.closing_journal_id = False
-        self.assertEqual(session.closing_move_count, 1)
-        self.assertEqual(session._get_closing_account_moves(), session.sales_move_id)
+        self.assertEqual(session._get_closing_account_moves(), session.sale_move_ids)
 
     def test_pos_closing_journal_misc_other_currency(self):
         eur = self.env.ref('base.EUR')
@@ -2167,7 +2163,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.close_session()
 
-        move = session.sales_move_id
+        move = session.sale_move_ids
         self.assertEqual(move.journal_id, misc_journal)
         self.assertEqual(move.move_type, 'entry')
         self.assertEqual(
@@ -2198,7 +2194,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.close_session()
 
-        self.assertTrue(session.refunds_move_id)
-        self.assertEqual(session.refunds_move_id.journal_id, misc_journal)
-        self.assertEqual(session.refunds_move_id.move_type, 'entry')
-        self._assert_closing_entry_amounts(session.refunds_move_id, 10.0, 0.6, -10.6)
+        self.assertTrue(session.refund_move_ids)
+        self.assertEqual(session.refund_move_ids.journal_id, misc_journal)
+        self.assertEqual(session.refund_move_ids.move_type, 'entry')
+        self._assert_closing_entry_amounts(session.refund_move_ids, 10.0, 0.6, -10.6)

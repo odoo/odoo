@@ -27,13 +27,12 @@ class PosConfig(models.Model):
     _check_company_auto = True
 
     def _default_sale_journal(self):
-        return self.env['account.journal']._ensure_company_account_journal()
-
-    def _default_invoice_journal(self):
-        return self.env['account.journal'].search([
+        company_journal = self.env['account.journal']._ensure_company_account_journal()
+        sale_journal = self.env['account.journal'].search([
             *self.env['account.journal']._check_company_domain(self.env.company),
             ('type', '=', 'sale'),
         ], limit=1)
+        return sale_journal or company_journal
 
     def _default_closing_journal(self):
         return False
@@ -232,6 +231,14 @@ class PosConfig(models.Model):
         string='Download Invoice',
         help="Automatically download the invoice PDF when an order is invoiced.",
     )
+
+    def _get_closing_journal(self):
+        self.ensure_one()
+        AccountJournal = self.env['account.journal'].with_company(self.company_id)
+        journal = AccountJournal._ensure_company_account_journal()
+        if self.journal_id != journal and self.journal_id.type != 'sale':
+            self.journal_id = journal
+        return self.closing_journal_id or self.journal_id
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()

@@ -48,43 +48,23 @@ class AccountJournal(models.Model):
 
     @api.model
     def _ensure_company_account_journal(self):
+        return self._ensure_pos_journal('POSS', 'sale')
+
+    @api.model
+    def _ensure_company_closing_journal(self):
+        return self._ensure_pos_journal('POSC', 'general')
+
+    def _ensure_pos_journal(self, code, journal_type='sale'):
         journal = self.search([
-            ('code', '=', 'POSS'),
-            ('type', '=', 'sale'),
+            ('code', '=', code),
+            ('type', '=', journal_type),
             ('company_id', '=', self.env.company.id),
         ], limit=1)
         if not journal:
             journal = self.create({
                 'name': _('Point of Sale'),
-                'code': 'POSS',
-                'type': 'sale',
+                'code': code,
+                'type': journal_type,
                 'company_id': self.env.company.id,
-            })
-        return journal
-
-    @api.model
-    def _ensure_company_closing_journal(self):
-        company = self.env.company
-        journal = self.search([
-            ('code', '=', 'POSC'),
-            ('type', '=', 'general'),
-            ('company_id', '=', company.id),
-        ], limit=1)
-        if not journal:
-            journal = self.env['pos.config'].sudo().search([
-                ('company_id', '=', company.id),
-                ('closing_journal_id.type', '=', 'general'),
-            ], limit=1).closing_journal_id.with_env(self.env)
-        if not journal:
-            code_taken = self.with_context(active_test=False).search_count([
-                ('code', '=', 'POSC'),
-                ('company_id', '=', company.id),
-            ], limit=1)
-            journal = self.create({
-                'name': _('Point of Sale'),
-                # 'code' is unique per company, let it be computed when 'POSC' is taken.
-                **({} if code_taken else {'code': 'POSC'}),
-                'type': 'general',
-                'company_id': company.id,
             })
         return journal

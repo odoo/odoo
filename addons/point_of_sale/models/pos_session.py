@@ -122,10 +122,6 @@ class PosSession(models.Model):
         string='Number of related journal entries',
         compute='_compute_account_move_count',
     )
-    closing_move_count = fields.Integer(
-        string='Number of Closing Entries',
-        compute='_compute_closing_move_count',
-    )
     order_ids = fields.One2many('pos.order', 'session_id', string='Orders')
     order_count = fields.Integer(compute='_compute_order_count')
     payment_method_ids = fields.Many2many(
@@ -368,8 +364,8 @@ class PosSession(models.Model):
     @api.constrains('start_at')
     def _check_start_date(self):
         for record in self:
-            journal = record.config_id.closing_journal_id or record.config_id.journal_id
-            company = journal.company_id or record.company_id
+            journal = record.config_id.journal_id
+            company = journal.company_id
             start_date = record.start_at.date()
             violated_lock_dates = company._get_violated_lock_dates(start_date, True, journal)
             if violated_lock_dates:
@@ -602,7 +598,7 @@ class PosSession(models.Model):
 
     def show_linked_account_move(self):
         self.ensure_one()
-        all_related_moves = self._get_invoice_account_moves()
+        all_related_moves = self._get_session_and_order_account_moves()
         return {
             'name': _('Invoices'),
             'type': 'ir.actions.act_window',
@@ -614,50 +610,12 @@ class PosSession(models.Model):
             ],
         }
 
-    def action_show_closing_moves(self):
-        self.ensure_one()
-        closing_moves = self._get_closing_account_moves()
-        action = {
-            'name': _('Closing Entry') if len(closing_moves) <= 1 else _('Closing Entries'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'views': [
-                (self.env.ref('account.view_move_tree').id, 'list'),
-                (self.env.ref('account.view_move_form').id, 'form'),
-            ],
-            'domain': [('id', 'in', closing_moves.ids)],
-        }
-        if len(closing_moves) == 1:
-            action['res_id'] = closing_moves.id
-            action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
-        return action
-
     @api.depends('sale_move_ids', 'refund_move_ids')
     def _compute_account_move_count(self):
         for record in self:
-            record.account_move_count = len(record._get_invoice_account_moves())
+            record.account_move_count = len(record._get_session_and_order_account_moves())
             record.sale_move_count = len(record.sale_move_ids)
             record.refund_move_count = len(record.refund_move_ids)
-
-    def _compute_closing_move_count(self):
-        for record in self:
-            record.closing_move_count = len(record._get_closing_account_moves())
-
-    def _get_invoice_journals(self):
-        self.ensure_one()
-        invoices = self.order_ids.account_move - (self.sales_move_id | self.refunds_move_id)
-        return invoices.journal_id or self.config_id.journal_id
-
-    def _get_closing_account_moves(self):
-        self.ensure_one()
-        invoice_journals = self._get_invoice_journals()
-        return (self.sales_move_id | self.refunds_move_id).filtered(
-            lambda move: move.journal_id not in invoice_journals,
-        )
-
-    def _get_invoice_account_moves(self):
-        self.ensure_one()
-        return self._get_session_and_order_account_moves() - self._get_closing_account_moves()
 
     def _get_session_and_order_account_moves(self):
         return self.sale_move_ids | self.refund_move_ids | self.order_ids.mapped('account_move')
@@ -1007,41 +965,20 @@ class PosSession(models.Model):
     def _prepare_session_move_vals(self, orders):
         self.ensure_one()
         today = fields.Date.context_today(self)
-        closing_journal = self.config_id.closing_journal_id or self.config_id.journal_id
-        if closing_journal.type == 'general':
-            move_type = 'entry'
-        else:
-            move_type = 'out_refund' if orders[0].is_refund_or_negative() else 'out_invoice'
-
-        vals = {
+        # All orders are refunds or not
+        journal = self.config_id._get_closing_journal()
+        move_type = 'out_refund' if orders[0].is_refund_or_negative() else 'out_invoice'
+        move_type = 'entry' if journal.type == 'general' else move_type
+        return {
             'move_type': move_type,
             'company_id': self.company_id.id,
-            'journal_id': closing_journal.id,
+            'journal_id': journal.id,
             'partner_id': self.config_id.default_partner_id.id,
             'date': today,
             'invoice_date_due': today,
             'pos_session_ids': [(4, self.id)],
             'always_tax_exigible': True,
         }
-        if move_type == 'entry':
-            vals['currency_id'] = orders.currency_id.id
-        return vals
-
-    def _prepare_session_entry_rounding_line_commands(self, orders, line_vals, rounding_method):
-        currency = orders.currency_id
-        difference = -sum(vals.get('amount_currency', 0.0) for vals in line_vals)
-        if not rounding_method or not orders.config_id.cash_rounding or currency.is_zero(difference):
-            return []
-
-        account = rounding_method.loss_account_id if difference > 0.0 else rounding_method.profit_account_id
-        return [Command.create({
-            'name': rounding_method.name,
-            'account_id': account.id,
-            'display_type': 'rounding',
-            'currency_id': currency.id,
-            'amount_currency': difference,
-            'balance': -sum(vals.get('balance', 0.0) for vals in line_vals),
-        })]
 
     def _create_session_account_move(self, orders):
         """
@@ -1069,12 +1006,6 @@ class PosSession(models.Model):
             return self.env['account.move']
 
         refund = orders[0].is_refund_or_negative()  # All orders are refunds or not
-        AccountJournal = self.env['account.journal'].with_company(
-            self.company_id,
-        )
-        if self.config_id.journal_id.type != 'sale':
-            self.config_id.journal_id = AccountJournal._ensure_company_account_journal()
-
         payment_methods = orders.payment_ids.payment_method_id
         cash_payment_method = payment_methods.filtered(
             lambda pm: pm.type == 'cash',
@@ -1085,27 +1016,12 @@ class PosSession(models.Model):
                 "Only one cash payment method can be used in a session.",
             ))
 
-        rounding_method = self.config_id._get_rounding_method_for_invoice(orders)
-        move_vals = self._prepare_session_move_vals(orders)
-        is_entry = move_vals['move_type'] == 'entry'
-
+        # product_commands => invoice_line_ids (display_type=product, net price_unit)
         lines = orders.with_context(hide_combo_title=True)._prepare_account_move_line_data()
-
-        tax_line_data = orders._prepare_move_line_data_for_entry(lines) if is_entry else []
         lines_commands = [Command.create(line['account.move.line']) for line in lines]
 
         payments = orders._prepare_account_move_line_data_for_payments()
         line_data = [pm['account.move.line'] for pm in payments]
-        if is_entry:
-            company_currency = self.company_id.currency_id
-            for pm_data in line_data:
-                pm_data['currency_id'] = orders.currency_id.id
-                pm_data['balance'] = orders.currency_id._convert(
-                    pm_data['amount_currency'],
-                    company_currency,
-                    self.company_id,
-                    move_vals['date'],
-                )
         payment_commands = [Command.create(pm_data) for pm_data in line_data]
         extra_commands = self._prepare_session_closing_extra_line_commands(
             orders,
@@ -1113,28 +1029,17 @@ class PosSession(models.Model):
             payments,
         )
 
-        move_vals['invoice_cash_rounding_id'] = rounding_method.id
-        if is_entry:
-            rounding_commands = self._prepare_session_entry_rounding_line_commands(
-                orders,
-                [line['account.move.line'] for line in lines] + tax_line_data + line_data,
-                rounding_method,
-            )
-            move_vals['line_ids'] = (
-                lines_commands
-                + [Command.create(tax_vals) for tax_vals in tax_line_data]
-                + payment_commands
-                + rounding_commands
-            )
-        else:
-            move_vals.update({
-                'invoice_line_ids': lines_commands,
-                'line_ids': payment_commands,
-            })
+        # Ensure rounding method record is set on the invoice if needed
+        rounding_method = self.config_id._get_rounding_method_for_invoice(orders)
+        move_vals = self._prepare_session_move_vals(orders)
+        move_vals.update({
+            'invoice_line_ids': lines_commands,
+            'line_ids': payment_commands,
+            'invoice_cash_rounding_id': rounding_method.id,
+        })
         move = self.env['account.move'].sudo().with_context(
             check_move_validity=False,
             linked_to_pos=True,
-            skip_invoice_sync=is_entry,
         ).create(move_vals)
 
         move_ctx = move.with_context(
@@ -1159,7 +1064,7 @@ class PosSession(models.Model):
             term_line.account_id = payment_command[2]['account_id']
 
         with move_ctx._check_balanced({'records': move}):
-            if rounding_method.exists() and not is_entry:
+            if rounding_method.exists():
                 data = orders._prepare_account_move_line_data_for_rounding(move)
                 move_ctx.line_ids = data
 
@@ -1177,20 +1082,31 @@ class PosSession(models.Model):
 
         move_ctx.with_company(self.company_id)._post()
         partner = self.config_id.default_partner_id
-
-        for payment, term in zip(payments, payment_term_lines):
+        payment_lines = self.env['account.move.line']
+        for payment in payments:
             metadata = payment['metadata']
             pm = metadata['payment_method_id']
-            payment_line = pm._create_payment_line(
+            payment_lines |= pm._create_payment_line(
                 self,
                 metadata['amount'],
                 partner.property_account_receivable_id,
                 False,
                 partner,
+                metadata['foreign_currency_id'].id,
+                metadata['amount_currency'],
             )
-            if not payment_line or payment_line.reconciled or term.reconciled:
-                continue
 
+        payment_lines = payment_lines.filtered(
+            lambda line: not line.reconciled,
+        )
+        payment_term_lines = payment_term_lines.filtered(
+            lambda line: not line.reconciled,
+        )
+
+        # We cannot reconcile automatically all lines together because
+        # sometime it create weird reconciliation with multiple payments
+        for idx, term in enumerate(payment_term_lines):
+            payment_line = payment_lines[idx]
             (payment_line + term).with_context(
                 skip_invoice_sync=True,
                 no_cash_basis=True,
@@ -1227,9 +1143,9 @@ class PosSession(models.Model):
                 'product_id': line.product_id.id,
                 'account_id': line.account_id.id,
                 'partner_id': line.partner_id.id,
-                'currency_id': line.currency_id.id,
+                'currency_id': order.company_id.currency_id.id,
                 'amount_currency': -line.amount_currency,
-                'balance': -line.balance,
+                'balance': -line.amount_currency,
                 'display_type': line.display_type,
                 'tax_ids': [(6, 0, line.tax_ids.ids)],
                 'quantity': -line.quantity,
