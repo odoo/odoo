@@ -16,14 +16,13 @@ from collections import defaultdict
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
-from urllib.parse import urlparse, urlsplit
+from urllib.parse import urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import (
     adapt_dark_palette_content,
-    get_base_domain,
     similarity_score,
     text_from_html,
 )
@@ -428,15 +427,11 @@ class Website(models.CachedModel):
     @api.constrains('domain')
     def _check_domain(self):
         for record in self:
-            if not record.domain:
+            if not record.domain_punycode:
+                # not a valid domain name, refused by the constraint in base
                 continue
 
-            try:
-                parsed = urlparse(record.domain)
-            except ValueError as e:
-                raise ValidationError(_("The provided website domain is not a valid URL.")) from e
-
-            if tools.urls._contains_dot_segments(parsed.path):
+            if tools.urls._contains_dot_segments(urlsplit(record.domain).path):
                 raise ValidationError(_("The domain path cannot contain relative path segments like '/./' or '/../'."))
 
     @api.constrains('homepage_url')
@@ -542,9 +537,6 @@ class Website(models.CachedModel):
         configurator_action_todo = self.env.ref('website.website_configurator_todo')
         return configurator_action_todo.action_launch()
 
-    def _idna_url(self, url):
-        return get_base_domain(url.lower(), True).encode('idna').decode('ascii')
-
     def _is_indexable_url(self, url):
         """
         Returns True if the given url has to be indexed by search engines.
@@ -557,7 +549,10 @@ class Website(models.CachedModel):
         :param url: the url to check
         :return: True if the url has to be indexed, False otherwise
         """
-        return self._idna_url(url) == self._idna_url(self.domain)
+        domain = tools.urls.idna_domain(url)
+        return domain is not None and (
+            domain.removeprefix('www.') == (self.domain_punycode or '').removeprefix('www.')
+        )
 
     # ----------------------------------------------------------
     # Configurator

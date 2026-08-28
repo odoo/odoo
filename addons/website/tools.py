@@ -2,7 +2,6 @@
 import colorsys
 import re
 
-import werkzeug.urls
 from lxml import etree, html
 
 from odoo.tools.misc import hmac
@@ -141,25 +140,6 @@ def images_from_html(html_fragment, base_url):
         if (src := img.get('src')) and not src.startswith('data:')
     )
     return list(seen)
-
-
-def get_base_domain(url, strip_www=False):
-    """
-    Returns the domain of a given url without the scheme and the www. and the
-    final '/' if any.
-
-    :param url: url from which the domain must be extracted
-    :param strip_www: if True, strip the www. from the domain
-
-    :return: domain of the url
-    """
-    if not url:
-        return ''
-
-    url = werkzeug.urls.url_parse(url).netloc
-    if strip_www and url.startswith('www.'):
-        url = url[4:]
-    return url
 
 
 def add_form_signature(html_fragment, env_sudo):
