@@ -13,7 +13,7 @@ from odoo.addons.sale.controllers import portal as sale_portal
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
-    @route("/my/order/return_data", type="jsonrpc", auth="user", readonly=True)
+    @route("/my/order/return_data", type="jsonrpc", auth="public", readonly=True)
     def my_order_return_data(self, order_id, access_token):
         """Prepare return details of order depending on deliveries.
 
@@ -40,7 +40,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
             "returnable_lines": [],
             "return_reasons": [
                 {"id": reason.id, "name": reason.name}
-                for reason in self.env["return.reason"].search([])
+                for reason in self.env["return.reason"].sudo().search([])
             ],
         }
         for line in order_sudo.order_line:
@@ -63,7 +63,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         return return_data
 
-    @route("/my/orders/<int:order_id>/download_return_label", type="http", auth="user")
+    @route("/my/orders/<int:order_id>/download_return_label", type="http", auth="public")
     def order_return_label(
         self, order_id, access_token=None, return_details=None, return_reason_id=None
     ):
@@ -97,7 +97,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
         for move in order_sudo.picking_ids.move_ids.filtered(lambda m: str(m.id) in raw_qtys):
             move_qty_by_picking.setdefault(move.picking_id, {})[move] = raw_qtys[str(move.id)]
 
-        return_reason = self.env["return.reason"].browse(int(return_reason_id))
+        return_reason = self.env["return.reason"].sudo().browse(int(return_reason_id))
         # Generate a return label with the returned products
         return_data = {
             "wh_address_id": order_sudo.warehouse_id.partner_id,
