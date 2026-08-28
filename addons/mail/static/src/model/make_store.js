@@ -11,7 +11,7 @@ import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 
-import { proxy, useApp } from "@odoo/owl";
+import { signal, useApp } from "@odoo/owl";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -41,7 +41,13 @@ export function makeStore(env, { localRegistry } = {}) {
             [OgClass.getName()]: class extends OgClass {},
         }[OgClass.getName()];
         Model._ = new ModelInternal();
-        Model.records = proxy({});
+        // `records` stays a property: business code reads it all over mail and enterprise.
+        const records = signal.Map();
+        Object.defineProperty(Model, "records", {
+            configurable: true,
+            enumerable: true,
+            get: () => records(),
+        });
         Models[Model.getName()] = Model;
         store[Model.getName()] = Model;
         // Detect fields with a dummy record and setup getter/setters on them

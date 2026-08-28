@@ -113,7 +113,7 @@ export class Store extends Record {
                     const record = RD_QUEUE.keys().next().value;
                     RD_QUEUE.delete(record);
                     record._.isDeleted.set(true);
-                    delete record.Model.records[record.localId];
+                    record.Model.records.delete(record.localId);
                     for (const [usingRecord, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
                             for (let c = 0; c < count; c++) {

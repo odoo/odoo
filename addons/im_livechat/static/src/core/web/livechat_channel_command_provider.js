@@ -22,12 +22,13 @@ registry.category("command_provider").add("im_livechat.channel_join_leave", {
         }
         await store.livechatChannels.fetch();
         const activeChannels = new Set(
-            Object.values(store["im_livechat.channel"].records)
+            store["im_livechat.channel"].records
+                .values()
                 .filter((c) => c.channel_ids.length > 0)
                 .map((c) => c.id)
         );
         // Show live chat channels with ongoing conversations first
-        return Object.values(store["im_livechat.channel"].records)
+        return [...store["im_livechat.channel"].records.values()]
             .sort((c1, c2) => {
                 const c1IsActive = activeChannels.has(c1.id);
                 const c2IsActive = activeChannels.has(c2.id);

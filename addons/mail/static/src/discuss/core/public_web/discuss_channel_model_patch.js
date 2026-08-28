@@ -19,7 +19,7 @@ const discussChannelPatch = {
             inverse: "channels",
             /** @this {import("models").DiscussChannel} */
             compute() {
-                return Object.values(this.store.MessagingMenuTab.records).filter((tab) =>
+                return [...this.store.MessagingMenuTab.records.values()].filter((tab) =>
                     tab.includesChannel(this)
                 );
             },
