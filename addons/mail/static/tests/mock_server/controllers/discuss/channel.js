@@ -128,7 +128,16 @@ registerStoreHandler(
     function store_get_discuss_channel_messages(store, params) {
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
+        const DiscussChannelMember = this.env["discuss.channel.member"];
         const channel = this.env["discuss.channel"].browse(params.channel_id);
+        const initial_fetch = params.fetch_params.initial_fetch;
+        if (initial_fetch) {
+            delete params.fetch_params.initial_fetch;
+            const selfMember = DiscussChannelMember.browse(channel.self_member_id);
+            if (selfMember.new_message_separator) {
+                params.fetch_params.around = channel.new_message_separator;
+            }
+        }
         const messages = _resolve_messages.call(this, store, {
             ...params.fetch_params,
             domain: [],

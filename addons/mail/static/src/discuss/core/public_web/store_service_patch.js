@@ -25,5 +25,12 @@ const StorePatch = {
         });
         this.insert(data);
     },
+    initialPromises({ action }) {
+        const promises = super.initialPromises(...arguments);
+        if (action === "discuss") {
+            promises.push(this.channels.fetch());
+        }
+        return promises;
+    },
 };
 patch(Store.prototype, StorePatch);
