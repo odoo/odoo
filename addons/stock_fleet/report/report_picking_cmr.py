@@ -45,6 +45,31 @@ class ReportCmr(models.AbstractModel):
             'm3_uom_id': m3_uom,
         }
 
+    def _get_packages_weight_and_volume(self, pickings):
+        done_pickings = pickings.filtered(lambda p: p.state == 'done')
+
+        ongoing_outermost_packages = (pickings - done_pickings).move_line_ids.result_package_id.outermost_package_id
+        all_outermost_packages = ongoing_outermost_packages | done_pickings.package_history_ids.outermost_dest_id
+
+        __, all_ongoing_pack_ids = ongoing_outermost_packages._get_all_children_package_dest_ids()
+        direct_done_children_by_pack, all_done_pack_ids = done_pickings.package_history_ids._get_all_history_children_package_dest_ids()
+        in_scope_ongoing_pack_ids = set(self.env['stock.package'].search_fetch([('id', 'in', all_ongoing_pack_ids), ('picking_ids', 'in', pickings.ids)]).ids)
+        in_scope_pack_ids = in_scope_ongoing_pack_ids | all_done_pack_ids
+
+        defined_weights_per_pack = self.env['stock.package']._get_defined_weights_per_package(in_scope_pack_ids)
+        content_weight_per_picking = self.env['stock.package']._get_content_weight_per_pickings(in_scope_pack_ids, pickings.ids)
+
+        defined_volumes_per_pack = self.env['stock.package']._get_defined_volume_per_package(in_scope_pack_ids)
+        content_volume_per_picking = self.env['stock.package']._get_content_volume_per_pickings(in_scope_pack_ids, pickings.ids)
+
+        packages_weight = {}
+        packages_volume = {}
+        for package in all_outermost_packages:
+            packages_weight[package.id] = package._get_effective_weight_in_pickings(pickings, defined_weights_per_pack, content_weight_per_picking, in_scope_ongoing_pack_ids, direct_done_children_by_pack)
+            packages_volume[package.id] = package._get_effective_volume_in_pickings(pickings, defined_volumes_per_pack, content_volume_per_picking, in_scope_ongoing_pack_ids, direct_done_children_by_pack)
+
+        return packages_weight, packages_volume
+
     def _get_pickings_data(self, pickings, kg_uom, m3_uom):
         def _get_processed_product_details(product, no_variant_att, unit, qty):
             """
@@ -91,15 +116,8 @@ class ReportCmr(models.AbstractModel):
                     product_processed_details = _get_processed_product_details(product, no_variant_att, unit, sum(mls.mapped('quantity')))
                     products.append(product_processed_details)
                     hs_codes.append(product.hs_code if 'hs_code' in product._fields else False)
-                    weight = package.shipping_weight or packages_weight.get(package, 0) if package else (sum(mls.mapped('quantity_product_uom')) * product.weight)
-                    volume = 0.0
-                    if package:
-                        volume = package.package_type_id.packaging_length *\
-                                package.package_type_id.width *\
-                                package.package_type_id.height *\
-                                packages_volume_factor if package.package_type_id else 0.0
-                    else:
-                        volume = (sum(mls.mapped('quantity_product_uom')) * product.volume)
+                    weight = packages_weight.get(package.id, 0) if package else sum(mls.mapped('quantity_product_uom')) * product.weight
+                    volume = packages_volume.get(package.id, 0) if package else sum(mls.mapped('quantity_product_uom')) * product.volume
             else:
                 product_processed_details = _get_processed_product_details(move.product_id, move.never_product_template_attribute_value_ids, move.uom_id, move.quantity)
                 products = [product_processed_details]
@@ -122,16 +140,12 @@ class ReportCmr(models.AbstractModel):
         volume_factor = 1 if volume_uom == m3_uom else 0.0283168
         has_uom_id = 'uom_id' in self.env['stock.move.line']._fields
 
-        # to convert package volume dimensions from cubic mm to cubic m
-        packages_volume_factor = 1e-9 if volume_uom == m3_uom else 1
-
         done_pickings = pickings.filtered(lambda p: p.state == 'done')
         done_outermost_packages = done_pickings.package_history_ids.outermost_dest_id
         ongoing_outermost_packages = (pickings - done_pickings).move_line_ids.result_package_id.outermost_package_id
         packageless_moves = pickings.move_ids.filtered(lambda m: not m.package_ids)
 
-        packages_weight = done_outermost_packages._get_weight()
-        packages_weight.update(ongoing_outermost_packages._get_weight(pickings.ids))
+        packages_weight, packages_volume = self._get_packages_weight_and_volume(pickings)
 
         consignee_id = pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id
         en_lang = self.env['res.lang'].search([('code', '=like', 'en_%')], limit=1)
@@ -144,7 +158,7 @@ class ReportCmr(models.AbstractModel):
             goods_rows.append(_get_goods_row(package, False, mls))
             processed_mls_ids.update(mls.ids)
 
-        for package in ongoing_outermost_packages:
+        for package in ongoing_outermost_packages - done_outermost_packages:
             mls = package.move_line_ids.filtered(lambda ml: ml.quantity and ml.picking_id.id in pickings.ids)
             goods_rows.append(_get_goods_row(package, False, mls))
             processed_mls_ids.update(mls.ids)
