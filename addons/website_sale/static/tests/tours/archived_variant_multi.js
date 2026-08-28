@@ -25,7 +25,8 @@ registry.category("web_tour.tours").add('website_sale.archived_variant_multi', {
         },
         {
             content: "check that brand b is not available (but clickable)",
-            trigger: '.css_not_available input.css_not_available:not([disabled])',
+            trigger: 'input[data-value-name="Brand B"].css_not_available:not([disabled])',
+            run: () => {},
         },
         {
             content: "change second variant to make brand b available",
