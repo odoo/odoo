@@ -146,8 +146,14 @@ export class ImageStrategyPlugin extends Plugin {
     addBottomUpConstraintsForImages(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { analysis } = defaultEmailNodeArguments;
         if (
-            (!analysis.facts.isImage && !analysis.facts.isImageLink) ||
-            !this.hasMarginAuto(referenceNode)
+            !(
+                ((analysis.facts.isImage || analysis.facts.isImageLink) &&
+                    this.hasMarginAuto(referenceNode)) ||
+                // Second part of the condition depends on handleImageLinkMarginAuto
+                // which ensures that the desktopMarginStyleInfo is defined on
+                // the ImageLink EmailNode.
+                (analysis.facts.isImageLink && this.hasMarginAuto(analysis.facts.imageNode))
+            )
         ) {
             return defaultEmailNodeArguments;
         }
@@ -277,6 +283,7 @@ export class ImageStrategyPlugin extends Plugin {
             analysis.parsingFacts.canMerge = true;
             analysis.parsingFacts.canParentMerge = false;
             layout = this.buildImageLinkLayout(detectionResult);
+            this.handleImageLinkMarginAuto(analysis, detectionResult);
         } else if ((detectionResult = this.detectImage(referenceNode))) {
             if (parentEmailNode.analysis.facts.isImageLink) {
                 // see discardImageEmailNodeInLink merge override
@@ -294,6 +301,18 @@ export class ImageStrategyPlugin extends Plugin {
             return { layout, analysis };
         }
         return defaultEmailNodeArguments;
+    }
+
+    handleImageLinkMarginAuto(analysis, { imageNode, linkNode }) {
+        if (!this.hasMarginAuto(linkNode) && this.hasMarginAuto(imageNode)) {
+            // In case the link does not have a margin auto, but the image does,
+            // overwrite the link margin instruction with the one from the image.
+            const rawStyleInfo = this.getRawStyleInfo(imageNode);
+            analysis.facts.desktopMarginStyleInfo = this.getMarginStyleInfo(
+                rawStyleInfo,
+                imageNode
+            );
+        }
     }
 
     getForcedImageStyle({ shouldBeBlock }) {

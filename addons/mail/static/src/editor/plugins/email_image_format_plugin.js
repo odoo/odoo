@@ -23,7 +23,8 @@ const WEBP_MIMETYPE = "image/webp";
 const FORBIDDEN_EMAIL_MIMETYPE = new Set([SVG_MIMETYPE, WEBP_MIMETYPE]);
 const SVG_EXCLUSIVE_ATTRIBUTES = new Set(["viewBox", "preserveAspectRatio", "x", "y"]);
 const PLACEHOLDER_IMAGE = "/html_editor/static/src/img/placeholder_thumbnail.png";
-const EMAIL_IMAGE_RESOLUTION_SCALING = { min: 0.5, max: 2 };
+const RESOLUTION_SCALING_RANGE = { min: 0.5, max: 2 };
+const SMALL_SVG_THRESHOLD = 150;
 
 export class AggregateEmailImageError extends AggregateError {
     name = this.constructor.name;
@@ -388,8 +389,8 @@ export class EmailImageFormatPlugin extends Plugin {
         const doc = new DOMParser().parseFromString(text, "image/svg+xml");
         const svg = doc.documentElement;
         const viewBox = svg.getAttribute("viewBox");
-        const width = svg.getAttribute("width");
-        const height = svg.getAttribute("height");
+        const width = svg.getAttribute("width") ?? "";
+        const height = svg.getAttribute("height") ?? "";
         const parsedWidth = parseCssValue(width);
         const parsedHeight = parseCssValue(height);
         const output = {};
@@ -434,14 +435,22 @@ export class EmailImageFormatPlugin extends Plugin {
         return output;
     }
 
-    async computeSvgNaturalDimensions(src, measuredDimensions) {
+    async computeSvgIntrinsicDimensions(src, measuredDimensions) {
         const intrinsicInfo = await this.getSvgIntrinsicInfo(src);
         if (intrinsicInfo.width && intrinsicInfo.height) {
             return intrinsicInfo;
         }
         const { aspectRatio } = intrinsicInfo;
         const dimensions = {};
-        const { width, height } = measuredDimensions;
+        let { width, height } = measuredDimensions;
+        // For small svg without intrinsic dimensions, render at increased
+        // measured resolution
+        const resolutionFactor =
+            width < SMALL_SVG_THRESHOLD && height < SMALL_SVG_THRESHOLD
+                ? RESOLUTION_SCALING_RANGE.max
+                : 1;
+        width *= resolutionFactor;
+        height *= resolutionFactor;
         // For SVG images, render at measured dimensions since their
         // resolution is dynamic, and they don't necessarily have
         // natural dimensions nor are they relevant.
@@ -644,14 +653,11 @@ export class EmailImageFormatPlugin extends Plugin {
             naturalDimensions.width / renderedDimensions.width,
             naturalDimensions.height / renderedDimensions.height
         );
-        let outputScale = Math.min(EMAIL_IMAGE_RESOLUTION_SCALING.max, scale);
+        let outputScale = Math.min(RESOLUTION_SCALING_RANGE.max, scale);
         if (scale < 1) {
             // Bias towards 1 allowing to store interpolated source image pixels
             // for a better filter quality
-            outputScale = Math.max(
-                EMAIL_IMAGE_RESOLUTION_SCALING.min,
-                Math.min((3 * scale) / 2, 1)
-            );
+            outputScale = Math.max(RESOLUTION_SCALING_RANGE.min, Math.min((3 * scale) / 2, 1));
         }
         Object.assign(renderedDimensions, normalizeDimensions(renderedDimensions, outputScale));
         Object.assign(targetDimensions, normalizeDimensions(targetDimensions, outputScale));
@@ -667,10 +673,9 @@ export class EmailImageFormatPlugin extends Plugin {
         const targetDimensions = this.getMeasuredBackgroundDimensions(measureEl);
         const naturalDimensions = await this.getImageNaturalDimensions(src);
         if (mimetype === SVG_MIMETYPE || !naturalDimensions.width || !naturalDimensions.height) {
-            // TODO EGGMAIL: scale SVGs higher than rendered dimensions for better quality?
             Object.assign(
                 naturalDimensions,
-                await this.computeSvgNaturalDimensions(src, targetDimensions)
+                await this.computeSvgIntrinsicDimensions(src, targetDimensions)
             );
         }
         const { renderedDimensions, targetPosition } = this.computeCoverGeometry(
@@ -781,11 +786,10 @@ export class EmailImageFormatPlugin extends Plugin {
         const { mimetype } = imageInfo;
         const dimensions = await this.getImageNaturalDimensions(src);
         if (mimetype === SVG_MIMETYPE || !dimensions.width || !dimensions.height) {
-            // TODO EGGMAIL: scale SVGs higher than rendered dimensions for better quality?
             const measuredDimensions = this.getMeasuredImageDimensions(measureEl);
             Object.assign(
                 dimensions,
-                await this.computeSvgNaturalDimensions(src, measuredDimensions)
+                await this.computeSvgIntrinsicDimensions(src, measuredDimensions)
             );
         }
         const checksum = await computeEmailImageChecksum("IMG", src, mimetype, dimensions);
