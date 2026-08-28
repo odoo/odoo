@@ -23,6 +23,7 @@ const WEBP_MIMETYPE = "image/webp";
 const FORBIDDEN_EMAIL_MIMETYPE = new Set([SVG_MIMETYPE, WEBP_MIMETYPE]);
 const SVG_EXCLUSIVE_ATTRIBUTES = new Set(["viewBox", "preserveAspectRatio", "x", "y"]);
 const PLACEHOLDER_IMAGE = "/html_editor/static/src/img/placeholder_thumbnail.png";
+const EMAIL_IMAGE_RESOLUTION_SCALING = { min: 0.5, max: 2 };
 
 export class AggregateEmailImageError extends AggregateError {
     name = this.constructor.name;
@@ -602,20 +603,23 @@ export class EmailImageFormatPlugin extends Plugin {
      * renderedDimensions may not be adequate relative to naturalDimensions:
      * - too small and it will result in a big loss of image quality
      * - too high and it will result in a bigger image with interpolated pixels (not useful)
-     * This function scales output dimensions between 0.5 and 2 according to that relation:
-     * - 0.5 lower boundary prevents generating a too low res filter on a low res image
-     * - 2 upper boundary prevents storing a big file when most of the quality is not perceptible
+     * This function scales output dimensions between boundaries according to that relation:
+     * - lower boundary prevents generating a too low res filter on a low res image
+     * - upper boundary prevents storing a big file when most of the quality is not perceptible
      */
     scaleDimensions(targetDimensions, naturalDimensions, renderedDimensions, targetPosition) {
         const scale = Math.min(
             naturalDimensions.width / renderedDimensions.width,
             naturalDimensions.height / renderedDimensions.height
         );
-        let outputScale = Math.min(2, scale);
+        let outputScale = Math.min(EMAIL_IMAGE_RESOLUTION_SCALING.max, scale);
         if (scale < 1) {
             // Bias towards 1 allowing to store interpolated source image pixels
             // for a better filter quality
-            outputScale = Math.max(0.5, Math.min((3 * scale) / 2, 1));
+            outputScale = Math.max(
+                EMAIL_IMAGE_RESOLUTION_SCALING.min,
+                Math.min((3 * scale) / 2, 1)
+            );
         }
         Object.assign(renderedDimensions, normalizeDimensions(renderedDimensions, outputScale));
         Object.assign(targetDimensions, normalizeDimensions(targetDimensions, outputScale));

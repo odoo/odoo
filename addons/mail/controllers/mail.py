@@ -390,10 +390,17 @@ class MailController(http.Controller):
         color_tuple = ImageColor.getrgb(color)
         alpha = color_tuple[3] if len(color_tuple) == 4 else 255
         bg = '#' + str.lower(bg)
-        # Make sure we have at least size=1
-        width = max(1, min(width, 512))
-        height = max(1, min(height, 512))
-        font_size = max(1, min(font_size, 512))
+        # Make sure size >= 1, keep requested aspect ratio and
+        # clamp maximum output dimension to 512
+        width = max(1, width)
+        height = max(1, height)
+        font_size = max(1, font_size)
+        max_size = max(width, height, font_size)
+        if max_size > 512:
+            scale = 512 / max_size
+            width = max(1, round(width * scale))
+            height = max(1, round(height * scale))
+            font_size = max(1, round(font_size * scale))
         # Determine the dimensions of the icon using a dummy draw
         draw = ImageDraw.Draw(Image.new('L', (1, 1)))
         fd = None

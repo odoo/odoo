@@ -41,6 +41,7 @@ export class ImageStrategyPlugin extends Plugin {
             this.refineImage.bind(this)
         ),
         style_rules_processors: [[this.provideStyleRules.bind(this), ImageStrategyPlugin.id]],
+        is_responsive_element_predicates: this.preventResponsiveImage.bind(this),
     };
 
     setup() {
@@ -48,6 +49,12 @@ export class ImageStrategyPlugin extends Plugin {
         // on an image
         this.imageBorderStyleRules = new Rules();
         this.provideImageBorderStyleRules();
+    }
+
+    preventResponsiveImage({ responsiveElement, container }) {
+        if (container.tagName === "DIV" || isParagraphRelatedElement(container)) {
+            // WORKING HERE
+        }
     }
 
     // TODO EGGMAIL: see rules_plugin, remove these rules and allow
@@ -132,6 +139,8 @@ export class ImageStrategyPlugin extends Plugin {
     // applied on non-paragraph-related elements too
     addBottomUpConstraintsForImages(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         if (!this.isImg({ referenceNode })) {
+            // TODO EGGMAIL: should detect image links too (and maybe icons even?)
+            // WORKING HERE
             return defaultEmailNodeArguments;
         }
         const rawStyleInfo = this.getRawStyleInfo(referenceNode);
@@ -147,7 +156,7 @@ export class ImageStrategyPlugin extends Plugin {
             const { layout } = emailNode;
             if (
                 !(layout instanceof ElementLayout) ||
-                !paragraphRelatedElements.includes(layout.tag) ||
+                (!paragraphRelatedElements.includes(layout.tag) && layout.tag !== "DIV") ||
                 emailNode.children.length !== 1 ||
                 (!emailNode.children.at(0).analysis.facts.isImage &&
                     !emailNode.children.at(0).analysis.facts.isImageLink)
@@ -423,9 +432,18 @@ export class ImageStrategyPlugin extends Plugin {
         const iconScale = this.getScaling(this.getFontIconPropertyValue(fontIcon, "transform"));
         const scaledFontSize = fontSize.number * iconScale;
         const computedStyle = this.getComputedStyle(fontIcon);
-        const width = parseCssValue(computedStyle.getPropertyValue("width"));
-        const height = parseCssValue(computedStyle.getPropertyValue("height"));
-        const containerScale = this.getScaling(computedStyle.getPropertyValue("transform"));
+        let width, height, containerScale;
+        if (shouldBeBlock) {
+            // If the icon is inside a block span, ignore the span dimensions,
+            // as they will result in a smaller resolution image.
+            width = parseCssValue(this.getFontIconPropertyValue(fontIcon, "width"));
+            height = parseCssValue(this.getFontIconPropertyValue(fontIcon, "height"));
+            containerScale = 1;
+        } else {
+            width = parseCssValue(computedStyle.getPropertyValue("width"));
+            height = parseCssValue(computedStyle.getPropertyValue("height"));
+            containerScale = this.getScaling(computedStyle.getPropertyValue("transform"));
+        }
         const scaledWidth = Math.max(width.number * containerScale, scaledFontSize);
         const scaledHeight = Math.max(height.number * containerScale, scaledFontSize);
         // render at double the resolution for sharper zoom accuracy
@@ -438,14 +456,13 @@ export class ImageStrategyPlugin extends Plugin {
             height: `${scaledHeight}px`,
             "vertical-align": "middle",
         });
-        const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock });
         return {
             attributes: Object.assign(this.getAttributes(fontIcon), {
                 src,
                 width: `${Math.round(scaledWidth)}`,
                 height: `${Math.round(scaledHeight)}`,
             }),
-            style: defaultStyleInfo.merge(forcedStyleInfo),
+            style: defaultStyleInfo,
         };
     }
 
