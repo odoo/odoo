@@ -134,6 +134,9 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         if "website_helpdesk" in self.installed_modules:
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
+        if "website_sale_collect" in self.installed_modules:
+            # Additional query to check the delivery method of the cart for the Click & Collect
+            res["delivery_carrier"] += 1
         return res
 
     def test_product_page_generation(self):
@@ -368,9 +371,6 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
 
         if "website_sale_mrp" in self.installed_modules:
             res["mrp_bom"] += 1
-
-        if "website_sale_collect" in self.installed_modules:
-            res["delivery_carrier"] += 1
 
         if "product_expiry" in self.installed_modules:
             res["stock_quant"] += 1

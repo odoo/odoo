@@ -9,15 +9,10 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
             content: "Check standard delivery is not possible",
             trigger: '[name="delivery_availability"] div:contains("Not available")',
         },
-        clickOnElement("Open Location selector", '[name="click_and_collect_availability"]'),
-        {
-            content: "Check the dialog is opened",
-            trigger: '.o_location_selector',
-        },
-        clickOnElement("Choose location", '#submit_location_large'),
+        clickOnElement("Select pickup", '[name="click_and_collect_availability"]'),
         {
             content: "Check pickup location is set",
-            trigger: '[name="click_and_collect_availability"] div:contains("Shop 1")',
+            trigger: '[name="click_and_collect_availability"] strong:contains("Shop 1")',
         },
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 1 }),

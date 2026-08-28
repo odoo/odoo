@@ -113,7 +113,7 @@
             <i
                 t-if="website.sudo().in_store_dm_id"
                 class="oi oi-fw me-1"
-                t-attf-data-icon="{{'location_on' if dm.delivery_type == 'in_store' else 'local_shipping'}}"
+                t-attf-data-icon="{{'storefront' if dm.delivery_type == 'in_store' else 'local_shipping'}}"
                 role="presentation"
                 aria-label="Delivery method"
             />
