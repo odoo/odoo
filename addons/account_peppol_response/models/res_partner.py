@@ -28,13 +28,12 @@ class ResPartner(models.Model):
             partner.peppol_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
 
     @handle_demo
-    def button_account_peppol_check_partner_endpoint(self, company=None):
+    def button_account_peppol_check_partner_endpoint(self):
         # EXTENDS account_peppol
         self.ensure_one()
-        super(ResPartner, self.with_company(company)).button_account_peppol_check_partner_endpoint()
+        super().button_account_peppol_check_partner_endpoint()
 
-        if not company:
-            company = self.env.company
+        company = self.env.company
         self_partner = self.with_company(company)
         if self_partner.peppol_eas and self_partner.peppol_endpoint:
             self_partner._peppol_fill_participant_supported_documents()
