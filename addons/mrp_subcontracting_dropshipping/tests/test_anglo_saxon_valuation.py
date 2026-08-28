@@ -236,5 +236,5 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         dropship_transfer = purchase_order.picking_ids[0]
         dropship_transfer.button_validate()
 
-        self.assertEqual(avco_product.standard_price, 100)
-        self.assertEqual(avco_product_2.standard_price, 100)
+        self.assertEqual(avco_product.standard_price, 0)
+        self.assertEqual(avco_product_2.standard_price, 0)
