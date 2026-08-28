@@ -419,8 +419,7 @@ class Domain:
         """Validates that the current domain is correct or raises an exception"""
         # just execute the optimization code that goes through all the fields
         # the search domain is set to False to avoid performing searches
-        model = model.with_context(search_domain=Domain.FALSE)
-        self._optimize(model, OptimizationLevel.FULL)._to_sql(Query(model).table)
+        self.optimize_full(model, search_domain=Domain.FALSE)._to_sql(Query(model).table)
 
     def _as_predicate[M: BaseModel](self, records: M) -> Callable[[M], bool]:
         """Return a predicate function from the domain (bound to records).
@@ -459,7 +458,7 @@ class Domain:
         """
         return self._optimize(model, OptimizationLevel.DYNAMIC_VALUES)
 
-    def optimize_full(self, model: BaseModel) -> Domain:
+    def optimize_full(self, model: BaseModel, search_domain: Domain | None = None) -> Domain:
         """Perform optimizations of the node given a model.
 
         Basic and advanced optimizations are applied.
@@ -468,7 +467,11 @@ class Domain:
         guaranteed at the given point in a transaction. We resolve inherited
         and non-stored fields (using their search method) to transform the
         conditions.
+
+        The `search_domain` is the whole domain the user provided for searching.
         """
+        if search_domain is not model.env.context.get('search_domain'):
+            model = model.with_context(search_domain=search_domain)
         return self._optimize(model, OptimizationLevel.FULL)
 
     @typing.final
@@ -1141,7 +1144,7 @@ class DomainCondition(Domain):
             field_expr = 'id'
             # similar to a search with [('id', 'in', records.ids), *condition]
             value = records._filtered_access('read')._as_query(ordered=False)
-            value.add_where(condition.optimize_full(records)._to_sql(value.table))
+            value.add_where(condition.optimize_full(records, search_domain=Domain('id', 'any!', value))._to_sql(value.table))
             assert isinstance(value, Query)
 
         if isinstance(value, Query):
