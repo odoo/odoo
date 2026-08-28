@@ -13,22 +13,22 @@
         <record id="blog_blog_1" model="blog.blog">
             <field name="name">Travel</field>
             <field name="subtitle">Find inspiration for your next adventure with guides, tips, and stories from around the globe.</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
         </record>
         <record id="blog_blog_2" model="blog.blog">
             <field name="name">Technology</field>
             <field name="subtitle">Stay ahead of the curve with the latest tech insights, trends, and how-tos.</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_2.webp')", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_2.webp')", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
         </record>
         <record id="blog_blog_3" model="blog.blog">
             <field name="name">Lifestyle</field>
             <field name="subtitle">Upgrade your daily routine with ideas on wellness, productivity, and modern living.</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_3.webp')", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_3.webp')", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
         </record>
         <record id="blog_blog_4" model="blog.blog">
             <field name="name">Business</field>
             <field name="subtitle">Build smarter strategies and grow with insights from industry leaders and real-world case studies.</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_4.webp')", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_4.webp')", "opacity": "0.6", "background_color_class": "o_cc5"}</field>
         </record>
 
         <!-- TAGS -->
@@ -131,7 +131,7 @@
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=100)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_4'), ref('blog_tag_5'), ref('blog_tag_6')])]"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>Traveling the world might sound like a luxury, but it doesn't have to come with a luxury price tag. With a few practical strategies and a flexible mindset, it's possible to explore new places, meet new people, and experience different cultures, without draining your savings.</p>
 
@@ -172,7 +172,7 @@
             <field name="published_date" eval="(datetime.now()-relativedelta(days=25)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_9'), ref('blog_tag_10'), ref('blog_tag_11')])]"/>
             <field name="visits">246</field>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>From controlling lights with a tap on your phone to automating your morning coffee, smart home technology has become part of everyday life. What started as a convenience has quickly evolved into a lifestyle shift, transforming how we interact with our living spaces.</p>
 <p>With new devices constantly hitting the market and major tech players investing heavily in home automation, smart homes are no longer a futuristic concept. But as these systems become more integrated and intelligent, the big question is: what's coming next?</p>
@@ -213,7 +213,7 @@
             <field name="visits">467</field>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=15)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_3.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_3.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>Working from home has become the new normal for many professionals around the world. While it offers flexibility and eliminates the daily commute, it also brings unique challenges when it comes to staying focused and organized.</p>
 <p>Whether you're freelancing, running a small business, or managing a remote team, creating a productive work-from-home environment is key. With the right habits and a bit of structure, working remotely can be just as efficient, if not more, than working in an office.</p>
@@ -251,7 +251,7 @@
             <field name="visits">453</field>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=70)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>Artificial Intelligence (AI) is no longer a distant concept confined to science fiction. It is rapidly becoming an integral part of our daily routines, transforming how we live, work, and interact. From smart assistants in our homes to personalized recommendations on our devices, AI is shaping the future in ways we are just beginning to understand.</p>
 <p>As AI technology continues to evolve, its applications in everyday life are expanding. Automated systems now handle complex tasks like managing home energy consumption, optimizing traffic flow in cities, and even assisting with healthcare diagnostics. These advancements promise to make daily life more efficient, convenient, and tailored to individual needs.</p>
@@ -287,7 +287,7 @@
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_7'), ref('blog_tag_14'), ref('blog_tag_15')])]"/>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=50)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>In a world filled with noise, distractions, and never-ending to-do lists, many people are turning to minimalism as a way to regain clarity and control. But minimalism isn't just about having fewer things, it's about making room for what truly matters.</p>
 <p>Whether you're simplifying your home, your schedule, or your digital life, embracing a minimalist mindset can bring more focus, freedom, and peace into your everyday routine.</p>
@@ -326,7 +326,7 @@
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_12'), ref('blog_tag_13')])]"/>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=40)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>Asia is home to some of the world's most iconic travel spots, from the bustling streets of Tokyo to the white sands of Bali. But beyond the usual tourist trails lie hidden gems that offer just as much charm, culture, and adventure, often with fewer crowds and a more authentic experience.</p>
 <p>Whether you're seeking serene beaches, ancient temples, or vibrant local life, these lesser-known destinations deserve a spot on your travel list.</p>
@@ -435,7 +435,7 @@
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_20'), ref('blog_tag_21'), ref('blog_tag_22')])]"/>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=80)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
             <field name="content"><![CDATA[
 <p>Starting a business without any upfront capital may sound impossible, but countless entrepreneurs have done it successfully. The key lies in creativity, resourcefulness, and leveraging available tools and networks. With the right mindset and strategy, you can turn an idea into a viable business even with little to no money.</p>
 <p>One of the first steps is to identify a service or product that requires minimal investment but solves a real problem. Many businesses today begin as side projects or freelance services, allowing founders to test the market and build a customer base without heavy financial risk.</p>
