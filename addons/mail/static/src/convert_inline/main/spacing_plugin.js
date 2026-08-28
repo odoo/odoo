@@ -50,6 +50,7 @@ export class SpacingPlugin extends Plugin {
         "getMarginStyleInfo",
         "buildMarginNode",
         "buildPaddingNode",
+        "hasMarginAuto",
         "hasMarginSpacing",
         "hasPaddingSpacing",
         "validateSpacingValue",
@@ -296,6 +297,15 @@ export class SpacingPlugin extends Plugin {
         return (
             analysis.facts.desktopMarginStyleInfo &&
             analysis.facts.desktopMarginStyleInfo.size !== 0
+        );
+    }
+
+    hasMarginAuto(referenceNode) {
+        const rawStyleInfo = this.getRawStyleInfo(referenceNode);
+        const marginStyleInfo = this.getMarginStyleInfo(rawStyleInfo, referenceNode);
+        return (
+            marginStyleInfo.getPropertyValue("margin-left") === "auto" ||
+            marginStyleInfo.getPropertyValue("margin-right") === "auto"
         );
     }
 

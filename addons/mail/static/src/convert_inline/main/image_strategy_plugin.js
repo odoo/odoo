@@ -52,8 +52,14 @@ export class ImageStrategyPlugin extends Plugin {
     }
 
     preventResponsiveImage({ responsiveElement, container }) {
-        if (container.tagName === "DIV" || isParagraphRelatedElement(container)) {
-            // WORKING HERE
+        if (
+            (container.tagName === "DIV" || isParagraphRelatedElement(container)) &&
+            (this.detectImageLink(responsiveElement) || this.detectImage(responsiveElement)) &&
+            this.hasMarginAuto(responsiveElement)
+        ) {
+            // Prevent single images with margin auto from being converted to responsive elements.
+            // This kind of configuration is better handled by addBottomUpConstraintsForImages.
+            return false;
         }
     }
 
@@ -138,20 +144,13 @@ export class ImageStrategyPlugin extends Plugin {
     // TODO EGGMAIL: verify if this margin-auto handling should be
     // applied on non-paragraph-related elements too
     addBottomUpConstraintsForImages(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
-        if (!this.isImg({ referenceNode })) {
-            // TODO EGGMAIL: should detect image links too (and maybe icons even?)
-            // WORKING HERE
-            return defaultEmailNodeArguments;
-        }
-        const rawStyleInfo = this.getRawStyleInfo(referenceNode);
-        const marginStyleInfo = this.getMarginStyleInfo(rawStyleInfo, referenceNode);
+        const { analysis } = defaultEmailNodeArguments;
         if (
-            marginStyleInfo.getPropertyValue("margin-left") !== "auto" &&
-            marginStyleInfo.getPropertyValue("margin-right") !== "auto"
+            (!analysis.facts.isImage && !analysis.facts.isImageLink) ||
+            !this.hasMarginAuto(referenceNode)
         ) {
             return defaultEmailNodeArguments;
         }
-        const { analysis } = defaultEmailNodeArguments;
         analysis.bottomUpConstraints.push((emailNode) => {
             const { layout } = emailNode;
             if (
@@ -314,9 +313,12 @@ export class ImageStrategyPlugin extends Plugin {
             shouldBeBlock = true;
         }
         const forcedStyleInfo = this.getForcedImageStyle({ shouldBeBlock });
-        const styleInfo = this.getStyleInfo(imageNode)
-            .merge(StyleInfo.from(dimensions.style))
-            .merge(forcedStyleInfo);
+        const filteredStyleInfo = StyleInfo.from(this.getStyleInfo(imageNode));
+        const dimensionsStyleInfo = StyleInfo.from(dimensions.style);
+        for (const [propertyName] of dimensionsStyleInfo) {
+            filteredStyleInfo.removeProperty(propertyName);
+        }
+        const styleInfo = filteredStyleInfo.merge(dimensionsStyleInfo).merge(forcedStyleInfo);
         return {
             attributes: Object.assign(this.getAttributes(imageNode), dimensions.attributes),
             style: styleInfo,
@@ -607,13 +609,17 @@ export class ImageStrategyPlugin extends Plugin {
             Object.assign(style, { width: `${width.number}px`, height: "auto" });
         } else {
             style.height = "auto";
-            if (width.unit === "%") {
+            if (width.unit === "%" && width.number === 100) {
+                // Don't keep width % lower than 100, as the % value most
+                // likely won't make sense in the email layout, instead, keep
+                // the desktop-rendered size.
                 style.width = `${width.number}%`;
             } else if (
                 width.string !== "auto" ||
                 !this.isZero(width.rendered.number - width.natural)
             ) {
                 style.width = `${Math.round(width.rendered.number)}px`;
+                style["max-width"] = `100%`;
             }
             attributes.width = `${Math.round(width.rendered.number)}`;
             if (maxWidth.unit === "px") {

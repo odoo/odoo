@@ -382,33 +382,65 @@ export class EmailImageFormatPlugin extends Plugin {
         return response;
     }
 
-    async getSvgAspectRatio(svgUrl) {
+    async getSvgIntrinsicInfo(svgUrl) {
         const response = await this.fetchImageUrl(svgUrl);
         const text = await response.text();
         const doc = new DOMParser().parseFromString(text, "image/svg+xml");
         const svg = doc.documentElement;
         const viewBox = svg.getAttribute("viewBox");
+        const width = svg.getAttribute("width");
+        const height = svg.getAttribute("height");
+        const parsedWidth = parseCssValue(width);
+        const parsedHeight = parseCssValue(height);
+        const output = {};
+        if ((parsedWidth.unit === "px" || parsedWidth.unit === null) && parsedWidth.number > 0) {
+            output.width = parsedWidth.number;
+        }
+        if ((parsedHeight.unit === "px" || parsedHeight.unit === null) && parsedHeight.number > 0) {
+            output.height = parsedHeight.number;
+        }
         if (viewBox) {
-            const [, , width, height] = viewBox
+            const [, , vbWidth, vbHeight] = viewBox
                 .trim()
                 .split(/[\s,]+/)
                 .map(Number);
 
-            if (width > 0 && height > 0) {
-                return width / height;
+            if (vbWidth > 0 && vbHeight > 0) {
+                output.aspectRatio = vbWidth / vbHeight;
             }
         }
-        const width = parseFloat(svg.getAttribute("width"));
-        const height = parseFloat(svg.getAttribute("height"));
-        if (width > 0 && height > 0) {
-            return width / height;
+        if (
+            !output.aspectRatio &&
+            parsedWidth.number > 0 &&
+            parsedHeight.number > 0 &&
+            parsedWidth.unit === parsedHeight.unit
+        ) {
+            const ratioWidth = parseFloat(width);
+            const ratioHeight = parseFloat(height);
+            if (ratioWidth > 0 && ratioHeight > 0) {
+                output.aspectRatio = ratioWidth / ratioHeight;
+            }
         }
-        return null;
+        if (Object.keys(output).length === 0) {
+            return null;
+        }
+        if ("aspectRatio" in output) {
+            if ("width" in output && !("height" in output)) {
+                output.height = output.width / output.aspectRatio;
+            } else if ("height" in output && !("width" in output)) {
+                output.width = output.height * output.aspectRatio;
+            }
+        }
+        return output;
     }
 
     async computeSvgNaturalDimensions(src, measuredDimensions) {
+        const intrinsicInfo = await this.getSvgIntrinsicInfo(src);
+        if (intrinsicInfo.width && intrinsicInfo.height) {
+            return intrinsicInfo;
+        }
+        const { aspectRatio } = intrinsicInfo;
         const dimensions = {};
-        const aspectRatio = await this.getSvgAspectRatio(src);
         const { width, height } = measuredDimensions;
         // For SVG images, render at measured dimensions since their
         // resolution is dynamic, and they don't necessarily have
