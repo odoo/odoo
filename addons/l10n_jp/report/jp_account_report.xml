@@ -11,7 +11,7 @@
             </xpath>
 
             <xpath expr="//th[@name='th_priceunit']" position="attributes">
-                <attribute name="class">text-end text-nowrap</attribute>
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
             </xpath>
             <xpath expr="//th[@name='th_priceunit']/span" position="replace">
                 <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
@@ -19,7 +19,7 @@
             </xpath>
 
             <xpath expr="//th[@name='th_subtotal']" position="attributes">
-                <attribute name="class">text-end text-nowrap</attribute>
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
             </xpath>
             <xpath expr="//th[@name='th_subtotal']/span" position="replace">
                 <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
@@ -33,7 +33,7 @@
             </xpath>
 
             <xpath expr="//table[@name='invoices']/thead/tr/th[last()]" position="attributes">
-                <attribute name="class">text-end text-nowrap</attribute>
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard' else 'text-end'</attribute>
             </xpath>
             <xpath expr="//table[@name='invoices']/thead/tr/th[last()]/span" position="replace">
                 <t t-set="jp_currency_label" t-value="o.currency_id.name if o.currency_id.name != 'JPY' else '円'"/>
