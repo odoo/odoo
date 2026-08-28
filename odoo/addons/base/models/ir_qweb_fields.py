@@ -215,14 +215,12 @@ class IrQwebFieldFloat(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        min_precision = options.get('min_precision')
+        min_precision = options.get('min_precision') or 0
         if 'decimal_precision' in options:
             precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
         elif options.get('precision') is None:
             # We display maximum 6 decimal digits
             precision = 6
-            if min_precision is None:
-                min_precision = 1
         else:
             precision = options['precision']
 
@@ -232,7 +230,7 @@ class IrQwebFieldFloat(models.AbstractModel):
         precision = min(precision, max_dec_digits)
 
         fmt = f'%.{precision}f'
-        if min_precision is not None and min_precision < precision:
+        if min_precision < precision:
             _, dec_part = float_utils.float_split_str(value, precision)
             digits_count = len(dec_part.rstrip('0'))
             if digits_count < min_precision:
