@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_log_view_form_project" model="ir.ui.view">
+        <field name="name">project.activity.log.view.form</field>
+        <field name="model">mail.activity.schedule</field>
+        <field name="inherit_id" ref="mail.mail_activity_log_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_id']" position="after">
+                <field name="task_id" nolabel="1" class="w-100"
+                    domain="task_id_domain"
+                    required="res_model_selection == 'project.task'"
+                    invisible="res_model_selection != 'project.task'"
+                    options="{'no_create': True}"
+                    placeholder="Choose a Task"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

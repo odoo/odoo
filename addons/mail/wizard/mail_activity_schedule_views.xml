@@ -142,5 +142,60 @@
                 </form>
             </field>
         </record>
+
+        <record id="mail_activity_log_view_form" model="ir.ui.view">
+            <field name="name">Log activity in chatter</field>
+            <field name="model">mail.activity.schedule</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet class="o_mail_activity_schedule_wizard">
+                        <group invisible="True">
+                            <field name="is_call_ongoing"/>
+                            <field name="res_model"/>
+                            <field name="res_ids"/>
+                        </group>
+                        <group>
+                            <field name="res_model_selection" widget="badges_selection" nolabel="1" required="True"/>
+                        </group>
+                        <group>
+                            <group>
+                                <div class="o_outlined d-flex align-items-center mb-2 gap-2" colspan="2">
+                                    <i class="oi oi-filled o_mail_activity_log_icon mb-2" data-icon="label" title="Log On"/>
+                                    <field name="contact_id" nolabel="1" class="w-100"
+                                        widget="many2one_avatar"
+                                        required="res_model_selection == 'res.partner'"
+                                        invisible="res_model_selection != 'res.partner'"
+                                        readonly="context.get('log_contact_id')"
+                                        options="{'no_create': True, 'no_open': True}"/>
+                                </div>
+                                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2" colspan="2">
+                                    <i class="oi oi-filled o_mail_activity_log_icon" data-icon="schedule" title="Activity Type"/>
+                                    <field name="activity_type_id" nolabel="1" class="w-100"
+                                        domain="activity_type_id_domain"
+                                        required="True"
+                                        readonly="not res_model_selection"
+                                        options="{'no_create': True, 'no_open': True}"/>
+                                </div>
+                                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2" colspan="2">
+                                    <i class="oi oi-filled o_mail_activity_log_icon" data-icon="sticky_note_2" title="Summary"/>
+                                    <field name="summary" nolabel="1" class="w-100"
+                                        placeholder="e.g. Discuss Proposal"/>
+                                </div>
+                            </group>
+                            <group/>
+                        </group>
+                        <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
+                    </sheet>
+                    <footer>
+                        <button string="Mark Done" name="action_schedule_activities_done" invisible="is_call_ongoing"
+                            type="object" class="btn-primary" data-hotkey="w"/>
+                        <button string="Mark Done" name="action_schedule_activities" invisible="not is_call_ongoing"
+                            type="object" class="btn-primary" data-hotkey="w"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
     </data>
 </odoo>

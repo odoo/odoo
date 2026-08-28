@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_log_view_form_sale" model="ir.ui.view">
+        <field name="name">sale.activity.log.view.form</field>
+        <field name="model">mail.activity.schedule</field>
+        <field name="inherit_id" ref="mail.mail_activity_log_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_id']" position="after">
+                <field name="sale_order_id" nolabel="1" class="w-100"
+                    domain="sale_order_id_domain"
+                    required="res_model_selection == 'sale.order'"
+                    invisible="res_model_selection != 'sale.order'"
+                    options="{'no_create': True}"
+                    placeholder="Choose a Sale Order"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

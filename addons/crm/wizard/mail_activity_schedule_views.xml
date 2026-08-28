@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_log_view_form_crm" model="ir.ui.view">
+        <field name="name">crm.activity.log.view.form</field>
+        <field name="model">mail.activity.schedule</field>
+        <field name="inherit_id" ref="mail.mail_activity_log_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_id']" position="after">
+                <field name="lead_id" nolabel="1" class="w-100"
+                    domain="lead_id_domain"
+                    required="res_model_selection == 'crm.lead'"
+                    invisible="res_model_selection != 'crm.lead'"
+                    options="{'no_create': True}"
+                    placeholder="Choose a Lead"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
