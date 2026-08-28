@@ -14,7 +14,7 @@ class TestJPStockReport(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('ja_JP')
         cls.partner_a.lang = 'ja_JP'
-        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
+        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jis_standard')
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.picking_type_out = cls.warehouse.out_type_id
         cls.customer_location = cls.picking_type_out.default_location_dest_id
