@@ -139,7 +139,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _compute_valid_work_entry_type_ids(self):
         res = self.env["hr.work.entry.type"]
         work_entry_types = (
-            self.env["hr.work.entry.type"].search([]).grouped("requires_allocation")
+            self.env["hr.work.entry.type"].search([('time_off_selectable', '=', True)]).grouped("requires_allocation")
         )
         work_entry_types_alloc = work_entry_types.get(True, res)
         work_entry_types_no_alloc = work_entry_types.get(False, res)

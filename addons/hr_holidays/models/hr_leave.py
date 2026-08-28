@@ -149,6 +149,7 @@ class HrLeave(models.Model):
         required=True, index=True, readonly=False,
         domain="""[
             [('id', 'in', allowed_work_entry_type_ids)],
+            ('time_off_selectable', '=', True),
             '|',
                 ('requires_allocation', '=', False),
                 ('has_valid_allocation', '=', True),
