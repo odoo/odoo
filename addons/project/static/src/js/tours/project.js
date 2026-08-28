@@ -109,6 +109,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_project_tasks",
 },
 {
+    id: "drag_task_to_next_stage",
     trigger: ".o_kanban_record",
     content: markup(_t("<b>Drag &amp; drop</b> the card to change your task from stage.")),
     tooltipPosition: "bottom",

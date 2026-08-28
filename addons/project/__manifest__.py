@@ -98,6 +98,9 @@
             'project/static/src/views/burndown_chart/**',
             'project/static/src/views/project_project_activity/**',
         ],
+        'web_tour.interactive': [
+            'project/static/src/js/tours/tour_pointer_step_id.js',
+        ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/interactions/*',
