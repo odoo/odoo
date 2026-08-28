@@ -32,23 +32,6 @@ class AccountTaxGroup(models.Model):
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
-    tax_payable_account_id = fields.Many2one(
-        comodel_name='account.account',
-        check_company=True,
-        domain="[('account_type', '=', 'liability_payable'), ('non_trade', '=', True)]",
-        string='Tax Payable Account',
-        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.")
-    tax_receivable_account_id = fields.Many2one(
-        comodel_name='account.account',
-        check_company=True,
-        domain="[('account_type', '=', 'asset_receivable'), ('non_trade', '=', True)]",
-        string='Tax Receivable Account',
-        help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.")
-    advance_tax_payment_account_id = fields.Many2one(
-        comodel_name='account.account',
-        check_company=True,
-        string='Tax Advance Account',
-        help="Downpayments posted on this account will be considered by the Tax Closing Entry.")
     country_id = fields.Many2one(
         string="Country",
         comodel_name='res.country',
@@ -63,19 +46,6 @@ class AccountTaxGroup(models.Model):
         translate=True,
     )
     pos_receipt_label = fields.Char(string='PoS receipt label')
-
-    @api.constrains('tax_payable_account_id', 'tax_receivable_account_id')
-    def _constrains_payable_receivable_account(self):
-        for tax_group in self:
-            if tax_group.tax_payable_account_id and tax_group.tax_payable_account_id.account_type != 'liability_payable':
-                raise UserError(self.env._("You must select a payable account for 'Tax Payable Account'."))
-            if tax_group.tax_receivable_account_id and tax_group.tax_receivable_account_id.account_type != 'asset_receivable':
-                raise UserError(self.env._("You must select a receivable account for 'Tax Receivable Account'."))
-            if (
-                (tax_group.tax_payable_account_id and not tax_group.tax_payable_account_id.non_trade)
-                or (tax_group.tax_receivable_account_id and not tax_group.tax_receivable_account_id.non_trade)
-            ):
-                raise UserError(self.env._("You must use non-trade accounts for tax groups."))
 
     @api.depends('company_id')
     def _compute_country_id(self):
