@@ -11,14 +11,18 @@
                 <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
             </xpath>
 
+            <xpath expr="//th[@name='th_price_unit']" position="attributes">
+                <attribute name="class">text-end text-nowrap</attribute>
+            </xpath>
             <xpath expr="//th[@name='th_price_unit']/strong" position="replace">
-                <strong t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="'Unit Price (%s)' % jp_currency_label"/>
-                <strong t-else="">Unit Price</strong>
+                <strong>Unit Price<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></strong>
             </xpath>
 
+            <xpath expr="//th[@name='th_subtotal']" position="attributes">
+                <attribute name="class">text-end text-nowrap</attribute>
+            </xpath>
             <xpath expr="//th[@name='th_subtotal']/strong" position="replace">
-                <strong t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="'Amount (%s)' % jp_currency_label"/>
-                <strong t-else="">Amount</strong>
+                <strong>Amount<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'" t-out="' (%s)' % jp_currency_label"/></strong>
             </xpath>
         </template>
 
