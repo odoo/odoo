@@ -120,9 +120,6 @@ a dependency towards website editing and customization capabilities.""",
             "portal/static/src/chatter/portal/scss/shadow.scss",
             "portal/static/src/chatter/portal/scss/portal_chatter.scss",
         ],
-        'website.assets_inside_builder_iframe': [
-            'portal/static/src/scss/portal.edit.*'
-        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
