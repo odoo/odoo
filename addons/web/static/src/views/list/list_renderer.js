@@ -741,15 +741,17 @@ export class ListRenderer extends Component {
                             multiCurrency = true;
                             currencyId = user.activeCompany.currency_id;
                             for (const i in values) {
-                                let currency = values[i][currencyField].id;
+                                const currencyValue = values[i][currencyField];
+                                if (!currencyValue) {
+                                    continue;
+                                }
+                                let currency = currencyValue.id;
                                 if (
                                     this.props.list.isGrouped &&
                                     !this.props.list.selection.length
                                 ) {
                                     currency =
-                                        values[i][currencyField].length > 1
-                                            ? currencyId
-                                            : values[i][currencyField][0];
+                                        currencyValue.length > 1 ? currencyId : currencyValue[0];
                                 }
                                 if (currency !== currencyId) {
                                     fieldValues[i] *= currency
@@ -795,7 +797,7 @@ export class ListRenderer extends Component {
         }
         if (this.props.list.isGrouped && !this.props.list.selection.length) {
             return values.reduce((set, value) => {
-                value[currencyField].forEach((c) => {
+                value[currencyField]?.forEach((c) => {
                     set.add(c);
                 });
                 return set;
