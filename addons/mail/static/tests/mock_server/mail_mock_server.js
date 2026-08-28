@@ -737,7 +737,9 @@ async function mail_message_update_content(request) {
                 res.one("parent_id", "_store_message_fields", {
                     value: MailMessage.browse(message.parent_id),
                 });
-                res.many("partner_ids", ["avatar_128", "name"], {
+                res.many("partner_ids", (r) => r.from_method("_store_avatar_fields"), {
+                    dynamic_fields: "_store_partner_name_dynamic_fields",
+                    sort: "id",
                     value: this.env["res.partner"].browse(message.partner_ids),
                 });
                 res.attr("pinned_at", message.pinned_at);
