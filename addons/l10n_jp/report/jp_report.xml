@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="external_layout_jp_standard">
-            <t t-set="jp_recipient_partner" t-value="jp_recipient_partner or (o and 'partner_id' in o and o.partner_id) or False"/>
+        <template id="external_layout_jis_standard">
+            <t t-set="jp_recipient_partner" t-value="(o and 'partner_id' in o and o.partner_id) or False"/>
             <t t-set="jp_recipient_lang" t-value="(jp_recipient_partner and jp_recipient_partner.lang) or company.partner_id.lang or ''"/>
             <t t-set="jp_honorific" t-value="jp_recipient_lang.startswith('ja') and (' 御中' if jp_recipient_partner and jp_recipient_partner.is_company else ' 様') or ''"/>
             <t t-set="jp_document_date"
                t-value="(o and 'invoice_date' in o and o.invoice_date) or (o and 'date_order' in o and o.date_order) or (o and 'date' in o and o.date) or (o and 'scheduled_date' in o and o.scheduled_date) or False"/>
 
             <div t-attf-class="o_company_#{company.id}_layout o_jp_standard_header header">
+                <div class="o_jp_document_heading mb-3">
+                    <h2 class="mb-1" t-if="layout_document_title" t-out="layout_document_title"/>
+                    <div class="text-muted" t-if="jp_document_date">
+                        <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
+                    </div>
+                </div>
                 <table class="table-borderless w-100">
                     <tr>
                         <td class="align-top w-50 pe-4">
@@ -16,16 +22,7 @@
                                 <div class="o_jp_recipient_name fw-bold" t-if="jp_recipient_partner and jp_recipient_partner.name">
                                     <span t-out="jp_recipient_partner.name"/><span t-out="jp_honorific"/>
                                 </div>
-                                <div class="o_jp_recipient_address">
-                                    <t t-if="address">
-                                        <t t-out="address"/>
-                                    </t>
-                                    <t t-else="">
-                                        <div class="mb-0"
-                                             t-if="jp_recipient_partner"
-                                             t-out="jp_recipient_partner.address"/>
-                                    </t>
-                                </div>
+                                <div class="o_jp_recipient_address mb-0" t-out="address or jp_recipient_partner.address"/>
                             </div>
                         </td>
                         <td class="align-top text-end w-50">
@@ -39,12 +36,6 @@
             </div>
 
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
-                <div class="o_jp_document_heading mb-3">
-                    <h2 class="mb-1" t-if="layout_document_title" t-out="layout_document_title"/>
-                    <div class="text-muted" t-if="jp_document_date">
-                        <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
-                    </div>
-                </div>
                 <div class="mb-3" t-if="information_block" t-out="information_block"/>
                 <t t-out="0"/>
             </t>
@@ -56,10 +47,9 @@
 
         <template id="jp_standard_css" inherit_id="web.styles_company_report">
             <xpath expr="//t[@t-elif]" position="before">
-                <t t-elif="layout == 'l10n_jp.external_layout_jp_standard'">
+                <t t-elif="layout == 'l10n_jp.external_layout_jis_standard'">
                     &amp;.o_jp_standard_header {
                         .o_jp_recipient_block {
-                            // ponytail: recipient block intentionally sits higher than sender for JP business etiquette.
                             margin-top: 0;
                         }
 
@@ -84,7 +74,7 @@
 
         <template id="document_tax_totals_template" inherit_id="account.document_tax_totals_template">
             <xpath expr="//t[@t-set='same_tax_base']" position="after">
-                <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
+                <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'"/>
             </xpath>
             <xpath expr='//span[@t-out="tax_group[&apos;group_name&apos;]"]' position="attributes">
                 <attribute name="t-out">('%s対象額' % tax_group['group_name']) if jp_layout_selected else tax_group['group_name']</attribute>

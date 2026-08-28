@@ -21,7 +21,7 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
             'name': 'JPY Pricelist',
             'currency_id': cls.jpy_currency.id,
         })
-        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
+        cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jis_standard')
 
     def test_sale_report_uses_honorific_and_currency_header(self):
         sale_order = self._create_sale_order_one_line(
