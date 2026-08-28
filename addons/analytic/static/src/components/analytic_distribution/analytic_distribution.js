@@ -51,6 +51,7 @@ export class AnalyticDistribution extends Component {
     setup(){
         this.orm = useService("orm");
         this.batchedOrm = useService("batchedOrm");
+        this.analyticDistributionService = useService("analytic_distribution");
 
         this.state = useState({
             showDropdown: false,
@@ -269,8 +270,9 @@ export class AnalyticDistribution extends Component {
         }
         this.state.formattedData = distribution;
         if (accountNotFound) {
-            // Analytic accounts in the json were not found, save the json without them
-            await this.save();
+            // Queue this widget for batched cleanup. This avoids triggering one
+            // update/onchange per widget by combining all stale account removals
+            this.analyticDistributionService.schedule(this);
         }
     }
 
@@ -474,9 +476,9 @@ export class AnalyticDistribution extends Component {
         }
     }
 
-    dataToJson() {
+    dataToJson(cleaningMode = false) {
         const result = {};
-        if (this.props.multi_edit) {
+        if (this.props.multi_edit && !cleaningMode) {
             result.__update__ = Object.entries(this.state.update_plan).filter((e) => e[1]).map((e) => e[0]);
         }
         this.state.formattedData = this.state.formattedData.filter((line) => this.accountCount(line));
@@ -495,6 +497,11 @@ export class AnalyticDistribution extends Component {
             this.state.formattedData = [];
             this.state.update_plan = {};
         }
+    }
+
+    saveClean() {
+        // Save the cleaned distribution without multi-edit-specific __update__ handling.
+        return this.dataToJson(true);
     }
 
     onSaveNew() {
