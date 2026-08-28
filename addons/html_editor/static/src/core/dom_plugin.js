@@ -149,8 +149,7 @@ export class DomPlugin extends Plugin {
             // Empty blocks at the inserted edges must contain a BR so the browser
             // can place the cursor inside them after insertion.
             const shouldFillEmpty = (node) =>
-                isBlock(node) &&
-                closestElement(node, "[contenteditable]")?.contentEditable !== "false";
+                isBlock(node) && this.dependencies.selection.isNodeEditable(node);
             [firstLeaf(insertedContent[0]), lastLeaf(insertedContent.at(-1))]
                 .filter(shouldFillEmpty)
                 .forEach(fillEmpty);
