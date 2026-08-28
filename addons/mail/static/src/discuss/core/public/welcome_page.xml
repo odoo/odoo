@@ -47,9 +47,9 @@
     <div class="d-flex align-items-center gap-2 w-100 text-start">
         <img class="rounded-3" t-att-src="this.channel.create_uid.avatarUrl" alt="User Avatar" width="32" height="32"/>
         <div class="d-flex flex-column overflow-hidden">
-            <span class="o-fw-600 text-uppercase text-muted smaller opacity-75">Invited by</span>
+            <span class="fw-bold text-uppercase text-muted smaller opacity-75">Invited by</span>
             <div class="d-flex gap-1">
-                <span class="o-fw-600 text-truncate" t-att-title="this.channel.create_uid.name" t-out="this.channel.create_uid.name"/>
+                <span class="fw-bold text-truncate" t-att-title="this.channel.create_uid.name" t-out="this.channel.create_uid.name"/>
                 <span t-if="this.store.companyName" class="text-truncate text-muted" t-att-title="this.store.companyName" t-out="this.store.companyName"/>
             </div>
         </div>
@@ -61,7 +61,7 @@
         <div class="bg-primary text-white rounded-2 d-flex p-2">
             <i class="oi fs-4" data-icon="group"/>
         </div>
-        <div class="fs-3 o-fw-600 mb-1">
+        <div class="fs-3 fw-bold mb-1">
             <t t-if="this.showCallPreview">You've been invited to a meeting!</t>
             <t t-else="">You've been invited to a chat!</t>
         </div>
@@ -72,8 +72,8 @@
     <div t-if="this.store.self_user" class="d-flex align-items-center gap-2">
         <img t-attf-src="/web/image/res.users/{{this.store.self_user.id}}/avatar_128/64x64" class="rounded-3" alt="User avatar" width="32" height="32"/>
         <div class="d-flex flex-column overflow-hidden">
-            <span class="text-uppercase text-muted o-fw-600 smaller opacity-75">Joining as</span>
-            <span class="o-fw-600 text-truncate" t-att-title="this.store.self_user?.name || this.state.userName.trim() || 'Guest'" t-out="this.store.self_user?.name || this.state.userName.trim() || 'Guest'"/>
+            <span class="text-uppercase text-muted fw-bold smaller opacity-75">Joining as</span>
+            <span class="fw-bold text-truncate" t-att-title="this.store.self_user?.name || this.state.userName.trim() || 'Guest'" t-out="this.store.self_user?.name || this.state.userName.trim() || 'Guest'"/>
         </div>
     </div>
 </t>
@@ -81,7 +81,7 @@
 <t t-name="mail.WelcomePage.joinSection">
     <div t-if="this.store.self_guest and !this.store.self_user">
         <label class="d-flex justify-content-between align-items-center mb-1">
-            <span class="o-fw-600">Enter your name</span>
+            <span class="fw-bold">Enter your name</span>
             <small class="text-muted" t-att-class="{'text-danger': this.state.userName.length > 60}">
                 <t t-out="this.state.userName.length"/>/60
             </small>

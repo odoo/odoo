@@ -25,13 +25,12 @@
                 </div>
                 <t t-if="!this.state.hideMailTemplateManagementOptions">
                     <div class="dropdown-divider"/>
-                    <DropdownItem class="'px-3'" onSelected="() => this.onSaveTemplate()">
-                        Save as Template
+                    <DropdownItem class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onSaveTemplate()">
+                        <i class="oi oi-fw opacity-75" data-icon="save"/>Save as Template
                     </DropdownItem>
-                    <div class="dropdown-divider"/>
-                    <a href="#" class="px-3" t-on-click="() => this.onManageTemplateBtnClick()">
-                        Manage Templates
-                    </a>
+                    <DropdownItem class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onManageTemplateBtnClick()">
+                        <i class="oi oi-fw opacity-75" data-icon="edit"/>Manage Templates
+                    </DropdownItem>
                 </t>
             </t>
         </Dropdown>

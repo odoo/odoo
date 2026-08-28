@@ -49,12 +49,12 @@
                     <div t-if="this.selectedPartners.length > 0 or this.state.selectedEmails.length > 0" class="pt-2">
                         <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto o-scrollbar-thin">
                             <t t-foreach="this.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
-                                <button class="btn btn-light o-fw-600 smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
+                                <button class="btn btn-light fw-bold smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
                                     <t t-out="selectedPartner.name"/> <i class="oi border border-dark-subtle ms-1" data-icon="close_small"/>
                                 </button>
                             </t>
                             <t t-foreach="this.state.selectedEmails" t-as="selectedEmail" t-key="selectedEmail">
-                                <button class="btn btn-light o-fw-600 smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedEmail(selectedEmail)">
+                                <button class="btn btn-light fw-bold smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedEmail(selectedEmail)">
                                     <t t-out="selectedEmail"/> <i class="oi border border-dark-subtle ms-1" data-icon="close_small"/>
                                 </button>
                             </t>

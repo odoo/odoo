@@ -7,8 +7,8 @@
     </xpath>
     <xpath expr="//t[@name='itemName']" position="replace">
         <div t-if="this.channel?.parent_channel_id" class="d-flex align-items-center">
-            <span class="flex-shrink-0 opacity-75" t-att-title="this.channel.parent_channel_id.displayName" t-out="this.parentChannelShortName"/>
-            <i class="oi o-xsmaller mx-1 flex-shrink-0 opacity-75" data-icon="chevron_forward"/>
+            <span class="flex-shrink-0 opacity-75 small" t-att-title="this.channel.parent_channel_id.displayName" t-out="this.parentChannelShortName"/>
+            <i class="oi o-xsmaller o-mx-0_5 flex-shrink-0 opacity-75" data-icon="chevron_forward"/>
             <span class="text-truncate" t-out="this.channel.thread.displayName"/>
         </div>
         <t t-else="">$0</t>

@@ -13,11 +13,9 @@
             <t t-if="this.props.channel.channel_type === 'channel'">
                 <t t-call="discuss.NotificationSettings.unMuteSttings" />
                 <Dropdown position="this.ui.isSmall ? 'bottom-end' : 'right-start'" state="this.muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 py-0 ' + this.store.discussDropdownMenuClass(this)" menuRef="this.muteMenuRef" manual="true">
-                    <button class="btn w-100 d-flex border-0 py-2 opacity-100-hover" t-att-class="{
+                    <button class="btn rounded-3 w-100 d-flex border-0 mt-1" t-att-class="{
                         'o-px-2_5': this.env[this.DROPDOWN_NESTING],
                         'o-ps-2_5 o-pe-1_5': !this.env[this.DROPDOWN_NESTING],
-                        'opacity-100': this.muteConversationDropdownState.isOpen,
-                        'opacity-75': !this.muteConversationDropdownState.isOpen,
                     }" t-ref="this.muteButtonRef">
                         <span class="text-wrap text-start text-break">Mute Conversation</span>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
@@ -27,17 +25,17 @@
                         <t t-call="discuss.NotificationSettings.muteSttings"/>
                     </t>
                 </Dropdown>
-                <hr class="solid o-mx-2_5 mt-1 mb-2"/>
-                <button class="btn d-flex w-100 o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-on-click="() => this.store.settings.setCustomNotifications(false, this.props.channel)">
+                <hr class="o-mx-2_5 mt-1 mb-2 o-discuss-separator"/>
+                <button class="btn rounded-3 d-flex w-100 o-ps-2_5 o-pe-1_5 o-py-1_5 border-0" t-on-click="() => this.store.settings.setCustomNotifications(false, this.props.channel)">
                     <div class="d-flex flex-column align-items-start">
                         <span class="fs-6 text-wrap text-start text-break">Use Default</span>
-                        <span class="o-fw-600 o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="this.store.settings.NOTIFICATIONS.find((n) => n.label === this.store.self_user.res_users_settings_id.channelNotifications).name"/></span>
+                        <span class="fw-bold o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="this.store.settings.NOTIFICATIONS.find((n) => n.label === this.store.self_user.res_users_settings_id.channelNotifications).name"/></span>
                     </div>
                     <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
                     <input class="form-check-input shadow-sm me-1" type="radio" t-att-checked="!this.props.channel.self_member_id?.custom_notifications"/>
                 </button>
                 <t t-foreach="this.store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
-                    <button class="btn w-100 d-flex o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-att-class="{ 'mb-1': notif_last and !this.env[this.DROPDOWN_NESTING] }" t-on-click="() => this.store.settings.setCustomNotifications(notif.label, this.props.channel)">
+                    <button class="btn rounded-3 w-100 d-flex o-ps-2_5 o-pe-1_5 o-py-1_5 border-0" t-att-class="{ 'mb-1': notif_last and !this.env[this.DROPDOWN_NESTING] }" t-on-click="() => this.store.settings.setCustomNotifications(notif.label, this.props.channel)">
                         <span class="fs-6 fw-normal text-wrap text-start text-break" t-out="notif.name"/>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
                         <input class="form-check-input ms-2 shadow-sm me-1" type="radio" t-att-checked="this.props.channel.self_member_id?.custom_notifications === notif.label"/>
@@ -52,17 +50,17 @@
     </t>
 
     <t t-name="discuss.NotificationSettings.muteSttings">
-        <div class="d-flex flex-column" t-attf-class="{{ this.store.discussDropdownMenuClass(this) }}">
+        <div class="d-flex flex-column py-2" t-attf-class="{{ this.store.discussDropdownMenuClass(this) }}">
             <t t-if="this.props.channel.channel_type !== 'channel'" t-call="discuss.NotificationSettings.unMuteSttings" />
             <t t-foreach="this.store.settings.MUTES" t-as="mute" t-key="mute.label">
-                <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn btn-secondary rounded-0 d-flex align-items-center px-3 o-py-1_5 m-0'" onSelected="()=>this.setMute(mute.value)"><t t-out="mute.name"/></DropdownItem>
+                <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn btn-secondary rounded-3 d-flex align-items-center px-3 o-py-1_5 m-0'" onSelected="()=>this.setMute(mute.value)"><t t-out="mute.name"/></DropdownItem>
             </t>
         </div>
     </t>
 
     <t t-name="discuss.NotificationSettings.unMuteSttings">
         <t t-if="this.props.channel.self_member_id?.mute_until_dt">
-            <button class="btn w-100 d-flex o-px-2_5 py-1 opacity-75 border-0 opacity-75 opacity-100-hover" t-on-click="()=>this.setMute(false)">
+            <button class="btn w-100 d-flex o-px-2_5 py-1 opacity-75 border-0" t-on-click="()=>this.setMute(false)">
                 <div class="d-flex flex-column flex-grow-1 w-100 rounded">
                     <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Conversation</span>
                     <span class="fw-normal smaller text-start text-muted" t-out="this.store.settings.getMuteUntilText(this.props.channel.self_member_id?.mute_until_dt)"/>

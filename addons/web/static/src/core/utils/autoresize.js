@@ -6,6 +6,8 @@ import { memoize } from "@web/core/utils/functions";
 
 const pendingResizes = new Map(); // el → options, deduplicates by element
 let flushScheduled = false;
+/** @type {CanvasRenderingContext2D | null} lazily-created, reused to measure placeholder text */
+let measureCtx = null;
 
 function flushResizes() {
     flushScheduled = false;
@@ -28,15 +30,23 @@ function flushResizes() {
     }
     // Phase 4: read scrollWidths + computed styles from all
     const finalWidths = inputs.map(([el], i) => {
-        if (el.value === "" && el.placeholder !== "") {
-            return "auto";
-        }
         const style = window.getComputedStyle(el);
-        let boxExtraWidth = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
-        if (doesScrollWidthExcludePadding()) {
-            boxExtraWidth += parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+        const borderWidth = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+        const paddingWidth = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+        let desiredWidth;
+        if (el.value === "" && el.placeholder !== "") {
+            // scrollWidth ignores the placeholder, so measure it directly.
+            measureCtx ??= document.createElement("canvas").getContext("2d");
+            measureCtx.font = style.font;
+            desiredWidth =
+                measureCtx.measureText(el.placeholder).width + borderWidth + paddingWidth + 1;
+        } else {
+            let boxExtraWidth = borderWidth;
+            if (doesScrollWidthExcludePadding()) {
+                boxExtraWidth += paddingWidth;
+            }
+            desiredWidth = el.scrollWidth + boxExtraWidth + 1;
         }
-        const desiredWidth = el.scrollWidth + boxExtraWidth + 1;
         return desiredWidth > maxWidths[i] ? "100%" : `${desiredWidth}px`;
     });
     // Phase 5: write final widths
@@ -93,6 +103,13 @@ function flushResizes() {
 // ── Public API ───────────────────────────────────────────────────────────────
 
 /**
+ * Event type to force a re-measure from outside, without using a real
+ * `"input"` event: `t-model` also listens to that one, so dispatching it
+ * artificially can clobber an in-flight reactive value update.
+ */
+export const AUTORESIZE_NUDGE_EVENT = "o-autoresize-nudge";
+
+/**
  * @param {Ref} ref
  */
 export function useAutoresize(ref, options = {}) {
@@ -112,7 +129,9 @@ export function useAutoresize(ref, options = {}) {
                         queueMicrotask(flushResizes);
                     }
                 };
-                el.addEventListener("input", () => resize(true));
+                const onInput = () => resize(true);
+                el.addEventListener("input", onInput);
+                el.addEventListener(AUTORESIZE_NUDGE_EVENT, onInput);
                 const resizeObserver = new ResizeObserver(() => {
                     if (wasProgrammaticallyResized) {
                         wasProgrammaticallyResized = false;
@@ -122,7 +141,8 @@ export function useAutoresize(ref, options = {}) {
                 });
                 resizeObserver.observe(el);
                 return () => {
-                    el.removeEventListener("input", resize);
+                    el.removeEventListener("input", onInput);
+                    el.removeEventListener(AUTORESIZE_NUDGE_EVENT, onInput);
                     resizeObserver.unobserve(el);
                     resizeObserver.disconnect();
                     resize = null;

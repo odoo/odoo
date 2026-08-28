@@ -1,5 +1,11 @@
 import { registry } from "@web/core/registry";
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
 import { InvitationSentDate } from "@mail/discuss/core/common/invitation_sent_date";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -22,34 +28,37 @@ export const channelMemberActionsRegistry = registry.category("discuss.channel.m
  * @param {ChannelMemberActionDefinition} definition
  */
 export function registerChannelMemberAction(id, definition) {
-    channelMemberActionsRegistry.add(id, definition);
+    channelMemberActionsRegistry.add(
+        id,
+        Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true })
+    );
 }
 
 registerChannelMemberAction("set-admin", {
     condition: ({ member }) => member.canSetAdmin,
-    icon: "star",
-    iconClass: "oi-filled text-primary",
+    icon: "crown",
+    iconClass: "opacity-75",
     name: _t("Set Admin"),
     onSelected: ({ member }) => member.setChannelRole("admin"),
-    sequence: 10,
+    sequence: 20,
 });
 
-registerChannelMemberAction("remove-admin", {
+registerChannelMemberAction("set-member", {
     condition: ({ member }) => member.canRemoveAdmin || member.canRemoveOwner,
-    icon: "star",
-    iconClass: ({ member }) => (member.canRemoveOwner ? "text-primary" : "text-warning"),
-    name: ({ member }) => (member.canRemoveOwner ? _t("Remove Owner") : _t("Remove Admin")),
+    icon: "person",
+    iconClass: "opacity-75",
+    name: _t("Set Member"),
     onSelected: ({ member }) => member.setChannelRole(false),
-    sequence: 20,
+    sequence: 30,
 });
 
 registerChannelMemberAction("set-owner", {
     condition: ({ member }) => member.canSetOwner,
-    icon: "star",
-    iconClass: "oi-filled text-warning",
+    icon: "crown_f",
+    iconClass: "text-warning",
     name: _t("Set Owner"),
     onSelected: ({ member }) => member.setChannelRole("owner"),
-    sequence: 30,
+    sequence: 10,
 });
 
 registerChannelMemberAction("resend-invitation", {

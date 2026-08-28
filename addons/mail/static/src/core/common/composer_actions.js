@@ -3,7 +3,13 @@ import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -27,7 +33,10 @@ export const composerActionsRegistry = registry.category("mail.composer/actions"
  * @param {ComposerActionDefinition} definition
  */
 export function registerComposerAction(id, definition) {
-    composerActionsRegistry.add(id, definition);
+    composerActionsRegistry.add(
+        id,
+        Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true })
+    );
 }
 
 export function pickerGetAnchor({ action, owner }) {

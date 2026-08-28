@@ -1,6 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { ACTION_TAGS } from "@mail/core/common/action";
-import { registerThreadAction } from "@mail/core/common/thread_actions";
+import { ACTION_GROUP_TAGS, ACTION_TAGS } from "@mail/core/common/action";
+import { describeThreadActionGroup, registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
@@ -11,6 +11,8 @@ import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_p
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+
+describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.INLINE_SWITCHER_LOOK });
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,

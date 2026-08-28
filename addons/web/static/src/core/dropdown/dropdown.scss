@@ -78,13 +78,13 @@
     margin-top: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
     margin-bottom: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
 
-    .dropdown-toggle:focus,
+    // Scoped to '.dropdown-item', not '.dropdown-toggle': a real submenu item
+    // always has both classes, an unrelated embedded dropdown only the latter.
     .dropdown-item:focus {
         background-color: transparent;
         outline: none;
     }
 
-    .dropdown-toggle,
     .dropdown-item {
         // Remove default active/hover effects so it's only controlled via the .focus class
         &:not(.focus) {

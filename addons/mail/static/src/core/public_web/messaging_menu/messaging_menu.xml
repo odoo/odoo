@@ -2,19 +2,20 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenu">
-    <div class="o-mail-MessagingMenu-container d-flex flex-grow-1 overflow-hidden min-h-0 min-w-0 w-100 h-100">
+    <div class="o-mail-MessagingMenu-container d-flex flex-grow-1 overflow-hidden min-h-0 min-w-0 w-100 h-100 gap-2">
         <t t-call="mail.MessagingMenu-navigation"/>
-        <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1 overflow-hidden min-h-0 min-w-0">
-            <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2 px-2 pt-2 pb-1">
+        <div class="o-mail-MessagingMenu rounded-4 border d-flex flex-column flex-grow-1 overflow-hidden min-h-0 min-w-0">
+            <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2 px-2 o-py-2_5">
                 <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
                     <t t-foreach="this.activeTab().actions" t-as="action" t-key="action.id">
                         <div t-if="action.subActions?.length" class="flex-shrink-0">
-                            <Dropdown
+                            <IsolatedDropdown
                                 items="action.subActions.map(subAction => ({ id: subAction.id, label: subAction.text, onSelected: () => this.onClickAction(subAction) }))"
                                 menuClass="'o-mail-MessagingMenu-dropdownMenu'"
+                                onOpened="() => this.focusSearchInput()"
                             >
                                 <t t-call="mail.MessagingMenu-action"/>
-                            </Dropdown>
+                            </IsolatedDropdown>
                         </div>
                         <t t-else="" t-call="mail.MessagingMenu-action"/>
                     </t>
@@ -22,7 +23,7 @@
                 </div>
                 <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
                     <button
-                        class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill px-3 flex-shrink-0"
+                        class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
                         t-att-class="{ 'o-active': !this.state().selectedFilter, 'text-muted': this.state().selectedFilter }"
                         t-att-aria-pressed="!this.state().selectedFilter"
                         t-on-click="() => this.state().selectedFilter = undefined"
@@ -32,7 +33,7 @@
                         t-foreach="this.activeTab().sortedFilters"
                         t-as="filter"
                         t-key="filter.id"
-                        class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill px-3 flex-shrink-0"
+                        class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
                         t-att-class="{ 'o-active': this.state().selectedFilter?.id === filter.id, 'text-muted': this.state().selectedFilter?.id !== filter.id }"
                         t-att-aria-pressed="this.state().selectedFilter?.id === filter.id"
                         t-on-click="() => this.state().selectedFilter = filter"
@@ -52,7 +53,7 @@
                     <t t-set-slot="name"><t t-out="this.notificationRequest.displayName"/></t>
                     <t t-set-slot="sideContent">
                         <div class="d-flex align-items-center justify-content-center o-gap-1_5">
-                            <a class="btn btn-primary btn-sm px-1 py-0">Enable</a>
+                            <a class="btn btn-outline-info btn-sm rounded-pill px-2 py-0">Enable</a>
                             <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="oi text-dark bg-transparent opacity-50 opacity-100-hover" data-icon="close_small" title="Dismiss"></span>
                         </div>
                     </t>
@@ -89,7 +90,7 @@
         t-att-title="action.title"
         t-on-click="() => togglesDropdown ? undefined : this.onClickAction(action)"
     >
-        <span t-if="action.icon" class="d-flex align-items-center opacity-75 flex-shrink-0" t-att-class="{'me-1': action.text}">
+        <span t-if="action.icon" class="d-flex align-items-center flex-shrink-0" t-att-class="{'me-1': action.text}">
             <i class="oi" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
         </span>
         <span t-if="action.text" class="text-truncate" t-out="action.text"/>
@@ -98,7 +99,7 @@
 </t>
 
 <t t-name="mail.MessagingMenu-navigation">
-    <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 p-1 gap-2 overflow-auto h-100 border-end border-dark o-border-opacity-7_5 o-scrollbar-thin">
+    <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 px-1 o-py-2_5 gap-2 overflow-auto h-100 o-scrollbar-thin">
         <button
             t-foreach="this.visibleTabs" t-key="tab.localId" t-as="tab"
             class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"
@@ -114,7 +115,7 @@
         >
             <i t-attf-class="oi o-mail-MessagingMenu-tabIcon {{tab.iconClass}} rounded-pill mx-auto p-2 fs-5" t-att-data-icon="this.activeTab().eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon"/>
             <span class="o-xsmaller text-center lh-1 opacity-75 mt-1" t-out="tab.label"/>
-            <span t-if="this.getTabCounter(tab)" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-count' }}" t-out="this.getTabCounter(tab)"/>
+            <span t-if="this.getTabCounter(tab)" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-muted' }}" t-out="this.getTabCounter(tab)"/>
         </button>
     </nav>
 </t>

@@ -29,7 +29,6 @@ export class NotificationItem extends Component {
             className: t.string().optional(""),
             counter: t.number().optional(0),
             datetime: t.instanceOf(DateTime).optional(),
-            first: t.boolean().optional(),
             hasMarkAsReadButton: t.boolean().optional(),
             iconSrc: t.string().optional(),
             important: t.or([t.boolean(), t.number()]).optional(),
@@ -73,12 +72,10 @@ export class NotificationItem extends Component {
     get attClass() {
         return {
             "o-important": this.props.important,
-            "o-interest border-secondary": this.props.muted === 0,
-            "border-secondary": this.props.muted === 1,
-            "opacity-50 border-secondary": this.props.muted === 2,
+            "o-interest": this.props.muted === 0,
+            "opacity-50": this.props.muted === 2,
             "px-1 py-2 gap-1 o-small": this.ui.isSmall,
-            "border-top-0": this.props.first,
-            "o-px-2_5 o-py-1_5 gap-2": !this.ui.isSmall,
+            "o-p-1_5 gap-2": !this.ui.isSmall,
             "o-active": this.props.isActive,
             [this.props.className]: this.props.className,
         };

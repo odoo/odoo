@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
+    hasBtnBg: true,
     icon: "phone",
     iconClass: "oi-filled",
     name: ({ channel }) => (channel?.hasRtcSessionActive ? _t("Join the Call") : _t("Start Call")),
@@ -16,6 +17,7 @@ registerThreadAction("call", {
 });
 registerThreadAction("camera-call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
+    hasBtnBg: true,
     icon: "videocam",
     iconClass: "oi-filled",
     name: ({ channel }) =>
@@ -34,7 +36,6 @@ registerThreadAction("call-settings", {
     actionPanelComponentProps: () => ({ isCompact: true }),
     condition: ({ channel, owner, store }) =>
         channel?.allowCalls &&
-        store.self_user &&
         (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "settings",
@@ -46,6 +47,7 @@ registerThreadAction("call-settings", {
 registerThreadAction("disconnect", {
     condition: ({ channel, owner, store }) =>
         store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
+    hasBtnBg: true,
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     icon: "phone",
     iconClass: "oi-filled",

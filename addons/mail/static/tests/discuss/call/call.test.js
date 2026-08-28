@@ -1240,7 +1240,7 @@ test("single 'join' (without camera) button when last call was audio-only", asyn
     await click("button[title='Join Call']");
     await contains(".o-discuss-Call.o-selfInCall");
     await click("button[title='Disconnect']");
-    await click("button[title='Join Call']:text('Join')", { contains: ["[data-icon='phone']"] });
+    await click("button[title='Join Call']:text('Join')", { contains: ["[data-icon='phone_f']"] });
 });
 
 test("single 'join' (with camera) button when last call had camera on", async () => {
@@ -1268,7 +1268,7 @@ test("single 'join' (with camera) button when last call had camera on", async ()
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] video");
     await click("button[title='Disconnect']");
     await click("button[title='Join Video Call']:text('Join')", {
-        contains: ["[data-icon='videocam']"],
+        contains: ["[data-icon='videocam_f']"],
     });
 });
 

@@ -28,9 +28,12 @@ class ChatBubblePreview extends Component {
         return this.props.chatWindow.channel;
     }
 
+    get lastMessage() {
+        return this.channel.newestPersistentOfAllMessage;
+    }
+
     get previewText() {
-        const lastMessage = this.channel.newestPersistentOfAllMessage;
-        return lastMessage?.previewText || _t("This is the start of your conversation");
+        return this.lastMessage?.previewText || _t("This is the start of your conversation");
     }
 }
 

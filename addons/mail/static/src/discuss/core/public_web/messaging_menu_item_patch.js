@@ -94,7 +94,6 @@ const messagingMenuItemPatch = {
             : undefined;
         return {
             thread: this.channel.thread,
-            className: "border-0 rounded-3",
             message: displayedMessage,
             counter: this.channel.importantCounter ?? this.channel.needactionCounter,
             datetime: displayedMessage?.datetime ?? this.channel.create_date,

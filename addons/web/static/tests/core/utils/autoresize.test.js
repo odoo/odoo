@@ -23,6 +23,25 @@ test(`resizable input`, async () => {
     expect(`.resizable-input`).not.toHaveRect({ width: initialWidth });
 });
 
+test(`resizable input sizes to its placeholder when empty`, async () => {
+    class ResizableInput extends Component {
+        static template = xml`<input class="resizable-input" placeholder="Hi" t-ref="this.inputRef"/>`;
+        props = useProps();
+        inputRef = signal.ref();
+
+        setup() {
+            useAutoresize(this.inputRef);
+        }
+    }
+    await mountWithCleanup(ResizableInput);
+    const placeholderWidth = queryRect(`.resizable-input`).width;
+
+    await contains(`.resizable-input`).edit("Hi");
+    const typedWidth = queryRect(`.resizable-input`).width;
+    // "Hi" placeholder vs "Hi" text should size about the same.
+    expect(placeholderWidth).toBeWithin(typedWidth - 5, typedWidth + 5);
+});
+
 test(`resizable textarea`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;

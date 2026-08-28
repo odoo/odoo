@@ -35,15 +35,14 @@
     font-size: 11px;
     display: none;
     padding: map-get($spacers, 1) / 2;
-    border: $border-width solid mix($o-gray-300, $o-gray-400);
+    --border-opacity: .5;
 
     &:not(:hover) {
         color: $text-muted;
     }
 
     &:hover {
-        background-color: $o-gray-300 !important;
-        border-color: $o-gray-500;
+        --border-opacity: .75;
     }
 }
 
@@ -65,7 +64,25 @@
     right: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-ChatBubble-zindex - 1;
     border-color: $o-gray-300 !important;
-    
+
+    &.o-blue, &.o-green, &.o-orange {
+        background-color: var(--o-bubble-bg) !important;
+        border-color: var(--o-bubble-border-color) !important;
+
+        // the popover arrow is a sibling, not a descendant: it can't read the
+        // custom properties set below directly on this element, so it relies
+        // instead on inheriting them from their common ancestor (see the
+        // `.o_popover:has(...)` rule further down)
+        & + .popover-arrow {
+            &::before {
+                border-left-color: var(--o-bubble-border-color) !important;
+            }
+            &::after {
+                border-left-color: var(--o-bubble-bg) !important;
+            }
+        }
+    }
+
     & + .popover-arrow {
         // puts arrow above preview border
         z-index: 1 !important;
@@ -74,11 +91,22 @@
             right: 1px !important;
         }
         &::after {
-            border-left-color: $gray-100 !important;
+            border-left-color: $o-view-background-color !important;
             right: 2px !important;
         }
     }
 }
+
+@mixin o-chat-bubble-preview-colors {
+    .o_popover {
+        @each $_type in map-keys($o-bubble-colors) {
+            &:has(> .o-mail-ChatBubble-preview.#{$_type}) {
+                @include o-bubble-color-vars($_type);
+            }
+        }
+    }
+}
+@include o-chat-bubble-preview-colors;
 
 .o-mail-ChatBubble-status {
     z-index: 6;

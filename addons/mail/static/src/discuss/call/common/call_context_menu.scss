@@ -1,6 +1,9 @@
 .o-discuss-CallContextMenu {
     .o-discuss-CallContextMenu-muteToggle {
-        @include o-hover-opacity(0.75, 1);
+        opacity: 65%;
+        &:hover {
+            opacity: 100%;
+        }
     }
 
     .o-discuss-CallContextMenu-item {
@@ -8,10 +11,20 @@
         &:focus {
             background-color: rgba(white, 0.1);
         }
+        &.o-danger {
+            color: $danger;
+            i {
+                color: $danger;
+            }
+            &:hover,
+            &:focus {
+                color: white;
+                background-color: $danger;
+                i {
+                    color: white;
+                }
+            }
 
-        &.o-danger:hover,
-        &.o-danger:focus {
-            background-color: rgba($danger, 0.2);
         }
     }
 }

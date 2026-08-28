@@ -30,7 +30,10 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: ".o-mail-Poll button:contains('Vote'):enabled", run: "click" },
         { trigger: ".o-mail-PollOption:contains(Blue):contains(1 vote100%)" },
         { trigger: ".o-mail-Poll a:text('1 vote')", run: "click" },
-        { trigger: ".o-mail-PollVotesPanel:has(:text('❤️ Red (0)'))" },
+        {
+            trigger:
+                ".o-mail-PollVotesPanel .o-mail-TabHeader:has(:text('Red')) .o-discuss-badge:text(0)",
+        },
         { trigger: ".modal .btn-close", run: "click" },
         { trigger: "body:not(:has(.o-mail-PollVotesPanel))" },
         { trigger: ".o-mail-Poll button:contains('Remove Vote')", run: "click" },

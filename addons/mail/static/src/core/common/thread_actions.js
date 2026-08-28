@@ -3,7 +3,14 @@ import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    IS_ACTION_GROUP_DESCRIPTION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
@@ -26,7 +33,18 @@ export const threadActionsRegistry = registry.category("mail.thread/actions");
  * @param {ThreadActionDefinition} definition
  */
 export function registerThreadAction(id, definition) {
-    threadActionsRegistry.add(id, definition);
+    threadActionsRegistry.add(id, Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true }));
+}
+
+/**
+ * @param {import("@mail/core/common/action").ActionGroupId} id
+ * @param {import("@mail/core/common/action").ActionGroupDescriptionDefinition} definition
+ */
+export function describeThreadActionGroup(id, definition) {
+    threadActionsRegistry.add(
+        id,
+        Object.assign(definition, { [IS_ACTION_GROUP_DESCRIPTION_SYM]: true })
+    );
 }
 
 registerThreadAction("fold-chat-window", {

@@ -189,6 +189,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             'mail/static/src/js/**/*',
             'mail/static/src/model/**/*',
+            # ensure core.scss before any other style
+            "mail/static/src/core/common/core.scss",
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
             'mail/static/src/core/web_portal_project/**/*',
@@ -215,6 +217,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/views/web/activity/**',
         ],
         "web.assets_web_dark": [
+            # ensure core.dark.scss before any other style
+            'mail/static/src/core/common/core.dark.scss',
             'mail/static/src/**/*.dark.scss',
         ],
         "web.assets_frontend": [
@@ -277,6 +281,8 @@ For more specific needs, you may also assign custom-defined actions
             ("include", "html_editor.assets_editor"),
 
             'mail/static/src/model/**/*',
+            # ensure core.scss before any other style
+            "mail/static/src/core/common/core.scss",
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
             'mail/static/src/**/common/**/*',
@@ -301,6 +307,8 @@ For more specific needs, you may also assign custom-defined actions
         'im_livechat.assets_embed_core': [
             ("include", "html_editor.assets_editor"),
             'mail/static/src/model/**/*',
+            # ensure core.scss before any other style
+            "mail/static/src/core/common/core.scss",
             "mail/static/src/core/common/**/*",
             "mail/static/src/**/common/**/*",
             ('remove', 'mail/static/src/**/*.dark.scss'),

@@ -2,20 +2,18 @@
     --list-group-bg: transparent;
     outline: 1px solid transparent;
     outline-offset: -1px;
-    --border-opacity: .35;
+    --border-opacity: 0;
 
-    &:not(.o-interest) {
-        opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
-    }
     &:hover, &.o-active {
-        backdrop-filter: contrast(.85);
+        --border-opacity: var(--mail-NotificationItem-activeBorderOpacity, .075);
+        backdrop-filter: contrast(var(--mail-NotificationItem-activeBackdropFilterContrast, .85));
     }
 }
 
 .o-mail-NotificationItem-badge {
     padding: 3px 6px !important;
     &.o-discuss-badge:not(.o-important) {
-        --o-discuss-badge-bg: #{$gray-500};
+        --o-discuss-badge-bg: #{var(--mail-Notification-badgeMutedBg, $gray-500)};
     }
 }
 
@@ -33,6 +31,14 @@
     width: 14px;
     bottom: -2px;
     left: -4px;
+}
+
+.o-mail-NotificationItem-date {
+    opacity: .85;
+
+    &.o-muted {
+        opacity: .5;
+    }
 }
 
 .o-mail-NotificationItem-line {
@@ -56,10 +62,10 @@
 }
 
 .o-mail-NotificationItem-text {
-    opacity: .75;
+    opacity: var(--mail-NotificationItem-textOpacity, .75);
 
     &.o-muted {
-        opacity: .5;
+        opacity: var(--mail-NotificationItem-textMutedOpacity, .5);
     }
 
     &:before {

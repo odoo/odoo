@@ -1,16 +1,3 @@
-// The notification item and this panel together form a single visual card.
-.o-mail-MessagingMenuItem:has(.o-mail-MessagingMenuCallParticipants) {
-    @include o-mail-call-bordered(.15);
-    border-radius: $border-radius;
-
-    .o-mail-NotificationItem {
-        padding-bottom: 0 !important;
-        &:not(:hover):not(.o-active) {
-            background-color: inherit;
-        }
-    }
-}
-
 .o-mail-MessagingMenuCallParticipants-expandBtn {
     aspect-ratio: 1;
     opacity: 75%;

@@ -81,7 +81,6 @@ class Action extends Component {
 
     onSelected(action, ev) {
         action.onSelected?.(ev);
-        this.env.inCallDropdown?.close();
     }
 }
 

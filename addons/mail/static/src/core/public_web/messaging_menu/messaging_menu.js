@@ -4,6 +4,7 @@ import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messagi
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
+import { incrementFn } from "@mail/utils/common/signal";
 
 import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
@@ -13,10 +14,17 @@ import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 
+/** Never a submenu of an ancestor Dropdown it's embedded in, even visually/positionally. */
+class IsolatedDropdown extends Dropdown {
+    get hasParent() {
+        return false;
+    }
+}
+
 export class MessagingMenu extends Component {
     static components = {
         DiscussSearch,
-        Dropdown,
+        IsolatedDropdown,
         MessagingMenuItem,
         MessagingMenuEmpty,
         NotificationItem,
@@ -70,8 +78,9 @@ export class MessagingMenu extends Component {
         this.close = useProps.static("close", types.function().optional());
         this.searchInputAutofocus = useProps.static(
             "searchInputAutofocus",
-            types.signal(types.number()).optional()
+            types.signal(types.number()).optional(() => signal(0))
         );
+        this.focusSearchInput = incrementFn(this.searchInputAutofocus);
         this.ui = useService("ui");
         // Bound once so `onClickMessage` is a stable (useProps.static) handler.
         this.onClickMessage = this.onClickMessage.bind(this);

@@ -14,7 +14,7 @@
                         <span class="fw-bold me-1 text-truncate flex-grow-1" t-out="option.option_label"/>
                         <span class="flex-shrink-0">
                             <span class="me-2 smaller" t-out="this.props.poll.voteCountText(option.number_of_votes)"/>
-                            <span class="o-fw-600 me-1"><t t-out="option.vote_percentage"/>%</span>
+                            <span class="fw-bold me-1"><t t-out="option.vote_percentage"/>%</span>
                             <i t-if="option.selected_by_self" class="oi oi-lg oi-filled o-mx-1_5" data-icon="check_circle" t-att-class="{ 'text-primary': this.props.poll.end_message_id and option.eq(this.props.poll.winning_option_id) }"/>
                         </span>
                     </div>

@@ -6,7 +6,7 @@
                 <i class="oi" data-icon="close_small"/>
             </button>
             <h5 class="mb-2 pe-4">Your Meeting is Ready</h5>
-            <button class="btn btn-primary mb-2" t-on-click="() => this.openChannelInvitationDialog(this.env, this.channel)">Add Others</button>
+            <button class="btn btn-primary mb-2" t-on-click="() => this.openChannelInvitationDialog(this.env, this.channel)"><i class="oi oi-fw opacity-75 me-1" data-icon="person_add"/>Add Others</button>
             <p class="text-muted mb-2">or share this permanent link with others you want in the meeting:</p>
             <div class="input-group input-group-sm">
                 <input class="form-control" type="text" t-att-value="this.channel.invitationLink" readonly="" disabled="" t-on-focus="(ev) => ev.target.select()"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.CallContextMenu">
-        <div class="o-discuss-CallContextMenu d-flex flex-column gap-1 p-2 rounded">
+        <div class="o-discuss-CallContextMenu d-flex flex-column gap-1">
             <t t-if="!this.isSelf">
                 <button class="btn o-discuss-CallContextMenu-item d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-reset text-start cursor-pointer" t-on-click="this.togglePin">
                     <i class="oi oi-fw opacity-75" data-icon="push_pin"/><t t-if="this.isPinned">Unpin</t><t t-else="">Pin</t>
@@ -15,7 +15,7 @@
                         <output t-out="`${Math.round(this.state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{this.state.rangeVolume * 100}}%;"/>
                     </div>
                 </div>
-                <button t-if="this.canModerate" class="btn o-discuss-CallContextMenu-item o-danger d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-danger text-start cursor-pointer" t-on-click="this.onClickRemoveFromCall">
+                <button t-if="this.canModerate" class="btn o-discuss-CallContextMenu-item o-danger d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-start cursor-pointer" t-on-click="this.onClickRemoveFromCall">
                     <i class="oi oi-fw oi-filled" data-icon="cancel"/>Remove from call
                 </button>
             </t>

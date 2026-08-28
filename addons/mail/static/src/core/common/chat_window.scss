@@ -6,6 +6,7 @@
         z-index: var(--mail-ChatWindow-mobileZindex, $zindex-sticky - 2) !important;
     }
     &:not(.o-mobile) {
+        --border-opacity: var(--mail-ChatWindow-desktopBorderOpacity, .15);
         height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
     }
     outline: none;
@@ -25,7 +26,7 @@
         border-color: transparent !important;
     }
     &:not(.o-active):not(.o-hover) [data-icon="arrow_drop_down"] {
-        opacity: 25%;
+        opacity: 50%;
     }
 }
 
@@ -42,6 +43,9 @@
 }
 
 .o-mail-ChatWindow-header {
+    --o-btn-circle-height: 0;
+    --border-opacity: var(--mail-ChatWindow-headerBorderOpacity, .15);
+
     .o-mail-ActionList-group {
         gap: map-get($spacers, 3);
 
@@ -57,6 +61,11 @@
     .o-mail-ChatWindow-threadAvatar img {
         height: $o-mail-Avatar-sizeSmall;
         width: $o-mail-Avatar-sizeSmall;
+    }
+
+    button:not(.o-tag-JOIN_LEAVE_CALL) {
+        --gradient: transparent;
+        padding: 0;
     }
 }
 

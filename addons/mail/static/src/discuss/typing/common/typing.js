@@ -1,8 +1,9 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, markup, t, useProps } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 export class Typing extends Component {
     static template = "discuss.Typing";
@@ -25,21 +26,26 @@ export class Typing extends Component {
             ? [this.props.member.name]
             : this.props.channel.otherTypingMembers.map(({ name }) => name);
         if (typingMemberNames.length === 1) {
-            return _t("%s is typing...", typingMemberNames[0]);
+            return _t("%s is typing...", markup`<b>${typingMemberNames[0]}</b>`);
         }
         if (typingMemberNames.length === 2) {
             return _t("%(user1)s and %(user2)s are typing...", {
-                user1: typingMemberNames[0],
-                user2: typingMemberNames[1],
+                user1: markup`<b>${typingMemberNames[0]}</b>`,
+                user2: markup`<b>${typingMemberNames[1]}</b>`,
             });
         }
         return _t("%(user1)s, %(user2)s and more are typing...", {
-            user1: typingMemberNames[0],
-            user2: typingMemberNames[1],
+            user1: markup`<b>${typingMemberNames[0]}</b>`,
+            user2: markup`<b>${typingMemberNames[1]}</b>`,
         });
     }
 
     get showTypingIcon() {
         return true;
+    }
+
+    /** @returns {string} */
+    get textTitle() {
+        return createDocumentFragmentFromContent(this.text).body.textContent;
     }
 }

@@ -1,9 +1,10 @@
 .o-discuss-ChannelMember {
+    --border-opacity: var(--discuss-ChannelMember-actionButtonBorderOpacity, .35);
 
     &.o-offline {
         opacity: 33%;
 
-        &.cursor-pointer:hover {
+        &.cursor-pointer:hover, &.o-showingActions {
             opacity: 75%;
         }
     }
@@ -21,9 +22,16 @@
 .o-discuss-ChannelMember-actions button {
     aspect-ratio: 1;
 
-
     &:hover, &:active, &:focus-visible, &.o-showingActions {
         --border-opacity: 1;
         --border-color: #{rgba($o-action, var(--o-mail-DiscussSidebar-borderOpacity, 1))};
+
+        .o-discuss-ChannelMember.o-offline:has(&) {
+            opacity: 75%;
+
+            > *:not(.o-discuss-ChannelMember-actions) {
+                opacity: (33 / 75) * 100%;
+            }
+        }
     }
 }

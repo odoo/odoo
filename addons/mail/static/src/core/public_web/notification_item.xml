@@ -3,7 +3,7 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="this.props.onSwipeLeft ? this.props.onSwipeLeft : undefined" onRightSwipe="this.props.onSwipeRight ? this.props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-custom-click="this.onClick" t-ref="this.rootRef" t-att-class="this.attClass" data-available-offline="">
+        <button class="o-mail-NotificationItem rounded-4 border border-dark list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-custom-click="this.onClick" t-ref="this.rootRef" t-att-class="this.attClass" data-available-offline="">
             <div class="o-mail-MessagingMenuItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': this.ui.isSmall }">
                 <DiscussAvatar t-if="this.props.thread or this.props.persona" record="this.props.thread or this.props.persona" size="this.ui.isSmall ? 40 : undefined" iconExtraTransform="this.ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Notification Item Image" t-att-src="this.props.iconSrc"/>
@@ -11,11 +11,11 @@
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start overflow-x-hidden overflow-y-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': this.ui.isSmall, 'ps-1': !this.ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name align-items-baseline o-fw-600 text-truncate" t-att-class="{ 'fs-5': this.ui.isSmall }">
+                    <span class="o-mail-NotificationItem-name align-items-baseline fw-bold text-truncate" t-att-class="{ 'fs-5': this.ui.isSmall }">
                         <t t-call-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
-                    <small t-if="this.props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': this.props.muted, 'o-fw-600': !this.props.muted }" t-att-title="this.props.datetime?.toLocaleString(this.DateTime.DATETIME_SHORT) ?? ''">
+                    <small t-if="this.props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'o-muted': this.props.muted, 'fw-bold': !this.props.muted }" t-att-title="this.props.datetime?.toLocaleString(this.DateTime.DATETIME_SHORT) ?? ''">
                         <t t-out="this.dateText"/>
                     </small>
                     <t t-if="this.props.slots and this.props.slots.sideContent">

@@ -5,7 +5,7 @@
         <div class="o-discuss-QuickVideoSettings d-flex flex-column">
             <DeviceSelect label.translate="Camera" kind="'videoinput'" menuClass="this.store.discussDropdownMenuClass(this) + (this.env.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
             <t t-if="!this.isBrowserSafari()">
-                <hr class="mx-2 my-1 o-discuss-separator"/>
+                <hr class="mx-2 my-1 o-discuss-separator opacity-0"/>
                 <div class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.settings.useBlur = !this.store.settings.useBlur">
                     <span class="text-truncate text-wrap">Blur Background</span>
                     <div class="flex-grow-1"/>
@@ -15,7 +15,7 @@
                 </div>
             </t>
             <t t-if="!this.env.pipWindow">
-                <hr class="mx-2 my-1 o-discuss-separator"/>
+                <hr class="mx-2 my-1 o-discuss-separator opacity-0"/>
                 <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="this.onClickVideoSettings">
                     <span>Advanced Settings</span>
                     <div class="flex-grow-1"/>
