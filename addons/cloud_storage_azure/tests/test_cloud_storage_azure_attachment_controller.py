@@ -7,6 +7,7 @@ import odoo
 from odoo.tools.misc import file_open
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage_azure.tests.test_cloud_storage_azure import TestCloudStorageAzureCommon
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tests.common import MailCommon
 
 
@@ -53,7 +54,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                         res.content.decode("utf-8"),
                     )
                 )
-                content["data"]["store_data"].pop("__store_version__")
+                pop_store_version(content["data"]["store_data"])
                 self.assertEqual(
                     content,
                     {

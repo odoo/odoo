@@ -4,7 +4,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests.common import new_test_user
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 
 
 class TestDiscussTools(MailCase):
@@ -73,8 +73,10 @@ class TestDiscussTools(MailCase):
                 res.one("partner_id", ["country_id"]),
             ),
         )
+        data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            store._build_result(),
+            data,
             {
                 "res.partner": [
                     {
@@ -433,7 +435,7 @@ class TestDiscussTools(MailCase):
         data = store._build_result()
         self.assertEqual(data["discuss.channel"][0]["messages"], general.message_ids[1].ids)
 
-    def test_460_replace_wrapped_into_command_when_multiple_commands_are_added(self):
+    def test_460_multiple_commands_are_added(self):
         general = self.env["discuss.channel"].create({"name": "General"})
         general.message_post(body="Message 1")
         general.message_post(body="Message 2")
@@ -454,7 +456,11 @@ class TestDiscussTools(MailCase):
             ),
         )
         data = store._build_result()
+        version = general.env.cr.now().isoformat(timespec="microseconds")
         self.assertEqual(
             data["discuss.channel"][0]["messages"],
-            [("REPLACE", general.message_ids.ids), ("DELETE", general.message_ids[2].ids)],
+            [
+                ("REPLACE", general.message_ids.ids),
+                ("DELETE", general.message_ids[2].ids, version),
+            ],
         )
