@@ -239,20 +239,29 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
                 (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
             ],
-            'tz': 'UTC',
+            'tz': 'Europe/Brussels',
         })
-        self.contract_cdi.resource_calendar_id = calendar_20h
-        self.contract_cdi.generate_work_entries(date(2019, 10, 1), date(2019, 10, 30))
+        self.calendar_40h.tz = 'Europe/Brussels'
+        test_emp = self.env['hr.employee'].create({
+            'name': 'Test Emp',
+            'tz': 'Europe/Brussels',
+            'contract_date_start': date(2019, 10, 1),
+            'date_version': date(2019, 10, 1),
+            'contract_date_end': date(2019, 10, 31),
+            'resource_calendar_id': calendar_20h.id,
+            'wage': 1000,
+        })
+        test_emp.version_id.generate_work_entries(date(2019, 10, 1), date(2019, 10, 30))
         leave = self.env['hr.leave'].create({
             'name': 'Holiday!!',
-            'employee_id': self.jules_emp.id,
+            'employee_id': test_emp.id,
             'holiday_status_id': self.leave_type.id,
             'request_date_from': date(2019, 10, 10),
             'request_date_to': date(2019, 10, 10),
         })
         leave.action_approve()
         work_entries = self.env['hr.work.entry'].search([
-            ('employee_id', '=', self.jules_emp.id),
+            ('employee_id', '=', test_emp.id),
             ('date_start', '>=', date(2019, 10, 10)),
             ('date_stop', '<=', date(2019, 10, 10))
         ])
@@ -260,11 +269,11 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(work_entries.leave_id, leave)
         self.assertEqual(work_entries.work_entry_type_id, self.leave_type.work_entry_type_id)
         self.assertEqual(work_entries.duration, 4.0)
-        self.assertEqual(work_entries.date_start, datetime(2019, 10, 10, 8, 0))
-        self.assertEqual(work_entries.date_stop, datetime(2019, 10, 10, 12, 0))
-        self.contract_cdi.resource_calendar_id = self.calendar_40h
+        self.assertEqual(work_entries.date_start, datetime(2019, 10, 10, 6, 0))
+        self.assertEqual(work_entries.date_stop, datetime(2019, 10, 10, 10, 0))
+        test_emp.version_id.resource_calendar_id = self.calendar_40h
         work_entries = self.env['hr.work.entry'].search([
-            ('employee_id', '=', self.jules_emp.id),
+            ('employee_id', '=', test_emp.id),
             ('date_start', '>=', date(2019, 10, 10)),
             ('date_stop', '<=', date(2019, 10, 10))
         ])
@@ -272,5 +281,5 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(work_entries.leave_id, leave)
         self.assertEqual(work_entries.work_entry_type_id, self.leave_type.work_entry_type_id)
         self.assertEqual(work_entries.mapped('duration'), [4.0, 4.0])
-        self.assertEqual(work_entries.mapped('date_start'), [datetime(2019, 10, 10, 8, 0), datetime(2019, 10, 10, 13, 0)])
-        self.assertEqual(work_entries.mapped('date_stop'), [datetime(2019, 10, 10, 12, 0), datetime(2019, 10, 10, 17, 0)])
+        self.assertEqual(work_entries.mapped('date_start'), [datetime(2019, 10, 10, 6, 0), datetime(2019, 10, 10, 11, 0)])
+        self.assertEqual(work_entries.mapped('date_stop'), [datetime(2019, 10, 10, 10, 0), datetime(2019, 10, 10, 15, 0)])
