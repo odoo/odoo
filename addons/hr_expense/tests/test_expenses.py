@@ -705,6 +705,30 @@ class TestExpenses(TestExpenseCommon):
         expense_data = self.env['hr.expense'].with_user(self.expense_user_employee).get_expense_dashboard()
         self.assertEqual(expense_data['draft']['amount'], 3000.00)
 
+    def test_dashboard_waiting_reimbursement_posted_expense(self):
+        """ Check that an employee-paid expense stays in the "Waiting Reimbursement"
+            total once its move is posted, until the payment is actually made.
+        """
+        expense = self.create_expenses({
+            'name': 'Employee expense',
+            'payment_mode': 'own_account',
+            'total_amount_currency': 1000.00,
+            'employee_id': self.expense_employee.id,
+        })
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertEqual(expense.state, 'posted')
+        expense_data = self.env['hr.expense'].with_user(self.expense_user_employee).get_expense_dashboard()
+        self.assertEqual(expense_data['approved']['amount'], 1000.00)
+
+        self.get_new_payment(expense, 1000.00)
+
+        self.assertIn(expense.state, ('in_payment', 'paid'))
+        expense_data = self.env['hr.expense'].with_user(self.expense_user_employee).get_expense_dashboard()
+        self.assertEqual(expense_data['approved']['amount'], 0.00)
+
     def test_update_expense_price_on_product_standard_price(self):
         """
         Tests that updating the standard price of a product will update all the un-submitted
