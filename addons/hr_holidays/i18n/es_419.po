@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-08-21 19:28+0000\n"
+"PO-Revision-Date: 2026-08-27 21:09+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/hr_holidays/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1263,7 +1263,7 @@ msgstr "Del aprobador del empleado y el responsable de permisos"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_work_entry_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Del encargado de permisos"
+msgstr "Del responsable de permisos"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -3079,43 +3079,38 @@ msgstr "Solo"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer/Manager can approve a leave."
-msgstr ""
-"Solo un gerente o encargado de Tiempo personal puede aprobar un permiso."
+msgstr "Solo un gerente o responsable de permisos puede aprobarlos."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can approve an allocation."
-msgstr ""
-"Solo un gerente o encargado de Tiempo personal puede aprobar una asignación."
+msgstr "Solo un gerente o responsable de permisos puede aprobar una asignación."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer/Manager can refuse a leave."
-msgstr ""
-"Solo un gerente o encargado de Tiempo personal puede rechazar un permiso."
+msgstr "Solo un gerente o responsable de permisos puede rechazar un permiso."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
 msgstr ""
-"Solo un gerente o encargado de Tiempo personal puede rechazar una asignación."
+"Solo un gerente o responsable de permisos puede rechazar una asignación."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer/Manager can validate a leave."
-msgstr ""
-"Solo un gerente o encargado de Tiempo personal puede validar un permiso."
+msgstr "Solo un gerente o responsable de permisos puede validar un permiso."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can validate an allocation."
-msgstr ""
-"Solo un gerente o encargado de Tiempo personal puede validar una asignación."
+msgstr "Solo un gerente o responsable de permisos puede validar una asignación."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3479,13 +3474,14 @@ msgid ""
 "need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
-"Seleccione el nivel de aprobación necesario para las solicitudes de "
-"empleado\n"
-"            #     - No requiere validación:  la solicitud del empleado se "
-"aprueba de forma automática.\n"
-"            #     - Aprobado por el encargado de tiempo personal: el "
-"encargado del tiempo personal\n"
-"            #       debe aprobar de forma manual la solicitud del empleado."
+"Selecciona el nivel de aprobación necesario para las solicitudes de los "
+"empleados\n"
+"            #     - No requiere validación: La solicitud del empleado queda "
+"aprobada de forma automática.\n"
+"            #     - Aprobado por el responsable de permisos: La persona "
+"responsable de los permisos, la persona responsable del empleado\n"
+"            #       o ambas deben aprobar la solicitud del empleado de forma "
+"manual."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3794,8 +3790,8 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
-"La cantidad máxima de exceso debe ser mayor a 0. Desactive el límite "
-"negativo si quiere que sea 0."
+"La cantidad máxima excedente debe ser mayor que 0. Si quieres que sea 0, "
+"desactiva el límite negativo."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4669,7 +4665,7 @@ msgstr "¿Cuándo se acumula el tiempo?"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
-msgstr "¿Por qué quiere cancelar este tiempo personal aprobado?"
+msgstr "¿Por qué quieres cancelar este permiso aprobado?"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_work_entry_type
@@ -4861,17 +4857,14 @@ msgstr "No puede realizar la misma acción dos veces."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't refuse a leave with validation by Time Off Officer."
-msgstr ""
-"No puede rechazar un permiso que ya lo haya validado el encargado de Tiempo "
-"personal."
+msgstr "No puedes rechazar un permiso que ya está validado por un responsable."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You can't refuse an allocation with validation by Time Off Officer."
 msgstr ""
-"No puede rechazar una asignación que ya lo haya validado el encargado de "
-"Tiempo personal."
+"No puedes rechazar una asignación que ya está validada por un responsable."
 
 #. module: hr_holidays
 #. odoo-python
