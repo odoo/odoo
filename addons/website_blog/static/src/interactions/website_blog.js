@@ -34,6 +34,12 @@ export class WebsiteBlog extends Interaction {
 
     setup() {
         this.defaultPosition = this._isCompactListOrSplitGridView() ? 0 : 16;
+        // The sidebar becomes sticky once the scroll reaches the table of
+        // content.
+        if (this._hasBlogTableOfContent()) {
+            const blogToCEl = this.el.querySelector("#o_wblog_post_sidebar .o_wblog_toc");
+            this.defaultPosition -= blogToCEl.offsetTop;
+        }
         this.position = this.defaultPosition;
     }
 
@@ -168,6 +174,17 @@ export class WebsiteBlog extends Interaction {
             this.el.querySelector(".o_wblog_compact_list_month_header") !== null ||
             this.el.querySelector(".o_wblog_split_grid_view_container") !== null
         );
+    }
+
+    /**
+     * Checks if we are in a blog post with the table of content enabled in the
+     * sidebar.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasBlogTableOfContent() {
+        return !!this.el.querySelector("#o_wblog_post_sidebar .o_wblog_toc");
     }
 }
 

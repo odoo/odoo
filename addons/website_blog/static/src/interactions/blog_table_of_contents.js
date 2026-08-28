@@ -18,11 +18,6 @@ export class BlogTableOfContents extends Interaction {
         _scrollingTarget: {
             "t-on-scroll": this.process,
         },
-        ".o_wblog_toc": {
-            "t-att-class": () => ({
-                "d-none": !this.targets.length,
-            }),
-        },
     };
 
     setup() {
@@ -63,6 +58,18 @@ export class BlogTableOfContents extends Interaction {
         this.navMobileEl.innerHTML = "";
         if (!this.headingEls.length) {
             return;
+        }
+
+        // Ensure the headings all have an id (needed for blogs posts created in
+        // older versions, until their content is modified again (see
+        // BlogPostPageOptionPlugin)).
+        const headingsWithIdEls = this.contentEl.querySelectorAll("[id^='blog_table_of_content_']");
+        if (!headingsWithIdEls.length) {
+            let id = 0;
+            this.headingEls.forEach((headingEl) => {
+                headingEl.setAttribute("id", `blog_table_of_content_${++id}`);
+                headingEl.dataset.anchor = "true";
+            });
         }
 
         const listGroupEl = document.createElement("div");

@@ -133,13 +133,9 @@
     }
 
     // Sidebar and table of contents
-    #o_wblog_post_sidebar {
-        height: 100%;
-
-        #o_wblog_post_sidebar_sticky {
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
-        }
+    #o_wblog_post_sidebar.o_wblog_post_sidebar_sticky {
+        max-height: calc(100vh - var(--wblog-sticky-top, 0px));
+        overflow-y: auto;
     }
 
     .o_wblog_toc {
@@ -150,6 +146,10 @@
                         padding-left: $spacer * (0.75 + $i);
                     }
                 }
+
+                // Prevent long titles from making the sidebar scroll.
+                overflow-x: hidden;
+                text-overflow: ellipsis;
             }
 
             @include media-breakpoint-up(lg) {
