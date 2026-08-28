@@ -138,12 +138,6 @@ class Website(models.Model):
         default="website_sequence asc",
     )
 
-    shop_extra_field_ids = fields.One2many(
-        string="E-Commerce Extra Fields",
-        comodel_name="website.sale.extra.field",
-        inverse_name="website_id",
-    )
-
     product_page_container = fields.Selection(
         selection=[("unset", "Unset"), ("regular", "Regular"), ("fluid", "Full-width")],
         default="unset",
@@ -918,6 +912,51 @@ class Website(models.Model):
             if self.product_page_container == "unset"
             else self.product_page_container
         )
+
+    def _prepare_product_spec_groups(self, product_variant, product_template):
+        """Return grouped product page specifications and their extra field values.
+        The groups contain product attributes and website's configured extra fields.
+
+        :param product.product product_variant: The selected variant, if any.
+        :param product.template product_template: The product template being displayed.
+        :return: The spec groups and the extra field values.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        ExtraField = self.env["website.sale.extra.field"]
+        empty_attribute_lines = self.env["product.template.attribute.line"]
+        attribute_categories = product_template.valid_product_template_attribute_line_ids._prepare_categories_for_display()
+        extra_fields = ExtraField.search([("website_id", "=", self.id)])
+        extra_field_values = extra_fields._get_values_for_display(product_variant, product_template)
+        visible_extra_fields_by_category = {}
+
+        # Keep only extra fields with a value, grouped by their display category.
+        for extra_field in extra_fields:
+            if extra_field not in extra_field_values:
+                continue
+            category = extra_field.category_id
+            visible_extra_fields_by_category.setdefault(category, ExtraField)
+            visible_extra_fields_by_category[category] |= extra_field
+
+        spec_groups = []
+        # Merge extra fields into existing attribute categories first to preserve category order.
+        for category, attribute_lines in attribute_categories.items():
+            spec_groups.append({
+                "category": category,
+                "attribute_lines": attribute_lines,
+                "extra_fields": visible_extra_fields_by_category.pop(category, ExtraField),
+            })
+
+        # Add categories containing only extra fields.
+        for category, visible_extra_fields in visible_extra_fields_by_category.items():
+            spec_groups.append({
+                "category": category,
+                "attribute_lines": empty_attribute_lines,
+                "extra_fields": visible_extra_fields,
+            })
+
+        return {"spec_groups": spec_groups, "extra_field_values": extra_field_values}
 
     @api.model
     def _cron_send_abandoned_cart_email(self):
