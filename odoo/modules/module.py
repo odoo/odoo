@@ -74,12 +74,10 @@ _DEFAULT_MANIFEST = {
     'countries': [],
     'data': [],
     'demo': [],
-    'demo_xml': [],
     'depends': [],
     'description': '',  # defaults to README file
     'external_dependencies': {},
     'iap_paid_service': False,
-    'init_xml': [],
     'installable': True,
     'images': [],  # website
     'kpi_providers': [],
@@ -93,7 +91,6 @@ _DEFAULT_MANIFEST = {
     'summary': '',
     'test': [],
     'theme_customizations': {},  # themes
-    'update_xml': [],
     'uninstall_hook': '',
     'version': '1.0',
     'web': False,
