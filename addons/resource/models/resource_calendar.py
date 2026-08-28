@@ -626,6 +626,27 @@ class ResourceCalendar(models.Model):
         works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
 
+    def _get_expected_hours_per_day(self, start_dt, end_dt, resource=None):
+        if self:
+            self.ensure_one()
+        if not start_dt.tzinfo:
+            start_dt = start_dt.replace(tzinfo=UTC)
+        if not end_dt.tzinfo:
+            end_dt = end_dt.replace(tzinfo=UTC)
+
+        resources_per_tz = resource._get_resources_per_tz() if resource else None
+        intervals = self._work_intervals_batch(start_dt, end_dt, resources_per_tz=resources_per_tz, compute_leaves=True)
+        resource_id = resource.id if resource else False
+
+        day_hours = defaultdict(float)
+        for start, stop, _meta in intervals[resource_id]:
+            day_hours[start.date()] += (stop - start).total_seconds() / 3600
+
+        return {
+            fields.Date.to_string(day.date()): day_hours.get(day.date(), 0.0)
+            for day in rrule(DAILY, start_dt, until=end_dt)
+        }
+
     def _get_default_attendance_ids(self, company_id=None):
         """ return a copy of the company's calendar attendance or default 40 hours/week """
         if company_id and company_id.resource_calendar_id.calendar_type == "fixed" and (attendances := company_id.resource_calendar_id.attendance_ids):
