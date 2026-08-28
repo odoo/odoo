@@ -242,6 +242,7 @@ export class Field extends Component {
             decorations: {},
             attrs: {},
             domain: undefined,
+            group_expand: !!fields[name].group_expand,
         };
 
         for (const attr of ["invisible", "column_invisible", "readonly", "required"]) {

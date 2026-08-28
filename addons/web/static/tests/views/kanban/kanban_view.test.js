@@ -467,6 +467,71 @@ test("empty group when grouped by date", async () => {
     await press("Enter"); // reload
     await animationFrame();
 
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["February 2017\n(3)"]);
+
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(3);
+});
+
+test.tags("desktop");
+test("empty group when grouped by date with group_expand", async () => {
+    Partner._records[0].date = "2017-01-08";
+    Partner._records[1].date = "2017-02-09";
+    Partner._records[2].date = "2017-02-08";
+    Partner._records[3].date = "2017-02-10";
+    Partner._fields.date = fields.Date({ group_expand: true });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `<kanban>
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`,
+        groupBy: ["date:month"],
+    });
+
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(1)", "February 2017\n(3)"]);
+
+    MockServer.env["partner"].shift(); // remove only record of the first group
+
+    await press("Enter"); // reload
+    await animationFrame();
+
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(0)", "February 2017\n(3)"]);
+
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(0);
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(3);
+});
+
+test.tags("desktop");
+test("empty group when grouped by date as default groupby", async () => {
+    Partner._records[0].date = "2017-01-08";
+    Partner._records[1].date = "2017-02-09";
+    Partner._records[2].date = "2017-02-08";
+    Partner._records[3].date = "2017-02-10";
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `<kanban default_group_by='date:month'>
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`,
+    });
+
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(1)", "February 2017\n(3)"]);
+
+    MockServer.env["partner"].shift(); // remove only record of the first group
+
+    await press("Enter"); // reload
+    await animationFrame();
+
     expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(0)", "February 2017\n(3)"]);
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(0);

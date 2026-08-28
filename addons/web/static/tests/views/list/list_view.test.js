@@ -2819,6 +2819,33 @@ test(`grouped list rendering with default_group_by m2o field: add group`, async 
     ]);
 });
 
+test(`grouped list rendering with default_group_by m2o: add group`, async () => {
+    Foo._fields.value = fields.Integer();
+
+    onRpc("name_create", ({ args }) => {
+        expect(args[0]).toBe("New group");
+        expect.step("name_create");
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list default_group_by="m2o"><field name="foo"/></list>`,
+    });
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 3 records", "Value 2 1 record"]);
+    expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
+    await contains(`.o_list_footer td > button`).click();
+    expect(`.o_list_footer td > button`).toHaveCount(0);
+    expect(`.o_list_footer td input`).toHaveCount(1);
+    await contains(`.o_list_footer td input`).edit("New group", { confirm: false });
+    await contains(`.o_list_footer .o_list_group_confirm`).click();
+    expect.verifySteps(["name_create"]);
+    expect(queryAllTexts(".o_group_name")).toEqual([
+        "Value 1 3 records",
+        "Value 2 1 record",
+        "New group 0 record",
+    ]);
+});
+
 test(`grouped list rendering with groupby m2o field: group_create = false`, async () => {
     await mountView({
         resModel: "foo",
@@ -5303,7 +5330,7 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
     await toggleMenuItem("Delete");
     await contains(`.o_dialog footer .btn-danger`).click(); // confirm
     expect(`.o_data_row`).toHaveCount(0);
-    expect(`.o_group_header:last`).toHaveText("Yes 0 record 0.00", { inline: true });
+    expect(`.o_group_header:last`).toHaveText("No 1 record $ 0.00", { inline: true });
 });
 
 test(`list with monetary field with attribute column_invisible="1"`, async () => {
@@ -21548,4 +21575,59 @@ test("mass edit discoverability: pencil icon displays on selected row and enters
     await click(`.o_data_row:eq(0) .o_mass_edit_btn`);
     await animationFrame();
     expect(".o_selected_row .o_field_widget[name='foo'] input").toBeFocused();
+});
+
+test("Empty Groups: filter out empty groups unless field has group_expand", async () => {
+    Foo._fields.active = fields.Boolean({ default: true });
+    Foo._fields.m2o = fields.Many2one({ relation: "bar", group_expand: true });
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2o"/>
+            </list>
+        `,
+        actionMenus: {},
+        groupBy: ["m2o"],
+    });
+
+    expect(".o_group_header").toHaveCount(2);
+
+    await contains(".o_group_name:eq(1)").click();
+    await clickRecordSelector(1);
+    await contains("div.o_control_panel .o_cp_action_menus .dropdown-toggle").click();
+    await toggleMenuItem("Archive");
+    await contains(".modal-footer .btn-primary").click();
+
+    expect(".o_group_header").toHaveCount(2);
+});
+
+test("Empty Groups: filter out empty groups", async () => {
+    Foo._fields.active = fields.Boolean({ default: true });
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2o"/>
+            </list>
+        `,
+        actionMenus: {},
+        groupBy: ["m2o"],
+    });
+
+    expect(".o_group_header").toHaveCount(2);
+
+    await contains(".o_group_name:eq(1)").click();
+    await clickRecordSelector(1);
+    await contains("div.o_control_panel .o_cp_action_menus .dropdown-toggle").click();
+    await toggleMenuItem("Archive");
+    await contains(".modal-footer .btn-primary").click();
+
+    expect(".o_group_header").toHaveCount(1);
 });
