@@ -21,7 +21,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ve',
-                'currency_id': 'base.VED',
                 'cash_account_code_prefix': '1101',
                 'bank_account_code_prefix': '1102',
                 'transfer_account_code_prefix': '1129003',
