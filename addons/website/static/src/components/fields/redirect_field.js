@@ -1,13 +1,13 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";
 
 class RedirectField extends Component {
     static template = "website.RedirectField";
-    static props = { ...standardFieldProps };
+    props = useProps({ ...standardFieldProps });
 
     handleViewButton = useViewButtonHandler();
 

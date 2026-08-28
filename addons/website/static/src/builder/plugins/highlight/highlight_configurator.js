@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
 import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { normalizeColor } from "@html_builder/utils/utils_css";
@@ -32,19 +32,19 @@ export const highlightIdToName = {
 export class HighlightConfigurator extends Component {
     static template = "website.highlightConfigurator";
     static components = { ColorPicker };
-    static props = {
-        applyHighlight: Function,
-        applyHighlightStyle: Function,
-        deleteHighlight: Function,
-        getHighlightState: Function,
-        previewHighlight: Function,
-        previewHighlightStyle: Function,
-        revertHighlight: Function,
-        revertHighlightStyle: Function,
-        componentStack: Object,
-        getUsedCustomColors: Function,
-        getMaxFontSize: Function,
-    };
+    props = useProps({
+        applyHighlight: t.function(),
+        applyHighlightStyle: t.function(),
+        deleteHighlight: t.function(),
+        getHighlightState: t.function(),
+        previewHighlight: t.function(),
+        previewHighlightStyle: t.function(),
+        revertHighlight: t.function(),
+        revertHighlightStyle: t.function(),
+        componentStack: t.object(),
+        getUsedCustomColors: t.function(),
+        getMaxFontSize: t.function(),
+    });
 
     setup() {
         this.state = proxy(this.props.getHighlightState());

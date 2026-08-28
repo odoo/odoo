@@ -1,5 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -67,16 +67,16 @@ function getUploadedFontWeight(fontName) {
 export class AddFontDialog extends Component {
     static template = "website.dialog.addFont";
     static components = { GoogleFontAutoComplete, Dialog };
-    static props = {
-        close: Function,
-        allFonts: Array,
-        googleFonts: Array,
-        googleLocalFonts: Array,
-        uploadedLocalFonts: Array,
-        variable: String,
-        customize: Function,
-        reloadEditor: Function,
-    };
+    props = useProps({
+        close: t.function(),
+        allFonts: t.array(),
+        googleFonts: t.array(),
+        googleLocalFonts: t.array(),
+        uploadedLocalFonts: t.array(),
+        variable: t.string(),
+        customize: t.function(),
+        reloadEditor: t.function(),
+    });
     state = proxy({
         valid: true,
         loading: false,

@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { session } from "@web/session";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
 
 export class WebsiteSwitcherSystrayItem extends Component {
@@ -13,7 +13,7 @@ export class WebsiteSwitcherSystrayItem extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {};
+    props = useProps({});
     setup() {
         this.websiteService = useService("website");
         this.notificationService = useService("notification");

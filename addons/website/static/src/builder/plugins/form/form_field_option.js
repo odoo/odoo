@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy, useProps, t } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import {
     getDependencyEl,
@@ -17,12 +17,14 @@ const { DateTime } = luxon;
 
 export const RANGE_COMPARATORS = ["between", "!between"];
 
+export const formFieldOptionProps = {
+    redrawSequence: t.number().optional(),
+};
+
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
     static dependencies = ["websiteFormOption"];
-    static props = {
-        redrawSequence: { type: Number, optional: true },
-    };
+    props = useProps(formFieldOptionProps);
     static components = { FormActionFieldsOption };
 
     setup() {

@@ -1,5 +1,6 @@
 import { useOperation } from "@html_builder/core/operation_plugin";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useProps, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
@@ -31,10 +32,10 @@ const FORM_INNER_SNIPPETS = [
 
 export class FormOptionAddFieldButton extends BaseOptionComponent {
     static template = "website.s_website_form_form_option_add_field_button";
-    static props = {
-        addField: Function,
-        tooltip: String,
-    };
+    props = useProps({
+        addField: t.function(),
+        tooltip: t.string(),
+    });
 
     setup() {
         this.callOperation = useOperation();
@@ -53,10 +54,10 @@ export class FormOptionAddContentDropdown extends BaseOptionComponent {
         DropdownItem,
         Dropdown,
     };
-    static props = {
-        addField: Function,
-        tooltip: String,
-    };
+    props = useProps({
+        addField: t.function(),
+        tooltip: t.string(),
+    });
 
     setup() {
         this.callOperation = useOperation();

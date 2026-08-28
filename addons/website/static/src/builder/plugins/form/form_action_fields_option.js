@@ -1,12 +1,12 @@
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy, useProps, t } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class FormActionFieldsOption extends BaseOptionComponent {
     static template = "website.s_website_form_form_action_fields_option";
     static dependencies = ["websiteFormOption"];
-    static props = {
-        activeForm: { type: Object, optional: true },
-    };
+    props = useProps({
+        activeForm: t.object().optional(),
+    });
 
     setup() {
         super.setup();

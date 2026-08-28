@@ -1,22 +1,24 @@
-import { proxy, signal } from "@odoo/owl";
+import { proxy, signal, useProps, t } from "@odoo/owl";
 import { ImgGroup } from "@html_builder/core/img_group";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { getShapeURL } from "../image/image_helpers";
 import { useAutofocus } from "@web/core/utils/hooks";
 
+export const shapeSelectorProps = {
+    onClose: t.function(),
+    selectorTitle: t.string(),
+    shapeGroups: t.object(),
+    shapeActionId: t.string(),
+    buttonWrapperClassName: t.string().optional(),
+    imgThroughDiv: t.boolean().optional(),
+    getShapeUrl: t.function().optional(),
+    getShapeStyle: t.function().optional(),
+};
+
 export class ShapeSelector extends BaseOptionComponent {
     static template = "html_builder.shapeSelector";
-    static props = {
-        onClose: Function,
-        selectorTitle: String,
-        shapeGroups: Object,
-        shapeActionId: String,
-        buttonWrapperClassName: { type: String, optional: true },
-        imgThroughDiv: { type: Boolean, optional: true },
-        getShapeUrl: { type: Function, optional: true },
-        getShapeStyle: { type: Function, optional: true },
-    };
+    props = useProps(shapeSelectorProps);
     static components = { ImgGroup };
     rootRef = signal.ref();
     tabsRef = signal.ref();

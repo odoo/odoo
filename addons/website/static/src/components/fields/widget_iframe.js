@@ -1,11 +1,11 @@
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class FieldIframePreview extends Component {
     static template = "website.iframeWidget";
-    static props = { ...standardFieldProps };
+    props = useProps({ ...standardFieldProps });
     setup() {
         this.state = proxy({ isMobile: false });
 

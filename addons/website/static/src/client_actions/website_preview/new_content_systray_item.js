@@ -1,4 +1,4 @@
-import { Component, onMounted, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, xml, proxy, useProps, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -21,10 +21,10 @@ export const MODULE_STATUS = {
 export class NewContentSystrayItem extends Component {
     static template = "website.NewContentSystrayItem";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        onNewPage: Function,
-        newInstalledModule: { type: String, optional: true },
-    };
+    props = useProps({
+        onNewPage: t.function(),
+        newInstalledModule: t.string().optional(),
+    });
 
     setup() {
         this.orm = useService("orm");

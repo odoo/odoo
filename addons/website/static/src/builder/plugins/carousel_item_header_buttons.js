@@ -1,14 +1,14 @@
 import { useOperation } from "@html_builder/core/operation_plugin";
 import { useDomState } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 export class CarouselItemHeaderMiddleButtons extends Component {
     static template = "website.CarouselItemHeaderMiddleButtons";
-    static props = {
-        applyAction: Function,
-        addSlide: Function,
-        removeSlide: Function,
-    };
+    props = useProps({
+        applyAction: t.function(),
+        addSlide: t.function(),
+        removeSlide: t.function(),
+    });
 
     setup() {
         this.callOperation = useOperation();

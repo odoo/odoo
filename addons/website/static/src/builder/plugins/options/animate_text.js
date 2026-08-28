@@ -1,21 +1,20 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
-import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 import { useSubEnv } from "@web/owl2/utils";
-import { AnimateOption } from "./animate_option";
+import { AnimateOption, animateOptionProps } from "./animate_option";
 
 export class AnimateTextPopover extends BaseOptionComponent {
     static template = "website_builder.AnimateTextPopover";
-    static props = {
-        animateOptionProps: AnimateOption.props,
-        onReset: Function,
+    props = useProps({
+        animateOptionProps: t.object(animateOptionProps),
+        onReset: t.function(),
 
         // Popover service
-        close: { type: Function, optional: true },
-    };
+        close: t.function().optional(),
+    });
     static components = { AnimateOption };
     contentRef = signal.ref();
 
@@ -35,14 +34,16 @@ export class AnimateTextPopover extends BaseOptionComponent {
 
 export class AnimateText extends Component {
     static template = "website_builder.AnimateText";
-    static props = {
-        ...toolbarButtonProps,
-        config: { type: Object, shape: { editor: Object, editorBus: Object } },
-        animateOptionProps: AnimateOption.props,
-        getAnimatedTextOrCreateDefault: Function,
-        isActive: Function,
-        isDisabled: Function,
-    };
+    props = useProps({
+        // from toolbarButtonProps
+        title: t.or([t.string(), t.function()]),
+        getSelection: t.function(),
+        config: t.object({ editor: t.object(), editorBus: t.object() }),
+        animateOptionProps: t.object(animateOptionProps),
+        getAnimatedTextOrCreateDefault: t.function(),
+        isActive: t.function(),
+        isDisabled: t.function(),
+    });
 
     root = signal.ref();
 

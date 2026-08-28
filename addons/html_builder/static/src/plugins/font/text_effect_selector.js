@@ -1,10 +1,9 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownCloser, useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { useDomState } from "@html_builder/core/utils";
@@ -252,19 +251,19 @@ export class TextEffectOption extends BaseOptionComponent {
 export class TextEffectSelector extends Component {
     static template = "html_builder.TextEffectSelector";
     static components = { Dropdown, TextEffectOption };
-    static props = {
-        ...toolbarButtonProps,
-        config: {
-            type: Object,
-            shape: { editor: Object, editorBus: Object },
-        },
-        prepareTextEffectSelection: Function,
-        applyTextEffect: Function,
-        previewTextEffect: Function,
-        revertTextEffect: Function,
-        getState: Function,
-        updateState: Function,
-    };
+    props = useProps({
+        // from toolbarButtonProps
+        title: t.or([t.string(), t.function()]),
+        getSelection: t.function(),
+        isDisabled: t.boolean(),
+        config: t.object({ editor: t.object(), editorBus: t.object() }),
+        prepareTextEffectSelection: t.function(),
+        applyTextEffect: t.function(),
+        previewTextEffect: t.function(),
+        revertTextEffect: t.function(),
+        getState: t.function(),
+        updateState: t.function(),
+    });
 
     setup() {
         this.props.updateState();

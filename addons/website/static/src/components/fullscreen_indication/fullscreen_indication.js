@@ -1,11 +1,11 @@
 import { useBus } from "@web/core/utils/hooks";
-import { EventBus, Component, markup, proxy } from "@odoo/owl";
+import { EventBus, Component, markup, proxy, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class FullscreenIndication extends Component {
-    static props = {
-        bus: EventBus,
-    };
+    props = useProps({
+        bus: t.instanceOf(EventBus),
+    });
     static template = "website.FullscreenIndication";
 
     setup() {

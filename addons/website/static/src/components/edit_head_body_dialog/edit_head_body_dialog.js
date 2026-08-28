@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 
@@ -11,9 +11,9 @@ import { CodeEditor } from "@web/core/code_editor/code_editor";
 export class EditHeadBodyDialog extends Component {
     static template = "website.EditHeadBodyDialog";
     static components = { CodeEditor, Dialog };
-    static props = {
-        close: Function,
-    };
+    props = useProps({
+        close: t.function(),
+    });
 
     setup() {
         this.orm = useService("orm");

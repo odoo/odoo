@@ -15,7 +15,7 @@ import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, xml, useProps } from "@odoo/owl";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -524,7 +524,7 @@ test("stay on the 'Theme' tab if no more option match the selected element", asy
             super.setup();
             this.ThemeTab = class DummyThemeTab extends Component {
                 static template = xml`<div>Dummy Theme Tab</div>`;
-                static props = ["*"];
+                props = useProps();
             };
         },
     });

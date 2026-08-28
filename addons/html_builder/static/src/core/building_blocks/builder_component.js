@@ -1,11 +1,11 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, useProps, t } from "@odoo/owl";
 import { useDomState } from "../utils";
 
 export class BuilderComponent extends Component {
     static template = xml`<t t-if="this.state.isVisible"><t t-call-slot="default"/></t>`;
-    static props = {
-        slots: { type: Object },
-    };
+    props = useProps({
+        slots: t.object(),
+    });
 
     setup() {
         this.state = useDomState(

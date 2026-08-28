@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 
 /**
  * @typedef {import('./google_map_option_plugin.js').ApiKeyValidation} ApiKeyValidation
@@ -10,11 +10,12 @@ import { Component, proxy, signal } from "@odoo/owl";
 export class GoogleMapsApiKeyDialog extends Component {
     static template = "website.GoogleMapsApiKeyDialog";
     static components = { Dialog };
-    static props = {
-        originalApiKey: String,
-        onSave: Function,
-        close: Function,
-    };
+    props = useProps({
+        title: t.string().optional(),
+        originalApiKey: t.string(),
+        onSave: t.function(),
+        close: t.function(),
+    });
 
     setup() {
         this.modalRef = signal.ref();

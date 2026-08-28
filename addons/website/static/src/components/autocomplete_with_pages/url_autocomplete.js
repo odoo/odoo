@@ -1,15 +1,15 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, useProps, t } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
 
 // TODO: we probably don't need it anymore after merging html_builder
 // see: https://github.com/odoo/odoo/pull/187091
 export class UrlAutoComplete extends Component {
-    static props = {
-        options: { type: Object },
-        loadAnchors: { type: Function },
-        targetDropdown: { type: HTMLElement },
-    };
+    props = useProps({
+        options: t.object(),
+        loadAnchors: t.function(),
+        targetDropdown: t.instanceOf(HTMLElement),
+    });
     static template = "website.UrlAutoComplete";
     static components = { AutoCompleteWithPages };
 

@@ -1,5 +1,5 @@
 // import { registry } from "@web/core/registry";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, xml, proxy, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 // -----------------------------------------------------------------------------
@@ -11,7 +11,7 @@ export class Counter extends Component {
         <div class="btn btn-primary" t-on-click="this.increment">
             Counter. Value=<t t-out="this.state.value"/>
         </div>`;
-    static props = {};
+    props = useProps({});
 
     setup() {
         this.state = proxy({ value: 1 });

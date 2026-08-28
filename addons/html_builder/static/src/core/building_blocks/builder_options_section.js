@@ -1,10 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 export class BuilderOptionsSection extends Component {
     static template = "html_builder.BuilderOptionsSection";
-    static props = {
-        title: { type: String, optional: true },
-        containerClass: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-    };
+    props = useProps({
+        title: t.string().optional(),
+        containerClass: t.string().optional(),
+        slots: t.object().optional(),
+    });
 }

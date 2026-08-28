@@ -5,15 +5,16 @@ import { BuilderButton } from "@html_builder/core/building_blocks/builder_button
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { FONT_VARIABLES_TO_RESET } from "../font/font_plugin";
+import { useProps, t } from "@odoo/owl";
 
 export class ThemeFontFamilyOption extends BaseOptionComponent {
     static template = "website.ThemeFontFamilyOption";
-    static props = {
-        cssVariable: String,
-        buttonIcon: String,
-        buttonIconClass: String,
-        buttonTitle: String,
-    };
+    props = useProps({
+        cssVariable: t.string(),
+        buttonIcon: t.string(),
+        buttonIconClass: t.string().optional(),
+        buttonTitle: t.string(),
+    });
     static components = {
         BuilderFontFamilyPicker,
         BuilderButton,

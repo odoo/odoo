@@ -40,13 +40,13 @@ function isMobileView() {
 
 export class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
-    static props = {
-        close: Function,
-        createPage: Function,
-        name: String,
-        sectionsArch: String,
-        templateId: String,
-    };
+    props = useProps({
+        close: t.function(),
+        createPage: t.function(),
+        name: t.string(),
+        sectionsArch: t.string(),
+        templateId: t.string(),
+    });
     static components = {
         Switch,
         WebsiteDialog,
@@ -76,19 +76,13 @@ export class AddPageConfirmDialog extends Component {
 
 class AddPageTemplatePreview extends Component {
     static template = "website.AddPageTemplatePreview";
-    static props = {
-        template: Object,
-        animationDelay: Number,
-        firstRow: {
-            type: Boolean,
-            optional: true,
-        },
-        isCustom: {
-            type: Boolean,
-            optional: true,
-        },
-        onPageKeydown: { type: Function },
-    };
+    props = useProps({
+        template: t.object(),
+        animationDelay: t.number(),
+        firstRow: t.boolean().optional(),
+        isCustom: t.boolean().optional(),
+        onPageKeydown: t.function(),
+    });
     iframeRef = signal.ref();
     previewRef = signal.ref();
     holderRef = signal.ref();
@@ -334,20 +328,11 @@ class AddPageTemplatePreview extends Component {
 
 class AddPageTemplatePreviews extends Component {
     static template = "website.AddPageTemplatePreviews";
-    static props = {
-        isCustom: {
-            type: Boolean,
-            optional: true,
-        },
-        templates: {
-            type: Array,
-            element: Object,
-        },
-        isSingleColumn: {
-            type: Boolean,
-            optional: true,
-        },
-    };
+    props = useProps({
+        isCustom: t.boolean().optional(),
+        templates: t.array(t.object()),
+        isSingleColumn: t.boolean().optional(),
+    });
     static components = {
         AddPageTemplatePreview,
     };
@@ -375,10 +360,10 @@ class AddPageTemplatePreviews extends Component {
 
 class AddPageTemplates extends Component {
     static template = "website.AddPageTemplates";
-    static props = {
-        onTemplatePageChanged: Function,
-        defaultTemplateId: { type: String, optional: true },
-    };
+    props = useProps({
+        onTemplatePageChanged: t.function(),
+        defaultTemplateId: t.string().optional(),
+    });
     static components = {
         AddPageTemplatePreviews,
     };
