@@ -287,11 +287,8 @@ class TestHrEmployee(TestHrCommon):
             Check that the `work_contact_id` information is no longer
             updated when an employee's `user_id` is added to another employee.
         """
-        user = self.env['res.users'].create({
-            'name': 'Test',
-            'login': 'test',
-            'email': 'test@example.com',
-        })
+        user = self.env.ref('base.test_user')
+        user.email = 'test@example.com'
         employee_A, employee_B = self.env['hr.employee'].create([
             {
                 'name': 'Employee A',
@@ -316,12 +313,11 @@ class TestHrEmployee(TestHrCommon):
         """ Ensure that all the user infos needed to display the avatar popover card
             are available on the model hr.employee.
         """
-        user = self.env['res.users'].create([{
-            'name': 'Test user',
-            'login': 'test',
+        user = self.env.ref('base.test_user')
+        user.write({
             'email': 'test@odoo.perso',
             'phone': '+32488990011',
-        }])
+        })
         employee = self.env['hr.employee'].create([{
             'name': 'Test employee',
             'user_id': user.id,

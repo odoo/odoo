@@ -27,11 +27,8 @@ class TestWebsiteResetPassword(HttpCase):
             return original_send_mail(*args, **kwargs)
 
         with patch.object(MailMail, 'unlink', lambda self: None), patch.object(MailTemplate, 'send_mail', my_send_mail):
-            user = self.env['res.users'].create({
-                'login': 'test',
-                'name': 'The King',
-                'email': 'noop@example.com',
-            })
+            user = self.env.ref('base.test_user')
+            user.email = 'noop@example.com'
             websites = self.env['website'].search([])
             website_1 = websites[0]
             if len(websites) == 1:
