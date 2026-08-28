@@ -14,7 +14,7 @@ import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
-import { Component, onMounted, xml, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, xml, proxy, signal, useProps, t } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -126,15 +126,15 @@ class BuilderContainer extends Component {
             </div>
         </div>`;
     static components = { Builder, LocalOverlayContainer };
-    static props = {
-        content: String,
-        editableSelector: String,
-        headerContent: String,
-        Plugins: Array,
-        onEditorLoad: Function,
-        iframeLangDir: String,
-        builderProps: { type: Object, optional: true },
-    };
+    props = useProps({
+        content: t.string(),
+        editableSelector: t.string(),
+        headerContent: t.string(),
+        Plugins: t.array(),
+        onEditorLoad: t.function(),
+        iframeLangDir: t.string(),
+        builderProps: t.object().optional(),
+    });
 
     containerRef = signal.ref();
     websitePreviewRef = signal.ref();

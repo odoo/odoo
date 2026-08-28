@@ -1,12 +1,11 @@
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { Plugin } from "@html_editor/plugin";
 import { removeClass, removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, proxy, signal, xml } from "@odoo/owl";
+import { Component, proxy, signal, xml, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
@@ -288,13 +287,14 @@ registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
 registry.category("translation-plugins").add(HighlightPlugin.id, HighlightPlugin);
 
 class HighlightToolbarButton extends Component {
-    static props = {
-        ...toolbarButtonProps,
-        highlightConfiguratorProps: Object,
-        onClick: Function,
-        title: String,
-        getSelection: Function,
-    };
+    props = useProps({
+        // from toolbarButtonProps
+        isDisabled: t.boolean(),
+        highlightConfiguratorProps: t.object(),
+        onClick: t.function(),
+        title: t.string(),
+        getSelection: t.function(),
+    });
     static template = xml`
         <button t-ref="this.root" t-attf-class="btn btn-light o-select-highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
             <i class="oi oi-fw py-1" data-icon="stylus_laser_pointer"/>

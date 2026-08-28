@@ -1,8 +1,8 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 export class CreatePageMessage extends Component {
     static template = "website.CreatePageMessage";
-    static props = {
-        createPage: { type: Function },
-    };
+    props = useProps({
+        createPage: t.function(),
+    });
 }

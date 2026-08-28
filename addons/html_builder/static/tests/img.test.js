@@ -3,7 +3,7 @@ import { ImgGroup } from "@html_builder/core/img_group";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, useProps } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -29,7 +29,7 @@ test("ImgGroup's inner Image components should not be blocked before src load", 
                     <Image src="''" class="key"/>
                 </t>
             </ImgGroup>`;
-        static props = {};
+        props = useProps({});
 
         setup() {
             this.defs = defs;

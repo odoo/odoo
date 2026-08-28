@@ -12,6 +12,8 @@ import {
     useEffect,
     usePlugin,
     useScope,
+    useProps,
+    t,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
@@ -49,13 +51,13 @@ export class WebsiteBuilderClientAction extends Component {
         ResourceEditor,
         CreatePageMessage,
     };
-    static props = {
+    props = useProps({
         ...standardActionServiceProps,
-        editTranslations: { type: Boolean, optional: true },
-        enableEditor: { type: Boolean, optional: true },
-        path: { type: String, optional: true },
-        websiteId: { type: [Number, { value: false }], optional: true },
-    };
+        editTranslations: t.boolean().optional(),
+        enableEditor: t.boolean().optional(),
+        path: t.string().optional(),
+        websiteId: t.or([t.number(), t.literal(false)]).optional(),
+    });
 
     static extractProps(action) {
         return {

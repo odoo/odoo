@@ -1,4 +1,4 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useProps, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { EditInBackendSystrayItem } from "./edit_in_backend";
 import { EditWebsiteSystrayItem } from "./edit_website_systray_item";
@@ -9,12 +9,12 @@ import { WebsiteSwitcherSystrayItem } from "./website_switcher_systray_item";
 
 export class WebsiteSystrayItem extends Component {
     static template = "website.WebsiteSystrayItem";
-    static props = {
-        onNewPage: { type: Function },
-        onEditPage: { type: Function },
-        iframeLoaded: { type: Object },
-        newInstalledModule: { type: String, optional: true}
-    };
+    props = useProps({
+        onNewPage: t.function(),
+        onEditPage: t.function(),
+        iframeLoaded: t.promise(),
+        newInstalledModule: t.string().optional(),
+    });
     static components = {
         MobilePreviewSystrayItem,
         WebsiteSwitcherSystrayItem,

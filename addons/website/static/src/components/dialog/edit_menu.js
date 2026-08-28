@@ -2,7 +2,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart, proxy, signal, useApp, useEffect } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useApp, useEffect, useProps, t } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -59,14 +59,14 @@ const toRelativeIfSameDomain = (url) => {
 export class MenuDialog extends Component {
     static template = "website.MenuDialog";
     static components = { WebsiteDialog };
-    static props = {
-        name: { type: String, optional: true },
-        url: { type: String, optional: true },
-        isMegaMenu: { type: Boolean, optional: true },
-        hasChildren: { type: Boolean, optional: true },
-        save: Function,
-        close: Function,
-    };
+    props = useProps({
+        name: t.string().optional(),
+        url: t.string().optional(),
+        isMegaMenu: t.boolean().optional(),
+        hasChildren: t.boolean().optional(),
+        save: t.function(),
+        close: t.function(),
+    });
 
     autofocusRef = signal.ref();
 
@@ -156,12 +156,12 @@ export class MenuDialog extends Component {
 
 class MenuRow extends Component {
     static template = "website.MenuRow";
-    static props = {
-        menu: Object,
-        edit: Function,
-        delete: Function,
-        createPage: Function,
-    };
+    props = useProps({
+        menu: t.object(),
+        edit: t.function(),
+        delete: t.function(),
+        createPage: t.function(),
+    });
     static components = {
         MenuRow,
     };
@@ -185,7 +185,11 @@ export class EditMenuDialog extends Component {
         MenuRow,
         WebsiteDialog,
     };
-    static props = ["rootID?", "close", "save?"];
+    props = useProps({
+        rootID: t.or([t.number(), t.literal(null)]).optional(),
+        close: t.function(),
+        save: t.function().optional(),
+    });
 
     menuEditor = signal.ref();
 
@@ -335,7 +339,7 @@ export class EditMenuDialog extends Component {
                 menuToEdit.fields["url"] = isMegaMenu || !url ? "#" : url;
                 menuToEdit.fields["is_mega_menu"] = isMegaMenu;
                 menuToEdit.page_not_found = false;
-                menuToEdit.is_homepage = !isMegaMenu && menuToEdit.is_homepage
+                menuToEdit.is_homepage = !isMegaMenu && menuToEdit.is_homepage;
                 this.checkMenuUrlExists(menuToEdit, url);
             },
         });

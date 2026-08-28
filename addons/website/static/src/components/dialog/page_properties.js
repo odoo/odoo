@@ -12,6 +12,13 @@ import { FormController, formControllerProps } from "@web/views/form/form_contro
 import { registry } from "@web/core/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
 
+export const pageDependenciesProps = {
+    resIds: t.array(),
+    resModel: t.string(),
+    mode: t.string(),
+    onDependenciesLoaded: t.function().optional(),
+};
+
 export class PageDependencies extends Component {
     static template = "website.PageDependencies";
     static popoverTemplate = xml`
@@ -21,12 +28,8 @@ export class PageDependencies extends Component {
             <div class="popover-body"/>
         </div>
     `;
-    static props = {
-        resIds: Array,
-        resModel: String,
-        mode: String,
-        onDependenciesLoaded: { type: Function, optional: true },
-    };
+    static propShape = pageDependenciesProps;
+    props = useProps(this.constructor.propShape);
 
     action = signal.ref();
 
@@ -98,10 +101,10 @@ export class PageDependencies extends Component {
 }
 
 export class FormPageDependencies extends PageDependencies {
-    static props = {
+    static propShape = {
         ...standardFieldProps,
-        ...PageDependencies.props,
-        resIds: { type: Array, optional: true },
+        ...pageDependenciesProps,
+        resIds: t.array().optional(),
     };
 
     async getResIds() {
@@ -135,13 +138,13 @@ export class DeletePageDialog extends Component {
         CheckBox,
         WebsiteDialog,
     };
-    static props = {
-        resIds: Array,
-        resModel: String,
-        onDelete: { type: Function, optional: true },
-        close: Function,
-        hasNewPageTemplate: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        resIds: t.array(),
+        resModel: t.string(),
+        onDelete: t.function().optional(),
+        close: t.function(),
+        hasNewPageTemplate: t.boolean().optional(),
+    });
 
     setup() {
         this.website = useService("website");
@@ -172,11 +175,11 @@ export class DeletePageDialog extends Component {
 export class DuplicatePageDialog extends Component {
     static components = { WebsiteDialog };
     static template = "website.DuplicatePageDialog";
-    static props = {
-        onDuplicate: Function,
-        close: Function,
-        pageIds: { type: Array, element: Number },
-    };
+    props = useProps({
+        onDuplicate: t.function(),
+        close: t.function(),
+        pageIds: t.array(t.number()),
+    });
     autofocusRef = signal.ref();
 
     setup() {

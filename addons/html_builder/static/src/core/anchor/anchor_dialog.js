@@ -1,17 +1,17 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class AnchorDialog extends Component {
     static template = "html_builder.AnchorDialog";
     static components = { Dialog };
-    static props = {
-        currentAnchorName: { type: String },
-        renameAnchor: { type: Function },
-        deleteAnchor: { type: Function },
-        formatAnchor: { type: Function },
-        close: { type: Function },
-    };
+    props = useProps({
+        currentAnchorName: t.string(),
+        renameAnchor: t.function(),
+        deleteAnchor: t.function(),
+        formatAnchor: t.function(),
+        close: t.function(),
+    });
 
     inputRef = signal.ref();
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { xml, Component, proxy } from "@odoo/owl";
+import { xml, Component, proxy, useProps, t } from "@odoo/owl";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 
 export function useStackingComponentState() {
@@ -25,12 +25,12 @@ export class StackingComponent extends Component {
             </div>
         </t>
     `;
-    static props = {
-        stackState: { type: Object },
-        class: { type: String, optional: true },
-        style: { type: String, optional: true },
-        close: { type: Function, optional: true },
-    };
+    props = useProps({
+        stackState: t.object(),
+        class: t.string().optional(),
+        style: t.string().optional(),
+        close: t.function().optional(),
+    });
     setup() {
         this.stack = proxy(this.props.stackState.stack);
         useLayoutEffect(

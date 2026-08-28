@@ -4,7 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 import { RelativePublishTime } from "./relative_publish_time";
 
@@ -51,7 +51,7 @@ export class PublishSystrayItem extends Component {
         CheckBox,
         RelativePublishTime,
     };
-    static props = {};
+    props = useProps({});
 
     setup() {
         this.website = useService("website");

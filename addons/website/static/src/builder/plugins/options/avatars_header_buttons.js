@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { useDomState } from "@html_builder/core/utils";
 import { useOperation } from "@html_builder/core/operation_plugin";
 
 export class AvatarsHeaderMiddleButtons extends Component {
     static template = "website.AvatarsHeaderMiddleButtons";
-    static props = {
-        addAvatar: Function,
-        removeAvatar: Function,
-    };
+    props = useProps({
+        addAvatar: t.function(),
+        removeAvatar: t.function(),
+    });
 
     setup() {
         this.callOperation = useOperation();

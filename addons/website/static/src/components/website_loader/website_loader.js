@@ -1,12 +1,12 @@
 import { delay } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
-import { Component, EventBus, proxy, useEffect } from "@odoo/owl";
+import { Component, EventBus, proxy, useEffect, useProps, t } from "@odoo/owl";
 
 export class WebsiteLoader extends Component {
-    static props = {
-        bus: EventBus,
-    };
+    props = useProps({
+        bus: t.instanceOf(EventBus),
+    });
     static template = "website.website_loader";
 
     setup() {

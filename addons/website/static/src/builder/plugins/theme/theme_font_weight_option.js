@@ -24,12 +24,12 @@ export class ThemeFontWeightOption extends BaseOptionComponent {
     static template = "website.ThemeFontWeightOption";
     static components = { FontWeightPicker };
     static dependencies = ["customizeWebsite", "themeTab"];
-    static props = {
-        fontVariable: { type: String },
-        regularVariables: { type: Array },
-        lightVariables: { type: Array, optional: true },
-        boldVariables: { type: Array, optional: true },
-    };
+    props = useProps({
+        fontVariable: t.string(),
+        regularVariables: t.array(),
+        lightVariables: t.array().optional(),
+        boldVariables: t.array().optional(),
+    });
 
     setup() {
         super.setup();

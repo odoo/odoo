@@ -1,12 +1,12 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, useProps, t } from "@odoo/owl";
 import { batched } from "@web/core/utils/timing";
 
 export class ImgGroup extends Component {
     static template = xml`<t><t t-call-slot="default"/></t>`;
-    static props = {
-        slots: Object,
-    };
+    props = useProps({
+        slots: t.object(),
+    });
 
     setup() {
         this.load = () => {};

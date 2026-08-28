@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, useProps, t } from "@odoo/owl";
 
 export class FooterTemplateOption extends BaseOptionComponent {
     static id = "footer_template_option";
@@ -18,5 +18,10 @@ registry.category("website-options").add(FooterTemplateOption.id, FooterTemplate
 
 export class FooterTemplateChoice extends BaseOptionComponent {
     static template = "website.FooterTemplateChoice";
-    static props = { title: String, view: String, varName: String, imgSrc: String };
+    props = useProps({
+        title: t.string(),
+        view: t.string(),
+        varName: t.string(),
+        imgSrc: t.string(),
+    });
 }

@@ -1,14 +1,13 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
+import { ShapeSelector, shapeSelectorProps } from "@html_builder/plugins/shape/shape_selector";
+import { useProps } from "@odoo/owl";
 
 export class BackgroundShapeSelector extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeSelector";
     static dependencies = ["backgroundShapeOption"];
     static components = { ShapeSelector };
-    static props = {
-        ...ShapeSelector.props,
-    };
+    props = useProps({ ...shapeSelectorProps });
     setup() {
         super.setup();
         this.backgroundShapePlugin = this.dependencies.backgroundShapeOption;

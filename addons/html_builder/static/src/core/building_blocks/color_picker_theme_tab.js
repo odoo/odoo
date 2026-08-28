@@ -1,19 +1,20 @@
-import { Component } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class ColorPickerThemeTab extends Component {
     static template = "html_builder.ColorPickerThemeTab";
-    static props = {
-        onColorClick: Function,
-        onColorPointerOver: Function,
-        onColorPointerOut: Function,
-        onColorPointerLeave: Function,
-        onFocusin: Function,
-        onFocusout: Function,
-        selectedColorCombination: { type: String, optional: true },
-        "*": { optional: true },
-    };
+    props = useProps({
+        onColorClick: t.function(),
+        onColorPointerOver: t.function(),
+        onColorPointerOut: t.function(),
+        onColorPointerLeave: t.function(),
+        onFocusin: t.function(),
+        onFocusout: t.function(),
+        selectedColorCombination: t.string().optional(),
+        editColorCombination: t.function().optional(),
+        close: t.function().optional(),
+    });
 }
 
 registry.category("color_picker_tabs").add(

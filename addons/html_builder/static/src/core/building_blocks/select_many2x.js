@@ -8,10 +8,10 @@ import { shallowEqual } from "@web/core/utils/arrays";
 
 class SelectMany2XCreate extends Component {
     static template = "html_builder.SelectMany2XCreate";
-    static props = {
-        name: String,
-        create: Function,
-    };
+    props = useProps({
+        name: t.string(),
+        create: t.function(),
+    });
 
     setup() {
         this.dropdown = useDropdownCloser();

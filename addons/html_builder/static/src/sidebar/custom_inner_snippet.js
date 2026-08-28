@@ -1,16 +1,16 @@
 import { Image } from "@html_builder/core/img";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class CustomInnerSnippet extends Component {
     static template = "html_builder.CustomInnerSnippet";
-    static props = {
-        snippetModel: { type: Object },
-        snippet: { type: Object },
-        onClickHandler: { type: Function },
-        disabledTooltip: { type: String },
-    };
+    props = useProps({
+        snippetModel: t.object(),
+        snippet: t.object(),
+        onClickHandler: t.function(),
+        disabledTooltip: t.string(),
+    });
     static components = { Image };
 
     renameInputRef = signal.ref();

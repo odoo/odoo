@@ -23,6 +23,8 @@ import {
     signal,
     useEffect,
     useListener,
+    useProps,
+    t,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
@@ -238,19 +240,19 @@ async function ensurePreviewHeaders(state) {
 
 export class SkipButton extends Component {
     static template = "website.Configurator.SkipButton";
-    static props = {
-        skip: Function,
-        className: { type: String, optional: true },
-    };
+    props = useProps({
+        skip: t.function(),
+        className: t.string().optional(),
+    });
 }
 
 export class DescriptionScreen extends Component {
     static template = "website.Configurator.DescriptionScreen";
     static components = { SkipButton, AutoComplete };
-    static props = {
-        navigate: Function,
-        skip: Function,
-    };
+    props = useProps({
+        navigate: t.function(),
+        skip: t.function(),
+    });
     industrySelection = signal.ref();
     purposeSelectionRef = signal.ref();
     autofocusRef = signal.ref();
@@ -651,10 +653,10 @@ Return ONLY a JSON object with:
 export class PaletteSelectionScreen extends Component {
     static components = { SkipButton };
     static template = "website.Configurator.PaletteSelectionScreen";
-    static props = {
-        navigate: Function,
-        skip: Function,
-    };
+    props = useProps({
+        navigate: t.function(),
+        skip: t.function(),
+    });
     logoInputRef = signal.ref();
     setup() {
         this.state = useStore();
@@ -866,7 +868,7 @@ Return ONLY a JSON object with:
 
 export class ApplyConfiguratorScreen extends Component {
     static template = "";
-    static props = ["*"];
+    props = useProps();
     setup() {
         this.websiteService = useService("website");
         this.configuratorProgress = 0;
@@ -1469,7 +1471,7 @@ export class Configurator extends Component {
         ThemeSelectionScreen,
     };
     static template = "website.Configurator.Configurator";
-    static props = { ...standardActionServiceProps };
+    props = useProps({ ...standardActionServiceProps });
 
     setup() {
         this.orm = useService("orm");

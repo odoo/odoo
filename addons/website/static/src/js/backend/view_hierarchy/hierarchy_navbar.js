@@ -1,6 +1,6 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 
 export class HierarchyNavbar extends Component {
     static template = "website.hierarchy_navbar";
@@ -8,12 +8,12 @@ export class HierarchyNavbar extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
-        toggleInactive: Function,
-        websites: Object,
-        selectWebsite: Function,
-        searchView: Function,
-    };
+    props = useProps({
+        toggleInactive: t.function(),
+        websites: t.object(),
+        selectWebsite: t.function(),
+        searchView: t.function(),
+    });
 
     navbarRef = signal.ref();
     searchInput = signal.ref();

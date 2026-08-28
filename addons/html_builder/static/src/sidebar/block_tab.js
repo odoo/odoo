@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
@@ -25,10 +25,10 @@ import { CustomInnerSnippet } from "./custom_inner_snippet";
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static components = { Snippet, CustomInnerSnippet };
-    static props = {
-        snippetsName: String,
-        newInstalledModule: { type: String, optional: true },
-    };
+    props = useProps({
+        snippetsName: t.string(),
+        newInstalledModule: t.string().optional(),
+    });
 
     blockTabRef = signal.ref();
     groupSnippetsContainer = signal.ref();

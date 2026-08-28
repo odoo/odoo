@@ -17,11 +17,11 @@ import {
     onWillStart,
     onWillUnmount,
     proxy,
-    props,
     signal,
     t,
     useApp,
     useEffect,
+    useProps,
 } from "@odoo/owl";
 import wUtils from "@website/js/utils";
 
@@ -214,7 +214,12 @@ async function fetchDelayedTranslations(pageUrl) {
 
 class MetaImage extends Component {
     static template = "website.MetaImage";
-    static props = ["active", "src", "custom", "selectImage"];
+    props = useProps({
+        active: t.boolean(),
+        src: t.string(),
+        custom: t.boolean(),
+        selectImage: t.function(),
+    });
 }
 
 class ImageSelector extends Component {
@@ -222,13 +227,13 @@ class ImageSelector extends Component {
     static components = {
         MetaImage,
     };
-    static props = {
-        previewDescription: String,
-        defaultTitle: String,
-        hasSocialDefaultImage: Boolean,
-        pageImages: Array,
-        url: String,
-    };
+    props = useProps({
+        previewDescription: t.string(),
+        defaultTitle: t.string(),
+        hasSocialDefaultImage: t.boolean(),
+        pageImages: t.array(),
+        url: t.string(),
+    });
 
     setup() {
         this.website = useService("website");
@@ -335,12 +340,12 @@ class ImageSelector extends Component {
 
 class Keyword extends Component {
     static template = "website.Keyword";
-    static props = {
-        language: String,
-        keyword: String,
-        addKeyword: Function,
-        removeKeyword: Function,
-    };
+    props = useProps({
+        language: t.string(),
+        keyword: t.string(),
+        addKeyword: t.function(),
+        removeKeyword: t.function(),
+    });
 
     setup() {
         this.website = useService("website");
@@ -442,7 +447,7 @@ class MetaKeywords extends Component {
     static components = {
         Keyword,
     };
-    static props = {};
+    props = useProps({});
 
     setup() {
         this.website = useService("website");
@@ -498,12 +503,12 @@ class MetaKeywords extends Component {
 
 class SEOPreview extends Component {
     static template = "website.SEOPreview";
-    static props = {
-        isIndexed: Boolean,
-        title: String,
-        description: String,
-        url: String,
-    };
+    props = useProps({
+        isIndexed: t.boolean(),
+        title: t.string(),
+        description: t.string(),
+        url: t.string(),
+    });
 
     setup() {
         this.website = useService("website");
@@ -579,18 +584,18 @@ class SEOPreview extends Component {
 }
 export class TitleDescription extends Component {
     static template = "website.TitleDescription";
-    static props = {
-        canEditSeo: Boolean,
-        canEditDescription: Boolean,
-        canEditUrl: Boolean,
-        canEditTitle: Boolean,
-        seoNameHelp: String,
-        seoNameDefault: { optional: true, type: String },
-        isIndexed: Boolean,
-        defaultTitle: String,
-        previewDescription: String,
-        url: String,
-    };
+    props = useProps({
+        canEditSeo: t.boolean(),
+        canEditDescription: t.boolean(),
+        canEditUrl: t.boolean(),
+        canEditTitle: t.boolean(),
+        seoNameHelp: t.string(),
+        seoNameDefault: t.string().optional(),
+        isIndexed: t.boolean(),
+        defaultTitle: t.string(),
+        previewDescription: t.string(),
+        url: t.string(),
+    });
     static components = {
         SEOPreview,
     };
@@ -707,7 +712,7 @@ export class TitleDescription extends Component {
 export class BrokenLink extends Component {
     static template = "website.BrokenLink";
 
-    props = props({ link: t.object() });
+    props = useProps({ link: t.object() });
 
     urlInputRef = signal.ref();
 
@@ -784,9 +789,9 @@ export class SeoChecks extends Component {
         CheckBox,
         BrokenLink,
     };
-    static props = {
-        isDefaultLang: Boolean,
-    };
+    props = useProps({
+        isDefaultLang: t.boolean(),
+    });
 
     async setup() {
         this.website = useService("website");
@@ -973,9 +978,9 @@ export class OptimizeSEODialog extends Component {
         SeoChecks,
         BrokenLink,
     };
-    static props = {
-        close: Function,
-    };
+    props = useProps({
+        close: t.function(),
+    });
 
     setup() {
         this.website = useService("website");

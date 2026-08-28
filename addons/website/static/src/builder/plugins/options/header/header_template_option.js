@@ -1,4 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useProps, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { useDomState } from "@html_builder/core/utils";
@@ -26,15 +27,15 @@ registry.category("website-options").add(HeaderTemplateOption.id, HeaderTemplate
 
 export class HeaderTemplateChoice extends BaseOptionComponent {
     static template = "website.HeaderTemplateChoice";
-    static props = {
-        title: String,
-        views: Array,
-        varName: String,
-        imgSrc: String,
-        id: String,
-        menuShadowClass: String,
-        defaultAlignment: { type: Object, optional: true },
-    };
+    props = useProps({
+        title: t.string(),
+        views: t.array(),
+        varName: t.string(),
+        imgSrc: t.string(),
+        id: t.string(),
+        menuShadowClass: t.string(),
+        defaultAlignment: t.object().optional(),
+    });
 }
 
 /**

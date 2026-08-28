@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, t } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -10,11 +10,11 @@ const websiteSystrayRegistry = registry.category("website_systray");
 
 export class EditWebsiteSystrayItem extends Component {
     static template = "website.EditWebsiteSystrayItem";
-    static props = {
-        onNewPage: { type: Function },
-        onEditPage: { type: Function },
-        iframeEl: { type: HTMLElement },
-    };
+    props = useProps({
+        onNewPage: t.function(),
+        onEditPage: t.function(),
+        iframeEl: t.instanceOf(HTMLElement),
+    });
     static components = {
         Dropdown,
         DropdownItem,

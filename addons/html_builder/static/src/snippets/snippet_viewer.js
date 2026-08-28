@@ -1,4 +1,4 @@
-import { Component, markup, signal } from "@odoo/owl";
+import { Component, markup, signal, useProps, t } from "@odoo/owl";
 import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { localization } from "@web/core/l10n/localization";
@@ -11,14 +11,14 @@ import { Image } from "@html_builder/core/img";
 
 export class SnippetViewer extends Component {
     static template = "html_builder.SnippetViewer";
-    static props = {
-        state: { type: Object },
-        selectSnippet: { type: Function },
-        hasSearchResults: Function,
-        snippetModel: { type: Object },
-        installSnippetModule: { type: Function },
-        frontendDirection: { type: String },
-    };
+    props = useProps({
+        state: t.object(),
+        selectSnippet: t.function(),
+        hasSearchResults: t.function(),
+        snippetModel: t.object(),
+        installSnippetModule: t.function(),
+        frontendDirection: t.string(),
+    });
 
     content = signal.ref();
 

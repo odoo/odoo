@@ -2,18 +2,18 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { useService } from "@web/core/utils/hooks";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps, t } from "@odoo/owl";
 
 export class EmbedCodeOptionDialog extends Component {
     static template = "website.EmbedCodeOptionDialog";
     static components = { Dialog, CodeEditor };
-    static props = {
-        title: String,
-        value: String,
-        mode: String,
-        confirm: Function,
-        close: Function,
-    };
+    props = useProps({
+        title: t.string(),
+        value: t.string(),
+        mode: t.string(),
+        confirm: t.function(),
+        close: t.function(),
+    });
     setup() {
         this.dialog = useService("dialog");
         this.state = proxy({ value: this.props.value });

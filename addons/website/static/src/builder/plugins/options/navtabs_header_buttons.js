@@ -1,13 +1,13 @@
 import { useDomState } from "@html_builder/core/utils";
 import { useOperation } from "@html_builder/core/operation_plugin";
-import { Component } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 export class NavTabsHeaderMiddleButtons extends Component {
     static template = "website.NavTabsHeaderMiddleButtons";
-    static props = {
-        addItem: Function,
-        removeItem: Function,
-    };
+    props = useProps({
+        addItem: t.function(),
+        removeItem: t.function(),
+    });
 
     setup() {
         this.state = useDomState((editingElement) => {
