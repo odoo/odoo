@@ -7,8 +7,10 @@ import { markRaw } from "@odoo/owl";
 
 /** * @template {Record} R */
 export class RecordList extends Array {
-    /** @type {import("models").Store} */
-    _store;
+    /** @returns {import("models").Store} */
+    get _store() {
+        return this._raw._.owner.store;
+    }
     /** @type {this} */
     _raw;
     /** @type {this} */

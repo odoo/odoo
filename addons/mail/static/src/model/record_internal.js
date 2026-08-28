@@ -57,14 +57,14 @@ function observeField(recordProxy, fieldName, callback) {
  * component that happened to create them is destroyed.
  */
 class RecordScope extends Scope {
-    /** @param {import("models").Store} store */
-    constructor(store) {
-        super(store._.app);
-        this.store = store;
+    /** @param {Record} record */
+    constructor(record) {
+        super(record._rawStore._.app);
+        this.record = record;
     }
 
     destroy() {
-        this.finalize((error) => this.store.handleError(error));
+        this.finalize((error) => this.record._rawStore.handleError(error));
     }
 
     /**
@@ -218,7 +218,7 @@ export class RecordInternal {
 
     /** @returns {RecordScope} the scope owning the computeds of this record */
     ensureScope() {
-        return (this.scope ??= new RecordScope(this.record._rawStore));
+        return (this.scope ??= new RecordScope(this.record));
     }
 
     /**
@@ -296,10 +296,6 @@ export class RecordInternal {
             Object.assign(recordList._, {
                 name: fieldName,
                 owner: record,
-            });
-            Object.assign(recordList, {
-                _raw: recordList,
-                _store: record.store,
             });
             record[fieldName] = recordList;
         } else {
