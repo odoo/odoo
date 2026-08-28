@@ -46,20 +46,15 @@ def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, pa
 
     :returns: Whether a file was loaded
     """
-    keys = ('init_xml', 'data') if kind == 'data' else ('demo',)
+    files = set()
+    for filename in package.manifest[kind]:
+        if filename in files:
+            _logger.warning("File %s is imported twice in module %s %s", filename, package.name, kind)
+        files.add(filename)
 
-    files: set[str] = set()
-    for k in keys:
-        if k == 'init_xml' and package.manifest[k]:
-            _logger.warning("module %s: key 'init_xml' is deprecated in Odoo 19.", package.name)
-        for filename in package.manifest[k]:
-            if filename in files:
-                _logger.warning("File %s is imported twice in module %s %s", filename, package.name, kind)
-            files.add(filename)
-
-            _logger.info("loading %s/%s", package.name, filename)
-            convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
-            env.cr.flush()  # run precommit hooks
+        _logger.info("loading %s/%s", package.name, filename)
+        convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
+        env.cr.flush()  # run precommit hooks
 
     return bool(files)
 
@@ -70,7 +65,7 @@ def load_demo(env: Environment, package: ModuleNode, idref: IdRef, mode: LoadMod
     """
 
     try:
-        if package.manifest.get('demo') or package.manifest.get('demo_xml'):
+        if package.manifest.get('demo'):
             _logger.info("Module %s: loading demo", package.name)
             with env.cr.savepoint(flush=False):
                 load_data(env(su=True, context=dict(env.context, install_demo=True)), idref, mode, kind='demo', package=package)
