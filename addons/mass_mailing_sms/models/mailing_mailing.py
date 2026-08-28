@@ -49,6 +49,9 @@ class MailingMailing(models.Model):
         'Unregistered IAP account', compute='_compute_sms_has_iap_failure') # used to propose to Register the SMS IAP account
     sms_force_send = fields.Boolean(
         'Send Directly', help='Immediately send the SMS Mailing instead of queuing up. Use at your own risk.')
+    sms_company_id = fields.Many2one(
+        'res.company', string='SMS Company',
+        default=lambda self: self.env.company)
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
     # A/B Testing
@@ -250,9 +253,17 @@ class MailingMailing(models.Model):
             if not res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if res_ids:
-                composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
+                composer = self.env['sms.composer'].with_context(active_id=False).with_company(
+                    mailing._sms_get_company()
+                ).create(mailing._send_sms_get_composer_values(res_ids))
                 composer._action_send_sms()
         return True
+
+    def _sms_get_company(self):
+        self.ensure_one()
+        if self.env.su or self.sms_company_id.id in self.env.user._get_company_ids():
+            return self.sms_company_id
+        return self.env.company
 
     # ------------------------------------------------------
     # STATISTICS
