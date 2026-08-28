@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address" inherit_id="website_sale.address" name="Show l10n_fr field" customize_show="True">
+        <div id="div_country" position="after">
+            <t t-if="res_company.account_fiscal_country_id.code == 'FR'">
+                <div class="col-lg-6 mb-3" id="div_siren">
+                    <label class="col-form-label fw-normal label-optional" for="company_registry">Siren</label>
+                    <input type="text"
+                        name="company_registry"
+                        class="form-control text-uppercase"
+                        t-att-value="partner_sudo.company_registry"/>
+                </div>
+            </t>
+        </div>
+    </template>
+
+</odoo>
