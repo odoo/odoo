@@ -261,3 +261,46 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
             self.start_pos_tour("test_change_receipt_data")
             self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])
+
+    def _create_receipt_test_order(self, date_order, preset_time=False):
+        preset = self.env['pos.preset'].create({
+            'name': 'Online Order',
+            'use_timing': True,
+        })
+        return self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'date_order': date_order,
+            'preset_id': preset.id,
+            'preset_time': preset_time,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [Command.create({
+                'product_id': self.example_simple_product.product_variant_id.id,
+                'qty': 1,
+                'price_unit': 5.80,
+                'price_subtotal': 5.80,
+                'price_subtotal_incl': 5.80,
+            })],
+        })
+
+    def test_change_receipt_times_use_shop_timezone(self):
+        """
+        Preparation ticket times must use the shop timezone, not the acting user's,
+        since backend users (public user, OdooBot, self ordering user) may have no tz.
+        """
+        self.env.company.tz = 'Europe/Brussels'  # UTC+2
+        public_user = self.env.ref('base.public_user')
+        self.assertFalse(public_user.tz, "the public user carries no timezone")
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        order = self._create_receipt_test_order('2026-08-27 11:16:53', '2026-08-27 16:15:00')
+
+        data = order.with_user(public_user).sudo()._order_change_receipt_generate_data(set(self.category.ids))
+        self.assertTrue(data, "the order has one new line, it must produce a ticket")
+        extra_data = data[0]['extra_data']
+
+        self.assertEqual(extra_data['time'], '13:16', "13:16 in Brussels, not 11:16 in UTC")
+        self.assertEqual(extra_data['preset_time'], '06:15 PM', "18:15 in Brussels, not 16:15 in UTC")

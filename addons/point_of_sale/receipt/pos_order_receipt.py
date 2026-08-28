@@ -55,6 +55,11 @@ class PosOrderReceipt(models.AbstractModel):
         ]
         return [[name, self.env['ir.qweb']._get_template(name)[1]] for name in names]
 
+    def _order_receipt_tz(self):
+        """Receipts must use the shop timezone, since the rendering user (self ordering user, public user, OdooBot, ...) can be in a different tz"""
+        self.ensure_one()
+        return self.company_id.sudo().tz or self.env.context.get('tz') or self.env.user.tz or 'UTC'
+
     @api.model
     def _order_receipt_format_currency(self, amount):
         return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
@@ -156,6 +161,7 @@ class PosOrderReceipt(models.AbstractModel):
         config_logo = image_data_uri(self.config_id.logo) if self.config_id.logo else False
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
         tip_percentage = [self.config_id.tip_percentage_1, self.config_id.tip_percentage_2, self.config_id.tip_percentage_3] if self.config_id.set_tip_after_payment and self.amount_total > 0 else False
+        receipt_tz = self._order_receipt_tz()
 
         return {
             'order': self.read(order_fields, load=False)[0],
@@ -179,14 +185,14 @@ class PosOrderReceipt(models.AbstractModel):
             },
             'extra_data': {
                 'vat_label': self.company_id.country_id.vat_label or _("Tax ID"),
-                'preset_datetime': format_datetime(self.env, self.preset_time) if self.preset_time else False,
+                'preset_datetime': format_datetime(self.env, self.preset_time, tz=receipt_tz) if self.preset_time else False,
                 'partner_vat_label': self.partner_id.country_id.vat_label if self.partner_id.country_id else _("Tax ID"),
                 'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
                 'prices': self._order_receipt_generate_taxe_data(),
                 'cashier_name': self._order_receipt_generate_cashier_name(),
                 'company_state_name': company.state_id.name if company.state_id else False,
                 'company_country_name': company.country_id.name if company.country_id else False,
-                'formated_date_order': format_datetime(self.env, self.date_order),
+                'formated_date_order': format_datetime(self.env, self.date_order, tz=receipt_tz),
                 'tips_configuration': [
                     [f"{p}%", self._order_receipt_format_currency(self.amount_total * (p / 100))]
                     for p in tip_percentage
@@ -394,10 +400,13 @@ class PosOrderReceipt(models.AbstractModel):
         preset_fields = self.env['pos.preset']._load_pos_data_fields(self.config_id)
         preset = self.preset_id if self.preset_id else False
         preset_time = self.preset_time or False
-        if preset_time and preset_time.date() == self.date_order.date():
-            preset_time_str = format_time(self.env, preset_time, time_format='short')
+        receipt_tz = self._order_receipt_tz()
+        # Same day pickup only needs its hour (comparison done in shop timezone with same format)
+        day_format = 'yyyy-MM-dd'
+        if preset_time and format_datetime(self.env, preset_time, tz=receipt_tz, dt_format=day_format) == format_datetime(self.env, self.date_order, tz=receipt_tz, dt_format=day_format):
+            preset_time_str = format_time(self.env, preset_time, tz=receipt_tz, time_format='short')
         else:
-            preset_time_str = format_datetime(self.env, preset_time) if preset_time else False
+            preset_time_str = format_datetime(self.env, preset_time, tz=receipt_tz) if preset_time else False
 
         base = {
             'order': self.read(order_fields, load=False)[0],
@@ -406,7 +415,7 @@ class PosOrderReceipt(models.AbstractModel):
             'partner': self.partner_id.read([], load=False)[0] if self.partner_id else False,
             'preset': preset.read(preset_fields, load=False)[0] if preset else False,
             'extra_data': {
-                'time': format_datetime(self.env, self.date_order),
+                'time': format_datetime(self.env, self.date_order, tz=receipt_tz, dt_format='HH:mm'),
                 'employee_name': self.user_id.name if self.user_id else '',
                 'preset_time': preset_time_str,
                 'prefix': _("Order"),
