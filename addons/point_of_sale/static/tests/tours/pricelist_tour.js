@@ -44,3 +44,15 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ProductScreen.closePos(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_price_extra_pricelist_based_pricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1.0"),
+            ...Order.hasTotal(`$ 103.20`),
+            ProductScreen.clickPriceList("Pricelist 2", false),
+            ...Order.hasTotal(`$ 51.60`),
+        ].flat(),
+});
