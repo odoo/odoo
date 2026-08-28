@@ -375,6 +375,10 @@ export class ProductPage extends Interaction {
     }
 
     /**
+     * Requests are discarded as soon as a newer combination has been requested for the same
+     * product: the server may answer concurrent requests out of order, and applying an outdated
+     * answer would leave the page in a state that doesn't match the selected combination.
+     *
      * @see onChangeVariant
      *
      * @param {Event} ev
@@ -384,6 +388,8 @@ export class ProductPage extends Interaction {
         const parent = ev.target.closest('.js_product');
         if (!parent) return Promise.resolve();
         const combination = wSaleUtils.getSelectedAttributeValues(parent);
+        const requestId = (this.combinationInfoRequestIds.get(parent) || 0) + 1;
+        this.combinationInfoRequestIds.set(parent, requestId);
         const addToCart = parent.querySelector('#add_to_cart_wrap button[name="add_to_cart"]');
         const productTemplateId = parseInt(addToCart?.dataset?.productTemplateId);
 
@@ -396,10 +402,12 @@ export class ProductPage extends Interaction {
             'context': this.context,
             ...this._getOptionalCombinationInfoParams(parent),
         }));
+        if (this.combinationInfoRequestIds.get(parent) !== requestId) return;
         const attributeValueImages = await this.waitFor(rpc('/website_sale/get_attribute_images', {
             'product_template_id': productTemplateId,
             'combination': combination,
         }));
+        if (this.combinationInfoRequestIds.get(parent) !== requestId) return;
         if (combinationInfo.product_tags) {
             combinationInfo.product_tags = markup(combinationInfo.product_tags);
         }
@@ -859,6 +867,12 @@ export class ProductPage extends Interaction {
         formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
         return formatted.join(decimalPoint);
     }
+
+    /**
+     * The id of the last `_getCombinationInfo` request made for each product container, used to
+     * discard the answers of the requests that have been superseded since.
+     */
+    combinationInfoRequestIds = new WeakMap();
 
     /**
      * Return a throttled `_getCombinationInfo` with a leading and a trailing call, which is
