@@ -232,7 +232,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         # test tracking in case of finished date change wo state chage
         self.flush_tracking()
         with self.mock_mail_gateway(), self.mock_mail_app():
-            mo.write({'date_finished': datetime(2022, 6, 29, 18, 0)})
+            mo.with_env(self.env).write({'date_finished': datetime(2022, 6, 29, 18, 0)})
             self.flush_tracking()
         self.assertMessageFields(self._new_msgs, {
             'body': '',
