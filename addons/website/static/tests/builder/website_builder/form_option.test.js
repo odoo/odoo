@@ -1472,6 +1472,42 @@ test("incomplete field requirements are discarded on save", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
 });
 
+test("only known model fields are whitelisted on save", async () => {
+    // The save pipeline may fire the whitelist RPC more than once: assert on
+    // the sent names, not on the call count.
+    const whitelistCalls = [];
+    onRpc("get_authorized_fields", () => ({
+        email_from: { name: "email_from", string: "Email", type: "char" },
+    }));
+    onRpc("formbuilder_whitelist", ({ args }) => {
+        whitelistCalls.push(args[1]);
+        return true;
+    });
+    onRpc("ir.ui.view", "save", () => true);
+    await setupWebsiteBuilder(`
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div class="s_website_form_field">
+                    <input class="s_website_form_input" type="email" name="email_from"/>
+                </div>
+                <div class="s_website_form_field">
+                    <input class="s_website_form_input" type="text" name="unknown_field_1"/>
+                </div>
+                <div class="s_website_form_field">
+                    <input class="s_website_form_input" type="text" name=""/>
+                </div>
+            </form>
+        </section>
+    `);
+
+    queryOne(":iframe .s_website_form").classList.add("o_dirty");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(whitelistCalls.length).toBeGreaterThan(0);
+    for (const names of whitelistCalls) {
+        expect(names).toEqual(["email_from"]);
+    }
+});
+
 test("change action of form to a model without registered fields adds the model's required fields", async () => {
     patchWithCleanup(webModels.IrModel.prototype, {
         get_compatible_form_models() {
