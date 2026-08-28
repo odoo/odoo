@@ -74,17 +74,11 @@
     }
 }
 
-// external_layout_dual
-.o_layout_dual_footer {
-    .o_dual_shape_1 {
-        top: 22mm;
-    }
-}
-
-// external_layout_lines
-.o_layout_lines_header {
-    .o_company_address_list {
+// external_layout_dual + external_layout_lines
+.o_layout_dual_header, .o_layout_lines_header {
+    [name="company_address_list"] {
         margin-bottom: 0;
+        line-height: $line-height-sm;
 
         p {
             margin-bottom: 0;
@@ -99,5 +93,11 @@
     }
     #informations {
         margin-bottom: map-get($spacers, 1) !important;
+    }
+}
+
+.o_layout_dual_footer {
+    .o_dual_shape_1 {
+        top: 22mm;
     }
 }
