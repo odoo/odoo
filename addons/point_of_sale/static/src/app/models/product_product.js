@@ -170,7 +170,13 @@ export class ProductProduct extends Base {
 
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
-                price = this.get_price(rule.base_pricelist_id, quantity, 0, true, list_price);
+                price = this.get_price(
+                    rule.base_pricelist_id,
+                    quantity,
+                    price_extra,
+                    true,
+                    list_price
+                );
             }
         } else if (rule.base === "standard_price") {
             price = this.standard_price;
