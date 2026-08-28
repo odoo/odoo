@@ -15,24 +15,22 @@
                         <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
                     </div>
                 </div>
-                <table class="table-borderless w-100">
-                    <tr>
-                        <td class="align-top w-50 pe-4">
-                            <div class="o_jp_recipient_block">
-                                <div class="o_jp_recipient_name fw-bold" t-if="jp_recipient_partner and jp_recipient_partner.name">
-                                    <span t-out="jp_recipient_partner.name"/><span t-out="jp_honorific"/>
-                                </div>
-                                <div class="o_jp_recipient_address mb-0" t-out="address or jp_recipient_partner.address"/>
+                <div class="row">
+                    <div class="col-6 pe-4">
+                        <div class="o_jp_recipient_block">
+                            <div class="o_jp_recipient_name fw-bold" t-if="jp_recipient_partner and jp_recipient_partner.name">
+                                <span t-out="jp_recipient_partner.name"/><span t-out="jp_honorific"/>
                             </div>
-                        </td>
-                        <td class="align-top text-end w-50">
-                            <div class="o_jp_sender_block">
-                                <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                                <t t-call="web.company_address_list"/>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                            <div class="o_jp_recipient_address mb-0" t-out="address or jp_recipient_partner.address"/>
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="o_jp_sender_block">
+                            <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <t t-call="web.company_address_list"/>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
