@@ -8,7 +8,6 @@ export class Plugin {
 
     constructor(context) {
         this.config = context.config;
-        this.services = context.services;
         this.dependencies = context.dependencies;
         this.getResource = context.getResource;
         this.trigger = context.trigger;

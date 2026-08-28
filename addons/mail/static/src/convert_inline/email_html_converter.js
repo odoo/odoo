@@ -24,7 +24,7 @@ export class EmailHtmlConverter extends PluginManager {
     }
 
     async measureReference(config) {
-        if (this.isDestroyed) {
+        if (this.isDestroyed || this.scope.isDestroyed()) {
             return false;
         } else if (this.measureCompleted) {
             return this.isReady;

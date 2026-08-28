@@ -55,7 +55,6 @@ export class MassMailingHtmlField extends HtmlField {
                 ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
-            services: this.env.services,
         });
         this.themeService = useService("mass_mailing.themes");
         this.ui = useService("ui");

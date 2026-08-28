@@ -45,12 +45,12 @@ export class PluginManager {
     /**
      * @param { PluginManagerConfig } config
      */
-    constructor(services = {}) {
+    constructor(scope) {
+        this.scope = scope;
         this.pluginPropertyName = "__pluginManager";
         this.isReady = false;
         this.isDestroyed = false;
         this.config = {};
-        this.services = services;
         this.plugins = [];
         this.resources = null;
         this.shared = {};
@@ -63,7 +63,6 @@ export class PluginManager {
         return {
             config: this.config,
             dependencies: this.getDependencies(dependencies),
-            services: this.services,
             getResource: this.getResource.bind(this),
             trigger: this.trigger.bind(this),
             triggerAsync: this.triggerAsync.bind(this),
@@ -118,9 +117,11 @@ export class PluginManager {
     }
 
     startPlugins() {
-        for (const plugin of this.plugins) {
-            plugin.setup();
-        }
+        this.scope.run(() => {
+            for (const plugin of this.plugins) {
+                plugin.setup();
+            }
+        });
     }
 
     createResources() {

@@ -15,7 +15,7 @@ import { DIMENSIONS } from "./core/utils";
  * @param {Array<string>} [options.bundles] bundles to load for the conversion
  * @returns {Object}
  */
-export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, isVisible }) {
+export function useEmailHtmlConverter({ Plugins, bundles, targetRef, isVisible }) {
     let converter, reference, referenceDocument; // Element and Document in which the conversion takes place.
     let currentConfig = {};
     let isReady = false;
@@ -33,6 +33,9 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
     } = Promise.withResolvers();
 
     const setupIframe = async () => {
+        if (scope.isDestroyed()) {
+            return false;
+        }
         try {
             await scope.run(() => convertInlineIframeService.readyPromise);
             convertInlineIframeService.add(referenceIframe, targetRef);
@@ -48,6 +51,9 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
                     background-color: transparent !important;`
                 );
             });
+            if (scope.isDestroyed()) {
+                return false;
+            }
             await scope.run(() => Promise.all([contentPromise, assetsPromise]));
             return true;
         } catch (e) {
@@ -84,7 +90,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
             return false;
         }
         cleanupConverter();
-        converter = new EmailHtmlConverter(services);
+        converter = new EmailHtmlConverter(scope);
         reference = renderToElement("mail.EmailHtmlConverterReference");
         reference.append(fragment);
         referenceDocument.body.append(reference);

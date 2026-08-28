@@ -35,7 +35,6 @@ export class DebugConvertInlineDialog extends Component {
                 ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
-            services: this.env.services,
             targetRef: this.referenceIframeRef,
             isVisible: true,
         });
