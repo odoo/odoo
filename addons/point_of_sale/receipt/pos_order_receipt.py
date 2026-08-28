@@ -57,6 +57,11 @@ class PosOrderReceipt(models.AbstractModel):
         ]
         return [[name, self.env['ir.qweb']._get_template(name)[1]] for name in names]
 
+    def _order_receipt_tz(self):
+        """Receipts must use the shop timezone, since the rendering user (self ordering user, public user, OdooBot, ...) can be in a different tz"""
+        self.ensure_one()
+        return self.company_id.sudo().tz or self.env.context.get('tz') or self.env.user.tz or 'UTC'
+
     @api.model
     def _order_receipt_format_currency(self, amount):
         return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
@@ -197,6 +202,7 @@ class PosOrderReceipt(models.AbstractModel):
         config_logo = image_data_uri(self.config_id.logo) if self.config_id.logo else False
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
         tip_percentage = [self.config_id.tip_percentage_1, self.config_id.tip_percentage_2, self.config_id.tip_percentage_3] if self.config_id.set_tip_after_payment and self.amount_total > 0 else False
+        receipt_tz = self._order_receipt_tz()
 
         return {
             **self._get_common_record_data(),
@@ -215,7 +221,29 @@ class PosOrderReceipt(models.AbstractModel):
                 'module_pos_restaurant': self.config_id.module_pos_restaurant,
             },
             'extra_data': {
+<<<<<<< 5b0f47b69c635e85015cb5fc9ee63517456e9691
                 **self._get_common_extra_data(),
+||||||| 11e0a09060707970989d112590088e1ca8799f5a
+                'vat_label': self.company_id.country_id.vat_label or _("Tax ID"),
+                'preset_datetime': format_datetime(self.env, self.preset_time) if self.preset_time else False,
+                'partner_vat_label': self.partner_id.country_id.vat_label if self.partner_id.country_id else _("Tax ID"),
+                'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
+                'prices': self._order_receipt_generate_taxe_data(),
+                'cashier_name': self._order_receipt_generate_cashier_name(),
+                'company_state_name': company.state_id.name if company.state_id else False,
+                'company_country_name': company.country_id.name if company.country_id else False,
+                'formated_date_order': format_datetime(self.env, self.date_order),
+=======
+                'vat_label': self.company_id.country_id.vat_label or _("Tax ID"),
+                'preset_datetime': format_datetime(self.env, self.preset_time, tz=receipt_tz) if self.preset_time else False,
+                'partner_vat_label': self.partner_id.country_id.vat_label if self.partner_id.country_id else _("Tax ID"),
+                'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
+                'prices': self._order_receipt_generate_taxe_data(),
+                'cashier_name': self._order_receipt_generate_cashier_name(),
+                'company_state_name': company.state_id.name if company.state_id else False,
+                'company_country_name': company.country_id.name if company.country_id else False,
+                'formated_date_order': format_datetime(self.env, self.date_order, tz=receipt_tz),
+>>>>>>> 0be1c9f80a62b61f6f83f3f9bfea0c9193151e9b
                 'tips_configuration': [
                     [f"{p}%", self._order_receipt_format_currency(self.amount_total * (p / 100))]
                     for p in tip_percentage
@@ -246,12 +274,141 @@ class PosOrderReceipt(models.AbstractModel):
             changes[printer] = self._generate_preparation_receipt_data(data)
         return changes
 
+<<<<<<< 5b0f47b69c635e85015cb5fc9ee63517456e9691
     def _generate_preparation_change_for_categories(self, prep_categ_ids):
         changes = {
             "category_count": {},
             "added_quantity": [],
             "removed_quantity": [],
             "note_update": [],
+||||||| 11e0a09060707970989d112590088e1ca8799f5a
+    def _order_change_receipt_generate_data(self, prep_categ_ids=None):
+        """Mirror of JS generatePreparationData"""
+        self.ensure_one()
+
+        order_changes = self._order_change_compute_changes(prep_categ_ids)
+        receipts_data = []
+
+        if order_changes['new']:
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': _("NEW"),
+                'data': order_changes['new'],
+            }))
+
+        if order_changes['cancelled']:
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': _("CANCELLED"),
+                'data': order_changes['cancelled'],
+            }))
+
+        if order_changes.get('noteUpdate'):
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': _("NOTE UPDATE"),
+                'data': order_changes['noteUpdate'],
+            }))
+
+        # Print a separate order note ticket only if no other tickets exist
+        if len(receipts_data) == 0 and (order_changes.get('internal_note') or order_changes.get('general_customer_note')):
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': '',
+                'data': [],
+            }))
+
+        order_fields = self.env['pos.order']._load_pos_data_fields(self.config_id)
+        config_fields = self.env['pos.config']._load_pos_data_fields(self.config_id)
+        preset_fields = self.env['pos.preset']._load_pos_data_fields(self.config_id)
+        preset = self.preset_id if self.preset_id else False
+        preset_time = self.preset_time or False
+        if preset_time and preset_time.date() == self.date_order.date():
+            preset_time_str = format_time(self.env, preset_time, time_format='short')
+        else:
+            preset_time_str = format_datetime(self.env, preset_time) if preset_time else False
+
+        base = {
+            'order': self.read(order_fields, load=False)[0],
+            'config': self.config_id.read(config_fields, load=False)[0],
+            'company': self.company_id.read([], load=False)[0],
+            'partner': self.partner_id.read([], load=False)[0] if self.partner_id else False,
+            'preset': preset.read(preset_fields, load=False)[0] if preset else False,
+            'extra_data': {
+                'time': format_datetime(self.env, self.date_order),
+                'employee_name': self.user_id.name if self.user_id else '',
+                'preset_time': preset_time_str,
+                'prefix': _("Order"),
+                'order_label': self.floating_order_name,
+                'reprint': False,
+                'internal_note': _get_str_notes(order_changes.get('internal_note', '')),
+                'general_customer_note': order_changes.get('general_customer_note', ''),
+            },
+            'conditions': {
+                'module_pos_restaurant': self.config_id.module_pos_restaurant,
+            },
+=======
+    def _order_change_receipt_generate_data(self, prep_categ_ids=None):
+        """Mirror of JS generatePreparationData"""
+        self.ensure_one()
+
+        order_changes = self._order_change_compute_changes(prep_categ_ids)
+        receipts_data = []
+
+        if order_changes['new']:
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': _("NEW"),
+                'data': order_changes['new'],
+            }))
+
+        if order_changes['cancelled']:
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': _("CANCELLED"),
+                'data': order_changes['cancelled'],
+            }))
+
+        if order_changes.get('noteUpdate'):
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': _("NOTE UPDATE"),
+                'data': order_changes['noteUpdate'],
+            }))
+
+        # Print a separate order note ticket only if no other tickets exist
+        if len(receipts_data) == 0 and (order_changes.get('internal_note') or order_changes.get('general_customer_note')):
+            receipts_data.append(self._prepare_preparation_grouped_data({
+                'title': '',
+                'data': [],
+            }))
+
+        order_fields = self.env['pos.order']._load_pos_data_fields(self.config_id)
+        config_fields = self.env['pos.config']._load_pos_data_fields(self.config_id)
+        preset_fields = self.env['pos.preset']._load_pos_data_fields(self.config_id)
+        preset = self.preset_id if self.preset_id else False
+        preset_time = self.preset_time or False
+        receipt_tz = self._order_receipt_tz()
+        # Same day pickup only needs its hour (comparison done in shop timezone with same format)
+        day_format = 'yyyy-MM-dd'
+        if preset_time and format_datetime(self.env, preset_time, tz=receipt_tz, dt_format=day_format) == format_datetime(self.env, self.date_order, tz=receipt_tz, dt_format=day_format):
+            preset_time_str = format_time(self.env, preset_time, tz=receipt_tz, time_format='short')
+        else:
+            preset_time_str = format_datetime(self.env, preset_time, tz=receipt_tz) if preset_time else False
+
+        base = {
+            'order': self.read(order_fields, load=False)[0],
+            'config': self.config_id.read(config_fields, load=False)[0],
+            'company': self.company_id.read([], load=False)[0],
+            'partner': self.partner_id.read([], load=False)[0] if self.partner_id else False,
+            'preset': preset.read(preset_fields, load=False)[0] if preset else False,
+            'extra_data': {
+                'time': format_datetime(self.env, self.date_order, tz=receipt_tz, dt_format='HH:mm'),
+                'employee_name': self.user_id.name if self.user_id else '',
+                'preset_time': preset_time_str,
+                'prefix': _("Order"),
+                'order_label': self.floating_order_name,
+                'reprint': False,
+                'internal_note': _get_str_notes(order_changes.get('internal_note', '')),
+                'general_customer_note': order_changes.get('general_customer_note', ''),
+            },
+            'conditions': {
+                'module_pos_restaurant': self.config_id.module_pos_restaurant,
+            },
+>>>>>>> 0be1c9f80a62b61f6f83f3f9bfea0c9193151e9b
         }
 
         def _key_maker(prep_line):
