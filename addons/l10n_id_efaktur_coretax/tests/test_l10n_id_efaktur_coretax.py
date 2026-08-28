@@ -67,7 +67,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '07',
         })
@@ -112,7 +112,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
         })
         vendor_bill.action_post()
@@ -127,7 +127,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
         })
 
@@ -268,7 +268,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
         })
         out_invoice.action_post()
@@ -293,7 +293,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '07',
         })
@@ -309,7 +309,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '08',
         })
@@ -340,7 +340,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -379,7 +379,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -403,7 +403,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                Command.create({'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
+                Command.create({'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -532,7 +532,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -543,7 +543,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -615,9 +615,9 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids}),
                 (0, 0, {'name': 'description', 'display_type': 'line_note'}),
-                (0, 0, {'product_id': product_2.id, 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': product_2.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -813,7 +813,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1})
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
@@ -1160,7 +1160,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1}),
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, "tax_ids": self.tax_sale_a.ids}),
                 (0, 0, {'product_id': product_2.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
             ],
             'l10n_id_kode_transaksi': '04',
