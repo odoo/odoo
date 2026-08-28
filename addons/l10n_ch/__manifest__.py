@@ -35,6 +35,7 @@ The generation of the QR-bill is automatic if you meet the previous criteria. Th
         'views/setup_wizard_views.xml',
         'views/qr_invoice_wizard_view.xml',
         'views/account_payment_view.xml',
+        'views/account_move_send_views.xml',
     ],
     'demo': [
         'demo/account_cash_rounding.xml',
