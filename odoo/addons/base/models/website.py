@@ -1,5 +1,6 @@
 from odoo import api, fields, models
-from urllib.parse import urlparse
+from odoo.exceptions import ValidationError
+from odoo.tools.urls import idna_domain
 
 
 class Website(models.CachedModel):
@@ -48,19 +49,25 @@ class Website(models.CachedModel):
         compute="_compute_domain_punycode",
         store=True,
         readonly=True)
-    _domain_unique = models.Constraint(
-        'unique(domain)',
-        'Website Domain should be unique.',
+    _domain_punycode_unique = models.Constraint(
+        'unique(domain_punycode)',
+        'This domain name resolves to the same host as another website.',
     )
 
     @api.depends('domain')
     def _compute_domain_punycode(self):
-        """Compute the punycode (ASCII-safe) version of the domain."""
+        """The ``host[:port]`` of the domain encoded with IDNA2008, or
+        nothing when the configured domain is not a valid domain name. The
+        host of an incoming request is matched against this value."""
         for website in self:
-            website_domain = website.domain or ''
-            hostname = urlparse(website_domain).hostname or ''
-            try:
-                punycode_hostname = hostname.encode('idna').decode('ascii')
-                website.domain_punycode = website_domain.replace(hostname, punycode_hostname)
-            except UnicodeError:
-                website.domain_punycode = website_domain
+            website.domain_punycode = idna_domain(website.domain) or False
+
+    @api.constrains('domain')
+    def _check_domain_punycode(self):
+        for website in self:
+            if website.domain and not website.domain_punycode:
+                raise ValidationError(self.env._(
+                    "The provided website domain is not a valid domain name. "
+                    "A valid name should only contain letters, numbers, hyphens "
+                    "and international characters. No special symbols are allowed."
+                ))
