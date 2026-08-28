@@ -273,14 +273,13 @@ Display a sidebar beside the post content.
 <template id="blog_post_sidebar" name="Sidebar - Blog Post">
     <div id="o_wblog_post_sidebar">
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_1"/>
-        <div id="o_wblog_post_sidebar_sticky" t-attf-class="#{opt_blog_post_toc_display and 'o_sticky_reactive sticky-lg-top'}"/>
     </div>
 </template>
 
 
 <!-- (Option) Post Sidebar: Author avatar -->
 <template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="0">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="before">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Written by</h2>
             <t t-call="website_blog.post_published_info"
@@ -295,7 +294,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4" t-ignore="true">
             <h2 class="small mb-3">Share this post</h2>
             <t t-snippet-call="website.s_share" string="Share"
@@ -310,7 +309,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="False" priority="3">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Tags</h2>
             <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1 small">
@@ -332,7 +331,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Blogs list -->
 <template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="False" priority="4">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Our blogs</h2>
             <ul class="list-unstyled small">
@@ -347,7 +346,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Archive -->
 <template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="False" priority="5">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Archive</h2>
             <t t-call="website_blog.date_selector"/>
@@ -358,7 +357,10 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Table of Contents -->
 <template id="opt_blog_post_toc_display" name="Table of Contents" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="attributes">
+        <attribute name="class">o_wblog_post_sidebar_sticky o_sticky_reactive sticky-lg-top</attribute>
+    </xpath>
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block o_wblog_toc mb-2 pb-4">
             <h2 class="small mb-3">On this page</h2>
             <nav class="o_wblog_toc_nav o_not_editable">
