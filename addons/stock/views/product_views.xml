@@ -318,7 +318,7 @@
                 <div name="o_kanban_price" position="after">
                     <div t-if="record.is_storable.raw_value" invisible="not context.get('display_stock')"
                          name="o_kanban_qty_available_and_on_hand">
-                        <t name="qty_free" t-if="record.free_qty.raw_value != record.qty_available.raw_value">
+                        <t name="included_qty" t-if="record.free_qty.raw_value != record.qty_available.raw_value">
                             <span class="fw-bold" t-out="record.free_qty.raw_value"/>
                             <span class="text-muted small"> Available</span>
                             <span> / </span>

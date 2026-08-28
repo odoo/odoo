@@ -1,5 +1,5 @@
 /**
- * Verify that a combo item shows a price badge (for qty_free=0)
+ * Verify that a combo item shows a price badge (for included_qty=0)
  * Badge format: "+ €X" (not "Extra:")
  */
 export function verifyItemHasPriceBadge(productName, price) {
@@ -10,7 +10,7 @@ export function verifyItemHasPriceBadge(productName, price) {
 }
 
 /**
- * Verify that a combo item shows an "Extra:" badge (for qty > qty_free)
+ * Verify that a combo item shows an "Extra:" badge (for qty > included_qty)
  */
 export function verifyItemHasExtraBadge(productName, price) {
     return {

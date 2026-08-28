@@ -29,7 +29,7 @@ test("builds combo payloads for direct non-upsell combos", async () => {
     const comboProduct = store.models["product.product"].get(7);
     const combo1 = store.models["product.combo"].get(1);
     combo1.is_upsell = false;
-    combo1.qty_free = combo1.qty_max = 1;
+    combo1.included_qty = combo1.qty_max = 1;
 
     await store.addLineToOrder({ product_tmpl_id: 8 }, order);
     await store.addLineToOrder({ product_tmpl_id: 10 }, order);

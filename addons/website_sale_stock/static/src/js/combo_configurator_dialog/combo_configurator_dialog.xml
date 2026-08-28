@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
         <ProductCard position="attributes">
-            <attribute name="quantity">this.state.quantity</attribute>
+            <attribute name="quantity">(this.getItemQuantity(comboItem.id) || 1) * this.state.quantity</attribute>
         </ProductCard>
         <QuantityButtons position="attributes">
             <attribute name="isPlusButtonDisabled">
@@ -23,5 +23,10 @@
                 separator=" || "
             />
         </button>
+        <SubItemQuantityButtons position="attributes">
+            <attribute name="isPlusButtonDisabled">
+                !this.getSelectedOrProvidedComboItem(comboItem).product.isQuantityAllowed((this.getItemQuantity(comboItem.id) + 1) * this.state.quantity)
+            </attribute>
+        </SubItemQuantityButtons>
     </t>
 </templates>

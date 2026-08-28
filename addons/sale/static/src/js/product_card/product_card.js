@@ -10,7 +10,8 @@ export class ProductCard extends Component {
         extraPrice: { type: Number, optional: true },
         onClick: Function,
         isSelected: { type: Boolean, optional: true },
-        isConfigurable: { type: Boolean, optional: true }
+        isConfigurable: { type: Boolean, optional: true },
+        slots: { type: Object, optional: true },
     };
 
     /**

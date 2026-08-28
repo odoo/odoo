@@ -341,7 +341,7 @@ export class PosOrder extends PosOrderAccounting {
             const comboId = cLine.combo_item_id.combo_id.id;
 
             if (!(comboId in comboRemainingFree)) {
-                comboRemainingFree[comboId] = cLine.combo_item_id.combo_id.qty_free * parentQty;
+                comboRemainingFree[comboId] = cLine.combo_item_id.combo_id.included_qty * parentQty;
             }
 
             const childQty = cLine.getQuantity();

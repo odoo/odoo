@@ -212,6 +212,7 @@ export const saleProductMixin = () => ({
             id: record.data.combo_item_id.id,
             no_variant_ptav_ids: edit ? this._getNoVariantPtavIds(record.data) : [],
             custom_ptavs: edit ? await this._getCustomPtavs(record.data) : [],
+            quantity: record.data.selected_combo_item_qty,
         })));
         const { combos, ...remainingData } = await rpc('/sale/combo_configurator/get_data', {
             product_tmpl_id: comboLineRecord.data.product_template_id.id,
