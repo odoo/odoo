@@ -371,6 +371,13 @@ class SaleProductConfiguratorController(Controller):
                                 if show_price
                                 else 0.0
                             ),
+                            show_extra_price=(
+                                product_template._get_ptav_show_extra_price(
+                                    ptav, combination, pricelist, quantity, so_date
+                                )
+                                if show_price
+                                else True
+                            ),
                         )
                         for ptav in ptal.product_template_value_ids
                         if ptav.ptav_active or (combination and ptav.id in combination.ids)
@@ -435,7 +442,6 @@ class SaleProductConfiguratorController(Controller):
                 "id",
                 "display_name",
             ])
-        pricelist_rule = request.env["product.pricelist.item"].browse(pricelist_rule_id)
         return dict(
             **basic_information,
             price=price,
@@ -443,7 +449,6 @@ class SaleProductConfiguratorController(Controller):
             **self.env["product.template"]._get_additional_configurator_data(
                 product_or_template, pricelist=pricelist, **kwargs
             ),
-            show_extra_price=pricelist_rule.compute_price != "fixed",
         )
 
     def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):  # noqa: ARG002
