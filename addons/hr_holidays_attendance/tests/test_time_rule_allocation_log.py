@@ -49,7 +49,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
             'resource_calendar_id': cls.calendar.id,
         })
 
-    # helpers 
+    # helpers
     def _make_rule(self, **kw):
         defaults = {
             'name': 'Test Rule',
@@ -81,7 +81,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
             ('allocation_id', 'in', self._alloc().ids),
         ])
 
-    # log source routing 
+    # log source routing
     def test_log_source_inplace(self):
         """In-place case: source IS the overtime record -> log must reference the source att."""
         self._make_rule()
@@ -184,7 +184,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         r1.unlink()
         r2.unlink()
 
-    # reversal on output delete 
+    # reversal on output delete
     def test_output_unlink_reverses_allocation(self):
         """Deleting the output attendance child reverses its credited allocation days."""
         self._make_rule()
@@ -205,7 +205,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
                                msg="Deleting the output child must reverse its allocation credit")
         self.assertFalse(self._logs(), "Log entries must be cleaned up after reversal")
 
-    # reversal on source delete 
+    # reversal on source delete
     def test_source_unlink_inplace_reverses_allocation(self):
         """Deleting an in-place source (log against source) reverses its credit."""
         self._make_rule()
@@ -248,7 +248,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         )
         self.assertTrue(self._logs(), "Log entry for output must still exist")
 
-    # reversal on source write 
+    # reversal on source write
     def test_source_write_reverses_inplace_credit(self):
         self._make_rule()
         # Saturday (in-place case): all 4h is overtime, no output children created.
@@ -285,12 +285,12 @@ class TestTimeRuleAllocationLog(TransactionCase):
             msg="Non-time-field write must not trigger reversal",
         )
 
-    # multi-source selective reversal 
+    # multi-source selective reversal
     def test_two_sources_independent_reversal(self):
         """Two Saturday attendances both credit the same allocation; deleting one reverses only its share."""
         self._make_rule()
         att1 = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))   # 4h Sat
-        att2 = self._make_att(datetime(2022, 12, 17, 8), datetime(2022, 12, 17, 16))  # 8h next Sat
+        self._make_att(datetime(2022, 12, 17, 8), datetime(2022, 12, 17, 16))  # 8h next Sat
 
         alloc = self._alloc()
         # 4h + 8h excess, all in-place -> 0.5d + 1.0d = 1.5d total
@@ -308,7 +308,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
             msg="Only att1's 0.5d must be reversed; att2's 1.0d stays",
         )
 
-    # leave-source reversal 
+    # leave-source reversal
     def test_leave_source_refuse_reverses_allocation(self):
         """Refusing a source leave that had triggered allocation credits must reverse those credits."""
         leave_type = self.env['hr.work.entry.type'].create({
@@ -367,11 +367,14 @@ class TestTimeRuleAllocationLog(TransactionCase):
         alloc = self._alloc()
         self.assertAlmostEqual(alloc.number_of_days, 1.0, places=5)
 
+        # allocation date_from defaults to today
+        alloc.date_from = '2020-01-01'
+        last_friday = last_sat - timedelta(days=1)
         self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
             'employee_id': self.emp.id,
             'work_entry_type_id': self.comp_type.id,
-            'request_date_from': today,
-            'request_date_to': today,
+            'request_date_from': last_friday,
+            'request_date_to': last_friday,
             'state': 'validate',
         })
 

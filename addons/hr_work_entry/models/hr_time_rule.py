@@ -18,6 +18,7 @@ from odoo.tools.intervals import Intervals, invert_intervals
 
 _logger = logging.getLogger(__name__)
 
+
 # single interval shape used throughout the pipeline, excess, and output stages.
 class _Iv(NamedTuple):
     start: object           # interval start(local naive datetime)
@@ -27,6 +28,7 @@ class _Iv(NamedTuple):
     rule: object = None     # rule that last classified this interval; none = unclassified
     acc: frozenset = frozenset()  # accumulator of rules: overlapping rules displaced by rule.
     pp: frozenset = frozenset()   # premium pay category ids on this interval
+
 
 def resolve_intervals_by_sequence(intervals):
     """For each non-overlapping sub-interval, pick the payload with the lowest sequence.
@@ -556,7 +558,7 @@ class HrTimeRule(models.Model):
         excess_alloc = []   # [employee, rule, hours, source, log_source]
         deficit_alloc = []  # [employee, rule, hours, source, log_source]
         # pending: (excess_alloc_index, create_vals_index) for output-record credits
-        _pending_log_sources = []
+        pending_log_sources = []
 
         for employee, by_source in deficit.items():
             tz = ZoneInfo(employee._get_tz())
@@ -682,7 +684,7 @@ class HrTimeRule(models.Model):
 
                 for iv in subsequent:
                     # new output record being created; log_source resolved to it after create()
-                    _pending_log_sources.append((len(excess_alloc), len(create_vals)))
+                    pending_log_sources.append((len(excess_alloc), len(create_vals)))
                     create_vals.append(source._get_time_rule_output_vals(iv.rule, _to_utc(iv.start, tz), _to_utc(iv.end, tz), iv.pp))
                     excess_alloc.append([employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600, source, None])
 
@@ -699,7 +701,7 @@ class HrTimeRule(models.Model):
         )
         new_records = self.env[any_source._name].sudo().with_context(**any_source._time_rule_write_ctx).create(create_vals)
         # resolve pending log_sources: output records now have IDs; backfill into excess_alloc
-        for alloc_idx, create_idx in _pending_log_sources:
+        for alloc_idx, create_idx in pending_log_sources:
             excess_alloc[alloc_idx][4] = new_records[create_idx]
         return new_records, all_source_ids, excess_alloc, deficit_alloc
 
@@ -808,7 +810,7 @@ class HrTimeRule(models.Model):
         """
         excess = defaultdict(lambda: defaultdict(list))
         deficit = defaultdict(lambda: defaultdict(list))
-        active_iv = defaultdict(lambda: defaultdict(Intervals))
+        active_iv = defaultdict(lambda: defaultdict(Intervals))  # for multi day leaves
 
         if not records:
             return excess, deficit, active_iv

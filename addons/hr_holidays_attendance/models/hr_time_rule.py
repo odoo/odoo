@@ -9,7 +9,7 @@ class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
     def _apply_attendance_output(self, excess, deficit, active_iv=None):
-        _new_records, _all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
+        _new_records, _all_source_ids, excess_alloc, deficit_alloc = super()._apply_attendance_output(excess, deficit, active_iv=active_iv)
 
         # accumulate days per (employee, allocation_type) before any DB writes so that
         # multiple rules targeting the same allocation type in one transaction produce a

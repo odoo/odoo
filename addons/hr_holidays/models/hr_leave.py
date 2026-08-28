@@ -1539,8 +1539,8 @@ class HrLeave(models.Model):
 
         skip_leave_version_check = False
         if {'date_from', 'date_to'} & values.keys():
-            new_df = values.get('date_from')
-            new_dt = values.get('date_to')
+            new_df = fields.Datetime.to_datetime(values.get('date_from'))
+            new_dt = fields.Datetime.to_datetime(values.get('date_to'))
             skip_leave_version_check = all(
                 r.date_from and r.date_to
                 and (not new_df or new_df.date() >= r.date_from.date())
@@ -1583,12 +1583,13 @@ class HrLeave(models.Model):
                 raise UserError(error_message % {'state': state_description_values.get(holiday.state)})
 
     def unlink(self):
-        # reverse engine allocation credits before the records disappear
+        self._prepare_leave_unlink()
+        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+
+    def _prepare_leave_unlink(self):
         self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', self.ids)
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
-        res = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
-        return res
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         rules._apply_leave_output(excess, deficit, active_iv=active_iv)
