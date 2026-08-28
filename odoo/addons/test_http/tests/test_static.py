@@ -201,6 +201,14 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_filename='sq5Abt.png',
             )
 
+        earth = self.env.ref('test_http.earth')
+        field = earth._fields['address']
+        with self.subTest("filename field no access fallback"), patch.object(field, 'groups', new='.'):
+            self.assertDownloadGizeh(
+                '/web/content/test_http.earth?field=glyph_inline&filename_field=address',
+                assert_filename=f'test_http_stargate-{earth.id}-glyph_inline.png',
+            )
+
     def test_static11_bad_filenames(self):
         with self.subTest("missing record name"):
             gizeh = self.env.ref('test_http.gizeh_png')
