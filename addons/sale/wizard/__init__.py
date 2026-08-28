@@ -3,6 +3,7 @@
 from . import (
     accrued_orders,
     base_document_layout,
+    mail_activity_schedule,
     mass_cancel_orders,
     payment_link_wizard,
     res_config_settings,
