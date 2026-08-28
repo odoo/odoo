@@ -4847,6 +4847,30 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
     expect(`.o_group_header:last`).toHaveText("Yes 0 0.00", { inline: true });
 });
 
+test(`monetary aggregates in grouped list: add a new group`, async () => {
+    onRpc("name_create", () => {
+        expect.step("name_create");
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_group_by="m2o">
+                <field name="foo"/>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1\n3", "Value 2\n1"]);
+    expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
+    await contains(`.o_list_footer td > button`).click();
+    await contains(`.o_list_footer td input`).edit("New group", { confirm: false });
+    await contains(`.o_list_footer .o_list_group_confirm`).click();
+    expect.verifySteps(["name_create"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1\n3", "Value 2\n1", "New group\n0"]);
+});
+
 test(`list with monetary field with attribute column_invisible="1"`, async () => {
     await mountView({
         resModel: "foo",
