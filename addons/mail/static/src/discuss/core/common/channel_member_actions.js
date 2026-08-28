@@ -1,5 +1,11 @@
 import { registry } from "@web/core/registry";
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
 import { InvitationSentDate } from "@mail/discuss/core/common/invitation_sent_date";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -22,7 +28,10 @@ export const channelMemberActionsRegistry = registry.category("discuss.channel.m
  * @param {ChannelMemberActionDefinition} definition
  */
 export function registerChannelMemberAction(id, definition) {
-    channelMemberActionsRegistry.add(id, definition);
+    channelMemberActionsRegistry.add(
+        id,
+        Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true })
+    );
 }
 
 registerChannelMemberAction("set-admin", {

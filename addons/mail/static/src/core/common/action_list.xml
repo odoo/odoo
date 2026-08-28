@@ -11,6 +11,9 @@
         }"/>
         <t t-foreach="this.groups()" t-as="group" t-key="group_index">
             <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
+                <t t-set="firstActionInGroup" t-value="group[0]"/>
+                <t t-set="groupDescription" t-value="firstActionInGroup.actions?.actionGroupDescriptions.get(firstActionInGroup.sequenceGroup)"/>
+                <span class="smaller text-muted ms-1" t-if="this.props.dropdown and groupDescription?.name" t-out="groupDescription?.name"/>
                 <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
             </span>
             <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>

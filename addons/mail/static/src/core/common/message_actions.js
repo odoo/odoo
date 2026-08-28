@@ -1,7 +1,13 @@
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
@@ -29,7 +35,7 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
  * @param {MessageActionDefinition} definition
  */
 export function registerMessageAction(id, definition) {
-    messageActionsRegistry.add(id, definition);
+    messageActionsRegistry.add(id, Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true }));
 }
 
 registerMessageAction("reaction", {
