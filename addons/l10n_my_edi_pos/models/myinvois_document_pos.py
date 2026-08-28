@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import itertools
+import re
 
 from odoo import api, fields, models
+
+# pos_reference looks like "{year}{device_identifier}-{config_id}-{number}" (see pos.config._get_next_order_refs).
+POS_REFERENCE_RE = re.compile(r'^(?P<device>.+)-\d+-(?P<number>\d+)$')
 
 
 class MyInvoisDocumentPoS(models.Model):
@@ -83,7 +86,9 @@ class MyInvoisDocumentPoS(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'pos.order',
                 'view_mode': 'list,form',
-                'views': [(False, 'list'), (False, 'form')],
+                # A dedicated list view is used so that the orders are listed in the order in which they are
+                # reported on the consolidated invoice, rather than in the default reverse chronological one.
+                'views': [(self.env.ref('l10n_my_edi_pos.view_pos_order_tree_consolidated').id, 'list'), (False, 'form')],
                 'domain': [('id', 'in', self.pos_order_ids.ids)],
             }
 
@@ -170,32 +175,59 @@ class MyInvoisDocumentPoS(models.Model):
         There is no requirement asking to split per sequence (and thus config), but we still do so to make it easier to
         submit per PoS if wanted.
 
+        Two orders are only reported on the same line when they are continuous on all of the following:
+        - `sequence_number`, a gapless counter local to a single config, assigned when the order reaches the database.
+          A gap means that an order in between was left out of the batch, invoiced separately for example.
+        - Their receipt reference: same device, and the receipt number incrementing by one. That number is a counter
+          local to a single device, so two orders taken on different devices can carry adjacent numbers without being
+          consecutive receipts.
+        - Being of the same kind, a receipt made exclusively of refund lines never sharing a line with the sales it
+          follows, so that neither is hidden inside the total of the other.
+        Requiring all three keeps every line readable as a plain "first-last" range of comparable receipts.
+
+        The two counters not being held at the same level, several devices selling under one config split lines that
+        a single device would have kept together: the receipt of another device sitting in between leaves a gap in
+        `sequence_number` between two receipts that do follow each other on their own. We accept these extra lines,
+        `sequence_number` being the only one of the two counters the server assigns itself - `pos_reference` is
+        written by the device, numbering from its own storage and handing the numbers of deleted orders back out
+        later, so it cannot vouch on its own that nothing was left out of the batch.
+
         :param pos_order_ids: The orders to separate.
         :return: A dict of pos order per config, for each config having a list of recordset each representing a single line in the xml.
         """
         lines_per_config = {}
-        # We start by gathering the sessions involved in this process, and loop on their orders.
-        sorted_orders_to_consolidated = pos_order_ids.sorted(reverse=True)
-        sorted_session_orders = (
-            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True)
-        )
-        # During the loop, we want to gather "lines".
-        # One line can be comprised of any number of orders as long as they are continuous.
-        continuous_orders = []
-        for config, orders in itertools.groupby(sorted_session_orders, key=lambda o: o["config_id"]):
-            config_lines = []
-            for order in orders:
-                if continuous_orders and order not in pos_order_ids:
-                    config_lines.append(self.env["pos.order"].browse(continuous_orders))
-                    continuous_orders = []
-                elif order in pos_order_ids:
-                    continuous_orders.append(order.id)
+        # We don't mix orders from different configs in a single line as they have different sequences.
+        # `_order` being reverse chronological, sorting in reverse yields the oldest orders first, so that the
+        # consolidated invoices follow the order they were sold in.
+        for config, orders in pos_order_ids.sorted(reverse=True).grouped('config_id').items():
+            config_line_ids = []
+            previous_order = self.env['pos.order']
+            previous_reference = None
+            previous_is_refund = False
+            for order in orders.sorted('sequence_number'):
+                reference = POS_REFERENCE_RE.match(order.pos_reference or '')
+                # An order mixing refund lines with new sales is a receipt in its own right, reported like any
+                # other with the amounts it refunded already deducted from it.
+                is_refund = bool(order.lines) and all(line.refunded_orderline_id for line in order.lines)
+                is_continuous = (
+                    previous_order
+                    and is_refund == previous_is_refund
+                    and order.sequence_number == previous_order.sequence_number + 1
+                    and reference and previous_reference
+                    and reference['device'] == previous_reference['device']
+                    and int(reference['number']) == int(previous_reference['number']) + 1
+                )
+                if is_continuous:
+                    config_line_ids[-1].append(order.id)
+                else:
+                    config_line_ids.append([order.id])
+                previous_order = order
+                previous_reference = reference
+                previous_is_refund = is_refund
 
-            # We don't mix orders from different configs in a single line as they have different sequences.
-            if continuous_orders:
-                config_lines.append(self.env["pos.order"].browse(continuous_orders))
-                continuous_orders = []
-            lines_per_config.setdefault(config, []).extend(config_lines)
+            lines_per_config[config] = [
+                pos_order_ids.browse(line_ids) for line_ids in config_line_ids
+            ]
 
         return lines_per_config
 
