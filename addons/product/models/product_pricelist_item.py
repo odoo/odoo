@@ -616,7 +616,21 @@ class ProductPricelistItem(models.Model):
         uom.ensure_one()
 
         if self.compute_price == 'fixed':
-            return product.uom_id._compute_price(self.fixed_price, uom)
+            price = product.uom_id._compute_price(self.fixed_price, uom)
+            if product._name == 'product.product':
+                attrs_extra_price = (
+                    sum(product.product_template_attribute_value_ids.mapped('price_extra'))
+                    + self.env.context.get('no_variant_attributes_price_extra', 0)
+                )
+            else:
+                attrs_extra_price = product._get_attributes_extra_price()
+            extra_price = product.uom_id._compute_price(attrs_extra_price, uom)
+            currency = kwargs.get('currency') or self.currency_id or self.env.company.currency_id
+            if product.currency_id != currency:
+                extra_price = product.currency_id._convert(
+                    extra_price, currency, date=kwargs.get('date', False), round=False,
+                )
+            return price + extra_price
 
         base_price = self._compute_base_price(product, quantity, uom, **kwargs)
         if self.compute_price == 'percentage':

@@ -80,6 +80,13 @@ export class ProductTemplateAccounting extends Base {
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
         let price = basePrice + (price_extra || 0);
+        const variantExtraPrice = variant
+            ? variant.product_template_attribute_value_ids.reduce(
+                  (sum, ptav) => sum + ptav.price_extra,
+                  0
+              )
+            : 0;
+        const attributesExtraPrice = variantExtraPrice + (price_extra || 0);
 
         if (!pricelist) {
             return price;
@@ -148,6 +155,11 @@ export class ProductTemplateAccounting extends Base {
 
         if (rule.compute_price === "fixed") {
             price = rule.fixed_price;
+            if (attributesExtraPrice) {
+                price += needsCurrencyConversion
+                    ? attributesExtraPrice * (pricelistCurrency.rate / posCurrency.rate)
+                    : attributesExtraPrice;
+            }
         } else if (rule.compute_price === "percentage") {
             price = price - price * ((rule.percent_price || 0) / 100);
         } else {

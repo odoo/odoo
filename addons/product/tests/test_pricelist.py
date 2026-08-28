@@ -721,3 +721,21 @@ class TestPricelist(ProductVariantsCommon):
         self.assertEqual(item.applied_on, "0_product_variant")
         self.assertEqual(item.product_id, sofa_1)
         self.assertEqual(item.product_tmpl_id, self.product_template_sofa)
+
+    def test_fixed_price_with_attribute_extra_price(self):
+        """A fixed pricelist price should still be topped up with the attribute
+        extra price of the selected variant, instead of ignoring it."""
+        self.product_sofa_red.product_template_attribute_value_ids.price_extra = 15
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': "Fixed Price Pricelist",
+            'item_ids': [Command.create({
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_template_sofa.id,
+                'compute_price': 'fixed',
+                'fixed_price': 100,
+            })],
+        })
+
+        self.assertEqual(pricelist._get_product_price(self.product_sofa_red, 1.0), 115)
+        self.assertEqual(pricelist._get_product_price(self.product_sofa_blue, 1.0), 100)

@@ -250,3 +250,66 @@ test("Pricelist: rule targeting a product missing from the PoS is not applied gl
     const product = productTmpl.product_variant_ids[0];
     expect(productTmpl.getPrice(pricelist, 1, 0, false, product)).toBe(productTmpl.list_price);
 });
+
+test("Pricelist: fixed price rule still adds attribute extra price", async () => {
+    const store = await setupPosEnv();
+    const pricelist = store.models["product.pricelist"].create({
+        name: "Fixed Price Pricelist",
+    });
+
+    const productTemplate = store.models["product.template"].create({
+        name: "Test Template",
+        list_price: 100,
+    });
+    const product = store.models["product.product"].create({
+        product_tmpl_id: productTemplate,
+        lst_price: 100,
+    });
+
+    const rule = store.models["product.pricelist.item"].create({
+        pricelist_id: pricelist,
+        compute_price: "fixed",
+        fixed_price: 90,
+    });
+    pricelist.update({ item_ids: [rule] });
+
+    expect(product.getPrice(pricelist, 1, 15, false, product)).toBe(105);
+});
+
+test("Pricelist: fixed price with currency conversion still adds attribute extra price", async () => {
+    const store = await setupPosEnv();
+
+    const mxn = store.models["res.currency"].create({
+        name: "MXN",
+        symbol: "MX$",
+        position: "before",
+        rounding: 0.01,
+        rate: 2.0,
+        decimal_places: 2,
+    });
+
+    store.config.update({ currency_id: mxn });
+
+    const usd = store.models["res.currency"].get(1);
+    const pricelist = store.models["product.pricelist"].create({
+        name: "USD Fixed Pricelist",
+        currency_id: usd,
+    });
+    const rule = store.models["product.pricelist.item"].create({
+        pricelist_id: pricelist,
+        compute_price: "fixed",
+        fixed_price: 50,
+    });
+    pricelist.update({ item_ids: [rule] });
+
+    const productTemplate = store.models["product.template"].create({
+        name: "Test Product",
+        list_price: 100,
+    });
+    const product = store.models["product.product"].create({
+        product_tmpl_id: productTemplate,
+        lst_price: 100,
+    });
+
+    expect(product.getPrice(pricelist, 1, 10, false, product)).toBe(110);
+});
