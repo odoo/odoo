@@ -26,9 +26,9 @@ describe("pos_store.js", () => {
         expect(store.getTableOrders(table)).toHaveLength(0);
 
         const order2 = await getFilledOrder(store, { self_ordering_table_id: table });
-        expect(store.tableHasOrders(table)).toBe(true);
-        expect(store.getActiveOrdersOnTable(table)).toHaveLength(1);
-        expect(store.getTableOrders(table.id)).toHaveLength(1);
+        expect(store.tableHasOrders(table)).toBe(false);
+        expect(store.getActiveOrdersOnTable(table)).toHaveLength(0);
+        expect(store.getTableOrders(table.id)).toHaveLength(0);
 
         // Avoid doublon
         order2.table_id = table;

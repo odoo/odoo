@@ -29,7 +29,7 @@
                                 <path class="o_pos_status_check_path" d="M15 27 l7.5 7.5 L38 19"/>
                             </svg>
                         </div>
-                        <t t-if="this.confirmedOrder.preset_id?.use_timing and this.selfOrder.config.self_ordering_service_mode !== 'table'">
+                        <t t-if="this.confirmedOrder.preset_id?.use_timing and !this.selfOrder.config.serviceAtTable">
                             <t t-set="slotDate" t-value="this.confirmedOrder.preset_id.slotPrefix(this.confirmedOrder.preset_time) or this.confirmedOrder.preset_id.formatDate(this.confirmedOrder.preset_time)"/>
                             <h1 class="mb-0 o_pos_sched d-flex flex-column align-items-center gap-1">
                                 <span class="o_pos_sched_for text-muted fs-6 fw-bold">Order for</span>

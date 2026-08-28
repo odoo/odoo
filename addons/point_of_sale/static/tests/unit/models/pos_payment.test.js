@@ -16,25 +16,8 @@ test("uiState", async () => {
     const paymentline = createPaymentLine(store, order, card);
 
     expect(paymentline.uiState).toEqual({
-        qrCode: null,
         initStateDate: DateTime.fromISO("2025-01-09T13:00:00"),
     });
-});
-
-test("updateCustomerDisplayQrCode", async () => {
-    const store = await setupPosEnv();
-    const order = await getFilledOrder(store);
-    const card = store.models["pos.payment.method"].get(2);
-    const paymentline = createPaymentLine(store, order, card);
-    const qrCode = "https://example.com/qr-code";
-
-    // Update QR code
-    paymentline.updateCustomerDisplayQrCode(qrCode);
-    expect(paymentline.uiState.qrCode).toBe(qrCode);
-
-    // Clear QR code
-    paymentline.updateCustomerDisplayQrCode(null);
-    expect(paymentline.uiState.qrCode).toBe(null);
 });
 
 test("isDone", async () => {

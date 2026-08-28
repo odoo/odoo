@@ -124,6 +124,24 @@ describe("Mobile Pay Button", () => {
     });
 });
 
+test("onWillRender replaces a finalized order with a new one that keeps its table and preset", async () => {
+    const store = await setupPosEnv();
+    const table = store.models["restaurant.table"].get(2);
+    const preset = store.models["pos.preset"].get(1);
+    const order = store.addNewOrder({ table_id: table, preset_id: preset });
+
+    await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+    // Simulate the order being paid from another POS while this screen still shows it.
+    order.state = "paid";
+    await animationFrame();
+
+    const newOrder = store.getOrder();
+    expect(newOrder.id).not.toBe(order.id);
+    expect(newOrder.table_id.id).toBe(table.id);
+    expect(newOrder.preset_id.id).toBe(preset.id);
+});
+
 test("select existing order when preset requires order name", async () => {
     const store = await setupPosEnv();
     store.config.available_preset_ids = [1, 2, 3];

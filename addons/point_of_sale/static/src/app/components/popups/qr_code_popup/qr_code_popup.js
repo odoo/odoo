@@ -9,7 +9,6 @@ export const qrPopupProps = {
     cancel: t.function().optional(),
     cancelLabel: t.string().optional("Discard"),
     close: t.function().optional(),
-    footer: t.boolean().optional(true),
     provider: t.or([t.string(), t.boolean()]).optional(),
 };
 

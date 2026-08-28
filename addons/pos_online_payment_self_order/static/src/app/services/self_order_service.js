@@ -52,22 +52,19 @@ patch(SelfOrder.prototype, {
         exitRoute = true
     ) {
         const baseUrl = session.base_url;
-        const order = this.currentOrder;
         let exitRouteUrl = baseUrl;
 
         if (exitRoute) {
-            let table = "";
-            exitRouteUrl += `/pos-self/${order_pos_config_id.id}`;
+            let extra = "";
+            exitRouteUrl += `/pos-self/${order_pos_config_id.id}/confirmation/${order_access_token}/order`;
 
-            if (this.config.self_ordering_pay_after === "each") {
-                exitRouteUrl += `/confirmation/${order.access_token}/order`;
+            if (this.config.self_ordering_service_mode === "dynamic_qr") {
+                extra += `&order_identifier=${order_access_token}`;
+            } else if (this.currentTableIdentifier) {
+                extra = `&table_identifier=${this.currentTableIdentifier}`;
             }
 
-            if (this.currentTable) {
-                table = `&table_identifier=${this.currentTable.identifier}`;
-            }
-
-            exitRouteUrl += `?access_token=${this.access_token}${table}`;
+            exitRouteUrl += `?access_token=${this.access_token}${extra}`;
         }
 
         const exit = encodeURIComponent(exitRouteUrl);

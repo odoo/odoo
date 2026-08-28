@@ -34,19 +34,20 @@
                 </t>
                 <!-- Transfer / Merge Button -->
                 <!-- No t-call controlButton because of t-on-click.stop -->
-                <button 
+                <button
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
-                    t-on-click.stop="() => this.clickTransferOrder()">
+                    t-on-click.stop="() => this.clickTransferOrder()"
+                    t-att-disabled="this.pos.disableForSelfOrder">
                     <i t-attf-class="oi {{!this.ui.isSmall ? ' oi-2x oi-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true" data-icon="east"/>
                     <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer / Merge</span>
                     </span>
                 </button>
                 <!-- Transfer Course Button -->
-                <button 
+                <button
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferCourse()"
-                    t-att-disabled="!this.showTransferCourse()">
+                    t-att-disabled="!this.showTransferCourse() || this.pos.disableForSelfOrder">
                     <i t-attf-class="oi {{!this.ui.isSmall ? ' oi-2x oi-fw' : ''}} align-self-center opacity-50" data-icon="south" role="img" aria-hidden="true"/>
                     <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer Course</span>
@@ -57,7 +58,8 @@
                     icon="'edit_square'"
                     btnText.translate="Set Order Name"
                     btnClasses="'btn-secondary '"
-                    onClick="() => this.pos.editFloatingOrderName(this.pos.getOrder())">
+                    onClick="() => this.pos.editFloatingOrderName(this.pos.getOrder())"
+                    disabled="this.pos.disableForSelfOrder">
                 </t>
             </t>
         </xpath>

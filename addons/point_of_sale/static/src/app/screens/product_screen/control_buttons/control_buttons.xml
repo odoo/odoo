@@ -64,7 +64,8 @@
                     btnText.translate="Pricelist"
                     btnClasses="'o_pricelist_button btn-secondary '"
                     onClick="() => this.clickPricelist()"
-                    subText="pricelistSubText">
+                    subText="pricelistSubText"
+                    disabled="this.pos.disableForSelfOrder">
                 </t>
                 <!-- Tax Button -->
                 <t t-set="fiscalSubText">

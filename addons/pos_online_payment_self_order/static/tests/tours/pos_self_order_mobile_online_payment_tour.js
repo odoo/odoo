@@ -28,6 +28,27 @@ registry.category("web_tour.tours").add("self_mobile_online_payment_meal_table",
     ],
 });
 
+registry.category("web_tour.tours").add("self_mobile_online_payment_meal_dynamic_qr", {
+    steps: () => [
+        Utils.checkBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Ok"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Fanta"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Fanta", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        ConfirmationPage.isShown(),
+        Utils.clickBtn("Ok"),
+        Utils.clickBtn("My Order"),
+        Utils.clickBtn("Pay"),
+    ],
+});
+
 registry.category("web_tour.tours").add("self_mobile_online_payment_meal", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),

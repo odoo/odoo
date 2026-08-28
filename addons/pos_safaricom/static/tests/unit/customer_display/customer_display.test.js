@@ -31,7 +31,7 @@ test("LipaNaMpesa: the customer display shows the QR code to scan", async () => 
 
     await waitFor(".qr-payment-card");
     // The QR reached the payment line, and the display renders one for it.
-    expect(line.uiState.qrCode).toMatch(/^data:image\/png;base64,/);
+    expect(line.qr_code).toMatch(/^data:image\/png;base64,/);
     expect(queryOne(".qr-payment-card img.qr-image").src).toMatch(/^data:image\/png;base64,/);
     expect(".qr-payment-card .qr-amount").toHaveText("Amount: $ 10.00");
 });

@@ -33,8 +33,11 @@ export class EatingLocationPage extends Component {
         this.router.navigate(history.state?.redirectPage || "product_list");
     }
 
-    // In the self, we don't want to display presets that have service_at table. Except if the clients are in
-    // restaurant (they scanned QR Code and have a table_identifier in the URL) or if the self is in KioskMode.
+    /**
+     * Presets offered for eating-location selection.
+     * Table-service presets are hidden unless a table is known (kiosk, scanned QR, or dynamic_qr order).
+     * In dynamic_qr mode, only table-service presets are offered, since the order is already tied to that table.
+     */
     get presets() {
         return this.selfOrder.availablePresets;
     }

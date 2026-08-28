@@ -19,12 +19,6 @@ class PosOrder(models.Model):
         ('kiosk', 'Self-Order Kiosk')
     ])
 
-    def write(self, vals):
-        if 'table_id' in vals and vals['table_id'] and self.self_ordering_table_id:
-            # Clear stale self-order table link when the order is transferred to a new table.
-            vals['self_ordering_table_id'] = vals['table_id']
-        return super().write(vals)
-
     @api.model
     def _load_pos_self_data_domain(self, data):
         return [('id', '=', False)]
@@ -91,8 +85,11 @@ class PosOrder(models.Model):
     def _should_send_to_preparation(self):
         """
         Determine whether the order should be sent to preparation based
-        on its payment status and the config's payment method configuration.
+        on its payment status and the config's payment method configuration
+        or the pay-after setting.
         """
+        if self.config_id.self_ordering_pay_after == 'meal' and self.source in ['mobile', 'kiosk']:
+            return True
         return not self.config_id.has_valid_self_payment_method() or super()._should_send_to_preparation()
 
     def _send_payment_result(self, payment_result):
@@ -203,6 +200,16 @@ class PosOrder(models.Model):
         }]]
 
     @api.model
+    def _get_self_order_floating_name(self, pos_config, order, device_type, table, tracking_number, prefix=""):
+        if device_type == 'kiosk':
+            return f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else f"Kiosk Order {tracking_number}"
+        if not table:
+            return f"Self-Order {tracking_number}"
+        if pos_config.self_ordering_service_mode == 'dynamic_qr':
+            return f"T {table.table_number} - {prefix}{tracking_number}"
+        return f"Self-Order T {table.table_number}"
+
+    @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
         company = pos_config.company_id
         preset_id = order['preset_id'] if pos_config.use_presets else False
@@ -235,18 +242,15 @@ class PosOrder(models.Model):
             prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
 
             if not floating_order_name:
-                if device_type == 'kiosk':
-                    floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else f"Kiosk Order {tracking_number}"
-                elif table:
-                    floating_order_name = f"Self-Order T {table.table_number}"
-                else:
-                    floating_order_name = f"Self-Order {tracking_number}"
+                floating_order_name = self._get_self_order_floating_name(pos_config, order, device_type, table, tracking_number, prefix)
 
             tracking_number = f"{prefix}{tracking_number}"
         else:
             pos_reference = existing_order.pos_reference
             floating_order_name = existing_order.floating_order_name
             tracking_number = existing_order.tracking_number
+            if not floating_order_name:
+                floating_order_name = self._get_self_order_floating_name(pos_config, order, device_type, table, tracking_number)
 
         fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
@@ -265,11 +269,9 @@ class PosOrder(models.Model):
             if not exists:
                 raise UserError(_("The order ID isn't linked to the order UUID. This is a sign of a tampered payload."))
 
-        return {
+        result = {
             'id': order.get('id'),
-            'table_stand_number': order.get('table_stand_number'),
             'customer_count': order.get('customer_count'),
-            'self_ordering_table_id': table.id if table else False,
             'date_order': str(fields.Datetime.now()),
             'amount_difference': order.get('amount_difference'),
             'amount_tax': order.get('amount_tax'),
@@ -303,6 +305,14 @@ class PosOrder(models.Model):
             'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
+
+        if (table and pos_config.self_ordering_service_mode == 'table'):
+            result['table_stand_number'] = order.get('table_stand_number')
+            result['self_ordering_table_id'] = table.id
+            if pos_config.self_ordering_pay_after == 'meal':
+                result['table_id'] = table.id
+
+        return result
 
     def _check_combo_lines(self):
         """
@@ -428,7 +438,7 @@ class PosOrder(models.Model):
             return
 
         # Build base lines from applicable order lines to derive the correct taxes
-        base_lines = [line._prepare_base_line_for_taxes_computation() for line in applicable_lines]
+        base_lines = applicable_lines._prepare_base_lines_for_taxes_computation()
 
         # For 'pre_discount', ignore discounts when computing service fee
         if preset.service_fee_based_on == 'pre_discount':

@@ -61,6 +61,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.assertTrue("Service at Table" in html)
 
         self.pos_config.write({
+            'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
         })
 
@@ -235,62 +236,86 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         ):
             self.start_tour(self_route, 'test_delete_mobile_order_from_backend')
 
-    def test_pos_self_order_table_transfer(self):
-        """
-        Verify that transferring a POS order to a new table clears
-        `self_ordering_table_id`, preventing the order from remaining linked
-        to the original self-order table.
-        """
-
-        self.browser_size = '1366x768'
+    def test_self_order_pay_warns_on_stale_cart(self):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'meal',
-            'self_ordering_service_mode': 'table',
-            'floor_ids': [(6, 0, [self.pos_main_floor.id])],
+            'self_ordering_service_mode': 'dynamic_qr',
+            'use_presets': False,
         })
 
-        self.pos_main_floor.write({
-            'table_ids': [(0, 0, {
-                'table_number': '2',
-            })],
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'table_id': self.pos_table_1.id,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+        })
+        order._ensure_access_token()
+        self_route = self.pos_config._get_self_order_route(order=order)
+
+        @http.route('/pos-self-order/test-modify-line-qty-from-backend/', auth='public', type='jsonrpc', website=True)
+        def modify_line_qty_from_backend(self, line_id, qty):
+            self.env['pos.order.line'].sudo().browse(line_id).write({'qty': qty})
+
+        with patch.object(PosSelfOrderController, 'modify_line_qty_from_backend', modify_line_qty_from_backend, create=True):
+            self.start_tour(self_route, 'self_order_mobile_pay_warns_on_stale_cart')
+
+    def test_self_order_snooze_service(self):
+        """
+        Verify that snoozing the self-order service from the order tracker
+        dropdown creates a `pos.snooze` record for the requested duration.
+        """
+
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'counter',
+            'use_presets': False,
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
 
-        self.env['pos.order'].create({
-            'session_id': self.pos_config.current_session_id.id,
-            'self_ordering_table_id': self.pos_main_floor.table_ids[0].id,
-            'amount_total': 10.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'amount_paid': 0.0,
-            'lines': [(0, 0, {
-                'qty': 1,
-                'product_id': self.cola.id,
-                'price_unit': self.cola.lst_price,
-                'price_subtotal': self.cola.lst_price,
-                'price_subtotal_incl': self.cola.lst_price,
-            })],
-        })
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_self_order_snooze_service', login='pos_user')
 
-        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_table_transfer', login='pos_user')
-        # Self order should be snoozed for 1 hour
         snoozed_item = self.env['pos.snooze'].search([], limit=1)
         self.assertEqual(snoozed_item.type, "self-ordering")
         self.assertEqual(snoozed_item.end_time - snoozed_item.start_time, timedelta(hours=1))
 
-        orders = self.pos_config.current_session_id.order_ids
-        self.assertEqual(len(orders), 2, "Expected exactly 2 orders: the transferred self-order and an empty placeholder")
-        orders_with_lines = orders.filtered(lambda o: o.lines)
-        empty_orders = orders.filtered(lambda o: not o.lines)
-        self.assertEqual(len(orders_with_lines), 1, "Expected exactly one order with lines")
-        self.assertEqual(len(empty_orders), 1, "Expected exactly one empty order")
-        self_order = orders_with_lines[0]
-        self.assertEqual(self_order.self_ordering_table_id, self_order.table_id)
-        empty_order = empty_orders[0]
-        self.assertFalse(empty_order.lines, "Empty order should have no lines")
+    def test_pos_self_order_dynamic_qr(self):
+        self.browser_size = '1366x768'
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'self_ordering_service_mode': 'dynamic_qr',
+            'floor_ids': [(6, 0, [self.pos_main_floor.id])],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # Without a QR-joined order, self-ordering is blocked with a staff-only message.
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, 'self_order_mobile_dynamic_qr_blocked')
+
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_dynamic_qr', login='pos_user')
+
+        order = self.pos_config.current_session_id.order_ids.filtered(lambda o: o.lines)
+        self.assertEqual(len(order), 1, "Expected exactly one order with lines")
+        self.assertTrue(order.access_token, "Clicking Dynamic QR should have generated an access_token for the order")
+
+        self_route_order = self.pos_config._get_self_order_route(order=order)
+        self.assertIn(f"order_identifier={order.access_token}", self_route_order)
+        self.start_tour(self_route_order, "self_order_mobile_join_via_qr")
+
+        order.invalidate_recordset()
+        self.assertEqual(len(order.lines), 1)
+        self.assertEqual(order.lines[0].qty, 2)
 
     def test_self_order_mobile_not_visible_in_other_config(self):
         """Self-orders from config A should not appear in config B's ticket screen."""

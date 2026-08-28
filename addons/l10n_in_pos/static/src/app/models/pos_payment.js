@@ -2,10 +2,10 @@ import { PosPayment } from "@point_of_sale/app/models/pos_payment";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosPayment.prototype, {
-    getQrPopupProps(customerDisplay = false) {
+    getQrPopupProps() {
         // Extract only required fields to prevent circular references when serializing data for customer display
         const { upi_identifier = "", _qr_payment_icon_urls = [] } = this.payment_method_id || {};
-        const base = super.getQrPopupProps(customerDisplay);
+        const base = super.getQrPopupProps();
         return {
             ...base,
             paymentMethod: {

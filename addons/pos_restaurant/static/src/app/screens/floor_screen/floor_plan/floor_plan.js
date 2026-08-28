@@ -7,6 +7,7 @@ import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/uti
 import { calculateBoundsFromTransform } from "@pos_restaurant/app/services/floor_plan/utils/bounds_calculator";
 import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { _t } from "@web/core/l10n/translation";
 
 const TABLE_LINKING_DELAY = 400;
 const TIMER_INTERVAL = 60000;
@@ -20,6 +21,7 @@ export class FloorPlan extends FloorPlanBase {
         this.pos = usePos();
         this.alert = this.pos.alert;
         this.ui = useService("ui");
+        this.notification = useService("notification");
         useListener(window, "resize", useDebounced(this.handleWindowResize.bind(this), 100));
         this.scrollFloorId = null;
 
@@ -179,6 +181,17 @@ export class FloorPlan extends FloorPlanBase {
 
         if (currentTableMOParent !== newTableMOParent) {
             const oToTrans = this.pos.getActiveOrdersOnTable(tableMO)[0];
+            const oTarget = this.pos.getActiveOrdersOnTable(newTableMOParent)[0];
+            if (oToTrans?.isSelfOrder || oTarget?.isSelfOrder) {
+                this.notification.add(
+                    _t(
+                        "Self-orders cannot be transferred or merged, whether they are the order being moved or the one receiving it."
+                    ),
+                    { type: "danger" }
+                );
+                return false;
+            }
+
             if (oToTrans) {
                 this.pos.mergeTableOrders(oToTrans.uuid, newTableMOParent);
             }

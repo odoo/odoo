@@ -78,7 +78,6 @@ describe("handleBancontactPayNotification", () => {
             paymentline.qr_code = "bancontact_qr_code";
             paymentline.bancontact_id = "bancontact_id";
             notificationMessage = null;
-            paymentline.uiState.qrCode = "test_qr_code";
             store.setOrder(orderSelected);
             orderSelected.selectPaymentline(paymentlineSelected);
             store.qrCode = {
@@ -104,7 +103,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe(null);
         expect(store.qrCode).toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.qrCode.closer.1", "store.autoValidateOrder.1"]);
 
         // Current order + current qr code displayed + different payment line
@@ -121,7 +119,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment received");
         expect(store.qrCode).toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.qrCode.closer.2", "store.autoValidateOrder.2"]);
 
         // Current order + different qr code displayed + current payment line
@@ -137,7 +134,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe(null);
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.autoValidateOrder.3"]);
 
         // Current order + different qr code displayed + different payment line
@@ -152,7 +148,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment received");
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.autoValidateOrder.4"]);
 
         // Other order selected - Fully paid
@@ -170,7 +165,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toInclude(`The order test_order_1 has been fully paid.`);
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps([]);
 
         // Other order selected - Partially paid
@@ -186,7 +180,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toInclude(`The order test_order_1 has been partially paid.`);
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps([]);
     });
 
@@ -215,7 +208,6 @@ describe("handleBancontactPayNotification", () => {
             paymentline.qr_code = "bancontact_qr_code";
             paymentline.bancontact_id = "bancontact_id";
             notificationMessage = null;
-            paymentline.uiState.qrCode = "test_qr_code";
             store.setOrder(orderSelected);
             store.qrCode = {
                 paymentline: paymentlineSelected,
@@ -237,7 +229,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment failed");
         expect(store.qrCode).toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.qrCode.closer.1"]);
 
         // Current order but different payment line selected
@@ -253,7 +244,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment failed");
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps([]);
 
         // Other order selected
@@ -270,7 +260,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe(`A payment for order test_order_1 has failed.`);
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps([]);
 
         // Already retry
@@ -286,7 +275,6 @@ describe("handleBancontactPayNotification", () => {
         expect(paymentline.qr_code).toBe("bancontact_qr_code");
         expect(notificationMessage).toBe(null);
         expect(store.qrCode).not.toBe(null);
-        expect(paymentline.uiState.qrCode).toBe("test_qr_code");
         expect.verifySteps([]);
     });
 

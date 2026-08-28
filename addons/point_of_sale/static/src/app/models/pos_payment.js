@@ -17,7 +17,7 @@ export class PosPayment extends Base {
 
     initState() {
         super.initState();
-        this.uiState = { qrCode: null, initStateDate: DateTime.now() };
+        this.uiState = { initStateDate: DateTime.now() };
     }
 
     get config() {
@@ -35,24 +35,12 @@ export class PosPayment extends Base {
         );
     }
 
-    getQrPopupProps(customerDisplay = false) {
-        return customerDisplay
-            ? {
-                  qrCode: this.uiState.qrCode,
-                  amount: this.getAmount(),
-                  provider: this.payment_provider,
-                  isCustomerDisplay: true,
-                  footer: false,
-              }
-            : {
-                  qrCode: this.qr_code,
-                  amount: formatCurrency(this.getAmount(), this.currency),
-                  provider: this.payment_provider,
-              };
-    }
-
-    updateCustomerDisplayQrCode(qrCode) {
-        this.uiState.qrCode = qrCode;
+    getQrPopupProps() {
+        return {
+            qrCode: this.qr_code,
+            amount: formatCurrency(this.amount_currency || this.getAmount(), this.currency),
+            provider: this.payment_provider,
+        };
     }
 
     /**

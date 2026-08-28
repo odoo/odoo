@@ -40,7 +40,7 @@ class PosConfig(models.Model):
         required=True,
     )
     self_ordering_service_mode = fields.Selection(
-        [("counter", "Pickup zone"), ("table", "Table")],
+        [("counter", "Pickup zone"), ("table", "Table"), ("dynamic_qr", "Dynamic QR")],
         string="Self Ordering Service Mode",
         default="counter",
         help="Choose the kiosk mode",
@@ -171,6 +171,8 @@ class PosConfig(models.Model):
         if vals.get('self_ordering_mode') in ('kiosk', 'mobile') and not product_delivery_template.active:
             product_delivery_template.active = True
         for record in self:
+            mode = vals.get('self_ordering_mode', record.self_ordering_mode)
+
             if vals.get('self_ordering_mode') == 'kiosk' or (vals.get('pos_self_ordering_mode') == 'mobile' and vals.get('pos_self_ordering_service_mode') == 'counter'):
                 vals['self_ordering_pay_after'] = 'each'
 
@@ -178,15 +180,24 @@ class PosConfig(models.Model):
                 vals['self_ordering_pay_after'] = 'each'
 
             if (
-                vals.get('self_ordering_mode') == 'mobile'
+                mode == 'mobile'
                 and (
                     vals.get('self_ordering_service_mode') == 'counter'
-                    or (record.self_ordering_service_mode == 'counter' and vals.get('self_ordering_service_mode') != 'table')
+                    or (record.self_ordering_service_mode == 'counter' and vals.get('self_ordering_service_mode') not in ('table', 'dynamic_qr'))
                 )
             ):
                 vals['self_ordering_pay_after'] = 'each'
 
-            if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
+            elif (
+                mode == 'mobile'
+                and (
+                    vals.get('self_ordering_service_mode') == 'dynamic_qr'
+                    or (record.self_ordering_service_mode == 'dynamic_qr' and vals.get('self_ordering_service_mode') not in ('table', 'counter'))
+                )
+            ):
+                vals['self_ordering_pay_after'] = 'meal'
+
+            elif mode == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
 
         res = super().write(vals)
@@ -258,31 +269,48 @@ class PosConfig(models.Model):
 
         return table_qr_code
 
-    def _get_self_order_route(self, table_id: int | None = None) -> str:
+    def _get_self_order_route(self, table_id: int | None = None, order=None) -> str:
         self.ensure_one()
         base_route = f"/pos-self/{self.id}"
-        table_route = ""
 
         if self.self_ordering_mode == 'consultation':
             return base_route
 
+        extra_params = ""
         if self.self_ordering_mode == 'mobile':
-            table = self.env["restaurant.table"].search(
-                [("active", "=", True), ("id", "=", table_id)], limit=1
-            )
+            if order:
+                extra_params += f"&order_identifier={order.access_token}"
+            if table_id:
+                table = self.env["restaurant.table"].search([("active", "=", True), ("id", "=", table_id)], limit=1)
+                if table:
+                    extra_params += f"&table_identifier={table.identifier}"
 
-            if table:
-                table_route = f"&table_identifier={table.identifier}"
-
-        return f"{base_route}?access_token={self.access_token}{table_route}"
+        return f"{base_route}?access_token={self.access_token}{extra_params}"
 
     def _get_self_order_url(self, table_id: int | None = None) -> str:
         self.ensure_one()
-        long_url = self.get_base_url() + self._get_self_order_route(table_id)
+        long_url = self.get_base_url() + self._get_self_order_route(table_id=table_id)
         return self.env['link.tracker'].search_or_create([{
             'url': long_url,
             'title': f"Self Order {self.name}" if not table_id else f"Self Order {self.name} - Table id {table_id}",
         }]).short_url
+
+    def get_dynamic_qr_url(self, order_id: int) -> str:
+        self.ensure_one()
+        order = self.env['pos.order'].browse(order_id)
+        if (
+            self.self_ordering_mode != 'mobile'
+            or self.self_ordering_service_mode != 'dynamic_qr'
+            or self.self_ordering_pay_after != 'meal'
+            or not order.exists()
+            or order.config_id != self
+            or order.state != 'draft'
+            or not order.table_id
+            or (order.preset_id and order.preset_id.service_at != 'table')
+        ):
+            return False
+        order._ensure_access_token()
+        return self.get_base_url() + self._get_self_order_route(order=order)
 
     def preview_self_order_app(self):
         self.ensure_one()
@@ -464,7 +492,7 @@ class PosConfig(models.Model):
 
         if table_ids and self.self_ordering_mode == 'mobile':
             for table in table_ids:
-                url = self._get_self_order_url(table.id)
+                url = self._get_self_order_url(table_id=table.id)
                 table_data.append({
                     'url': url,
                     'name': f"{table.floor_id.name} - {table.table_number}",

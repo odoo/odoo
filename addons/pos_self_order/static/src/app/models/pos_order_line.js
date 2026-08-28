@@ -19,7 +19,7 @@ patch(PosOrderline.prototype, {
         }
 
         const diff = {
-            qty: this.qty !== change.qty ? this.qty - change.qty : false,
+            qty: this.getPendingQtyDelta() || false,
             customer_note:
                 this.customer_note !== change.customer_note ? change.customer_note : false,
             attribute_value_ids:
@@ -34,6 +34,11 @@ patch(PosOrderline.prototype, {
                     : false,
         };
         return diff;
+    },
+    /** Qty delta since the last sync for this line, or 0 if unchanged or never synced. */
+    getPendingQtyDelta() {
+        const lastSynced = this.order_id?.uiState.lineChanges[this.uuid]?.qty;
+        return lastSynced !== undefined ? this.qty - lastSynced : 0;
     },
     isLotTracked() {
         return false;

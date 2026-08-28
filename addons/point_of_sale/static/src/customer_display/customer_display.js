@@ -36,9 +36,9 @@ export class CustomerDisplay extends Component {
         return this.customerDisplay.data();
     }
 
-    get qrPaymentData() {
+    get qrData() {
         return {
-            ...this.order.qrPaymentData,
+            ...this.order.qrData,
             ...this.order.onlinePaymentData,
         };
     }
