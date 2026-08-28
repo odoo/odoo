@@ -86,6 +86,6 @@ export class EventTrackLocationDisplay extends Interaction {
 }
 
 registry.category("public.interactions").add(
-    "website_event_track_location_display.event_track_location_display",
+    "website_event_track.event_track_location_display",
     EventTrackLocationDisplay
 );

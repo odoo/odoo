@@ -2,9 +2,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
-from odoo.addons.website_event_track_location_display.controllers.location_display import (
-    EventTrackLocationDisplayController,
-)
+from odoo.addons.website_event_track.controllers.location_display import EventTrackLocationDisplayController
 from odoo.tests.common import HttpCase, users
 
 
