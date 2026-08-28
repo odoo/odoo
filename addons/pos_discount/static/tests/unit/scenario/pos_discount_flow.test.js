@@ -28,7 +28,7 @@ test("pos_discount_numpad: apply a fixed then a percentage global discount", asy
     expect(order.lines[0].qty).toBe(4);
     expect(order.totalDue).toBe(100);
 
-    // The popup starts on the configured percentage.
+    // The popup starts on the configured discount value with by default the percentage type.
     await Utils.openDiscountPopup();
     expect(Utils.dialogTitle()).toBe("Discount");
     expect(Utils.numberPopupValue()).toBe("20 %");
@@ -45,11 +45,13 @@ test("pos_discount_numpad: apply a fixed then a percentage global discount", asy
     await advanceTime(150);
     expect(Utils.getOrderTotal()).toInclude("90");
 
-    // Reopening the popup starts over from the configured percentage.
+    // Reopening the popup starts over from the configured discount value with the last discount type used.
     await Utils.openDiscountPopup();
-    expect(Utils.numberPopupValue()).toBe("20 %");
+    expect(Utils.selectedNumberPopupType()).toBe("fixed");
+    expect(Utils.numberPopupValue()).toBe("$ 20.00");
 
     await Utils.sendBufferKeys("2", "5");
+    await Utils.clickNumberPopupType("percent");
     expect(Utils.selectedNumberPopupType()).toBe("percent");
     expect(Utils.numberPopupValue()).toBe("25 %");
 
