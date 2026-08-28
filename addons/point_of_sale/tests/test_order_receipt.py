@@ -4,6 +4,8 @@ import logging
 from datetime import datetime
 from unittest.mock import patch
 
+from freezegun import freeze_time
+
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import (
@@ -317,3 +319,74 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         `based on` has nothing to qualify on a flat amount.
         """
         self.assertEqual(self._get_service_fee_receipt_info('fixed')['description'], "")
+
+    def _create_receipt_test_order(self, date_order, preset_time=False):
+        preset = self.env['pos.preset'].create({
+            'name': 'Online Order',
+            'use_timing': True,
+        })
+        return self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'date_order': date_order,
+            'preset_id': preset.id,
+            'preset_time': preset_time,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [Command.create({
+                'product_id': self.example_simple_product.product_variant_id.id,
+                'qty': 1,
+                'price_unit': 5.80,
+                'price_subtotal': 5.80,
+                'price_subtotal_incl': 5.80,
+            })],
+        })
+
+    def _get_preparation_extra_data(self, order):
+        changes = order._generate_preparation_change_for_categories(set(self.category.ids))
+        data = order._generate_preparation_receipt_data(changes)
+        self.assertTrue(data, "the order has one new line, it must produce a ticket")
+        return data[0]['extra_data']
+
+    def test_change_receipt_times_use_shop_timezone(self):
+        """
+        Preparation ticket times must use the shop timezone, not the acting user's,
+        since backend users (public user, OdooBot, self ordering user) may have no tz.
+        """
+        self.env.company.tz = 'Europe/Brussels'  # UTC+2
+        public_user = self.env.ref('base.public_user')
+        self.assertFalse(public_user.tz, "the public user carries no timezone")
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with freeze_time('2026-08-27 11:16:53'):
+            order = self._create_receipt_test_order('2026-08-27 11:16:53', '2026-08-27 16:15:00')
+            extra_data = self._get_preparation_extra_data(order.with_user(public_user).sudo())
+
+        self.assertEqual(extra_data['time'], '13:16', "13:16 in Brussels, not 11:16 in UTC")
+        self.assertEqual(extra_data['preset_time'], '06:15 PM', "18:15 in Brussels, not 16:15 in UTC")
+
+    def test_change_receipt_preset_time_dates_the_pickup_only_when_needed(self):
+        """
+        Mirror of the JS presetDateTime getter: a pickup on the order's own day prints its
+        hour alone, one on another day prints its date too. Both days are the shop's, which
+        is what makes the first order below same-day despite spanning two UTC days.
+        """
+        self.env.company.tz = 'Europe/Brussels'  # UTC+2
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        # 08-27 23:30 UTC is already 08-28 01:30 in Brussels, the pickup's own day
+        same_day = self._create_receipt_test_order('2026-08-27 23:30:00', '2026-08-28 09:00:00')
+        other_day = self._create_receipt_test_order('2026-08-27 11:16:53', '2026-08-28 16:15:00')
+
+        self.assertEqual(
+            self._get_preparation_extra_data(same_day)['preset_time'],
+            '11:00 AM',
+            "same day in Brussels, even though the order was placed on the previous UTC day",
+        )
+        self.assertEqual(
+            self._get_preparation_extra_data(other_day)['preset_time'],
+            '08/28/2026 06:15:00 PM',
+            "a pickup on another day needs its date spelled out",
+        )
