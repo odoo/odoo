@@ -70,7 +70,7 @@ test("Last operator leaving ends the livechat", async () => {
     // simulate operator leaving
     await withUser(operatorUserId, () =>
         getService("orm").call("discuss.channel", "action_unfollow", [
-            [Object.values(getService("mail.store")["mail.thread"].records).at(-1).id],
+            [[...getService("mail.store")["mail.thread"].records.values()].at(-1).id],
         ])
     );
     await contains("span", { text: "This live chat conversation has ended." });

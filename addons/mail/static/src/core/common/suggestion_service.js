@@ -125,7 +125,7 @@ export class SuggestionService {
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm) {
-        const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
+        const cannedResponses = [...this.store["mail.canned.response"].records.values()].filter(
             (cannedResponse) => normalize(cannedResponse.source).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
@@ -208,7 +208,7 @@ export class SuggestionService {
     }
 
     searchRoleSuggestions(cleanedSearchTerm) {
-        const roles = Object.values(this.store["res.role"].records).filter((role) =>
+        const roles = [...this.store["res.role"].records.values()].filter((role) =>
             normalize(role.name).includes(cleanedSearchTerm)
         );
         const sortFunc = (r1, r2) => {
@@ -255,7 +255,7 @@ export class SuggestionService {
      * @param {import("models").Thread} [options.thread]
      */
     getPartnerSuggestions({ composerType, thread } = {}) {
-        return Object.values(this.store["res.partner"].records).filter((partner) =>
+        return [...this.store["res.partner"].records.values()].filter((partner) =>
             this.isPartnerSuggestionValid(partner, {
                 composerType,
                 thread,

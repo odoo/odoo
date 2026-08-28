@@ -12,7 +12,7 @@ const StorePatch = {
     },
     /** @returns {import("models").DiscussChannel[]} */
     getSelfRecentChannels() {
-        return Object.values(this["discuss.channel"].records)
+        return [...this["discuss.channel"].records.values()]
             .filter((channel) => channel.self_member_id)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },

@@ -72,7 +72,7 @@ export class Record {
     }
     static get(data) {
         const Model = this;
-        return Model.records[Model.localId(data)];
+        return Model.records.get(Model.localId(data));
     }
     /**
      * Gets a record by id, fetching it from the server if it doesn't exist in the store or if some
@@ -207,7 +207,7 @@ export class Record {
             const record = recordProxy._raw;
             recordProxy.setup();
             Object.assign(recordProxy, { ...ids });
-            Model.records[record.localId] = recordProxy;
+            Model.records.set(record.localId, recordProxy);
             if (record.Model.getName() === "Store") {
                 record.env = Model._rawStore.env;
             }

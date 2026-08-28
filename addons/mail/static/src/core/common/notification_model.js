@@ -25,12 +25,14 @@ export class Notification extends Record {
             if (!this.mail_message_id?.isSelfAuthored) {
                 return;
             }
-            const failure = Object.values(this.store.Failure.records).find(
-                (f) =>
-                    f.resModel === thread?.model &&
-                    f.type === this.notification_type &&
-                    (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
-            );
+            const failure = this.store.Failure.records
+                .values()
+                .find(
+                    (f) =>
+                        f.resModel === thread?.model &&
+                        f.type === this.notification_type &&
+                        (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
+                );
             return this.isFailure
                 ? {
                       id: failure ? failure.id : this.store.Failure.nextId.value++,
