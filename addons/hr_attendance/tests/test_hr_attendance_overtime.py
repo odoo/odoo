@@ -122,13 +122,19 @@ class TestHrAttendanceOvertime(HttpCase):
             'contract_date_start': date(2030, 1, 1),
         })
 
+        cls.calendar_flexible = cls.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'company_id': cls.company.id,
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+            'hours_per_week': 40,
+            'hours_per_day': 8,
+        })
         cls.flexible_employee = cls.env['hr.employee'].create({
             'name': 'Flexi',
             'company_id': cls.company.id,
             'tz': 'UTC',
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8,
+            'resource_calendar_id': cls.calendar_flexible.id,
             'date_version': date(2020, 1, 1),
             'contract_date_start': date(2020, 1, 1),
             'ruleset_id': cls.ruleset.id
@@ -901,9 +907,8 @@ class TestHrAttendanceOvertime(HttpCase):
         """ Test the computation of overtime hours for a fully flexible resource.
         Fully flexible resources should not have any overtime. """
 
-        # take the flexible resource and set the resource calendar to a fully flexible one
-        self.flexible_employee.write({
-            'resource_calendar_id': False,
+        # take the flexible resource and set the calendar's target hours to fully flexible (0 hours)
+        self.flexible_employee.resource_calendar_id.write({
             'hours_per_week': 0,
             'hours_per_day': 0,
         })
@@ -928,7 +933,7 @@ class TestHrAttendanceOvertime(HttpCase):
         spread across non consecutive days must not generate overtime. """
         self.flexible_employee.ruleset_id = self.ruleset
         self.flexible_employee.tz = 'Europe/Brussels'
-        self.flexible_employee.write({
+        self.flexible_employee.resource_calendar_id.write({
             'hours_per_day': 8,
             'hours_per_week': 16,
         })

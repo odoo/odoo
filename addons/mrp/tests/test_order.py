@@ -4881,7 +4881,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(production.workorder_ids[0].duration_expected, 15)
 
     def test_mo_without_resource_calendar(self):
-        self.workcenter_1.resource_calendar_id = False
+        self.workcenter_1.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'company_id': self.workcenter_1.company_id.id,
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+        })
 
         mo = self.env['mrp.production'].create({
             'product_id': self.product_1.id,

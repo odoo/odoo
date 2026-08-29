@@ -115,13 +115,19 @@ class TestHrAttendanceUndertime(HttpCase):
             'contract_date_start': date(2030, 1, 1),
         })
 
+        cls.calendar_flexible = cls.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'company_id': cls.company.id,
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+            'hours_per_week': 40,
+            'hours_per_day': 8,
+        })
         cls.flexible_employee = cls.env['hr.employee'].create({
             'name': 'Flexi',
             'company_id': cls.company.id,
             'tz': 'UTC',
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8,
+            'resource_calendar_id': cls.calendar_flexible.id,
             'date_version': date(2020, 1, 1),
             'contract_date_start': date(2020, 1, 1),
             'ruleset_id': cls.ruleset.id,

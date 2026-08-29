@@ -21,9 +21,14 @@ class TestResourceCalendar(TransactionCase):
                 'hour_to': 17,     # 21:00 UTC
             })],
         })
+        fully_flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+        })
         resource = self.env['resource.resource'].create({
             'name': 'Wade Wilson',
-            'calendar_id': False,  # Fully-flexible because no calendar is set
+            'calendar_id': fully_flex_calendar.id,  # Fully-flexible: flexible calendar, no hours target
             'tz': 'America/New_York',  # -04:00 UTC offset in the summer
         })
         start_dt = datetime(2025, 6, 4, 18, 0, 0).astimezone(UTC)
@@ -47,11 +52,16 @@ class TestResourceCalendar(TransactionCase):
         """
         Test that the duration of an attendance interval for flexible calendar is correctly computed.
         """
-        flex_resource = self.env['resource.resource'].create({
-            'name': 'Test FlexResource',
-            'calendar_id': False,
+        flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
             'hours_per_week': 30.0,
             'hours_per_day': 7.0,
+        })
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Test FlexResource',
+            'calendar_id': flex_calendar.id,
             'tz': 'UTC',
         })
 

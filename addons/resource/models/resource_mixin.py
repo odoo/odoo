@@ -22,8 +22,6 @@ class ResourceMixin(models.AbstractModel):
         'resource.calendar', 'Working Hours',
         default=lambda self: self.env.company.resource_calendar_id,
         index=True, related='resource_id.calendar_id', store=True, readonly=False)
-    hours_per_week = fields.Float(string="Hours per Week", related='resource_id.hours_per_week', readonly=False)
-    hours_per_day = fields.Float(string="Hours per Day", related='resource_id.hours_per_day', readonly=False)
     tz = fields.Selection(
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
@@ -85,10 +83,10 @@ class ResourceMixin(models.AbstractModel):
         return {resource.id: resource.resource_calendar_id for resource in self}
 
     def _get_hours_per_week_batch(self, date_from=None):
-        return {resource.id: resource.hours_per_week for resource in self}
+        return {resource.id: resource.resource_calendar_id.hours_per_week for resource in self}
 
     def _get_hours_per_day_batch(self, date_from=None):
-        return {resource.id: resource.hours_per_day for resource in self}
+        return {resource.id: resource.resource_calendar_id.hours_per_day for resource in self}
 
     def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
@@ -157,7 +155,7 @@ class ResourceMixin(models.AbstractModel):
         for calendar, resources in resource_per_calendar.items():
             # handle fully flexible resources by returning the length of the whole interval
             # since we do not take into account leaves for fully flexible resources
-            if not calendar:
+            if calendar._is_fully_flexible():
                 days = (to_datetime - from_datetime).days
                 hours = (to_datetime - from_datetime).total_seconds() / 3600
                 for resource in resources:
@@ -199,7 +197,7 @@ class ResourceMixin(models.AbstractModel):
         result = {}
         records_by_calendar = defaultdict(lambda: self.env[self._name])
         for record in self:
-            records_by_calendar[calendar or record.resource_calendar_id or record.company_id.resource_calendar_id] += record
+            records_by_calendar[calendar or record.resource_calendar_id] += record
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:

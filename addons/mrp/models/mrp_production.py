@@ -825,8 +825,6 @@ class MrpProduction(models.Model):
 
         date_finished_per_workcenter = defaultdict(lambda: date_start)
         for wo in self.workorder_ids:
-            if not wo.workcenter_id.resource_calendar_id:
-                return False
             wo_optimal_date_start = date_finished_per_workcenter[wo.workcenter_id.id]
             _, to_date = wo.workcenter_id._get_first_available_slot(wo_optimal_date_start, wo.duration_expected)
             if not isinstance(to_date, datetime.datetime):

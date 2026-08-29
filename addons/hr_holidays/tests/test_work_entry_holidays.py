@@ -289,10 +289,15 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             },
         ])
 
-        self.jules_emp.write({
-            'resource_calendar_id': False,
+        calendar_flexible = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
             'hours_per_week': 40,
             'hours_per_day': 8,
+        })
+        self.jules_emp.write({
+            'resource_calendar_id': calendar_flexible.id,
             'tz': self.jules_emp.tz
         })
 

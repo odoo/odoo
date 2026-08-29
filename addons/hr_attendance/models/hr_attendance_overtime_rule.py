@@ -154,7 +154,7 @@ class HrAttendanceOvertimeRule(models.Model):
 
         employee = attendances.employee_id
         if self.expected_hours_from_contract:
-            if employee.version_id.is_flexible:
+            if employee.version_id._is_flexible():
                 date_start = date_end = start.date()
                 if self.quantity_period == 'week':
                     date_start -= timedelta(days=date_start.weekday())  # Monday
@@ -283,7 +283,7 @@ class HrAttendanceOvertimeRule(models.Model):
         for employee in employees:
             if {'work_days', 'non_work_days'} & timing_type_set:
                 employee_sudo = employee.sudo()
-                if employee_sudo.is_flexible:
+                if employee_sudo._is_flexible():
                     intervals_by_timing_type['work_days'][employee] = _generate_days_intervals(
                         Intervals([(
                             datetime.combine(min_check_in, datetime.min.time()),

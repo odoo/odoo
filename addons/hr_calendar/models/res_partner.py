@@ -48,8 +48,8 @@ class ResPartner(models.Model):
         calendar_periods_by_employee = employees._get_calendar_periods(start_period.date(), stop_period.date())
         for employee, calendar_periods in calendar_periods_by_employee.items():
             for _start, _stop, calendar in calendar_periods:
-                calendar = calendar or self.env.company.resource_calendar_id
-                resources_by_calendar[calendar] += employee.resource_id
+                # a flexible employee is treated as following their company's schedule
+                resources_by_calendar[calendar if not calendar._is_flexible() else self.env.company.resource_calendar_id] += employee.resource_id
 
         # Compute all work intervals per calendar
         for calendar, resources in resources_by_calendar.items():
@@ -67,7 +67,7 @@ class ResPartner(models.Model):
         for employee, calendar_periods in calendar_periods_by_employee.items():
             employee_interval = Intervals([])
             for (start, stop, calendar) in calendar_periods:
-                calendar = calendar or self.env.company.resource_calendar_id # No calendar if fully flexible
+                calendar = calendar if not calendar._is_flexible() else self.env.company.resource_calendar_id
                 tz = ZoneInfo(employee._get_tz(start))
                 interval = Intervals([(
                     datetime.combine(start, time.min, tz),

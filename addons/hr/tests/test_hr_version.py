@@ -658,8 +658,6 @@ class TestHrVersion(TestHrCommon):
             "display_name",
             "id",
             "is_current",
-            "is_flexible",
-            "is_fully_flexible",
             "is_future",
             "is_in_contract",
             "is_past",

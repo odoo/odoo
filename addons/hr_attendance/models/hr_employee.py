@@ -279,7 +279,7 @@ class HrEmployee(models.Model):
 
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
-            if not self.version_id.is_flexible and self.company_id.single_check_in:
+            if not self.version_id._is_flexible() and self.company_id.single_check_in:
                 if self.env.context.get('is_from_systray_check_in_out', False):  # throw user error if user tries to checkout from systray.
                     raise exceptions.UserError(self.env._("You've already checked in."))
                 return notification  # no need to checkout the user if single checkin enabled.
@@ -374,7 +374,7 @@ class HrEmployee(models.Model):
 
         for cal, employees in employees_by_calendar.items():
             if not cal:  # employees are flex or fully flex
-                employees = employees.filtered(lambda e: not e.is_fully_flexible)
+                employees = employees.filtered(lambda e: not e._is_fully_flexible())
                 if not employees:
                     continue
             resources_per_tz = employees._get_resources_per_tz()
@@ -428,7 +428,7 @@ class HrEmployee(models.Model):
             employee_attendances = attendance_intervals_by_employee[employee]
             for (p_start, p_stop, version) in intervals:
                 interval = Intervals([(p_start.replace(tzinfo=None), p_stop.replace(tzinfo=None), self.env['resource.calendar'])])
-                if version.is_fully_flexible:
+                if version._is_fully_flexible():
                     full_schedule_by_employee['fully_flexible'][employee] |= interval
                     continue
                 calendar = version.resource_calendar_id

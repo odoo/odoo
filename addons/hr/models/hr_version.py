@@ -149,12 +149,8 @@ class HrVersion(models.Model):
     departure_apply_date = fields.Date(related='departure_id.apply_date', groups="hr.group_hr_user")
 
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', inverse='_inverse_resource_calendar_id', string="Working Hours", index='btree_not_null', tracking=1,
+        'resource.calendar', required=True, default=lambda self: self.env.company.resource_calendar_id, inverse='_inverse_resource_calendar_id', string="Working Hours", index='btree_not_null', tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
-    hours_per_week = fields.Float(string="Hours per Week", compute='_compute_hours_per_week', store=True, readonly=False)
-    hours_per_day = fields.Float(string="Hours per Day", compute='_compute_hours_per_day', store=True, readonly=False)
-    is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
-    is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     # Contract Information
@@ -283,14 +279,6 @@ class HrVersion(models.Model):
                         version.employee_id.display_name))
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
-
-    @api.constrains('hours_per_week', 'hours_per_day')
-    def _verify_hours(self):
-        for employee in self:
-            if (employee.hours_per_week < 0 or employee.hours_per_week > 168):
-                raise ValidationError(self.env._("Hours per week must be between 0 and 168."))
-            if (employee.hours_per_day < 0 or employee.hours_per_day > 24):
-                raise ValidationError(self.env._("Average hours per day must be between 0 and 24."))
 
     def check_contract_finished(self):
         if self.contract_date_start and not self.contract_date_end:
@@ -442,6 +430,14 @@ class HrVersion(models.Model):
             return False
         return self.date_start <= date and (not self.date_end or self.date_end >= date)
 
+    def _is_flexible(self):
+        self.ensure_one()
+        return self.resource_calendar_id._is_flexible()
+
+    def _is_fully_flexible(self):
+        self.ensure_one()
+        return self.resource_calendar_id._is_fully_flexible()
+
     def _is_overlapping_period(self, date_from, date_to):
         """
         Return True if the employee is at least in contract one day during the period given
@@ -454,17 +450,6 @@ class HrVersion(models.Model):
         period_end = date_to or date.max
         contract_end = self.date_end or date.max
         return period_start <= contract_end and self.date_start <= period_end
-
-    def _is_fully_flexible(self):
-        """ return True if the version has a fully flexible working calendar """
-        self.ensure_one()
-        return not self.resource_calendar_id and not self.hours_per_week and not self.hours_per_day
-
-    @api.depends('resource_calendar_id', 'hours_per_week', 'hours_per_day')
-    def _compute_is_flexible(self):
-        for version in self:
-            version.is_fully_flexible = version._is_fully_flexible()
-            version.is_flexible = version._is_fully_flexible() or (not version.resource_calendar_id and (version.hours_per_week or version.hours_per_day))
 
     @api.model
     def _get_whitelist_fields_from_template(self):
@@ -706,17 +691,6 @@ class HrVersion(models.Model):
                 if version == current_version and employee.resource_id.calendar_id != version.resource_calendar_id:
                     employee.resource_id.calendar_id = version.resource_calendar_id
 
-    @api.depends('hours_per_day')
-    def _compute_hours_per_week(self):
-        for resource in self:
-            if not resource.hours_per_week:
-                resource.hours_per_week = resource.hours_per_day * 7
-
-    @api.depends('hours_per_week')
-    def _compute_hours_per_day(self):
-        for resource in self:
-            resource.hours_per_day = resource.hours_per_week / 7
-
     def _get_salary_costs_factor(self):
         self.ensure_one()
         return 12.0
@@ -736,30 +710,6 @@ class HrVersion(models.Model):
             tz: versions.employee_id.resource_id
             for tz, versions in version_per_tz.items()
         }
-
-    def _get_days_per_week(self):
-        self.ensure_one()
-        if self.resource_calendar_id:
-            return self.resource_calendar_id.days_per_week
-        if not self.hours_per_day:
-            return 0
-        return self.hours_per_week / self.hours_per_day
-
-    def _get_hours_per_week(self):
-        self.ensure_one()
-        if self.resource_calendar_id:
-            return self.resource_calendar_id.hours_per_week
-        elif self.is_flexible:
-            return self.hours_per_week
-        return self.company_id.resource_calendar_id.hours_per_week
-
-    def _get_hours_per_day(self):
-        self.ensure_one()
-        if self.resource_calendar_id:
-            return self.resource_calendar_id.hours_per_day
-        if self.is_flexible:
-            return self.hours_per_day
-        return self.company_id.resource_calendar_id.hours_per_day
 
     def _get_field_block_start_date(self, field_name):
         """

@@ -164,11 +164,20 @@ class TestWorkEntry(TestWorkEntryBase):
             {'name': 'emp fullyflex std'},
             {'name': 'emp fullyflex std'},
         ])
-        self.env['hr.version'].create([{
-            'employee_id': emp_flex_std.id,
-            'resource_calendar_id': False,
+        calendar_flex, calendar_fully_flex = self.env['resource.calendar'].create([{
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
             'hours_per_week': 21,
             'hours_per_day': 3,
+        }, {
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+        }])
+        self.env['hr.version'].create([{
+            'employee_id': emp_flex_std.id,
+            'resource_calendar_id': calendar_flex.id,
             'date_version': datetime(2025, 9, 1),
             'contract_date_start': datetime(2025, 9, 1),
             'contract_date_end': datetime(2025, 9, 15),
@@ -198,9 +207,7 @@ class TestWorkEntry(TestWorkEntryBase):
         },
         {
             'employee_id': emp_std_flex.id,
-            'resource_calendar_id': False,
-            'hours_per_week': 21,
-            'hours_per_day': 3,
+            'resource_calendar_id': calendar_flex.id,
             'date_version': datetime(2025, 9, 16),
             'contract_date_start': datetime(2025, 9, 16),
             'contract_date_end': datetime(2025, 9, 30),
@@ -210,9 +217,7 @@ class TestWorkEntry(TestWorkEntryBase):
         },
         {
             'employee_id': emp_fullyflex_std.id,
-            'resource_calendar_id': False,
-            'hours_per_week': 0,
-            'hours_per_day': 0,
+            'resource_calendar_id': calendar_fully_flex.id,
             'date_version': datetime(2025, 9, 1),
             'contract_date_start': datetime(2025, 9, 1),
             'contract_date_end': datetime(2025, 9, 15),
@@ -242,9 +247,7 @@ class TestWorkEntry(TestWorkEntryBase):
         },
         {
             'employee_id': emp_std_fullyflex.id,
-            'resource_calendar_id': False,
-            'hours_per_week': 0,
-            'hours_per_day': 0,
+            'resource_calendar_id': calendar_fully_flex.id,
             'date_version': datetime(2025, 9, 16),
             'contract_date_start': datetime(2025, 9, 16),
             'contract_date_end': datetime(2025, 9, 30),

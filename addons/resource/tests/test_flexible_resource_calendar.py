@@ -10,17 +10,26 @@ class TestFlexibleResourceCalendar(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.fully_flex_resource, cls.flex_resource = cls.env['resource.resource'].create([{
-            'name': 'Wade Wilson',
-            'calendar_id': False,
+        fully_flex_calendar, flex_calendar = cls.env['resource.calendar'].create([{
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
             'hours_per_week': 0,
             'hours_per_day': 0,
+        }, {
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
+        }])
+        cls.fully_flex_resource, cls.flex_resource = cls.env['resource.resource'].create([{
+            'name': 'Wade Wilson',
+            'calendar_id': fully_flex_calendar.id,
             'tz': 'UTC',
         }, {
             'name': 'Wade Wilson',
-            'calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8.0,
+            'calendar_id': flex_calendar.id,
             'tz': 'UTC',
         }])
 
@@ -71,12 +80,17 @@ class TestFlexibleResourceCalendar(TransactionCase):
             ],
         })
         self.env.company.resource_calendar_id = cal_40
+        flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Part Time Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+            'hours_per_week': 38.0,
+            'hours_per_day': 7.6,
+        })
         resource = self.env['resource.resource'].create({
             'name': 'flexpt',
             'tz': 'UTC',
-            'calendar_id': False,
-            'hours_per_week': 38.0,
-            'hours_per_day': 7.6,
+            'calendar_id': flex_calendar.id,
         })
         start_dt = datetime(2025, 7, 28).astimezone(UTC)
         end_dt = datetime(2025, 8, 3).astimezone(UTC)

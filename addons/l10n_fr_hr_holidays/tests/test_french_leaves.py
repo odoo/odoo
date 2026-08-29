@@ -269,7 +269,7 @@ class TestFrenchLeaves(TransactionCase):
         leave.unlink()
 
         # Both ending with week type 0
-        with self.assertQueryCount(129):  # TODO: [XBO] investigate why planning_* add more queries (127 instead of 118)
+        with self.assertQueryCount(130):  # TODO: [XBO] investigate why planning_* add more queries (127 instead of 118)
             start_time = time.time()
             leave = self.env['hr.leave'].create({
                 'name': 'Test',
@@ -489,10 +489,15 @@ class TestFrenchLeaves(TransactionCase):
 
     def test_leave_flexible_employee(self):
         self.company.resource_calendar_id = self.base_calendar
-        self.employee.write({
-            'resource_calendar_id': False,
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible',
+            'company_id': self.company.id,
+            'calendar_type': 'flexible',
             'hours_per_week': 40,
             'hours_per_day': 8,
+        })
+        self.employee.write({
+            'resource_calendar_id': flexible_calendar.id,
         })
         self.time_off_type.requires_allocation = True
         self.env['hr.leave.allocation'].with_company(self.company).create({

@@ -62,7 +62,7 @@ class HrAttendance(http.Controller):
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
-                'is_employee_single_checkin': not employee.version_id.is_flexible and employee.company_id.single_check_in,
+                'is_employee_single_checkin': not employee.version_id._is_flexible() and employee.company_id.single_check_in,
             }
         return response
 
