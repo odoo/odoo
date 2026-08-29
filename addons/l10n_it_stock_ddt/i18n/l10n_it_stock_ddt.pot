@@ -4,16 +4,38 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:04+0000\n"
-"PO-Revision-Date: 2025-12-16 19:04+0000\n"
+"POT-Creation-Date: 2026-08-28 18:21+0000\n"
+"PO-Revision-Date: 2026-08-28 18:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_it_stock_ddt
+#: model:ir.module.module,description:base.module_l10n_it_stock_ddt
+msgid ""
+"\n"
+"Documento di Trasporto (DDT)\n"
+"\n"
+"Whenever goods are transferred between A and B, the DDT serves\n"
+"as a legitimation e.g. when the police would stop you.\n"
+"\n"
+"When you want to print an outgoing picking in an Italian company,\n"
+"it will print you the DDT instead.  It is like the delivery\n"
+"slip, but it also contains the value of the product,\n"
+"the transportation reason, the carrier, ... which make it a DDT.\n"
+"\n"
+"We also use a separate sequence for the DDT as the number should not\n"
+"have any gaps and should only be applied at the moment the goods are sent.\n"
+"\n"
+"When invoices are related to their sale order and the sale order with the\n"
+"delivery, the system will automatically calculate the linked DDTs for every\n"
+"invoice line to export in the FatturaPA XML.\n"
+msgstr ""
 
 #. module: l10n_it_stock_ddt
 #. odoo-python
@@ -159,6 +181,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__id
 #: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type__id
 msgid "ID"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
+#: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
+msgid "Italy - Stock DDT"
 msgstr ""
 
 #. module: l10n_it_stock_ddt

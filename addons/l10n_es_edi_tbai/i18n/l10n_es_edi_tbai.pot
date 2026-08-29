@@ -4,16 +4,32 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1+e\n"
+"Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 18:21+0000\n"
-"PO-Revision-Date: 2026-06-12 18:21+0000\n"
+"POT-Creation-Date: 2026-08-28 18:19+0000\n"
+"PO-Revision-Date: 2026-08-28 18:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_es_edi_tbai
+#: model:ir.module.module,description:base.module_l10n_es_edi_tbai
+msgid ""
+"\n"
+"This module sends invoices and vendor bills to the \"Diputaciones\n"
+"Forales\" of Araba/Álava, Bizkaia and Gipuzkoa.\n"
+"\n"
+"Invoices and bills get converted to XML and regularly sent to the\n"
+"Basque government servers which provides them with a unique identifier.\n"
+"A hash chain ensures the continuous nature of the invoice/bill\n"
+"sequences. QR codes are added to emitted (sent/printed) invoices,\n"
+"bills and tickets to allow anyone to check they have been declared.\n"
+"\n"
+"You need to configure your certificate and the tax agency.\n"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__l10n_es_edi_tbai_document__state__accepted
@@ -488,6 +504,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/res_company.py:0
 msgid "Software version"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai
+msgid "Spain - TicketBAI"
 msgstr ""
 
 #. module: l10n_es_edi_tbai

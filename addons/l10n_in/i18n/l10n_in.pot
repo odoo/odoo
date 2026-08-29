@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 18:17+0000\n"
-"PO-Revision-Date: 2026-08-21 18:17+0000\n"
+"POT-Creation-Date: 2026-08-28 18:20+0000\n"
+"PO-Revision-Date: 2026-08-28 18:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,28 @@ msgid ""
 "        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.\n"
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.module.module,description:base.module_l10n_in
+msgid ""
+"\n"
+"Indian Accounting: Chart of Account.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of Accounts - Schedule VI.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_payment.py:0
+msgid " TDS amount: %s"
 msgstr ""
 
 #. module: l10n_in
@@ -79,12 +101,6 @@ msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.view_account_payment_form_inherit_l10n_in_withholding
-msgid "<span class=\"o_stat_text\">TDS</span>"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid ""
 "<span invisible=\"l10n_in_gstin_verified_date\">Not Checked</span>\n"
 "                            <span invisible=\"not l10n_in_gstin_verified_date\" class=\"ps-3\">Checked: </span>"
@@ -113,6 +129,11 @@ msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "<strong>Adjustment Type</strong>"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "<strong>PAYMENT QR CODE</strong>"
 msgstr ""
 
@@ -133,7 +154,6 @@ msgstr ""
 
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_account_account
-#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Account"
 msgstr ""
 
@@ -194,33 +214,10 @@ msgid "Add a payment QR-code to your invoices."
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__is_aggregate_limit
-msgid "Aggregate"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__aggregate_period
-msgid "Aggregate Period"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__aggregate_limit
-msgid "Aggregate limit"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_section_alert_aggregate_limit
-msgid "Aggregate limit must be positive"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__l10n_in_applicable_tds_tcs_section_ids
-msgid "Applicable TDS/TCS Sections"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
-msgid "Apply TDS"
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_adjustment_type
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_adjustment_type
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_reversal__l10n_in_adjustment_type
+msgid "Adjustment Type"
 msgstr ""
 
 #. module: l10n_in
@@ -328,12 +325,6 @@ msgid "Balance"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__base
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-msgid "Base Amount"
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Bill From:"
 msgstr ""
@@ -399,11 +390,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__sale_cdnr_sez_wp
 msgid "CDNR(SEZ-WP)"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_cdnur_overseas
-msgid "CDNUR Overseas"
 msgstr ""
 
 #. module: l10n_in
@@ -477,7 +463,6 @@ msgstr ""
 
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_res_company
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__company_id
 #: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_pan_entity__type__c
 msgid "Company"
 msgstr ""
@@ -502,11 +487,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
 "Connect to NIC (National Informatics Center) to submit invoices on posting."
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__consider_amount
-msgid "Consider"
 msgstr ""
 
 #. module: l10n_in
@@ -539,11 +519,6 @@ msgid "Country state"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.actions.act_window,name:l10n_in.l10n_in_withholding_entry_form_action
-msgid "Create TDS Entry"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model,website_form_label:l10n_in.model_res_partner
 msgid "Create a Customer"
 msgstr ""
@@ -551,38 +526,18 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__create_uid
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__create_uid
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_uid
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__create_date
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__create_date
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_date
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__create_date
 msgid "Created on"
 msgstr ""
 
 #. module: l10n_in
 #: model:iap.service,unit_name:l10n_in.iap_service_l10n_in_edi
 msgid "Credits"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__currency_id
-msgid "Currency"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "Customer Payment"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__date
-msgid "Date"
 msgstr ""
 
 #. module: l10n_in
@@ -605,14 +560,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_payment__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_report__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_iap_account__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__display_name
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__display_name
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_product_template__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__display_name
@@ -707,16 +662,12 @@ msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
-msgid ""
-"Enable this to activate the Tax Collected at Source (TCS) feature and the "
-"account-based TCS section suggestion."
+msgid "Enable this to activate the Tax Collected at Source (TCS) feature."
 msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
-msgid ""
-"Enable this to activate the Tax Deducted at Source (TDS) feature and the "
-"account-based TDS section suggestion."
+msgid "Enable this to activate the Tax Deducted at Source (TDS) feature."
 msgstr ""
 
 #. module: l10n_in
@@ -733,11 +684,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid "Ensure that the HSN/SAC Code consists either %s in invoice lines"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
-msgid "Entry Date"
 msgstr ""
 
 #. module: l10n_in
@@ -767,11 +713,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_fetch_vendor_edi_feature
 msgid "Fetch Vendor E-Invoiced Document"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__aggregate_period__fiscal_yearly
-msgid "Financial Yearly"
 msgstr ""
 
 #. module: l10n_in
@@ -978,11 +919,6 @@ msgid "Higher"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_withhold_wizard__tds_deduction__higher
-msgid "Higher Deduction"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_pan_entity__type__h
 msgid "Hindu Undivided Family"
 msgstr ""
@@ -998,14 +934,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_payment__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_report__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_in.field_iap_account__id
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__id
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__id
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__id
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__id
 #: model:ir.model.fields,field_description:l10n_in.field_product_template__id
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__id
@@ -1029,12 +965,7 @@ msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_imp_services
-msgid "IMP(service)"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_imp_services_rcm
-msgid "IMP(service) RCM"
+msgid "IMP(services-RCM)"
 msgstr ""
 
 #. module: l10n_in
@@ -1091,8 +1022,8 @@ msgid "India Port Code"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
-msgid "India TDS Control:"
+#: model:ir.module.module,shortdesc:base.module_l10n_in
+msgid "Indian - Accounting"
 msgstr ""
 
 #. module: l10n_in
@@ -1126,43 +1057,13 @@ msgid "Indian PAN Entity"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_withhold_move_ids
-msgid "Indian Payment TDS Entries"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_edi_production_env
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_edi_production_env
 msgid "Indian Production Environment"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withhold_move_ids
-#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withhold_move_ids
-msgid "Indian TDS Entries"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withholding_line_ids
-#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withholding_line_ids
-msgid "Indian TDS Lines"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_move_id
-#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withholding_ref_move_id
-msgid "Indian TDS Ref Move"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_payment_id
-#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withholding_ref_payment_id
-msgid "Indian TDS Ref Payment"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tax_type
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__l10n_in_tds_tax_type
 msgid "Indian Tax Type"
 msgstr ""
 
@@ -1213,39 +1114,23 @@ msgid "Invalid sequence as per GST rule 46(b)"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__related_move_id
-msgid "Invoice/Bill"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__message_is_follower
 msgid "Is Follower"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_is_withholding
-#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_is_withholding
-msgid "Is Indian TDS Entry"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/models/l10n_in_section_alert.py:0
-msgid ""
-"It's advisable to %(action)s %(section_type)s u/s %(warning)s on this "
-"transaction."
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_account_journal
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__journal_id
-#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Journal"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_move_reversal
+msgid "Journal Entry Reversal"
 msgstr ""
 
 #. module: l10n_in
@@ -1303,6 +1188,11 @@ msgid "L10N In Is Gst Registered Enabled"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_reversal__l10n_in_show_adjustment_type
+msgid "L10N In Show Adjustment Type"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_show_gstin_status
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_show_gstin_status
 msgid "L10N In Show Gstin Status"
@@ -1319,11 +1209,6 @@ msgid "L10N In Tds Feature Enabled"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_total_withholding_amount
-msgid "L10N In Total Withholding Amount"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_warning
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_warning
 msgid "L10N In Warning"
@@ -1337,16 +1222,12 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__write_uid
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__write_uid
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__write_uid
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__write_date
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__write_date
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__write_date
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1358,11 +1239,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_pan_entity__tds_deduction__lower
 msgid "Lower"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_withhold_wizard__tds_deduction__lower
-msgid "Lower Deduction"
 msgstr ""
 
 #. module: l10n_in
@@ -1408,11 +1284,6 @@ msgid "Micro"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__aggregate_period__monthly
-msgid "Monthly"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
@@ -1426,18 +1297,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/demo/account_demo.py:0
 msgid "NON-GST"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "Negative or zero values are not allowed in Base Amount for withhold"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "Negative or zero values are not allowed in TDS Amount for withhold"
 msgstr ""
 
 #. module: l10n_in
@@ -1473,11 +1332,6 @@ msgid "No"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_withhold_wizard__tds_deduction__no
-msgid "No Deduction"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__non_gst
 msgid "Non-GST"
 msgstr ""
@@ -1491,11 +1345,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_pan_entity__tds_deduction__normal
 msgid "Normal"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_withhold_wizard__tds_deduction__normal
-msgid "Normal Deduction"
 msgstr ""
 
 #. module: l10n_in
@@ -1613,24 +1462,13 @@ msgid "Partners"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_account_payment
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__related_payment_id
 msgid "Payment"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__is_per_transaction_limit
-msgid "Per Transaction"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__per_transaction_limit
-msgid "Per Transaction limit"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_section_alert_per_transaction_limit
-msgid "Per transaction limit must be positive"
 msgstr ""
 
 #. module: l10n_in
@@ -1657,12 +1495,6 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "Please configure the withholding account from the settings"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
 #: code:addons/l10n_in/models/res_config_settings.py:0
 msgid ""
 "Please ensure that at least one Indian service and production environment is"
@@ -1673,12 +1505,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/res_partner.py:0
 msgid "Please enter the GSTIN"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "Please set a partner on the %s before creating a withhold."
 msgstr ""
 
 #. module: l10n_in
@@ -1708,6 +1534,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_shipping_port_code_id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_shipping_port_code_id
 msgid "Port code"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_adjustment_type__price_adjustment
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_reversal__l10n_in_adjustment_type__price_adjustment
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Price Adjustment"
 msgstr ""
 
 #. module: l10n_in
@@ -1753,23 +1586,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__rating_ids
 msgid "Ratings"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__reference
-msgid "Reference"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_payment_id
-#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_withholding_ref_payment_id
-msgid "Reference Payment for withholding entry"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_move_id
-#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_withholding_ref_move_id
-msgid "Reference move for withholding entry"
 msgstr ""
 
 #. module: l10n_in
@@ -1877,14 +1693,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
 msgid "Searching..."
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.actions.act_window,name:l10n_in.l10n_in_section_alert_action
-#: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_section_id
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_tree
-msgid "Section"
 msgstr ""
 
 #. module: l10n_in
@@ -2605,9 +2413,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__name
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
-msgid "Section Name"
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_adjustment_type
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_adjustment_type
+msgid ""
+"Select 'Standard' when quantity is affected.\n"
+"                Select 'Price Adjustment' when quantity is not affected."
 msgstr ""
 
 #. module: l10n_in
@@ -2690,6 +2500,12 @@ msgid "Special Economic Zone (SEZ)"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_adjustment_type__standard
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_reversal__l10n_in_adjustment_type__standard
+msgid "Standard"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__state_id
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_port_code_search_view
 msgid "State"
@@ -2720,7 +2536,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_tcs_feature
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_tcs_feature
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__tcs
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__tax_source_type__tcs
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "TCS"
 msgstr ""
@@ -2731,33 +2546,14 @@ msgid "TCS I.T. Act 25 Report"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_account__l10n_in_tds_tcs_section_id
-#: model:ir.model.fields,field_description:l10n_in.field_account_move_line__l10n_in_tds_tcs_section_id
-msgid "TCS/TDS Section"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_tds_feature_enabled
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_tds_feature_enabled
-#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_tds_feature_enabled
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tds_feature_enabled
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_tds_feature
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_tds_feature
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__tax_source_type__tds
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__tds
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "TDS"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_withholding_account_id
-#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_withholding_account_id
-msgid "TDS Account"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__amount
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-msgid "TDS Amount"
 msgstr ""
 
 #. module: l10n_in
@@ -2780,14 +2576,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_tds_deduction
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_tds_deduction
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__tds_deduction
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__tds_deduction
 msgid "TDS Deduction"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.view_account_payment_form_inherit_l10n_in_withholding
-msgid "TDS Entry"
 msgstr ""
 
 #. module: l10n_in
@@ -2796,61 +2585,9 @@ msgid "TDS I.T. Act 25 Report"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-msgid "TDS Information"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_withholding_journal_id
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_withholding_journal_id
 msgid "TDS Journal"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__tds_purchase
-msgid "TDS Purchase"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__tds_sale
-msgid "TDS Sale"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__tax_id
-#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
-msgid "TDS Section"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_move_line__l10n_in_withhold_tax_amount
-msgid "TDS Tax Amount"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "TDS created from"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid ""
-"TDS must be created from Posted Customer Invoices, Customer Credit Notes, "
-"Vendor Bills or Vendor Refunds."
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "TDS must be created from an Invoice or a Payment."
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "TDS of %s"
 msgstr ""
 
 #. module: l10n_in
@@ -2876,34 +2613,13 @@ msgid "TIN number-first two digits"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Tax Invoice"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__tax_source_type
-msgid "Tax Source Type"
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Taxable Value"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__l10n_in_section_tax_ids
-msgid "Taxes"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_is_withholding
-#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_is_withholding
-msgid "Technical field to identify Indian withholding entry"
 msgstr ""
 
 #. module: l10n_in
@@ -2914,12 +2630,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_port_code_code_uniq
 msgid "The Port Code must be unique!"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "The base amount of TDS is greater than the amount of the %s"
 msgstr ""
 
 #. module: l10n_in
@@ -2989,11 +2699,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
-msgid "Threshold limits"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_account_tax__l10n_in_reverse_charge
 msgid "Tick this if this tax is reverse charge. Only for Indian accounting"
 msgstr ""
@@ -3006,35 +2711,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
-msgid "Total"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__consider_amount__total_amount
-msgid "Total Amount"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_total_withholding_amount
-#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_total_withholding_amount
-msgid "Total Indian TDS Amount"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_total_withholding_amount
-#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_total_withholding_amount
-msgid "Total withholding amount for the move"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.actions.report,name:l10n_in.l10n_in_account_invoices_triplicate
 msgid "Triplicate (3 Copies)"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_pan_entity__type
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__type_name
 msgid "Type"
 msgstr ""
 
@@ -3089,11 +2771,6 @@ msgid "Unregistered Business"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__consider_amount__untaxed_amount
-msgid "Untaxed Amount"
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Use this if setup with Reseller(E-Commerce)."
 msgstr ""
@@ -3101,12 +2778,6 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Vendor Bill"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "Vendor Payment"
 msgstr ""
 
 #. module: l10n_in
@@ -3121,25 +2792,9 @@ msgid "View Journal Item(s)"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model,name:l10n_in.model_l10n_in_withhold_wizard
-msgid "Withhold Wizard"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__l10n_in_withholding_warning
-msgid "Withholding warning"
-msgstr ""
-
-#. module: l10n_in
 #. odoo-python
 #: code:addons/l10n_in/models/template_in.py:0
 msgid "Within %s"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid "You can only create a withhold for only one record at a time."
 msgstr ""
 
 #. module: l10n_in
@@ -3170,18 +2825,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_gst_tax_type__cgst
 msgid "cgst"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/models/l10n_in_section_alert.py:0
-msgid "collect"
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/models/l10n_in_section_alert.py:0
-msgid "deduct"
 msgstr ""
 
 #. module: l10n_in
@@ -3220,11 +2863,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_gst_tax_type__igst
 msgid "igst"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model,name:l10n_in.model_l10n_in_section_alert
-msgid "indian section alert"
 msgstr ""
 
 #. module: l10n_in

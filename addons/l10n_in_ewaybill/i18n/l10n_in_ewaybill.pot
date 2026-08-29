@@ -6,14 +6,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 18:17+0000\n"
-"PO-Revision-Date: 2026-08-07 18:17+0000\n"
+"POT-Creation-Date: 2026-08-28 18:20+0000\n"
+"PO-Revision-Date: 2026-08-28 18:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_in_ewaybill
+#: model:ir.module.module,description:base.module_l10n_in_ewaybill
+msgid ""
+"\n"
+"Indian - E-waybill\n"
+"====================================\n"
+"To submit E-waybill through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-waybill portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Indian Electronic WayBill or find \"E-waybill\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
+msgstr ""
 
 #. module: l10n_in_ewaybill
 #. odoo-python
@@ -1312,6 +1327,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_ewaybill
+#: model:ir.module.module,shortdesc:base.module_l10n_in_ewaybill
+msgid "Indian - E-waybill"
+msgstr ""
+
+#. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_bank_statement_line__l10n_in_ewaybill_name
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_move__l10n_in_ewaybill_name
 msgid "Indian Ewaybill Number"
@@ -2567,6 +2587,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
 msgid "This document is being sent by another process already."
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_ewaybill/models/account_move.py:0
+msgid ""
+"This documents (%s) cannot be deleted since it already has a generated "
+"E-waybill."
 msgstr ""
 
 #. module: l10n_in_ewaybill

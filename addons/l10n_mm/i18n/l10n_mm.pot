@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 18:18+0000\n"
-"PO-Revision-Date: 2026-08-07 18:18+0000\n"
+"POT-Creation-Date: 2026-08-28 18:21+0000\n"
+"PO-Revision-Date: 2026-08-28 18:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,28 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_mm
+#: model:ir.module.module,description:base.module_l10n_mm
+msgid ""
+"\n"
+"Chart Of Account and Taxes for Myanmar.\n"
+msgstr ""
+
+#. module: l10n_mm
 #: model:ir.model,name:l10n_mm.model_account_chart_template
 msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_mm
+#: model:ir.model.fields,field_description:l10n_mm.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:l10n_mm.field_res_partner_bank__proxy_type
+msgid "Account Identifier Type"
+msgstr ""
+
+#. module: l10n_mm
+#: model_terms:ir.ui.view,arch_db:l10n_mm.res_config_settings_view_form
+msgid ""
+"Add a QR-code to your invoices so that your customers can pay instantly with"
+" their mobile banking or e-wallet application."
 msgstr ""
 
 #. module: l10n_mm
@@ -60,6 +80,13 @@ msgid "ID"
 msgstr ""
 
 #. module: l10n_mm
+#. odoo-python
+#: code:addons/l10n_mm/models/res_bank.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_mm.res_config_settings_view_form
+msgid "MMQR Code"
+msgstr ""
+
+#. module: l10n_mm
 #: model:ir.model.fields,field_description:l10n_mm.field_account_setup_bank_manual_config__l10n_mm_merchant_city
 #: model:ir.model.fields,field_description:l10n_mm.field_res_partner_bank__l10n_mm_merchant_city
 msgid "Merchant City (Myanmar Unicode)"
@@ -91,9 +118,8 @@ msgid "Missing Merchant Name (Myanmar Unicode)."
 msgstr ""
 
 #. module: l10n_mm
-#: model:ir.model.fields,field_description:l10n_mm.field_account_setup_bank_manual_config__proxy_type
-#: model:ir.model.fields,field_description:l10n_mm.field_res_partner_bank__proxy_type
-msgid "Proxy Type"
+#: model:ir.module.module,shortdesc:base.module_l10n_mm
+msgid "Myanmar - Accounting"
 msgstr ""
 
 #. module: l10n_mm
@@ -123,5 +149,13 @@ msgstr ""
 #. module: l10n_mm
 #. odoo-python
 #: code:addons/l10n_mm/models/res_bank.py:0
-msgid "The proxy type of an MMQR code must be a Merchant ID."
+msgid "The account identifier type of an MMQR code must be a Merchant ID."
+msgstr ""
+
+#. module: l10n_mm
+#: model:ir.model.fields,help:l10n_mm.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,help:l10n_mm.field_res_partner_bank__proxy_type
+msgid ""
+"The identification method linked to this bank account (e.g., Mobile Number, "
+"Company ID) used to route QR payments to this account."
 msgstr ""
