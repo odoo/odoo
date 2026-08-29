@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="chatter_reducer.ChatterToggleTabs">
+        <div t-if="this.chatterPresent() and !this.hidden()" class="o_chatter_reducer_tab o_chatter_reducer_close_tab"
+             t-on-click="() => this.toggle()" title="Hide chatter">
+            <i class="fa fa-chevron-right"/>
+        </div>
+        <div t-if="this.chatterPresent() and this.hidden()" class="o_chatter_reducer_tab o_chatter_reducer_reopen_tab"
+             t-on-click="() => this.toggle()" title="Show chatter">
+            <i class="fa fa-chevron-left"/>
+        </div>
+    </t>
+</templates>
