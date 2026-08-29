@@ -184,3 +184,9 @@ class TestAddressExtendedOnchanges(TransactionCase):
         partner._onchange_city_id()
         self.assertEqual(partner.zip, "12345")
         self.assertEqual(partner.state_id, self.state)
+
+    def test_city_formatted_display_name_shows_state(self):
+        """The formatted display name appends the state, to tell homonyms apart."""
+        formatted = self.city.with_context(formatted_display_name=True).display_name
+        self.assertEqual(formatted, f"Springfield (62701) \t --{self.state.name}--")
+        self.assertEqual(self.city.display_name, "Springfield (62701)")

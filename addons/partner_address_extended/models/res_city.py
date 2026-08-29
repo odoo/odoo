@@ -30,8 +30,13 @@ class ResCity(models.Model):
         message="A city with this name, zip code, state and country already exists.",
     )
 
-    @api.depends("zipcode")
+    @api.depends("zipcode", "state_id")
+    @api.depends_context("formatted_display_name")
     def _compute_display_name(self):
+        formatted = self.env.context.get("formatted_display_name")
         for city in self:
             name = city.name if not city.zipcode else f"{city.name} ({city.zipcode})"
-            city.display_name = name
+            if formatted and city.state_id:
+                city.display_name = f"{name} \t --{city.state_id.name}--"
+            else:
+                city.display_name = name
