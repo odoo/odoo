@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-08-21 10:24+0000\n"
+"POT-Creation-Date: 2026-08-25 21:57+0000\n"
+"PO-Revision-Date: 2026-08-24 04:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "purchase/ja/>\n"
@@ -34,8 +34,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('ドラフト', '送信済') および '見積依頼 - "
-"%s' % (object.name) または\n"
+"                (object.state in ('下書き', '送信済') および '見積依頼 - %s' "
+"% (object.name) または\n"
 "                '購買オーダ - %s' % (object.name))"
 
 #. module: purchase
@@ -753,7 +753,7 @@ msgstr "すべてのオーダまでの日数"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Draft RFQs"
-msgstr "すべてのドラフト見積依頼書"
+msgstr "すべての下書き見積依頼書"
 
 #. module: purchase
 #. odoo-javascript
@@ -1389,7 +1389,7 @@ msgstr "前受金"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
-msgstr "ドラフト見積依頼書"
+msgstr "下書き見積依頼書"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1940,7 +1940,7 @@ msgstr "自分のオーダまでの日数"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Draft RFQs"
-msgstr "自分のドラフトRFQ"
+msgstr "自分の下書きRFQ"
 
 #. module: purchase
 #. odoo-javascript
@@ -2508,6 +2508,7 @@ msgstr "購買オーダ数"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -3012,7 +3013,7 @@ msgstr "シーケンス"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr "ドラフトに設定"
+msgstr "下書きに設定"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
@@ -3545,7 +3546,7 @@ msgid ""
 "                    document in Odoo."
 msgstr ""
 "仕入先請求書は、発注書または領収書に基づいて事前に生成できます。これにより、"
-"Odooのドラフト文書に従って、ベンダーから受け取る請求書を管理できます。"
+"Odooの下書き文書に従って、ベンダーから受け取る請求書を管理できます。"
 
 #. module: purchase
 #. odoo-python

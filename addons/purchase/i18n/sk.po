@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-08-25 21:57+0000\n"
 "PO-Revision-Date: 2026-06-12 13:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -19,8 +19,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
-"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
@@ -159,8 +159,8 @@ msgstr ""
 "        </t>\n"
 "        je očakávaná \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">5. 5.2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">5. 5.2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">neurčené</span>.\n"
@@ -240,13 +240,14 @@ msgstr ""
 "        V prílohe nájdete objednávku <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            s referenciou: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            s referenciou: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        na sumu <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10,00</span>\n"
-"        od spoločnosti <t t-out=\"object.company_id.name or ''\">"
-"YourCompany</t>. \n"
+"        na sumu <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10,00</span>\n"
+"        od spoločnosti <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
 "            Dodanie sa očakáva <span style=\"font-weight:bold;\" t-"
@@ -315,11 +316,11 @@ msgstr ""
 "        V prílohe nájdete žiadosť o cenovú ponuku <span style=\"font-"
 "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            s referenciou: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            s referenciou: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        od spoločnosti <t t-out=\"object.company_id.name or ''\">"
-"YourCompany</t>.\n"
+"        od spoločnosti <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Ak máte akékoľvek otázky, neváhajte nás kontaktovať.\n"
 "        <br/><br/>\n"
@@ -425,8 +426,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Žiadosť o cenovú ponuku </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Žiadosť o cenovú ponuku </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Nákupná objednávka </span>"
 
@@ -2440,7 +2441,8 @@ msgstr "URL portálového prístupu"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #, fuzzy
 msgid "Preview the reminder email by sending it to yourself."
-msgstr "Zobraziť náhľad e-mailu s pripomienkou tak, že si ho pošlete sami sebe."
+msgstr ""
+"Zobraziť náhľad e-mailu s pripomienkou tak, že si ho pošlete sami sebe."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -2674,6 +2676,7 @@ msgstr "Počet nákupných objednávok"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -3243,7 +3246,8 @@ msgstr "Zobraziť porovnanie"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr "Zobraziť všetky záznamy, kde dátum nasledujúcej aktivity je v minulosti"
+msgstr ""
+"Zobraziť všetky záznamy, kde dátum nasledujúcej aktivity je v minulosti"
 
 #. module: purchase
 #. odoo-python
@@ -3461,7 +3465,8 @@ msgstr "Aktuálne neexistujú žiadne žiadosti o cenovú ponuku pre váš úče
 #, fuzzy
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
-msgstr "Na nákupnú objednávku nie sú žiadne produkty na pridanie. Ide o zálohy?"
+msgstr ""
+"Na nákupnú objednávku nie sú žiadne produkty na pridanie. Ide o zálohy?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all

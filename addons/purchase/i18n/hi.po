@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-08-25 21:57+0000\n"
 "PO-Revision-Date: 2026-06-12 13:46+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -33,8 +33,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('ड्राफ़्ट', 'भेजा गया') और 'कोटेशन के लिए "
-"अनुरोध - %s' % (object.name) या\n"
+"                (object.state in ('ड्राफ़्ट', 'भेजा गया') और 'कोटेशन के लिए अनुरोध "
+"- %s' % (object.name) या\n"
 "                'परचेज़ ऑर्डर - %s' % (object.name))"
 
 #. module: purchase
@@ -77,8 +77,7 @@ msgstr ""
 msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
-msgstr ""
-", यह 100% मुफ़्त है! आप शानदार कोटेशन बनाने में समय बचाएंगे और सेल्स को ट्रैक करेंगे।"
+msgstr ", यह 100% मुफ़्त है! आप शानदार कोटेशन बनाने में समय बचाएंगे और सेल्स को ट्रैक करेंगे।"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -159,8 +158,9 @@ msgstr ""
 "        </t>\n"
 "        की डिलीवरी \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span> पर मिलने वाली है.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span> पर मिलने "
+"वाली है.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">तय नहीं</span>.\n"
@@ -241,10 +241,11 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            रेफ़रेंस: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        जिसकी कुल राशि <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        है, जो <t t-out=\"object.company_id.name or ''\">YourCompany</t> से है. "
-"\n"
+"        जिसकी कुल राशि <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
+"        है, जो <t t-out=\"object.company_id.name or ''\">YourCompany</t> से "
+"है. \n"
 "       <br/><br/> \n"
 "       <t t-if=\"object.date_planned\"> \n"
 "            रसीद मिलने की उम्मीद <span style=\"font-weight:bold;\" t-"
@@ -316,8 +317,8 @@ msgstr ""
 "        यह एक कोटेशन के लिए अनुरोध <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            है जिसका रेफ़रेंस नंबर है: <t t-out=\"object.partner_ref or ''\">"
-"REF_XXX</t>\n"
+"            है जिसका रेफ़रेंस नंबर है: <t t-out=\"object.partner_ref or "
+"''\">REF_XXX</t>\n"
 "        </t>\n"
 "        . इसको <t t-out=\"object.company_id.name or ''\">YourCompany</t> की "
 "तरफ़ से भेजा गया है.\n"
@@ -427,8 +428,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"कोटेशन के लिए अनुरोध </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">कोटेशन के लिए अनुरोध </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">परचेज़ ऑर्डर</span>"
 
@@ -880,8 +881,8 @@ msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
 msgstr ""
-"परचेज़ ऑर्डर की हर लाइन के लिए प्लानिंग की तारीख और ऑर्डर करने की तारीख के बीच की अवधि"
-"।"
+"परचेज़ ऑर्डर की हर लाइन के लिए प्लानिंग की तारीख और ऑर्डर करने की तारीख के बीच की "
+"अवधि।"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
@@ -2292,8 +2293,7 @@ msgstr "कार्रवाई की संख्या"
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 #, fuzzy
 msgid "Number of days to send reminder email before the promised receipt date"
-msgstr ""
-"तय डिलीवरी तारीख से कितने दिन पहले वेंडर को याद दिलाने वाला ईमेल भेजा जाए"
+msgstr "तय डिलीवरी तारीख से कितने दिन पहले वेंडर को याद दिलाने वाला ईमेल भेजा जाए"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -2730,6 +2730,7 @@ msgstr "परचेज़ ऑर्डर काउंट"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2830,8 +2831,7 @@ msgstr "परचेज़ के लिए रिमाइंडर"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #, fuzzy
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr ""
-"विशेषताओं (जैसे आकार, रंग, वगैरह) का उपयोग करके प्रॉडक्ट के अलग-अलग वैरिएंट खरीदें"
+msgstr "विशेषताओं (जैसे आकार, रंग, वगैरह) का उपयोग करके प्रॉडक्ट के अलग-अलग वैरिएंट खरीदें"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -3109,8 +3109,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #, fuzzy
 msgid "Request managers to approve orders above a minimum amount"
-msgstr ""
-"एक न्यूनतम राशि से ऊपर के ऑर्डर को मंजूरी देने के लिए मैनेजरों से अनुरोध करें"
+msgstr "एक न्यूनतम राशि से ऊपर के ऑर्डर को मंजूरी देने के लिए मैनेजरों से अनुरोध करें"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -3524,8 +3523,7 @@ msgstr "वर्तमान में आपके खाते के लि�
 #, fuzzy
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
-msgstr ""
-"परचेज़ ऑर्डर में जोड़ने के लिए कोई प्रॉडक्ट नहीं हैं. क्या ये डाउन पेमेंट हैं?"
+msgstr "परचेज़ ऑर्डर में जोड़ने के लिए कोई प्रॉडक्ट नहीं हैं. क्या ये डाउन पेमेंट हैं?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3696,8 +3694,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #, fuzzy
 msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
-msgstr ""
-"परचेज़ ऑर्डर को रद्द नहीं किया जा सकता: %s . आपको पहले उन्हें अनलॉक करना होगा।"
+msgstr "परचेज़ ऑर्डर को रद्द नहीं किया जा सकता: %s . आपको पहले उन्हें अनलॉक करना होगा।"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
@@ -3975,8 +3972,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 #, fuzzy
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr ""
-"आप किसी वेंडर को उसके नाम, TIN, ईमेल या इंटरनल रेफ़रेंस से ढूंढ सकते हैं।"
+msgstr "आप किसी वेंडर को उसके नाम, TIN, ईमेल या इंटरनल रेफ़रेंस से ढूंढ सकते हैं।"
 
 #. module: purchase
 #. odoo-javascript
