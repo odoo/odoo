@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 01:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -153,9 +153,10 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-#, fuzzy
-msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
-msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Sevimli ma'ruzalar"
+msgid ""
+"<i class=\"oi oi-filled mx-2 text-muted\" data-icon=\"notifications\"/> "
+"Favorite Talks"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
@@ -164,26 +165,15 @@ msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-#, fuzzy
-msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
-msgstr "<span class=\"fa fa-plus me-1\"/> Ma'ruzalarni jadvallash"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-#, fuzzy
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" "
+"                                    <i class=\"oi mr4\" data-icon=\"close\" "
 "role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
 "                                    <span "
 "class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
-"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\"> <i "
-"class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Xato\" title=\"Xato\"/> "
-"<span class=\"o_wetrack_proposal_error_message\"/> </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -204,6 +194,12 @@ msgid ""
 msgstr ""
 "<span class=\"o_wetrack_proposal_label_content\">Suhbat sarlavhasi</span> "
 "<span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Schedule Tracks"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
@@ -756,6 +752,11 @@ msgstr "Suhbat eslatmasini qo‘shish: {{ object.name }}"
 #, fuzzy
 msgid "Add this talk to your agenda ?"
 msgstr "Bu suhbatni kun tartibingizga qo‘shmoqchimisiz?"
+
+#. module: website_event_track
+#: model:ir.module.module,shortdesc:base.module_website_event_track
+msgid "Advanced Events"
+msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -1554,12 +1555,6 @@ msgid "Followers (Partners)"
 msgstr "Kuzatuvchilar (hamkorlar)"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
-#, fuzzy
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome belgisi, masalan fa-tasks"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__footer_visible
 #, fuzzy
 msgid "Footer Visible"
@@ -2155,6 +2150,11 @@ msgstr ""
 "xonalar, kanallar va boshqalar)."
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 #, fuzzy
 msgid "Medium"
@@ -2362,6 +2362,60 @@ msgstr "Yetkazib berishda xato bo‘lgan xabarlar soni"
 #, fuzzy
 msgid "Old is New"
 msgstr "Eski yangidir"
+
+#. module: website_event_track
+#: model:ir.module.module,description:base.module_website_event_track
+msgid ""
+"Organize Events, Trainings & Webinars\n"
+"-------------------------------------\n"
+"\n"
+"### Schedule, Promote, Sell, Organize\n"
+"\n"
+"Get extra features per event; multiple pages, sponsors, multiple talks, talk "
+"proposal form, agenda, event-related news, documents (slides of "
+"presentations), event-specific menus.\n"
+"\n"
+"Organize Your Tracks\n"
+"--------------------\n"
+"\n"
+"### From the talk proposal to the publication\n"
+"\n"
+"Add a talk proposal form on your events to allow visitors to submit talks "
+"and speakers. Organize the validation process of every talk, and schedule "
+"easily.\n"
+"\n"
+"Odoo's unique frontend and backend integration makes organization and "
+"publication so easy. Easily design beautiful speaker biographies and talks "
+"description.\n"
+"\n"
+"Agenda and List of Talks\n"
+"------------------------\n"
+"\n"
+"### A strong user interface\n"
+"\n"
+"Get a beautiful agenda for each event published automatically on your "
+"website. Allow your visitors to easily search and browse talks, filter by "
+"tags, locations or speakers.\n"
+"\n"
+"Manage Sponsors\n"
+"---------------\n"
+"\n"
+"### Sell sponsorship, promote your sponsors\n"
+"\n"
+"Add sponsors to your events and publish sponsors per level (e.g. bronze, "
+"silver, gold) on the bottom of every page of the event.\n"
+"\n"
+"Sell sponsorship packages online through the Odoo eCommerce for a full sales "
+"cycle integration.\n"
+"\n"
+"Communicate Efficiently\n"
+"-----------------------\n"
+"\n"
+"### Activate a blog for some events\n"
+"\n"
+"You can activate a blog for each event allowing you to communicate on "
+"specific events. Visitors can subscribe to news to get informed."
+msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
@@ -2707,6 +2761,11 @@ msgstr "Notiq profili"
 #, fuzzy
 msgid "Speakers"
 msgstr "Notiqlar"
+
+#. module: website_event_track
+#: model:ir.module.module,summary:base.module_website_event_track
+msgid "Sponsors, Tracks, Agenda, Event News"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -3665,6 +3724,32 @@ msgstr ""
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "x"
 msgstr ""
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
+#~ msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Sevimli ma'ruzalar"
+
+#, fuzzy
+#~ msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
+#~ msgstr "<span class=\"fa fa-plus me-1\"/> Ma'ruzalarni jadvallash"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+#~ "                                    <i class=\"fa fa-close mr4\" "
+#~ "role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+#~ "                                    <span "
+#~ "class=\"o_wetrack_proposal_error_message\"/>\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\"> "
+#~ "<i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Xato\" "
+#~ "title=\"Xato\"/> <span class=\"o_wetrack_proposal_error_message\"/> </"
+#~ "span>"
+
+#, fuzzy
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Font awesome belgisi, masalan fa-tasks"
 
 #, fuzzy
 #~ msgid "Website Messages"

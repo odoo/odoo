@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 23:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -33,6 +33,7 @@ msgstr "Archivos adjuntos"
 
 #. module: cloud_storage
 #: model:ir.model.fields.selection,name:cloud_storage.selection__ir_attachment__type__cloud_storage
+#: model:ir.module.module,shortdesc:base.module_cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Cloud Storage"
 msgstr "Almacenamiento en la nube"
@@ -80,8 +81,8 @@ msgstr "Nombre para mostrar"
 msgid ""
 "Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
 msgstr ""
-"Ocurrió un error al descargar el archivo adjunto (%(id)s) de la nube: %(code)"
-"s - %(reason)s"
+"Ocurrió un error al descargar el archivo adjunto (%(id)s) de la nube: %"
+"(code)s - %(reason)s"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
@@ -127,6 +128,11 @@ msgid "Select the cloud storage provider to store new attachments."
 msgstr ""
 "Seleccione el proveedor de almacenamiento en la nube para almacenar los "
 "nuevos archivos adjuntos."
+
+#. module: cloud_storage
+#: model:ir.module.module,summary:base.module_cloud_storage
+msgid "Store chatter attachments in the cloud"
+msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 20:39+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -24,6 +24,21 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_presence
+#: model:ir.module.module,description:base.module_hr_presence
+msgid ""
+"\n"
+"Control Employees Presence\n"
+"==========================\n"
+"\n"
+"Based on:\n"
+"    * The IP Address\n"
+"    * The User's Session\n"
+"    * The Sent Emails\n"
+"\n"
+"Allows to contact directly the employee in case of unjustified absence.\n"
+msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -44,8 +59,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    亲爱的<t t-out=\"object.name or ''\">Abigail Peterson</t>"
-"，<br/><br/>\n"
+"                    亲爱的<t t-out=\"object.name or ''\">Abigail Peterson</"
+"t>，<br/><br/>\n"
 "希望您一切安好。我们注意到您目前没有上班，而系统并没有您的请假记录。如果您的"
 "缺勤是由于我们的疏忽造成的，我们诚挚地向您道歉。\n"
 "请采取必要的措施，处理这次意外缺勤。如果您有任何疑问或需要帮助，请尽早联系您"
@@ -95,6 +110,11 @@ msgstr "已发送邮件"
 #: model:ir.model,name:hr_presence.model_hr_employee
 msgid "Employee"
 msgstr "员工"
+
+#. module: hr_presence
+#: model:ir.module.module,shortdesc:base.module_hr_presence
+msgid "Employee Presence Control"
+msgstr ""
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence

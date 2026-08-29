@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 23:19+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
@@ -20,10 +20,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: barcodes
@@ -48,8 +48,8 @@ msgstr ""
 "та сортуватися.\n"
 "Просканований штрих-код пов'язується з <i>першим</i> правилом відповідним "
 "шаблоном.\n"
-"Синтаксис шаблона належить до регулярних виразів, а штрих-коди співпадають, "
-"\n"
+"Синтаксис шаблона належить до регулярних виразів, а штрих-коди "
+"співпадають, \n"
 "якщо регулярний вираз співпадає з префіксом штрих-кода."
 
 #. module: barcodes
@@ -101,6 +101,7 @@ msgstr ""
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+#: model:ir.module.module,shortdesc:base.module_barcodes
 msgid "Barcode"
 msgstr "Штрих-код"
 
@@ -248,8 +249,8 @@ msgstr ""
 "плаваючою точкою також підтримуються \n"
 "десятковими дробами, позначеними D, наприклад <code>{NNNDD}</code>. У такому "
 "випадку\n"
-"                                поле штрих-коду на пов'язаних записах <i>"
-"має</i> показувати ці цифри як\n"
+"                                поле штрих-коду на пов'язаних записах "
+"<i>має</i> показувати ці цифри як\n"
 "                                нулі."
 
 #. module: barcodes
@@ -267,6 +268,11 @@ msgstr "Назва правила"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
 msgstr "Правила"
+
+#. module: barcodes
+#: model:ir.module.module,summary:base.module_barcodes
+msgid "Scan and Parse Barcodes"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence

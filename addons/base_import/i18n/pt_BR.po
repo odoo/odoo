@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 03:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -24,6 +24,31 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: base_import
+#: model:ir.module.module,description:base.module_base_import
+msgid ""
+"\n"
+"New extensible file import for Odoo\n"
+"======================================\n"
+"\n"
+"Re-implement Odoo's file import system:\n"
+"\n"
+"* Server side, the previous system forces most of the logic into the\n"
+"  client which duplicates the effort (between clients), makes the\n"
+"  import system much harder to use without a client (direct RPC or\n"
+"  other forms of automation) and makes knowledge about the\n"
+"  import/export system much harder to gather as it is spread over\n"
+"  3+ different projects.\n"
+"\n"
+"* In a more extensible manner, so users and partners can build their\n"
+"  own front-end to import from other file formats (e.g. OpenDocument\n"
+"  files) which may be simpler to handle in their work flow or from\n"
+"  their data production sources.\n"
+"\n"
+"* In a module, so that administrators and users of Odoo who do not\n"
+"  need or want an online import can avoid it being available to users.\n"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -101,6 +126,11 @@ msgid "Base Import Mapping"
 msgstr "Mapeamento da importação de base"
 
 #. module: base_import
+#: model:ir.module.module,shortdesc:base.module_base_import
+msgid "Base import"
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
@@ -165,8 +195,8 @@ msgstr "Vírgula"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Não foi possível recuperar a URL: %(url)s [%(field_name)s: L%(line_number)"
-"d]: %(error)s"
+"Não foi possível recuperar a URL: %(url)s [%(field_name)s: L%"
+"(line_number)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -438,15 +468,6 @@ msgstr ""
 "especialmente quando o arquivo tem muitas colunas."
 
 #. module: base_import
-#. odoo-python
-#: code:addons/base_import/models/base_import.py:0
-msgid ""
-"Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
-"O tamanho da imagem excede o limite. As imagens importadas devem ser menores "
-"que 42 milhões de pixels"
-
-#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
@@ -491,9 +512,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"Formato de célula inválido na linha %(row)s, colunas %(col)s: %(cell_value)"
-"s, com formatos: %(cell_format)s, pois formatos (%(format_type)s) não são "
-"suportados."
+"Formato de célula inválido na linha %(row)s, colunas %(col)s: %"
+"(cell_value)s, com formatos: %(cell_format)s, pois formatos (%"
+"(format_type)s) não são suportados."
 
 #. module: base_import
 #. odoo-python
@@ -501,6 +522,18 @@ msgstr ""
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
 "Valor de célula inválido na linha %(row)s, coluna %(col)s: %(cell_value)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Lang:"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Language"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -649,6 +682,12 @@ msgstr "Retomar"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
 msgstr "Pesquisar um campo..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Search a language..."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -808,8 +847,8 @@ msgstr ""
 msgid ""
 "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
-"Não foi possível carregar o arquivo \"{extension}\": o módulo Python \""
-"{modname}\" é necessário"
+"Não foi possível carregar o arquivo \"{extension}\": o módulo Python "
+"\"{modname}\" é necessário"
 
 #. module: base_import
 #. odoo-python
@@ -970,3 +1009,10 @@ msgstr "segundos"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "código de erro desconhecido %s"
+
+#~ msgid ""
+#~ "Image size excessive, imported images must be smaller than 42 million "
+#~ "pixel"
+#~ msgstr ""
+#~ "O tamanho da imagem excede o limite. As imagens importadas devem ser "
+#~ "menores que 42 milhões de pixels"

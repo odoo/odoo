@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-22 00:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/uom/"
@@ -25,6 +25,14 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: uom
+#: model:ir.module.module,description:base.module_uom
+msgid ""
+"\n"
+"This is the base module for managing Units of measure.\n"
+"========================================================================\n"
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
 msgstr "絶対数量"
@@ -35,7 +43,7 @@ msgid "Active"
 msgstr "有効"
 
 #. module: uom
-#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+#: model_terms:ir.actions.act_window,help:uom.uom_uom_action_list
 msgid "Add a new unit of measure"
 msgstr "新しい単位を追加"
 
@@ -84,7 +92,8 @@ msgstr "時間"
 msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
-msgstr "この単位が、この単位の基準単位と比較して、どの程度大きいか、または小さいか"
+msgstr ""
+"この単位が、この単位の基準単位と比較して、どの程度大きいか、または小さいか"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
@@ -144,7 +153,7 @@ msgid "Product Unit of Measure"
 msgstr "プロダクト単位"
 
 #. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_form
 msgid "Quantity"
 msgstr "数量"
 
@@ -157,7 +166,7 @@ msgstr "数量フィールド名"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_form
 msgid "Reference Unit"
 msgstr "参照単位"
 
@@ -221,7 +230,8 @@ msgstr ""
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr "有効項目のチェックを外すことで、単位を削除することなく非表示にできます。"
+msgstr ""
+"有効項目のチェックを外すことで、単位を削除することなく非表示にできます。"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
@@ -234,15 +244,20 @@ msgid "Units"
 msgstr "個"
 
 #. module: uom
-#: model:ir.actions.act_window,name:uom.product_uom_form_action
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
+#: model:ir.actions.act_window,name:uom.uom_uom_action_list
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_list
 msgid "Units & Packagings"
 msgstr "単位 & パッケージング"
 
 #. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_form
 msgid "Units of Measure"
 msgstr "単位"
+
+#. module: uom
+#: model:ir.module.module,shortdesc:base.module_uom
+msgid "Units of measure"
+msgstr ""
 
 #. module: uom
 #. odoo-javascript

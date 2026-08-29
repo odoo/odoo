@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 06:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -224,13 +224,13 @@ msgstr "(Inn"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-msgid "+ %d day(s)"
-msgstr "+ %d dag(er)"
+msgid "+ %d days"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-msgid "+ %s day(s)"
+msgid "+ %s days"
 msgstr ""
 
 #. module: mrp
@@ -279,38 +279,45 @@ msgid ":  hours"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid ""
-"<i class=\"fa fa-calendar-o mx-1 mt-1\" role=\"img\" title=\"Deadline\"/>"
+"<i class=\"oi me-1 my-auto\" data-icon=\"schedule\" title=\"planned date "
+"start\"/>"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"hourglass_bottom\" title=\"time remaining\"/"
+">"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
-"Availability\"/>"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"build\" role=\"img\" title=\"Child "
+"MO's\"/>"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
 msgid ""
-"<i class=\"fa fa-hourglass-half mx-1 mt-1\" role=\"img\" title=\"Remaining "
-"Time\"/>"
+"<i class=\"oi mx-1 mt-1\" data-icon=\"calendar_today\" role=\"img\" "
+"title=\"Deadline\"/>"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
-msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"hourglass_bottom\" role=\"img\" "
+"title=\"Remaining Time\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_card_view
+msgid ""
+"<i class=\"oi mx-1 mt-1\" data-icon=\"inventory_2\" role=\"img\" "
+"title=\"Components Availability\"/>"
 msgstr ""
 
 #. module: mrp
@@ -2362,6 +2369,8 @@ msgstr "Fullført"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_unbuild__state__draft
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Draft"
 msgstr "Utkast"
 
@@ -2595,14 +2604,6 @@ msgstr "Følgere"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome-ikon, for eksempel fa-tasks"
 
 #. module: mrp
 #. odoo-javascript
@@ -2882,6 +2883,13 @@ msgstr ""
 "produktet."
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
+msgid ""
+"If active, registering production on a work order will automatically unblock "
+"the next work order if it is blocked."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__message_needaction
@@ -3144,6 +3152,11 @@ msgid "Kit"
 msgstr "Sett"
 
 #. module: mrp
+#: model:ir.actions.server,name:mrp.action_print_labels
+msgid "Labels"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "Laptop"
 msgstr ""
@@ -3267,6 +3280,7 @@ msgstr "Lag som er satt sammen for å montere tre paneler."
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: code:addons/mrp/static/src/widgets/mrp_bom_popover.xml:0
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Lead Time"
 msgstr "Ledetid"
@@ -3520,6 +3534,7 @@ msgstr "Produsert siste 365 dager"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.actions.client,name:mrp.action_mrp_display_fullscreen
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__code__mrp_operation
+#: model:ir.module.module,shortdesc:base.module_mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 #: model:res.groups.privilege,name:mrp.res_groups_privilege_manufacturing
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
@@ -3581,6 +3596,11 @@ msgstr "Produksjonsordre"
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 msgid "Manufacturing Orders"
 msgstr "Produksjonsordre"
+
+#. module: mrp
+#: model:ir.module.module,summary:base.module_mrp
+msgid "Manufacturing Orders & BOMs"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3660,6 +3680,14 @@ msgstr "Master produksjonsplan"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
 msgstr "Material tilgjengelighet"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
@@ -3831,6 +3859,11 @@ msgstr "Oppsummering av neste aktivitet"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_type_id
 msgid "Next Activity Type"
 msgstr "Neste aktivitetstype"
+
+#. module: mrp
+#: model:res.groups.privilege,placeholder:mrp.res_groups_privilege_manufacturing
+msgid "No"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -4071,6 +4104,86 @@ msgstr "OEE"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee_target
 msgid "OEE Target"
 msgstr "OEE Mål"
+
+#. module: mrp
+#: model:ir.module.module,description:base.module_mrp
+msgid ""
+"Odoo Manufacturing Resource Planning\n"
+"------------------------------------\n"
+"\n"
+"Manage Bill of Materials, plan manufacturing orders, track work orders with "
+"the\n"
+"Odoo <a href=\"https://www.odoo.com/app/manufacturing\">Open Source MRP</a> "
+"app.\n"
+"\n"
+"Get all your assembly or manufacturing operations managed by Odoo. Schedule\n"
+"manufacturing orders and work orders automatically. Review the proposed\n"
+"planning with the smart kanban and gantt views. Use the advanced analytics\n"
+"features to detect bottleneck in resources capacities and inventory "
+"locations.\n"
+"\n"
+"Schedule Manufacturing Orders Efficiently\n"
+"-----------------------------------------\n"
+"\n"
+"Get manufacturing orders and work orders scheduled automatically based on "
+"your\n"
+"procurement rules, quantities forecasted and dependent demand (demand for "
+"this\n"
+"part based on another part consuming it).\n"
+"\n"
+"Define Flexible Master Data\n"
+"---------------------------\n"
+"\n"
+"Get the flexibility to create multi-level bill of materials, optional "
+"routing,\n"
+"version changes and phantom bill of materials. You can use BoM for kits or "
+"for\n"
+"manufacturing orders.\n"
+"\n"
+"Get Flexibility In All Operations\n"
+"---------------------------------\n"
+"\n"
+"Edit manually all proposed operations at any level of the progress. With "
+"Odoo,\n"
+"you will not be frustrated by a rigid system.\n"
+"\n"
+"Schedule Work Orders\n"
+"--------------------\n"
+"\n"
+"Check resources capacities and fix bottlenecks.  Define routings and plan "
+"the\n"
+"working time and capacity of your resources. Quickly identify resource\n"
+"requirements and bottlenecks to ensure your production meets your delivery\n"
+"schedule dates.\n"
+"\n"
+"\n"
+"A Productive User Interface\n"
+"---------------------------\n"
+"\n"
+"Organize manufacturing orders and work orders the way you like it. Process "
+"next\n"
+"orders from the list view, control in the calendar view and edit the "
+"proposed\n"
+"schedule in the Gantt view.\n"
+"\n"
+"\n"
+"Inventory & Manufacturing Analytics\n"
+"-----------------------------------\n"
+"\n"
+"Track the evolution of the stock value, according to the level of "
+"manufacturing\n"
+"activities as they progress in the transformation process.\n"
+"\n"
+"Fully Integrated with Operations\n"
+"--------------------------------\n"
+"\n"
+"Get your manufacturing resource planning accurate with it's full "
+"integration\n"
+"with sales and purchases apps. The accounting integration allows real time\n"
+"accounting valuation and deeper reporting on costs and revenues on your\n"
+"manufacturing operations.\n"
+"\n"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -4524,11 +4637,6 @@ msgstr ""
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Print"
 msgstr "Skriv ut"
-
-#. module: mrp
-#: model:ir.actions.server,name:mrp.action_print_labels
-msgid "Print Labels"
-msgstr "Print etiketter"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -5291,13 +5399,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__continuous
-msgid ""
-"Select to enable continuous production. When checked, operations will start "
-"as soon as some quantities are ready."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__sequence
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__sequence
@@ -5656,14 +5757,14 @@ msgid "Stock after Manufacturing Location"
 msgstr "Lagerbeholdning etter produksjonssted"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_replenishment_info
+msgid "Stock delivery time information"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Rapport for lagerregler"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_replenishment_info
-msgid "Stock supplier replenishment information"
-msgstr "Lagerleverandør påfyllingsinformasjon"
 
 #. module: mrp
 #. odoo-python
@@ -7306,6 +7407,18 @@ msgstr "faktisk varighet"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "splitte"
+
+#~ msgid "+ %d day(s)"
+#~ msgstr "+ %d dag(er)"
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Font Awesome-ikon, for eksempel fa-tasks"
+
+#~ msgid "Print Labels"
+#~ msgstr "Print etiketter"
+
+#~ msgid "Stock supplier replenishment information"
+#~ msgstr "Lagerleverandør påfyllingsinformasjon"
 
 #~ msgid "Allocation Report for Manufacturing Orders"
 #~ msgstr "Tildelingsrapport for MO"

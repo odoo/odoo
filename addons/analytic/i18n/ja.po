@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 06:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -29,10 +29,17 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: analytic
-#. odoo-python
-#: code:addons/analytic/models/analytic_account.py:0
-msgid "%s (copy)"
-msgstr "%s (コピー)"
+#: model:ir.module.module,description:base.module_analytic
+msgid ""
+"\n"
+"Module for defining analytic accounting object.\n"
+"===============================================\n"
+"\n"
+"In Odoo, analytic accounts are linked to general accounts but are treated\n"
+"totally independently. So, you can enter various different analytic "
+"operations\n"
+"that have no counterpart in the general financial accounts.\n"
+msgstr ""
 
 #. module: analytic
 #. odoo-python
@@ -57,8 +64,8 @@ msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
 msgstr ""
-"'プロジェクト'計画は存在する必要があり、そのIDはシステム変数におい"
-"て`analytic.project_plan` として設定される必要があります。"
+"'プロジェクト'計画は存在する必要があり、そのIDはシステム変数において"
+"`analytic.project_plan` として設定される必要があります。"
 
 #. module: analytic
 #. odoo-javascript
@@ -143,6 +150,7 @@ msgstr "分析勘定"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
+#: model:ir.module.module,shortdesc:base.module_analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "分析用会計"
@@ -583,8 +591,8 @@ msgid ""
 "                your margins easily."
 msgstr ""
 "Odooでは、販売オーダ、プロジェクトは分析勘定を使用します。\n"
-"                費用と収益を追跡して、簡単にマージンを分析することができます"
-"。"
+"                費用と収益を追跡して、簡単にマージンを分析することができま"
+"す。"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
@@ -895,8 +903,8 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "分析分配の対象となるパートナーを選択します（例：新規顧客請求書や販売オーダを"
-"作成する際に、このパートナーを選択すると、自動的に分析勘定として扱われます）"
-"。"
+"作成する際に、このパートナーを選択すると、自動的に分析勘定として扱われま"
+"す）。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -973,7 +981,8 @@ msgstr "全員に表示"
 msgid ""
 "Whoa there! Making this change would wipe out your current data. Let's avoid "
 "that, shall we?"
-msgstr "この処理を続行すると、現在のデータがすべて削除されます。よろしいですか？"
+msgstr ""
+"この処理を続行すると、現在のデータがすべて削除されます。よろしいですか？"
 
 #. module: analytic
 #. odoo-python
@@ -1005,3 +1014,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "例 プロジェクトXYZ"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (コピー)"

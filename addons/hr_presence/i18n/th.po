@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 02:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
@@ -18,6 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_presence
+#: model:ir.module.module,description:base.module_hr_presence
+msgid ""
+"\n"
+"Control Employees Presence\n"
+"==========================\n"
+"\n"
+"Based on:\n"
+"    * The IP Address\n"
+"    * The User's Session\n"
+"    * The Sent Emails\n"
+"\n"
+"Allows to contact directly the employee in case of unjustified absence.\n"
+msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -80,6 +95,11 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_presence
+#: model:ir.module.module,shortdesc:base.module_hr_presence
+msgid "Employee Presence Control"
+msgstr ""
+
+#. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
 msgstr "พนักงาน: แจ้งเตือนการเข้างาน"
@@ -101,8 +121,8 @@ msgid ""
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
-"สวัสดี เราสังเกตว่าคุณไม่ได้ทำงานและไม่ได้ส่งใบลางานมา หากนี่เป็นการกำกับดูแลจากเรา เราต้องขอ"
-"อภัยด้วย โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด ขอบคุณค่ะ"
+"สวัสดี เราสังเกตว่าคุณไม่ได้ทำงานและไม่ได้ส่งใบลางานมา หากนี่เป็นการกำกับดูแลจากเรา "
+"เราต้องขออภัยด้วย โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด ขอบคุณค่ะ"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -165,8 +185,7 @@ msgstr "ส่ง SMS"
 msgid ""
 "Sent manually in presence module when an employee wasn't working despite not "
 "being off"
-msgstr ""
-"ส่งด้วยตนเองในโมดูลการแสดงตน เมื่อพนักงานไม่ได้ทำงานแม้จะไม่ได้ลางานก็ตาม"
+msgstr "ส่งด้วยตนเองในโมดูลการแสดงตน เมื่อพนักงานไม่ได้ทำงานแม้จะไม่ได้ลางานก็ตาม"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
@@ -207,10 +226,11 @@ msgid ""
 "your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
-"เราทราบว่าขณะนี้คุณไม่ได้อยู่ที่ทำงาน และไม่มีบันทึกการขอลาจากคุณ เราขออภัยหากการขาดงานครั้งนี้เกิ"
-"ดจากความผิดพลาดของเรา\n"
-"โปรดดำเนินการตามขั้นตอนที่จำเป็นเพื่อจัดการกับการลางานโดยไม่ได้วางแผนนี้ หากคุณมีคำถามหรือต้องก"
-"ารความช่วยเหลือ โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด\n"
+"เราทราบว่าขณะนี้คุณไม่ได้อยู่ที่ทำงาน และไม่มีบันทึกการขอลาจากคุณ "
+"เราขออภัยหากการขาดงานครั้งนี้เกิดจากความผิดพลาดของเรา\n"
+"โปรดดำเนินการตามขั้นตอนที่จำเป็นเพื่อจัดการกับการลางานโดยไม่ได้วางแผนนี้ "
+"หากคุณมีคำถามหรือต้องการความช่วยเหลือ "
+"โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด\n"
 "ขอบคุณที่ให้ความสนใจในเรื่องนี้โดยเร็ว"
 
 #. module: hr_presence

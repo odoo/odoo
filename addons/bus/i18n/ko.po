@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 06:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/bus/"
@@ -62,6 +62,11 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Create Date"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,website_form_label:bus.model_res_partner
 msgid "Create a Customer"
 msgstr "고객 만들기"
@@ -70,11 +75,6 @@ msgstr "고객 만들기"
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "작성자"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
-msgid "Created on"
-msgstr "작성일자"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -130,6 +130,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: bus
+#: model:ir.module.module,shortdesc:base.module_bus
+msgid "IM Bus"
+msgstr ""
+
+#. module: bus
+#: model:ir.module.module,description:base.module_bus
+msgid "Instant Messaging Bus allow you to send messages to users, in live."
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
@@ -156,32 +166,15 @@ msgstr ""
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/services/bus_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "Refresh"
 msgstr "새로 고침"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid ""
-"Save your work and refresh to get the latest updates and avoid potential "
-"issues."
-msgstr ""
-"작업을 저장한 후 페이지를 새로고침하세요. 최신 업데이트가 적용되어 문제 발생"
-"을 사전에 예방합니다."
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "The page appears to be out of date."
 msgstr "페이지가 오래된 것 같습니다."
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid "The page is out of date"
-msgstr "페이지가 오래되었습니다."
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -207,11 +200,24 @@ msgid ""
 "users it is important to change it immediately for security reasons. I will "
 "keep nagging you about it!"
 msgstr ""
-"비밀번호는 기본(admin)입니다! 이 시스템이 신뢰할 수 없는 사용자에게 노출된 "
-"경우 보안상의 이유로 즉시 변경해야합니다. 나는 이 문제에 대해 계속 잔소리를 "
-"할겁니다!"
+"비밀번호는 기본(admin)입니다! 이 시스템이 신뢰할 수 없는 사용자에게 노출된 경"
+"우 보안상의 이유로 즉시 변경해야합니다. 나는 이 문제에 대해 계속 잔소리를 할"
+"겁니다!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
 msgstr "웹소켓 메시지 처리"
+
+#~ msgid "Created on"
+#~ msgstr "작성일자"
+
+#~ msgid ""
+#~ "Save your work and refresh to get the latest updates and avoid potential "
+#~ "issues."
+#~ msgstr ""
+#~ "작업을 저장한 후 페이지를 새로고침하세요. 최신 업데이트가 적용되어 문제 발"
+#~ "생을 사전에 예방합니다."
+
+#~ msgid "The page is out of date"
+#~ msgstr "페이지가 오래되었습니다."

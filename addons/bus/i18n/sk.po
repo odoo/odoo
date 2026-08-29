@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 20:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/bus/"
@@ -18,8 +18,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
-"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: bus
@@ -61,6 +61,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Create Date"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,website_form_label:bus.model_res_partner
 msgid "Create a Customer"
 msgstr ""
@@ -69,11 +74,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Vytvoril"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
-msgid "Created on"
-msgstr "Vytvorené"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -129,6 +129,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: bus
+#: model:ir.module.module,shortdesc:base.module_bus
+msgid "IM Bus"
+msgstr ""
+
+#. module: bus
+#: model:ir.module.module,description:base.module_bus
+msgid "Instant Messaging Bus allow you to send messages to users, in live."
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
@@ -155,30 +165,15 @@ msgstr ""
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/services/bus_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "Refresh"
 msgstr "Obnoviť"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid ""
-"Save your work and refresh to get the latest updates and avoid potential "
-"issues."
-msgstr ""
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "The page appears to be out of date."
 msgstr "Zdá sa, že stránka je zastaraná."
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid "The page is out of date"
-msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -209,3 +204,6 @@ msgstr ""
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#~ msgid "Created on"
+#~ msgstr "Vytvorené"

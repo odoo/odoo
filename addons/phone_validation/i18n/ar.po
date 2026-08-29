@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-19 06:54+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
@@ -22,6 +22,23 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: phone_validation
+#: model:ir.module.module,description:base.module_phone_validation
+msgid ""
+"\n"
+"Phone Numbers Validation\n"
+"========================\n"
+"\n"
+"This module adds the feature of validation and formatting phone numbers\n"
+"according to a destination country.\n"
+"\n"
+"It also adds phone blacklist management through a specific model storing\n"
+"blacklisted phone numbers.\n"
+"\n"
+"It adds mail.thread.phone mixin that handles sanitation and blacklist of\n"
+"records numbers. "
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python
@@ -367,6 +384,11 @@ msgid "Phone Number"
 msgstr "رقم الهاتف"
 
 #. module: phone_validation
+#: model:ir.module.module,shortdesc:base.module_phone_validation
+msgid "Phone Numbers Validation"
+msgstr ""
+
+#. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Please enter at least 3 characters when searching a Phone number."
@@ -396,7 +418,8 @@ msgstr "رقم هاتف سليم"
 #: code:addons/phone_validation/tools/phone_validation.py:0
 msgid ""
 "The phone number %s is invalid! Let's fix it - you are not dialing aliens."
-msgstr "رقم الهاتف %s غير صالح! فلنقم بتصحيحه - أنت لا تتصل بأشخاص من كوكب آخر."
+msgstr ""
+"رقم الهاتف %s غير صالح! فلنقم بتصحيحه - أنت لا تتصل بأشخاص من كوكب آخر."
 
 #. module: phone_validation
 #. odoo-python
@@ -421,14 +444,19 @@ msgid "User"
 msgstr "المستخدم"
 
 #. module: phone_validation
+#: model:ir.module.module,summary:base.module_phone_validation
+msgid "Validate and format phone numbers"
+msgstr ""
+
+#. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid ""
 "You do not have the access right to unblacklist phone numbers. Please "
 "contact your administrator."
 msgstr ""
-"لا تمتلك صلاحيات الوصول لإزالة أرقام الهواتف من القائمة السوداء. يرجى التواصل "
-"مع المدير."
+"لا تمتلك صلاحيات الوصول لإزالة أرقام الهواتف من القائمة السوداء. يرجى "
+"التواصل مع المدير."
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

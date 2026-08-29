@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 00:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -56,11 +56,12 @@ msgid ""
 "''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id."
-"website_absolute_url)\" t-attf-style=\"background-color: {{user.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{user.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -73,15 +74,17 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        親愛的 <t t-out=\"object.partner_id.name or '參加者' or ''\">參加者</"
 "t><br/><br/>\n"
-"        抱歉你未能通過認證，你現時不再是以下課程的成員： <t t-out=\"object."
-"slide_partner_id.channel_id.name or ''\">園藝基礎</t>。<br/><br/>\n"
+"        抱歉你未能通過認證，你現時不再是以下課程的成員： <t t-"
+"out=\"object.slide_partner_id.channel_id.name or ''\">園藝基礎</t>。<br/><br/"
+">\n"
 "        歡迎你再次報名參加！\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id."
-"website_absolute_url)\" t-attf-style=\"background-color: {{user.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{user.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                立即報名\n"
 "            </a>\n"
 "        </div>\n"
@@ -214,6 +217,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
 msgid "Add a new certification"
 msgstr "添加新認證"
+
+#. module: website_slides_survey
+#: model:ir.module.module,summary:base.module_website_slides_survey
+msgid "Add certification capabilities to your courses"
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
@@ -379,6 +387,11 @@ msgstr "恭喜，你已通過了認證！"
 #: model:ir.model,name:website_slides_survey.model_slide_channel
 msgid "Course"
 msgstr "課程"
+
+#. module: website_slides_survey
+#: model:ir.module.module,shortdesc:base.module_website_slides_survey
+msgid "Course Certifications"
+msgstr ""
 
 #. module: website_slides_survey
 #. odoo-python
@@ -655,6 +668,13 @@ msgstr "沒有成員資格資訊時的相關課程幻燈片"
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
 msgstr "此試卷通過電子學習應用模組連接到的幻燈片"
+
+#. module: website_slides_survey
+#: model:ir.module.module,description:base.module_website_slides_survey
+msgid ""
+"This module lets you use the full power of certifications within your "
+"courses."
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name

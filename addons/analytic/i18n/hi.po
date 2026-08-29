@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 04:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-master/"
@@ -21,10 +21,17 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: analytic
-#. odoo-python
-#: code:addons/analytic/models/analytic_account.py:0
-msgid "%s (copy)"
-msgstr "%s (कॉपी)"
+#: model:ir.module.module,description:base.module_analytic
+msgid ""
+"\n"
+"Module for defining analytic accounting object.\n"
+"===============================================\n"
+"\n"
+"In Odoo, analytic accounts are linked to general accounts but are treated\n"
+"totally independently. So, you can enter various different analytic "
+"operations\n"
+"that have no counterpart in the general financial accounts.\n"
+msgstr ""
 
 #. module: analytic
 #. odoo-python
@@ -135,6 +142,7 @@ msgstr "एनालिटिक अकाउंट"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
+#: model:ir.module.module,shortdesc:base.module_analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "एनालिटिक अकाउंटिंग"
@@ -710,8 +718,7 @@ msgstr "डिलीवरी में गड़बड़ी वाले म�
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
-"एक या एक से ज़्यादा लाइनें ऐसी हैं जिनके लिए '100% विश्लेषणात्मक वितरण' ज़रूरी है।"
+msgstr "एक या एक से ज़्यादा लाइनें ऐसी हैं जिनके लिए '100% विश्लेषणात्मक वितरण' ज़रूरी है।"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -998,3 +1005,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "जैसे, प्रोजेक्ट XYZ"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (कॉपी)"

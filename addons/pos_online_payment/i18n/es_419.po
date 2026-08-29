@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 11:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -23,8 +23,20 @@ msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
-msgid "<span class=\"visually-hidden\">Loading...</span>"
-msgstr "<span class=\"visually-hidden\">Cargando...</span>"
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"lock\"/>Payment secured · Don't close this "
+"window"
+msgstr ""
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
+msgid "<span class=\"text-500\">Order</span>"
+msgstr ""
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
+msgid "<span class=\"text-500\">Total</span>"
+msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -299,6 +311,11 @@ msgid "Point of Sale Payment Method"
 msgstr "Método de pago del punto de venta"
 
 #. module: pos_online_payment
+#: model:ir.module.module,shortdesc:base.module_pos_online_payment
+msgid "Point of Sale online payment"
+msgstr ""
+
+#. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
 msgstr "Procesado por"
@@ -559,12 +576,8 @@ msgstr "No ha activado ningún"
 msgid ""
 "You should receive an email confirming your payment within a few minutes.<br/"
 ">\n"
-"                            Don't hesitate to contact us if you don't "
-"receive it."
+"                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
-"Deberías recibir un correo electrónico que confirme tu pago en unos minutos."
-"<br/>\n"
-"                        No dudes en contactarnos si no lo recibes."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -580,3 +593,16 @@ msgstr "proveedor de pago"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "para permitir pagos en línea."
+
+#~ msgid "<span class=\"visually-hidden\">Loading...</span>"
+#~ msgstr "<span class=\"visually-hidden\">Cargando...</span>"
+
+#~ msgid ""
+#~ "You should receive an email confirming your payment within a few minutes."
+#~ "<br/>\n"
+#~ "                            Don't hesitate to contact us if you don't "
+#~ "receive it."
+#~ msgstr ""
+#~ "Deberías recibir un correo electrónico que confirme tu pago en unos "
+#~ "minutos.<br/>\n"
+#~ "                        No dudes en contactarnos si no lo recibes."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 00:32+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -280,6 +280,13 @@ msgid "Early Payment Discount of"
 msgstr "提早付款折扣："
 
 #. module: account_payment
+#: model:ir.module.module,summary:base.module_account_payment
+msgid ""
+"Enable customers to pay invoices on the portal and post payments when "
+"transactions are processed."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
 msgstr "只支援全額"
@@ -406,6 +413,11 @@ msgstr ""
 "請注意，服務商若設為只可授權交易（而非收取金額），其提供的代碼便不可用。"
 
 #. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Online Payments"
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
@@ -481,6 +493,11 @@ msgid "Payment"
 msgstr "付款"
 
 #. module: account_payment
+#: model:ir.module.module,shortdesc:base.module_account_payment
+msgid "Payment - Account"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
 msgstr "付款金額"
@@ -501,19 +518,9 @@ msgid "Payment Method Line"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_method_menu
-msgid "Payment Methods"
-msgstr "付款方式"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "付款服務商"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_provider_menu
-msgid "Payment Providers"
 msgstr "付款服務商"
 
 #. module: account_payment
@@ -522,21 +529,11 @@ msgid "Payment Refund Wizard"
 msgstr "付款退款引導"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_token_menu
-msgid "Payment Tokens"
-msgstr "付款代碼(token)"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
-msgstr "付款交易"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
-msgid "Payment Transactions"
 msgstr "付款交易"
 
 #. module: account_payment
@@ -794,3 +791,15 @@ msgstr "逾期"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid "Payment Methods"
+#~ msgstr "付款方式"
+
+#~ msgid "Payment Providers"
+#~ msgstr "付款服務商"
+
+#~ msgid "Payment Tokens"
+#~ msgstr "付款代碼(token)"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "付款交易"

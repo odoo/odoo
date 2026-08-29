@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-21 20:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -27,22 +27,35 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model:ir.module.module,description:base.module_http_routing
+msgid ""
+"\n"
+"Proposes advanced routing options not available in web or base to keep\n"
+"base modules simple.\n"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_400_layout_1
 #, fuzzy
 msgid "400: Bad Request"
 msgstr "400: Noto‘g‘ri so‘rov"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_403_layout_1
 #, fuzzy
 msgid "403: Forbidden"
 msgstr "403: Ruxsat etilmagan"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_415_layout_1
 #, fuzzy
 msgid "415: Unsupported Media Type"
 msgstr "415: Qo‘llab-quvvatlanmaydigan media turi"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_422_layout_1
+msgid "422: Unprocessable Entity"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
@@ -73,6 +86,24 @@ msgstr "Orqaga"
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+msgid "Drag blocks here to add them above the error message"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+msgid "Drag blocks here to add them below the error message"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -108,14 +139,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.415
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_415_layout_1
 msgid ""
 "It looks like the URL you are accessing doesn't support the format of the "
-"request. Take a look at the error message below."
+"request."
 msgstr ""
-"Siz kirmoqchi bo‘lgan URL manzili so‘rov formatini qo‘llab-quvvatlamaydi. "
-"Quyidagi xato xabariga e'tibor bering."
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_422_layout_1
+msgid ""
+"It looks like the request you made could not be processed due to semantic "
+"errors."
+msgstr ""
 
 #. module: http_routing
 #: model:ir.model,name:http_routing.model_res_lang
@@ -129,8 +164,7 @@ msgid "Maybe you were looking for one of these <b>popular pages?</b>"
 msgstr "Balki shu <b>mashhur sahifalardan</b> birini qidirayotgan edingizmi?"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.422
-#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_4xx_layout_1
 #, fuzzy
 msgid "Oops! Something went wrong."
 msgstr "Voy! Nimadir xato ketdi."
@@ -148,31 +182,21 @@ msgid "Qweb"
 msgstr "Qweb"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.422
-#: model_terms:ir.ui.view,arch_db:http_routing.4xx
-#, fuzzy
-msgid "Take a look at the error message below."
-msgstr "Quyidagi xato xabariga e'tibor bering."
-
-#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 #, fuzzy
 msgid "The error occurred while rendering the template"
 msgstr "Shablonni taqdim etishda xatolik yuz berdi"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_403_layout_1
 #, fuzzy
 msgid "The page you were looking for could not be authorized."
 msgstr "Siz qidirayotgan sahifaga ruxsat berilmadi."
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
-#, fuzzy
-msgid ""
-"The server couldn't understand the request. Take a look at the error message "
-"below."
-msgstr "Server so‘rovni tushuna olmadi. Quyidagi xato xabariga e'tibor bering."
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_400_layout_1
+msgid "The server couldn't understand the request."
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -187,6 +211,12 @@ msgid "We couldn't find the page you're looking for!"
 msgstr "Siz qidirayotgan sahifani topa olmadik!"
 
 #. module: http_routing
+#: model:ir.module.module,shortdesc:base.module_http_routing
+#: model:ir.module.module,summary:base.module_http_routing
+msgid "Web Routing"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 #, fuzzy
 msgid "and evaluating the following expression:"
@@ -197,3 +227,22 @@ msgstr "va quyidagi ifodani baholash:"
 #, fuzzy
 msgid "this page"
 msgstr "ushbu sahifa"
+
+#, fuzzy
+#~ msgid ""
+#~ "It looks like the URL you are accessing doesn't support the format of the "
+#~ "request. Take a look at the error message below."
+#~ msgstr ""
+#~ "Siz kirmoqchi bo‘lgan URL manzili so‘rov formatini qo‘llab-quvvatlamaydi. "
+#~ "Quyidagi xato xabariga e'tibor bering."
+
+#, fuzzy
+#~ msgid "Take a look at the error message below."
+#~ msgstr "Quyidagi xato xabariga e'tibor bering."
+
+#, fuzzy
+#~ msgid ""
+#~ "The server couldn't understand the request. Take a look at the error "
+#~ "message below."
+#~ msgstr ""
+#~ "Server so‘rovni tushuna olmadi. Quyidagi xato xabariga e'tibor bering."

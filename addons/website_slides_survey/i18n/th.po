@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 18:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
@@ -51,11 +51,12 @@ msgid ""
 "''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id."
-"website_absolute_url)\" t-attf-style=\"background-color: {{user.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{user.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -68,16 +69,17 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        เรียน <t t-out=\"object.partner_id.name or 'participant' or "
 "''\">ผู้เข้าร่วม</t><br/><br/>\n"
-"        ขอแจ้งให้ทราบว่า คุณไม่ผ่านการรับรองในหลักสูตร <t t-out=\"object."
-"slide_partner_id.channel_id.name or ''\">พื้นฐานการทำสวน</t><br/"
+"        ขอแจ้งให้ทราบว่า คุณไม่ผ่านการรับรองในหลักสูตร <t t-"
+"out=\"object.slide_partner_id.channel_id.name or ''\">พื้นฐานการทำสวน</t><br/"
 ">และจะไม่ได้เป็นสมาชิกของหลักสูตรนี้อีกต่อไป<br/>\n"
 "        แต่ว่าคุณสามารถสมัครเข้าเรียนใหม่ได้ทุกเมื่อ!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id."
-"website_absolute_url)\" t-attf-style=\"background-color: {{user.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{user.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                สมัครเรียนอีกครั้ง\n"
 "            </a>\n"
 "        </div>\n"
@@ -210,6 +212,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
 msgid "Add a new certification"
 msgstr "เพิ่มการรับรองใหม่"
+
+#. module: website_slides_survey
+#: model:ir.module.module,summary:base.module_website_slides_survey
+msgid "Add certification capabilities to your courses"
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
@@ -375,6 +382,11 @@ msgstr "ขอแสดงความยินดี คุณผ่านก�
 #: model:ir.model,name:website_slides_survey.model_slide_channel
 msgid "Course"
 msgstr "คอร์ส"
+
+#. module: website_slides_survey
+#: model:ir.module.module,shortdesc:base.module_website_slides_survey
+msgid "Course Certifications"
+msgstr ""
 
 #. module: website_slides_survey
 #. odoo-python
@@ -651,6 +663,13 @@ msgstr "สไลด์หลักสูตรที่เกี่ยวข้
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
 msgstr "สไลด์แบบสำรวจนี้เชื่อมโยงผ่านแอปพลิเคชันอบรมออนไลน์"
+
+#. module: website_slides_survey
+#: model:ir.module.module,description:base.module_website_slides_survey
+msgid ""
+"This module lets you use the full power of certifications within your "
+"courses."
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name

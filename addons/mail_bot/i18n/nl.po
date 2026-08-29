@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 18:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -35,6 +35,11 @@ msgstr ""
 "menselijk voor mij! Laten we het professioneel houden ❤️"
 
 #. module: mail_bot
+#: model:ir.module.module,summary:base.module_mail_bot
+msgid "Add OdooBot in discussions"
+msgstr ""
+
+#. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
 msgid "Disabled"
 msgstr "Uitgeschakeld"
@@ -53,31 +58,23 @@ msgstr "Weergavenaam"
 
 #. module: mail_bot
 #. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-msgid ""
-"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
-"Discuss app."
+#: code:addons/mail_bot/models/res_users.py:0
+msgid "Go ahead - Try sending me an emoji 😊"
 msgstr ""
-"Geweldig! Je kunt %(bold_start)sstandaardantwoorden%(bold_end)s aanpassen in "
-"de app Chat."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
-"sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
-"help."
+"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
+"Discuss app settings."
 msgstr ""
-"Super! 👍 %(new_line)sOm toegang te krijgen tot speciale opdrachten, %"
-"(bold_start)sbegin je je zin met%(bold_end)s%(command_start)s/%(command_end)"
-"s. Probeer hulp te krijgen."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
-msgid "Hello,"
-msgstr "Hallo,"
+msgid "Hello 👋"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
@@ -114,19 +111,18 @@ msgid "Idle"
 msgstr "Inactief"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_bot
-msgid "Mail Bot"
-msgstr "Mailbot"
-
-#. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
-"(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+"It looks like you're not sure what to do next. Please type %(command_start)s/"
+"%(command_end)s to see the suggestions, then select %(command_start)shelp%"
+"(command_end)s and press Enter."
 msgstr ""
-"Niet precies. Stuur een emoji: %(bold_start)styp%(bold_end)s %(command_start)"
-"s:)%(command_end)s en druk op enter om de rondleiding voort te zetten."
+
+#. module: mail_bot
+#: model:ir.model,name:mail_bot.model_mail_bot
+msgid "Mail Bot"
+msgstr "Mailbot"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -137,33 +133,31 @@ msgstr "Niet geïnitialiseerd"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s/%(command_end)s "
-"and wait for the propositions. Select %(command_start)shelp%(command_end)s "
-"and press enter."
+"Not quite. To continue the tour, please send an emoji by typing %"
+"(command_start)s:)%(command_end)s and pressing Enter, or by clicking the %"
+"(smile_icon)s icon to pick one."
 msgstr ""
-"Ik weet niet zeker wat je doet. Typ %(command_start)s/%(command_end)s en "
-"wacht op de voorstellen. Selecteer %(command_start)shelp%(command_end)s en "
-"druk op Enter."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
-"and wait for the propositions. Select one of them and press enter."
+"Not sure what you're doing? Please type %(command_start)s::%(command_end)s "
+"to see canned responses. Select one and press Enter."
 msgstr ""
-"Ik weet niet zeker wat je doet. Typ %(command_start)s:%(command_end)s en "
-"wacht op de voorstellen. Selecteer er een en druk op Enter."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid ""
-"Odoo's chat helps employees collaborate efficiently. I'm here to help you "
-"discover its features."
+"Odoo's Discuss application helps employees collaborate efficiently. I'm here "
+"to help you explore its features."
 msgstr ""
-"Odoo's chat helpt om werknemers efficiënt samen te werken. Ik ben hier om je "
-"te helpen de functies ervan te ontdekken."
+
+#. module: mail_bot
+#: model:ir.module.module,shortdesc:base.module_mail_bot
+msgid "OdooBot"
+msgstr ""
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -216,13 +210,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
-"him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
-"me."
+"Sorry, I'm not listening right now. To get my attention, %"
+"(bold_start)smention me%(bold_end)s by typing %(command_start)s@OdooBot%"
+"(command_end)s and selecting me."
 msgstr ""
-"Sorry, ik was niet aan het luisteren. %(bold_start)sPing een persoon%"
-"(bold_end)s om de aandacht te trekken. Schrijf %(command_start)s@OdooBot%"
-"(command_end)s en selecteer mij."
 
 #. module: mail_bot
 #. odoo-python
@@ -240,62 +231,50 @@ msgstr "Bedankt voor je feedback. Tot ziens!"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "That's not nice! I'm a bot but I have feelings... 💔"
-msgstr "Dat is niet vriendelijk! Ik ben een bot, maar ik heb ook gevoelens... 💔"
+msgstr ""
+"Dat is niet vriendelijk! Ik ben een bot, maar ik heb ook gevoelens... 💔"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"That’s the end of this overview. You can %(bold_start)sclose this "
+"That's the end of this overview. You can %(bold_start)sclose this "
 "conversation%(bold_end)s or type %(command_start)sstart the tour%"
 "(command_end)s to see it again. Enjoy exploring Odoo!"
 msgstr ""
-"Dat is het einde van dit overzicht. Je kunt %(bold_start)sdit gesprek "
-"sluiten%(bold_end)s of %(command_start)sstart de tour%(command_end)s typen "
-"om het opnieuw te zien. Veel plezier met het verkennen van Odoo!"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-msgid "This is a temporary canned response to see how canned responses work."
-msgstr ""
-"Dit is een tijdelijk standaardantwoord om te zien hoe deze antwoorden werken."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
-"(paperclip_icon)s icon and select a file."
+"To %(bold_start)ssend an attachment%(bold_end)s, first click the %"
+"(plus_icon)s icon, then select %(paperclip_icon)s Attach files."
 msgstr ""
-"Om een %(bold_start)sbijlage te versturen%(bold_end)s, klik op de%"
-"(paperclip_icon)s-icoon en selecteer een bestand."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-msgid "To start, try to send me an emoji :)"
-msgstr "Probeer mij een emoji te sturen om te starten :)"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/res_users.py:0
-msgid "Try to send me an emoji"
-msgstr "Probeer mij een emoji te sturen"
+msgid "To get started, try sending me an emoji 😊"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
-"discovering our product, please check %(document_link_start)sour "
+"To use special commands, %(bold_start)sstart your message with a %"
+"(bold_end)s %(command_start)s/%(command_end)s. For example, try typing %"
+"(command_start)s/help%(command_end)s."
+msgstr ""
+
+#. module: mail_bot
+#. odoo-python
+#: code:addons/mail_bot/models/mail_bot.py:0
+msgid ""
+"Unfortunately, I'm just a bot 😞 I don't understand that.%(new_line)sIf you "
+"need help exploring our apps, please check out %(document_link_start)sour "
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
-"Helaas ben ik maar een bot 😞 Ik begrijp het niet! Als je hulp nodig hebt "
-"bij het ontdekken van ons product, raadpleeg dan onze %(document_link_start)"
-"s documentatie%(document_link_end)s of %(slides_link_start)sonze video's%"
-"(slides_link_end)s."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -307,34 +286,25 @@ msgstr "Gebruiker"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
-"use canned responses. I've created a temporary one for you."
+"use canned responses. I've created a temporary one just for you."
 msgstr ""
-"Geweldig! 😇%(new_line)sProbeer %(command_start)s::%(command_end)s te typen "
-"om kant-en-klare reacties te gebruiken. Ik heb er alvast een tijdelijke voor "
-"je aangemaakt."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Wow you are a natural!%(new_line)sPing someone with @username to grab their "
-"attention. %(bold_start)sTry to ping me using%(bold_end)s %"
-"(command_start)s@OdooBot%(command_end)s in a sentence."
+"Wow, you're a natural!%(new_line)s Use @username to mention someone and grab "
+"their attention.%(new_line)s %(bold_start)sTry mentioning me by typing%"
+"(bold_end)s %(command_start)s@OdooBot%(command_end)s in your message."
 msgstr ""
-"Wauw, je bent een natuurtalent! %(new_line)sPing iemand met @gebruikersnaam "
-"om zijn of haar aandacht te trekken. %(bold_start)sProbeer me te pingen%"
-"(bold_end)s door %(command_start)s@OdooBot%(command_end)s in een zin te "
-"gebruiken."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
-"(bold_end)s, like a picture of your cute dog..."
+"Yep, I'm here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
+"(bold_end)s 📎 - maybe a picture of your cute dog... 🐕"
 msgstr ""
-"Ja, hier ben ik! 🎉 %(new_line)sProbeer nu %(bold_start)seen bijlage te "
-"verzenden%(bold_end)s, zoals een foto van je schattige hond ..."
 
 #. module: mail_bot
 #. odoo-python
@@ -365,3 +335,127 @@ msgstr "liefde"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "start the tour"
 msgstr "start de rondleiding"
+
+#~ msgid ""
+#~ "Great! You can customize %(bold_start)scanned responses%(bold_end)s in "
+#~ "the Discuss app."
+#~ msgstr ""
+#~ "Geweldig! Je kunt %(bold_start)sstandaardantwoorden%(bold_end)s aanpassen "
+#~ "in de app Chat."
+
+#~ msgid ""
+#~ "Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
+#~ "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
+#~ "help."
+#~ msgstr ""
+#~ "Super! 👍 %(new_line)sOm toegang te krijgen tot speciale opdrachten, %"
+#~ "(bold_start)sbegin je je zin met%(bold_end)s%(command_start)s/%"
+#~ "(command_end)s. Probeer hulp te krijgen."
+
+#~ msgid "Hello,"
+#~ msgstr "Hallo,"
+
+#~ msgid ""
+#~ "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
+#~ "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+#~ msgstr ""
+#~ "Niet precies. Stuur een emoji: %(bold_start)styp%(bold_end)s %"
+#~ "(command_start)s:)%(command_end)s en druk op enter om de rondleiding "
+#~ "voort te zetten."
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s/%"
+#~ "(command_end)s and wait for the propositions. Select %"
+#~ "(command_start)shelp%(command_end)s and press enter."
+#~ msgstr ""
+#~ "Ik weet niet zeker wat je doet. Typ %(command_start)s/%(command_end)s en "
+#~ "wacht op de voorstellen. Selecteer %(command_start)shelp%(command_end)s "
+#~ "en druk op Enter."
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s:%"
+#~ "(command_end)s and wait for the propositions. Select one of them and "
+#~ "press enter."
+#~ msgstr ""
+#~ "Ik weet niet zeker wat je doet. Typ %(command_start)s:%(command_end)s en "
+#~ "wacht op de voorstellen. Selecteer er een en druk op Enter."
+
+#~ msgid ""
+#~ "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
+#~ "discover its features."
+#~ msgstr ""
+#~ "Odoo's chat helpt om werknemers efficiënt samen te werken. Ik ben hier om "
+#~ "je te helpen de functies ervan te ontdekken."
+
+#~ msgid ""
+#~ "Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
+#~ "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and "
+#~ "select me."
+#~ msgstr ""
+#~ "Sorry, ik was niet aan het luisteren. %(bold_start)sPing een persoon%"
+#~ "(bold_end)s om de aandacht te trekken. Schrijf %(command_start)s@OdooBot%"
+#~ "(command_end)s en selecteer mij."
+
+#~ msgid ""
+#~ "That’s the end of this overview. You can %(bold_start)sclose this "
+#~ "conversation%(bold_end)s or type %(command_start)sstart the tour%"
+#~ "(command_end)s to see it again. Enjoy exploring Odoo!"
+#~ msgstr ""
+#~ "Dat is het einde van dit overzicht. Je kunt %(bold_start)sdit gesprek "
+#~ "sluiten%(bold_end)s of %(command_start)sstart de tour%(command_end)s "
+#~ "typen om het opnieuw te zien. Veel plezier met het verkennen van Odoo!"
+
+#~ msgid ""
+#~ "This is a temporary canned response to see how canned responses work."
+#~ msgstr ""
+#~ "Dit is een tijdelijk standaardantwoord om te zien hoe deze antwoorden "
+#~ "werken."
+
+#~ msgid ""
+#~ "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
+#~ "(paperclip_icon)s icon and select a file."
+#~ msgstr ""
+#~ "Om een %(bold_start)sbijlage te versturen%(bold_end)s, klik op de%"
+#~ "(paperclip_icon)s-icoon en selecteer een bestand."
+
+#~ msgid "To start, try to send me an emoji :)"
+#~ msgstr "Probeer mij een emoji te sturen om te starten :)"
+
+#~ msgid "Try to send me an emoji"
+#~ msgstr "Probeer mij een emoji te sturen"
+
+#~ msgid ""
+#~ "Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
+#~ "discovering our product, please check %(document_link_start)sour "
+#~ "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
+#~ "(slides_link_end)s."
+#~ msgstr ""
+#~ "Helaas ben ik maar een bot 😞 Ik begrijp het niet! Als je hulp nodig hebt "
+#~ "bij het ontdekken van ons product, raadpleeg dan onze %"
+#~ "(document_link_start)s documentatie%(document_link_end)s of %"
+#~ "(slides_link_start)sonze video's%(slides_link_end)s."
+
+#~ msgid ""
+#~ "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
+#~ "use canned responses. I've created a temporary one for you."
+#~ msgstr ""
+#~ "Geweldig! 😇%(new_line)sProbeer %(command_start)s::%(command_end)s te "
+#~ "typen om kant-en-klare reacties te gebruiken. Ik heb er alvast een "
+#~ "tijdelijke voor je aangemaakt."
+
+#~ msgid ""
+#~ "Wow you are a natural!%(new_line)sPing someone with @username to grab "
+#~ "their attention. %(bold_start)sTry to ping me using%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s in a sentence."
+#~ msgstr ""
+#~ "Wauw, je bent een natuurtalent! %(new_line)sPing iemand met "
+#~ "@gebruikersnaam om zijn of haar aandacht te trekken. %"
+#~ "(bold_start)sProbeer me te pingen%(bold_end)s door %"
+#~ "(command_start)s@OdooBot%(command_end)s in een zin te gebruiken."
+
+#~ msgid ""
+#~ "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
+#~ "attachment%(bold_end)s, like a picture of your cute dog..."
+#~ msgstr ""
+#~ "Ja, hier ben ik! 🎉 %(new_line)sProbeer nu %(bold_start)seen bijlage te "
+#~ "verzenden%(bold_end)s, zoals een foto van je schattige hond ..."

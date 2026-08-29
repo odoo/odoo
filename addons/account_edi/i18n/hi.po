@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 16:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-master/"
@@ -18,6 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: account_edi
+#: model:ir.module.module,description:base.module_account_edi
+msgid ""
+"\n"
+"Electronic Data Interchange\n"
+"=======================================\n"
+"EDI is the electronic interchange of business information using a "
+"standardized format.\n"
+"\n"
+"This is the base module for import and export of invoices in various EDI "
+"formats, and the\n"
+"the transmission of said documents to various parties involved in the "
+"exchange (other company,\n"
+"governements, etc.)\n"
+msgstr ""
 
 #. module: account_edi
 #. odoo-python
@@ -54,8 +70,7 @@ msgstr "ईडीआई रद्द करने का अनुरोध व�
 msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
-msgstr ""
-"क्या आप इनवॉइस को ईडीआई दस्तावेज़ के रद्द हुए बिना ही रद्द करना चाहते हैं?"
+msgstr "क्या आप इनवॉइस को ईडीआई दस्तावेज़ के रद्द हुए बिना ही रद्द करना चाहते हैं?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -103,8 +118,7 @@ msgstr "रद्द किया गया"
 msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
-msgstr ""
-"इस जर्नल पर (%s) को बंद नहीं कर सकते, क्योंकि सभी दस्तावेज़ सिंक नहीं हुए हैं"
+msgstr "इस जर्नल पर (%s) को बंद नहीं कर सकते, क्योंकि सभी दस्तावेज़ सिंक नहीं हुए हैं"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -282,6 +296,11 @@ msgid "ID"
 msgstr "आईडी"
 
 #. module: account_edi
+#: model:ir.module.module,shortdesc:base.module_account_edi
+msgid "Import/Export Invoices From XML/PDF"
+msgstr ""
+
+#. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
 msgid "Info"
@@ -387,8 +406,7 @@ msgstr "राज्य"
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
-"इस लेन-देन के सभी ईडीआई की कुल स्थिति, खासकर जब वे ऑनलाइन सिस्टम से जुड़े हों"
+msgstr "इस लेन-देन के सभी ईडीआई की कुल स्थिति, खासकर जब वे ऑनलाइन सिस्टम से जुड़े हों"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -417,8 +435,7 @@ msgstr "जल्द ही इनवॉइस भेज दिया जाए�
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
 "The text of the last error that happened during Electronic Invoice operation."
-msgstr ""
-"यह उस अंतिम गलती का विवरण है जो इलेक्ट्रॉनिक इनवॉइस का काम करते समय हुई थी।"
+msgstr "यह उस अंतिम गलती का विवरण है जो इलेक्ट्रॉनिक इनवॉइस का काम करते समय हुई थी।"
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
@@ -437,8 +454,7 @@ msgstr "यह दस्तावेज़ अभी कोई और सिस�
 msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation "
 "request."
-msgstr ""
-"यह इनवॉइस तब रद्द हुआ, जब ईडीआई %s को रद्द करने का अनुरोध अभी भी पेंडिंग था।"
+msgstr "यह इनवॉइस तब रद्द हुआ, जब ईडीआई %s को रद्द करने का अनुरोध अभी भी पेंडिंग था।"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

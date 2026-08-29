@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 18:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
@@ -23,6 +23,21 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: calendar
+#: model:ir.module.module,description:base.module_calendar
+msgid ""
+"\n"
+"This is a full-featured calendar system.\n"
+"========================================\n"
+"\n"
+"It supports:\n"
+"------------\n"
+"    - Calendar of events\n"
+"    - Recurring events\n"
+"\n"
+"If you need to manage your meetings, you should install the CRM module.\n"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -105,8 +120,8 @@ msgid ""
 "bottom: 28px;\">\n"
 "        Date Updated\n"
 "        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
-"width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-"
-"align: bottom;\"/>\n"
+"width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
+"align: middle; padding-bottom: 2px;\"/>\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "        <span style=\"display: block; margin-bottom: 8px;\">Hello <t t-"
@@ -264,6 +279,42 @@ msgid ""
 "        <t t-out=\"object.event_id.description\">Internal meeting for "
 "discussion for new pricing for product and services.</t>\n"
 "    </div>\n"
+"    <br/>\n"
+"    <strong>Add to calendar</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+"{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+"{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-"
+"left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.event_id.google_calendar_url\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+"bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
 "    <p style=\"margin: 32px 0 0;\">\n"
 "        Thank you!\n"
 "        <t t-if=\"organizer.signature\">\n"
@@ -435,6 +486,42 @@ msgid ""
 "        <t t-out=\"object.event_id.description\">Internal meeting for "
 "discussion for new pricing for product and services.</t>\n"
 "    </div>\n"
+"    <br/>\n"
+"    <strong>Add to calendar</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+"{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+"{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-"
+"left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.event_id.google_calendar_url\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+"bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
 "    <p style=\"margin: 32px 0 0;\">\n"
 "        Thank you!\n"
 "        <t t-if=\"object.event_id.user_id.signature\">\n"
@@ -460,8 +547,8 @@ msgid ""
 "bottom: 28px;\">\n"
 "        Event updated\n"
 "        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
-"width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-"
-"align: bottom;\"/>\n"
+"width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
+"align: middle; padding-bottom: 2px;\"/>\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "        <span style=\"display: block; margin-bottom: 8px;\">Hello,</span>\n"
@@ -574,6 +661,42 @@ msgid ""
 "        <t t-out=\"object.description\">Internal meeting for discussion for "
 "new pricing for product and services.</t>\n"
 "    </div>\n"
+"    <br/>\n"
+"    <strong>Add to calendar</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/"
+"{{ object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
+"padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-radius: "
+"3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/"
+"{{ object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
+"padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: "
+"8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.google_calendar_url\" target=\"new\" "
+"style=\"padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-"
+"left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;"
+"\">\n"
+"                    <img src=\"/calendar/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
 "    <p style=\"margin: 32px 0 0;\">\n"
 "        Thank you!\n"
 "        <t t-if=\"object.user_id.signature\">\n"
@@ -597,8 +720,8 @@ msgid ""
 "bottom: 28px;\">\n"
 "        Reminder\n"
 "        <img src=\"/calendar/static/src/img/bell.png\" style=\"border:0; "
-"width: 21px; height: 24px; margin-left: 10px; text-decoration:none; vertical-"
-"align: bottom;\"/>\n"
+"width: 16px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
+"align: middle; padding-bottom: 2px;\"/>\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "        Hello <t t-out=\"object.common_name or ''\">Gemini Furniture</t>,<br/"
@@ -729,6 +852,42 @@ msgid ""
 "        <t t-out=\"object.event_id.description\">Internal meeting for "
 "discussion for new pricing for product and services.</t>\n"
 "    </div>\n"
+"    <br/>\n"
+"    <strong>Add to calendar</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+"{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+"{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-"
+"left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.event_id.google_calendar_url\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+"bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
 "    <p style=\"margin: 32px 0 0;\">\n"
 "        Thank you!\n"
 "        <t t-if=\"object.event_id.user_id.signature\">\n"
@@ -752,8 +911,8 @@ msgid ""
 "bottom: 28px;\">\n"
 "        Event canceled\n"
 "        <img src=\"/calendar/static/src/img/times-circle.png\" "
-"style=\"border:0; width: 24px; height: 24px; margin-left: 10px; text-"
-"decoration:none; vertical-align: bottom;\"/>\n"
+"style=\"border:0; width: 20px; height: 20px; margin-left: 10px; text-"
+"decoration:none; vertical-align: middle; padding-bottom: 2px;\"/>\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "        Hello,<br/>\n"
@@ -822,74 +981,71 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "<i class=\"fa fa-calendar\" title=\"Calendar\"/>"
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Calendar\"/>\n"
+"                    <span class=\"text-muted\">Pick a date and time</span>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-circle\" title=\"Show as\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"Show as\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-clock-o mt-1\" title=\"Dates\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"Booking Name\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-lock\" title=\"Visibility\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"Visibility\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-map\" title=\"Location\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"Location\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
-msgid "<i class=\"fa fa-remove\" title=\"Remove\"/>"
-msgstr "<i class=\"fa fa-remove\" title=\"Удалить\"/>"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-sticky-note\" title=\"Notes\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Participants\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-tag\" title=\"Booking Name\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"Notes\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-user\" title=\"Participants\"/>"
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"Videocall URL\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-video-camera\" title=\"Videocall URL\"/>"
+msgid "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid ""
-"<i title=\"Clear meeting\" data-tooltip=\"Clear meeting\" class=\"fa fa-"
-"times\"/>"
+"<i title=\"Clear meeting\" data-tooltip=\"Clear meeting\" class=\"oi\" data-"
+"icon=\"close\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid ""
-"<i title=\"Join Video Call\" data-tooltip=\"Join video call\" class=\"fa fa-"
-"sign-in\"/>"
-msgstr ""
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<span class=\"fa fa-plus me-1\"/>Video conference"
+"<i title=\"Join Video Call\" data-tooltip=\"Join video call\" class=\"oi\" "
+"data-icon=\"login\"/>"
 msgstr ""
 
 #. module: calendar
@@ -921,7 +1077,13 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid ""
-"<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Video conference</span>"
+"<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
+"conference</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/>Video conference"
 msgstr ""
 
 #. module: calendar
@@ -971,6 +1133,11 @@ msgstr "Принять"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
 msgstr "Принятый счет"
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
+msgid "Access token should be unique"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -1054,6 +1221,11 @@ msgstr "План-график деятельности Мастер"
 #, fuzzy
 msgid "Add Title"
 msgstr "Добавить заголовок"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Add attendees..."
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1196,6 +1368,7 @@ msgid "Bye-bye, record!"
 msgstr "Прощай, информация!"
 
 #. module: calendar
+#: model:ir.module.module,shortdesc:base.module_calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
@@ -1204,8 +1377,6 @@ msgid "Calendar"
 msgstr "Календарь"
 
 #. module: calendar
-#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
-#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
@@ -1358,6 +1529,11 @@ msgid "Common name"
 msgstr "Общее название"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
+msgid "Company"
+msgstr ""
+
+#. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
 msgid "Configuration"
 msgstr "Конфигурация"
@@ -1383,6 +1559,7 @@ msgstr "Подключите календарь"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "Contact"
 msgstr "Контакты"
 
@@ -1635,6 +1812,7 @@ msgstr "Dtstart"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
 msgstr "Продолжительность"
@@ -1738,6 +1916,16 @@ msgstr "Правило повторения событий"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
 msgstr "Время события"
+
+#. module: calendar
+#: model:mail.message.subtype,name:calendar.mt_calendar_event_updated
+msgid "Event Updates"
+msgstr ""
+
+#. module: calendar
+#: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
+msgid "Event updated"
+msgstr ""
 
 #. module: calendar
 #. odoo-python
@@ -1868,12 +2056,6 @@ msgid "Followers (Partners)"
 msgstr "Подписчики"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
-#, fuzzy
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Иконка Font awesome, например, fa-tasks"
-
-#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
 msgid "Forever"
@@ -1925,6 +2107,11 @@ msgstr "Google"
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Google Calendar"
 msgstr "Google Календарь"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__google_calendar_url
+msgid "Google Calendar URL"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2050,8 +2237,8 @@ msgstr "Неверный партнер по электронной почте"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
-msgid "Invitation"
-msgstr "Приглашение"
+msgid "Invitation Status"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
@@ -2103,6 +2290,12 @@ msgstr "Выделено ли событие"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
 msgstr "Является ли организатор одиноким"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+msgid "Join Meeting"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
@@ -2159,6 +2352,11 @@ msgstr ""
 "Пусть событие автоматически повторяется через указанный интервал времени"
 
 #. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__google_calendar_url
+msgid "Link to manually add the meeting to Google Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_record
 msgid "Linked to"
 msgstr "Связано с"
@@ -2183,6 +2381,11 @@ msgstr "Шаблон сообщения"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
 msgstr "Mail Tz"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: calendar
 #. odoo-javascript
@@ -2231,8 +2434,6 @@ msgid "Meeting linked"
 msgstr "Встреча связана"
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/res_partner.py:0
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_ids
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_ids
@@ -2243,6 +2444,11 @@ msgstr "Встреча связана"
 #: model_terms:ir.ui.view,arch_db:calendar.view_partners_form
 msgid "Meetings"
 msgstr "Встречи"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+msgid "Message"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
@@ -2526,6 +2732,11 @@ msgid "Option"
 msgstr "Опции"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+msgid "Optional message"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_popover_delete_wizard__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
@@ -2691,8 +2902,15 @@ msgid "Remind Before"
 msgstr "Напомнить до"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+msgid "Reminder"
+msgstr ""
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
 #: model:ir.ui.menu,name:calendar.calendar_submenu_reminders
+#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
 msgid "Reminders"
 msgstr "Напоминания"
 
@@ -2778,13 +2996,18 @@ msgstr "Суббота"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule"
-msgstr "Запланировать встречу"
+msgid "Schedule Meeting"
+msgstr ""
 
 #. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
-#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting"
+#: model:ir.module.module,summary:base.module_calendar
+msgid "Schedule employees' meetings"
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/core/web/messaging_menu_model_patch.js:0
+msgid "Schedule for later"
 msgstr ""
 
 #. module: calendar
@@ -2812,11 +3035,6 @@ msgstr "Поиск встреч"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__2
 msgid "Second"
 msgstr "Секунда"
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Select attendees..."
-msgstr "Выберите участников..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3326,6 +3544,11 @@ msgid "Weeks"
 msgstr "Недель"
 
 #. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__notify_responsible
+msgid "When activated, the event organizer will also receive this reminder."
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__description
 msgid ""
 "When synchronization with an external calendar is active, this description "
@@ -3424,9 +3647,34 @@ msgid "declined"
 msgstr "отклонено"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
+msgid "e.g. (555) 555-0199"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
+msgid "e.g. Acme Corporation"
+msgstr ""
+
+#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "например, бизнес-ланч"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
+msgid "e.g. Lumber Inc or Brandon Freeman"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
+msgid "e.g. Sales Director"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
+msgid "e.g. john.doe@email.com"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3473,6 +3721,23 @@ msgstr "{{ object.event_id.name }}: Дата обновления"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Обновление события"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-remove\" title=\"Remove\"/>"
+#~ msgstr "<i class=\"fa fa-remove\" title=\"Удалить\"/>"
+
+#, fuzzy
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Иконка Font awesome, например, fa-tasks"
+
+#~ msgid "Invitation"
+#~ msgstr "Приглашение"
+
+#~ msgid "Schedule"
+#~ msgstr "Запланировать встречу"
+
+#~ msgid "Select attendees..."
+#~ msgstr "Выберите участников..."
 
 #~ msgid ""
 #~ "<div style=\"font-size: 13px; color: #374151;\">\n"

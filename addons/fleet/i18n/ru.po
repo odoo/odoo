@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-22 01:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
@@ -22,6 +22,27 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: fleet
+#: model:ir.module.module,description:base.module_fleet
+msgid ""
+"\n"
+"Vehicle, leasing, insurances, cost\n"
+"==================================\n"
+"With this module, Odoo helps you managing all your vehicles, the\n"
+"contracts associated to those vehicle as well as services, costs\n"
+"and many other features necessary to the management of your fleet\n"
+"of vehicle(s)\n"
+"\n"
+"Main Features\n"
+"-------------\n"
+"* Add vehicles to your fleet\n"
+"* Manage contracts for vehicles\n"
+"* Reminder when a contract reach its expiration date\n"
+"* Add services, odometer values for all vehicles\n"
+"* Show all costs associated to a vehicle or to a type of service\n"
+"* Analysis graph for costs\n"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -911,7 +932,10 @@ msgid "Display Name"
 msgstr "Отображаемое имя"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__done
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__done
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Done"
 msgstr "Готово"
 
@@ -1106,6 +1130,7 @@ msgid "Fiscality"
 msgstr "Фискальность"
 
 #. module: fleet
+#: model:ir.module.module,shortdesc:base.module_fleet
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
 #: model:ir.ui.menu,name:fleet.fleet_vehicles
 #: model:ir.ui.menu,name:fleet.menu_root
@@ -1301,12 +1326,6 @@ msgstr "Лошадиные силы"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower (hp)"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__horsepower_tax
-msgid "Horsepower Taxation"
-msgstr "Налогообложение лошадиных сил"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hydrogen
@@ -1592,6 +1611,11 @@ msgid "Manage efficiently your vehicle Odometers with Odoo."
 msgstr ""
 
 #. module: fleet
+#: model:ir.module.module,summary:base.module_fleet
+msgid "Manage your fleet and track car costs"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
 msgid "Management Fee"
 msgstr "Плата за управление"
@@ -1616,6 +1640,11 @@ msgstr "Производитель"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Manufacturers"
 msgstr "Производители"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Mark as Done"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
@@ -1791,14 +1820,9 @@ msgstr "Следующий водитель Адрес автомобиля"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
+#: model:res.groups.privilege,placeholder:fleet.res_groups_privilege_fleet
 msgid "No"
 msgstr "Нет"
-
-#. module: fleet
-#. odoo-python
-#: code:addons/fleet/models/fleet_vehicle.py:0
-msgid "No Plate"
-msgstr "Без номера"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1959,8 +1983,8 @@ msgid ""
 msgstr ""
 "Опциональный язык перевода (код ISO), выбираемый при отправке e-mail. Если "
 "не установлен, будет использоваться язык основного партнера. Обычно это "
-"выражение-заполнитель, предоставляющее нужный язык, напр. {{ object."
-"partner_id.lang }}."
+"выражение-заполнитель, предоставляющее нужный язык, напр. "
+"{{ object.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2209,12 +2233,6 @@ msgstr "Повторная шлифовка роторов"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Review driver change"
-msgstr ""
-
-#. module: fleet
-#. odoo-python
-#: code:addons/fleet/models/fleet_vehicle.py:0
-msgid "Review driver change of %s and specify End date"
 msgstr ""
 
 #. module: fleet
@@ -2628,6 +2646,12 @@ msgid "Unit"
 msgstr "Единица"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "Unnamed Vehicle"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Unregistered"
 msgstr ""
@@ -2947,3 +2971,9 @@ msgstr "показать журналы обслуживания для этог
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "user_id"
 msgstr ""
+
+#~ msgid "Horsepower Taxation"
+#~ msgstr "Налогообложение лошадиных сил"
+
+#~ msgid "No Plate"
+#~ msgstr "Без номера"

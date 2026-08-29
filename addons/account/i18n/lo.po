@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-18 23:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-master/account/"
@@ -66,6 +66,22 @@ msgstr ""
 "        ຕົວຢ່າງ 180 / (1 - 10%) = 200 (ບໍ່ລວມພາສີໃນລາຄາ)\n"
 "        ຕົວຢ່າງ 200 * (1 - 10%) = 180 (ລວມພາສີໃນລາຄາ)\n"
 "        "
+
+#. module: account
+#: model:ir.module.module,description:base.module_account
+msgid ""
+"\n"
+"Invoicing & Payments\n"
+"====================\n"
+"The specific and easy-to-use Invoicing system in Odoo allows you to keep "
+"track of your accounting, even when you are not an accountant. It provides "
+"an easy way to follow up on your vendors and customers.\n"
+"\n"
+"You could use this simplified accounting in case you work with an (external) "
+"account to keep your books, and you still want to keep track of payments. "
+"This module also offers you an easy method of registering payments, without "
+"having to encode complete abstracts of account.\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -303,17 +319,6 @@ msgstr "%d ການເຄື່ອນໄຫວ"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_payment_term.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_tax.py:0
-#, fuzzy
-msgid "%s (copy)"
-msgstr "%s (ສຳເນົາ)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "%s - private part"
@@ -361,13 +366,6 @@ msgid "(Un)Block Payment"
 msgstr "(ປົດ)ລັອກ ການຊຳລະເງິນ"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, fuzzy
-msgid "(copy)"
-msgstr "(ສຳເນົາ)"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 #, fuzzy
 msgid "(from"
@@ -379,13 +377,6 @@ msgstr "(ຈາກ"
 #, fuzzy
 msgid "(object._get_report_base_filename())"
 msgstr "(object._get_report_base_filename())"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
-#, fuzzy
-msgid "+ Add Section"
-msgstr "+ ເພີ່ມພາກສ່ວນ"
 
 #. module: account
 #. odoo-python
@@ -466,6 +457,17 @@ msgid "... (View all)"
 msgstr "... (ເບິ່ງທັງໝົດ)"
 
 #. module: account
+#: model:account.tax,name:account.24_tax_PT2
+#: model:account.tax,name:account.24_tax_ST2
+msgid "0% EXEMPT"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_ST7
+msgid "0% EXPORT"
+msgstr ""
+
+#. module: account
 #: model:account.tax,name:account.21_sale_export_tax_template
 #, fuzzy
 msgid "0% Exports"
@@ -490,6 +492,44 @@ msgid "100.00 USD"
 msgstr "100.00 USD"
 
 #. module: account
+#: model:account.tax,name:account.24_tax_PT4
+#: model:account.tax,name:account.24_tax_ST4
+msgid "12% (Non-Luxury Good)"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_PT7
+msgid "12% IM"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_luxury_pemungut_ppn
+msgid "12% Luxury Pemungut PPN"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_luxury_wapu
+#: model_terms:account.tax,description:account.24_tax_luxury_wapu
+msgid "12% Luxury WAPU"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_PT6
+msgid "12% NCR"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_pemungut_ppn
+msgid "12% Pemungut PPN"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_wapu
+#: model_terms:account.tax,description:account.24_tax_wapu
+msgid "12% WAPU"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 #, fuzzy
 msgid "15 Days"
@@ -500,6 +540,27 @@ msgstr "15 ວັນ"
 #, fuzzy
 msgid "2/7 Net 30"
 msgstr "ສ່ວນຫຼຸດ 2% ພາຍໃນ 7 ມື້, ສຸດທິ 30 ມື້"
+
+#. module: account
+#: model:account.tax,name:account.24_tax_PT5
+#: model:account.tax,name:account.24_tax_luxury_sales
+msgid "20% (STLG)"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_sltg_wapu
+msgid "20% SLTG WAPU"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_stlg_pemungut_ppn
+msgid "20% STLG Pemungut PPN"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.24_tax_sltg_wapu
+msgid "20% STLG WAPU"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -805,13 +866,19 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
 "><br/>\n"
-"        Thank you for your payment.\n"
-"        Here is your payment receipt <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"amounting\n"
-"        to <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.partner_type == 'customer' and object.payment_type "
+"== 'outbound'\">We have processed your refund of</t>\n"
+"        <t t-elif=\"object.partner_type == 'supplier' and "
+"object.payment_type == 'outbound'\">We have processed your payment of</t>\n"
+"        <t t-elif=\"object.partner_type == 'supplier' and "
+"object.payment_type == 'inbound'\">Thank you for your refund of</t>\n"
+"        <t t-else=\"\">Thank you for your payment of</t> <span style=\"font-"
+"weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or "
+"''\">$ 10.00</span>.\n"
+"        Please find the <t t-out=\"object.payment_receipt_title.lower()"
+"\">payment receipt</t> <span t-if=\"object.name\" style=\"font-weight:bold;"
+"\" t-out=\"object.name.replace('/','-')\">BNK1-2021-05-0002</span> from <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <br/><br/>\n"
@@ -832,128 +899,91 @@ msgid "<em>Draft Invoice</em>"
 msgstr "<em>ໃບແຈ້ງໜີ້ຮ່າງ</em>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+"<i class=\"o_button_icon oi me-2\" data-icon=\"east\"/> Configure Alias "
+"Domain"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-#, fuzzy
-msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "<i class=\"fa fa-download\"/> ດາວໂຫຼດ"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
-"role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"Paid</span>"
+#: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to settings"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
-"role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"ຊໍາລະແລ້ວ</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
-"role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"Reversed</span>"
-msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
-"role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"ກັບຄືນລາຍການແລ້ວ</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
-"title=\"Processing Payment\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"Processing Payment</span>"
-msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
-"title=\"Processing Payment\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"ກຳລັງດຳເນີນການຊຳລະເງິນ</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
-"role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"Waiting for Payment</span>"
-msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
-"role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"ລໍຖ້າການຊໍາລະ</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        Don't worry, you can always change this setting "
-"later on the vendor's form.\n"
-"                        You also have the option to disable the feature for "
-"all vendors in the accounting settings."
-msgstr ""
-"<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        ບໍ່ຕ້ອງກັງວົນ, "
-"ທ່ານສາມາດປ່ຽນການຕັ້ງຄ່ານີ້ໄດ້ສະເໝີໃນພາຍຫຼັງໃນຟອມຂອງຜູ້ສະໜອງ.\n"
-"                        ທ່ານຍັງມີທາງເລືອກໃນການປິດການໃຊ້ງານຄຸນສົມບັດນີ້ສຳລັບຜູ້ສະໜອງທັງໝົດໃນການຕັ້ງຄ່າບັນຊີ."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-trash text-danger\"/>\n"
+"<i class=\"oi oi-filled text-danger\" data-icon=\"delete\"/>\n"
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length == 1\">Delete all duplicates</span>\n"
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
-"<i class=\"fa fa-trash text-danger\"/>\n"
-"                            <span class=\"text-danger\" "
-"invisible=\"duplicated_ref_ids.length == 1\">ລຶບລາຍການທີ່ຊ້ຳກັນທັງໝົດ</span>\n"
-"                            <span class=\"text-danger\" "
-"invisible=\"duplicated_ref_ids.length &gt; 1\">ລຶບລາຍການທີ່ຊ້ຳກັນ</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
-#, fuzzy
-msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>ກັບຄືນສູ່ການຕັ້ງຄ່າ"
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Paid</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"Reversed\" "
+"title=\"Reversed\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Reversed</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"processing_payment\" "
+"title=\"Processing Payment\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Processing Payment</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "<i class=\"oi oi-fw\" data-icon=\"download\"/> Download"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"schedule\" aria-label=\"Opened\" "
+"title=\"Opened\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Waiting for Payment</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid ""
-"<i class=\"oi oi-arrow-right\"/>\n"
+"<i class=\"oi\" data-icon=\"east\"/>\n"
 "                                                Preview"
 msgstr ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                                                ເບິ່ງຕົວຢ່າງ"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias Domain"
-msgstr "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> ຕັ້ງຄ່າ Alias Domain"
+"<i class=\"oi\" data-icon=\"lightbulb\" role=\"img\"/>\n"
+"                        Don't worry, you can always change this setting "
+"later on the vendor's form.\n"
+"                        You also have the option to disable the feature for "
+"all vendors in the accounting settings."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
+msgid ""
+"<i class=\"oi\" data-icon=\"schedule\" aria-label=\"Date\" role=\"img\" "
+"title=\"Date\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -979,21 +1009,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
-#, fuzzy
 msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
-"                                    <i class=\"fa fa-fw fa-remove\" aria-"
-"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"                                    <i class=\"oi oi-fw\" data-"
+"icon=\"close\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Cancelled</span>\n"
 "                                </span>"
 msgstr ""
-"<span class=\"badge rounded-pill text-bg-warning\">\n"
-"                                    <i class=\"fa fa-fw fa-remove\" aria-"
-"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> "
-"ຍົກເລີກແລ້ວ</span>\n"
-"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -1052,7 +1075,9 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"move_type != 'out_refund'\">Invoice</"
 "span>\n"
 "                                <span class=\"o_stat_text\" "
-"invisible=\"move_type != 'in_refund'\">Vendor Bill</span>"
+"invisible=\"move_type != 'in_refund'\">Vendor Bill</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"move_type != 'entry'\">Journal Entry</span>"
 msgstr ""
 
 #. module: account
@@ -1122,18 +1147,13 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">ອອກໃບແຈ້ງໜີ້ແລ້ວ</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#, fuzzy
-msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">ລາຍການບັນຊີປະຈໍາວັນ</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">ລາຍການບັນຊີປະຈໍາວັນ</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
 msgstr ""
@@ -1288,12 +1308,6 @@ msgid "<span role=\"separator\">View</span>"
 msgstr "<span role=\"separator\">ເບິ່ງ</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
-msgid "<span title=\"Latest Statement\">Last Statement</span>"
-msgstr "<span title=\"Latest Statement\">ບົດລາຍງານຫຼ້າສຸດ</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #, fuzzy
 msgid "<span> (CR)</span>"
@@ -1331,19 +1345,6 @@ msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
-msgid "<span>1.00</span>"
-msgstr "<span>1.00</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
-msgid "<span>1</span>"
-msgstr "<span>1</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #, fuzzy
 msgid "<span>5.00</span>"
@@ -1354,13 +1355,6 @@ msgstr "<span>5.00</span>"
 #, fuzzy
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr "<span><b>ເກັ່ງຫຼາຍ!</b> ທ່ານໄດ້ຜ່ານທຸກຂັ້ນຕອນຂອງການແນະນໍານີ້ແລ້ວ.</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
-msgid "<span>=</span>"
-msgstr "<span>=</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -2552,6 +2546,11 @@ msgid "A temporary number can not be used in a real matching"
 msgstr "ເລກລຳດັບຊົ່ວຄາວບໍ່ສາມາດນຳໃຊ້ໃນການຈັບຄູ່ (matching) ຕົວຈິງໄດ້"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210600
+msgid "AC units, movable power systems (Group 2)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 #, fuzzy
 msgid "Abnormal Amount Partner"
@@ -2786,6 +2785,11 @@ msgid "Account Move Count"
 msgstr "ຈຳນວນການເຄື່ອນໄຫວບັນຊີ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -2809,6 +2813,7 @@ msgid "Account Parents"
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_21100010
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 #, fuzzy
@@ -2828,6 +2833,7 @@ msgid "Account Prefix Placeholder"
 msgstr "ຕົວແທນຂໍ້ຄວາມຄຳນຳໜ້າບັນຊີ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_11210010
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 #, fuzzy
@@ -2835,9 +2841,19 @@ msgid "Account Receivable"
 msgstr "ບັນຊີລູກໜີ້"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_11210011
+msgid "Account Receivable (PoS)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
 msgstr ""
 
 #. module: account
@@ -3059,6 +3075,7 @@ msgstr "ບັນຊີ: ລົງບັນຊີລາຍການຮ່າງ�
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_accounting
+#: model:account.account,name:account.24_l10n_id_66110110
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -3129,6 +3146,11 @@ msgstr "ແຖວລາຍງານການບັນຊີ"
 #, fuzzy
 msgid "Accounting documents"
 msgstr "ເອກະສານການບັນຊີ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110110
+msgid "Accounting service expenses"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -3234,11 +3256,146 @@ msgid "Accrued Orders Wizard"
 msgstr "ຕົວຊ່ວຍຈັດການຄຳສັ່ງຄ້າງຮັບ/ຄ້າງຈ່າຍ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_25110110
+msgid "Accrued Payable BPJS Kesehatan"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110020
+msgid "Accrued Payable BPJS Ketenagakerjaan"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110060
+msgid "Accrued Payable Bank"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110080
+msgid "Accrued Payable Business License"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110100
+msgid "Accrued Payable Education"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110010
+msgid "Accrued Payable Electricity"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110090
+msgid "Accrued Payable Insurance"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110070
+msgid "Accrued Payable PBB"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110050
+msgid "Accrued Payable Security Management"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110040
+msgid "Accrued Payable Telp & Internet"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_25110030
+msgid "Accrued Payable Water"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, fuzzy
 msgid "Accrued total"
 msgstr "ຍອດລວມຄ້າງຮັບ/ຄ້າງຈ່າຍ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281700
+msgid "Accum. Amortization - Software Licenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281430
+msgid "Accum. Depr. - Appliances"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281600
+msgid "Accum. Depr. - Building Installations"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281210
+msgid "Accum. Depr. - Buildings Non-Permanent"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281200
+msgid "Accum. Depr. - Buildings Permanent"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281410
+msgid "Accum. Depr. - Communication Devices"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281510
+msgid "Accum. Depr. - Furniture (Metal/Mixed)"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281500
+msgid "Accum. Depr. - Furniture (Wood/Rattan)"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281630
+msgid "Accum. Depr. - Heavy Construction Equip"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281620
+msgid "Accum. Depr. - Heavy Machinery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281320
+msgid "Accum. Depr. - Heavy Vehicles"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281400
+msgid "Accum. Depr. - IT Equipment"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281610
+msgid "Accum. Depr. - Light Machinery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281300
+msgid "Accum. Depr. - Motorcycles"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281420
+msgid "Accum. Depr. - Office Electronics"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12281310
+msgid "Accum. Depr. - Operational Vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
@@ -3441,10 +3598,23 @@ msgid "Add QR-code link on PDF"
 msgstr "ເພີ່ມລິ້ງລະຫັດ QR ໃນ PDF"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
+msgid "Add Section"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
 #, fuzzy
 msgid "Add a Note"
 msgstr "ເພີ່ມໝາຍເຫດ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"Add a QR-code to your invoices so that your customers can pay instantly with "
+"their banking application."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3509,6 +3679,8 @@ msgid "Add a rounding line"
 msgstr "ເພີ່ມລາຍການປັດເສດ"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, fuzzy
 msgid "Add a section"
@@ -3516,6 +3688,7 @@ msgstr "ເພີ່ມພາກສ່ວນ"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #, fuzzy
 msgid "Add a subsection"
@@ -3543,6 +3716,11 @@ msgstr "ເພີ່ມເງື່ອນໄຂ ແລະ ຂໍ້ກຳນົ�
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
 msgid "Add..."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100050
+msgid "Additional payroll expense under the Gross Up method"
 msgstr ""
 
 #. module: account
@@ -3621,15 +3799,26 @@ msgstr "ລາຍການປັບປຸງ {link} {percent}%% ຂອງ {amoun
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
+#: model:account.account,name:account.24_l10n_id_66110180
 #, fuzzy
 msgid "Administration Fees"
 msgstr "ຄ່າທຳນຽມການບໍລິຫານ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110180
+msgid "Administrative fees"
+msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 #, fuzzy
 msgid "Administrator"
 msgstr "ຜູ້ດູແລລະບົບ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_28110010
+msgid "Advance Sales"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -3644,10 +3833,20 @@ msgid "Advanced Settings"
 msgstr "ການຕັ້ງຄ່າຂັ້ນສູງ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_66110250
+msgid "Advertising"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_marketing
 #, fuzzy
 msgid "Advertising & Marketing"
 msgstr "ການໂຄສະນາ ແລະ ການຕະຫຼາດ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110250
+msgid "Advertising and promotion expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
@@ -3680,6 +3879,11 @@ msgstr "ທາງລັດສູດການລວມຂໍ້ມູນ"
 #, fuzzy
 msgid "Airfare"
 msgstr "ຄ່າປີ້ຍົນ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110210
+msgid "Airfare expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__alerts
@@ -3812,6 +4016,20 @@ msgid "All unreconciled bank statement lines before the selected date."
 msgstr "ລາຍການໃບແຈ້ງຍອດທະນາຄານທັງໝົດທີ່ຍັງບໍ່ທັນໄດ້ສົມທຽບ ກ່ອນວັນທີທີ່ເລືອກ."
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_67100060
+msgid ""
+"Allocation of cost for computing hardware, including servers, laptops, "
+"desktops, and networking gear."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100120
+msgid ""
+"Allocation of cost for integrated systems like electrical wiring, plumbing, "
+"and HVAC systems."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
 msgstr ""
@@ -3933,6 +4151,11 @@ msgstr ""
 "ໂດຍສະແດງເປັນສະກຸນເງິນຕ່າງປະເທດຂອງລາຍການເບື້ອງຄ້າງ."
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_67100160
+msgid "Amortization Exp - Software Licenses"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__amount
@@ -4038,6 +4261,21 @@ msgid "Amount:"
 msgstr "ຈຳນວນເງິນ:"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_11210010
+msgid "Amounts owed by customers for sales"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11210020
+msgid "Amounts owed by employees (advances, loans)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100010
+msgid "Amounts owed to the company by customers"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_amounts_to_settle
 #, fuzzy
 msgid "Amounts to Settle"
@@ -4104,6 +4342,11 @@ msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
 msgstr "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ຄິດໄລ່ຄວາມບໍ່ສາມາດປ່ຽນແປງໄດ້. ທຸກໆລາຍການຕ້ອງໄດ້ຮັບການສົມທຽບກ່ອນ."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Analysis"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4302,6 +4545,11 @@ msgid ""
 msgstr "ລາຍການຂາຍໃດໆກ່ອນ ແລະ ລວມທັງວັນທີນີ້ ຈະຖືກເລື່ອນໄປວັນທີຕໍ່ມາ, ຕາມລໍາດັບຂອງປຶ້ມບັນຊີປະຈໍາວັນ."
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_12210430
+msgid "Appliances"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
 #, fuzzy
 msgid "Applicability"
@@ -4335,6 +4583,11 @@ msgstr "ນຳໃຊ້ສະເພາະຖ້າປະເທດຈັດສົ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Apply rounding to the total amount of a sales invoice."
 msgstr ""
 
 #. module: account
@@ -4412,6 +4665,11 @@ msgstr "ຖາມຂ້ອຍພາຍຫຼັງ"
 #, fuzzy
 msgid "Asset"
 msgstr "ສິນຊັບ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110152
+msgid "Asset Maintenance Costs"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -4515,6 +4773,11 @@ msgstr "ສາມາດກວດສອບໄດ້"
 #, fuzzy
 msgid "August"
 msgstr "ສິງຫາ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_31100010
+msgid "Authorized Capital"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_auto_insurance
@@ -4739,6 +5002,11 @@ msgid "BILL"
 msgstr "ໃບບິນ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_61100060
+msgid "BPJS Expense"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #, fuzzy
 msgid "BRT *([\\d,\\.]+)"
@@ -4806,13 +5074,16 @@ msgstr "ເປີເຊັນຍອດເຫຼືອ ບໍ່ສາມາດ�
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_bank_journal_default_account_163
-#: model:account.account,name:account.22_bank_journal_default_account_296
+#: model:account.account,name:account.22_bank_journal_default_account_499
+#: model:account.account,name:account.24_l10n_id_11120004
 #: model:account.journal,name:account.21_bank
 #: model:account.journal,name:account.22_bank
+#: model:account.journal,name:account.24_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
 #: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__bank
 #: model:res.groups.privilege,name:account.res_group_privilege_accounting_bank
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, fuzzy
@@ -4895,6 +5166,11 @@ msgid "Bank Accounts"
 msgstr "ບັນຊີທະນາຄານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110020
+msgid "Bank Administration Fees"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_statements_source
 #, fuzzy
 msgid "Bank Feeds"
@@ -4905,8 +5181,10 @@ msgstr "ຂໍ້ມູນການເຄື່ອນໄຫວຈາກທະນ
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_expense_finance
 #: model:account.account,name:account.22_account_account_us_bank_fees
+#: model:account.account,name:account.24_l10n_id_66110340
 #: model:account.reconcile.model,name:account.21_bank_fees_reco
 #: model:account.reconcile.model,name:account.22_bank_fees_reco
+#: model:account.reconcile.model,name:account.24_bank_fees_reco
 #, fuzzy
 msgid "Bank Fees"
 msgstr "ຄ່າທຳນຽມທະນາຄານ"
@@ -4932,6 +5210,11 @@ msgstr ""
 #, fuzzy
 msgid "Bank Journals"
 msgstr "ສະໝຸດບັນຊີທະນາຄານ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_22110010
+msgid "Bank Loan"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_name
@@ -4997,6 +5280,7 @@ msgid "Bank Statements"
 msgstr "ໃບແຈ້ງຍອດທະນາຄານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_11120001
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 #, fuzzy
 msgid "Bank Suspense"
@@ -5007,6 +5291,7 @@ msgstr "ບັນຊີພັກທະນາຄານ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_account_journal_suspense_account_id
 #: model:account.account,name:account.22_account_journal_suspense_account_id
+#: model:account.account,name:account.24_account_journal_suspense_account_id
 #, fuzzy
 msgid "Bank Suspense Account"
 msgstr "ບັນຊີພັກທະນາຄານ"
@@ -5062,6 +5347,16 @@ msgid "Bank of odoo"
 msgstr "ທະນາຄານ Odoo"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_65110020
+msgid "Bank service and administration fees"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110340
+msgid "Bank service charges"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
@@ -5073,6 +5368,13 @@ msgstr "ການຕັ້ງຄ່າທະນາຄານ"
 #, fuzzy
 msgid "Bank setup manual config"
 msgstr "ການຕັ້ງຄ່າທະນາຄານແບບປ້ອນເອງ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Bank statements must be linked to a journal of type Bank, Cash or Credit."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__suspense_account_id
@@ -5091,6 +5393,11 @@ msgid "Bank transactions and payments:"
 msgstr "ລາຍການເຄື່ອນໄຫວທະນາຄານ ແລະ ການຊຳລະເງິນ:"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_25110060
+msgid "Bank-related fees accrued"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, fuzzy
@@ -5103,6 +5410,11 @@ msgstr "ທະນາຄານ: ຍອດເຫຼືອ"
 #, fuzzy
 msgid "Banks"
 msgstr "ທະນາຄານ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110280
+msgid "Bar & Restaurant"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
@@ -5363,6 +5675,11 @@ msgid "Body content is the same as the template"
 msgstr "ເນື້ອໃນຂໍ້ຄວາມຄືກັນກັບແບບຟອມ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_61100020
+msgid "Bonuses and benefits for employees"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__boolean
 #, fuzzy
@@ -5401,16 +5718,51 @@ msgid "Budgets"
 msgstr "ງົບປະມານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_12210600
+msgid "Building Installations (Movable)"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110153
+msgid "Building Maintenance Costs"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11410010
+msgid "Building Rent"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_buildings
 #, fuzzy
 msgid "Buildings"
 msgstr "ອາຄານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_12210210
+msgid "Buildings - Non-Permanent"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210200
+msgid "Buildings - Permanent"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110260
+msgid "Business Gift"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 #, fuzzy
 msgid "Business document import mixin"
 msgstr "Mixin ການນຳເຂົ້າເອກະສານທາງທຸລະກິດ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110080
+msgid "Business license fees accrued"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_licenses
@@ -5462,6 +5814,31 @@ msgid "C"
 msgstr "C"
 
 #. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_ca_alameda
+msgid "CA Alameda County 4.25%"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_ca_state
+msgid "CA State 6%"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_ca_exempt
+msgid "CA State 6% Exempt"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_ca_nontaxable
+msgid "CA State 6% Non-Taxable"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_ca_reduced
+msgid "CA State 6% reduced to 4%"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, fuzzy
@@ -5488,12 +5865,6 @@ msgid "CLABE"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/tools/bank_account_number.py:0
-msgid "CLABE should be a string of 18 digits."
-msgstr ""
-
-#. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
 #, fuzzy
 msgid "COST AND FREIGHT"
@@ -5504,6 +5875,11 @@ msgstr "ຕົ້ນທຶນ ແລະ ຄ່າຂົນສົ່ງ (CFR)"
 #, fuzzy
 msgid "COST, INSURANCE AND FREIGHT"
 msgstr "ຕົ້ນທຶນ, ປະກັນໄພ ແລະ ຄ່າຂົນສົ່ງ (CIF)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "CSV, XLS and XLSX files cannot be imported automatically."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -5517,6 +5893,11 @@ msgstr "ລູກຄ້າ"
 #, fuzzy
 msgid "Can Be Proposed"
 msgstr "ສາມາດຖືກສະເໜີໄດ້"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_base_document_layout__can_configure_later
+msgid "Can Configure Later"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
@@ -5662,6 +6043,21 @@ msgid "Capital"
 msgstr "ທຶນ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_31210010
+msgid "Capital Reserves"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_31100020
+msgid "Capital actually paid by shareholders"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_31100030
+msgid "Capital committed but not yet paid by shareholders"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 #, fuzzy
@@ -5679,8 +6075,11 @@ msgstr "ຍົກຍອດໄປທີ່"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.21_cash_journal_default_account_306
+#: model:account.account,name:account.21_cash_journal_default_account_509
+#: model:account.account,name:account.24_l10n_id_11110001
+#: model:account.journal,name:account.24_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, fuzzy
@@ -5694,13 +6093,13 @@ msgid "Cash Account"
 msgstr "ບັນຊີເງິນສົດ"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_303
+#: model:account.account,name:account.21_cash_journal_default_account_506
 #, fuzzy
 msgid "Cash Bakery"
 msgstr "ເງິນສົດຮ້ານເບເກີຣີ"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_305
+#: model:account.account,name:account.21_cash_journal_default_account_508
 #, fuzzy
 msgid "Cash Bar"
 msgstr "ເງິນສົດບາ"
@@ -5738,6 +6137,7 @@ msgstr "ທີ່ມາຂອງເກນເງິນສົດ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_caba
 #: model:account.journal,name:account.22_caba
+#: model:account.journal,name:account.24_caba
 #, fuzzy
 msgid "Cash Basis Taxes"
 msgstr "ພາສີເກນເງິນສົດ"
@@ -5749,7 +6149,7 @@ msgid "Cash Basis Transition Account"
 msgstr "ບັນຊີພັກພາສີເກນເງິນສົດ"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_302
+#: model:account.account,name:account.21_cash_journal_default_account_505
 #, fuzzy
 msgid "Cash Clothes Shop"
 msgstr "ເງິນສົດຮ້ານຂາຍເຄື່ອງນຸ່ງ"
@@ -5765,6 +6165,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍສ່ວນຕ່າງເງິນສົ
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_diff_income
 #: model:account.account,name:account.22_account_account_us_cash_diff_income
+#: model:account.account,name:account.24_l10n_id_99900002
 #, fuzzy
 msgid "Cash Difference Gain"
 msgstr "ກຳໄລຈາກສ່ວນຕ່າງເງິນສົດ"
@@ -5780,6 +6181,7 @@ msgstr "ລາຍໄດ້ສ່ວນຕ່າງເງິນສົດ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_diff_expense
 #: model:account.account,name:account.22_account_account_us_cash_diff_expense
+#: model:account.account,name:account.24_l10n_id_99900001
 #, fuzzy
 msgid "Cash Difference Loss"
 msgstr "ຂາດທຶນຈາກສ່ວນຕ່າງເງິນສົດ"
@@ -5789,6 +6191,7 @@ msgstr "ຂາດທຶນຈາກສ່ວນຕ່າງເງິນສົດ
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_discount_gain
 #: model:account.account,name:account.22_account_account_us_cash_discount_gain
+#: model:account.account,name:account.24_l10n_id_99900004
 #, fuzzy
 msgid "Cash Discount Gain"
 msgstr "ກຳໄລຈາກສ່ວນຫຼຸດເງິນສົດ"
@@ -5798,6 +6201,7 @@ msgstr "ກຳໄລຈາກສ່ວນຫຼຸດເງິນສົດ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_cash_discount_loss
 #: model:account.account,name:account.22_account_account_us_cash_discount_loss
+#: model:account.account,name:account.24_l10n_id_99900003
 #, fuzzy
 msgid "Cash Discount Loss"
 msgstr "ຂາດທຶນຈາກສ່ວນຫຼຸດເງິນສົດ"
@@ -5821,10 +6225,30 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "ບັນຊີຂາດທຶນຈາກການຕັດຈ່າຍສ່ວນຫຼຸດເງິນສົດ"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_301
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Cash Flow"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.21_cash_journal_default_account_504
 #, fuzzy
 msgid "Cash Furn. Shop"
 msgstr "ເງິນສົດຮ້ານເຟີນີເຈີ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
+msgid "Cash In"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
+msgid "Cash Out"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -5834,16 +6258,10 @@ msgid "Cash Registers"
 msgstr "ເຄື່ອງບັນທຶກເງິນສົດ"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_304
+#: model:account.account,name:account.21_cash_journal_default_account_507
 #, fuzzy
 msgid "Cash Restaurant"
 msgstr "ເງິນສົດຮ້ານອາຫານ"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
-#, fuzzy
-msgid "Cash Rounding"
-msgstr "ການປັດເສດເງິນສົດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -5851,14 +6269,6 @@ msgstr "ການປັດເສດເງິນສົດ"
 #, fuzzy
 msgid "Cash Rounding Method"
 msgstr "ວິທີການປັດເສດເງິນສົດ"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.rounding_list_action
-#: model:ir.ui.menu,name:account.menu_action_rounding_form_view
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
-msgid "Cash Roundings"
-msgstr "ການປັດເສດເງິນສົດ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -5879,6 +6289,15 @@ msgstr "ບັນຊີພັກເພື່ອປ່ຽນຜ່ານເກນ
 #, fuzzy
 msgid "Cash: Balance"
 msgstr "ເງິນສົດ: ຍອດເຫຼືອ"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_cashflow_analysis
+#: model:ir.ui.menu,name:account.menu_action_account_cashflow_analysis
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_graph_cashflow
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_pivot_cashflow
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
+msgid "Cashflow Analysis"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6070,6 +6489,12 @@ msgid "Click"
 msgstr "ຄລິກ"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
+msgid "Click to swap currencies"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 #, fuzzy
 msgid "Close"
@@ -6129,6 +6554,11 @@ msgid ""
 "Collect information and produce statistics on the trade in goods in Europe "
 "with intrastat"
 msgstr "ເກັບກຳຂໍ້ມູນ ແລະ ສ້າງສະຖິຕິການຄ້າສິນຄ້າໃນຢູໂຣບດ້ວຍ intrastat"
+
+#. module: account
+#: model:account.tax.group,name:account.24_l10n_id_tax_group_vat_collector
+msgid "Collected by VAT Collector"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
@@ -6198,6 +6628,11 @@ msgid "Common Stock"
 msgstr "ຮຸ້ນສາມັນ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_12210410
+msgid "Communication Devices"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
 #, fuzzy
 msgid "Communication Standard"
@@ -6254,6 +6689,7 @@ msgstr "ບໍລິສັດທີ່ອ້າງອີງເຖິງຄູ່
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_group__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6270,6 +6706,11 @@ msgstr "ບໍລິສັດ"
 #, fuzzy
 msgid "Company "
 msgstr "ບໍລິສັດ "
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100060
+msgid "Company BPJS contribution expense"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -6323,6 +6764,11 @@ msgid "Company Vat Placeholder"
 msgstr "ຕົວຢ່າງບ່ອນຕື່ມຂໍ້ມູນພາສີມູນຄ່າເພີ່ມຂອງບໍລິສັດ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_11120004
+msgid "Company bank account for transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
 #, fuzzy
 msgid "Company has a chart of accounts"
@@ -6350,6 +6796,21 @@ msgstr "ບໍລິສັດທີ່ກ່ຽວຂ້ອງກັບປຶ້
 msgid ""
 "Company's personnel costs excluding compensations, contributions and vouchers"
 msgstr "ຄ່າໃຊ້ຈ່າຍບຸກຄະລາກອນຂອງບໍລິສັດ ໂດຍບໍ່ລວມຄ່າຕອບແທນ, ການປະກອບສ່ວນ ແລະ ບັດກຳນັນ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_31100010
+msgid "Companys authorized capital"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11110001
+msgid "Companys main cash on hand"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100040
+msgid "Compensation expenses for employees"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_salaries
@@ -6388,6 +6849,16 @@ msgid "Computers"
 msgstr "ຄອມພິວເຕີ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210400
+msgid "Computers, laptops, servers (Group 1)."
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.rounding_form_view
+msgid "Conditions"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_res_config_settings
 #, fuzzy
 msgid "Config Settings"
@@ -6411,6 +6882,11 @@ msgstr "ການກວດສອບການຕັ້ງຄ່າ"
 #, fuzzy
 msgid "Configure"
 msgstr "ຕັ້ງຄ່າ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
+msgid "Configure Later"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -6503,6 +6979,16 @@ msgid "Construction of buildings and costs associated to buildings"
 msgstr "ການກໍ່ສ້າງອາຄານ ແລະ ຄ່າໃຊ້ຈ່າຍທີ່ກ່ຽວຂ້ອງກັບອາຄານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110030
+msgid "Consultant Fees"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110120
+msgid "Consumables"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_res_partner
 #, fuzzy
 msgid "Contact"
@@ -6536,6 +7022,86 @@ msgid "Contents"
 msgstr "ເນື້ອຫາ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12281430
+msgid "Contra account for Appliances depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281600
+msgid "Contra account for Building Installations depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281410
+msgid "Contra account for Communication Devices depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281630
+msgid "Contra account for Heavy Construction Equipment depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281620
+msgid "Contra account for Heavy Machinery depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281320
+msgid "Contra account for Heavy Vehicles depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281400
+msgid "Contra account for IT Equipment depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281610
+msgid "Contra account for Light Machinery depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281510
+msgid "Contra account for Metal/Mixed Furniture depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281300
+msgid "Contra account for Motorcycles depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281210
+msgid "Contra account for Non-Permanent Building depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281420
+msgid "Contra account for Office Electronics depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281310
+msgid "Contra account for Operational Vehicles depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281200
+msgid "Contra account for Permanent Building depreciation."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281700
+msgid "Contra account for Software Licenses amortization."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12281500
+msgid "Contra account for Wood/Rattan Furniture depreciation."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.account_audit_control_menu
 #, fuzzy
 msgid "Control"
@@ -6563,11 +7129,47 @@ msgid "Cool, it looks like you don't have any amount to settle."
 msgstr "ດີຫຼາຍ, ເບິ່ງຄືວ່າທ່ານບໍ່ມີຈຳນວນເງິນໃດໆທີ່ຕ້ອງຊຳລະສະສາງ."
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_21210040
+msgid "Corporate tax payable (PPh 25)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100014
+msgid "Corporate tax payable for the year (PPh 29)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11210014
+msgid "Corporate tax receivable for the year (PPh 28A)"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, fuzzy
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr "ຂໍ້ມູນເສຍຫາຍໃນລາຍການປຶ້ມບັນຊີປະຈໍາວັນທີ່ມີໄອດີ %(id)s (%(name)s)."
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100140
+msgid ""
+"Cost allocation for large-scale production lines, industrial plant "
+"machinery, and stationary power plants."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100040
+msgid ""
+"Cost allocation for standard company cars, SUVs, and vans used for "
+"administrative and daily business tasks."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100090
+msgid ""
+"Cost allocation for utility equipment like refrigerators, microwaves, and "
+"air conditioning units."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -6578,6 +7180,7 @@ msgstr "ຕົ້ນທຶນ ແລະ ລາຍຮັບ"
 #. module: account
 #: model:account.account,name:account.21_cost_of_goods_sold
 #: model:account.account,name:account.22_account_account_us_cost_of_goods_sold
+#: model:account.account,name:account.24_l10n_id_51000010
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 #, fuzzy
 msgid "Cost of Goods Sold"
@@ -6609,6 +7212,16 @@ msgid "Cost of revenue"
 msgstr "ຕົ້ນທຶນຂອງລາຍຮັບ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_65110153
+msgid "Costs for maintaining buildings"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110090
+msgid "Costs for shipping goods"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_postage
 #, fuzzy
 msgid ""
@@ -6630,6 +7243,16 @@ msgstr ""
 #, fuzzy
 msgid "Costs related to promoting the business, such as ads, campaigns, etc"
 msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ກ່ຽວຂ້ອງກັບການສົ່ງເສີມທຸລະກິດ, ເຊັ່ນ: ການໂຄສະນາ, ແຄມເປນ ແລະ ອື່ນໆ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110040
+msgid "Costs related to rentals"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110152
+msgid "Costs to maintain fixed assets"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -6898,6 +7521,12 @@ msgid "Create a vendor credit note"
 msgstr "ສ້າງໃບຫຼຸດໜີ້ຜູ້ສະໜອງ"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
+msgid "Create and edit"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 #, fuzzy
 msgid ""
@@ -6954,9 +7583,8 @@ msgstr "ສ້າງບັນຊີໃໝ່"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
-#, fuzzy
-msgid "Create the first cash rounding"
-msgstr "ສ້າງການປັດເສດເງິນສົດຄັ້ງທຳອິດ"
+msgid "Create the first rounding method"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -7087,6 +7715,7 @@ msgstr "ສ້າງເມື່ອ"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, fuzzy
@@ -7220,6 +7849,11 @@ msgid "Credit limit specific to this partner."
 msgstr "ວົງເງິນສິນເຊື່ອສະເພາະສຳລັບຄູ່ຄ້ານີ້."
 
 #. module: account
+#: model_terms:account.tax,description:account.24_tax_PT7
+msgid "Creditable Input VAT from Imports and Foreign Sources"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
 #, fuzzy
 msgid "Cumulated Balance"
@@ -7283,6 +7917,7 @@ msgstr "ສະກຸນເງິນ"
 #: model:ir.model,name:account.model_res_currency
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__currency_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
@@ -7294,6 +7929,7 @@ msgstr "ສະກຸນເງິນ"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner__currency_id
 #: model:ir.model.fields,field_description:account.field_res_users__currency_id
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -7452,6 +8088,11 @@ msgid "Customer Credit Note"
 msgstr "ໃບຫຼຸດໜີ້ລູກຄ້າ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_28110020
+msgid "Customer Deposit"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_invoice
@@ -7554,6 +8195,8 @@ msgid "CustomerInvoices"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.actions.act_window,name:account.res_partner_action_customer
 #: model:ir.ui.menu,name:account.menu_account_customer
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -7623,6 +8266,7 @@ msgstr "ສົ່ງເຖິງສະຖານທີ່ໂດຍລວມພາ
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 #: model:ir.ui.menu,name:account.menu_board_journal_1
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #, fuzzy
 msgid "Dashboard"
 msgstr "ແຜງຄວບຄຸມ"
@@ -7660,6 +8304,7 @@ msgstr "ການກວດສອບຄວາມສອດຄ່ອງຂອງຂ
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -8015,6 +8660,7 @@ msgstr "ຄ່າເລີ່ມຕົ້ນສຳລັບ 'company_id' ຂອ�
 #. module: account
 #: model:account.account,name:account.21_deferred_revenue
 #: model:account.account,name:account.22_account_account_us_deferred_revenue
+#: model:account.account,name:account.24_l10n_id_28110030
 #, fuzzy
 msgid "Deferred Revenue"
 msgstr "ລາຍໄດ້ລໍຖ້າການຮັບຮູ້"
@@ -8025,12 +8671,6 @@ msgstr "ລາຍໄດ້ລໍຖ້າການຮັບຮູ້"
 #, fuzzy
 msgid "Define a default in the settings"
 msgstr "ກໍານົດຄ່າເລີ່ມຕົ້ນໃນການຕັ້ງຄ່າ"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
-msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr "ກຳນົດຫົວໜ່ວຍເງິນທີ່ນ້ອຍທີ່ສຸດຂອງສະກຸນເງິນທີ່ໃຊ້ຊຳລະດ້ວຍເງິນສົດ"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -8049,6 +8689,11 @@ msgstr "ກຳນົດວິທີການລົງທະບຽນໃບລາ
 #, fuzzy
 msgid "Defines if the field account prefix should be displayed"
 msgstr "ກຳນົດວ່າຄວນສະແດງຄຳນຳໜ້າເລກບັນຊີຫຼືບໍ່"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.ir_actions_report_form_inherit_account
+msgid "Defines if the report is used in the invoice wizard"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -8079,6 +8724,7 @@ msgstr "ປະເພດການຊັກຊ້າ"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #, fuzzy
 msgid "Delete"
@@ -8124,6 +8770,31 @@ msgid "Demo Stock Account"
 msgstr "ບັນຊີສາງສິນຄ້າ (ຕົວຢ່າງ)"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_81100020
+msgid "Deposit Income"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_22110020
+msgid "Deposit for leasing agreements"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_28110020
+msgid "Deposits received from customers"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100020
+msgid "Deposits received from shareholders"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100030
+msgid "Deposits received from third parties"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 #, fuzzy
@@ -8142,6 +8813,81 @@ msgstr "ລິງກ໌ທີ່ເລີກໃຊ້ແລ້ວ"
 #, fuzzy
 msgid "Depreciation"
 msgstr "ຄ່າເສື່ອມລາຄາ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100090
+msgid "Depreciation Exp - Appliances"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100120
+msgid "Depreciation Exp - Building Installations"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100020
+msgid "Depreciation Exp - Buildings Non-Permanent"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100010
+msgid "Depreciation Exp - Buildings Permanent"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100070
+msgid "Depreciation Exp - Communication Devices"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100110
+msgid "Depreciation Exp - Furniture (Metal/Mixed)"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100100
+msgid "Depreciation Exp - Furniture (Wood/Rattan)"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100150
+msgid "Depreciation Exp - Heavy Construction Equip"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100140
+msgid "Depreciation Exp - Heavy Machinery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100050
+msgid "Depreciation Exp - Heavy Vehicles"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100060
+msgid "Depreciation Exp - IT Equipment"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100130
+msgid "Depreciation Exp - Light Machinery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100030
+msgid "Depreciation Exp - Motorcycles"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100080
+msgid "Depreciation Exp - Office Electronics"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_67100040
+msgid "Depreciation Exp - Operational Vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -8179,9 +8925,52 @@ msgid "Depreciation Expense - Vehicles"
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_67100110
+msgid ""
+"Depreciation for durable furniture like steel filing cabinets and metal-"
+"framed workstations."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100100
+msgid ""
+"Depreciation for furniture made primarily of organic materials, such as "
+"wooden desks and cabinets."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100050
+msgid ""
+"Depreciation for large-scale transport assets such as dump trucks, prime "
+"movers, or large buses."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100080
+msgid ""
+"Depreciation for office peripherals such as printers, scanners, "
+"photocopiers, and projectors."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100150
+msgid ""
+"Depreciation for site-specific machinery like excavators, cranes, and "
+"bulldozers."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100030
+msgid ""
+"Depreciation of two-wheeled motorized vehicles used for business operations "
+"or delivery."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__description
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
+#: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Description"
@@ -8259,6 +9048,11 @@ msgstr ""
 "ຫັນປ່ຽນເອກະສານ PDF ຫຼື ເອກະສານທີ່ສະແກນຂອງທ່ານໃຫ້ເປັນຂໍ້ມູນດີຈີຕອນດ້ວຍ OCR ແລະ ປັນຍາປະດິດ (AI)"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_51000010
+msgid "Direct cost of goods sold"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
 #: model:ir.model.fields,field_description:account.field_account_move__direction_sign
 #, fuzzy
@@ -8276,6 +9070,11 @@ msgstr "ປະກັນໄພທຸບພົນລະພາບ"
 #, fuzzy
 msgid "Disable Merge Button"
 msgstr "ປິດການໃຊ້ງານປຸ່ມຮວມ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__disable_dashboard_graph
+msgid "Disable chart to speed up dashboard"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__disabled
@@ -8375,6 +9174,11 @@ msgstr "ສ່ວນຫຼຸດ %(amount)s ຖ້າຊຳລະໃນມື້
 #, fuzzy
 msgid "Discount of %(amount)s if paid within %(days)s days"
 msgstr "ສ່ວນຫຼຸດ %(amount)s ຖ້າຊຳລະພາຍໃນ %(days)s ວັນ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_42000070
+msgid "Discounts given to customers on sales"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -8531,6 +9335,7 @@ msgstr "ສະແດງແຖບການຈັບຄູ່ຂໍ້ມູນ (M
 #: model:ir.model.fields,field_description:account.field_ir_http__display_name
 #: model:ir.model.fields,field_description:account.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:account.field_kpi_provider__display_name
+#: model:ir.model.fields,field_description:account.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:account.field_mail_message__display_name
 #: model:ir.model.fields,field_description:account.field_mail_template__display_name
 #: model:ir.model.fields,field_description:account.field_onboarding_onboarding_step__display_name
@@ -8732,6 +9537,7 @@ msgstr "ທາງລັດສູດເງື່ອນໄຂ"
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_domestic_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_domestic
+#: model:account.fiscal.position,name:account.24_l10n_id_domestic_fiscal_position
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #, fuzzy
@@ -8756,6 +9562,11 @@ msgstr "ປະເທດພາຍໃນຂອງການບັນຊີຂອງ
 #, fuzzy
 msgid "Down"
 msgstr "ປັດລົງ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11800000
+msgid "Down Payment"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -8916,8 +9727,6 @@ msgid "Drop to import your invoices."
 msgstr "ວາງໄຟລ໌ເພື່ອນຳເຂົ້າໃບແຈ້ງໜີ້ຂອງທ່ານ."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
 #, fuzzy
 msgid "Due"
@@ -8958,6 +9767,7 @@ msgstr "ຄ່າທຳນຽມ ແລະ ຄ່າສະມາຊິກ"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #, fuzzy
 msgid "Duplicate"
@@ -9138,6 +9948,16 @@ msgid "Education and training fees not including food and drinks"
 msgstr "ຄ່າທຳນຽມການສຶກສາ ແລະ ການຝຶກອົບຮົມ ບໍ່ລວມຄ່າອາຫານ ແລະ ເຄື່ອງດື່ມ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_25110100
+msgid "Education-related expenses accrued"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110010
+msgid "Electricity expenses accrued but not yet paid"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #, fuzzy
 msgid "Electronic Data Interchange"
@@ -9189,6 +10009,11 @@ msgid "Email bills"
 msgstr "ສົ່ງໃບບິນຜ່ານອີເມລ"
 
 #. module: account
+#: model:ir.model,name:account.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 #, fuzzy
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
@@ -9201,6 +10026,21 @@ msgid "Emails"
 msgstr "ອີເມລ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_61100020
+msgid "Employee Bonus / Benefits"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11210020
+msgid "Employee Liabilities"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_61100030
+msgid "Employee Overtime Pay"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.21_employee_payroll_taxes
 #: model:account.account,name:account.22_account_account_us_employee_payroll_taxes
 #, fuzzy
@@ -9208,10 +10048,25 @@ msgid "Employee Payroll Taxes"
 msgstr "ພາສີເງິນເດືອນພະນັກງານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_61100010
+msgid "Employee Salary"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100100
+msgid "Employee tax-related benefits (PPh 21)"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_commissions
 #, fuzzy
 msgid "Employees Commissions"
 msgstr "ຄ່ານາຍໜ້າພະນັກງານ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_61100040
+msgid "Employees Compensation"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_commissions
@@ -9313,7 +10168,6 @@ msgstr "ຍອດເຫຼືອປິດທ້າຍ"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 #, fuzzy
 msgid "Enter a description"
@@ -9527,6 +10381,11 @@ msgid "Example:"
 msgstr "ຕົວຢ່າງ:"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210630
+msgid "Excavators, cranes, bulldozers (Group 4)."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 #, fuzzy
@@ -9538,6 +10397,7 @@ msgstr "ຂໍ້ຍົກເວັ້ນ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_exch
 #: model:account.journal,name:account.22_exch
+#: model:account.journal,name:account.24_exch
 #, fuzzy
 msgid "Exchange Difference"
 msgstr "ສ່ວນຕ່າງອັດຕາແລກປ່ຽນ"
@@ -9573,11 +10433,6 @@ msgid "Exchange Rate"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment_register__exchange_rate_currency_code
-msgid "Exchange Rate Currency Code"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Exchange difference entries:"
@@ -9586,15 +10441,19 @@ msgstr "ລາຍການສ່ວນຕ່າງອັດຕາແລກປ່
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
-#, fuzzy
-msgid "Exclude this journal entry from follow-up reports."
-msgstr "ຍົກເວັ້ນລາຍການບັນຊີນີ້ອອກຈາກລາຍງານການຕິດຕາມໜີ້."
+msgid "Exclude this journal entry from Reminder reports."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
-#, fuzzy
-msgid "Exclude this journal item from follow-up reports."
-msgstr "ຍົກເວັ້ນລາຍການບັນຊີນີ້ອອກຈາກລາຍງານການຕິດຕາມໜີ້."
+msgid "Exclude this journal item from Reminder reports."
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_PT2
+#: model_terms:account.tax,description:account.24_tax_ST2
+msgid "Exempt"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
@@ -9645,12 +10504,45 @@ msgid "Expense Accrual Account"
 msgstr "ບັນຊີລາຍຈ່າຍຄ້າງຈ່າຍ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:account.account,name:account.21_expense
+#: model:account.account,name:account.24_l10n_id_61100000
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, fuzzy
 msgid "Expenses"
 msgstr "ລາຍຈ່າຍ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110120
+msgid "Expenses for consumable items"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110300
+msgid "Expenses for employee training and documentation"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110280
+msgid "Expenses for meals at bars and restaurants"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_63110040
+msgid "Expenses for office equipment"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_64110050
+msgid "Expenses for postal services"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110100
+msgid "Expenses for raw materials used in production"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_meals
@@ -9674,10 +10566,35 @@ msgstr ""
 "ຄ່າໃຊ້ຈ່າຍໃນການສ້ອມແປງ ແລະ ບຳລຸງຮັກສາຄອມພິວເຕີໂນດບຸກ, ອຸປະກອນຕໍ່ພ່ວງ ແລະ ອຸປະກອນຄອມພິວເຕີ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_11210040
+msgid "Expenses paid in advance for goods or services"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110170
+msgid "Expenses paid to subcontractors"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_63110030
+msgid "Expenses related to R&D activities"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110150
+msgid "Expenses related to studies or projects"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
 #, fuzzy
 msgid "Expired"
 msgstr "ໝົດອາຍຸ"
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_ST7
+msgid "Export"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -9778,6 +10695,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210620
+msgid "Factory production lines (Group 3)."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, fuzzy
@@ -9821,6 +10743,26 @@ msgid "Federal States"
 msgstr "ລັດ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110000
+msgid "Fees"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110010
+msgid "Fees for licenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110030
+msgid "Fees paid to consultants"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110330
+msgid "Fees related to importing goods"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/fetch_einvoices/fetch_einvoices_cog.js:0
 #, fuzzy
@@ -9843,7 +10785,7 @@ msgstr "ປ້ອນລາຍລະອຽດຂອງສິນຄ້າ ຫຼ�
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
+#: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
 #, fuzzy
 msgid "Filter"
 msgstr "ຕົວຕອງ"
@@ -9879,6 +10821,16 @@ msgstr "ປຶ້ມບັນຊີການເງິນ"
 #, fuzzy
 msgid "Financing Activities"
 msgstr "ກິດຈະກຳການຈັດຫາທຶນ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110052
+msgid "Fire Insurance"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110052
+msgid "Fire insurance premiums"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
@@ -9939,6 +10891,11 @@ msgstr "ປະເທດທາງພາສີ"
 #, fuzzy
 msgid "Fiscal Country Code"
 msgstr "ລະຫັດປະເທດທາງພາສີ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
+msgid "Fiscal Country Code of the Company"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -10057,6 +11014,11 @@ msgid "Fixed Assets"
 msgstr "ຊັບສິນຄົງທີ່"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_66110210
+msgid "Flights"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_airfare
 #, fuzzy
 msgid "Flights or expenses related to air travel by plane"
@@ -10129,16 +11091,9 @@ msgid "Followers (Partners)"
 msgstr "ຜູ້ຕິດຕາມ (ຄູ່ຄ້າ)"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_account__activity_type_icon
-#: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_type_icon
-#: model:ir.model.fields,help:account.field_account_journal__activity_type_icon
-#: model:ir.model.fields,help:account.field_account_move__activity_type_icon
-#: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
-#: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
-#: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
-#, fuzzy
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "ໄອຄອນ Font awesome ເຊັ່ນ fa-tasks"
+#: model:account.account,description:account.24_l10n_id_66110290
+msgid "Food expenses for receptions and deliveries"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_food
@@ -10155,6 +11110,11 @@ msgstr ""
 #, fuzzy
 msgid "Food: Catering & Delivery"
 msgstr "ອາຫານ: ການບໍລິການຈັດລ້ຽງ ແລະ ການຈັດສົ່ງ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110290
+msgid "Food: Reception & Delivery"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -10236,6 +11196,7 @@ msgstr "ສະກຸນເງິນຕ່າງປະເທດ"
 #. module: account
 #: model:account.account,name:account.21_income_currency_exchange
 #: model:account.account,name:account.22_account_account_us_income_currency_exchange
+#: model:account.account,name:account.24_l10n_id_81100030
 #, fuzzy
 msgid "Foreign Exchange Gain"
 msgstr "ກຳໄລຈາກອັດຕາແລກປ່ຽນຕ່າງປະເທດ"
@@ -10243,6 +11204,7 @@ msgstr "ກຳໄລຈາກອັດຕາແລກປ່ຽນຕ່າງປ
 #. module: account
 #: model:account.account,name:account.21_expense_currency_exchange
 #: model:account.account,name:account.22_account_account_us_expense_currency_exchange
+#: model:account.account,name:account.24_l10n_id_91100020
 #, fuzzy
 msgid "Foreign Exchange Loss"
 msgstr "ຂາດທຶນຈາກອັດຕາແລກປ່ຽນຕ່າງປະເທດ"
@@ -10261,6 +11223,7 @@ msgstr ""
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_export
+#: model:account.fiscal.position,name:account.24_l10n_id_foreign_trade_fiscal_position
 #, fuzzy
 msgid "Foreign Trade"
 msgstr "ການຄ້າຕ່າງປະເທດ"
@@ -10426,6 +11389,11 @@ msgid "Fuel"
 msgstr "ນ້ຳມັນເຊື້ອໄຟ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_66110010
+msgid "Fuel expenses for vehicles"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__full
 #, fuzzy
 msgid "Full Amount"
@@ -10451,10 +11419,17 @@ msgid "Full access, including configuration rights."
 msgstr "ເຂົ້າເຖິງໄດ້ເຕັມຮູບແບບ, ລວມທັງສິດໃນການຕັ້ງຄ່າ."
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_19999991
+msgid "Funds being transferred between accounts"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_transfer_account_id
 #: model:account.account,name:account.22_transfer_account_id
+#: model:account.account,name:account.24_l10n_id_19999991
+#: model:account.account,name:account.24_transfer_account_id
 #, fuzzy
 msgid "Funds in Transit"
 msgstr "ເງິນໃນລະຫວ່າງການໂອນ"
@@ -10464,6 +11439,26 @@ msgstr "ເງິນໃນລະຫວ່າງການໂອນ"
 #, fuzzy
 msgid "Furniture & Fixtures"
 msgstr "ເຟີນີເຈີ ແລະ ເຄື່ອງຕິດຕັ້ງ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210510
+msgid "Furniture (Metal/Mixed)"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210500
+msgid "Furniture (Wood/Rattan)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210510
+msgid "Furniture made of metal or mixed materials (Group 2)."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210500
+msgid "Furniture made of wood or rattan (Group 1)."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10505,6 +11500,26 @@ msgid "Gain Exchange Rate Account Active"
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_99900002
+msgid "Gain due to cash differences"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_99900004
+msgid "Gain due to cash discounts received"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_81100030
+msgid "Gain from foreign currency fluctuations"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_81100050
+msgid "Gain on Sale of Fixed Assets"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 #, fuzzy
 msgid "General"
@@ -10512,9 +11527,40 @@ msgstr "ທົ່ວໄປ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_general_subcontracting
+#: model:account.account,name:account.24_l10n_id_66110170
 #, fuzzy
 msgid "General Subcontracting"
 msgstr "ການຮັບເໝົາຊ່ວງທົ່ວໄປ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100000
+msgid "General company expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110000
+msgid "General fees incurred by the company"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110050
+msgid "General insurance expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110150
+msgid "General maintenance expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110000
+msgid "General office supply expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110070
+msgid "General taxes paid by the company"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
@@ -10559,6 +11605,11 @@ msgstr "ຮັບຊຳລະເງິນອອນລາຍ. ສົ່ງໃບ�
 #, fuzzy
 msgid "Get hash integrity result as PDF."
 msgstr "ດຶງຜົນກວດສອບຄວາມຖືກຕ້ອງຂອງ Hash ເປັນ PDF."
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110260
+msgid "Gifts for business purposes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__global_location_number
@@ -10616,6 +11667,17 @@ msgstr "ສິນຄ້າຈັດສົ່ງແລ້ວແຕ່ຍັງບ
 #, fuzzy
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
 msgstr "ສິນຄ້າອອກໃບແຈ້ງໜີ້ແລ້ວແຕ່ຍັງບໍ່ທັນຈັດສົ່ງ (ການຕີລາຄາແບບຕໍ່ເນື່ອງ)"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110190
+msgid "Goods for Resale"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Gross Margin"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_ground_transportation
@@ -10721,6 +11783,12 @@ msgid "Has Accounting Entries"
 msgstr "ມີລາຍການບັນຊີ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_biggest_tax_cash_rounding_line
+#: model:ir.model.fields,field_description:account.field_account_move__has_biggest_tax_cash_rounding_line
+msgid "Has Biggest Tax Cash Rounding Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_draft_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__has_draft_move_duplicate
 msgid "Has Draft Move Duplicate"
@@ -10823,10 +11891,30 @@ msgid "Hash integrity result PDF"
 msgstr "PDF ຜົນການກວດສອບຄວາມຖືກຕ້ອງຂອງ Hash"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_25110110
+msgid "Health insurance accrued expenses"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_healthcare
 #, fuzzy
 msgid "Healthcare Benefits"
 msgstr "ສະຫວັດດີການດ້ານສຸຂະພາບ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210630
+msgid "Heavy Construction Equipment"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210620
+msgid "Heavy Machinery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210320
+msgid "Heavy Vehicles"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -10920,6 +12008,16 @@ msgid "Highlight Send Button"
 msgstr "ເນັ້ນປຸ່ມສົ່ງ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_39000000
+msgid "Historical Balance"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_39000000
+msgid "Historical balance from previous periods"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__holder_name
 msgid "Holder Name"
@@ -10932,6 +12030,11 @@ msgid "Horizontal Split Side"
 msgstr "ດ້ານການແບ່ງຕາມລວງນອນ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_66110220
+msgid "Hotel accommodation expenses"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_hotels
 #, fuzzy
 msgid "Hotel or accommodation expenses incurred during business trips"
@@ -10939,6 +12042,7 @@ msgstr "ຄ່າໂຮງແຮມ ຫຼື ຄ່າທີ່ພັກທີ�
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_hotels
+#: model:account.account,name:account.24_l10n_id_66110220
 #, fuzzy
 msgid "Hotels"
 msgstr "ໂຮງແຮມ"
@@ -11026,6 +12130,7 @@ msgstr "ICE:"
 #: model:ir.model.fields,field_description:account.field_ir_http__id
 #: model:ir.model.fields,field_description:account.field_ir_module_module__id
 #: model:ir.model.fields,field_description:account.field_kpi_provider__id
+#: model:ir.model.fields,field_description:account.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:account.field_mail_message__id
 #: model:ir.model.fields,field_description:account.field_mail_template__id
 #: model:ir.model.fields,field_description:account.field_onboarding_onboarding_step__id
@@ -11083,6 +12188,11 @@ msgstr "INV0001"
 #, fuzzy
 msgid "INV001"
 msgstr "INV001"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210400
+msgid "IT Equipment"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_exception_icon
@@ -11262,6 +12372,14 @@ msgstr ""
 "ມັນຈະຊ່ວຍໃຫ້ທ່ານສາມາດເຊື່ອງເງື່ອນໄຂການຊຳລະເງິນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, the default fiscal position that applies "
+"will                                            depend upon the output of "
+"the verification by the European VIES Service."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
@@ -11366,6 +12484,7 @@ msgstr "ນຳເຂົ້າໄຟລ໌ .qif"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_import_fees
+#: model:account.account,name:account.24_l10n_id_66110330
 #, fuzzy
 msgid "Import Fees"
 msgstr "ຄ່າທຳນຽມການນຳເຂົ້າ"
@@ -11539,6 +12658,37 @@ msgid "Income Account Active"
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110070
+msgid "Income Tax Expenses (CIT)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_81100020
+msgid "Income from deposits"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_81100010
+msgid "Income from interest earned"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_28110030
+msgid "Income received in advance for goods or services"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100120
+msgid ""
+"Income tax for PPh 4(2) withheld directly at the time of the transaction"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100110
+msgid "Income tax for PPh22 withheld on trade or commercial activities"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_state_income_tax
 #, fuzzy
 msgid "Income taxes owed to state taxing authorities"
@@ -11555,6 +12705,12 @@ msgstr "ພາສີລາຍໄດ້ທີ່ຕິດຄ້າງກັບລ
 #, fuzzy
 msgid "Incoming Payments"
 msgstr "ການຊຳລະເງິນຂາເຂົ້າ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid "Incorrect ending balance, expected %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -11644,6 +12800,12 @@ msgid "Initial Setup"
 msgstr "ການຕັ້ງຄ່າເລີ່ມຕົ້ນ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid "Initial balance (%s) does not match previous statement"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Insert your terms & conditions here..."
@@ -11662,16 +12824,51 @@ msgid "Installments Switch Html"
 msgstr "Html ປ່ຽນເປັນການຜ່ອນຊຳລະ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110050
+msgid "Insurance Costs"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_us_group_655
 #, fuzzy
 msgid "Insurance Expenses"
 msgstr "ຄ່າໃຊ້ຈ່າຍປະກັນໄພ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_65110054
+msgid "Insurance covering legal matters"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110055
+msgid "Insurance covering professional liabilities"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110051
+msgid "Insurance for company vehicles"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_professional_liability_insurance
 #, fuzzy
 msgid "Insurance for damage caused to third parties"
 msgstr "ປະກັນໄພຄວາມເສຍຫາຍທີ່ເກີດກັບບຸກຄົນທີສາມ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110053
+msgid "Insurance for professional risks"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110090
+msgid "Insurance premiums accrued but unpaid"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11410020
+msgid "Insurance premiums paid in advance"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_compensation_insurance
@@ -11682,6 +12879,11 @@ msgid ""
 msgstr ""
 "ຄ່າທຳນຽມປະກັນໄພທີ່ກວມເອົາຄ່າປິ່ນປົວ ແລະ "
 "ຄ່າແຮງງານທົດແທນໃຫ້ກັບພະນັກງານທີ່ໄດ້ຮັບບາດເຈັບໃນເວລາເຮັດວຽກ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210700
+msgid "Intangible software assets (Group 1)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -11703,10 +12905,30 @@ msgid "Inter-Banks Transfer Account"
 msgstr "ບັນຊີໂອນເງິນລະຫວ່າງທະນາຄານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_91100010
+msgid "Interest Expense"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_81100010
+msgid "Interest Income"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_91100010
+msgid "Interest paid on loans and debts"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_loan_interest_expense
 #, fuzzy
 msgid "Interest paid on loans or lines of credit"
 msgstr "ດອກເບ້ຍທີ່ຈ່າຍໃຫ້ກັບເງິນກູ້ ຫຼື ວົງເງິນສິນເຊື່ອ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_29000000
+msgid "Interim Stock"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__transfer_account_id
@@ -11758,6 +12980,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.21_internal_transfer_reco
 #: model:account.reconcile.model,name:account.22_internal_transfer_reco
+#: model:account.reconcile.model,name:account.24_internal_transfer_reco
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
 #, fuzzy
 msgid "Internal Transfers"
@@ -11851,6 +13074,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Invalid Statement"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, fuzzy
 msgid "Invalid Statement(s)"
 msgstr "ໃບແຈ້ງຍອດທີ່ບໍ່ຖືກຕ້ອງ"
@@ -11878,10 +13106,16 @@ msgid "Invalid token"
 msgstr "ໂທເຄັນບໍ່ຖືກຕ້ອງ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_11300180
+msgid "Inventory"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.21_stock_valuation
 #: model:account.account,name:account.22_account_account_us_inventory_valuation
 #: model:account.journal,name:account.21_inventory_valuation
 #: model:account.journal,name:account.22_inventory_valuation
+#: model:account.journal,name:account.24_inventory_valuation
 #, fuzzy
 msgid "Inventory Valuation"
 msgstr "ການຕີມູນຄ່າສະຕັອກ"
@@ -11896,6 +13130,11 @@ msgstr "ມູນຄ່າສາງເຄື່ອງ"
 #: model:account.account,name:account.21_stock_variation
 #: model:account.account,name:account.22_account_account_us_inventory_variation
 msgid "Inventory Variation"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11300180
+msgid "Inventory items not classified under main stock"
 msgstr ""
 
 #. module: account
@@ -12018,6 +13257,12 @@ msgid "Invoice Incoterm Placeholder"
 msgstr "ບ່ອນກຳນົດ Incoterm ຂອງໃບເກັບເງິນ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Invoice Layout"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, fuzzy
 msgid "Invoice Line"
@@ -12073,6 +13318,11 @@ msgstr "ຊື່ສະແດງຂອງຄູ່ຄ້າໃນໃບແຈ້
 #, fuzzy
 msgid "Invoice Payments Widget"
 msgstr "ວິດເຈັດການຊຳລະເງິນໃບແຈ້ງໜີ້"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.ir_actions_report_form_inherit_account
+msgid "Invoice Report"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
@@ -12232,6 +13482,11 @@ msgid "Invoices"
 msgstr "ໃບແຈ້ງໜີ້"
 
 #. module: account
+#: model:ir.module.module,summary:base.module_account
+msgid "Invoices & Payments"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #, fuzzy
 msgid "Invoices &amp; Bills"
@@ -12324,6 +13579,7 @@ msgid "Invoices/Bills/Mandates"
 msgstr "ໃບເກັບເງິນ/ໃບຮຽກເກັບເງິນ/ໃບມອບສິດ"
 
 #. module: account
+#: model:ir.module.module,shortdesc:base.module_account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
 #: model:ir.ui.menu,name:account.menu_finance
 #: model:res.groups,name:account.group_account_invoice
@@ -12477,13 +13733,6 @@ msgid "Is Register Payment On Draft"
 msgstr "ແມ່ນລົງທະບຽນການຊຳລະໃນສະບັບຮ່າງ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
-#: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
-#, fuzzy
-msgid "Is Sale Installed"
-msgstr "ຕິດຕັ້ງໂມດູນການຂາຍແລ້ວ"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
 #, fuzzy
 msgid "Is Same Currency"
@@ -12589,6 +13838,7 @@ msgstr "ມັງກອນ"
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__journal_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__journal_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -12902,6 +14152,11 @@ msgstr ""
 "ດ້ວຍວິທີການປະເມີນມູນຄ່າແບບອັດຕະໂນມັດ, ບັນຊີຄ່າໃຊ້ຈ່າຍໃນໝວດສິນຄ້າຈະຖືກນຳໃຊ້."
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210430
+msgid "Kitchen and pantry electronics (Group 1)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
 #, fuzzy
 msgid "Kpi Account Total Revenue Value"
@@ -12940,16 +14195,37 @@ msgid "Label on PoS Receipts"
 msgstr "ປ້າຍຊື່ໃນໃບຮັບເງິນ PoS"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
+#: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
+msgid "Label sanitize"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210100
+msgid "Land"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_land
 #, fuzzy
 msgid "Land (not built)"
 msgstr "ທີ່ດິນ (ຍັງບໍ່ໄດ້ປຸກສ້າງ)"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210100
+msgid "Land ownership rights (non-depreciable)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__lang
 #, fuzzy
 msgid "Language"
 msgstr "ພາສາ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
+msgid "Last 12 Months"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13121,6 +14397,11 @@ msgid "Learn more"
 msgstr "ຮຽນຮູ້ເພີ່ມເຕີມ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_22110020
+msgid "Leasing Deposit"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 #: model_terms:ir.ui.view,arch_db:account.setup_credit_card_account_wizard
 #, fuzzy
@@ -13169,6 +14450,11 @@ msgid "Legal"
 msgstr "ທາງກົດໝາຍ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_66110140
+msgid "Legal Expenses"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -13177,11 +14463,21 @@ msgid "Legal Notes"
 msgstr "ໝາຍເຫດທາງກົດໝາຍ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110054
+msgid "Legal Protection Insurance"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__note
 #: model:ir.model.fields,help:account.field_account_tax__invoice_legal_notes
 #, fuzzy
 msgid "Legal mentions that have to be printed on the invoices."
 msgstr "ຂໍ້ຄວາມທາງກົດໝາຍທີ່ຕ້ອງພິມລົງໃນໃບແຈ້ງໜີ້."
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110140
+msgid "Legal service expenses"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13247,6 +14543,16 @@ msgid "Licenses or computer services (like repairs or upgrades)"
 msgstr "ໃບອະນຸຍາດ ຫຼື ບໍລິການຄອມພິວເຕີ (ເຊັ່ນ: ການສ້ອມແປງ ຫຼື ການອັບເກຣດ)"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110010
+msgid "Licensing Fees"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210610
+msgid "Light Machinery"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
 msgid "Limit the date for the Residual (at date) fields."
 msgstr ""
@@ -13278,6 +14584,7 @@ msgstr "ແຖວ \"%s\" ກຳນົດຕົວມັນເອງເປັນ�
 #. module: account
 #: model:account.reconcile.model,name:account.21_reconcile_from_label
 #: model:account.reconcile.model,name:account.22_reconcile_from_label
+#: model:account.reconcile.model,name:account.24_reconcile_from_label
 #, fuzzy
 msgid "Line with Bank Fees"
 msgstr "ແຖວທີ່ມີຄ່າທຳນຽມທະນາຄານ"
@@ -13324,6 +14631,11 @@ msgstr "ຄ່າໃຊ້ຈ່າຍດອກເບ້ຍເງິນກູ້
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_loan_extract
 msgid "Loans Digitization"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_22110010
+msgid "Loans obtained from banks"
 msgstr ""
 
 #. module: account
@@ -13434,6 +14746,41 @@ msgid "Loss Exchange Rate Account Active"
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_99900001
+msgid "Loss due to cash differences"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_99900003
+msgid "Loss due to cash discounts given"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_91100020
+msgid "Loss from foreign currency fluctuations"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_91100030
+msgid "Loss from selling fixed assets"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_91100030
+msgid "Loss on Sale of Fixed Assets"
+msgstr ""
+
+#. module: account
+#: model:account.tax.group,name:account.24_l10n_id_tax_group_luxury_goods
+msgid "Luxury Good Taxes"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_luxury_pemungut_ppn
+msgid "Luxury Goods to WAPU"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, fuzzy
@@ -13496,6 +14843,21 @@ msgstr "ສະກຸນເງິນຫຼັກຂອງບໍລິສັດ."
 #, fuzzy
 msgid "Main currency of your company"
 msgstr "ສະກຸນເງິນຫຼັກຂອງບໍລິສັດທ່ານ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110150
+msgid "Maintenance Costs"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110030
+msgid "Maintenance and service costs for vehicles"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110151
+msgid "Maintenance services for office"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -13766,6 +15128,17 @@ msgstr ""
 "ຊື່ຂອງການກວດສອບກະທົບຍອດເຕັມຫາກມີຢູ່."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_account__activity_type_icon
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_type_icon
+#: model:ir.model.fields,help:account.field_account_journal__activity_type_icon
+#: model:ir.model.fields,help:account.field_account_move__activity_type_icon
+#: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
+#: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
+#: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
 #, fuzzy
 msgid "Max Date of Matched Lines"
@@ -13788,6 +15161,16 @@ msgstr "ພຶດສະພາ"
 #, fuzzy
 msgid "Meals & Entertainment"
 msgstr "ຄ່າອາຫານ ແລະ ການບັນເທີງ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110200
+msgid "Membership Fees"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110200
+msgid "Membership and subscription fees"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_subscriptions
@@ -13879,6 +15262,7 @@ msgid "Messages Search"
 msgstr "ຄົ້ນຫາຂໍ້ຄວາມ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding_method
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_id
 #, fuzzy
 msgid "Method"
@@ -13924,9 +15308,35 @@ msgstr "ຊັບສິນຄົງທີ່ເບັດເຕັດ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_general
 #: model:account.journal,name:account.22_general
+#: model:account.journal,name:account.24_general
 #, fuzzy
 msgid "Miscellaneous Operations"
 msgstr "ການດຳເນີນງານອື່ນໆ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_69000000
+msgid "Miscellaneous company expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_81100040
+msgid "Miscellaneous income"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_63110041
+msgid "Miscellaneous office necessities"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110270
+msgid "Miscellaneous personnel-related costs"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110240
+msgid "Miscellaneous travel expenses"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13963,6 +15373,11 @@ msgstr "ຂາດສະກຸນເງິນຕ່າງປະເທດໃນລ
 #, fuzzy
 msgid "Missing required account on accountable line."
 msgstr "ຂາດບັນຊີທີ່ຈຳເປັນໃນແຖວທີ່ຕ້ອງລົງບັນຊີ."
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210410
+msgid "Mobile phones, tablets, fax (Group 1)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__model_id
@@ -14020,6 +15435,11 @@ msgstr "ລາຍເດືອນ"
 #, fuzzy
 msgid "More precision on Product Prices"
 msgstr "ຄວາມລະອຽດເພີ່ມເຕີມກ່ຽວກັບລາຄາສິນຄ້າ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210300
+msgid "Motorcycles"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -14231,6 +15651,12 @@ msgid "Net"
 msgstr "ສຸດທິ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Net Margin"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__excluded
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__never
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
@@ -14275,6 +15701,12 @@ msgstr "ຊື່ປື້ມບັນຊີໃໝ່"
 #, fuzzy
 msgid "New Move"
 msgstr "ລາຍການເຄື່ອນໄຫວໃໝ່"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
+msgid "New Rounding Method"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -14360,6 +15792,8 @@ msgstr "ວັນທີຊຳລະຖັດໄປ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__no
+#: model:res.groups.privilege,placeholder:account.res_group_privilege_accounting_bank
+#: model:res.groups.privilege,placeholder:account.res_groups_privilege_accounting
 #, fuzzy
 msgid "No"
 msgstr "ບໍ່"
@@ -14377,19 +15811,18 @@ msgid "No Bank Transaction"
 msgstr "ບໍ່ມີທຸລະກຳທະນາຄານ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__no_followup
-#: model:ir.model.fields,field_description:account.field_account_move__no_followup
-#: model:ir.model.fields,field_description:account.field_account_move_line__no_followup
-#, fuzzy
-msgid "No Follow-Up"
-msgstr "ບໍ່ມີການຕິດຕາມ"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, fuzzy
 msgid "No Payment Method"
 msgstr "ບໍ່ມີວິທີການຊຳລະເງິນ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__no_followup
+#: model:ir.model.fields,field_description:account.field_account_move__no_followup
+#: model:ir.model.fields,field_description:account.field_account_move_line__no_followup
+msgid "No Reminder"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__no_review
@@ -14508,6 +15941,11 @@ msgid "Non Trade Receivable"
 msgstr "ລູກໜີ້ອື່ນໆ (ທີ່ບໍ່ແມ່ນການຄ້າ)"
 
 #. module: account
+#: model_terms:account.tax,description:account.24_tax_PT6
+msgid "Non-Creditable Standard Rate Input VAT"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 #, fuzzy
 msgid "Non-current Assets"
@@ -14527,6 +15965,11 @@ msgstr "ໜີ້ສິນບໍ່ໝູນວຽນ"
 #, fuzzy
 msgid "Non-current assets"
 msgstr "ສັບສິນບໍ່ໝູນວຽນ"
+
+#. module: account
+#: model:account.tax.group,name:account.24_l10n_id_tax_group_non_luxury_goods
+msgid "Non-luxury Good Taxes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14554,13 +15997,6 @@ msgstr "ລູກໜີ້ປົກກະຕິ"
 #, fuzzy
 msgid "Not Contains"
 msgstr "ບໍ່ປະກອບມີ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-#, fuzzy
-msgid "Not Due"
-msgstr "ບໍ່ທັນຮອດກຳນົດ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -14818,6 +16254,16 @@ msgid "Off-Balance Sheet"
 msgstr "ນອກງົບດຸ່ນດ່ຽງ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_12210420
+msgid "Office Electronics"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_63110040
+msgid "Office Equipment"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_us_group_651
 #, fuzzy
 msgid "Office Expenses"
@@ -14836,19 +16282,27 @@ msgid "Office Maintenance"
 msgstr "ການບຳລຸງຮັກສາຫ້ອງການ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_65110151
+msgid "Office Maintenance Services"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_office_rent
+#: model:account.account,name:account.24_l10n_id_65110042
 #, fuzzy
 msgid "Office Rent"
 msgstr "ຄ່າເຊົ່າຫ້ອງການ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_office_services
+#: model:account.account,name:account.24_l10n_id_66110020
 #, fuzzy
 msgid "Office Services"
 msgstr "ການບໍລິການຫ້ອງການ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_office_supplies
+#: model:account.account,name:account.24_l10n_id_66110000
 #, fuzzy
 msgid "Office Supplies"
 msgstr "ອຸປະກອນຫ້ອງການ"
@@ -14938,10 +16392,9 @@ msgid "One or more lines require a 100% analytic distribution."
 msgstr "ແຖວໜຶ່ງ ຫຼື ຫຼາຍກວ່ານັ້ນຕ້ອງການການແຈກຢາຍການວິເຄາະ 100%."
 
 #. module: account
-#: model:ir.ui.menu,name:account.root_payment_menu
-#, fuzzy
-msgid "Online Payments"
-msgstr "ການຊຳລະເງິນອອນໄລນ໌"
+#: model:account.account,name:account.24_l10n_id_31510020
+msgid "Ongoing Profit & Loss"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -15039,12 +16492,8 @@ msgid "Open"
 msgstr "ເປີດ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__open_on
-#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-msgid "Open On"
-msgstr ""
-
-#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 #, fuzzy
 msgid "Opening Balance"
@@ -15102,6 +16551,7 @@ msgstr "ລາຍການເປີດໄດ້ລົງບັນຊີແລ້
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 #, fuzzy
 msgid "Opening balance"
@@ -15118,6 +16568,11 @@ msgstr "ກິດຈະກຳການດຳເນີນງານ"
 #, fuzzy
 msgid "Operation Templates"
 msgstr "ແບບຟອມການດຳເນີນງານ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210310
+msgid "Operational Vehicles"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__optional
@@ -15234,6 +16689,7 @@ msgid "Other Employees Benefits"
 msgstr "ສະວັດດີການອື່ນໆຂອງພະນັກງານ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_69000000
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_other
 #, fuzzy
 msgid "Other Expenses"
@@ -15242,6 +16698,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍອື່ນໆ"
 #. module: account
 #: model:account.account,name:account.21_other_income
 #: model:account.account,name:account.22_account_account_us_other_income
+#: model:account.account,name:account.24_l10n_id_81100040
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income_other
 #, fuzzy
 msgid "Other Income"
@@ -15252,6 +16709,21 @@ msgstr "ລາຍໄດ້ອື່ນໆ"
 #, fuzzy
 msgid "Other Info"
 msgstr "ຂໍ້ມູນອື່ນໆ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_63110041
+msgid "Other Necessities"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110270
+msgid "Other Personnel Costs"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110240
+msgid "Other Travel Costs"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_other_property
@@ -15312,6 +16784,8 @@ msgstr "ບັນຊີຄ້າງຈ່າຍ"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_account_journal_payment_credit_account_id
 #: model:account.account,name:account.22_account_journal_payment_credit_account_id
+#: model:account.account,name:account.24_account_journal_payment_credit_account_id
+#: model:account.account,name:account.24_l10n_id_11120003
 #, fuzzy
 msgid "Outstanding Payments"
 msgstr "ການຊຳລະເງິນທີ່ຍັງຄ້າງ"
@@ -15327,6 +16801,8 @@ msgstr "ບັນຊີການຊຳລະເງິນທີ່ຍັງຄ້
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_account_journal_payment_debit_account_id
 #: model:account.account,name:account.22_account_journal_payment_debit_account_id
+#: model:account.account,name:account.24_account_journal_payment_debit_account_id
+#: model:account.account,name:account.24_l10n_id_11120002
 #, fuzzy
 msgid "Outstanding Receipts"
 msgstr "ໃບຮັບເງິນທີ່ຍັງຄ້າງ"
@@ -15398,10 +16874,21 @@ msgid ""
 msgstr "ຂ້າມຄ່າເລີ່ມຕົ້ນຂອງບໍລິສັດ ກ່ຽວກັບວ່າລາຄາທີ່ທ່ານໃຊ້ໃນສິນຄ້າ ແລະ ໃບເກັບເງິນ ລວມພາສີນີ້ຫຼືບໍ່."
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_61100030
+msgid "Overtime pay for employees"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_31100040
+msgid "Owner withdrawals from the company"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.21_owner_current_account
 #: model:account.account,name:account.22_account_account_us_owner_current_account
 #: model:account.reconcile.model,name:account.21_owner_current_account_model
 #: model:account.reconcile.model,name:account.22_owner_current_account_model
+#: model:account.reconcile.model,name:account.24_owner_current_account_model
 #, fuzzy
 msgid "Owner's Current Account"
 msgstr "ບັນຊີກະແສລາຍວັນຂອງເຈົ້າຂອງ"
@@ -15458,12 +16945,39 @@ msgid "PEPPOL eligible"
 msgstr "ມີສິດໃຊ້ PEPPOL"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_61100110
+msgid "PPh 22 Final"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11210014
+msgid "PPh 28A"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21100014
+msgid "PPh 29"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_61100120
+msgid "PPh 4(2) Final"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_PT1
+msgid "PT1"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Package"
 msgstr "ຫີບຫໍ່"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__paid
@@ -15481,6 +16995,11 @@ msgstr "ຈ່າຍແລ້ວ"
 #, fuzzy
 msgid "Paid Bills"
 msgstr "ໃບເກັບເງິນທີ່ຊຳລະແລ້ວ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_31100020
+msgid "Paid Capital"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15540,6 +17059,11 @@ msgid "Parent Section Line"
 msgstr "ແຖວພາກສ່ວນແມ່"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_66110040
+msgid "Parking and toll fees for vehicles"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, fuzzy
 msgid "Partial"
@@ -15589,6 +17113,11 @@ msgstr "ຊຳລະແລ້ວບາງສ່ວນ"
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 msgid "Partner"
 msgstr "ຄຸ່ຄ້າ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__partner_category_ids
+msgid "Partner Category"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -15684,6 +17213,16 @@ msgid "Partners with same bank"
 msgstr "ຄູ່ຄ້າທີ່ມີທະນາຄານດຽວກັນ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210310
+msgid "Passenger cars, sedans, vans (Group 2)."
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_31510010
+msgid "Past Profit & Loss"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #: model:ir.actions.server,name:account.action_move_force_register_payment
@@ -15722,6 +17261,11 @@ msgstr ""
 #, fuzzy
 msgid "Payable and receivable"
 msgstr "ເຈົ້າໜີ້ ແລະ ລູກໜີ້"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11120003
+msgid "Payables due but not yet paid"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15805,6 +17349,7 @@ msgstr "ລາຍການການຊຳລະ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__payment_method_line_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_method_line_id
@@ -15840,6 +17385,11 @@ msgstr "ວິທີການຊຳລະເງິນ:"
 #, fuzzy
 msgid "Payment Methods"
 msgstr "ວິທີການຊຳລະເງິນ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Payment QR Codes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
@@ -15935,6 +17485,11 @@ msgstr "ປະເພດການຊຳລະ"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Payment must be in paid state to be reconciled."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11120005
+msgid "Payment processing account via Stripe"
 msgstr ""
 
 #. module: account
@@ -16056,6 +17611,11 @@ msgid "Payments linked to an Asset Cash account cannot be reconciled."
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_11800000
+msgid "Payments made in advance for goods or services"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 #, fuzzy
 msgid ""
@@ -16080,6 +17640,11 @@ msgstr "ຄ່າໃຊ້ຈ່າຍເງິນເດືອນ"
 #, fuzzy
 msgid "Payroll Tax"
 msgstr "ພາສີເງິນເດືອນ"
+
+#. module: account
+#: model:account.fiscal.position,name:account.24_l10n_id_pemungut_ppn
+msgid "Pemungut PPN"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_pension
@@ -16188,6 +17753,37 @@ msgid "Periodic depreciation expense for vehicle assets."
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_67100070
+msgid ""
+"Periodic expense for mobile phones, PBX systems, and other "
+"telecommunications hardware."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100130
+msgid ""
+"Periodic expense for small-scale industrial tools, small generators, and "
+"portable equipment."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100020
+msgid ""
+"Periodic expense for temporary or semi-permanent structures (e.g., sheds, "
+"containers) with a shorter lifespan."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210200
+msgid "Permanent structures (Concrete/Brick) - 20 Years."
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11110010
+msgid "Petty Cash"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__phishing_warnings
 msgid "Phishing Warnings"
@@ -16215,12 +17811,22 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_63110010
+msgid "Phone & Internet"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_internet
 #, fuzzy
 msgid ""
 "Phone and internet bills from your telco provider for business operations"
 msgstr ""
 "ໃບຮຽກເກັບເງິນຄ່າໂທລະສັບ ແລະ ອິນເຕີເນັດ ຈາກຜູ້ໃຫ້ບໍລິການໂທລະຄົມມະນາຄົມສຳລັບການດຳເນີນທຸລະກິດ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210420
+msgid "Photocopiers, projectors (Group 2)."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -16318,6 +17924,11 @@ msgid "Post Entry?"
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_64110050
+msgid "Post Necessities"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 #, fuzzy
 msgid "Post Payments"
@@ -16361,10 +17972,20 @@ msgid "Posted Journal Items"
 msgstr "ລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_61100100
+msgid "Pph 21 Benefit"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
 #, fuzzy
 msgid "Preceding Subtotal"
 msgstr "ຍອດລວມຍ່ອຍກ່ອນໜ້າ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding
+msgid "Precision"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
@@ -16427,11 +18048,76 @@ msgid ""
 msgstr "ຄ່າທຳນຽມປະກັນໄພທີ່ຊຳລະສຳລັບການຄຸ້ມຄອງປະກັນໄພຍານພາຫະນະທີ່ບໍລິສັດເປັນເຈົ້າຂອງ ຫຼື ເຊົ່າ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_11410030
+msgid "Prepaid Advertisement-Fee"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11210040
+msgid "Prepaid Expense"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.21_prepayments
 #: model:account.account,name:account.22_account_account_us_prepaid_expenses
 #, fuzzy
 msgid "Prepaid Expenses"
 msgstr "ຄ່າໃຊ້ຈ່າຍຈ່າຍລ່ວງໜ້າ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11410020
+msgid "Prepaid Insurance"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11510010
+msgid "Prepaid Tax PPh 21"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11510020
+msgid "Prepaid Tax PPh 22"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11510030
+msgid "Prepaid Tax PPh 23"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11510040
+msgid "Prepaid Tax PPh 25"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11410030
+msgid "Prepaid advertising fees"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11510040
+msgid "Prepaid corporate income tax installment (PPh 25)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11510010
+msgid "Prepaid employee income tax (PPh 21)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11410010
+msgid "Prepaid rent for office or building facilities"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11510020
+msgid "Prepaid tax on imports/exports (PPh 22)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11510030
+msgid "Prepaid withholding tax on services (PPh 23)"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_prepayments
@@ -16551,7 +18237,13 @@ msgid "Private Share Account Active"
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_31100040
+msgid "Prive (Personal Retrieval)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_problem_description
 #, fuzzy
 msgid "Problem Description"
 msgstr "ຄຳອະທິບາຍບັນຫາ"
@@ -16665,12 +18357,14 @@ msgstr "ຄ່າທຳນຽມວິຊາຊີບ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_professional_insurance
+#: model:account.account,name:account.24_l10n_id_65110053
 #, fuzzy
 msgid "Professional Insurance"
 msgstr "ປະກັນໄພວິຊາຊີບ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_professional_liability_insurance
+#: model:account.account,name:account.24_l10n_id_65110055
 #, fuzzy
 msgid "Professional Liability Insurance"
 msgstr "ປະກັນໄພຄວາມຮັບຜິດຊອບທາງວິຊາຊີບ"
@@ -16695,6 +18389,21 @@ msgid "Profit Account Active"
 msgstr ""
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_31510010
+msgid "Profit and loss carried over from previous periods"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_31510020
+msgid "Profit and loss for the current period"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_81100050
+msgid "Profit from selling fixed assets"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #: model:account.account,name:account.21_profit_or_loss
@@ -16706,6 +18415,11 @@ msgstr "ການຈັດສັນກຳໄລ ຫຼື ຂາດທຶນ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_99999900
+msgid "Profits or losses not yet distributed"
 msgstr ""
 
 #. module: account
@@ -16748,9 +18462,22 @@ msgstr "ແຖວວິທີການຊຳລະເງິນອອກຂອງ
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_property_tax
+#: model:account.account,name:account.24_l10n_id_65110071
+#: model:account.account,name:account.24_l10n_id_66110320
 #, fuzzy
 msgid "Property Tax"
 msgstr "ພາສີຊັບສິນ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110070
+msgid "Property tax accrued (PBB)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110071
+#: model:account.account,description:account.24_l10n_id_66110320
+msgid "Property tax expenses"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16771,9 +18498,15 @@ msgstr "ໄດ້ຮັບການປ້ອງກັນໂດຍບັນທຶ
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_public_transportation
+#: model:account.account,name:account.24_l10n_id_66110230
 #, fuzzy
 msgid "Public Transportation"
 msgstr "ການຂົນສົ່ງສາທາລະນະ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110230
+msgid "Public transport expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -16845,6 +18578,7 @@ msgstr "ການຊື້ລົດເກງ ຫຼື ລົດບັນທຸ�
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.21_purchase
 #: model:account.journal,name:account.22_purchase
+#: model:account.journal,name:account.24_purchase
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_purchase
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__purchase
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -16853,6 +18587,11 @@ msgstr "ການຊື້ລົດເກງ ຫຼື ລົດບັນທຸ�
 #, fuzzy
 msgid "Purchases"
 msgstr "ການຊື້"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110190
+msgid "Purchases for resale"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_improvements
@@ -16956,6 +18695,7 @@ msgstr "ການໃຫ້ຄະແນນ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_raw_materials
+#: model:account.account,name:account.24_l10n_id_66110100
 #, fuzzy
 msgid "Raw Materials"
 msgstr "ວັດຖຸດິບ"
@@ -17004,6 +18744,16 @@ msgstr "ບັນຊີລູກໜີ້"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__receivable_account_id
 msgid "Receivable Account"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11120002
+msgid "Receivables expected but not yet collected"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11210011
+msgid "Receivables generated from Point-of-Sale transactions"
 msgstr ""
 
 #. module: account
@@ -17198,6 +18948,12 @@ msgstr "ຄືນເງິນ"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "Refund Confirmation"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "Refund Created"
@@ -17220,6 +18976,11 @@ msgstr "ສະກຸນເງິນຄືນເງິນ"
 #, fuzzy
 msgid "Refunds"
 msgstr "ການຄືນເງິນ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_42000060
+msgid "Refunds given to customers"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -17314,6 +19075,18 @@ msgstr "ສ້າງລຳດັບຂອງລາຍການບັນຊີຄ
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid "Remittance Advice"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
+msgid "Remove Rounding Method"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, fuzzy
 msgid "Remove empty lines"
@@ -17325,6 +19098,12 @@ msgstr "ລົບແຖວຫວ່າງອອກ"
 #, fuzzy
 msgid "Removed"
 msgstr "ຖືກລົບອອກ"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
+msgid "Rename"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__render_model
@@ -17343,6 +19122,21 @@ msgstr "ຄ່າເຊົ່າ"
 #, fuzzy
 msgid "Rent or lease of buildings"
 msgstr "ຄ່າເຊົ່າ ຫຼື ຄ່າເຊົ່າຊື້ອາຄານ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110040
+msgid "Rental Costs"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110042
+msgid "Rental costs for office space"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110041
+msgid "Rental costs for vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_vehicle_rent
@@ -17427,10 +19221,11 @@ msgid "Reporting"
 msgstr "ບົດລາຍງານ"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
-#, fuzzy
-msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-msgstr "ສະແດງມູນຄ່າທີ່ບໍ່ແມ່ນສູນຂອງຫົວໜ່ວຍເງິນທີ່ນ້ອຍທີ່ສຸດ (ຕົວຢ່າງ: 0.05)."
+#: model:account.account,description:account.24_l10n_id_66110130
+msgid ""
+"Represents the difference in value between Opening Stock and Closing Stock "
+"for the period."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17453,10 +19248,20 @@ msgid "Res Partner Bank"
 msgstr "ທະນາຄານຂອງຄູ່ຄ້າ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_63110030
+msgid "Research & Development"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 #, fuzzy
 msgid "Resequence"
 msgstr "ຈັດລຽງລຳດັບໃໝ່"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_31210010
+msgid "Reserves set aside from profits"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17557,6 +19362,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍແຜນການລ້ຽງຊີບຍ
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
@@ -17573,6 +19379,16 @@ msgid "Revenue Accrual Account"
 msgstr "ບັນຊີລາຍຮັບຄ້າງຮັບ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_41000010
+msgid "Revenue from goods or services sold"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_28110010
+msgid "Revenue received in advance from customers"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 #, fuzzy
 msgid "Revenue/Expense Account"
@@ -17583,6 +19399,11 @@ msgstr "ບັນຊີລາຍຮັບ/ຄ່າໃຊ້ຈ່າຍ"
 #, fuzzy
 msgid "Reversal Date"
 msgstr "ວັນທີກັບລາຍການ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Reversal Entries"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_ids
@@ -17713,6 +19534,7 @@ msgstr "ກວດສອບລາຍການບັນທຶກ"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #, fuzzy
 msgid "Review Statements"
@@ -17791,6 +19613,7 @@ msgstr "ປັດເສດຕາມພາສີ"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__rounding
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
+#: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 #, fuzzy
 msgid "Rounding"
 msgstr "ການປັດເສດ"
@@ -17808,23 +19631,19 @@ msgid "Rounding List"
 msgstr "ລາຍການການປັດເສດ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding_method
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Rounding Method"
 msgstr "ວິທີການປັດເສດ"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding
-#, fuzzy
-msgid "Rounding Precision"
-msgstr "ຄວາມລະອຽດການປັດເສດ"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_cash_rounding__strategy
-#, fuzzy
-msgid "Rounding Strategy"
-msgstr "ກົນລະຍຸດການປັດເສດ"
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
+#: model:ir.actions.act_window,name:account.rounding_list_action
+#: model:ir.ui.menu,name:account.menu_action_rounding_form_view
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Rounding Methods"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -17856,6 +19675,11 @@ msgid "SEPA QR Codes"
 msgstr ""
 
 #. module: account
+#: model:account.tax.group,name:account.24_l10n_id_tax_group_stlg
+msgid "SLTG"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_sms_error
@@ -17877,16 +19701,41 @@ msgid "SO123"
 msgstr "SO123"
 
 #. module: account
+#: model_terms:account.tax,description:account.24_tax_ST1
+msgid "ST1"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 #, fuzzy
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "ຂໍ້ກຳນົດ ແລະ ເງື່ອນໄຂມາດຕະຖານຂອງການຂາຍ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_21100012
+msgid "STLG Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11210013
+msgid "STLG Receivable"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_salaries
 #, fuzzy
 msgid "Salaries & Wages"
 msgstr "ເງິນເດືອນ ແລະ ຄ່າຈ້າງ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_61100010
+msgid "Salaries paid to employees"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21100040
+msgid "Salary Deposit"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_expense_salary
@@ -17900,6 +19749,11 @@ msgstr "ຄ່າໃຊ້ຈ່າຍເງິນເດືອນ"
 #, fuzzy
 msgid "Salary Payable"
 msgstr "ເງິນເດືອນຄ້າງຈ່າຍ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100040
+msgid "Salary payable to employees"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -17916,8 +19770,10 @@ msgstr "ໃບຮັບເງິນການຂາຍ"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.24_l10n_id_41000010
 #: model:account.journal,name:account.21_sale
 #: model:account.journal,name:account.22_sale
+#: model:account.journal,name:account.24_sale
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__sale
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__sale
@@ -17933,6 +19789,11 @@ msgstr "ການຂາຍ"
 #, fuzzy
 msgid "Sales Credit Limit"
 msgstr "ວົງເງິນສິນເຊື່ອການຂາຍ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_42000070
+msgid "Sales Discount"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_expense_sales
@@ -17962,12 +19823,28 @@ msgid "Sales Receipt Created"
 msgstr "ສ້າງໃບຮັບເງິນການຂາຍແລ້ວ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_42000060
+msgid "Sales Refund"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_sales_tax
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Sales Tax"
 msgstr "ພາສີການຂາຍ"
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_PT5
+#: model_terms:account.tax,description:account.24_tax_luxury_sales
+msgid "Sales Tax on Luxury Goods (STLG)"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_stlg_pemungut_ppn
+msgid "Sales Tax on Luxury Goods (STLG) to WAPU"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -18130,6 +20007,12 @@ msgstr "ຄົ້ນຫາຊື່ ຫຼື ເລກປະຈຳຕົວຜ�
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
+msgid "Search more..."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/m2o_cell_with_extra_fields/m2o_cell_with_extra_fields.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 #, fuzzy
@@ -18152,7 +20035,7 @@ msgstr "ໝວດຂອງ"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
+#: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
 #, fuzzy
 msgid "Sections"
@@ -18212,6 +20095,11 @@ msgid "Security Token"
 msgstr "ໂທເຄັນຄວາມປອດໄພ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_25110050
+msgid "Security management fees accrued"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "See exchange information"
@@ -18223,6 +20111,13 @@ msgstr ""
 #, fuzzy
 msgid "See items"
 msgstr "ເບິ່ງລາຍການ"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/tax_totals/tax_totals.js:0
+#: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
+msgid "Select Rounding Method"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -18375,9 +20270,8 @@ msgstr "ສົ່ງໃບແຈ້ງໜີ້ໄປທີ່"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
-msgid "Send invoices and payment follow-ups by post"
-msgstr "ສົ່ງໃບແຈ້ງໜີ້ ແລະ ການຕິດຕາມການຊຳລະເງິນທາງໄປສະນີ"
+msgid "Send invoices and payment reminders by post"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_account_move_send_ir_actions_server
@@ -18538,6 +20432,7 @@ msgstr "ກັນຍາ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__sequence
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__sequence
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence
 #: model:ir.model.fields,field_description:account.field_account_journal_group__sequence
@@ -18611,6 +20506,11 @@ msgid ""
 "janitorial"
 msgstr ""
 "ການບໍລິການທີ່ກ່ຽວຂ້ອງກັບການບຳລຸງຮັກສາສະຖານທີ່ເຮັດວຽກຂອງທ່ານ, ເຊັ່ນ: ການສ້ອມແປງ ຫຼື ການອະນາໄມ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110020
+msgid "Services used in office operations"
+msgstr ""
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
@@ -18733,6 +20633,16 @@ msgstr "ແບ່ງປັນ"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21100020
+msgid "Shareholder Deposit"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110090
+msgid "Shipping Costs"
 msgstr ""
 
 #. module: account
@@ -18928,6 +20838,16 @@ msgid "Show journal on dashboard"
 msgstr "ສະແດງສະມຸດບັນຊີໃນໜ້າຄວບຄຸມ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_11110010
+msgid "Small cash fund for minor expenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210610
+msgid "Small generators, pumps, tools (Group 2)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 #, fuzzy
 msgid "Snailmail"
@@ -18935,15 +20855,37 @@ msgstr "Snailmail"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_social_security
+#: model:account.account,name:account.24_l10n_id_66110310
 #, fuzzy
 msgid "Social Security"
 msgstr "ປະກັນສັງຄົມ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_66110310
+msgid "Social security contributions"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110020
+msgid "Social security contributions accrued"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_software
+#: model:account.account,name:account.24_l10n_id_66110160
 #, fuzzy
 msgid "Software"
 msgstr "ຊອບແວ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_12210700
+msgid "Software Licenses"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_66110160
+msgid "Software-related expenses"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -19030,6 +20972,13 @@ msgstr ""
 "ໂດຍບໍ່ຄຳນຶງເຖິງສິນຄ້າໃນແຕ່ລະແຖວ."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
+msgid ""
+"Specify how the rounding difference is applied: add a rounding line or "
+"adjust the highest tax amount."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
 #: model:ir.model.fields,help:account.field_account_move__auto_post
 #, fuzzy
@@ -19041,12 +20990,14 @@ msgstr ""
 "ລວມທັງໃບແຈ້ງໜີ້ທີ່ເກີດຂຶ້ນຊ້ຳໆທີ່ຄ້າຍຄືກັນ."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
-#, fuzzy
-msgid ""
-"Specify which way will be used to round the invoice amount to the rounding "
-"precision"
-msgstr "ກຳນົດວິທີທີ່ຈະໃຊ້ໃນການປັດເສດຈຳນວນເງິນໃນໃບແຈ້ງໜີ້ໃຫ້ກົງກັບຄວາມລະອຽດຂອງການປັດເສດ"
+#: model_terms:account.tax,description:account.24_tax_PT3
+msgid "Standard Rate for Luxury Goods &amp; Services"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_PT4
+msgid "Standard Rate for Non-Luxury Goods &amp; Services"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -19212,6 +21163,17 @@ msgid "Step completed!"
 msgstr "ຂັ້ນຕອນສຳເລັດແລ້ວ!"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_66110130
+#, fuzzy
+msgid "Stock Variation"
+msgstr "ສ່ວນຕ່າງສິນຄ້າໃນສາງ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_29000000
+msgid "Stock temporarily recorded during inventory processing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Storno Accounting"
@@ -19223,6 +21185,11 @@ msgstr "ການບັນຊີແບບ Storno"
 #, fuzzy
 msgid "Storno accounting"
 msgstr "ການບັນຊີແບບ Storno"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_cash_rounding__strategy
+msgid "Strategy"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__street
@@ -19260,6 +21227,16 @@ msgstr "ສະເພາະໃນວັນທີທີ່ກຳນົດໃຫ້
 #, fuzzy
 msgid "String"
 msgstr "ຂໍ້ຄວາມ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11120005
+msgid "Stripe Issuing"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110150
+msgid "Studies & Works"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
@@ -19335,6 +21312,12 @@ msgid "Supplier Rank"
 msgstr "ລຳດັບຜູ້ສະໜອງ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "Suppliers"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 #, fuzzy
 msgid "Suspense Account"
@@ -19350,6 +21333,30 @@ msgstr ""
 #, fuzzy
 msgid "Switch into invoice/credit note"
 msgstr "ປ່ຽນເປັນໃບແຈ້ງໜີ້/ໃບຫຼຸດໜີ້"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100010
+msgid ""
+"Systematic allocation of the cost of long-term, durable structures (e.g., "
+"concrete/brick) over their useful life."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_67100160
+msgid ""
+"Systematic write-off of the cost of intangible software assets and licenses "
+"over their legal or useful life."
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_tx_state
+msgid "TX State 6.25%"
+msgstr ""
+
+#. module: account
+#: model:account.tax,name:account.22_account_tax_us_demo_tx_exempt
+msgid "TX State 6.25% Exempt"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -19467,6 +21474,11 @@ msgstr "ພາສີ 4.2%"
 #, fuzzy
 msgid "Tax 4.225%"
 msgstr "ພາສີ 4.225%"
+
+#. module: account
+#: model:account.tax.group,name:account.22_account_tax_group_us_demo_4_25
+msgid "Tax 4.25%"
+msgstr ""
 
 #. module: account
 #: model:account.tax.group,name:account.22_account_tax_group_us_4_5
@@ -19619,6 +21631,16 @@ msgid "Tax Advance Account"
 msgstr "ບັນຊີເງິນຈ່າຍລ່ວງໜ້າພາສີ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_61100050
+msgid "Tax Allowance Expense"
+msgstr ""
+
+#. module: account
+#: model:account.cash.rounding,name:account.24_cash_rounding_id_half_up
+msgid "Tax Amount Rounding (IDR)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
 #, fuzzy
 msgid "Tax Calculation Rounding Method"
@@ -19681,6 +21703,11 @@ msgstr ""
 #, fuzzy
 msgid "Tax Excluded"
 msgstr "ບໍ່ລວມພາສີ"
+
+#. module: account
+#: model:account.tax.group,name:account.24_l10n_id_tax_group_exempt
+msgid "Tax Exempted"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
@@ -19782,10 +21809,40 @@ msgid "Tax Payable"
 msgstr "ພາສີຕ້ອງຈ່າຍ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_21210050
+msgid "Tax Payable 4 (2)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__tax_payable_account_id
 #, fuzzy
 msgid "Tax Payable Account"
 msgstr "ບັນຊີພາສີຕ້ອງຈ່າຍ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21210010
+msgid "Tax Payable PPh 21"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21210020
+msgid "Tax Payable PPh 22"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21210030
+msgid "Tax Payable PPh 23"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21210040
+msgid "Tax Payable PPh 25"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21210060
+msgid "Tax Payable PPh 26"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_tax_receivable
@@ -19905,10 +21962,50 @@ msgstr ""
 "%(taxes)s"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_21210010
+msgid "Tax payable for employee income (PPh 21)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21210020
+msgid "Tax payable for export/import (PPh 22)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21210030
+msgid "Tax payable on services (PPh 23)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21210060
+msgid "Tax payable on services and income for foreign taxpayers (PPh 26)"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21210050
+msgid "Tax payable under Article 4(2)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_used
 #, fuzzy
 msgid "Tax used"
 msgstr "ພາສີທີ່ໃຊ້ແລ້ວ"
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_ST4
+msgid "Taxable Goods Other Than Luxury Goods"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_pemungut_ppn
+msgid "Taxable Goods Other Than Luxury Goods to WAPU"
+msgstr ""
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_ST3
+msgid "Taxable Luxury Goods"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxable_supply_date
@@ -19928,6 +22025,7 @@ msgstr "ຂໍ້ຄວາມແນະນຳວັນທີສະໜອງສິ
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: model:account.account,name:account.22_us_group_8
+#: model:account.tax.group,name:account.24_default_tax_group
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_ids
@@ -19979,6 +22077,11 @@ msgid ""
 msgstr ""
 "ພາສີທີ່ຄົບກຳນົດໃນການຊຳລະ ແລະ ໃນໃບແຈ້ງໜີ້ ບໍ່ສາມາດປະປົນກັນໃນລາຍການບັນຊີດຽວກັນໄດ້ "
 "ຖ້າພວກມັນໃຊ້ແທັກຮ່ວມກັນ."
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110072
+msgid "Taxes for company vehicles"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -20073,10 +22176,20 @@ msgid "Technology"
 msgstr "ເຕັກໂນໂລຊີ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_63110010
+msgid "Telecommunication expenses"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_internet
 #, fuzzy
 msgid "Telephone & Internet"
 msgstr "ໂທລະສັບ ແລະ ອິນເຕີເນັດ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110040
+msgid "Telephone and internet expenses accrued"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__template_name
@@ -20138,6 +22251,16 @@ msgstr ""
 #, fuzzy
 msgid "Templates Found"
 msgstr "ພົບແມ່ແບບ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11120001
+msgid "Temporary account for unclear bank transactions"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210210
+msgid "Temporary structures or site offices - 10 Years."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
@@ -20302,26 +22425,6 @@ msgid "The Hard Lock Date cannot be removed."
 msgstr "ວັນທີລັອກຖາວອນ (Hard Lock Date) ບໍ່ສາມາດລົບອອກໄດ້."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/tools/bank_account_number.py:0
-#, fuzzy
-msgid ""
-"The IBAN does not seem to be correct. You should have entered something like "
-"this %s\n"
-"Where B = National bank code, S = Branch code, C = Account No, k = Check "
-"digit"
-msgstr ""
-"IBAN ເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ. ທ່ານຄວນປ້ອນບາງຢ່າງຄືກັບ %s\n"
-"ໂດຍທີ່ B = ລະຫັດທະນາຄານແຫ່ງຊາດ, S = ລະຫັດສາຂາ, C = ເລກບັນຊີ, k = ຕົວເລກກວດສອບ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/tools/bank_account_number.py:0
-#, fuzzy
-msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "IBAN ບໍ່ຖືກຕ້ອງ, ມັນຄວນຈະເລີ່ມຕົ້ນດ້ວຍລະຫັດປະເທດ"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_fiscal_position__fiscal_country_codes
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -20331,6 +22434,7 @@ msgstr "IBAN ບໍ່ຖືກຕ້ອງ, ມັນຄວນຈະເລີ�
 #: model:ir.model.fields,help:account.field_account_payment_register__country_code
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__country_code
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account.field_account_tax__company_country_code
 #: model:ir.model.fields,help:account.field_account_tax__country_code
 #: model:ir.model.fields,help:account.field_account_tax_group__country_code
 #: model:ir.model.fields,help:account.field_base_document_layout__country_code
@@ -20374,7 +22478,8 @@ msgstr "ບັນຊີ %(name)s (%(code)s) ຖືກຈັດເກັບແລ
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"The account code can only contain alphanumeric characters, dots, and dashes."
+"The account code can only contain alphanumeric characters, dots, and dashes. "
+"(account code: %s)"
 msgstr ""
 
 #. module: account
@@ -20568,6 +22673,11 @@ msgstr ""
 #, fuzzy
 msgid "The company this distribution line belongs to."
 msgstr "ບໍລິສັດທີ່ແຖວການແຈກຢາຍນີ້ເປັນຂອງ."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
+msgid "The computation rule used to round values (e.g., UP, DOWN, or HALF-UP)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -21141,13 +23251,6 @@ msgstr "ຈຳນວນເງິນຄົງເຫຼືອໃນລາຍກາ
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, fuzzy
-msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr "ຍອດເຫຼືອປັດຈຸບັນ (%s) ບໍ່ກົງກັບຍອດປິດທີ່ລະບຸໄວ້."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 #, fuzzy
 msgid ""
@@ -21324,13 +23427,9 @@ msgstr ""
 "ແຕ່ທ່ານໄດ້ເລືອກທັງສອງປະເພດປົນກັນ."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, fuzzy
-msgid ""
-"The starting balance doesn't match the ending balance of the previous "
-"statement, or an earlier statement is missing."
-msgstr "ຍອດຍົກມາບໍ່ກົງກັບຍອດເຫຼືອທ້າຍຂອງໃບແຈ້ງຍອດກ່ອນໜ້າ, ຫຼື ມີໃບແຈ້ງຍອດກ່ອນໜ້ານັ້ນຫາຍໄປ."
+#: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
+msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -21351,12 +23450,6 @@ msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີຂອງບ
 #, fuzzy
 msgid "The tax group must have the same country_id as the tax using it."
 msgstr "ກຸ່ມພາສີຕ້ອງມີ country_id ດຽວກັນກັບພາສີທີ່ນຳໃຊ້ມັນ."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
-#, fuzzy
-msgid "The tie-breaking rule used for float rounding operations"
-msgstr "ກົດລະບຽບການຕັດສິນທີ່ໃຊ້ ສຳລັບການປັດເສດຕົວເລກທົດສະນິຍົມ"
 
 #. module: account
 #. odoo-python
@@ -21452,13 +23545,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/tools/bank_account_number.py:0
-#, fuzzy
-msgid "There is no IBAN code."
-msgstr "ບໍ່ມີລະຫັດ IBAN."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, fuzzy
 msgid ""
@@ -21529,23 +23615,15 @@ msgstr ""
 "ເຈົ້າຄຸ້ມຄອງການເງິນໄດ້ດີຫຼາຍ!"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_21100030
+msgid "Third-Party Deposit"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, fuzzy
 msgid "Thirty one dollar and Five cents"
 msgstr "ສາມສິບເອັດໂດລາ ກັບ ຫ້າເຊັນ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/tools/bank_account_number.py:0
-msgid "This CLABE does not pass the checksum check, please verify it."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/tools/bank_account_number.py:0
-#, fuzzy
-msgid "This IBAN does not pass the validation check, please verify it."
-msgstr "IBAN ນີ້ບໍ່ຜ່ານການກວດສອບຄວາມຖືກຕ້ອງ, ກະລຸນາກວດສອບຄືນໃໝ່."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_month
@@ -21564,13 +23642,6 @@ msgstr "ໄຕມາດນີ້"
 #, fuzzy
 msgid "This Return Period"
 msgstr "ຮອບວຽນການຍື່ນແບບນີ້"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
-#, fuzzy
-msgid "This Week"
-msgstr "ອາທິດນີ້"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_year
@@ -21737,8 +23808,7 @@ msgstr "ລາຍການນີ້ໄດ້ຖືກກັບຄືນລາຍ
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid ""
-"This entry has been reviewed, You need the bookkeeper role to change it."
+msgid "This entry has been reviewed by accountants, only them can edit it now."
 msgstr ""
 
 #. module: account
@@ -22079,6 +24149,7 @@ msgstr "ກິດຈະກຳມື້ນີ້"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -22174,6 +24245,11 @@ msgstr ""
 #, fuzzy
 msgid "Total Residual in Currency"
 msgstr "ມູນຄ່າທີ່ເຫຼືອທັງໝົດຕາມສະກຸນເງິນ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
+msgid "Total Rounding"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -22278,6 +24354,7 @@ msgstr "ການຄ້າ %s"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_training
+#: model:account.account,name:account.24_l10n_id_66110300
 #, fuzzy
 msgid "Training and Documentation"
 msgstr "ການຝຶກອົບຮົມ ແລະ ເອກະສານ"
@@ -22398,6 +24475,11 @@ msgstr ""
 "ກຳນົດຄ່າຫຼາຍກວ່າ 0.0 ເພື່ອເປີດໃຊ້ງານການກວດສອບວົງເງິນສິນເຊື່ອ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_12210320
+msgid "Trucks, buses, forklifts (Group 2)."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, fuzzy
@@ -22413,6 +24495,11 @@ msgstr "ແມ່ນ"
 #, fuzzy
 msgid "Trusted"
 msgstr "ເຊື່ອຖືໄດ້"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_12210300
+msgid "Two-wheeled vehicles (Group 1)."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_type
@@ -22494,6 +24581,7 @@ msgstr "ຍັງບໍ່ທັນໄດ້ກຳນົດ"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_undistributed_profits
+#: model:account.account,name:account.24_l10n_id_99999900
 #, fuzzy
 msgid "Undistributed Profits/Losses"
 msgstr "ກຳໄລ/ຂາດທຶນ ທີ່ຍັງບໍ່ທັນໄດ້ປັນສ່ວນ"
@@ -22553,12 +24641,6 @@ msgid "Unit Price:"
 msgstr "ລາຄາຕໍ່ໜ່ວຍ:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
-msgid "Units"
-msgstr "ບັນດາຫົວໜ່ວຍ"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Units & Packagings"
@@ -22584,10 +24666,17 @@ msgid "Unmerge account"
 msgstr "ແຍກບັນຊີ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, fuzzy
 msgid "Unpaid"
 msgstr "ບໍ່ໄດ້ຮັບເງິນ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_31100030
+msgid "Unpaid Capital"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -22633,6 +24722,11 @@ msgstr "ລາຍການໃບແຈ້ງຍອດທະນາຄານທີ
 #, fuzzy
 msgid "Unreconciled Entries"
 msgstr "ລາຍການທີ່ຍັງບໍ່ທັນໄດ້ກວດສອບສົບທຽບ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__open_on
+msgid "Unreconciled On"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__unreconciled_paid_amount
@@ -22966,6 +25060,11 @@ msgid "Utility bills for water, gas, electricity, heating, etc"
 msgstr "ໃບບິນຄ່າສາທາລະນຸປະໂພກ ເຊັ່ນ ຄ່ານ້ຳ, ຄ່າແກັສ, ຄ່າໄຟຟ້າ, ຄ່າຄວາມຮ້ອນ, ແລະ ອື່ນໆ"
 
 #. module: account
+#: model:account.account,description:account.24_l10n_id_63110020
+msgid "Utility expenses for office"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 #, fuzzy
@@ -22979,6 +25078,66 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr "ຟິວຊ່ວຍເພື່ອສະແດງວ່າລາຍການບັນຊີຍ່ອຍນັ້ນ ຂຶ້ນກັບການບັນຊີແບບ storno ຫຼື ບໍ່"
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_ST0
+msgid "VAT Not Collected"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21100011
+msgid "VAT Payable"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100012
+msgid "VAT Payable - luxury goods from the net of Input and Output VAT."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21100011
+msgid "VAT Payable from the net of Input and Output VAT."
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11210030
+msgid "VAT Purchase"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_11210012
+msgid "VAT Receivable"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11210013
+msgid "VAT Receivable - luxury goods from the net of Input and Output VAT."
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11210012
+msgid "VAT Receivable from the net of Input and Output VAT."
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_21221010
+msgid "VAT Sales"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_21221010
+msgid "VAT collected on sales"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_account_vies
+msgid "VAT number validation with VIES"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_11210030
+msgid "VAT paid on purchases"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -23096,10 +25255,46 @@ msgstr ""
 "ອຸປະກອນຕ່າງໆທີ່ຊື້ສຳລັບບ່ອນເຮັດວຽກ ຫຼື ຫ້ອງການຂອງທ່ານ, ເຊັ່ນ: ສໍ, ເຈ້ຍ, ເຄື່ອງບໍລິໂພກ, ແລະ ອື່ນໆ"
 
 #. module: account
+#: model:account.account,name:account.24_l10n_id_66110010
+msgid "Vehicle Fuel"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110051
+msgid "Vehicle Insurance"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110154
+msgid "Vehicle Maintenance"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110040
+msgid "Vehicle Parking & Toll Fee"
+msgstr ""
+
+#. module: account
 #: model:account.account,name:account.22_account_account_us_vehicle_rent
+#: model:account.account,name:account.24_l10n_id_65110041
 #, fuzzy
 msgid "Vehicle Rent"
 msgstr "ຄ່າເຊົ່າຍານພາຫະນະ"
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_66110030
+msgid "Vehicle Service"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_65110072
+msgid "Vehicle Taxes"
+msgstr ""
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_65110154
+msgid "Vehicle maintenance expenses"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_vehicles
@@ -23238,6 +25433,21 @@ msgstr ""
 "ສິ່ງນີ້ຊ່ວຍໃຫ້ເຈົ້າສາມາດກວດສອບໃບບິນທີ່ໄດ້ຮັບຈາກຜູ້ຈຳໜ່າຍຕາມເອກະສານຮ່າງໃນ Odoo."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__vat_check_vies
+msgid "Verify VAT Numbers with VIES"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, fuzzy
@@ -23260,6 +25470,7 @@ msgid "View Partner(s)"
 msgstr "ເບິ່ງຄູ່ຄ້າ"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #, fuzzy
 msgid "Visible to all"
@@ -23285,6 +25496,16 @@ msgstr "ຄຳເຕືອນສຳລັບວິທີການປັດເສ
 #, fuzzy
 msgid "Warnings"
 msgstr "ຄຳເຕືອນ"
+
+#. module: account
+#: model:account.account,description:account.24_l10n_id_25110030
+msgid "Water expenses accrued but not yet paid"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.24_l10n_id_63110020
+msgid "Water, Electricity, Gas"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23495,21 +25716,14 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#, fuzzy
 msgid ""
 "You can not archive a journal containing draft journal entries.\n"
 "\n"
 "To proceed:\n"
-"1/ click on the top-right button 'Journal Entries' from this journal form\n"
-"2/ then filter on 'Draft' entries\n"
+"1/ go to Accounting > Accounting > Journal Entries\n"
+"2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"ທ່ານບໍ່ສາມາດຈັດເກັບບັນຊີປະຈຳວັນທີ່ມີລາຍການບັນຊີຮ່າງໄດ້.\n"
-"\n"
-"ເພື່ອດຳເນີນການຕໍ່:\n"
-"1/ ຄລິກໃສ່ປຸ່ມ 'ລາຍການບັນຊີປະຈຳວັນ' ຢູ່ເບື້ອງຂວາເທິງຈາກແບບຟອມບັນຊີປະຈຳວັນນີ້\n"
-"2/ ຈາກນັ້ນກັ່ນຕອງເອົາລາຍການ 'ຮ່າງ'\n"
-"3/ ເລືອກທັງໝົດແລ້ວບັນທຶກ ຫຼື ລຶບພວກມັນອອກຜ່ານເມນູການດຳເນີນການ"
 
 #. module: account
 #. odoo-python
@@ -23780,6 +25994,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/base_document_layout.py:0
+msgid "You cannot configure the document layout for this company."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/partner.py:0
 #, fuzzy
 msgid ""
@@ -23991,9 +26211,10 @@ msgstr "ທ່ານບໍ່ສາມາດແກ້ໄຂຫ້ອງ %s ຂ�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
-msgid "You cannot modify the following readonly fields on a posted move: %s"
-msgstr "ເຈົ້າບໍ່ສາມາດແກ້ໄຂຫ້ອງຂໍ້ມູນທີ່ອ່ານໄດ້ຢ່າງດຽວ (Readonly) ຕໍ່ໄປນີ້ໃນລາຍການທີ່ລົງບັນຊີແລ້ວ: %s"
+msgid ""
+"You cannot modify the following readonly fields on the posted move %(move)s: "
+"%(fields)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -24027,6 +26248,12 @@ msgstr "ທ່ານບໍ່ສາມາດບັນທຶກລາຍການ
 #, fuzzy
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr "ເຈົ້າບໍ່ສາມາດລົງບັນຊີລາຍການທີ່ມີບັນຊີວິເຄາະທີ່ຖືກຈັດເກັບ (Archived) ແລ້ວ: %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/base_document_layout.py:0
+msgid "You cannot preview this invoice."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -24094,13 +26321,6 @@ msgstr ""
 #, fuzzy
 msgid "You cannot reset to draft a locked journal entry."
 msgstr "ເຈົ້າບໍ່ສາມາດປ່ຽນລາຍການບັນຊີທີ່ຖືກລັອກແລ້ວໃຫ້ເປັນສະບັບຮ່າງກ່ອນໄດ້."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, fuzzy
-msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "ທ່ານບໍ່ສາມາດປ່ຽນລາຍການບັນຊີພາສີເກນເງິນສົດຄືນເປັນຮ່າງໄດ້."
 
 #. module: account
 #. odoo-python
@@ -24195,6 +26415,12 @@ msgid ""
 msgstr ""
 "ທ່ານບໍ່ສາມາດຢັ້ງຢືນໃບແຈ້ງໜີ້ທີ່ມີຍອດລວມຕິດລົບໄດ້. ທ່ານຄວນສ້າງໃບຫຼຸດໜີ້ແທນ. "
 "ໃຊ້ເມນູການດຳເນີນການເພື່ອປ່ຽນມັນເປັນໃບຫຼຸດໜີ້ ຫຼື ການຄືນເງິນ."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid "You do not have access to the Accounting Dashboard."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -24347,6 +26573,16 @@ msgstr "ໃບແແຈ້ງໜີ້ຂອງທ່ານ"
 #, fuzzy
 msgid "ZIP"
 msgstr "ລະຫັດໄປສະນີ"
+
+#. module: account
+#: model_terms:account.tax,description:account.24_tax_PT0
+msgid "Zero-Rated"
+msgstr ""
+
+#. module: account
+#: model:account.tax.group,name:account.24_l10n_id_tax_group_0
+msgid "Zero-rated Taxes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__zip
@@ -25011,14 +27247,6 @@ msgstr ""
 "{{ object.company_id.name }} ໃບແແຈ້ງໜີ້ (ອ້າງອີງ {{ object.name or 'n/a' }})"
 
 #. module: account
-#: model:mail.template,subject:account.mail_template_data_payment_receipt
-#, fuzzy
-msgid ""
-"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} ໃບຮັບເງິນ (ອ້າງອີງ {{ object.name or 'n/a' }})"
-
-#. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_credit_note
 #, fuzzy
 msgid ""
@@ -25037,6 +27265,311 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} ໃບແແຈ້ງໜີ້ທີ່ອອກໃຫ້ຕົນເອງ (Ref {{ object.name or 'n/"
 "a' }})"
+
+#. module: account
+#: model:mail.template,subject:account.mail_template_data_payment_receipt
+msgid ""
+"{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
+"{{ object.name or 'n/a' }})"
+msgstr ""
+
+#, fuzzy
+#~ msgid "%s (copy)"
+#~ msgstr "%s (ສຳເນົາ)"
+
+#, fuzzy
+#~ msgid "(copy)"
+#~ msgstr "(ສຳເນົາ)"
+
+#, fuzzy
+#~ msgid "+ Add Section"
+#~ msgstr "+ ເພີ່ມພາກສ່ວນ"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" "
+#~ "title=\"Date\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" "
+#~ "title=\"Date\"/>"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-download\"/> Download"
+#~ msgstr "<i class=\"fa fa-download\"/> ດາວໂຫຼດ"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+#~ "role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "Paid</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+#~ "role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "ຊໍາລະແລ້ວ</span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
+#~ "role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "Reversed</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
+#~ "role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "ກັບຄືນລາຍການແລ້ວ</span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
+#~ "title=\"Processing Payment\" role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "Processing Payment</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
+#~ "title=\"Processing Payment\" role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "ກຳລັງດຳເນີນການຊຳລະເງິນ</span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+#~ "role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "Waiting for Payment</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+#~ "role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "ລໍຖ້າການຊໍາລະ</span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
+#~ "                        Don't worry, you can always change this setting "
+#~ "later on the vendor's form.\n"
+#~ "                        You also have the option to disable the feature "
+#~ "for all vendors in the accounting settings."
+#~ msgstr ""
+#~ "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
+#~ "                        ບໍ່ຕ້ອງກັງວົນ, "
+#~ "ທ່ານສາມາດປ່ຽນການຕັ້ງຄ່ານີ້ໄດ້ສະເໝີໃນພາຍຫຼັງໃນຟອມຂອງຜູ້ສະໜອງ.\n"
+#~ "                        ທ່ານຍັງມີທາງເລືອກໃນການປິດການໃຊ້ງານຄຸນສົມບັດນີ້ສຳລັບຜູ້ສະໜອງທັງໝົດໃນການຕັ້ງຄ່າບັນຊີ."
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-trash text-danger\"/>\n"
+#~ "                            <span class=\"text-danger\" "
+#~ "invisible=\"duplicated_ref_ids.length == 1\">Delete all duplicates</"
+#~ "span>\n"
+#~ "                            <span class=\"text-danger\" "
+#~ "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-trash text-danger\"/>\n"
+#~ "                            <span class=\"text-danger\" "
+#~ "invisible=\"duplicated_ref_ids.length == 1\">ລຶບລາຍການທີ່ຊ້ຳກັນທັງໝົດ</span>\n"
+#~ "                            <span class=\"text-danger\" "
+#~ "invisible=\"duplicated_ref_ids.length &gt; 1\">ລຶບລາຍການທີ່ຊ້ຳກັນ</span>"
+
+#, fuzzy
+#~ msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
+#~ msgstr "<i class=\"oi oi-arrow-right me-1\"/>ກັບຄືນສູ່ການຕັ້ງຄ່າ"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-arrow-right\"/>\n"
+#~ "                                                Preview"
+#~ msgstr ""
+#~ "<i class=\"oi oi-arrow-right\"/>\n"
+#~ "                                                ເບິ່ງຕົວຢ່າງ"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias "
+#~ "Domain"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> ຕັ້ງຄ່າ Alias Domain"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span class=\"badge rounded-pill text-bg-warning\">\n"
+#~ "                                    <i class=\"fa fa-fw fa-remove\" aria-"
+#~ "label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "Cancelled</span>\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span class=\"badge rounded-pill text-bg-warning\">\n"
+#~ "                                    <i class=\"fa fa-fw fa-remove\" aria-"
+#~ "label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+#~ "                                    <span class=\"d-none d-md-inline\"> "
+#~ "ຍົກເລີກແລ້ວ</span>\n"
+#~ "                                </span>"
+
+#, fuzzy
+#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
+#~ msgstr "<span class=\"o_stat_text\">ລາຍການບັນຊີປະຈໍາວັນ</span>"
+
+#, fuzzy
+#~ msgid "<span title=\"Latest Statement\">Last Statement</span>"
+#~ msgstr "<span title=\"Latest Statement\">ບົດລາຍງານຫຼ້າສຸດ</span>"
+
+#, fuzzy
+#~ msgid "<span>1.00</span>"
+#~ msgstr "<span>1.00</span>"
+
+#, fuzzy
+#~ msgid "<span>1</span>"
+#~ msgstr "<span>1</span>"
+
+#, fuzzy
+#~ msgid "<span>=</span>"
+#~ msgstr "<span>=</span>"
+
+#, fuzzy
+#~ msgid "Cash Rounding"
+#~ msgstr "ການປັດເສດເງິນສົດ"
+
+#, fuzzy
+#~ msgid "Cash Roundings"
+#~ msgstr "ການປັດເສດເງິນສົດ"
+
+#, fuzzy
+#~ msgid "Create the first cash rounding"
+#~ msgstr "ສ້າງການປັດເສດເງິນສົດຄັ້ງທຳອິດ"
+
+#, fuzzy
+#~ msgid "Define the smallest coinage of the currency used to pay by cash"
+#~ msgstr "ກຳນົດຫົວໜ່ວຍເງິນທີ່ນ້ອຍທີ່ສຸດຂອງສະກຸນເງິນທີ່ໃຊ້ຊຳລະດ້ວຍເງິນສົດ"
+
+#, fuzzy
+#~ msgid "Exclude this journal entry from follow-up reports."
+#~ msgstr "ຍົກເວັ້ນລາຍການບັນຊີນີ້ອອກຈາກລາຍງານການຕິດຕາມໜີ້."
+
+#, fuzzy
+#~ msgid "Exclude this journal item from follow-up reports."
+#~ msgstr "ຍົກເວັ້ນລາຍການບັນຊີນີ້ອອກຈາກລາຍງານການຕິດຕາມໜີ້."
+
+#, fuzzy
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "ໄອຄອນ Font awesome ເຊັ່ນ fa-tasks"
+
+#, fuzzy
+#~ msgid "Is Sale Installed"
+#~ msgstr "ຕິດຕັ້ງໂມດູນການຂາຍແລ້ວ"
+
+#, fuzzy
+#~ msgid "No Follow-Up"
+#~ msgstr "ບໍ່ມີການຕິດຕາມ"
+
+#, fuzzy
+#~ msgid "Not Due"
+#~ msgstr "ບໍ່ທັນຮອດກຳນົດ"
+
+#, fuzzy
+#~ msgid "Online Payments"
+#~ msgstr "ການຊຳລະເງິນອອນໄລນ໌"
+
+#, fuzzy
+#~ msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
+#~ msgstr "ສະແດງມູນຄ່າທີ່ບໍ່ແມ່ນສູນຂອງຫົວໜ່ວຍເງິນທີ່ນ້ອຍທີ່ສຸດ (ຕົວຢ່າງ: 0.05)."
+
+#, fuzzy
+#~ msgid "Rounding Precision"
+#~ msgstr "ຄວາມລະອຽດການປັດເສດ"
+
+#, fuzzy
+#~ msgid "Rounding Strategy"
+#~ msgstr "ກົນລະຍຸດການປັດເສດ"
+
+#, fuzzy
+#~ msgid "Send invoices and payment follow-ups by post"
+#~ msgstr "ສົ່ງໃບແຈ້ງໜີ້ ແລະ ການຕິດຕາມການຊຳລະເງິນທາງໄປສະນີ"
+
+#, fuzzy
+#~ msgid ""
+#~ "Specify which way will be used to round the invoice amount to the "
+#~ "rounding precision"
+#~ msgstr "ກຳນົດວິທີທີ່ຈະໃຊ້ໃນການປັດເສດຈຳນວນເງິນໃນໃບແຈ້ງໜີ້ໃຫ້ກົງກັບຄວາມລະອຽດຂອງການປັດເສດ"
+
+#, fuzzy
+#~ msgid ""
+#~ "The IBAN does not seem to be correct. You should have entered something "
+#~ "like this %s\n"
+#~ "Where B = National bank code, S = Branch code, C = Account No, k = Check "
+#~ "digit"
+#~ msgstr ""
+#~ "IBAN ເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ. ທ່ານຄວນປ້ອນບາງຢ່າງຄືກັບ %s\n"
+#~ "ໂດຍທີ່ B = ລະຫັດທະນາຄານແຫ່ງຊາດ, S = ລະຫັດສາຂາ, C = ເລກບັນຊີ, k = ຕົວເລກກວດສອບ"
+
+#, fuzzy
+#~ msgid "The IBAN is invalid, it should begin with the country code"
+#~ msgstr "IBAN ບໍ່ຖືກຕ້ອງ, ມັນຄວນຈະເລີ່ມຕົ້ນດ້ວຍລະຫັດປະເທດ"
+
+#, fuzzy
+#~ msgid "The running balance (%s) doesn't match the specified ending balance."
+#~ msgstr "ຍອດເຫຼືອປັດຈຸບັນ (%s) ບໍ່ກົງກັບຍອດປິດທີ່ລະບຸໄວ້."
+
+#, fuzzy
+#~ msgid ""
+#~ "The starting balance doesn't match the ending balance of the previous "
+#~ "statement, or an earlier statement is missing."
+#~ msgstr "ຍອດຍົກມາບໍ່ກົງກັບຍອດເຫຼືອທ້າຍຂອງໃບແຈ້ງຍອດກ່ອນໜ້າ, ຫຼື ມີໃບແຈ້ງຍອດກ່ອນໜ້ານັ້ນຫາຍໄປ."
+
+#, fuzzy
+#~ msgid "The tie-breaking rule used for float rounding operations"
+#~ msgstr "ກົດລະບຽບການຕັດສິນທີ່ໃຊ້ ສຳລັບການປັດເສດຕົວເລກທົດສະນິຍົມ"
+
+#, fuzzy
+#~ msgid "There is no IBAN code."
+#~ msgstr "ບໍ່ມີລະຫັດ IBAN."
+
+#, fuzzy
+#~ msgid "This IBAN does not pass the validation check, please verify it."
+#~ msgstr "IBAN ນີ້ບໍ່ຜ່ານການກວດສອບຄວາມຖືກຕ້ອງ, ກະລຸນາກວດສອບຄືນໃໝ່."
+
+#, fuzzy
+#~ msgid "This Week"
+#~ msgstr "ອາທິດນີ້"
+
+#, fuzzy
+#~ msgid "Units"
+#~ msgstr "ບັນດາຫົວໜ່ວຍ"
+
+#, fuzzy
+#~ msgid ""
+#~ "You can not archive a journal containing draft journal entries.\n"
+#~ "\n"
+#~ "To proceed:\n"
+#~ "1/ click on the top-right button 'Journal Entries' from this journal "
+#~ "form\n"
+#~ "2/ then filter on 'Draft' entries\n"
+#~ "3/ select them all and post or delete them through the action menu"
+#~ msgstr ""
+#~ "ທ່ານບໍ່ສາມາດຈັດເກັບບັນຊີປະຈຳວັນທີ່ມີລາຍການບັນຊີຮ່າງໄດ້.\n"
+#~ "\n"
+#~ "ເພື່ອດຳເນີນການຕໍ່:\n"
+#~ "1/ ຄລິກໃສ່ປຸ່ມ 'ລາຍການບັນຊີປະຈຳວັນ' ຢູ່ເບື້ອງຂວາເທິງຈາກແບບຟອມບັນຊີປະຈຳວັນນີ້\n"
+#~ "2/ ຈາກນັ້ນກັ່ນຕອງເອົາລາຍການ 'ຮ່າງ'\n"
+#~ "3/ ເລືອກທັງໝົດແລ້ວບັນທຶກ ຫຼື ລຶບພວກມັນອອກຜ່ານເມນູການດຳເນີນການ"
+
+#, fuzzy
+#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
+#~ msgstr ""
+#~ "ເຈົ້າບໍ່ສາມາດແກ້ໄຂຫ້ອງຂໍ້ມູນທີ່ອ່ານໄດ້ຢ່າງດຽວ (Readonly) ຕໍ່ໄປນີ້ໃນລາຍການທີ່ລົງບັນຊີແລ້ວ: %s"
+
+#, fuzzy
+#~ msgid "You cannot reset to draft a tax cash basis journal entry."
+#~ msgstr "ທ່ານບໍ່ສາມາດປ່ຽນລາຍການບັນຊີພາສີເກນເງິນສົດຄືນເປັນຮ່າງໄດ້."
+
+#, fuzzy
+#~ msgid ""
+#~ "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/"
+#~ "a' }})"
+#~ msgstr ""
+#~ "{{ object.company_id.name }} ໃບຮັບເງິນ (ອ້າງອີງ {{ object.name or 'n/a' }})"
 
 #, fuzzy
 #~ msgid "PEPPOL Electronic Invoicing"
@@ -25152,10 +27685,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "GS1 identification keys"
 #~ msgstr "ລະຫັດລະບຸຕົວຕົນ GS1"
-
-#, fuzzy
-#~ msgid "Stock Variation"
-#~ msgstr "ສ່ວນຕ່າງສິນຄ້າໃນສາງ"
 
 #, fuzzy
 #~ msgid "Website Messages"

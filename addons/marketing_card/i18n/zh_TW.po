@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 23:55+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -457,6 +457,11 @@ msgid "Followers (Partners)"
 msgstr "關注人（業務夥伴）"
 
 #. module: marketing_card
+#: model:ir.module.module,summary:base.module_marketing_card
+msgid "Generate dynamic shareable cards"
+msgstr ""
+
+#. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_geometric
 msgid "Geometric"
 msgstr "幾何圖案"
@@ -637,6 +642,7 @@ msgstr "郵寄數目"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
+#: model:ir.module.module,shortdesc:base.module_marketing_card
 #: model:ir.ui.menu,name:marketing_card.card_menu
 #: model:ir.ui.menu,name:marketing_card.marketing_card_menu_technical
 #: model:res.groups.privilege,name:marketing_card.res_groups_privilege_marketing_card
@@ -758,6 +764,11 @@ msgid "Next Activity Type"
 msgstr "下一活動類型"
 
 #. module: marketing_card
+#: model:res.groups.privilege,placeholder:marketing_card.res_groups_privilege_marketing_card
+msgid "No"
+msgstr ""
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "No button"
 msgstr "沒有按鈕"
@@ -801,8 +812,8 @@ msgid ""
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
 "發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
-"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如：{{ object."
-"partner_id.lang }}。"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
+"{{ object.partner_id.lang }}。"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic

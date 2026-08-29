@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 17:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -64,6 +64,11 @@ msgid "'. Showing results for '"
 msgstr "'. Tulokset haulle '"
 
 #. module: website_hr_recruitment
+#: model:website.page,url:website_hr_recruitment.thankyou
+msgid "/job-thank-you"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "12 days / year, including <br/>6 of your choice."
 msgstr "12 päivää / vuosi, mukaan lukien <br/>6 valitsemaasi päivää."
@@ -78,6 +83,21 @@ msgstr ""
 "target=\"_blank\"><small><b>LUE</b></small></a>"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"account_tree\" title=\"Department\" "
+"role=\"img\" aria-label=\"Department\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"location_on\" title=\"Address\" "
+"role=\"img\" aria-label=\"Address\"/>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid ""
 "<i class=\"oi oi-fw\" data-icon=\"luggage\" title=\"Employment type\" "
@@ -251,6 +271,12 @@ msgid "All"
 msgstr "Kaikki"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_floating_snippets_plugin.js:0
+msgid "All jobs"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 msgid "All websites"
 msgstr "Kaikki verkkosivut"
@@ -353,8 +379,8 @@ msgstr "Luo sisältöä, joka auttaa käyttäjiämme päivittäin"
 msgid ""
 "Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
 msgstr ""
-"Luo uusia työsivuja oikean yläkulman <strong>+ <i>Uusi</i></strong> -"
-"painikkeella."
+"Luo uusia työsivuja oikean yläkulman <strong>+ <i>Uusi</i></strong> "
+"-painikkeella."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -589,6 +615,11 @@ msgid "Jobs Page"
 msgstr "Avoimet työpaikat -sivu"
 
 #. module: website_hr_recruitment
+#: model:website.snippet.filter,name:website_hr_recruitment.dynamic_filter_latest_job_positions
+msgid "Latest Job Positions"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Lead the entire sales cycle"
 msgstr "Johtaa koko myyntisykliä"
@@ -598,6 +629,11 @@ msgstr "Johtaa koko myyntisykliä"
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "LinkedIn Profile"
 msgstr "LinkedIn-profiili"
+
+#. module: website_hr_recruitment
+#: model:ir.module.module,summary:base.module_website_hr_recruitment
+msgid "Manage your online hiring process"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -655,6 +691,11 @@ msgstr "Toimistot"
 #: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Offices Filter"
 msgstr "Toimipaikkasuodatin"
+
+#. module: website_hr_recruitment
+#: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
+msgid "Online Jobs"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -884,6 +925,25 @@ msgstr ""
 "bold\">ota rohkeasti yhteyttä</span> ja lähetä avoin hakemus."
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_floating_snippets_plugin.js:0
+msgid "This job"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.module.module,description:base.module_website_hr_recruitment
+msgid ""
+"This module allows to publish your available job positions on your website "
+"and keep track of application submissions easily."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_floating_snippets_plugin.js:0
+msgid "This page"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Tracker URL"
 msgstr "Seurannan URL-osoite"
@@ -913,6 +973,11 @@ msgstr "Määrittelemätön"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Valid work permit for Belgium"
 msgstr "Voimassa oleva työlupa Belgiaan"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
+msgid "View {{0}}"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published
@@ -1053,11 +1118,13 @@ msgid "job URL"
 msgstr "työn URL-osoite"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open position"
 msgstr "avoin työpaikka"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open positions"
 msgstr "avoimet työpaikat"

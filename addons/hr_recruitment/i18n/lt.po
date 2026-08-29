@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 08:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
@@ -86,20 +86,20 @@ msgid ""
 "    Hello,\n"
 "    <br/><br/>\n"
 "    We confirm we successfully received your application for the job\n"
-"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object."
-"job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object."
-"job_id.name or ''\">Experienced Developer</strong></a>\" at <strong t-"
-"out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
+"out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" at "
+"<strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
 "    <br/><br/>\n"
 "    We will come back to you shortly.\n"
 "\n"
-"    <div t-if=\"'website_url' in object.job_id and object.job_id."
-"website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"    <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "        <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: {{object.company_id."
-"email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px 16px; border-"
-"radius: 5px;\">Job Description</a>\n"
+"'#875A7B'}}; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
+"8px 16px; border-radius: 5px;\">Job Description</a>\n"
 "    </div>\n"
 "\n"
 "    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
@@ -144,30 +144,30 @@ msgid ""
 "    <t t-if=\"object.job_id.address_id.street2\">\n"
 "        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
 "(RM)</t><br/>\n"
-"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id."
-"address_id.street2)\"/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
 "    </t>\n"
 "    <t t-if=\"object.job_id.address_id.city\">\n"
 "        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id."
-"address_id.city)\"/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
 "    </t>\n"
 "    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
 "        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id."
-"address_id.state_id.name)\"/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
 "    </t>\n"
 "    <t t-if=\"object.job_id.address_id.zip\">\n"
 "        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id."
-"address_id.zip)\"/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
 "    </t>\n"
 "    <br/>\n"
 "    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
 "        <t t-out=\"object.job_id.address_id.country_id.name or "
 "''\">Argentina</t><br/>\n"
-"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id."
-"address_id.country_id.name)\"/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
 "    </t>\n"
 "    <br/>\n"
 "</div>\n"
@@ -231,8 +231,8 @@ msgid ""
 "        <br/><br/>\n"
 "        Best<br/>\n"
 "        <div style=\"font-size: 11px; color: grey;\">\n"
-"            <t t-if=\"object.recruiter_id and object.recruiter_id."
-"user_id\">\n"
+"            <t t-if=\"object.recruiter_id and "
+"object.recruiter_id.user_id\">\n"
 "                -- <br/>\n"
 "                <strong t-out=\"object.recruiter_id.name or ''\">Marc Demo</"
 "strong><br/>\n"
@@ -268,13 +268,13 @@ msgid ""
 "        position, your application has been short listed for a\n"
 "        call or an interview.\n"
 "        <br/><br/>\n"
-"        <div t-if=\"'website_url' in object.job_id and object.job_id."
-"website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "            <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: {{object.company_id."
-"email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px 16px; border-"
-"radius: 5px;\">Job Description</a>\n"
+"'#875A7B'}}; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
+"8px 16px; border-radius: 5px;\">Job Description</a>\n"
 "        </div>\n"
 "\n"
 "        <t t-if=\"object.recruiter_id and object.recruiter_id.user_id\">\n"
@@ -291,10 +291,10 @@ msgid ""
 "        <div style=\"font-size: 11px; color: grey;\">\n"
 "            -- <br/>\n"
 "            The HR Team\n"
-"            <t t-if=\"'website_url' in object.job_id and hasattr(object."
-"job_id, 'website_url') and object.job_id.website_url\">\n"
-"                Discover <a href=\"/jobs\" style=\"text-decoration:none;"
-"color:#717188;\">all our jobs</a>.<br/>\n"
+"            <t t-if=\"'website_url' in object.job_id and "
+"hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                Discover <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">all our jobs</a>.<br/>\n"
 "            </t>\n"
 "        </div>\n"
 "\n"
@@ -323,37 +323,37 @@ msgid ""
 "        <t t-if=\"object.job_id.address_id.street\">\n"
 "            <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
 "9710</t><br/>\n"
-"            <t t-set=\"location\" t-value=\"object.job_id.address_id."
-"street\"/>\n"
+"            <t t-set=\"location\" t-"
+"value=\"object.job_id.address_id.street\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.street2\">\n"
 "            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, "
 "Santiago (RM)</t><br/>\n"
-"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object."
-"job_id.address_id.street2)\"/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.city\">\n"
 "            <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object."
-"job_id.address_id.city)\"/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
 "            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</"
 "t>,\n"
-"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object."
-"job_id.address_id.state_id.name)\"/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.zip\">\n"
 "            <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object."
-"job_id.address_id.zip)\"/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
 "        </t>\n"
 "        <br/>\n"
 "        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
 "            <t t-out=\"object.job_id.address_id.country_id.name or "
 "''\">Argentina</t><br/>\n"
-"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, object."
-"job_id.address_id.country_id.name)\"/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
 "        </t>\n"
 "        <br/>\n"
 "    </div>\n"
@@ -712,6 +712,7 @@ msgstr "Analizė"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_new
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__applicant_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -757,10 +758,12 @@ msgstr "Kandidato vardas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__applicant_without_email
 msgid "Applicant(s) not having email"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_partner__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_users__applicant_ids
@@ -920,6 +923,7 @@ msgstr "Prisegtukų skaičius"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__attachment_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__attachment_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
 msgid "Attachments"
 msgstr "Prisegtukai"
@@ -958,6 +962,7 @@ msgstr "Neleidžiamas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body_has_template_value
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr ""
 
@@ -1004,6 +1009,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__can_edit_body
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__can_edit_body
 msgid "Can Edit Body"
 msgstr ""
 
@@ -1086,6 +1092,7 @@ msgstr "Turinys"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__body
 msgid "Contents"
 msgstr "Turinys"
 
@@ -1167,6 +1174,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_uid
@@ -1183,6 +1191,7 @@ msgstr "Sukūrė"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_date
@@ -1389,6 +1398,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__display_name
@@ -1456,16 +1466,19 @@ msgstr "Dubliuoti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids_domain
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicate_applicant_ids_domain
 msgid "Duplicate Applicant Ids Domain"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicate_applicant_ids
 msgid "Duplicate Applications"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicates_count
 msgid "Duplicates Count"
 msgstr ""
 
@@ -1497,11 +1510,13 @@ msgstr "El. pašto pseudonimas"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 msgid "Email Body..."
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__template_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__template_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid "Email Template"
@@ -1725,6 +1740,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
@@ -1926,6 +1942,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__is_mail_template_editor
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__is_mail_template_editor
 msgid "Is Editor"
 msgstr ""
 
@@ -2073,6 +2090,7 @@ msgstr "Naujų kolegų personalo KPI reikšmė"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__lang
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__lang
 msgid "Language"
 msgstr "Kalba"
 
@@ -2095,6 +2113,7 @@ msgstr "Paskutinis etapo atnaujinimas"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_uid
@@ -2111,6 +2130,7 @@ msgstr "Paskutinį kartą atnaujino"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_date
@@ -2192,6 +2212,56 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Pagrindinis prisegtukas"
+
+#. module: hr_recruitment
+#: model:ir.module.module,description:base.module_hr_recruitment
+msgid ""
+"Manage Recruitment and Job applications\n"
+"---------------------------------------\n"
+"\n"
+"Publish, promote and organize your job offers with the Odoo\n"
+"<a href=\"https://www.odoo.com/app/recruitment\">Open Source Recruitment "
+"Application</a>.\n"
+"\n"
+"Organize your job board, promote your job announces and keep track of\n"
+"application submissions easily. Follow every applicant and build up a "
+"database\n"
+"of skills and profiles with indexed documents.\n"
+"\n"
+"Post Your Jobs on Best Job Boards\n"
+"---------------------------------\n"
+"\n"
+"Connect automatically to most famous job board websites; linkedIn, Monster,\n"
+"Craigslist, ... Every job position has a new email address automatically\n"
+"assigned to route applications automatically to the right job position.\n"
+"\n"
+"Whether applicants contact you by email or using an online form, you get "
+"all\n"
+"the data indexed automatically (resumes, motivation letter) and you can "
+"answer\n"
+"in just a click, reusing templates of answers.\n"
+"\n"
+"Customize Your Recruitment Process\n"
+"----------------------------------\n"
+"\n"
+"Use the kanban view and customize the steps of your recruitments process;\n"
+"pre-qualification, first interview, second interview, negociaiton, ...\n"
+"\n"
+"Get accurate statistics on your recruitment pipeline. Get reports to "
+"compare\n"
+"the performance of your different investments on external job boards.\n"
+"\n"
+"Streamline Your Recruitment Process\n"
+"-----------------------------------\n"
+"\n"
+"Follow applicants in your recruitment process with the smart kanban view. "
+"Save\n"
+"time by automating some communications with email templates.\n"
+"\n"
+"Documents like resumes and motivation letters are indexed automatically,\n"
+"allowing you to easily find for specific skills and build up a database of\n"
+"profiles.\n"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -2383,6 +2453,11 @@ msgid "Next Meeting"
 msgstr "Kitas susitikimas"
 
 #. module: hr_recruitment
+#: model:res.groups.privilege,placeholder:hr_recruitment.res_groups_privilege_recruitment
+msgid "No"
+msgstr ""
+
+#. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "No Meeting"
@@ -2565,6 +2640,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
+#: model:ir.model.fields,help:hr_recruitment.field_applicant_refuse_single__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
@@ -2711,6 +2787,7 @@ msgstr "Esate pasiruošę įdarbinti efektyviau?"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 msgid "Reason"
 msgstr "Priežastis"
 
@@ -2731,6 +2808,7 @@ msgid "Recruiter Work Email"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.module.module,shortdesc:base.module_hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
 #: model:res.groups.privilege,name:hr_recruitment.res_groups_privilege_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.digest_digest_view_form
@@ -2792,6 +2870,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2805,6 +2884,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicates
 msgid "Refuse Duplicate Applications"
 msgstr ""
 
@@ -2813,8 +2893,10 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__refuse_reason_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_reason_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2831,6 +2913,11 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
 msgstr "Atmetimo priežastys"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_applicant_refuse_single
+msgid "Refuse a single applicant"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2866,6 +2953,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__model
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__model
 msgid "Related Document Model"
 msgstr ""
 
@@ -2882,6 +2970,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__render_model
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__render_model
 msgid "Rendering Model"
 msgstr ""
 
@@ -3003,6 +3092,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__scheduled_date
 msgid "Scheduled Date"
 msgstr "Suplanuota data"
 
@@ -3071,6 +3161,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicant_mass_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__send_mail
 msgid "Send Email"
 msgstr "Siųsti el. laišką"
 
@@ -3249,11 +3340,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__subject
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__subject
 msgid "Subject"
 msgstr "Tema"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 msgid "Subject..."
 msgstr "Tema..."
 
@@ -3487,6 +3580,11 @@ msgstr "Šiandienos veiklos"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Bendras prognozuojamas darbuotojų skaičius"
+
+#. module: hr_recruitment
+#: model:ir.module.module,summary:base.module_hr_recruitment
+msgid "Track your recruitment pipeline"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -3815,6 +3913,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
+#: model:ir.model.fields,help:hr_recruitment.field_applicant_refuse_single__scheduled_date
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."

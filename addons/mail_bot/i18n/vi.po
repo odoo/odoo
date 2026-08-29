@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 14:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -34,6 +34,11 @@ msgstr ""
 "Bạn quá con người đối với tôi! Hãy giữ cho nó chuyên nghiệp"
 
 #. module: mail_bot
+#: model:ir.module.module,summary:base.module_mail_bot
+msgid "Add OdooBot in discussions"
+msgstr ""
+
+#. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
 msgid "Disabled"
 msgstr "Đã vô hiệu"
@@ -52,29 +57,23 @@ msgstr "Tên hiển thị"
 
 #. module: mail_bot
 #. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-msgid ""
-"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
-"Discuss app."
+#: code:addons/mail_bot/models/res_users.py:0
+msgid "Go ahead - Try sending me an emoji 😊"
 msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
-"sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
-"help."
+"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
+"Discuss app settings."
 msgstr ""
-"Tuyệt vời! 👍%(new_line)sĐể truy cập các lệnh đặc biệt, %(bold_start)shãy "
-"bắt đầu câu của bạn bằng %(bold_end)s%(command_start)s/%(command_end)s. Hãy "
-"cố gắng tìm kiếm sự trợ giúp."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
-msgid "Hello,"
-msgstr "Xin chào,"
+msgid "Hello 👋"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
@@ -96,8 +95,8 @@ msgid ""
 "ask: %(command_start)sstart the tour%(command_end)s."
 msgstr ""
 "Tôi không có đủ trí thông minh để trả lời câu hỏi của bạn.%(new_line)sĐể làm "
-"theo hướng dẫn của tôi, hãy hỏi: %(command_start)sbắt đầu tour%(command_end)"
-"s."
+"theo hướng dẫn của tôi, hãy hỏi: %(command_start)sbắt đầu tour%"
+"(command_end)s."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
@@ -112,19 +111,18 @@ msgid "Idle"
 msgstr "Rảnh rỗi"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_bot
-msgid "Mail Bot"
-msgstr "Mail Bot"
-
-#. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
-"(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+"It looks like you're not sure what to do next. Please type %(command_start)s/"
+"%(command_end)s to see the suggestions, then select %(command_start)shelp%"
+"(command_end)s and press Enter."
 msgstr ""
-"Không hẳn. Để tiếp tục tour, hãy gửi một emoji: %(bold_start)sgõ%(bold_end)s%"
-"(command_start)s :)%(command_end)s và nhấn enter."
+
+#. module: mail_bot
+#: model:ir.model,name:mail_bot.model_mail_bot
+msgid "Mail Bot"
+msgstr "Mail Bot"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -135,33 +133,31 @@ msgstr "Không được khởi tạo"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s/%(command_end)s "
-"and wait for the propositions. Select %(command_start)shelp%(command_end)s "
-"and press enter."
+"Not quite. To continue the tour, please send an emoji by typing %"
+"(command_start)s:)%(command_end)s and pressing Enter, or by clicking the %"
+"(smile_icon)s icon to pick one."
 msgstr ""
-"Nếu không chắc chắn những gì bạn đang làm, vui lòng gõ %(command_start)s/%"
-"(command_end)s và chờ đợi các đề xuất. Chọn %(command_start)sgiúp đỡ%"
-"(command_end)s và nhấn enter."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
-"and wait for the propositions. Select one of them and press enter."
+"Not sure what you're doing? Please type %(command_start)s::%(command_end)s "
+"to see canned responses. Select one and press Enter."
 msgstr ""
-"Nếu không chắc chắn những gì bạn đang làm, vui lòng gõ %(command_start)s:%"
-"(command_end)s và chờ đợi các đề xuất. Chọn một trong số chúng và nhấn enter."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid ""
-"Odoo's chat helps employees collaborate efficiently. I'm here to help you "
-"discover its features."
+"Odoo's Discuss application helps employees collaborate efficiently. I'm here "
+"to help you explore its features."
 msgstr ""
-"Ứng dụng trò chuyện của Odoo giúp nhân viên cộng tác hiệu quả. Tôi ở đây để "
-"giúp bạn khám phá các tính năng của ứng dụng này."
+
+#. module: mail_bot
+#: model:ir.module.module,shortdesc:base.module_mail_bot
+msgid "OdooBot"
+msgstr ""
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -215,13 +211,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
-"him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
-"me."
+"Sorry, I'm not listening right now. To get my attention, %"
+"(bold_start)smention me%(bold_end)s by typing %(command_start)s@OdooBot%"
+"(command_end)s and selecting me."
 msgstr ""
-"Xin lỗi tôi không để ý. Để thu hút sự chú ý của ai đó, hãy %(bold_start)"
-"sping người đó%(bold_end)s. Viết %(command_start)s@OdooBot%(command_end)s và "
-"chọn tôi."
 
 #. module: mail_bot
 #. odoo-python
@@ -245,57 +238,43 @@ msgstr "Điều đó không tốt! Tôi là một bot nhưng tôi có cảm xúc
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"That’s the end of this overview. You can %(bold_start)sclose this "
+"That's the end of this overview. You can %(bold_start)sclose this "
 "conversation%(bold_end)s or type %(command_start)sstart the tour%"
 "(command_end)s to see it again. Enjoy exploring Odoo!"
 msgstr ""
-"Đây là phần kết của tổng quan này. Bạn có thể %(bold_start)sđóng cuộc trò "
-"chuyện này%(bold_end)s hoặc gõ %(command_start)sbắt đầu tour%(command_end)s "
-"để xem lại. Chúc bạn khám phá Odoo vui vẻ!"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-msgid "This is a temporary canned response to see how canned responses work."
-msgstr ""
-"Đây là câu trả lời soạn sẵn tạm thời để xem cách hoạt động của các câu trả "
-"lời soạn sẵn."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
-"(paperclip_icon)s icon and select a file."
+"To %(bold_start)ssend an attachment%(bold_end)s, first click the %"
+"(plus_icon)s icon, then select %(paperclip_icon)s Attach files."
 msgstr ""
-"Để %(bold_start)sgửi một tệp đính kèm%(bold_end)s, nhấp vào biểu tượng %"
-"(paperclip_icon)s và chọn một tệp."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-msgid "To start, try to send me an emoji :)"
-msgstr "Để bắt đầu, hãy thử gửi cho tôi một biểu tượng cảm xúc :)"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/res_users.py:0
-msgid "Try to send me an emoji"
-msgstr "Hãy thử gửi cho tôi một biểu tượng cảm xúc"
+msgid "To get started, try sending me an emoji 😊"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
-"discovering our product, please check %(document_link_start)sour "
+"To use special commands, %(bold_start)sstart your message with a %"
+"(bold_end)s %(command_start)s/%(command_end)s. For example, try typing %"
+"(command_start)s/help%(command_end)s."
+msgstr ""
+
+#. module: mail_bot
+#. odoo-python
+#: code:addons/mail_bot/models/mail_bot.py:0
+msgid ""
+"Unfortunately, I'm just a bot 😞 I don't understand that.%(new_line)sIf you "
+"need help exploring our apps, please check out %(document_link_start)sour "
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
-"Rất tiếc, tôi chỉ là bot 😞, nên hiểu biết còn hạn chế! Nếu bạn muốn được "
-"trợ giúp khám phá sản phẩm của chúng tôi, vui lòng tham khảo %"
-"(document_link_start)stài liệu%(document_link_end)s hoặc %(slides_link_start)"
-"svideo%(slides_link_end)s."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -307,32 +286,25 @@ msgstr "Người dùng"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
-"use canned responses. I've created a temporary one for you."
+"use canned responses. I've created a temporary one just for you."
 msgstr ""
-"Tuyệt vời! 😇%(new_line)sHãy thử nhập %(command_start)s::%(command_end)s để "
-"sử dụng câu trả lời soạn sẵn. Tôi đã tạo một câu trả lời tạm thời cho bạn."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Wow you are a natural!%(new_line)sPing someone with @username to grab their "
-"attention. %(bold_start)sTry to ping me using%(bold_end)s %"
-"(command_start)s@OdooBot%(command_end)s in a sentence."
+"Wow, you're a natural!%(new_line)s Use @username to mention someone and grab "
+"their attention.%(new_line)s %(bold_start)sTry mentioning me by typing%"
+"(bold_end)s %(command_start)s@OdooBot%(command_end)s in your message."
 msgstr ""
-"Wow. Bạn thật giỏi! %(new_line)sNhắc đến ai đó bằng @username để thu hút sự "
-"chú ý của họ. %(bold_start)sBạn có thể thử nhắc đến tôi bằng%(bold_end)s %"
-"(command_start)s@OdooBot%(command_end)s trong một câu."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
-"(bold_end)s, like a picture of your cute dog..."
+"Yep, I'm here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
+"(bold_end)s 📎 - maybe a picture of your cute dog... 🐕"
 msgstr ""
-"Tôi ở đây! 🎉 %(new_line)sBây giờ, hãy thử %(bold_start)sgửi tệp đính kèm%"
-"(bold_end)s, ví dụ như ảnh chú cún đáng yêu của bạn..."
 
 #. module: mail_bot
 #. odoo-python
@@ -363,3 +335,119 @@ msgstr "yêu"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "start the tour"
 msgstr "bắt đầu tour"
+
+#~ msgid ""
+#~ "Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
+#~ "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
+#~ "help."
+#~ msgstr ""
+#~ "Tuyệt vời! 👍%(new_line)sĐể truy cập các lệnh đặc biệt, %(bold_start)shãy "
+#~ "bắt đầu câu của bạn bằng %(bold_end)s%(command_start)s/%(command_end)s. "
+#~ "Hãy cố gắng tìm kiếm sự trợ giúp."
+
+#~ msgid "Hello,"
+#~ msgstr "Xin chào,"
+
+#~ msgid ""
+#~ "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
+#~ "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+#~ msgstr ""
+#~ "Không hẳn. Để tiếp tục tour, hãy gửi một emoji: %(bold_start)sgõ%"
+#~ "(bold_end)s%(command_start)s :)%(command_end)s và nhấn enter."
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s/%"
+#~ "(command_end)s and wait for the propositions. Select %"
+#~ "(command_start)shelp%(command_end)s and press enter."
+#~ msgstr ""
+#~ "Nếu không chắc chắn những gì bạn đang làm, vui lòng gõ %(command_start)s/%"
+#~ "(command_end)s và chờ đợi các đề xuất. Chọn %(command_start)sgiúp đỡ%"
+#~ "(command_end)s và nhấn enter."
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s:%"
+#~ "(command_end)s and wait for the propositions. Select one of them and "
+#~ "press enter."
+#~ msgstr ""
+#~ "Nếu không chắc chắn những gì bạn đang làm, vui lòng gõ %(command_start)s:%"
+#~ "(command_end)s và chờ đợi các đề xuất. Chọn một trong số chúng và nhấn "
+#~ "enter."
+
+#~ msgid ""
+#~ "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
+#~ "discover its features."
+#~ msgstr ""
+#~ "Ứng dụng trò chuyện của Odoo giúp nhân viên cộng tác hiệu quả. Tôi ở đây "
+#~ "để giúp bạn khám phá các tính năng của ứng dụng này."
+
+#~ msgid ""
+#~ "Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
+#~ "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and "
+#~ "select me."
+#~ msgstr ""
+#~ "Xin lỗi tôi không để ý. Để thu hút sự chú ý của ai đó, hãy %"
+#~ "(bold_start)sping người đó%(bold_end)s. Viết %(command_start)s@OdooBot%"
+#~ "(command_end)s và chọn tôi."
+
+#~ msgid ""
+#~ "That’s the end of this overview. You can %(bold_start)sclose this "
+#~ "conversation%(bold_end)s or type %(command_start)sstart the tour%"
+#~ "(command_end)s to see it again. Enjoy exploring Odoo!"
+#~ msgstr ""
+#~ "Đây là phần kết của tổng quan này. Bạn có thể %(bold_start)sđóng cuộc trò "
+#~ "chuyện này%(bold_end)s hoặc gõ %(command_start)sbắt đầu tour%"
+#~ "(command_end)s để xem lại. Chúc bạn khám phá Odoo vui vẻ!"
+
+#~ msgid ""
+#~ "This is a temporary canned response to see how canned responses work."
+#~ msgstr ""
+#~ "Đây là câu trả lời soạn sẵn tạm thời để xem cách hoạt động của các câu "
+#~ "trả lời soạn sẵn."
+
+#~ msgid ""
+#~ "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
+#~ "(paperclip_icon)s icon and select a file."
+#~ msgstr ""
+#~ "Để %(bold_start)sgửi một tệp đính kèm%(bold_end)s, nhấp vào biểu tượng %"
+#~ "(paperclip_icon)s và chọn một tệp."
+
+#~ msgid "To start, try to send me an emoji :)"
+#~ msgstr "Để bắt đầu, hãy thử gửi cho tôi một biểu tượng cảm xúc :)"
+
+#~ msgid "Try to send me an emoji"
+#~ msgstr "Hãy thử gửi cho tôi một biểu tượng cảm xúc"
+
+#~ msgid ""
+#~ "Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
+#~ "discovering our product, please check %(document_link_start)sour "
+#~ "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
+#~ "(slides_link_end)s."
+#~ msgstr ""
+#~ "Rất tiếc, tôi chỉ là bot 😞, nên hiểu biết còn hạn chế! Nếu bạn muốn được "
+#~ "trợ giúp khám phá sản phẩm của chúng tôi, vui lòng tham khảo %"
+#~ "(document_link_start)stài liệu%(document_link_end)s hoặc %"
+#~ "(slides_link_start)svideo%(slides_link_end)s."
+
+#~ msgid ""
+#~ "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
+#~ "use canned responses. I've created a temporary one for you."
+#~ msgstr ""
+#~ "Tuyệt vời! 😇%(new_line)sHãy thử nhập %(command_start)s::%(command_end)s "
+#~ "để sử dụng câu trả lời soạn sẵn. Tôi đã tạo một câu trả lời tạm thời cho "
+#~ "bạn."
+
+#~ msgid ""
+#~ "Wow you are a natural!%(new_line)sPing someone with @username to grab "
+#~ "their attention. %(bold_start)sTry to ping me using%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s in a sentence."
+#~ msgstr ""
+#~ "Wow. Bạn thật giỏi! %(new_line)sNhắc đến ai đó bằng @username để thu hút "
+#~ "sự chú ý của họ. %(bold_start)sBạn có thể thử nhắc đến tôi bằng%"
+#~ "(bold_end)s %(command_start)s@OdooBot%(command_end)s trong một câu."
+
+#~ msgid ""
+#~ "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
+#~ "attachment%(bold_end)s, like a picture of your cute dog..."
+#~ msgstr ""
+#~ "Tôi ở đây! 🎉 %(new_line)sBây giờ, hãy thử %(bold_start)sgửi tệp đính kèm%"
+#~ "(bold_end)s, ví dụ như ảnh chú cún đáng yêu của bạn..."

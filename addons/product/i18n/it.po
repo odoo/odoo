@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 04:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
@@ -28,6 +28,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: product
+#: model:ir.module.module,description:base.module_product
+msgid ""
+"\n"
+"This is the base module for managing products and pricelists in Odoo.\n"
+"========================================================================\n"
+"\n"
+"Products support variants, different pricing methods, vendors information,\n"
+"make to stock/order, different units of measure, packaging and properties.\n"
+"\n"
+"Pricelists support:\n"
+"-------------------\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist\n"
+"        * Cost price\n"
+"        * List price\n"
+"        * Vendor price\n"
+"\n"
+"Pricelists preferences by product and/or partners.\n"
+"\n"
+"Print product labels with barcode.\n"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -47,20 +71,20 @@ msgstr "N. prodotti"
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
 "%(base)s con uno sconto di %(discount)s %% %(discount_type)s e una tassa "
 "aggiuntiva di %(surcharge)s\n"
-"Esempio: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Esempio: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
 msgstr ""
 "%(item_name)s: la data di fine (%(end_date)s) deve seguire la data di inizio "
 "(%(start_date)s)"
@@ -82,15 +106,6 @@ msgstr "%(percentage)s %% di sconto su %(pricelist)s"
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
 msgstr "%(percentage)s %% di sconto sul prezzo di vendita"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_category.py:0
-#: code:addons/product/models/product_pricelist.py:0
-#: code:addons/product/models/product_tag.py:0
-#: code:addons/product/models/product_template.py:0
-msgid "%s (copy)"
-msgstr "%s (copia)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
@@ -147,8 +162,8 @@ msgstr "- %(amount)s riduzione"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- Codice a barre \"%(barcode)s\" già assegnato al prodotto(i): "
-"%(product_list)s"
+"- Codice a barre \"%(barcode)s\" già assegnato al prodotto(i): %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -836,6 +851,11 @@ msgid "Barcode Database"
 msgstr "Database codice a barre"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Barcode Lookup"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid ""
@@ -1003,13 +1023,13 @@ msgstr "Combo sedie"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"La modifica dell'unità di misura del prodotto comporterà una conversione 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"La modifica dell'unità di misura del prodotto comporterà una conversione 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "Tutti i record esistenti (ordini di vendita, di acquisto, ecc.) che "
 "utilizzano il prodotto verranno aggiornati sostituendo il nome dell'unità."
 
@@ -2037,6 +2057,11 @@ msgid "Height"
 msgstr "Altezza"
 
 #. module: product
+#: model:res.groups.privilege,description:product.res_groups_privilege_product
+msgid "Helps you manage your product catalog."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
 msgid ""
@@ -2934,11 +2959,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"Impossibile trasformare l'attributo %(attribute_src)s del prodotto "
-"%(product)s nell'attributo %(attribute_dest)s."
+"Impossibile trasformare l'attributo %(attribute_src)s del prodotto %"
+"(product)s nell'attributo %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -3560,6 +3585,11 @@ msgid "Products"
 msgstr "Prodotti"
 
 #. module: product
+#: model:ir.module.module,shortdesc:base.module_product
+msgid "Products & Pricelists"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
 msgstr "Prezzo prodotti"
@@ -3764,13 +3794,6 @@ msgstr "Varianti correlate"
 #: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
 msgid "Related attachment"
 msgstr "Allegato"
-
-#. module: product
-#. odoo-javascript
-#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
-msgid "Remove"
-msgstr "Rimuovi"
 
 #. module: product
 #. odoo-javascript
@@ -4203,11 +4226,11 @@ msgstr "Il riferimento '%s' esiste già."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr ""
-"L'attributo %(attribute)s deve avere almeno un valore per il prodotto "
-"%(product)s."
+"L'attributo %(attribute)s deve avere almeno un valore per il prodotto %"
+"(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -4248,12 +4271,12 @@ msgstr "Tipo di visualizzazione usata nel configuratore prodotto."
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
-"\"%(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
 msgstr ""
-"Il prodotto in uscita ha un valore di attributo diverso. "
-"\"%(imported_values)s\" non è equivalente a \"%(existing_values)s\" per "
-"\"%(external_id)s\", \"%(id)s\""
+"Il prodotto in uscita ha un valore di attributo diverso. \"%"
+"(imported_values)s\" non è equivalente a \"%(existing_values)s\" per \"%"
+"(external_id)s\", \"%(id)s\""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4352,8 +4375,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Valore %(value)s non definito per l'attributo %(attribute)s sul prodotto "
-"%(product)s."
+"Valore %(value)s non definito per l'attributo %(attribute)s sul prodotto %"
+"(product)s."
 
 #. module: product
 #. odoo-python
@@ -4889,6 +4912,11 @@ msgid "Vendors"
 msgstr "Fornitori"
 
 #. module: product
+#: model:res.groups.privilege,placeholder:product.res_groups_privilege_product
+msgid "View"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
 msgstr "Allestimento virtuale abitazione"
@@ -5128,8 +5156,8 @@ msgid ""
 "because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Impossibile cambiare la modalità di creazione di varianti dell'attributo "
-"%(attribute)s perché utilizzato nei seguenti prodotti:\n"
+"Impossibile cambiare la modalità di creazione di varianti dell'attributo %"
+"(attribute)s perché utilizzato nei seguenti prodotti:\n"
 "%(products)s"
 
 #. module: product
@@ -5163,8 +5191,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
 "Impossibile cambiare il prodotto del valore %(value)s impostato sul prodotto "
 "%(product)s."
@@ -5173,11 +5201,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
-"Impossibile cambiare il valore del valore %(value)s impostato sul prodotto "
-"%(product)s."
+"Impossibile cambiare il valore del valore %(value)s impostato sul prodotto %"
+"(product)s."
 
 #. module: product
 #. odoo-python
@@ -5435,11 +5463,6 @@ msgid "attribute_id"
 msgstr "attribute_id"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
-msgid "barcodelookup.com"
-msgstr "barcodelookup.com"
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
@@ -5546,3 +5569,13 @@ msgstr "→"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (copia)"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "Rimuovi"
+
+#~ msgid "barcodelookup.com"
+#~ msgstr "barcodelookup.com"

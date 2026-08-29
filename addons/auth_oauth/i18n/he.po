@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 06:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-master/"
@@ -29,6 +29,14 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: auth_oauth
+#: model:ir.module.module,description:base.module_auth_oauth
+msgid ""
+"\n"
+"Allow users to login through OAuth2 Provider.\n"
+"=============================================\n"
+msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -64,13 +72,9 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_client_id
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID"
 msgstr "מזהה לקוח"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "Client ID:"
-msgstr "מספר לקוח:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -86,6 +90,11 @@ msgstr "נוצר על-ידי"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_date
 msgid "Created on"
 msgstr "נוצר ב-"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__icon
+msgid "Custom Material Symbols Icon"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
@@ -176,6 +185,11 @@ msgid "OAuth User ID"
 msgstr "OAuth מזהה משתמש"
 
 #. module: auth_oauth
+#: model:ir.module.module,shortdesc:base.module_auth_oauth
+msgid "OAuth2 Authentication"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 #, fuzzy
 msgid "OAuth2 provider"
@@ -244,11 +258,6 @@ msgid "System Parameter"
 msgstr "פרמטר מערכת"
 
 #. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "Tutorial"
-msgstr "מדריך"
-
-#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "User"
 msgstr "משתמש"
@@ -290,3 +299,9 @@ msgstr "arch"
 #, fuzzy
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "לדוגמא 1234-xyz.apps.googleusercontent.com"
+
+#~ msgid "Client ID:"
+#~ msgstr "מספר לקוח:"
+
+#~ msgid "Tutorial"
+#~ msgstr "מדריך"

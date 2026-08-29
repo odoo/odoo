@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-22 00:06+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
@@ -23,6 +23,20 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: portal
+#: model:ir.module.module,description:base.module_portal
+msgid ""
+"\n"
+"This module adds required base code for a fully integrated customer portal.\n"
+"It contains the base controller class and base templates. Business addons\n"
+"will add their specific templates and controllers to extend the customer\n"
+"portal.\n"
+"\n"
+"This module contains most code coming from odoo v10 website_portal. Purpose\n"
+"of this module is to allow the display of a customer portal without having\n"
+"a dependency towards website editing and customization capabilities."
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -67,6 +81,13 @@ msgid ""
 "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
 msgstr ""
 "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Отменить"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid ""
+"<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Send Message\"/>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -191,6 +212,11 @@ msgstr "<span class=\"small me-1 navbar-text\">Группа по:</span>"
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
 msgstr "<span class=\"small me-1 navbar-text\">Сортировать по:</span>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid "<span class=\"small text-muted\">Your Contact</span>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -325,11 +351,9 @@ msgstr "Изменить пароль"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
+"Changing %(field_description)s is not allowed once document(s) have been "
+"issued for your account. Please contact us directly for this operation."
 msgstr ""
-"Не допускается изменение номера НДС после оформления документов для вашей "
-"учетной записи. Пожалуйста, свяжитесь с нами."
 
 #. module: portal
 #. odoo-python
@@ -477,6 +501,12 @@ msgstr "Дата создания:"
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
 msgstr "Ключи API клиента"
+
+#. module: portal
+#: model:ir.module.module,shortdesc:base.module_portal
+#: model:ir.module.module,summary:base.module_portal
+msgid "Customer Portal"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -822,8 +852,8 @@ msgstr "Сообщение"
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
 msgid ""
-"Model %(model_name)s does not support token signature, as it does not have "
-"%(field_name)s field."
+"Model %(model_name)s does not support token signature, as it does not have %"
+"(field_name)s field."
 msgstr ""
 "Модель %(model_name)s не поддерживает подпись токена, так как в ней "
 "отсутствует поле %(field_name)s."
@@ -1081,11 +1111,6 @@ msgid "Send"
 msgstr "Отправить"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
-msgid "Send message"
-msgstr "Отправить сообщение"
-
-#. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
@@ -1161,15 +1186,14 @@ msgstr "Спасибо!"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The %(field_name)s is managed on your company account."
-msgstr "Поле %(field_name)s управляется через учетную запись вашей компании."
+msgid "The %(field_description)s is managed on your company account."
+msgstr ""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The %(field_name)s is managed on your main account address."
+msgid "The %(field_description)s is managed on your main account address."
 msgstr ""
-"Поле %(field_name)s управляется через основной адрес вашей учетной записи."
 
 #. module: portal
 #. odoo-python
@@ -1501,3 +1525,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "данные вашей учетной записи"
+
+#~ msgid ""
+#~ "Changing VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Не допускается изменение номера НДС после оформления документов для вашей "
+#~ "учетной записи. Пожалуйста, свяжитесь с нами."
+
+#~ msgid "Send message"
+#~ msgstr "Отправить сообщение"
+
+#~ msgid "The %(field_name)s is managed on your company account."
+#~ msgstr ""
+#~ "Поле %(field_name)s управляется через учетную запись вашей компании."
+
+#~ msgid "The %(field_name)s is managed on your main account address."
+#~ msgstr ""
+#~ "Поле %(field_name)s управляется через основной адрес вашей учетной записи."

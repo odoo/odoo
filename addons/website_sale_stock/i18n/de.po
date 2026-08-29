@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 05:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
@@ -23,6 +23,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: website_sale_stock
+#: model:ir.module.module,description:base.module_website_sale_stock
+msgid ""
+"\n"
+"Manage the inventory of your products and display their availability status "
+"in your eCommerce store.\n"
+"In case of stockout, you can decide to block further sales or to keep "
+"selling.\n"
+"A default behavior can be selected in the Website settings.\n"
+"Then it can be made specific at the product level.\n"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -104,6 +116,8 @@ msgstr "Assistent zur Auswahl der Liefermethode"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
@@ -115,6 +129,8 @@ msgstr "Anzeigename"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_partner__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
@@ -139,6 +155,11 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Loading..."
 msgstr "Lädt …"
+
+#. module: website_sale_stock
+#: model:ir.module.module,summary:base.module_website_sale_stock
+msgid "Manage product inventory & availability"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -208,6 +229,21 @@ msgstr "Abholort"
 msgid "Please select a pickup point before adding a delivery method"
 msgstr ""
 "Bitte wählen Sie einen Abholort aus, bevor Sie eine Liefermethode hinzufügen"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.module.module,shortdesc:base.module_website_sale_stock
+msgid "Product Availability"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_delivery_carrier__published_date
@@ -318,5 +354,8 @@ msgstr "Bei dieser Liefermethode müssen Sie eine Abholadresse auswählen."
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
-msgid "Your postal code"
-msgstr "Ihre Postleitzahl"
+msgid "Zip or City"
+msgstr ""
+
+#~ msgid "Your postal code"
+#~ msgstr "Ihre Postleitzahl"

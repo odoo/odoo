@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 07:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
@@ -41,6 +41,21 @@ msgid "%(points_name)s Used"
 msgstr ""
 
 #. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"fw-bold\">Total</small>"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"text-muted\">Issued</small>"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"text-muted\">Used</small>"
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "<span class=\"oi\" data-icon=\"assignment\"/> Copy"
 msgstr "<span class=\"oi\" data-icon=\"assignment\"/> Copier"
@@ -55,8 +70,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "<strong>Loyalty Card</strong>"
-msgstr "<strong>Carte de fidélité</strong>"
+msgid ""
+"<strong class=\"smaller text-uppercase text-muted\">Loyalty Card</strong>"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -227,6 +243,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_loyalty
+#: model:ir.module.module,description:base.module_sale_loyalty
+msgid "Integrate discount and loyalty programs mechanisms in sales orders."
+msgstr ""
+
+#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Invalid product to claim."
@@ -242,11 +263,6 @@ msgstr "Commande client invalide."
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
 msgstr "Est une ligne de récompense de programme"
-
-#. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "Issued"
-msgstr "Émis"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
@@ -266,6 +282,11 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
 msgid "Last Updated on"
 msgstr "Mis à jour le"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_template
+msgid "Loyalty Card"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -395,6 +416,11 @@ msgstr "Produits de récompense"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Rewards Available"
 msgstr "Récompenses disponibles"
+
+#. module: sale_loyalty
+#: model:ir.module.module,shortdesc:base.module_sale_loyalty
+msgid "Sale Loyalty"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -593,9 +619,9 @@ msgstr ""
 "nouvelles récompenses, le cas échéant."
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "Used"
-msgstr "Consommé"
+#: model:ir.module.module,summary:base.module_sale_loyalty
+msgid "Use discounts and loyalty programs in sales orders"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -628,3 +654,12 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "order_id"
 msgstr "order_id"
+
+#~ msgid "<strong>Loyalty Card</strong>"
+#~ msgstr "<strong>Carte de fidélité</strong>"
+
+#~ msgid "Issued"
+#~ msgstr "Émis"
+
+#~ msgid "Used"
+#~ msgstr "Consommé"

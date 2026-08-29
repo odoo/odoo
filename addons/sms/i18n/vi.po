@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 05:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -24,6 +24,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sms
+#: model:ir.module.module,description:base.module_sms
+msgid ""
+"\n"
+"This module gives a framework for SMS text messaging\n"
+"----------------------------------------------------\n"
+"\n"
+"The service is provided by the In App Purchase Odoo platform.\n"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -44,12 +54,6 @@ msgid ""
 msgstr ""
 "%(count)s trong số %(total)s Tin nhắn văn bản SMS được chọn đã được gửi lại "
 "thành công."
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/models/sms_template.py:0
-msgid "%s (copy)"
-msgstr "%s (sao chép)"
 
 #. module: sms
 #. odoo-python
@@ -127,48 +131,6 @@ msgid ""
 msgstr ""
 "<span class=\"text-warning\" invisible=\"not no_record\">Không có bản ghi "
 "nào</span>"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
-msgid ""
-"<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to "
-"the recipients of the template\n"
-"                                    and will not appear in the messaging "
-"history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only "
-"be posted as an\n"
-"                                    internal note in the messaging history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the "
-"recipients of the\n"
-"                                    template and it will also be posted as "
-"an internal note\n"
-"                                    in the messaging history.\n"
-"                                </span>"
-msgstr ""
-"<span invisible=\"sms_method != 'sms'\">\n"
-"                                Tin nhắn sẽ được gửi tới người nhận mẫu dưới "
-"dạng SMS\n"
-"                                và sẽ không xuất hiện trong lịch sử nhắn "
-"tin.\n"
-"                            </span>\n"
-"                            <span invisible=\"sms_method != 'note'\">\n"
-"                                Tin nhắn sẽ không được gửi mà chỉ được đăng "
-"dưới dạng\n"
-"                                ghi chú nội bộ trong lịch sử nhắn tin.\n"
-"                            </span>\n"
-"                            <span invisible=\"sms_method != 'comment'\">\n"
-"                                Tin nhắn sẽ được gửi tới người nhận mẫu dưới "
-"dạng SMS\n"
-"                                và cũng sẽ được đăng dưới dạng ghi chú nội "
-"bộ \n"
-"                                trong lịch sử nhắn tin.\n"
-"                            </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -346,12 +308,6 @@ msgstr "Quốc gia không được hỗ trợ"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr "Yêu cầu đăng ký theo quốc gia cụ thể"
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Country-specific registration required."
 msgstr "Yêu cầu đăng ký theo quốc gia cụ thể"
 
 #. module: sms
@@ -621,8 +577,8 @@ msgstr "Địa chỉ đích không hợp lệ"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
-"Invalid phone number. Please make sure to follow the international format, i."
-"e. a plus sign (+), then country code, city code, and local phone number. "
+"Invalid phone number. Please make sure to follow the international format, "
+"i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
 "Số điện thoại không hợp lệ. Vui lòng đảm bảo tuân thủ định dạng quốc tế như "
@@ -763,11 +719,6 @@ msgid "Not enough credits to send SMS"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
-msgid "Note only"
-msgstr "Chỉ ghi chú"
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
@@ -815,8 +766,8 @@ msgid ""
 msgstr ""
 "Ngôn ngữ dịch thuật tùy chọn (mã ISO) cần chọn khi gửi email. Nếu không được "
 "thiết lập, ngôn ngữ của đối tác chính sẽ được sử dụng. Đây thường là một "
-"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: {{ object.partner_id."
-"lang }}."
+"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: "
+"{{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -902,12 +853,6 @@ msgid "Register Account"
 msgstr "Đăng ký tài khoản"
 
 #. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Register now."
-msgstr "Đăng ký ngay."
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
@@ -975,16 +920,6 @@ msgstr "SMS"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
 msgstr ""
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
-msgid "SMS (with note)"
-msgstr "SMS (kèm ghi chú)"
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
-msgid "SMS (without note)"
-msgstr "SMS (không kèm ghi chú)"
 
 #. module: sms
 #. odoo-javascript
@@ -1117,6 +1052,11 @@ msgid "SMS Templates have been reset"
 msgstr "Mẫu SMS đã được đặt lại"
 
 #. module: sms
+#: model:ir.module.module,summary:base.module_sms
+msgid "SMS Text Messaging"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
 msgstr "Trình theo dõi SMS"
@@ -1125,6 +1065,11 @@ msgstr "Trình theo dõi SMS"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
 msgstr "Nội dung SMS"
+
+#. module: sms
+#: model:ir.module.module,shortdesc:base.module_sms
+msgid "SMS gateway"
+msgstr ""
 
 #. module: sms
 #. odoo-python
@@ -1190,12 +1135,6 @@ msgstr "Gửi SMS"
 #: code:addons/sms/models/sms_template.py:0
 msgid "Send SMS (%s)"
 msgstr "Gửi SMS (%s)"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
-#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
-msgid "Send SMS As"
-msgstr "Gửi SMS dưới dạng"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1320,6 +1259,7 @@ msgstr "Thành công"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Template"
 msgstr "Mẫu"
 
@@ -1698,3 +1638,66 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "bản ghi:"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (sao chép)"
+
+#~ msgid ""
+#~ "<span invisible=\"sms_method != 'sms'\">\n"
+#~ "                                    The message will be sent as an SMS to "
+#~ "the recipients of the template\n"
+#~ "                                    and will not appear in the messaging "
+#~ "history.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'note'\">\n"
+#~ "                                    The SMS will not be sent, it will "
+#~ "only be posted as an\n"
+#~ "                                    internal note in the messaging "
+#~ "history.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'comment'\">\n"
+#~ "                                    The SMS will be sent as an SMS to the "
+#~ "recipients of the\n"
+#~ "                                    template and it will also be posted "
+#~ "as an internal note\n"
+#~ "                                    in the messaging history.\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span invisible=\"sms_method != 'sms'\">\n"
+#~ "                                Tin nhắn sẽ được gửi tới người nhận mẫu "
+#~ "dưới dạng SMS\n"
+#~ "                                và sẽ không xuất hiện trong lịch sử nhắn "
+#~ "tin.\n"
+#~ "                            </span>\n"
+#~ "                            <span invisible=\"sms_method != 'note'\">\n"
+#~ "                                Tin nhắn sẽ không được gửi mà chỉ được "
+#~ "đăng dưới dạng\n"
+#~ "                                ghi chú nội bộ trong lịch sử nhắn tin.\n"
+#~ "                            </span>\n"
+#~ "                            <span invisible=\"sms_method != 'comment'\">\n"
+#~ "                                Tin nhắn sẽ được gửi tới người nhận mẫu "
+#~ "dưới dạng SMS\n"
+#~ "                                và cũng sẽ được đăng dưới dạng ghi chú "
+#~ "nội bộ \n"
+#~ "                                trong lịch sử nhắn tin.\n"
+#~ "                            </span>"
+
+#~ msgid "Country-specific registration required."
+#~ msgstr "Yêu cầu đăng ký theo quốc gia cụ thể"
+
+#~ msgid "Note only"
+#~ msgstr "Chỉ ghi chú"
+
+#~ msgid "Register now."
+#~ msgstr "Đăng ký ngay."
+
+#~ msgid "SMS (with note)"
+#~ msgstr "SMS (kèm ghi chú)"
+
+#~ msgid "SMS (without note)"
+#~ msgstr "SMS (không kèm ghi chú)"
+
+#~ msgid "Send SMS As"
+#~ msgstr "Gửi SMS dưới dạng"

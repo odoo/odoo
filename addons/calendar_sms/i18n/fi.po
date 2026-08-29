@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-19 19:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -25,6 +25,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: calendar_sms
+#: model:ir.module.module,shortdesc:base.module_calendar_sms
+msgid "Calendar - SMS"
+msgstr ""
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
@@ -65,8 +70,8 @@ msgid ""
 "Event reminder: {{ object.name }}, "
 "{{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
-"Muistutus tapahtumasta: {{ object.name }}, {{ object.get_display_time_tz"
-"(object.partner_id.tz) }}"
+"Muistutus tapahtumasta: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
@@ -76,6 +81,7 @@ msgid "ID"
 msgstr "Tunnus"
 
 #. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
 msgid "SMS"
 msgstr "Tekstiviesti"
@@ -84,11 +90,6 @@ msgstr "Tekstiviesti"
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "SMS Template"
 msgstr "Tekstiviestipohja"
-
-#. module: calendar_sms
-#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
-msgid "SMS Text Message"
-msgstr "Tekstiviesti"
 
 #. module: calendar_sms
 #. odoo-python
@@ -101,6 +102,12 @@ msgstr "Lähetä tekstiviesti"
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
 msgid "Send SMS to attendees"
 msgstr "Lähetä tekstiviesti osallistujille"
+
+#. module: calendar_sms
+#: model:ir.module.module,description:base.module_calendar_sms
+#: model:ir.module.module,summary:base.module_calendar_sms
+msgid "Send text messages as event reminders"
+msgstr ""
 
 #. module: calendar_sms
 #: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
@@ -117,3 +124,6 @@ msgstr "Näissä tapahtumissa ei ole osallistujia"
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "Tyyppi"
+
+#~ msgid "SMS Text Message"
+#~ msgstr "Tekstiviesti"

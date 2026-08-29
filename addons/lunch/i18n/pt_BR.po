@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 05:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -26,6 +26,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: lunch
+#: model:ir.module.module,description:base.module_lunch
+msgid ""
+"\n"
+"The base module to manage lunch.\n"
+"================================\n"
+"\n"
+"Many companies order sandwiches, pizzas and other, from usual vendors, for "
+"their employees to offer them more facilities.\n"
+"\n"
+"However lunches management within the company requires proper administration "
+"especially when the number of employees or vendors is important.\n"
+"\n"
+"The “Lunch Order” module has been developed to make this management easier "
+"but also to offer employees more tools and usability.\n"
+"\n"
+"In addition to a full meal and vendor management, this module offers the "
+"possibility to display warning and provides quick order selection based on "
+"employee’s preferences.\n"
+"\n"
+"If you want to save your employees' time and avoid them to always have coins "
+"in their pockets, this module is essential.\n"
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -133,13 +157,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -213,8 +237,8 @@ msgstr ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Prezada <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,</"
 "p><p>Aqui estão os pedidos de hoje para <t t-out=\"order.get('company_name', "
@@ -263,9 +287,9 @@ msgstr ""
 "            <td/> <td/>\n"
 "            <td style=\"width: 100%; font-size: 13px; border-top: 1px solid "
 "black;\"> <strong> Total</strong></td> <td style=\"width: 100%; font-size: "
-"13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"order."
-"get('amount_total') and format_amount(order['amount_total'], currency) or "
-"''\"> $ 10,00</strong></td> </tr>\n"
+"13px; border-top: 1px solid black;\" align=\"right\"><strong t-"
+"out=\"order.get('amount_total') and format_amount(order['amount_total'], "
+"currency) or ''\"> $ 10,00</strong></td> </tr>\n"
 "    </tbody> </table>\n"
 "\n"
 "<p> Não hesite em nos contatar se tiver alguma dúvida.</p>\n"
@@ -939,6 +963,11 @@ msgid "Ham, Cheese, Vegetables"
 msgstr "Presunto, queijo, legumes"
 
 #. module: lunch
+#: model:ir.module.module,summary:base.module_lunch
+msgid "Handle lunch orders of your employees"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
 msgid "Has Message"
 msgstr "Tem uma mensagem"
@@ -1120,6 +1149,7 @@ msgid "Locations"
 msgstr "Locais"
 
 #. module: lunch
+#: model:ir.module.module,shortdesc:base.module_lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch
 #: model:res.groups.privilege,name:lunch.res_groups_privilege_lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1244,32 +1274,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Almoço: pedido ao fornecedor"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_241
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_240
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Almoço: notificação de alerta no chat (alerta para o Escritório 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_242
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_241
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Almoço: enviar e-mail automático para o Coin Gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Almoço: enviar e-mail automático para o fornecedor de almoço"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_243
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_242
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Almoço: enviar e-mail automático para o Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_245
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_244
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Almoço: enviar e-mail automático para o Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_244
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_243
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Almoço: enviar e-mail automático para o The Corner"
 
@@ -1416,6 +1446,11 @@ msgstr "Resumo da próxima atividade"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_id
 msgid "Next Activity Type"
 msgstr "Tipo da próxima atividade"
+
+#. module: lunch
+#: model:res.groups.privilege,placeholder:lunch.res_groups_privilege_lunch
+msgid "No"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery

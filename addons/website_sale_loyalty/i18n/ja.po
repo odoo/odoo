@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 06:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -19,6 +19,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: website_sale_loyalty
+#: model:ir.module.module,description:base.module_website_sale_loyalty
+msgid ""
+"\n"
+"Create coupons, promotion codes, gift cards and loyalty programs to boost "
+"your sales (free products,\n"
+"discounts, etc.). Shoppers can use them in the eCommerce checkout.\n"
+"\n"
+"Coupon & promotion programs can be edited in the Catalog menu of the Website "
+"app.\n"
+msgstr ""
 
 #. module: website_sale_loyalty
 #. odoo-python
@@ -38,20 +50,15 @@ msgid "All websites"
 msgstr "全てのウェブサイト"
 
 #. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/models/sale_order.py:0
+msgid "Applied rewards have changed. Please review your cart."
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__ecommerce_ok
 msgid "Available on Website"
 msgstr "ウェブサイトで入手可能"
-
-#. module: website_sale_loyalty
-#. odoo-python
-#: code:addons/website_sale_loyalty/controllers/payment.py:0
-msgid ""
-"Cannot process payment: applied reward was changed or has expired.\n"
-"Please refresh the page and try again."
-msgstr ""
-"支払処理ができません。適用された特典が変更されたか、使用期限が切れていま"
-"す。\n"
-"ページを更新して、再度お試し下さい。"
 
 #. module: website_sale_loyalty
 #. odoo-javascript
@@ -79,6 +86,11 @@ msgstr "クーポン"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Coupons -"
 msgstr "クーポン -"
+
+#. module: website_sale_loyalty
+#: model:ir.module.module,shortdesc:base.module_website_sale_loyalty
+msgid "Coupons, Promotions, Gift Card and Loyalty for eCommerce"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
@@ -312,7 +324,8 @@ msgstr "プロモコードは一意にして下さい。"
 #. odoo-python
 #: code:addons/website_sale_loyalty/wizard/coupon_share.py:0
 msgid "The shared website should correspond to the website of the program."
-msgstr "共有ウェブサイトは、プログラムのウェブサイトに対応している必要があります。"
+msgstr ""
+"共有ウェブサイトは、プログラムのウェブサイトに対応している必要があります。"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
@@ -320,8 +333,8 @@ msgid ""
 "To be able to top up eWallet from the portal, eWallet products must be\n"
 "                     published."
 msgstr ""
-"ポータルからeウォレットにチャージできるようにするには、eウォレット用の"
-"プロダクトが公開\n"
+"ポータルからeウォレットにチャージできるようにするには、eウォレット用のプロダ"
+"クトが公開\n"
 "                     されている必要があります。"
 
 #. module: website_sale_loyalty
@@ -334,6 +347,13 @@ msgstr "チャージ"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Use"
 msgstr "試用"
+
+#. module: website_sale_loyalty
+#: model:ir.module.module,summary:base.module_website_sale_loyalty
+msgid ""
+"Use coupon, promotion, gift cards and loyalty programs in your eCommerce "
+"store"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__website_id
@@ -351,10 +371,18 @@ msgid ""
 "uses this link."
 msgstr ""
 "このプロモーションをお客様と共有することができます。\n"
-"　　　　　　　　顧客がこのリンクを使用すると、チェックアウト時に適用されます"
-"。"
+"　　　　　　　　顧客がこのリンクを使用すると、チェックアウト時に適用されま"
+"す。"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "You have successfully applied the following code:"
 msgstr "以下のコードが適用されました:"
+
+#~ msgid ""
+#~ "Cannot process payment: applied reward was changed or has expired.\n"
+#~ "Please refresh the page and try again."
+#~ msgstr ""
+#~ "支払処理ができません。適用された特典が変更されたか、使用期限が切れていま"
+#~ "す。\n"
+#~ "ページを更新して、再度お試し下さい。"

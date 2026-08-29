@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-22 00:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -24,6 +24,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: survey
+#: model:ir.module.module,description:base.module_survey
+msgid ""
+"\n"
+"Create beautiful surveys and visualize answers\n"
+"==============================================\n"
+"\n"
+"It depends on the answers or reviews of some questions by different users. "
+"A\n"
+"survey may have multiple pages. Each page may contain multiple questions "
+"and\n"
+"each question may have multiple answers. Different users may give different\n"
+"answers of question and according to that survey is done. Partners are also\n"
+"sent mails with personal token for the invitation of the survey.\n"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -40,12 +56,6 @@ msgstr "隨機問題數目"
 #: code:addons/survey/models/survey_user_input.py:0
 msgid "%(participant)s just participated in \"%(survey_title)s\"."
 msgstr "%(participant)s 剛參與 %(survey_title)s 調查。"
-
-#. module: survey
-#. odoo-python
-#: code:addons/survey/models/survey_survey.py:0
-msgid "%s (copy)"
-msgstr "%s (副本)"
 
 #. module: survey
 #. odoo-python
@@ -158,17 +168,17 @@ msgstr ""
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
-"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
-"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
-"width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -195,17 +205,17 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
-"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
-"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
-"width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    認證： <t t-out=\"object.survey_id.display_name or ''\">"
 "回應表格</t>\n"
@@ -224,8 +234,8 @@ msgstr ""
 "''\">家具創作</strong>\n"
 "                    認證\n"
 "                </p>\n"
-"                <p>恭喜你測試合格並得分 <strong t-out=\"object."
-"scoring_percentage\"/>%！</p>\n"
+"                <p>恭喜你測試合格並得分 <strong t-"
+"out=\"object.scoring_percentage\"/>%！</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -261,8 +271,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object."
-"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-"
+"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -2892,6 +2902,7 @@ msgid "Nickname"
 msgstr "暱稱"
 
 #. module: survey
+#: model:res.groups.privilege,placeholder:survey.res_groups_privilege_surveys
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug2
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q2_sug2
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_1_choice_1
@@ -3174,8 +3185,8 @@ msgid ""
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
 "發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
-"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如：{{ object."
-"partner_id.lang }}。"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
+"{{ object.partner_id.lang }}。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3872,6 +3883,11 @@ msgid "Send by Email"
 msgstr "通過信件發送"
 
 #. module: survey
+#: model:ir.module.module,summary:base.module_survey
+msgid "Send your surveys or share them live."
+msgstr ""
+
+#. module: survey
 #: model:mail.template,description:survey.mail_template_certification
 msgid "Sent to participant if they succeeded the certification"
 msgstr "如果參加者成功獲得認證，則發送給參加者"
@@ -4299,6 +4315,7 @@ msgstr "調查：邀請"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
+#: model:ir.module.module,shortdesc:base.module_survey
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 #: model:res.groups.privilege,name:survey.res_groups_privilege_surveys
@@ -5363,3 +5380,6 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr "⚠️ 此問題放置在它部份或全部觸發問題之前，故此可以跳過。"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (副本)"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-22 00:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-master/"
@@ -22,7 +22,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/res_company.py:0
 msgid ""
-"A Bancontact Pay payment method is linked to a journal that uses the company's default currency.\n"
+"A Bancontact Pay payment method is linked to a journal that uses the "
+"company's default currency.\n"
 "This currency is not supported.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
@@ -43,6 +44,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s was cancelled."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#: model:ir.module.module,summary:base.module_pos_bancontact_pay
+msgid "Accept Bancontact Pay and Wero QR code payments in POS (Payconiq)."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -92,8 +98,17 @@ msgid ""
 msgstr ""
 
 #. module: pos_bancontact_pay
-#: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
-msgid "Bancontact Test Mode"
+#: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
+msgid ""
+"Bancontact Pro Portal > Admin Centre > Shops and products > Select a product "
+"> Manage API keys > View API key"
+msgstr ""
+
+#. module: pos_bancontact_pay
+#: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
+msgid ""
+"Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > "
+"Read the product ID from the card"
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -114,8 +129,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
 msgid ""
-"Bancontact payments can only be created for payment methods using Bancontact"
-" Pay as provider."
+"Bancontact payments can only be created for payment methods using Bancontact "
+"Pay as provider."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -149,8 +164,10 @@ msgstr ""
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
 msgid ""
 "Defines how the QR Code is presented to the customer:\n"
-"- On-Screen Display: A new QR code is dynamically shown on the screen for each order.\n"
-"- Static Sticker: A fixed QR sticker placed near the counter is used for scanning with every order."
+"- On-Screen Display: A new QR code is dynamically shown on the screen for "
+"each order.\n"
+"- Static Sticker: A fixed QR sticker placed near the counter is used for "
+"scanning with every order."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -215,6 +232,11 @@ msgid ""
 msgstr ""
 
 #. module: pos_bancontact_pay
+#: model:ir.module.module,shortdesc:base.module_pos_bancontact_pay
+msgid "POS Bancontact Pay & Wero"
+msgstr ""
+
+#. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid ""
@@ -262,6 +284,11 @@ msgid "Point of Sale Payment Method"
 msgstr ""
 
 #. module: pos_bancontact_pay
+#: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
+msgid "Preprod"
+msgstr ""
+
+#. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/pos_bancontact_pay/static/src/customer_display/customer_display.xml:0
@@ -281,7 +308,7 @@ msgstr ""
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
-msgid "Run transactions in the test environment."
+msgid "Run transactions in Bancontact's preprod environment."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -293,15 +320,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_config.py:0
 msgid ""
-"The Bancontact sticker payment method '%(method_name)s' is already assigned to another POS configuration (%(config_names)s).\n"
+"The Bancontact sticker payment method '%(method_name)s' is already assigned "
+"to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
-msgid ""
-"The action could not be completed. Please try again or contact support."
+msgid "The action could not be completed. Please try again or contact support."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -322,8 +349,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid ""
-"The customer is currently completing the payment, so it cannot be cancelled at this time.\n"
-"If you need to cancel it, please ask the customer to do so on their device or force the cancellation."
+"The customer is currently completing the payment, so it cannot be cancelled "
+"at this time.\n"
+"If you need to cancel it, please ask the customer to do so on their device "
+"or force the cancellation."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -352,6 +381,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid ""
-"Unable to process the request. Please verify your configuration or try again"
-" later."
+"Unable to process the request. Please verify your configuration or try again "
+"later."
 msgstr ""

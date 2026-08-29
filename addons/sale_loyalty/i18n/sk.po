@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:40+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 04:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/"
@@ -39,10 +39,24 @@ msgid "%(points_name)s Used"
 msgstr ""
 
 #. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"fw-bold\">Total</small>"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"text-muted\">Issued</small>"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"text-muted\">Used</small>"
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
-#, fuzzy
-msgid "<span class=\"fa fa-clipboard\"/> Copy"
-msgstr "<span class=\"fa fa-clipboard\"/> Kópia"
+msgid "<span class=\"oi\" data-icon=\"assignment\"/> Copy"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -54,9 +68,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-#, fuzzy
-msgid "<strong>Loyalty Card</strong>"
-msgstr "<strong>Vernostná karta</strong>"
+msgid ""
+"<strong class=\"smaller text-uppercase text-muted\">Loyalty Card</strong>"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -252,6 +266,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_loyalty
+#: model:ir.module.module,description:base.module_sale_loyalty
+msgid "Integrate discount and loyalty programs mechanisms in sales orders."
+msgstr ""
+
+#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, fuzzy
@@ -270,12 +289,6 @@ msgstr "Neplatná predajná objednávka."
 #, fuzzy
 msgid "Is a program reward line"
 msgstr "Je riadok z programu odmien"
-
-#. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-#, fuzzy
-msgid "Issued"
-msgstr "Vydané"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
@@ -298,6 +311,11 @@ msgstr "Naposledy upravoval"
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_template
+msgid "Loyalty Card"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -447,6 +465,11 @@ msgstr "Produkty odmeny"
 #, fuzzy
 msgid "Rewards Available"
 msgstr "Dostupné odmeny"
+
+#. module: sale_loyalty
+#: model:ir.module.module,shortdesc:base.module_sale_loyalty
+msgid "Sale Loyalty"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -673,10 +696,9 @@ msgstr ""
 "vhodné."
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-#, fuzzy
-msgid "Used"
-msgstr "Použité"
+#: model:ir.module.module,summary:base.module_sale_loyalty
+msgid "Use discounts and loyalty programs in sales orders"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -709,6 +731,22 @@ msgstr ""
 #, fuzzy
 msgid "order_id"
 msgstr "order_id"
+
+#, fuzzy
+#~ msgid "<span class=\"fa fa-clipboard\"/> Copy"
+#~ msgstr "<span class=\"fa fa-clipboard\"/> Kópia"
+
+#, fuzzy
+#~ msgid "<strong>Loyalty Card</strong>"
+#~ msgstr "<strong>Vernostná karta</strong>"
+
+#, fuzzy
+#~ msgid "Issued"
+#~ msgstr "Vydané"
+
+#, fuzzy
+#~ msgid "Used"
+#~ msgstr "Použité"
 
 #, fuzzy
 #~ msgid ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 20:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -29,12 +29,6 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_blog.py:0
-msgid "%s (copy)"
-msgstr "%s（副本）"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_feed
 msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
@@ -43,6 +37,11 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "'. 显示结果 '"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.post_published_info
+msgid "(Updated"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
@@ -55,32 +54,22 @@ msgid "-- Unpublished"
 msgstr "-- 未发布"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"<b>Binoculars are lightweight and portable.</b> Unless you have the luxury "
-"to set up and operate an observatory from your deck, you are probably going "
-"to travel to perform your viewings. Binoculars go with you much easier and "
-"they are more lightweight to carry to the country and use while you are "
-"there than a cumbersome telescope set up kit."
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "2 Columns"
 msgstr ""
-"<b>双筒望远镜重量轻，便于携带。</b>除非您有能力在您的甲板上建立和操作一个天文"
-"台，否则您可能要去旅行来进行观察。双筒望远镜更容易随身携带，而且比起笨重的望"
-"远镜架设工具，双筒望远镜更轻巧，可以携带到乡下使用。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"<b>Pick the brains of the experts</b>. If you are not already active in an "
-"astronomy society or club, the sales people at the telescope store will be "
-"able to guide you to the active societies in your area. Once you have "
-"connections with people who have bought telescopes, you can get advice about "
-"what works and what to avoid that is more valid than anything you will get "
-"from a web article or a salesperson at Wal-Mart."
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "3 Columns"
 msgstr ""
-"<b>挑选专家的大脑</b>。如果您还没有积极参加天文协会或俱乐部，望远镜商店的销售"
-"人员将能够指导您找到您所在地区的活跃协会。一旦您与购买过望远镜的人建立了联"
-"系，您就可以得到关于什么是有效的，什么是应该避免的建议，这比您从网络文章或沃"
-"尔玛的销售人员那里得到的任何建议都更有效。"
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "4 Columns"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -94,19 +83,6 @@ msgid "<b>Sign in</b>"
 msgstr "<b>登录</b>"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"<b>Try before you buy.</b> This is another advantage of going on some field "
-"trips with the astronomy club. You can set aside some quality hours with "
-"people who know telescopes and have their rigs set up to examine their "
-"equipment, learn the key technical aspects, and try them out before you sink "
-"money in your own set up."
-msgstr ""
-"<b>先试后买。这</b>是与天文俱乐部一起进行实地考察的另一个好处。您可以留出一些"
-"高质量的时间，与那些了解望远镜并有他们的设备的人一起检查他们的设备，学习关键"
-"的技术方面，并在您为自己的设备投入资金之前试用它们。"
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid ""
@@ -118,54 +94,70 @@ msgstr ""
 "体或斜体等。拖放构建构建块来得到更加图像化的博客。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
+#: model_terms:blog.post,content:website_blog.blog_post_7
 msgid ""
-"<em class=\"h4 my-0\">Apart from the native population, the local wildlife "
-"is also a major crowd puller.</em>"
+"<em class=\"h4 my-0\">\"Do not wait to strike till the iron is hot; but make "
+"it hot by striking.\"</em>"
 msgstr ""
-"<em class=\"h4 my-0\">除了本地人口，当地的野生动物也是吸引人的主要因素。</em>"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"<em class=\"h4 my-0\">It is critically important that you get just the right "
-"telescope.</em>"
-msgstr "<em class=\"h4 my-0\">获得合适的望远镜是至关重要的。</em>"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"<em class=\"h4 my-0\">That “Wow” moment is what astrology is all about.</em>"
-msgstr "<em class=\"h4 my-0\">那个 \"哇 \"的时刻就是占星学的全部内容。</em>"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"<em class=\"h4 my-0\">The more reviews you read, the more you notice how "
-"they tend to cluster at the extremes of opinion.</em>"
-msgstr ""
-"<em class=\"h4 my-0\">您读的评论越多，您就越注意到它们如何倾向于聚集在意见的"
-"极端。</em>"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
 msgid ""
-"<em class=\"h4 my-0\">There is something timeless about the cosmos.</em>"
-msgstr "<em class=\"h4 my-0\">宇宙有一种永恒的东西。</em>"
+"<em class=\"h4 my-0\">Minimalism isn't about having nothing. It's about "
+"making room for everything that matters. Living with intention can lead to "
+"more joy, clarity, and freedom.</em>"
+msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
+#: model_terms:blog.post,content:website_blog.blog_post_3
 msgid ""
-"<em class=\"h4 my-0\">Your study of the moon, like anything else, can go "
-"from the simple to the very complex.</em>"
+"<em class=\"h4 my-0\">Productivity isn't about doing more. It's about doing "
+"what matters, with focus and intention. Working from home gives you the "
+"freedom to shape your day, use it to your advantage.</em>"
 msgstr ""
-"<em class=\"h4 my-0\">您对月球的研究，就像其他事情一样，可以从简单到非常复"
-"杂。</em>"
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"<em class=\"h4 my-0\">The best journeys in life are those that answer "
+"questions you never thought to ask. Traveling on a budget teaches you to "
+"slow down, observe, and appreciate more with less.</em>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<em class=\"h4 my-0\">The best journeys often begin where the guidebook "
+"ends. Asia is full of surprises for those willing to look beyond the "
+"mainstream.</em>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid ""
+"<em class=\"h4 my-0\">The best technology doesn't just automate tasks. It "
+"adapts to our lives and helps us live better. The rise of smart homes is a "
+"shift from control to collaboration between people and their environments.</"
+"em>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid ""
+"<em class=\"h4 my-0\">The real question is not whether machines think but "
+"whether humans do.</em>"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "<em>No tags defined</em>"
 msgstr "<em>没有定义标签</em>"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"chevron_backward\" role=\"img\"/>All blogs"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -182,47 +174,45 @@ msgstr ""
 "date\" title=\"Post date\"/>"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_card
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_list_card
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_minimal_list_card
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_split_sticky_card
+#: model_terms:ir.ui.view,arch_db:website_blog.post_cover_image
+#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid ""
-"<i class=\"oi oi-3x text-white\" data-icon=\"keyboard_arrow_down\" aria-"
-"label=\"To blog content\" title=\"To blog content\"/>"
+"<i class=\"oi me-2\" data-icon=\"block\" role=\"presentation\"/>Unpublished"
 msgstr ""
-"<i class=\"oi oi-3x text-white\" data-icon=\"keyboard_arrow_down\" aria-"
-"label=\"To blog content\" title=\"To blog content\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-msgid "<small class=\"text-muted\">Mar 13, 2025</small>"
+msgid "<small class=\"text-muted\">August 5, 2026</small>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
-msgid ""
-"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">Read "
-"Next</span>"
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+msgid "<small class=\"text-muted\">July 1, 2026</small>"
 msgstr ""
-"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">阅读下一页"
-"</span>"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+msgid "<small class=\"text-muted\">July 11, 2026</small>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+msgid "<small class=\"text-muted\">July 26, 2026</small>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_full_cover
 msgid ""
-"<span class=\"h4 d-inline-block py-1 px-2 rounded-1 text-white\">\n"
-"                                    <i class=\"oi oi-3x text-white\" data-"
+"<span class=\"h4 d-inline-block py-1 px-2 rounded-1 cursor-pointer\">\n"
+"                        <i class=\"oi oi-3x text-white\" data-"
 "icon=\"keyboard_arrow_right\" aria-label=\"Read next\" title=\"Read Next\"/"
 ">\n"
-"                                </span>"
+"                    </span>"
 msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "<span class=\"me-1\">Show:</span>"
-msgstr "<span class=\"me-1\">显示：</span>"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
-msgid "<span class=\"nav-link disabled ps-0\">Blogs:</span>"
-msgstr "<span class=\"nav-link disabled ps-0\">博客：</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data
@@ -231,10 +221,11 @@ msgid ""
 "center flex-wrap gap-3 my-3 border rounded py-2 rounded-pill\">\n"
 "                    <span class=\"d-flex align-items-center gap-2\">\n"
 "                        <span class=\"badge text-bg-primary\">NEW</span>\n"
-"                        <strong>Sierra Tarahumara</strong>\n"
+"                        <strong>How to stay productive working from home</"
+"strong>\n"
 "                    </span>\n"
 "                    <span class=\"d-flex align-items-center gap-2\">\n"
-"                        <span class=\"text-muted\">Marc Demo in Travel</"
+"                        <span class=\"text-muted\">Marc Demo in Lifestyle</"
 "span>\n"
 "                        <span class=\"text-primary\">Read Now <i "
 "class=\"oi\" data-icon=\"east\" role=\"presentation\"/></span>\n"
@@ -244,7 +235,17 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-msgid "<span class=\"text-muted\">Mar 13, 2025</span>"
+msgid "<span class=\"text-muted\">August 5, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+msgid "<span class=\"text-muted\">July 11, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+msgid "<span class=\"text-muted\">July 26, 2026</span>"
 msgstr ""
 
 #. module: website_blog
@@ -260,7 +261,52 @@ msgid ""
 "<span class=\"w-100 w-md-auto\"><i class=\"oi me-2\" data-"
 "icon=\"account_circle\" role=\"presentation\"/>Marc Demo</span>\n"
 "                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
-"                    <span class=\"text-muted\">Mar 13, 2025</span>"
+"                    <span class=\"text-muted\">August 5, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"oi me-2\" data-"
+"icon=\"account_circle\" role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">July 1, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"oi me-2\" data-"
+"icon=\"account_circle\" role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">July 11, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"oi me-2\" data-"
+"icon=\"account_circle\" role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">July 26, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"oi me-2\" data-"
+"icon=\"account_circle\" role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">Jun 1, 2026</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"oi me-2\" data-"
+"icon=\"account_circle\" role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">Jun 11, 2026</span>"
 msgstr ""
 
 #. module: website_blog
@@ -272,7 +318,7 @@ msgid ""
 "                            </span>\n"
 "                            <span class=\"d-none d-sm-inline text-muted\">•</"
 "span>\n"
-"                            <span class=\"text-muted \">Mar 13, 2025 • </"
+"                            <span class=\"text-muted \">August 5, 2026 • </"
 "span>"
 msgstr ""
 
@@ -284,7 +330,7 @@ msgid ""
 "icon=\"account_circle\"/> Marc Demo</span>\n"
 "                    </span>\n"
 "                    <span class=\"d-none d-sm-inline text-muted\">•</span>\n"
-"                    <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                    <span class=\"text-muted\">July 26, 2026</span>\n"
 "                    <span class=\"text-muted mx-2\">•</span>"
 msgstr ""
 
@@ -297,7 +343,7 @@ msgid ""
 "                </span>\n"
 "                <span class=\"d-none d-sm-inline text-muted mx-sm-2\">•</"
 "span>\n"
-"                <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                <span class=\"text-muted\">July 26, 2026</span>\n"
 "                <span class=\"text-muted mx-2\">•</span>"
 msgstr ""
 
@@ -315,18 +361,149 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_2
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-msgid "A great way to discover hidden places"
-msgstr "发现隐藏地点的好方法"
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Gorkhi-Terelj National Park, Mongolia</strong>\n"
+"        <br>\n"
+"        Just outside Ulaanbaatar, this stunning park combines sweeping "
+"grasslands, granite cliffs, and traditional nomadic culture.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Gujarat, India</strong>\n"
+"        <br>\n"
+"        Often overshadowed by Rajasthan, Gujarat offers rich history, "
+"vibrant festivals, salt deserts, and the Gir National Park, home to the rare "
+"Asiatic lion.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Haputale, Sri Lanka</strong>\n"
+"        <br>\n"
+"        This small town in the central highlands offers tea plantations, "
+"misty hills, and breathtaking views, all without the crowds of nearby Ella.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Isaan Region, Thailand</strong>\n"
+"        <br>\n"
+"        This northeastern region showcases rural Thai life, ancient Khmer "
+"ruins, and authentic cuisine, far from the touristy beaches of the south.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Jeonju, South Korea</strong>\n"
+"        <br>\n"
+"        Famous for its traditional hanok village and delicious bibimbap, "
+"Jeonju provides a glimpse into Korea's past with a modern creative twist.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Luang Prabang, Laos</strong>\n"
+"        <br>\n"
+"        Nestled between mountains and rivers, this UNESCO World Heritage "
+"town offers a peaceful blend of Buddhist heritage, colonial architecture, "
+"and natural beauty.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Sapa, Vietnam</strong>\n"
+"        <br>\n"
+"        Beyond the well-trodden paths of Hanoi and Ho Chi Minh City, Sapa "
+"offers terraced rice fields, cool mountain air, and interactions with ethnic "
+"minority groups.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Siquijor Island, Philippines</strong>\n"
+"        <br>\n"
+"        A quiet alternative to the country's better-known islands, Siquijor "
+"is filled with waterfalls, coral reefs, and local legends of mysticism.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Tainan, Taiwan</strong>\n"
+"        <br>\n"
+"        Known as Taiwan's oldest city, Tainan is a haven for street food "
+"lovers and history buffs, with countless temples and lively night markets.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"<strong>Tana Toraja, Indonesia</strong>\n"
+"        <br>\n"
+"        Located in Sulawesi, this highland region is known for its dramatic "
+"landscapes and fascinating funeral traditions that reflect a deep cultural "
+"heritage.\n"
+"        <br>\n"
+"        <br>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid "A famous CEO"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid "A famous computer scientist"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_5
+msgid "A famous psychologist"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_3
+msgid "A famous sociologist"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid "A famous tech enthusiast"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
-msgid ""
-"A holiday to the Copper Canyon promises to be an exciting mix of relaxation, "
-"culture, history, wildlife and hiking."
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid "A famous traveler"
 msgstr ""
-"到铜川度假有望成为放松、文化、历史、野生动物和徒步旅行的一个令人兴奋的组合。"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
@@ -334,20 +511,27 @@ msgid "A new post"
 msgstr "新帖"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid ""
-"A traveler may choose to explore the area by hiking around the canyon or "
-"venturing into it. Detailed planning is required for those who wish to "
-"venture into the depths of the canyon. There are a number of travel "
-"companies that specialize in organizing tours to the region. Visitors can "
-"fly to Copper Canyon using a tourist visa, which is valid for 180 days. "
-"Travelers can also drive from anywhere in the United States and acquire a "
-"visa at the Mexican customs station at the border."
+#: model:blog.tag,name:website_blog.blog_tag_19
+msgid "AI"
 msgstr ""
-"旅行者可以选择通过在峡谷周围徒步旅行或冒险进入峡谷来探索该地区。对于那些希望"
-"冒险进入峡谷深处的人来说，需要详细的计划。有许多旅游公司专门组织前往该地区的"
-"旅游。访客可以使用旅游签证飞往铜川，其有效期为180天。访客也可以从美国的任何地"
-"方开车过来，在边境的墨西哥海关站获得签证。"
+
+#. module: website_blog
+#: model:blog.post,subtitle:website_blog.blog_post_4
+msgid ""
+"AI is changing the way we live. Discover the groundbreaking applications of "
+"artificial intelligence that will shape our future."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid "AI's Impact on Society"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "About Us"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.sidebar_blog_index
@@ -355,19 +539,19 @@ msgid "About us"
 msgstr "关于我们"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"Above all, <b>establish a relationship with a reputable telescope shop</b> "
-"that employs people who know their stuff. If you buy your telescope at a Wal-"
-"Mart or department store, the odds you will get the right thing are remote."
-msgstr ""
-"最重要的是，要<b>与一个有信誉的望远镜商店建立关系</b>，该商店雇用的人都很懂"
-"行。如果您在沃尔玛或百货公司购买望远镜，您得到正确的东西的几率很小。"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "Access post"
 msgstr "访问帖子"
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"Accommodation is another area where you can cut costs while gaining a more "
+"authentic experience. Guesthouses, hostels, and home rentals often provide a "
+"closer connection to local life, and cost far less than traditional hotels. "
+"Some travelers even arrange house-sitting or volunteer stays, exchanging "
+"help for free lodging and meals."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_needaction
@@ -380,6 +564,18 @@ msgstr "所需操作"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__active
 msgid "Active"
 msgstr "有效"
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Adapt the size of the blog post content"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Add a filter on the highligthed blog post"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
@@ -398,20 +594,15 @@ msgid "All Blogs"
 msgstr "所有博客"
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
+msgid "All blog posts"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.date_selector
 msgid "All dates"
 msgstr "所有日期"
-
-#. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Alone in the ocean"
-msgstr "独自一人在海洋中"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid "Along those lines, how difficult is the set up and break down?"
-msgstr "沿着这些思路，设置和分解的难度如何？"
 
 #. module: website_blog
 #. odoo-javascript
@@ -420,36 +611,9 @@ msgid "Amazing blog article: %(title)s! Check it live: %(url)s"
 msgstr "精彩的博客文章：%(title)s！马上了解： %(url)s"
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_1
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-msgid "An exciting mix of relaxation, culture, history, wildlife and hiking."
-msgstr "这是一个令人兴奋的放松、文化、历史、野生动物和徒步旅行的组合。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid ""
-"And when all is said and done,<b> get equipped</b>. Your quest for newer and "
-"better telescopes will be a lifelong one. Let yourself get addicted to "
-"astronomy and the experience will enrich every aspect of life. It will be an "
-"addiction you never want to break."
-msgstr ""
-"而当所有的事情都说过和做过之后，就<b> 得到了装备</b>。您对更新和更好的望远镜"
-"的追求将是一个终生的追求。让自己沉迷于天文学，这种经验将丰富生活的各个方面。"
-"这将是一个您永远不想打破的瘾。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Another unique feature of Copper Canyon is the presence of the Tarahumara "
-"Indian culture. These semi-nomadic people live in cave dwellings. Their "
-"livelihood chiefly depends on farming and cattle ranching."
-msgstr ""
-"铜锣湾的另一个独特之处在于塔拉乌马拉印第安文化的存在。这些半游牧民族居住在山"
-"洞里。他们的生计主要取决于农业和牧业。"
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_archive_display
 msgid "Archive"
 msgstr "存档"
@@ -480,27 +644,81 @@ msgid "Articles"
 msgstr "文章"
 
 #. module: website_blog
-#: model:blog.blog,name:website_blog.blog_blog_2
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid ""
+"Artificial Intelligence (AI) is no longer a distant concept confined to "
+"science fiction. It is rapidly becoming an integral part of our daily "
+"routines, transforming how we live, work, and interact. From smart "
+"assistants in our homes to personalized recommendations on our devices, AI "
+"is shaping the future in ways we are just beginning to understand."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"Artificial Intelligence (AI) is no longer a distant concept confined to "
+"science fiction. It is rapidly becoming an integral part of our daily "
+"routines, transforming how we live, work, and..."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid ""
+"As AI technology continues to evolve, its applications in everyday life are "
+"expanding. Automated systems now handle complex tasks like managing home "
+"energy consumption, optimizing traffic flow in cities, and even assisting "
+"with healthcare diagnostics. These advancements promise to make daily life "
+"more efficient, convenient, and tailored to individual needs."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_3
+msgid ""
+"As work culture continues to evolve, embracing the home office as a "
+"professional space is more relevant than ever. With the right approach, "
+"working from home can support not just productivity, but well-being too."
+msgstr ""
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#: model:blog.tag,name:website_blog.blog_tag_12
+msgid "Asia"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"Asia is home to some of the world's most iconic travel spots, from the "
+"bustling streets of Tokyo to the white sands of Bali. But beyond the usual "
+"tourist trails lie hidden gems that offer just as much charm, culture, and "
+"adventure, often with fewer crowds and a more authentic experience."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"Asia is home to some of the world's most iconic travel spots, from the "
+"bustling streets of Tokyo to the white sands of Bali. But beyond the usual "
+"tourist trails lie hidden gems that offer just as..."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-msgid "Astronomy"
-msgstr "天文学"
+msgid ""
+"Asia is home to some of the world's most iconic travel spots, from the "
+"bustling streets of Tokyo to the white..."
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
 msgid ""
-"Astronomy clubs are lively places full of knowledgeable amateurs who love to "
-"share their knowledge with you. For the price of a coke and snacks, they "
-"will go star gazing with you and overwhelm you with trivia and great "
-"knowledge."
+"At its core, minimalism invites us to ask: what do I really need? By letting "
+"go of the excess, physical or mental, we create space for what brings value. "
+"A tidy home can reduce stress and boost concentration. A simplified calendar "
+"can leave more time for meaningful work or connection. Even a decluttered "
+"digital life can lead to better focus and fewer distractions."
 msgstr ""
-"天文俱乐部是一个热闹的地方，充满了知识渊博的业余爱好者，他们喜欢与您分享他们"
-"的知识。只要花上一杯可乐和零食的钱，他们就会和您一起去看星星，用琐事和伟大的"
-"知识来压倒您。"
-
-#. module: website_blog
-#: model:blog.blog,subtitle:website_blog.blog_blog_2
-msgid "Astronomy is “stargazing\""
-msgstr "天文学就是 \"观星\"。"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -550,74 +768,21 @@ msgid "Avatar"
 msgstr "形象"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Awesome hotel rooms"
-msgstr "令人敬畏的酒店房间"
-
-#. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_4
-msgid "Be aware of this thing called “astronomy”"
-msgstr "要注意这个叫做 \"天文学 \"的东西"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid ""
-"Becoming part of the society of devoted amateur astronomers will give you "
-"access to these organized efforts to reach new levels in our ability to "
-"study the Earth’s moon. And it will give you peers and friends who share "
-"your passion for astronomy and who can share their experience and areas of "
-"expertise as you seek to find where you might look next in the huge night "
-"sky, at the moon and beyond it in your quest for knowledge about the "
-"seemingly endless universe above us."
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid "Beyond convenience: the future of connected living"
 msgstr ""
-"成为忠实的业余天文学家协会的一员将使您有机会参与这些有组织的努力，使我们研究"
-"地球月球的能力达到新的水平。它将给您带来与您一样热爱天文学的同行和朋友，当您"
-"寻求在巨大的夜空中寻找下一个目标时，他们可以分享他们的经验和专业领域，在您寻"
-"求关于我们头顶上似乎无尽的宇宙的知识时，他们可以在月球和月球之外寻找。"
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_7
-msgid "Becoming part of the society of devoted amateur astronomers."
-msgstr "成为忠实的业余天文学家协会的一员。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Bedroom Facilities"
-msgstr "卧室设施"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"Before you go to that big expense, it might be a better next step from the "
-"naked eye to invest in a good set of binoculars. There are even binoculars "
-"that are suited for star gazing that will do just as good a job at giving "
-"you that extra vision you want to see just a little better the wonders of "
-"the universe. A well designed set of binoculars also gives you much more "
-"mobility and ability to keep your “enhanced vision” at your fingertips when "
-"that amazing view just presents itself to you."
+#: model:blog.tag,name:website_blog.blog_tag_16
+msgid "Blockchain"
 msgstr ""
-"在你花费大量资金之前，从肉眼来看，下一步可能更好的选择是投资一副好的双筒望远"
-"镜。甚至有适合观星的双筒望远镜，它们同样能很好地提供你想要的额外视野，让你更"
-"好地欣赏宇宙的奇观。设计精良的双筒望远镜还赋予你更大的移动性和能力，在那些令"
-"人惊叹的景象出现时，随时拥有“增强视觉”。"
-
-#. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_6
-msgid "Before you make your first purchase…"
-msgstr "在您进行第一次采购之前…"
-
-#. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_7
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid "Beyond The Eye"
-msgstr "眼睛之外"
 
 #. module: website_blog
 #. odoo-python
 #: code:addons/website_blog/models/website.py:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
+#: model:ir.module.module,shortdesc:base.module_website_blog
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root_global
 #: model:res.groups.privilege,name:website_blog.res_groups_privilege_blog
 #: model:website.menu,name:website_blog.menu_blog
@@ -670,8 +835,11 @@ msgstr "博客文章网页"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_compact
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_full_cover
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_form_add
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_split_cover
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Post Title"
 msgstr "博文标题"
@@ -685,13 +853,13 @@ msgstr "博文标题"
 #: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
 #: model:ir.model.fields,field_description:website_blog.field_res_users__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blog Posts"
 msgstr "博文"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__subtitle
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Subtitle"
 msgstr "博文副标题"
@@ -717,14 +885,15 @@ msgid "Blog Teaser"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 msgid "Blog Title"
 msgstr "博客标题"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
-msgid "Blog's Title"
-msgstr "博客的标题"
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
+msgid "Blog navigation"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -734,7 +903,6 @@ msgstr "博客的标题"
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
-#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Blogs"
@@ -770,50 +938,27 @@ msgid "Breadcrumb Visible"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"But how do you sift through the amazing choices on offer? And more "
-"importantly, do you really trust the photographs and descriptions of the "
-"hotels that they have awarded themselves with the motivation of getting "
-"bookings? Traveler reviews can be helpful, but you need to exercise caution. "
-"They are often biased, sometimes out of date, and may not serve your "
-"interests at all. How do you know that the features that are important to "
-"the reviewer are important to you?"
-msgstr ""
-"但您如何从所提供的惊人选择中进行筛选？更重要的是，您真的相信他们自己颁发的酒"
-"店的照片和描述，以获得预订的动机吗？旅行者的评论可能是有帮助的，但您需要谨慎"
-"行事。他们往往有偏见，有时已经过时，而且可能根本不符合您的利益。您怎么知道对"
-"评论者来说很重要的功能对您来说也很重要？"
-
-#. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_6
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid "Buying A Telescope"
-msgstr "购买望远镜"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"Buying the right telescope to take your love of astronomy to the next level "
-"is a big next step in the development of your passion for the stars."
-msgstr ""
-"购买合适的望远镜，将您对天文学的热爱提升到一个新的水平，是您对星空的热情发展"
-"的下一个重要步骤。"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"Buying the right telescope to take your love of astronomy to the next level "
-"is a big next step in the development of your passion for the stars. In many "
-"ways, it is a big step from someone..."
+#: model:blog.tag,name:website_blog.blog_tag_4
+msgid "Budget travel"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+#: model:blog.blog,subtitle:website_blog.blog_blog_4
 msgid ""
-"Buying the right telescope to take your love of astronomy to the next level "
-"is a big next step in the development..."
+"Build smarter strategies and grow with insights from industry leaders and "
+"real-world case studies."
+msgstr ""
+
+#. module: website_blog
+#: model:blog.blog,name:website_blog.blog_blog_4
+msgid "Business"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_5
+msgid ""
+"By choosing simplicity, you create space for clarity, calm, and connection. "
+"And sometimes, the less you have, the more room you make for a better life."
 msgstr ""
 
 #. module: website_blog
@@ -824,8 +969,8 @@ msgstr "可以发布"
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Cards"
-msgstr "卡片"
+msgid "Cards Design"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -833,11 +978,6 @@ msgstr "卡片"
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
 msgid "Category"
 msgstr "类别"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Children’s’ Facilities"
-msgstr "儿童设施"
 
 #. module: website_blog
 #. odoo-javascript
@@ -859,10 +999,10 @@ msgid ""
 msgstr "点击右上角的 \"<b>New</b>\" 写下您的第一篇博文。"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "Close"
-msgstr "关闭"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/tours/website_blog.js:0
+msgid "Click on the cover to edit it."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__color
@@ -870,23 +1010,54 @@ msgid "Color"
 msgstr "颜色"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_comment_count
 msgid "Comment"
 msgstr "备注"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_comment_count
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_comment
 #: model_terms:ir.ui.view,arch_db:website_blog.post_info
 msgid "Comments"
 msgstr "注释"
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_3
+msgid ""
+"Communication is another crucial element, especially if you're collaborating "
+"with others. Regular check-ins, clear expectations, and the right tools, "
+"like messaging apps or task managers, can keep everyone on the same page "
+"without constant video calls or micromanaging."
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Comments/Views Stats"
-msgstr "注释/查看统计"
+msgid "Compact"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+#: model_terms:blog.post,content:website_blog.blog_post_2
+#: model_terms:blog.post,content:website_blog.blog_post_3
+#: model_terms:blog.post,content:website_blog.blog_post_4
+#: model_terms:blog.post,content:website_blog.blog_post_5
+#: model_terms:blog.post,content:website_blog.blog_post_6
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid "Conclusion"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid ""
+"Constraints often spark innovation. When you lack funds, you're forced to "
+"think outside the box, using free online platforms for marketing, bartering "
+"skills for services, and building partnerships to reduce costs. Social "
+"media, blogs, and community groups provide inexpensive ways to promote your "
+"business and connect with potential clients."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_res_partner
@@ -894,6 +1065,14 @@ msgid "Contact"
 msgstr ""
 
 #. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Container Size"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__content
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -901,29 +1080,16 @@ msgid "Content"
 msgstr "内容"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Copper Canyon is one of the six gorges in the area. Although the name "
-"suggests that the gorge might have some relevance to copper mining, this is "
-"not the case. The name is derived from the copper and green lichen covering "
-"the canyon. Copper Canyon has two climatic zones. The region features an "
-"alpine climate at the top and a subtropical climate at the lower levels. "
-"Winters are cold with frequent snowstorms at the higher altitudes. Summers "
-"are dry and hot. The capital city, Chihuahua, is a high altitude desert "
-"where weather ranges from cold winters to hot summers. The region is unique "
-"because of the various ecosystems that exist within it."
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Content Width"
 msgstr ""
-"铜峡谷是该地区的六个峡谷之一。虽然从名字上看，该峡谷可能与铜矿开采有一定关"
-"系，但事实并非如此。这个名字是由覆盖在峡谷上的铜和绿色地衣而来。铜峡谷有两个"
-"气候区。该地区的特点是顶部为高山气候，低处为亚热带气候。冬天很冷，高海拔地区"
-"经常有暴风雪。夏天干燥而炎热。首都奇瓦瓦是一个高海拔的沙漠，天气从寒冷的冬天"
-"到炎热的夏天不等。该地区的独特之处在于其内部存在各种生态系统。"
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Cover"
-msgstr "覆盖"
+msgid "Cover Image"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__cover_properties
@@ -953,7 +1119,13 @@ msgid "Created on"
 msgstr "创建日期"
 
 #. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_1
+msgid "Cybersecurity"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Date"
 msgstr "日期"
@@ -971,10 +1143,30 @@ msgid "Date (old to new)"
 msgstr "日期（从旧到新）"
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Decoration"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Default"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Dexter"
 msgstr "德克斯特"
+
+#. module: website_blog
+#: model:blog.post,subtitle:website_blog.blog_post_6
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+msgid ""
+"Discover the most underrated travel spots in Asia that are still off the "
+"radar, yet filled with rich culture."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__display_name
@@ -986,6 +1178,19 @@ msgstr "德克斯特"
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid ""
+"Display the blog's cover image and subtitle at the top of each blog page"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Display the number of comments and views for each blog post"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.index
@@ -1008,24 +1213,6 @@ msgid "Drag blocks here to customize the header of the \"{{0}}\" category."
 msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid "East Maui"
-msgstr "东毛伊岛"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid ""
-"East Maui helicopter tours will give you a view of the ten thousand foot "
-"volcano, Haleakala or House of the sun. This volcano is dormant and last "
-"erupted in 1790. You will be able to see the crater of the volcano and the "
-"dry, arid earth surrounding the south side of the volcano’s slop with Maui "
-"helicopter tours."
-msgstr ""
-"东茂宜岛直升机之旅将让您看到万英尺高的火山--哈雷阿卡拉（Haleakala）或太阳之"
-"家。这座火山处于休眠状态，最后一次喷发是在1790年。通过茂宜岛直升机旅游，您将"
-"能看到火山口和围绕火山坡南侧的干燥、干旱的土地。"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "Edit in backend"
 msgstr "在后端编辑"
@@ -1038,29 +1225,60 @@ msgstr "编辑标题，副标题是可选的。"
 
 #. module: website_blog
 #. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Emphasize the most recent post in the blog posts list"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Enter your post's title"
 msgstr "输入帖子标题"
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_3
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
-msgid "Facts you should bear in mind."
-msgstr "您应该牢记的事实。"
+#: model:blog.tag,name:website_blog.blog_tag_21
+msgid "Entrepreneurship"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid "Explore beyond the obvious"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"Exploring these underrated places not only supports local communities but "
+"also gives you a richer, more personal travel experience."
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Filter"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_17
+msgid "Finance"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.blog,subtitle:website_blog.blog_blog_1
+msgid ""
+"Find inspiration for your next adventure with guides, tips, and stories from "
+"around the globe."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid "Finding Opportunities in Constraints"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"Finally and most importantly, the quality hotel directory inspection team "
-"should have visited the hotel in question on a regular basis, met the staff, "
-"slept in a bedroom and tried the food. They should experience the hotel as "
-"only a hotel guest can and it is only then that they are really in a strong "
-"position to write about the hotel."
+msgid "Finding balance, focus, and routine"
 msgstr ""
-"最后，也是最重要的一点，优质酒店名录检查小组应该定期访问有关酒店，会见员工，"
-"在卧室里睡觉，并品尝食物。他们应该像酒店客人那样体验酒店，只有这样，他们才真"
-"正有能力写出关于酒店的文章。"
 
 #. module: website_blog
 #. odoo-javascript
@@ -1082,75 +1300,100 @@ msgid "Followers (Partners)"
 msgstr "关注者（合作伙伴）"
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"Food and transportation also offer great opportunities to save. Cooking your "
+"own meals when possible, taking public transport, and walking whenever you "
+"can aren't just budget-friendly, they often lead to the most memorable "
+"moments of a trip."
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__footer_visible
 msgid "Footer Visible"
 msgstr "页脚可见"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
+#: model_terms:blog.post,content:website_blog.blog_post_5
 msgid ""
-"For many of us who are city dwellers, we don’t really notice that sky up "
-"there on a routine basis. The lights of the city do a good job of disguising "
-"the amazing display that is above all of our heads all of the time."
+"For many, minimalism also brings emotional benefits. Fewer possessions mean "
+"fewer responsibilities and less decision fatigue. With less noise, it "
+"becomes easier to listen to your own needs, goals, and values, and act on "
+"them with purpose."
 msgstr ""
-"对于我们许多城市居民来说，我们在日常工作中并没有真正注意到上面的天空。城市的"
-"灯光很好地掩盖了在我们所有人头顶上一直存在的惊人显示。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
+#: model_terms:blog.post,content:website_blog.blog_post_1
 msgid ""
-"For many of us, our very first experience of learning about the celestial "
-"bodies begins when we saw our first full moon in the sky. It is truly a "
-"magnificent view even to the naked eye."
+"From choosing the right destinations to being smart about accommodation and "
+"transportation, there are many ways to make travel both affordable and "
+"rewarding. Whether you're planning a quick escape or a long-term journey, "
+"these ideas will help you get started without overspending."
 msgstr ""
-"对于我们中的许多人来说，我们学习天体的最初经历是从我们看到天空中的第一个满月"
-"开始的。即使对肉眼来说，这确实是一个壮观的景色。"
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid ""
+"From controlling lights with a tap on your phone to automating your morning "
+"coffee, smart home technology has become part of everyday life. What started "
+"as a convenience has quickly evolved into a lifestyle shift, transforming "
+"how we interact with our living spaces."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid ""
+"From controlling lights with a tap on your phone to automating your morning "
+"coffee, smart home technology has become part of everyday life. What started "
+"as a convenience has quickly evolved into a lifestyle..."
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
 msgid ""
-"For many of us, our very first experience of learning about the celestial "
-"bodies begins when we saw our first full moon in the sky. It is truly a "
-"magnificent view even to the naked eye...."
+"From controlling lights with a tap on your phone to automating your morning "
+"coffee, smart home technology has become part of everyday life. What started "
+"as a convenience has quickly evolved into..."
 msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 msgid ""
-"From the tiniest baby to the most advanced astrophysicist, there is "
-"something for anyone who wants to enjoy astronomy. In fact, it is a science "
-"that is so accessible that virtually anybody can do it virtually anywhere "
-"they are. All they have to know how to do is to look up."
+"From controlling lights with a tap on your phone to automating your morning "
+"coffee, smart home technology has become..."
 msgstr ""
-"从最微小的婴儿到最先进的天体物理学家，任何想享受天文学的人都有机会。事实上，"
-"它是一门非常容易掌握的科学，几乎任何人都可以在任何地方进行研究。他们所要做的"
-"就是抬头看。"
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"From remote mountains to coastal hideaways, Asia is full of destinations "
+"that go unnoticed by the average tourist. These lesser-known spots offer the "
+"same sense of wonder and discovery, often with more warmth, authenticity, "
+"and room to breathe."
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Full-Width"
-msgstr "全宽"
+msgid "Full"
+msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid "Get a geek"
-msgstr "获得一个极客"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Full Width"
+msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid "Get a telescope"
-msgstr "获得一个望远镜"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Full Width Cover"
+msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid "Get some history"
-msgstr "了解一些历史"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid "Get started"
-msgstr "开始"
+#: model:blog.tag,name:website_blog.blog_tag_11
+msgid "Future"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -1170,14 +1413,10 @@ msgid "Header Visible"
 msgstr "标题可见"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Here are some of the key facts you should bear in mind:"
-msgstr "以下是您应该牢记的一些关键事实:"
-
-#. module: website_blog
-#: model:blog.blog,subtitle:website_blog.blog_blog_1
-msgid "Holiday tips"
-msgstr "节日提示"
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Homeworking"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -1186,27 +1425,22 @@ msgid "Hover Effect"
 msgstr "鼠标悬停效果"
 
 #. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_4
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid "How To Look Up"
-msgstr "如何查询"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"How complex is the telescope and will you have trouble with maintenance? "
-"Network to get the answers to these and other questions. If you do your "
-"homework like this, you will find just the right telescope for this next big "
-"step in the evolution of your passion for astronomy."
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "How to make them relevant"
 msgstr ""
-"望远镜有多复杂，您在维护方面会有麻烦吗？通过网络来获得这些和其他问题的答案。"
-"如果您这样做了功课，您就会找到合适的望远镜，在您对天文学的热情演变中迈出下一"
-"个重要步骤。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid "How mobile must your telescope be?"
-msgstr "您的望远镜必须有多大的流动性？"
+#: model:blog.post,name:website_blog.blog_post_7
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "How to start your own business with no money"
+msgstr ""
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "How to stay productive"
+msgstr ""
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_3
@@ -1214,10 +1448,24 @@ msgstr "您的望远镜必须有多大的流动性？"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
-msgid "How to choose the right hotel"
-msgstr "如何选择合适的酒店"
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
+msgid "How to stay productive working from home"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.post,name:website_blog.blog_post_1
+msgid "How to travel the world on a budget"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid ""
+"However, with these exciting developments come important questions about "
+"privacy, ethics, and the impact on employment. As AI systems become more "
+"autonomous, it is crucial to ensure they are designed and used responsibly, "
+"keeping human values at the forefront. Addressing these challenges will "
+"determine how beneficial AI ultimately is in everyday life."
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__id
@@ -1245,32 +1493,10 @@ msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将出现发送错误。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"If it matters that your hotel is, for example, on the beach, close to the "
-"theme park, or convenient for the airport, then location is paramount. Any "
-"decent directory should offer a location map of the hotel and its "
-"surroundings. There should be distance charts to the airport offered as well "
-"as some form of interactive map."
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Improve your everyday life"
 msgstr ""
-"如果您的酒店很重要，例如，在海滩上，靠近主题公园，或方便前往机场，那么位置是"
-"最重要的。任何像样的目录都应该提供酒店及其周边地区的位置图。应该提供到机场的"
-"距离图，以及某种形式的互动地图。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid ""
-"If the night is clear, you can see amazing detail of the lunar surface just "
-"star gazing on in your back yard.\n"
-"Naturally, as you grow in your love of astronomy, you will find many "
-"celestial bodies fascinating. But the moon may always be our first love "
-"because is the one far away space object that has the unique distinction of "
-"flying close to the earth and upon which man has walked."
-msgstr ""
-"如果晚上天气晴朗，您只需在后院仰望星空，就可以看到月球表面的惊人细节。\n"
-"自然，随着您对天文学的热爱不断加深，您会发现许多天体都很迷人。但是，月球可能"
-"永远是我们的初恋，因为它是一个遥远的太空物体，具有独特的特点，可以飞到地球附"
-"近，而且人类已经在上面行走。"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_card
@@ -1281,23 +1507,38 @@ msgid "In"
 msgstr "在"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
+#: model_terms:blog.post,content:website_blog.blog_post_5
 msgid ""
-"In many ways, it is a big step from someone who is just fooling around with "
-"astronomy to a serious student of the science. But you and I both know that "
-"there is still another big step after buying a telescope before you really "
-"know how to use it."
+"In a world filled with noise, distractions, and never-ending to-do lists, "
+"many people are turning to minimalism as a way to regain clarity and "
+"control. But minimalism isn't just about having fewer things, it's about "
+"making room for what truly matters."
 msgstr ""
-"在许多方面，从一个只是在天文学上胡闹的人到一个认真学习科学的人，这是一个很大"
-"的进步。但您我都知道，在买了望远镜之后，在您真正知道如何使用它之前，还有一个"
-"很大的步骤。"
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Increase Readability"
-msgstr "增加可读性"
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"In a world filled with noise, distractions, and never-ending to-do lists, "
+"many people are turning to minimalism as a way to regain clarity and "
+"control. But minimalism isn't just about..."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+msgid ""
+"In a world filled with noise, distractions, and never-ending to-do lists, "
+"many people are turning to minimalism as..."
+msgstr ""
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_18
+msgid "Innovation"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_10
+msgid "IoT"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_is_follower
@@ -1311,85 +1552,10 @@ msgid "Is Published"
 msgstr "已发布"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Islands"
-msgstr "孤岛"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid ""
-"It is great fun to start learning the constellations, how to navigate the "
-"night sky and find the planets and the famous stars. There are web sites and "
-"books galore to guide you."
-msgstr ""
-"开始学习星座，如何在夜空中导航，寻找行星和著名的星星，这是非常有趣的。有很多"
-"网站和书籍可以指导您。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"It is important to choose a hotel that makes you feel comfortable – "
-"contemporary or traditional furnishings, local decor or international, "
-"formal or relaxed. The ideal hotel directory should let you know of the "
-"options available."
-msgstr ""
-"重要的是要选择一个让您感到舒适的酒店--现代或传统的家具，当地的装饰或国际的，"
-"正式或轻松的。理想的酒店目录应该让您知道有哪些选择。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"It is safe to say that at some point on our lives, each and every one of us "
-"has that moment when we are suddenly stunned when we come face to face with "
-"the enormity of the universe that we see in the night sky."
-msgstr ""
-"可以说，在我们生命中的某个时刻，我们每个人都有这样的时刻，当我们面对夜空中看"
-"到的巨大的宇宙时，我们突然惊呆了。"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"It is safe to say that at some point on our lives, each and every one of us "
-"has that moment when we are suddenly stunned when we come face to face with "
-"the enormity of the universe that we..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid ""
-"It really is amazing when you think about it that just by looking up on any "
-"given night, you could see virtually hundreds of thousands of stars, star "
-"systems, planets, moons, asteroids, comets and maybe a even an occasional "
-"space shuttle might wander by. It is even more breathtaking when you realize "
-"that the sky you are looking up at is for all intents and purposes the exact "
-"same sky that our ancestors hundreds and thousands of years ago enjoyed when "
-"they just looked up."
-msgstr ""
-"当您想一想，仅仅通过在任何给定的夜晚抬头，您几乎可以看到数十万颗恒星、恒星系"
-"统、行星、卫星、小行星、彗星，甚至可能偶尔会有航天飞机徘徊而过，这真的很惊"
-"人。当您意识到您所仰望的天空与我们几百年前的祖先在仰望时享受的天空完全相同"
-"时，这就更加令人惊叹了。"
-
-#. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Jungle"
-msgstr "Jungle"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid "Know what you are looking at"
-msgstr "知道您在看什么"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid "Know when to look"
-msgstr "知道什么时候看"
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Large"
 msgstr "大"
 
@@ -1420,6 +1586,17 @@ msgid "Latest Blog Posts"
 msgstr "最新博文"
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid ""
+"Launching a business with no money demands resilience, creativity, and a "
+"willingness to learn and adapt. By leveraging free resources, focusing on "
+"your strengths, and building meaningful relationships, you can overcome "
+"financial barriers and create a sustainable venture. Remember, every "
+"successful entrepreneur started somewhere, often with just an idea and "
+"determination."
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
@@ -1428,42 +1605,35 @@ msgstr "布局"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
-msgid ""
-"Learning the background to the great discoveries in astronomy will make your "
-"moments star gazing more meaningful. It is one of the oldest sciences on "
-"earth so find out the greats of history who have looked at these stars "
-"before you."
+msgid "Less clutter, more intention"
 msgstr ""
-"学习天文学的伟大发现的背景将使您的观星时刻更加有意义。它是地球上最古老的科学"
-"之一，所以要找出在您之前观察过这些星星的历史伟人。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Leisure Facilities"
-msgstr "休闲设施"
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "List"
-msgstr "列表"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
+#: model:blog.post,subtitle:website_blog.blog_post_5
 msgid ""
-"Local color is great but the hotel’s own restaurants and bars can play an "
-"important part in your stay. You should be aware of choice, style and "
-"whether or not they are smart or informal. A good hotel report should tell "
-"you this, and particularly about breakfast facilities."
+"Less is more. Discover the surprising benefits of adopting a minimalist "
+"lifestyle and how to get started."
 msgstr ""
-"当地的色彩是很好的，但酒店自己的餐厅和酒吧可以在您的住宿中发挥重要的作用。您"
-"应该了解选择、风格以及它们是否精明或不拘小节。一份好的酒店报告应该告诉您这"
-"些，特别是关于早餐设施。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Location"
-msgstr "位置"
+#: model:blog.blog,name:website_blog.blog_blog_3
+#: model:blog.tag,name:website_blog.blog_tag_15
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
+msgid "Lifestyle"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"Many travelers discover that being flexible with their plans can lead to big "
+"savings. Choosing to travel off-season, flying mid-week, or visiting lesser-"
+"known destinations can all make a big difference in price. Countries in "
+"Southeast Asia, Eastern Europe, and Central America, for example, offer rich "
+"experiences for just a fraction of the cost you'd expect in more touristy "
+"regions."
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -1472,65 +1642,16 @@ msgid "Marley"
 msgstr "马利"
 
 #. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_2
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_preview_data
-msgid "Maui helicopter tours"
-msgstr "茂宜岛直升机旅游"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"Maui helicopter tours are a great way to see the island from a different "
-"perspective and have a fun adventure. If you have never been on a helicopter "
-"before, this is a great place to do it."
-msgstr ""
-"茂宜岛的直升机之旅是一种从不同角度观察该岛并进行有趣冒险的好方法。如果您以前"
-"从未坐过直升机，这里是个好地方。"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-msgid ""
-"Maui helicopter tours are a great way to see the island from a different "
-"perspective and have a fun adventure..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid ""
-"Maui helicopter tours are a great way to tour those places that can not be "
-"reached on foot or by car. The tours last approximately one hour and range "
-"from approximately one hundred eight five dollars to two hundred forty "
-"dollars person. For many, this is a once in a lifetime opportunity to see "
-"natural scenery that will not be available again. Taking cameras and videos "
-"to capture the moments will also allow you to relive the tour again and "
-"again as you reminisce throughout the years."
-msgstr ""
-"茂宜岛直升机之旅是游览那些步行或驾车无法到达的地方的好方法。旅游时间大约为一"
-"小时，费用大约在一百八十五美元到二百四十美元之间。对许多人来说，这是一个一生"
-"中唯一的机会，可以看到不会再有的自然风光。带上相机和视频来记录这些时刻，也可"
-"以让您在多年的回忆中一次又一次地重温这次旅行。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid ""
-"Maui helicopter tours will allow you to see all of these sights. Make sure "
-"to take a camera or video with you when going on Maui helicopter tours to "
-"capture the beauty of the scenery and to show friends and family at home all "
-"the wonderful things you saw while on vacation."
-msgstr ""
-"茂宜岛直升机旅游将让您看到所有这些景点。参加茂宜岛直升机旅游时一定要带着相机"
-"或录像，以捕捉美丽的风景，并向家里的朋友和家人展示您在度假时看到的所有美好事"
-"物。"
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_cover_properties_option.js:0
 msgid "Medium"
 msgstr "中等"
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Meetings"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error
@@ -1560,44 +1681,52 @@ msgid "Meta Title"
 msgstr "元标题"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid "Molokai Maui"
-msgstr "摩洛凯岛 茂宜岛"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Minimal"
+msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid ""
-"Molokai Maui helicopter tours will take you to a different island but one "
-"that is only nine miles away and easily accessible by air. This island has a "
-"very small population with a different culture and scenery. The entire coast "
-"of the northeast is lined with cliffs and remote beaches. They are "
-"completely inaccessible by any other means of transportation than air.\n"
-"People who live on the island have never even seen this remarkable scenery "
-"unless they have taken Maui helicopter tours to view it. When the weather "
-"has been rainy and there is a lot of rainfall for he season you will see "
-"many astounding waterfalls."
+#: model:blog.tag,name:website_blog.blog_tag_14
+msgid "Minimalism"
 msgstr ""
-"摩洛凯岛茂宜岛直升机之旅将带您到一个不同的岛屿，但这个岛屿离您只有9英里远，而"
-"且很容易乘飞机到达。这个岛的人口非常少，有着不同的文化和风景。东北部的整个海"
-"岸线都是悬崖和偏远的海滩。除了飞机之外，任何其他交通工具都无法到达它们。\n"
-"住在岛上的人甚至从来没有见过这种非凡的风景，除非他们乘坐茂宜岛直升机旅行团来"
-"观赏它。当天气一直在下雨，而且这个季节的降雨量很大的时候，您会看到许多令人震"
-"惊的瀑布。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
+#: model_terms:blog.post,content:website_blog.blog_post_5
 msgid ""
-"More important to the family traveler than the business traveler, you should "
-"find out just how child friendly the hotel is from the directory and make "
-"your decision from there. One thing worth looking for is whether the hotel "
-"offers a baby sitters service. For the business traveler wishing to escape "
-"children this is of course very relevant too – perhaps a hotel that is not "
-"child friendly would be something more appropriate!"
+"Minimalism also helps break the cycle of consumerism. When you stop chasing "
+"the next purchase or upgrade, you begin to appreciate what you already have. "
+"This shift often leads to smarter spending, less waste, and a stronger sense "
+"of gratitude."
 msgstr ""
-"对于家庭旅行者来说，比商务旅行者更重要的是，您应该从目录中了解酒店对儿童的友"
-"好程度，并从中做出决定。值得注意的一点是酒店是否提供婴儿保姆服务。对于希望逃"
-"离儿童的商务旅行者来说，这当然也是非常重要的--也许一个对儿童不友好的酒店会是"
-"更合适的选择！"
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_5
+msgid ""
+"Minimalism isn't a trend or a strict set of rules. It's a mindset that helps "
+"you focus on what counts and let go of what doesn't. Whether you're just "
+"starting to declutter or already living with less, the benefits go far "
+"beyond a clean space."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid ""
+"Moreover, AI's influence extends beyond convenience to fostering deeper "
+"human connections. Virtual companions and language translation tools break "
+"down communication barriers, enabling people from diverse backgrounds to "
+"connect more easily. This growing accessibility highlights AI's potential to "
+"create a more inclusive and connected world."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid ""
+"Moreover, tapping into your existing skills and networks can be a game "
+"changer. Offering consulting, tutoring, or digital services requires little "
+"overhead and can generate revenue quickly. By focusing on what you already "
+"know and who you know, you maximize your chances of early success."
+msgstr ""
 
 #. module: website_blog
 #: model:website.snippet.filter,name:website_blog.dynamic_filter_most_viewed_blog_posts
@@ -1634,15 +1763,19 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "No Cover"
-msgstr "没有封面"
+#: model:res.groups.privilege,placeholder:website_blog.res_groups_privilege_blog
+msgid "No"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No blog post yet."
 msgstr "尚未发布博文。"
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_22
+msgid "No money"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__visits
@@ -1671,19 +1804,6 @@ msgid "None"
 msgstr "无"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"None of this precludes you from moving forward with your plans to put "
-"together an awesome telescope system. Just be sure you get quality advice "
-"and training on how to configure your telescope to meet your needs. Using "
-"these guidelines, you will enjoy hours of enjoyment stargazing at the "
-"phenomenal sights in the night sky that are beyond the naked eye."
-msgstr ""
-"这些都不妨碍您推进您的计划，把一个令人敬畏的望远镜系统放在一起。只要确保您得"
-"到高质量的建议和培训，了解如何配置您的望远镜以满足您的需求。使用这些准则，您"
-"将享受数小时的观星乐趣，欣赏夜空中超出肉眼的惊人景象。"
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Normal"
@@ -1699,16 +1819,6 @@ msgstr "正常图片"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 msgid "Not Published"
 msgstr "未发布"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid ""
-"Not only knowing the weather will make sure your star gazing is rewarding "
-"but if you learn when the big meteor showers and other big astronomy events "
-"will happen will make the excitement of astronomy come alive for you."
-msgstr ""
-"不仅了解天气可以确保您的观星是有收获的，而且如果您了解到大的流星雨和其他大的"
-"天文事件会在什么时候发生，将使天文学的兴奋度为您带来活力。"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_needaction_counter
@@ -1735,19 +1845,124 @@ msgid "Number of messages with delivery error"
 msgstr "发送错误的消息的数量"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
+#: model:ir.module.module,description:base.module_website_blog
 msgid ""
-"Of course, to take your moon worship to the ultimate, stepping your "
-"equipment up to a good starter telescope will give you the most stunning "
-"detail of the lunar surface. With each of these upgrades your knowledge and "
-"the depth and scope of what you will be able to see will improve "
-"geometrically. For many amateur astronomers, we sometimes cannot get enough "
-"of what we can see on this our closest space object."
+"Odoo Blog\n"
+"----------\n"
+"\n"
+"Write, Design, Promote and Engage with <a href=\"https://www.odoo.com/app/"
+"blog\">Odoo Blog</a>.\n"
+"\n"
+"Express yourself with the Odoo enterprise grade blogging platform. Write\n"
+"beautiful blog posts, engage with visitors, translate content and moderate\n"
+"social streams.\n"
+"\n"
+"Get your blog posts efficiently referenced in Google and translated in "
+"mutiple\n"
+"languages in just a few clicks.\n"
+"\n"
+"Write Beautiful Blog Posts\n"
+"--------------------------\n"
+"\n"
+"Drag & Drop well designed *'Building Blocks'* to create beautifull blog "
+"posts\n"
+"that perfectly integrates images, videos, call-to-actions, quotes, banners,\n"
+"etc.\n"
+"\n"
+"With our unique *'edit inline'* approach, you don't need to be a designer "
+"to\n"
+"create awsome, good-looking, content. Each blog post will look like it's\n"
+"designed by a professional designer.\n"
+"\n"
+"Automated Translation by Professionals\n"
+"--------------------------------------\n"
+"\n"
+"Get your blog posts translated in multiple languages with no effort. Our\n"
+"translation \"on demand\" feature allows you to benefit from professional\n"
+"translators to translate all your changes automatically. (\\$0.05 per word)\n"
+"Translated versions are updated automatically once translated by "
+"professionals\n"
+"(around 32 hours).\n"
+"\n"
+"Engage With Your Visitors\n"
+"-------------------------\n"
+"\n"
+"The integrated website live chat feature allows you to start chatting in "
+"real time with\n"
+"your visitors to get feedback on your recent posts or get ideas to write "
+"new\n"
+"posts.\n"
+"\n"
+"Engaging with your visitors is also a great way to convert visitors into\n"
+"customers.\n"
+"\n"
+"Build Visitor Loyalty\n"
+"---------------------\n"
+"\n"
+"The one click *follow* button will allow visitors to receive your blog posts "
+"by\n"
+"email with no effort, without having to register. Social media icons allow\n"
+"visitors to share your best blog posts easily.\n"
+"\n"
+"Google Analytics Integration\n"
+"----------------------------\n"
+"\n"
+"Get a clear visibility of your sales funnel. Odoo's Google Analytics "
+"trackers\n"
+"are configured by default to track all kinds of events related to shopping\n"
+"carts, call-to-actions, etc.\n"
+"\n"
+"As Odoo marketing tools (mass mailing, campaigns, etc) are also linked with\n"
+"Google Analytics, you get a 360° view of your business.\n"
+"\n"
+"SEO Optimized Blog Posts\n"
+"------------------------\n"
+"\n"
+"SEO tools are ready to use, with no configuration required. Odoo suggests\n"
+"keywords for your titles according to Google's most searched terms, Google\n"
+"Analytics tracks interests of your visitors, sitemaps are created "
+"automatically\n"
+"for quick Google indexing, etc.\n"
+"\n"
+"The system even creates structured content automatically to promote your\n"
+"products and events effectively in Google.\n"
+"\n"
+"Designer-Friendly Themes\n"
+"------------------------\n"
+"\n"
+"Themes are awesome and easy to design. You don't need to develop to create "
+"new\n"
+"pages, themes or building blocks. We use a clean HTML structure, a\n"
+"[bootstrap](http://getbootstrap.com/) CSS and our modularity allows you to\n"
+"distribute your themes easily.\n"
+"\n"
+"The building block approach allows the website to remain clean after end-"
+"users\n"
+"start creating new contents.\n"
+"\n"
+"Easy Access Rights\n"
+"------------------\n"
+"\n"
+"Not everyone requires the same access to your website. Designers manage the\n"
+"layout of the site, editors approve content and authors write that content.\n"
+"This lets you organize your publishing process according to your needs.\n"
+"\n"
+"Other access rights are related to business objects (products, people, "
+"events,\n"
+"etc) and directly following Odoo's standard access rights management, so you "
+"do\n"
+"not have to configure things twice.\n"
 msgstr ""
-"当然，要把您的拜月活动做到极致，把您的设备提升到一个好的入门级望远镜会给您带"
-"来月球表面最惊人的细节。随着每一次的升级，您的知识和您所能看到的深度和范围都"
-"会有几何级数的提高。对于许多业余天文学家来说，我们有时对这个离我们最近的太空"
-"物体所能看到的东西感到不满足。"
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_13
+msgid "Off the beaten path"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_toc_display
+msgid "On this page"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -1758,15 +1973,18 @@ msgid ""
 msgstr "查看移动设备上的内容后，您可以再次单击此处切换回普通视图"
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid ""
+"One of the first steps is to identify a service or product that requires "
+"minimal investment but solves a real problem. Many businesses today begin as "
+"side projects or freelance services, allowing founders to test the market "
+"and build a customer base without heavy financial risk."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 msgid "Others"
 msgstr "其它"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
-msgid "Our Latest Posts"
-msgstr "我们的最新文章"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_blogs_display
@@ -1774,59 +1992,39 @@ msgid "Our blogs"
 msgstr "我们的博客"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid "Photo by Anton Repponen, @repponen"
-msgstr "照片来源：安东-赖波宁，@赖波宁"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid "Photo by Arto Marttinen, @wandervisions"
-msgstr "照片：Arto Marttinen, @wandervisions"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid "Photo by Boris Smokrovic, @borisworkshop"
-msgstr "照片：Boris Smokrovic, @borisworkshop"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid "Photo by Denys Nevozhai, @dnevozhai"
-msgstr "照片：Denys Nevozhai, @dnevozhai"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid "Photo by Greg Rakozy, @grakozy"
-msgstr "照片来源：Greg Rakozy, @grakozy"
+#: model_terms:blog.post,content:website_blog.blog_post_5
+msgid "Photo by Alexey Aladashvili, @alexeyaladashvili61"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Photo by Jason Briscoe, @jbriscoe"
-msgstr "照片来源：Jason Briscoe, @jbriscoe"
+msgid "Photo by Domenico Loia, @domenicoloia"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
-msgid "Photo by Jon Ly, @jonatron"
-msgstr "照片来源：Jon Ly, @jonatron"
+msgid "Photo by Jakub Żerdzicki, @jakubzerdzicki"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
-msgid "Photo by Patrick Brinksma, @patrickbrinksma"
-msgstr "照片：Patrick Brinksma, @patrickbrinksma"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid "Photo by PoloX Hernandez, @elpolox"
-msgstr "照片：PoloX Hernandez, @elpolox"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid "Photo by SpaceX, @spacex"
-msgstr "照片来源：SpaceX，@spacex"
+msgid "Photo by Marília Castelli, @liacastelli"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
-msgid "Photo by Teddy Kelley, @teddykelley"
-msgstr "照片：泰迪-凯利，@teddykelley"
+msgid "Photo by Mega Caesaria, @megacaesaria"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_4
+msgid "Photo by Nick Design, @nickshuperdesign"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid "Photo by Thought Catalog, @thoughtcatalog"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -1841,15 +2039,35 @@ msgid "Posts"
 msgstr "帖子"
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid ""
+"Privacy and interoperability are also becoming central concerns. Consumers "
+"want systems that protect their data and work seamlessly with other devices, "
+"regardless of brand. This is driving a shift toward more open platforms and "
+"stricter security standards, shaping how future devices will be designed and "
+"connected."
+msgstr ""
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_7
+msgid "Productivity"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Posts List"
-msgstr "文章列表"
+msgid "Promote Last"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 msgid "Promote a post"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.module.module,summary:base.module_website_blog
+msgid "Publish blog posts, announces, news"
 msgstr ""
 
 #. module: website_blog
@@ -1862,11 +2080,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Published"
 msgstr "已发布"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "Published ("
-msgstr "发表("
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
@@ -1915,9 +2128,9 @@ msgid "Read Now <i class=\"oi\" data-icon=\"east\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_card
-msgid "Read more <i class=\"oi ms-2\" data-icon=\"chevron_forward\"/>"
-msgstr "阅读更多<i class=\"oi ms-2\" data-icon=\"chevron_forward\"/>"
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_compact
+msgid "Recommended"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__recommended_next_post_id
@@ -1932,14 +2145,20 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-msgid "Reset to default post"
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Regular"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid "Restaurants, Cafes and Bars"
-msgstr "餐馆、咖啡馆和酒吧"
+#: model:blog.tag,name:website_blog.blog_tag_8
+msgid "Remote work"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Reset to default post"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_id
@@ -1979,10 +2198,9 @@ msgid "Sample"
 msgstr "示例"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Satellites"
-msgstr "卫星"
+#: model:blog.tag,name:website_blog.blog_tag_6
+msgid "Savings"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
@@ -1991,27 +2209,10 @@ msgid "Scheduled"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "Scheduled ("
-msgstr ""
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Search for an image. (eg: type \"business\")"
 msgstr "搜索一个图像。(例如：输入 \"商业\")"
-
-#. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Seaside vs mountain side"
-msgstr "海边与山边"
-
-#. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Seeing the world from above"
-msgstr "从上面看世界"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_form_add
@@ -2054,17 +2255,10 @@ msgid "Set a blog post <b>cover</b>."
 msgstr "设置博文<b>封面</b>。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Several migratory and native birds, mammals and reptiles call Copper Canyon "
-"their home. The exquisite fauna in this near-pristine land is also worth "
-"checking out."
-msgstr ""
-"一些候鸟和本地鸟类、哺乳动物和爬行动物都把铜锣湾当作自己的家。在这片近乎原始"
-"的土地上，精美的动物群也值得一探究竟。"
-
-#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content_footer_share_links
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_split_cover
 msgid "Share"
 msgstr ""
 
@@ -2092,59 +2286,16 @@ msgid "Sidebar"
 msgstr "侧边栏"
 
 #. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_1
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
-msgid "Sierra Tarahumara"
-msgstr "塔拉乌马拉山脉"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-msgid ""
-"Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. "
-"The area is a favorite destination among those seeking an adventurous "
-"vacation."
-msgstr ""
-"Sierra Tarahumara，俗称铜峡谷，位于墨西哥。该地区是那些寻求冒险度假的人最喜欢"
-"的目的地。"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
-msgid ""
-"Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. "
-"The area is a favorite destination among those seeking an adventurous "
-"vacation. Copper Canyon is one of the six gorges in the..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. "
-"The area is a favorite destination among those seeking an adventurous "
-"vacation. Copper Canyon is one of the six gorges..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-msgid ""
-"Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. "
-"The area is a favorite destination among those..."
-msgstr ""
-
-#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 msgid "Silly-Chico"
 msgstr "愚蠢的奇科"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Skies"
-msgstr "天空"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Size"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -2159,77 +2310,41 @@ msgid "Smaller picture"
 msgstr "更小图片"
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Smart Homes"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_9
+msgid "Smart homes"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid ""
+"Smart homes are growing up. What began with simple voice assistants and "
+"connected light bulbs has matured into fully integrated systems that manage "
+"everything from energy use to home security. Artificial intelligence is at "
+"the heart of this evolution, enabling homes to learn from behavior patterns "
+"and anticipate needs in real time."
+msgstr ""
+
+#. module: website_blog
+#: model:blog.post,subtitle:website_blog.blog_post_2
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
+msgid ""
+"Smart homes are no longer a luxury. Learn what's next for the connected home "
+"revolution."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
 msgid ""
-"So it is critically important that you get just the right telescope for "
-"where you are and what your star gazing preferences are. To start with, "
-"let’s discuss the three major kinds of telescopes and then lay down some "
-"“Telescope 101″ concepts to increase your chances that you will buy the "
-"right thing."
+"So if you're planning your next trip, consider stepping off the beaten path. "
+"You might just find your new favorite place."
 msgstr ""
-"因此，对于您所在的地方和您的观星偏好来说，获得合适的望远镜是非常重要的。首"
-"先，让我们讨论一下三种主要的望远镜，然后提出一些 \"望远镜101 \"的概念，以增加"
-"您买对东西的机会。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"So it might be that once a year vacation to a camping spot or a trip to a "
-"relative’s house out in the country that we find ourselves outside when the "
-"spender of the night sky suddenly decides to put on it’s spectacular show. "
-"If you have had that kind of moment when you were literally struck "
-"breathless by the spender the night sky can show to us, you can probably "
-"remember that exact moment when you could say little else but “wow” at what "
-"you saw."
-msgstr ""
-"因此，可能是每年一次的野营度假，或者是去乡下亲戚家的旅行，当夜空的使者突然决"
-"定上演它的壮观表演时，我们发现自己在外面。如果您有过这样的时刻，当您真的被夜"
-"空的魅力所震撼而无法呼吸时，您可能会记得那个确切的时刻，您除了对您所看到的东"
-"西说 \"哇 \"之外，几乎没有别的话。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"So to select just the right kind of telescope, your objectives in using the "
-"telescope are important. To really understand the strengths and weaknesses "
-"not only of the lenses and telescope design but also in how the telescope "
-"performs in various star gazing situations, it is best to do some homework "
-"up front and get exposure to the different kinds. So before you make your "
-"first purchase…"
-msgstr ""
-"所以要选择合适的望远镜，您使用望远镜的目的很重要。为了真正了解镜头和望远镜设"
-"计的长处和短处，也为了了解望远镜在各种观星情况下的表现，最好先做一些功课，接"
-"触一下不同的种类。所以在您第一次采购之前…"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
-msgid ""
-"So you're going abroad, you've chosen your destination and now you have to "
-"choose a hotel. Ten years ago, you'd have probably visited your local travel "
-"agent and trusted the face-to-face advice you we..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"So you're going abroad, you've chosen your destination and now you have to "
-"choose a hotel. Ten years ago, you'd have probably visited your local travel "
-"agent and trusted the face-to-face advice..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
-msgid ""
-"So you're going abroad, you've chosen your destination and now you have to "
-"choose a hotel. Ten years ago, you'd have..."
-msgstr ""
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"So you’re going abroad, you’ve chosen your destination and now you have to "
-"choose a hotel."
-msgstr "所以您要出国，您已经选择了您的目的地，现在您必须选择一个酒店。"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -2237,20 +2352,16 @@ msgid "Social Media"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_1
-#: model_terms:blog.post,content:website_blog.blog_post_3
-#: model_terms:blog.post,content:website_blog.blog_post_4
-#: model_terms:blog.post,content:website_blog.blog_post_5
-#: model_terms:blog.post,content:website_blog.blog_post_6
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid "Someone famous in <cite title=\"Source Title\">Source Title</cite>"
-msgstr "<cite title=\"Source Title\">源标题</cite>中的著名人物"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Split"
+msgstr ""
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Spotting the fauna"
-msgstr "发现动物群"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Split Cover"
+msgstr ""
 
 #. module: website_blog
 #. odoo-python
@@ -2259,7 +2370,58 @@ msgid "Start writing here..."
 msgstr "由此开始..."
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_7
+msgid ""
+"Starting a business without any upfront capital may sound impossible, but "
+"countless entrepreneurs have done it successfully. The key lies in "
+"creativity, resourcefulness, and leveraging available tools and networks. "
+"With the right mindset and strategy, you can turn an idea into a viable "
+"business even with little to no money."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"Starting a business without any upfront capital may sound impossible, but "
+"countless entrepreneurs have done it successfully. The key lies in "
+"creativity, resourcefulness, and leveraging..."
+msgstr ""
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_20
+msgid "Startups"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Stats"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.blog,subtitle:website_blog.blog_blog_2
+msgid ""
+"Stay ahead of the curve with the latest tech insights, trends, and how-tos."
+msgstr ""
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Stay minimalist"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
+msgid ""
+"Staying productive while working from home is all about building the right "
+"environment, routines, and habits. When done thoughtfully, remote work can "
+"lead to greater autonomy, improved focus, and better overall satisfaction."
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 msgid "Style"
 msgstr "风格"
 
@@ -2270,11 +2432,25 @@ msgstr "副标题"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_compact
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_next_full_cover
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_split_cover
 msgid "Subtitle"
 msgstr "小标题"
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+msgid "Table of Contents"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+msgid "Table of contents"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_tag_category_global
@@ -2315,6 +2491,7 @@ msgstr "标签名称已存在！"
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_tags_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
@@ -2332,23 +2509,12 @@ msgid "Tags List"
 msgstr "标签列表"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Taking pictures in the dark"
-msgstr "在黑暗中拍照"
-
-#. module: website_blog
 #. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser
 msgid "Teaser"
 msgstr "预告"
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-msgid "Teaser & Tags"
-msgstr "预告片和标签"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser_manual
@@ -2356,72 +2522,35 @@ msgid "Teaser Content"
 msgstr "预告内容"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"Ten years ago, you’d have probably visited your local travel agent and "
-"trusted the face-to-face advice you were given by the so called ‘experts’. "
-"The 21st Century way to select and book your hotel is of course on the "
-"Internet, by using travel websites."
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#: model:blog.blog,name:website_blog.blog_blog_2
+#: model:blog.tag,name:website_blog.blog_tag_3
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid "Technology"
 msgstr ""
-"十年前，您可能会访问当地的旅行社，并相信所谓的 \"专家 \"给您的面对面的建议。"
-"21世纪选择和预订酒店的方式当然是在互联网上，通过使用旅游网站。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"That “Wow” moment is what astrology is all about. For some, that wow moment "
-"becomes a passion that leads to a career studying the stars. For a lucky "
-"few, that wow moment because an all consuming obsession that leads to them "
-"traveling to the stars in the space shuttle or on one of our early space "
-"missions. But for most of us astrology may become a pastime or a regular "
-"hobby. But we carry that wow moment with us for the rest of our lives and "
-"begin looking for ways to look deeper and learn more about the spectacular "
-"universe we see in the millions of stars above us each night."
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Text & Content"
 msgstr ""
-"那个 \"哇 \"的时刻就是占星术的全部内容。对于一些人来说，那一瞬间的惊叹成为一"
-"种激情，导致了研究星星的职业。对于少数幸运的人来说，那一瞬间的惊艳是一种完全"
-"的痴迷，导致他们乘坐航天飞机或在我们早期的太空任务中前往星空旅行。但对我们大"
-"多数人来说，占星术可能成为一种消遣或常规爱好。但我们会在余生中带着那个惊叹的"
-"时刻，并开始寻找方法来深入观察和了解我们每晚在我们头顶的数百万颗星星中看到的"
-"壮观宇宙。"
 
 #. module: website_blog
-#: model:blog.post,subtitle:website_blog.blog_post_5
-msgid "The beauty of astronomy is that anybody can do it."
-msgstr "天文学的美妙之处在于任何人都可以做到这一点。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid ""
-"The best time to view the moon, obviously, is at night when there are few "
-"clouds and the weather is accommodating for a long and lasting study. The "
-"first quarter yields the greatest detail of study. And don’t be fooled but "
-"the blotting out of part of the moon when it is not in full moon stage. The "
-"phenomenon known as “earthshine” gives you the ability to see the darkened "
-"part of the moon with some detail as well, even if the moon is only at "
-"quarter or half display."
+#: model:blog.post,name:website_blog.blog_post_5
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "The benefits of a minimalist lifestyle"
 msgstr ""
-"显然，观看月亮的最佳时间是在晚上，那时云层很少，天气适合长时间的研究。第一季"
-"度产生了最大的研究细节。当月亮没有进入满月阶段时，不要被月亮的一部分被遮挡住"
-"所迷惑。被称为 \"地光 \"的现象使您有能力看到月亮变暗的部分，并有一些细节，即"
-"使月亮只在四分之一或一半显示。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid "The best time to view the moon."
-msgstr "赏月的最佳时间。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid ""
-"The cliffs in this region are among the highest in the world and to see "
-"water cascading from the high peaks is simply breathtaking. The short jaunt "
-"from Maui with Maui helicopter tours is well worth seeing the beauty of this "
-"natural environment."
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "The control in your hands"
 msgstr ""
-"这个地区的悬崖是世界上最高的悬崖之一，看到水从高高的山峰上泻下，简直令人叹为"
-"观止。从茂宜岛出发，乘坐茂宜岛直升机旅游的短途旅行非常值得一看这个自然环境的"
-"美丽。"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_absolute_url
@@ -2438,116 +2567,77 @@ msgstr "通过网站访问文件的完整相对 URL。"
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
 msgid ""
-"The next thing we naturally want to get is a good telescope. You may have "
-"seen a hobbyist who is well along in their study setting up those really "
-"cool looking telescopes on a hill somewhere. That excites the amateur "
-"astronomer in you because that must be the logical next step in the growth "
-"of your hobby. But how to buy a good telescope can be downright confusing "
-"and intimidating."
+"The future of AI in everyday life holds incredible promise, offering the "
+"potential to enhance comfort, efficiency, and human connection in "
+"unprecedented ways. Yet, realizing these benefits requires careful "
+"consideration of ethical implications and a commitment to responsible "
+"innovation. By thoughtfully integrating AI into our daily environments, we "
+"can harness its power to improve lives while preserving the values that make "
+"us human."
 msgstr ""
-"我们自然希望得到的下一个东西是一个好的望远镜。您可能已经看到一个业余爱好者在"
-"他们的研究中进展顺利，在某处的山上设置了那些看起来非常酷的望远镜。这让您这个"
-"业余天文学家感到兴奋，因为这一定是您爱好发展的下一步。但是，如何购买一个好的"
-"望远镜可能是完全令人困惑和畏惧的。"
+
+#. module: website_blog
+#: model:blog.post,name:website_blog.blog_post_4
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "The future of artificial intelligence in everyday life"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
 msgid ""
-"The site should offer a detailed analysis of leisure services within the "
-"hotel – spa, pool, gym, sauna – as well as details of any other facilities "
-"nearby such as golf courses. 7. Special Needs: the hotel directory site "
-"should advise the visitor of each hotel’s special needs services and "
-"accessibility policy. Whilst again this does not apply to every visitor, it "
-"is absolutely vital to some."
+"The most effective remote workers tend to follow one simple principle: treat "
+"home like the office. Setting a consistent routine, starting at the same "
+"time each day, taking regular breaks, and clearly defining work hours, can "
+"help separate professional time from personal time, even when both happen in "
+"the same place."
 msgstr ""
-"该网站应提供酒店内休闲服务的详细分析--水疗、游泳池、健身房、桑拿--以及附近任"
-"何其他设施的细节，如高尔夫课程。 7.特殊需求：酒店目录网站应告知访客每个酒店的"
-"特殊需求服务和无障碍政策。虽然这并不应用于每个访客，但对某些访客来说绝对是至"
-"关重要的。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
-msgid ""
-"The tripod or other accessory decisions will change significantly with a "
-"telescope that will live on your deck versus one that you plan to take to "
-"many remote locations."
-msgstr ""
-"三脚架或其他附件的决定将大大改变一个将生活在您的甲板上的望远镜和一个您打算带"
-"去许多偏远地区的望远镜。"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_2
 msgid ""
-"The view of this is truly breathtaking and is a sight not to be missed. It "
-"is also highly educational with a chance to see a dormant volcano up close, "
-"something that can not be seen every day. On the northern and southern sides "
-"of the volcano, you will see an incredible different view however. These "
-"sides are lush and green and you will be able to see some beautiful "
-"waterfalls and gorgeous brush. Tropical rainforests abound on this side of "
-"the island and it is something that is not easily accessible by any other "
-"means than by air."
+"The next wave of innovation is pointing toward even deeper personalization "
+"and sustainability. Imagine a home that not only knows when to turn off "
+"lights but adjusts your heating, monitors air quality, tracks your energy "
+"usage, and suggests optimizations. As sensors become more sophisticated and "
+"data becomes more actionable, homes are getting smarter, and greener."
 msgstr ""
-"这里的景色确实令人叹为观止，是一个不容错过的景象。这也是非常有教育意义的，有"
-"机会近距离地看到休眠火山，这不是每天都能看到的。然而，在火山的北面和南面，您"
-"会看到令人难以置信的不同景色。这些侧面是郁郁葱葱的，您将能够看到一些美丽的瀑"
-"布和华丽的画笔。热带雨林在岛的这一侧比比皆是，除了飞机之外，其他方式都不容易"
-"到达。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"Then there’s the problem of the reviewer’s motivation. The more reviews you "
-"read, the more you notice how they tend to cluster at the extremes of "
-"opinion. On one end, you have angry reviewers with axes to grind; at the "
-"other, you have delighted guests who lavish praise beyond belief. You’ll not "
-"be surprised to learn that hotels sometimes post their own glowing reviews, "
-"or that competitor’s line up for the chance to lambaste the competition with "
-"bad reviews. It makes sense to consider what is really important to you when "
-"selecting a hotel. You should then choose an online hotel directory that "
-"gives up-to-date, independent, impartial information that really matters."
+#: model:blog.post,name:website_blog.blog_post_2
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid "The rise of smart homes: What's next?"
 msgstr ""
-"还有一个问题是评论者的动机。您读的评论越多，您就越能注意到它们是如何聚集在意"
-"见的两端的。在这一端，您有愤怒的评论者，他们怀有敌意；在另一端，您有高兴的客"
-"人，他们对酒店的赞美超乎想象。您不会惊讶地发现，酒店有时会发布他们自己的光辉"
-"评论，或者竞争对手排队等待机会，用差评来抨击竞争对手。在选择酒店时，考虑什么"
-"对您真正重要是有意义的。然后，您应该选择一个线上酒店目录，提供最新的、独立"
-"的、公正的、真正重要的信息。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_6
+#: model_terms:blog.post,content:website_blog.blog_post_2
 msgid ""
-"There are other considerations to factor into your final purchase decision."
-msgstr "还有其他的考虑因素要纳入您的最终采购决定。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_5
-msgid ""
-"There is something timeless about the cosmos. The fact that the planets and "
-"the moon and the stars beyond them have been there for ages does something "
-"to our sense of our place in the universe. In fact, many of the stars we "
-"“see” with our naked eye are actually light that came from that star "
-"hundreds of thousands of years ago. That light is just now reaching the "
-"earth. So in a very real way, looking up is like time travel."
+"The smart home is no longer just about gadgets, it's about creating a living "
+"environment that responds to you, supports your lifestyle, and helps you "
+"live more efficiently. As technology continues to evolve, homes will become "
+"more intuitive, sustainable, and secure."
 msgstr ""
-"宇宙有一种永恒的东西。行星和月球以及它们之外的星星已经存在了很久，这一事实让"
-"我们对自己在宇宙中的位置有了一些认识。事实上，我们用肉眼 \"看到 \"的许多恒星"
-"实际上是几十万年前从该恒星发出的光。这些光现在才到达地球。因此，从一个非常真"
-"实的角度来看，抬头看就像时间旅行。"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_3
-msgid ""
-"These things really do matter and any decent hotel directory should give you "
-"this sort of advice on bedrooms – not just the number of rooms which is the "
-"usual option!"
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_page_option_plugin.js:0
+msgid "This blog post"
 msgstr ""
-"这些东西真的很重要，任何像样的酒店目录都应该给您提供这种关于卧室的建议--而不"
-"仅仅是通常选择的房间数量！"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "This box will not be visible to your visitors"
-msgstr "您的来访者看不到这框"
+#: model:blog.tag,name:website_blog.blog_tag_2
+msgid "Threats"
+msgstr ""
+
+#. module: website_blog
+#. odoo-javascript
+#: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
+msgid "Thumbnails"
+msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
@@ -2556,8 +2646,12 @@ msgid "Tiny"
 msgstr "微小的"
 
 #. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_5
+msgid "Tips"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__name
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
 msgid "Title"
 msgstr "标题"
 
@@ -2574,77 +2668,12 @@ msgid "Title Inside Cover"
 msgstr "标题内封面"
 
 #. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid ""
-"To gaze at the moon with the naked eye, making yourself familiar with the "
-"lunar map will help you pick out the seas, craters and other geographic "
-"phenomenon that others have already mapped to make your study more "
-"enjoyable. Moon maps can be had from any astronomy shop or online and they "
-"are well worth the investment."
-msgstr ""
-"要想用肉眼凝视月球，让自己熟悉月球地图将有助于您挑选出别人已经绘制好的海洋、"
-"火山口和其他地理现象，使您的研究更加愉快。月球地图可以从任何天文商店或线上买"
-"到，它们非常值得投资。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_4
-msgid ""
-"To get started in learning how to observe the stars much better, there are "
-"some basic things we might need to look deeper, beyond just what we can see "
-"with the naked eye and begin to study the stars as well as enjoy them. The "
-"first thing you need isn’t equipment at all but literature. A good star map "
-"will show you the major constellations, the location of the key stars we use "
-"to navigate the sky and the planets that will appear larger than stars. And "
-"if you add to that map some well done introductory materials into the hobby "
-"of astronomy, you are well on your way."
-msgstr ""
-"为了开始学习如何更好地观察星星，我们可能需要一些基本的东西来深入观察，超越我"
-"们肉眼所能看到的，开始研究星星以及享受它们。您需要的第一件事根本就不是设备，"
-"而是文献。一张好的星图会告诉您主要的星座，我们用来导航天空的关键星星的位置，"
-"以及会出现比星星更大的行星。而如果您在这张地图上加上一些做得很好的天文学爱好"
-"的介绍材料，您就会很顺利。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid ""
-"To kick it up a notch, a good pair of binoculars can do wonders for the "
-"detail you will see on the lunar surface. For best results, get a good wide "
-"field in the binocular settings so you can take in the lunar landscape in "
-"all its beauty. And because it is almost impossible to hold the binoculars "
-"still for the length of time you will want to gaze at this magnificent body "
-"in space, you may want to add to your equipment arsenal a good tripod that "
-"you can affix the binoculars to so you can study the moon in comfort and "
-"with a stable viewing platform."
-msgstr ""
-"为了提高一个档次，一副好的双筒望远镜可以为您在月球表面看到的细节创造奇迹。为"
-"了获得最佳效果，在双筒望远镜的设置中要有良好的广角视野，这样您就可以把月球景"
-"观的所有美景尽收眼底。由于几乎不可能在您想凝视这个宏伟的太空天体的时候保持双"
-"筒望远镜不动，您可能想在您的设备库中增加一个好的三脚架，您可以把双筒望远镜固"
-"定在上面，这样您就可以在舒适和稳定的观察平台上研究月亮。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_7
-msgid ""
-"To take it to a natural next level, you may want to take advantage of "
-"partnerships with other astronomers or by visiting one of the truly great "
-"telescopes that have been set up by professionals who have invested in "
-"better techniques for eliminating atmospheric interference to see the moon "
-"even better. The internet can give you access to the Hubble and many of the "
-"huge telescopes that are pointed at the moon all the time. Further, many "
-"astronomy clubs are working on ways to combine multiple telescopes, "
-"carefully synchronized with computers for the best view of the lunar "
-"landscape."
-msgstr ""
-"为了让它自然而然地更上一层楼，您可能想利用与其他天文学家的合作关系，或者通过"
-"访问一个真正伟大的望远镜，这些望远镜是由专业人士建立的，他们投资了更好的技术"
-"来消除大气干扰，以更好地看到月亮。互联网可以让您接触到哈勃和许多巨大的望远"
-"镜，这些望远镜一直对准着月亮。此外，许多天文俱乐部正在研究如何将多台望远镜结"
-"合起来，仔细地与计算机同步，以获得最佳的月球景观。"
-
-#. module: website_blog
-#. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
-msgid "Toggle comments"
+#: model:blog.post,name:website_blog.blog_post_6
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_preview_data
+msgid "Top 10 underrated travel destinations in Asia"
 msgstr ""
 
 #. module: website_blog
@@ -2657,16 +2686,49 @@ msgstr "顶部模幅"
 #: model:blog.blog,name:website_blog.blog_blog_1
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
 msgid "Travel"
 msgstr "旅行"
 
 #. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid "Travel smart without spending big"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.post,subtitle:website_blog.blog_post_1
+msgid ""
+"Traveling doesn't have to break the bank. Find out how to travel on a tight "
+"budget with these essential tips."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"Traveling slowly, staying longer in each place, also reduces expenses and "
+"deepens your connection with the culture. You'll have time to learn, adapt, "
+"and experience daily life rather than rushing from one attraction to the "
+"next."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"Traveling the world might sound like a luxury, but it doesn't have to come "
+"with a luxury price tag. With a few practical strategies and a flexible "
+"mindset, it's possible to explore new places, meet new people, and "
+"experience different cultures, without draining your savings."
+msgstr ""
+
+#. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+msgid "Underrated destinations"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
-msgid "Unpublished ("
-msgstr "未发表的("
+msgid "Unpublished"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -2679,6 +2741,13 @@ msgid "Untitled Post"
 msgstr "无标题帖文"
 
 #. module: website_blog
+#: model:blog.blog,subtitle:website_blog.blog_blog_3
+msgid ""
+"Upgrade your daily routine with ideas on wellness, productivity, and modern "
+"living."
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/tours/website_blog.js:0
 msgid "Use this icon to preview your blog post on <b>mobile devices</b>."
@@ -2688,12 +2757,6 @@ msgstr "使用此图标，在<b>移动设备</b>上预览您的博文。"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Used in:"
 msgstr "使用在："
-
-#. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "Viewpoints"
-msgstr "观点"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_info
@@ -2763,28 +2826,94 @@ msgid "Website opengraph image"
 msgstr "网站opengraph图像"
 
 #. module: website_blog
-#: model:blog.post,name:website_blog.blog_post_5
-msgid "What If They Let You Run The Hubble"
-msgstr "如果他们让您运行哈勃会怎样"
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"Whether you're a solo traveler, a couple planning your next adventure, or "
+"someone chasing a lifelong dream, the tools are out there to help you go "
+"further without overspending. With the right approach, traveling the world "
+"becomes not just affordable, but deeply rewarding."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid ""
+"Whether you're a tech enthusiast, a business exploring new markets, or "
+"simply curious about where things are heading, the future of smart homes is "
+"full of potential. The next chapter isn’t just about making homes smarter, "
+"it's about making them more human."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_3
+msgid ""
+"Whether you're freelancing, running a small business, or managing a remote "
+"team, creating a productive work-from-home environment is key. With the "
+"right habits and a bit of structure, working remotely can be just as "
+"efficient, if not more, than working in an office."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_6
+msgid ""
+"Whether you're seeking serene beaches, ancient temples, or vibrant local "
+"life, these lesser-known destinations deserve a spot on your travel list."
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
 msgid ""
-"While anyone can look up and fall in love with the stars at any time, the "
-"fun of astronomy is learning how to become more and more skilled and "
-"equipped in star gazing that you see and understand more and more each time "
-"you look up. Here are some steps you can take to make the moments you can "
-"devote to your hobby of astronomy much more enjoyable."
+"Whether you're simplifying your home, your schedule, or your digital life, "
+"embracing a minimalist mindset can bring more focus, freedom, and peace into "
+"your everyday routine."
 msgstr ""
-"虽然任何人都可以在任何时候抬头并爱上星星，但天文学的乐趣在于学习如何在仰望星"
-"空时变得越来越熟练和有装备，每次抬头都能看到和理解更多。以下是您可以采取的一"
-"些步骤，使您可以投入到天文学爱好中的时间更加愉快。"
 
 #. module: website_blog
-#. odoo-python
-#: code:addons/website_blog/models/website_snippet_filter.py:0
-msgid "With a View"
-msgstr "视图"
+#: model_terms:blog.post,content:website_blog.blog_post_2
+msgid ""
+"With new devices constantly hitting the market and major tech players "
+"investing heavily in home automation, smart homes are no longer a futuristic "
+"concept. But as these systems become more integrated and intelligent, the "
+"big question is: what's coming next?"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.post,subtitle:website_blog.blog_post_3
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
+msgid ""
+"Working from home can be challenging. Here are some proven tips to stay "
+"productive and motivated."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_3
+msgid ""
+"Working from home has become the new normal for many professionals around "
+"the world. While it offers flexibility and eliminates the daily commute, it "
+"also brings unique challenges when it comes to staying focused and organized."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
+msgid ""
+"Working from home has become the new normal for many professionals around "
+"the world. While it offers flexibility and eliminates the daily commute, it "
+"also brings unique challenges when it comes to staying..."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"Working from home has become the new normal for many professionals around "
+"the world. While it offers flexibility and eliminates the daily commute, it "
+"also brings unique challenges when it comes..."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
+msgid ""
+"Working from home has become the new normal for many professionals around "
+"the world. While it offers flexibility and..."
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.sidebar_blog_index
@@ -2792,43 +2921,34 @@ msgid "Write a small text here to describe your blog or company."
 msgstr "在这里写一小段文字来描述您的博客或公司。"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_author_avatar_display
+msgid "Written by"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:blog.post,content:website_blog.blog_post_1
+msgid ""
+"You don't need a huge budget to see the world. What you do need is a "
+"willingness to plan creatively, let go of rigid expectations, and embrace "
+"the unknown. Budget travel isn't about cutting corners, it's about making "
+"intentional choices that let you experience more with less."
+msgstr ""
+
+#. module: website_blog
+#: model:blog.post,subtitle:website_blog.blog_post_7
+msgid ""
+"You don't need capital to get started. Find out how you can launch a "
+"successful business with limited resources."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
 msgid ""
-"You should always carefully consider the type of facilities you need from "
-"your bedroom and find the hotel that has those you consider important. The "
-"hotel directory website should elaborate on matters such as: bed size, "
-"Internet Access (its cost, whether there is WIFI or wired broadband "
-"connection), Complimentary amenities, views from the room and luxury "
-"offerings like a Pillow menu or Bath menu, choice of smoking or non smoking "
-"rooms etc."
+"Your workspace also matters. Having a dedicated area that's quiet, "
+"comfortable, and free of distractions goes a long way in maintaining focus. "
+"Even if you don't have a home office, carving out a small, intentional space "
+"can signal to your brain that it's time to work."
 msgstr ""
-"您应该始终仔细考虑您需要的卧室设施类型，并找到拥有那些您认为重要的设施的酒"
-"店。酒店目录网站应详细说明以下事项：床的尺寸、互联网接入（其费用、是否有WIFI"
-"或有线宽带连接）、免费设施、房间的景观和豪华产品，如枕头菜单或沐浴菜单，选择"
-"吸烟或不吸烟房间等。"
-
-#. module: website_blog
-#: model_terms:blog.post,content:website_blog.blog_post_2
-msgid ""
-"You will see all the beauty that Maui has to offer and can have a great time "
-"for the entire family. Tours are not too expensive and last from forty five "
-"minutes to over an hour. You can see places that are typically inaccessible "
-"with Maui helicopter tours. Places that are not available by foot or vehicle "
-"can be seen by air. Breathtaking sights await those who are up for some fun "
-"Maui helicopter tours. If you will be staying on the island for a "
-"considerable amount of time, you may want to think about doing multiple Maui "
-"helicopter tours."
-msgstr ""
-"您将看到茂宜岛的所有美景，并能让整个家庭享受到美好的时光。旅游费用不高，持续"
-"时间从四十五分钟到一个多小时。通过茂宜岛直升机旅游，您可以看到那些通常无法到"
-"达的地方。徒步或乘车无法到达的地方可以在空中看到。令人叹为观止的景象在等待着"
-"那些准备好参加茂宜岛直升机旅游的人。如果您将在岛上停留相当长的时间，您可能会"
-"考虑进行多次茂宜岛直升机旅游。"
-
-#. module: website_blog
-#: model:blog.tag,name:website_blog.blog_tag_2
-msgid "adventure"
-msgstr "冒险"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
@@ -2841,41 +2961,14 @@ msgid "breadcrumb"
 msgstr "浏览路径"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
-#: model_terms:ir.ui.view,arch_db:website_blog.post_heading
-msgid "by"
-msgstr "由"
-
-#. module: website_blog
-#: model:blog.tag,name:website_blog.blog_tag_5
-msgid "discovery"
-msgstr "自动发现"
-
-#. module: website_blog
-#: model:blog.tag,name:website_blog.blog_tag_3
-msgid "guides"
-msgstr "指南"
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "has been published on the"
 msgstr "已在博客上发布新帖子"
 
 #. module: website_blog
-#: model:blog.tag,name:website_blog.blog_tag_1
-msgid "hotels"
-msgstr "酒店"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
 #: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_single_badge
 msgid "in"
 msgstr "在"
-
-#. module: website_blog
-#: model:blog.tag,name:website_blog.blog_tag_4
-msgid "telescopes"
-msgstr "望远镜"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_comment
@@ -2883,27 +2976,1047 @@ msgid "to leave a comment"
 msgstr "留下评论"
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
-msgid ""
-"|\n"
-"            <i class=\"oi oi-filled ms-1 text-muted\" data-"
-"icon=\"chat_bubble\"/>"
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Business"
 msgstr ""
-"|\n"
-"            <i class=\"oi oi-filled ms-1 text-muted\" data-"
-"icon=\"chat_bubble\"/>"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
-msgid "| No comments yet"
-msgstr "| 还没有评论"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid "• Astronomy"
+msgid "• Lifestyle"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Technology"
 msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
 msgid "• Travel"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s（副本）"
+
+#~ msgid ""
+#~ "<b>Binoculars are lightweight and portable.</b> Unless you have the "
+#~ "luxury to set up and operate an observatory from your deck, you are "
+#~ "probably going to travel to perform your viewings. Binoculars go with you "
+#~ "much easier and they are more lightweight to carry to the country and use "
+#~ "while you are there than a cumbersome telescope set up kit."
+#~ msgstr ""
+#~ "<b>双筒望远镜重量轻，便于携带。</b>除非您有能力在您的甲板上建立和操作一个"
+#~ "天文台，否则您可能要去旅行来进行观察。双筒望远镜更容易随身携带，而且比起笨"
+#~ "重的望远镜架设工具，双筒望远镜更轻巧，可以携带到乡下使用。"
+
+#~ msgid ""
+#~ "<b>Pick the brains of the experts</b>. If you are not already active in "
+#~ "an astronomy society or club, the sales people at the telescope store "
+#~ "will be able to guide you to the active societies in your area. Once you "
+#~ "have connections with people who have bought telescopes, you can get "
+#~ "advice about what works and what to avoid that is more valid than "
+#~ "anything you will get from a web article or a salesperson at Wal-Mart."
+#~ msgstr ""
+#~ "<b>挑选专家的大脑</b>。如果您还没有积极参加天文协会或俱乐部，望远镜商店的"
+#~ "销售人员将能够指导您找到您所在地区的活跃协会。一旦您与购买过望远镜的人建立"
+#~ "了联系，您就可以得到关于什么是有效的，什么是应该避免的建议，这比您从网络文"
+#~ "章或沃尔玛的销售人员那里得到的任何建议都更有效。"
+
+#~ msgid ""
+#~ "<b>Try before you buy.</b> This is another advantage of going on some "
+#~ "field trips with the astronomy club. You can set aside some quality hours "
+#~ "with people who know telescopes and have their rigs set up to examine "
+#~ "their equipment, learn the key technical aspects, and try them out before "
+#~ "you sink money in your own set up."
+#~ msgstr ""
+#~ "<b>先试后买。这</b>是与天文俱乐部一起进行实地考察的另一个好处。您可以留出"
+#~ "一些高质量的时间，与那些了解望远镜并有他们的设备的人一起检查他们的设备，学"
+#~ "习关键的技术方面，并在您为自己的设备投入资金之前试用它们。"
+
+#~ msgid ""
+#~ "<em class=\"h4 my-0\">Apart from the native population, the local "
+#~ "wildlife is also a major crowd puller.</em>"
+#~ msgstr ""
+#~ "<em class=\"h4 my-0\">除了本地人口，当地的野生动物也是吸引人的主要因素。</"
+#~ "em>"
+
+#~ msgid ""
+#~ "<em class=\"h4 my-0\">It is critically important that you get just the "
+#~ "right telescope.</em>"
+#~ msgstr "<em class=\"h4 my-0\">获得合适的望远镜是至关重要的。</em>"
+
+#~ msgid ""
+#~ "<em class=\"h4 my-0\">That “Wow” moment is what astrology is all about.</"
+#~ "em>"
+#~ msgstr "<em class=\"h4 my-0\">那个 \"哇 \"的时刻就是占星学的全部内容。</em>"
+
+#~ msgid ""
+#~ "<em class=\"h4 my-0\">The more reviews you read, the more you notice how "
+#~ "they tend to cluster at the extremes of opinion.</em>"
+#~ msgstr ""
+#~ "<em class=\"h4 my-0\">您读的评论越多，您就越注意到它们如何倾向于聚集在意见"
+#~ "的极端。</em>"
+
+#~ msgid ""
+#~ "<em class=\"h4 my-0\">There is something timeless about the cosmos.</em>"
+#~ msgstr "<em class=\"h4 my-0\">宇宙有一种永恒的东西。</em>"
+
+#~ msgid ""
+#~ "<em class=\"h4 my-0\">Your study of the moon, like anything else, can go "
+#~ "from the simple to the very complex.</em>"
+#~ msgstr ""
+#~ "<em class=\"h4 my-0\">您对月球的研究，就像其他事情一样，可以从简单到非常复"
+#~ "杂。</em>"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-3x text-white\" data-icon=\"keyboard_arrow_down\" aria-"
+#~ "label=\"To blog content\" title=\"To blog content\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-3x text-white\" data-icon=\"keyboard_arrow_down\" aria-"
+#~ "label=\"To blog content\" title=\"To blog content\"/>"
+
+#~ msgid ""
+#~ "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">Read "
+#~ "Next</span>"
+#~ msgstr ""
+#~ "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1\">阅读下"
+#~ "一页</span>"
+
+#~ msgid "<span class=\"me-1\">Show:</span>"
+#~ msgstr "<span class=\"me-1\">显示：</span>"
+
+#~ msgid "<span class=\"nav-link disabled ps-0\">Blogs:</span>"
+#~ msgstr "<span class=\"nav-link disabled ps-0\">博客：</span>"
+
+#~ msgid "A great way to discover hidden places"
+#~ msgstr "发现隐藏地点的好方法"
+
+#~ msgid ""
+#~ "A holiday to the Copper Canyon promises to be an exciting mix of "
+#~ "relaxation, culture, history, wildlife and hiking."
+#~ msgstr ""
+#~ "到铜川度假有望成为放松、文化、历史、野生动物和徒步旅行的一个令人兴奋的组"
+#~ "合。"
+
+#~ msgid ""
+#~ "A traveler may choose to explore the area by hiking around the canyon or "
+#~ "venturing into it. Detailed planning is required for those who wish to "
+#~ "venture into the depths of the canyon. There are a number of travel "
+#~ "companies that specialize in organizing tours to the region. Visitors can "
+#~ "fly to Copper Canyon using a tourist visa, which is valid for 180 days. "
+#~ "Travelers can also drive from anywhere in the United States and acquire a "
+#~ "visa at the Mexican customs station at the border."
+#~ msgstr ""
+#~ "旅行者可以选择通过在峡谷周围徒步旅行或冒险进入峡谷来探索该地区。对于那些希"
+#~ "望冒险进入峡谷深处的人来说，需要详细的计划。有许多旅游公司专门组织前往该地"
+#~ "区的旅游。访客可以使用旅游签证飞往铜川，其有效期为180天。访客也可以从美国"
+#~ "的任何地方开车过来，在边境的墨西哥海关站获得签证。"
+
+#~ msgid ""
+#~ "Above all, <b>establish a relationship with a reputable telescope shop</"
+#~ "b> that employs people who know their stuff. If you buy your telescope at "
+#~ "a Wal-Mart or department store, the odds you will get the right thing are "
+#~ "remote."
+#~ msgstr ""
+#~ "最重要的是，要<b>与一个有信誉的望远镜商店建立关系</b>，该商店雇用的人都很"
+#~ "懂行。如果您在沃尔玛或百货公司购买望远镜，您得到正确的东西的几率很小。"
+
+#~ msgid "Alone in the ocean"
+#~ msgstr "独自一人在海洋中"
+
+#~ msgid "Along those lines, how difficult is the set up and break down?"
+#~ msgstr "沿着这些思路，设置和分解的难度如何？"
+
+#~ msgid ""
+#~ "An exciting mix of relaxation, culture, history, wildlife and hiking."
+#~ msgstr "这是一个令人兴奋的放松、文化、历史、野生动物和徒步旅行的组合。"
+
+#~ msgid ""
+#~ "And when all is said and done,<b> get equipped</b>. Your quest for newer "
+#~ "and better telescopes will be a lifelong one. Let yourself get addicted "
+#~ "to astronomy and the experience will enrich every aspect of life. It will "
+#~ "be an addiction you never want to break."
+#~ msgstr ""
+#~ "而当所有的事情都说过和做过之后，就<b> 得到了装备</b>。您对更新和更好的望远"
+#~ "镜的追求将是一个终生的追求。让自己沉迷于天文学，这种经验将丰富生活的各个方"
+#~ "面。这将是一个您永远不想打破的瘾。"
+
+#~ msgid ""
+#~ "Another unique feature of Copper Canyon is the presence of the Tarahumara "
+#~ "Indian culture. These semi-nomadic people live in cave dwellings. Their "
+#~ "livelihood chiefly depends on farming and cattle ranching."
+#~ msgstr ""
+#~ "铜锣湾的另一个独特之处在于塔拉乌马拉印第安文化的存在。这些半游牧民族居住在"
+#~ "山洞里。他们的生计主要取决于农业和牧业。"
+
+#~ msgid "Astronomy"
+#~ msgstr "天文学"
+
+#~ msgid ""
+#~ "Astronomy clubs are lively places full of knowledgeable amateurs who love "
+#~ "to share their knowledge with you. For the price of a coke and snacks, "
+#~ "they will go star gazing with you and overwhelm you with trivia and great "
+#~ "knowledge."
+#~ msgstr ""
+#~ "天文俱乐部是一个热闹的地方，充满了知识渊博的业余爱好者，他们喜欢与您分享他"
+#~ "们的知识。只要花上一杯可乐和零食的钱，他们就会和您一起去看星星，用琐事和伟"
+#~ "大的知识来压倒您。"
+
+#~ msgid "Astronomy is “stargazing\""
+#~ msgstr "天文学就是 \"观星\"。"
+
+#~ msgid "Awesome hotel rooms"
+#~ msgstr "令人敬畏的酒店房间"
+
+#~ msgid "Be aware of this thing called “astronomy”"
+#~ msgstr "要注意这个叫做 \"天文学 \"的东西"
+
+#~ msgid ""
+#~ "Becoming part of the society of devoted amateur astronomers will give you "
+#~ "access to these organized efforts to reach new levels in our ability to "
+#~ "study the Earth’s moon. And it will give you peers and friends who share "
+#~ "your passion for astronomy and who can share their experience and areas "
+#~ "of expertise as you seek to find where you might look next in the huge "
+#~ "night sky, at the moon and beyond it in your quest for knowledge about "
+#~ "the seemingly endless universe above us."
+#~ msgstr ""
+#~ "成为忠实的业余天文学家协会的一员将使您有机会参与这些有组织的努力，使我们研"
+#~ "究地球月球的能力达到新的水平。它将给您带来与您一样热爱天文学的同行和朋友，"
+#~ "当您寻求在巨大的夜空中寻找下一个目标时，他们可以分享他们的经验和专业领域，"
+#~ "在您寻求关于我们头顶上似乎无尽的宇宙的知识时，他们可以在月球和月球之外寻"
+#~ "找。"
+
+#~ msgid "Becoming part of the society of devoted amateur astronomers."
+#~ msgstr "成为忠实的业余天文学家协会的一员。"
+
+#~ msgid "Bedroom Facilities"
+#~ msgstr "卧室设施"
+
+#~ msgid ""
+#~ "Before you go to that big expense, it might be a better next step from "
+#~ "the naked eye to invest in a good set of binoculars. There are even "
+#~ "binoculars that are suited for star gazing that will do just as good a "
+#~ "job at giving you that extra vision you want to see just a little better "
+#~ "the wonders of the universe. A well designed set of binoculars also gives "
+#~ "you much more mobility and ability to keep your “enhanced vision” at your "
+#~ "fingertips when that amazing view just presents itself to you."
+#~ msgstr ""
+#~ "在你花费大量资金之前，从肉眼来看，下一步可能更好的选择是投资一副好的双筒望"
+#~ "远镜。甚至有适合观星的双筒望远镜，它们同样能很好地提供你想要的额外视野，让"
+#~ "你更好地欣赏宇宙的奇观。设计精良的双筒望远镜还赋予你更大的移动性和能力，在"
+#~ "那些令人惊叹的景象出现时，随时拥有“增强视觉”。"
+
+#~ msgid "Before you make your first purchase…"
+#~ msgstr "在您进行第一次采购之前…"
+
+#~ msgid "Beyond The Eye"
+#~ msgstr "眼睛之外"
+
+#~ msgid "Blog's Title"
+#~ msgstr "博客的标题"
+
+#~ msgid ""
+#~ "But how do you sift through the amazing choices on offer? And more "
+#~ "importantly, do you really trust the photographs and descriptions of the "
+#~ "hotels that they have awarded themselves with the motivation of getting "
+#~ "bookings? Traveler reviews can be helpful, but you need to exercise "
+#~ "caution. They are often biased, sometimes out of date, and may not serve "
+#~ "your interests at all. How do you know that the features that are "
+#~ "important to the reviewer are important to you?"
+#~ msgstr ""
+#~ "但您如何从所提供的惊人选择中进行筛选？更重要的是，您真的相信他们自己颁发的"
+#~ "酒店的照片和描述，以获得预订的动机吗？旅行者的评论可能是有帮助的，但您需要"
+#~ "谨慎行事。他们往往有偏见，有时已经过时，而且可能根本不符合您的利益。您怎么"
+#~ "知道对评论者来说很重要的功能对您来说也很重要？"
+
+#~ msgid "Buying A Telescope"
+#~ msgstr "购买望远镜"
+
+#~ msgid ""
+#~ "Buying the right telescope to take your love of astronomy to the next "
+#~ "level is a big next step in the development of your passion for the stars."
+#~ msgstr ""
+#~ "购买合适的望远镜，将您对天文学的热爱提升到一个新的水平，是您对星空的热情发"
+#~ "展的下一个重要步骤。"
+
+#~ msgid "Cards"
+#~ msgstr "卡片"
+
+#~ msgid "Children’s’ Facilities"
+#~ msgstr "儿童设施"
+
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgid "Comments/Views Stats"
+#~ msgstr "注释/查看统计"
+
+#~ msgid ""
+#~ "Copper Canyon is one of the six gorges in the area. Although the name "
+#~ "suggests that the gorge might have some relevance to copper mining, this "
+#~ "is not the case. The name is derived from the copper and green lichen "
+#~ "covering the canyon. Copper Canyon has two climatic zones. The region "
+#~ "features an alpine climate at the top and a subtropical climate at the "
+#~ "lower levels. Winters are cold with frequent snowstorms at the higher "
+#~ "altitudes. Summers are dry and hot. The capital city, Chihuahua, is a "
+#~ "high altitude desert where weather ranges from cold winters to hot "
+#~ "summers. The region is unique because of the various ecosystems that "
+#~ "exist within it."
+#~ msgstr ""
+#~ "铜峡谷是该地区的六个峡谷之一。虽然从名字上看，该峡谷可能与铜矿开采有一定关"
+#~ "系，但事实并非如此。这个名字是由覆盖在峡谷上的铜和绿色地衣而来。铜峡谷有两"
+#~ "个气候区。该地区的特点是顶部为高山气候，低处为亚热带气候。冬天很冷，高海拔"
+#~ "地区经常有暴风雪。夏天干燥而炎热。首都奇瓦瓦是一个高海拔的沙漠，天气从寒冷"
+#~ "的冬天到炎热的夏天不等。该地区的独特之处在于其内部存在各种生态系统。"
+
+#~ msgid "Cover"
+#~ msgstr "覆盖"
+
+#~ msgid "East Maui"
+#~ msgstr "东毛伊岛"
+
+#~ msgid ""
+#~ "East Maui helicopter tours will give you a view of the ten thousand foot "
+#~ "volcano, Haleakala or House of the sun. This volcano is dormant and last "
+#~ "erupted in 1790. You will be able to see the crater of the volcano and "
+#~ "the dry, arid earth surrounding the south side of the volcano’s slop with "
+#~ "Maui helicopter tours."
+#~ msgstr ""
+#~ "东茂宜岛直升机之旅将让您看到万英尺高的火山--哈雷阿卡拉（Haleakala）或太阳"
+#~ "之家。这座火山处于休眠状态，最后一次喷发是在1790年。通过茂宜岛直升机旅游，"
+#~ "您将能看到火山口和围绕火山坡南侧的干燥、干旱的土地。"
+
+#~ msgid "Facts you should bear in mind."
+#~ msgstr "您应该牢记的事实。"
+
+#~ msgid ""
+#~ "Finally and most importantly, the quality hotel directory inspection team "
+#~ "should have visited the hotel in question on a regular basis, met the "
+#~ "staff, slept in a bedroom and tried the food. They should experience the "
+#~ "hotel as only a hotel guest can and it is only then that they are really "
+#~ "in a strong position to write about the hotel."
+#~ msgstr ""
+#~ "最后，也是最重要的一点，优质酒店名录检查小组应该定期访问有关酒店，会见员"
+#~ "工，在卧室里睡觉，并品尝食物。他们应该像酒店客人那样体验酒店，只有这样，他"
+#~ "们才真正有能力写出关于酒店的文章。"
+
+#~ msgid ""
+#~ "For many of us who are city dwellers, we don’t really notice that sky up "
+#~ "there on a routine basis. The lights of the city do a good job of "
+#~ "disguising the amazing display that is above all of our heads all of the "
+#~ "time."
+#~ msgstr ""
+#~ "对于我们许多城市居民来说，我们在日常工作中并没有真正注意到上面的天空。城市"
+#~ "的灯光很好地掩盖了在我们所有人头顶上一直存在的惊人显示。"
+
+#~ msgid ""
+#~ "For many of us, our very first experience of learning about the celestial "
+#~ "bodies begins when we saw our first full moon in the sky. It is truly a "
+#~ "magnificent view even to the naked eye."
+#~ msgstr ""
+#~ "对于我们中的许多人来说，我们学习天体的最初经历是从我们看到天空中的第一个满"
+#~ "月开始的。即使对肉眼来说，这确实是一个壮观的景色。"
+
+#~ msgid ""
+#~ "From the tiniest baby to the most advanced astrophysicist, there is "
+#~ "something for anyone who wants to enjoy astronomy. In fact, it is a "
+#~ "science that is so accessible that virtually anybody can do it virtually "
+#~ "anywhere they are. All they have to know how to do is to look up."
+#~ msgstr ""
+#~ "从最微小的婴儿到最先进的天体物理学家，任何想享受天文学的人都有机会。事实"
+#~ "上，它是一门非常容易掌握的科学，几乎任何人都可以在任何地方进行研究。他们所"
+#~ "要做的就是抬头看。"
+
+#~ msgid "Full-Width"
+#~ msgstr "全宽"
+
+#~ msgid "Get a geek"
+#~ msgstr "获得一个极客"
+
+#~ msgid "Get a telescope"
+#~ msgstr "获得一个望远镜"
+
+#~ msgid "Get some history"
+#~ msgstr "了解一些历史"
+
+#~ msgid "Get started"
+#~ msgstr "开始"
+
+#~ msgid "Here are some of the key facts you should bear in mind:"
+#~ msgstr "以下是您应该牢记的一些关键事实:"
+
+#~ msgid "Holiday tips"
+#~ msgstr "节日提示"
+
+#~ msgid "How To Look Up"
+#~ msgstr "如何查询"
+
+#~ msgid ""
+#~ "How complex is the telescope and will you have trouble with maintenance? "
+#~ "Network to get the answers to these and other questions. If you do your "
+#~ "homework like this, you will find just the right telescope for this next "
+#~ "big step in the evolution of your passion for astronomy."
+#~ msgstr ""
+#~ "望远镜有多复杂，您在维护方面会有麻烦吗？通过网络来获得这些和其他问题的答"
+#~ "案。如果您这样做了功课，您就会找到合适的望远镜，在您对天文学的热情演变中迈"
+#~ "出下一个重要步骤。"
+
+#~ msgid "How mobile must your telescope be?"
+#~ msgstr "您的望远镜必须有多大的流动性？"
+
+#~ msgid "How to choose the right hotel"
+#~ msgstr "如何选择合适的酒店"
+
+#~ msgid ""
+#~ "If it matters that your hotel is, for example, on the beach, close to the "
+#~ "theme park, or convenient for the airport, then location is paramount. "
+#~ "Any decent directory should offer a location map of the hotel and its "
+#~ "surroundings. There should be distance charts to the airport offered as "
+#~ "well as some form of interactive map."
+#~ msgstr ""
+#~ "如果您的酒店很重要，例如，在海滩上，靠近主题公园，或方便前往机场，那么位置"
+#~ "是最重要的。任何像样的目录都应该提供酒店及其周边地区的位置图。应该提供到机"
+#~ "场的距离图，以及某种形式的互动地图。"
+
+#~ msgid ""
+#~ "If the night is clear, you can see amazing detail of the lunar surface "
+#~ "just star gazing on in your back yard.\n"
+#~ "Naturally, as you grow in your love of astronomy, you will find many "
+#~ "celestial bodies fascinating. But the moon may always be our first love "
+#~ "because is the one far away space object that has the unique distinction "
+#~ "of flying close to the earth and upon which man has walked."
+#~ msgstr ""
+#~ "如果晚上天气晴朗，您只需在后院仰望星空，就可以看到月球表面的惊人细节。\n"
+#~ "自然，随着您对天文学的热爱不断加深，您会发现许多天体都很迷人。但是，月球可"
+#~ "能永远是我们的初恋，因为它是一个遥远的太空物体，具有独特的特点，可以飞到地"
+#~ "球附近，而且人类已经在上面行走。"
+
+#~ msgid ""
+#~ "In many ways, it is a big step from someone who is just fooling around "
+#~ "with astronomy to a serious student of the science. But you and I both "
+#~ "know that there is still another big step after buying a telescope before "
+#~ "you really know how to use it."
+#~ msgstr ""
+#~ "在许多方面，从一个只是在天文学上胡闹的人到一个认真学习科学的人，这是一个很"
+#~ "大的进步。但您我都知道，在买了望远镜之后，在您真正知道如何使用它之前，还有"
+#~ "一个很大的步骤。"
+
+#~ msgid "Increase Readability"
+#~ msgstr "增加可读性"
+
+#~ msgid "Islands"
+#~ msgstr "孤岛"
+
+#~ msgid ""
+#~ "It is great fun to start learning the constellations, how to navigate the "
+#~ "night sky and find the planets and the famous stars. There are web sites "
+#~ "and books galore to guide you."
+#~ msgstr ""
+#~ "开始学习星座，如何在夜空中导航，寻找行星和著名的星星，这是非常有趣的。有很"
+#~ "多网站和书籍可以指导您。"
+
+#~ msgid ""
+#~ "It is important to choose a hotel that makes you feel comfortable – "
+#~ "contemporary or traditional furnishings, local decor or international, "
+#~ "formal or relaxed. The ideal hotel directory should let you know of the "
+#~ "options available."
+#~ msgstr ""
+#~ "重要的是要选择一个让您感到舒适的酒店--现代或传统的家具，当地的装饰或国际"
+#~ "的，正式或轻松的。理想的酒店目录应该让您知道有哪些选择。"
+
+#~ msgid ""
+#~ "It is safe to say that at some point on our lives, each and every one of "
+#~ "us has that moment when we are suddenly stunned when we come face to face "
+#~ "with the enormity of the universe that we see in the night sky."
+#~ msgstr ""
+#~ "可以说，在我们生命中的某个时刻，我们每个人都有这样的时刻，当我们面对夜空中"
+#~ "看到的巨大的宇宙时，我们突然惊呆了。"
+
+#~ msgid ""
+#~ "It really is amazing when you think about it that just by looking up on "
+#~ "any given night, you could see virtually hundreds of thousands of stars, "
+#~ "star systems, planets, moons, asteroids, comets and maybe a even an "
+#~ "occasional space shuttle might wander by. It is even more breathtaking "
+#~ "when you realize that the sky you are looking up at is for all intents "
+#~ "and purposes the exact same sky that our ancestors hundreds and thousands "
+#~ "of years ago enjoyed when they just looked up."
+#~ msgstr ""
+#~ "当您想一想，仅仅通过在任何给定的夜晚抬头，您几乎可以看到数十万颗恒星、恒星"
+#~ "系统、行星、卫星、小行星、彗星，甚至可能偶尔会有航天飞机徘徊而过，这真的很"
+#~ "惊人。当您意识到您所仰望的天空与我们几百年前的祖先在仰望时享受的天空完全相"
+#~ "同时，这就更加令人惊叹了。"
+
+#~ msgid "Jungle"
+#~ msgstr "Jungle"
+
+#~ msgid "Know what you are looking at"
+#~ msgstr "知道您在看什么"
+
+#~ msgid "Know when to look"
+#~ msgstr "知道什么时候看"
+
+#~ msgid ""
+#~ "Learning the background to the great discoveries in astronomy will make "
+#~ "your moments star gazing more meaningful. It is one of the oldest "
+#~ "sciences on earth so find out the greats of history who have looked at "
+#~ "these stars before you."
+#~ msgstr ""
+#~ "学习天文学的伟大发现的背景将使您的观星时刻更加有意义。它是地球上最古老的科"
+#~ "学之一，所以要找出在您之前观察过这些星星的历史伟人。"
+
+#~ msgid "Leisure Facilities"
+#~ msgstr "休闲设施"
+
+#~ msgid "List"
+#~ msgstr "列表"
+
+#~ msgid ""
+#~ "Local color is great but the hotel’s own restaurants and bars can play an "
+#~ "important part in your stay. You should be aware of choice, style and "
+#~ "whether or not they are smart or informal. A good hotel report should "
+#~ "tell you this, and particularly about breakfast facilities."
+#~ msgstr ""
+#~ "当地的色彩是很好的，但酒店自己的餐厅和酒吧可以在您的住宿中发挥重要的作用。"
+#~ "您应该了解选择、风格以及它们是否精明或不拘小节。一份好的酒店报告应该告诉您"
+#~ "这些，特别是关于早餐设施。"
+
+#~ msgid "Location"
+#~ msgstr "位置"
+
+#~ msgid "Maui helicopter tours"
+#~ msgstr "茂宜岛直升机旅游"
+
+#~ msgid ""
+#~ "Maui helicopter tours are a great way to see the island from a different "
+#~ "perspective and have a fun adventure. If you have never been on a "
+#~ "helicopter before, this is a great place to do it."
+#~ msgstr ""
+#~ "茂宜岛的直升机之旅是一种从不同角度观察该岛并进行有趣冒险的好方法。如果您以"
+#~ "前从未坐过直升机，这里是个好地方。"
+
+#~ msgid ""
+#~ "Maui helicopter tours are a great way to tour those places that can not "
+#~ "be reached on foot or by car. The tours last approximately one hour and "
+#~ "range from approximately one hundred eight five dollars to two hundred "
+#~ "forty dollars person. For many, this is a once in a lifetime opportunity "
+#~ "to see natural scenery that will not be available again. Taking cameras "
+#~ "and videos to capture the moments will also allow you to relive the tour "
+#~ "again and again as you reminisce throughout the years."
+#~ msgstr ""
+#~ "茂宜岛直升机之旅是游览那些步行或驾车无法到达的地方的好方法。旅游时间大约为"
+#~ "一小时，费用大约在一百八十五美元到二百四十美元之间。对许多人来说，这是一个"
+#~ "一生中唯一的机会，可以看到不会再有的自然风光。带上相机和视频来记录这些时"
+#~ "刻，也可以让您在多年的回忆中一次又一次地重温这次旅行。"
+
+#~ msgid ""
+#~ "Maui helicopter tours will allow you to see all of these sights. Make "
+#~ "sure to take a camera or video with you when going on Maui helicopter "
+#~ "tours to capture the beauty of the scenery and to show friends and family "
+#~ "at home all the wonderful things you saw while on vacation."
+#~ msgstr ""
+#~ "茂宜岛直升机旅游将让您看到所有这些景点。参加茂宜岛直升机旅游时一定要带着相"
+#~ "机或录像，以捕捉美丽的风景，并向家里的朋友和家人展示您在度假时看到的所有美"
+#~ "好事物。"
+
+#~ msgid "Molokai Maui"
+#~ msgstr "摩洛凯岛 茂宜岛"
+
+#~ msgid ""
+#~ "Molokai Maui helicopter tours will take you to a different island but one "
+#~ "that is only nine miles away and easily accessible by air. This island "
+#~ "has a very small population with a different culture and scenery. The "
+#~ "entire coast of the northeast is lined with cliffs and remote beaches. "
+#~ "They are completely inaccessible by any other means of transportation "
+#~ "than air.\n"
+#~ "People who live on the island have never even seen this remarkable "
+#~ "scenery unless they have taken Maui helicopter tours to view it. When the "
+#~ "weather has been rainy and there is a lot of rainfall for he season you "
+#~ "will see many astounding waterfalls."
+#~ msgstr ""
+#~ "摩洛凯岛茂宜岛直升机之旅将带您到一个不同的岛屿，但这个岛屿离您只有9英里"
+#~ "远，而且很容易乘飞机到达。这个岛的人口非常少，有着不同的文化和风景。东北部"
+#~ "的整个海岸线都是悬崖和偏远的海滩。除了飞机之外，任何其他交通工具都无法到达"
+#~ "它们。\n"
+#~ "住在岛上的人甚至从来没有见过这种非凡的风景，除非他们乘坐茂宜岛直升机旅行团"
+#~ "来观赏它。当天气一直在下雨，而且这个季节的降雨量很大的时候，您会看到许多令"
+#~ "人震惊的瀑布。"
+
+#~ msgid ""
+#~ "More important to the family traveler than the business traveler, you "
+#~ "should find out just how child friendly the hotel is from the directory "
+#~ "and make your decision from there. One thing worth looking for is whether "
+#~ "the hotel offers a baby sitters service. For the business traveler "
+#~ "wishing to escape children this is of course very relevant too – perhaps "
+#~ "a hotel that is not child friendly would be something more appropriate!"
+#~ msgstr ""
+#~ "对于家庭旅行者来说，比商务旅行者更重要的是，您应该从目录中了解酒店对儿童的"
+#~ "友好程度，并从中做出决定。值得注意的一点是酒店是否提供婴儿保姆服务。对于希"
+#~ "望逃离儿童的商务旅行者来说，这当然也是非常重要的--也许一个对儿童不友好的酒"
+#~ "店会是更合适的选择！"
+
+#~ msgid "No Cover"
+#~ msgstr "没有封面"
+
+#~ msgid ""
+#~ "None of this precludes you from moving forward with your plans to put "
+#~ "together an awesome telescope system. Just be sure you get quality advice "
+#~ "and training on how to configure your telescope to meet your needs. Using "
+#~ "these guidelines, you will enjoy hours of enjoyment stargazing at the "
+#~ "phenomenal sights in the night sky that are beyond the naked eye."
+#~ msgstr ""
+#~ "这些都不妨碍您推进您的计划，把一个令人敬畏的望远镜系统放在一起。只要确保您"
+#~ "得到高质量的建议和培训，了解如何配置您的望远镜以满足您的需求。使用这些准"
+#~ "则，您将享受数小时的观星乐趣，欣赏夜空中超出肉眼的惊人景象。"
+
+#~ msgid ""
+#~ "Not only knowing the weather will make sure your star gazing is rewarding "
+#~ "but if you learn when the big meteor showers and other big astronomy "
+#~ "events will happen will make the excitement of astronomy come alive for "
+#~ "you."
+#~ msgstr ""
+#~ "不仅了解天气可以确保您的观星是有收获的，而且如果您了解到大的流星雨和其他大"
+#~ "的天文事件会在什么时候发生，将使天文学的兴奋度为您带来活力。"
+
+#~ msgid ""
+#~ "Of course, to take your moon worship to the ultimate, stepping your "
+#~ "equipment up to a good starter telescope will give you the most stunning "
+#~ "detail of the lunar surface. With each of these upgrades your knowledge "
+#~ "and the depth and scope of what you will be able to see will improve "
+#~ "geometrically. For many amateur astronomers, we sometimes cannot get "
+#~ "enough of what we can see on this our closest space object."
+#~ msgstr ""
+#~ "当然，要把您的拜月活动做到极致，把您的设备提升到一个好的入门级望远镜会给您"
+#~ "带来月球表面最惊人的细节。随着每一次的升级，您的知识和您所能看到的深度和范"
+#~ "围都会有几何级数的提高。对于许多业余天文学家来说，我们有时对这个离我们最近"
+#~ "的太空物体所能看到的东西感到不满足。"
+
+#~ msgid "Our Latest Posts"
+#~ msgstr "我们的最新文章"
+
+#~ msgid "Photo by Anton Repponen, @repponen"
+#~ msgstr "照片来源：安东-赖波宁，@赖波宁"
+
+#~ msgid "Photo by Arto Marttinen, @wandervisions"
+#~ msgstr "照片：Arto Marttinen, @wandervisions"
+
+#~ msgid "Photo by Boris Smokrovic, @borisworkshop"
+#~ msgstr "照片：Boris Smokrovic, @borisworkshop"
+
+#~ msgid "Photo by Denys Nevozhai, @dnevozhai"
+#~ msgstr "照片：Denys Nevozhai, @dnevozhai"
+
+#~ msgid "Photo by Greg Rakozy, @grakozy"
+#~ msgstr "照片来源：Greg Rakozy, @grakozy"
+
+#~ msgid "Photo by Jason Briscoe, @jbriscoe"
+#~ msgstr "照片来源：Jason Briscoe, @jbriscoe"
+
+#~ msgid "Photo by Jon Ly, @jonatron"
+#~ msgstr "照片来源：Jon Ly, @jonatron"
+
+#~ msgid "Photo by Patrick Brinksma, @patrickbrinksma"
+#~ msgstr "照片：Patrick Brinksma, @patrickbrinksma"
+
+#~ msgid "Photo by PoloX Hernandez, @elpolox"
+#~ msgstr "照片：PoloX Hernandez, @elpolox"
+
+#~ msgid "Photo by SpaceX, @spacex"
+#~ msgstr "照片来源：SpaceX，@spacex"
+
+#~ msgid "Photo by Teddy Kelley, @teddykelley"
+#~ msgstr "照片：泰迪-凯利，@teddykelley"
+
+#~ msgid "Posts List"
+#~ msgstr "文章列表"
+
+#~ msgid "Published ("
+#~ msgstr "发表("
+
+#~ msgid "Read more <i class=\"oi ms-2\" data-icon=\"chevron_forward\"/>"
+#~ msgstr "阅读更多<i class=\"oi ms-2\" data-icon=\"chevron_forward\"/>"
+
+#~ msgid "Restaurants, Cafes and Bars"
+#~ msgstr "餐馆、咖啡馆和酒吧"
+
+#~ msgid "Satellites"
+#~ msgstr "卫星"
+
+#~ msgid "Seaside vs mountain side"
+#~ msgstr "海边与山边"
+
+#~ msgid "Seeing the world from above"
+#~ msgstr "从上面看世界"
+
+#~ msgid ""
+#~ "Several migratory and native birds, mammals and reptiles call Copper "
+#~ "Canyon their home. The exquisite fauna in this near-pristine land is also "
+#~ "worth checking out."
+#~ msgstr ""
+#~ "一些候鸟和本地鸟类、哺乳动物和爬行动物都把铜锣湾当作自己的家。在这片近乎原"
+#~ "始的土地上，精美的动物群也值得一探究竟。"
+
+#~ msgid "Sierra Tarahumara"
+#~ msgstr "塔拉乌马拉山脉"
+
+#~ msgid ""
+#~ "Sierra Tarahumara, popularly known as Copper Canyon is situated in "
+#~ "Mexico. The area is a favorite destination among those seeking an "
+#~ "adventurous vacation."
+#~ msgstr ""
+#~ "Sierra Tarahumara，俗称铜峡谷，位于墨西哥。该地区是那些寻求冒险度假的人最"
+#~ "喜欢的目的地。"
+
+#~ msgid "Skies"
+#~ msgstr "天空"
+
+#~ msgid ""
+#~ "So it is critically important that you get just the right telescope for "
+#~ "where you are and what your star gazing preferences are. To start with, "
+#~ "let’s discuss the three major kinds of telescopes and then lay down some "
+#~ "“Telescope 101″ concepts to increase your chances that you will buy the "
+#~ "right thing."
+#~ msgstr ""
+#~ "因此，对于您所在的地方和您的观星偏好来说，获得合适的望远镜是非常重要的。首"
+#~ "先，让我们讨论一下三种主要的望远镜，然后提出一些 \"望远镜101 \"的概念，以"
+#~ "增加您买对东西的机会。"
+
+#~ msgid ""
+#~ "So it might be that once a year vacation to a camping spot or a trip to a "
+#~ "relative’s house out in the country that we find ourselves outside when "
+#~ "the spender of the night sky suddenly decides to put on it’s spectacular "
+#~ "show. If you have had that kind of moment when you were literally struck "
+#~ "breathless by the spender the night sky can show to us, you can probably "
+#~ "remember that exact moment when you could say little else but “wow” at "
+#~ "what you saw."
+#~ msgstr ""
+#~ "因此，可能是每年一次的野营度假，或者是去乡下亲戚家的旅行，当夜空的使者突然"
+#~ "决定上演它的壮观表演时，我们发现自己在外面。如果您有过这样的时刻，当您真的"
+#~ "被夜空的魅力所震撼而无法呼吸时，您可能会记得那个确切的时刻，您除了对您所看"
+#~ "到的东西说 \"哇 \"之外，几乎没有别的话。"
+
+#~ msgid ""
+#~ "So to select just the right kind of telescope, your objectives in using "
+#~ "the telescope are important. To really understand the strengths and "
+#~ "weaknesses not only of the lenses and telescope design but also in how "
+#~ "the telescope performs in various star gazing situations, it is best to "
+#~ "do some homework up front and get exposure to the different kinds. So "
+#~ "before you make your first purchase…"
+#~ msgstr ""
+#~ "所以要选择合适的望远镜，您使用望远镜的目的很重要。为了真正了解镜头和望远镜"
+#~ "设计的长处和短处，也为了了解望远镜在各种观星情况下的表现，最好先做一些功"
+#~ "课，接触一下不同的种类。所以在您第一次采购之前…"
+
+#~ msgid ""
+#~ "So you’re going abroad, you’ve chosen your destination and now you have "
+#~ "to choose a hotel."
+#~ msgstr "所以您要出国，您已经选择了您的目的地，现在您必须选择一个酒店。"
+
+#~ msgid "Someone famous in <cite title=\"Source Title\">Source Title</cite>"
+#~ msgstr "<cite title=\"Source Title\">源标题</cite>中的著名人物"
+
+#~ msgid "Spotting the fauna"
+#~ msgstr "发现动物群"
+
+#~ msgid "Taking pictures in the dark"
+#~ msgstr "在黑暗中拍照"
+
+#~ msgid "Teaser & Tags"
+#~ msgstr "预告片和标签"
+
+#~ msgid ""
+#~ "Ten years ago, you’d have probably visited your local travel agent and "
+#~ "trusted the face-to-face advice you were given by the so called "
+#~ "‘experts’. The 21st Century way to select and book your hotel is of "
+#~ "course on the Internet, by using travel websites."
+#~ msgstr ""
+#~ "十年前，您可能会访问当地的旅行社，并相信所谓的 \"专家 \"给您的面对面的建"
+#~ "议。21世纪选择和预订酒店的方式当然是在互联网上，通过使用旅游网站。"
+
+#~ msgid ""
+#~ "That “Wow” moment is what astrology is all about. For some, that wow "
+#~ "moment becomes a passion that leads to a career studying the stars. For a "
+#~ "lucky few, that wow moment because an all consuming obsession that leads "
+#~ "to them traveling to the stars in the space shuttle or on one of our "
+#~ "early space missions. But for most of us astrology may become a pastime "
+#~ "or a regular hobby. But we carry that wow moment with us for the rest of "
+#~ "our lives and begin looking for ways to look deeper and learn more about "
+#~ "the spectacular universe we see in the millions of stars above us each "
+#~ "night."
+#~ msgstr ""
+#~ "那个 \"哇 \"的时刻就是占星术的全部内容。对于一些人来说，那一瞬间的惊叹成为"
+#~ "一种激情，导致了研究星星的职业。对于少数幸运的人来说，那一瞬间的惊艳是一种"
+#~ "完全的痴迷，导致他们乘坐航天飞机或在我们早期的太空任务中前往星空旅行。但对"
+#~ "我们大多数人来说，占星术可能成为一种消遣或常规爱好。但我们会在余生中带着那"
+#~ "个惊叹的时刻，并开始寻找方法来深入观察和了解我们每晚在我们头顶的数百万颗星"
+#~ "星中看到的壮观宇宙。"
+
+#~ msgid "The beauty of astronomy is that anybody can do it."
+#~ msgstr "天文学的美妙之处在于任何人都可以做到这一点。"
+
+#~ msgid ""
+#~ "The best time to view the moon, obviously, is at night when there are few "
+#~ "clouds and the weather is accommodating for a long and lasting study. The "
+#~ "first quarter yields the greatest detail of study. And don’t be fooled "
+#~ "but the blotting out of part of the moon when it is not in full moon "
+#~ "stage. The phenomenon known as “earthshine” gives you the ability to see "
+#~ "the darkened part of the moon with some detail as well, even if the moon "
+#~ "is only at quarter or half display."
+#~ msgstr ""
+#~ "显然，观看月亮的最佳时间是在晚上，那时云层很少，天气适合长时间的研究。第一"
+#~ "季度产生了最大的研究细节。当月亮没有进入满月阶段时，不要被月亮的一部分被遮"
+#~ "挡住所迷惑。被称为 \"地光 \"的现象使您有能力看到月亮变暗的部分，并有一些细"
+#~ "节，即使月亮只在四分之一或一半显示。"
+
+#~ msgid "The best time to view the moon."
+#~ msgstr "赏月的最佳时间。"
+
+#~ msgid ""
+#~ "The cliffs in this region are among the highest in the world and to see "
+#~ "water cascading from the high peaks is simply breathtaking. The short "
+#~ "jaunt from Maui with Maui helicopter tours is well worth seeing the "
+#~ "beauty of this natural environment."
+#~ msgstr ""
+#~ "这个地区的悬崖是世界上最高的悬崖之一，看到水从高高的山峰上泻下，简直令人叹"
+#~ "为观止。从茂宜岛出发，乘坐茂宜岛直升机旅游的短途旅行非常值得一看这个自然环"
+#~ "境的美丽。"
+
+#~ msgid ""
+#~ "The next thing we naturally want to get is a good telescope. You may have "
+#~ "seen a hobbyist who is well along in their study setting up those really "
+#~ "cool looking telescopes on a hill somewhere. That excites the amateur "
+#~ "astronomer in you because that must be the logical next step in the "
+#~ "growth of your hobby. But how to buy a good telescope can be downright "
+#~ "confusing and intimidating."
+#~ msgstr ""
+#~ "我们自然希望得到的下一个东西是一个好的望远镜。您可能已经看到一个业余爱好者"
+#~ "在他们的研究中进展顺利，在某处的山上设置了那些看起来非常酷的望远镜。这让您"
+#~ "这个业余天文学家感到兴奋，因为这一定是您爱好发展的下一步。但是，如何购买一"
+#~ "个好的望远镜可能是完全令人困惑和畏惧的。"
+
+#~ msgid ""
+#~ "The site should offer a detailed analysis of leisure services within the "
+#~ "hotel – spa, pool, gym, sauna – as well as details of any other "
+#~ "facilities nearby such as golf courses. 7. Special Needs: the hotel "
+#~ "directory site should advise the visitor of each hotel’s special needs "
+#~ "services and accessibility policy. Whilst again this does not apply to "
+#~ "every visitor, it is absolutely vital to some."
+#~ msgstr ""
+#~ "该网站应提供酒店内休闲服务的详细分析--水疗、游泳池、健身房、桑拿--以及附近"
+#~ "任何其他设施的细节，如高尔夫课程。 7.特殊需求：酒店目录网站应告知访客每个"
+#~ "酒店的特殊需求服务和无障碍政策。虽然这并不应用于每个访客，但对某些访客来说"
+#~ "绝对是至关重要的。"
+
+#~ msgid ""
+#~ "The tripod or other accessory decisions will change significantly with a "
+#~ "telescope that will live on your deck versus one that you plan to take to "
+#~ "many remote locations."
+#~ msgstr ""
+#~ "三脚架或其他附件的决定将大大改变一个将生活在您的甲板上的望远镜和一个您打算"
+#~ "带去许多偏远地区的望远镜。"
+
+#~ msgid ""
+#~ "The view of this is truly breathtaking and is a sight not to be missed. "
+#~ "It is also highly educational with a chance to see a dormant volcano up "
+#~ "close, something that can not be seen every day. On the northern and "
+#~ "southern sides of the volcano, you will see an incredible different view "
+#~ "however. These sides are lush and green and you will be able to see some "
+#~ "beautiful waterfalls and gorgeous brush. Tropical rainforests abound on "
+#~ "this side of the island and it is something that is not easily accessible "
+#~ "by any other means than by air."
+#~ msgstr ""
+#~ "这里的景色确实令人叹为观止，是一个不容错过的景象。这也是非常有教育意义的，"
+#~ "有机会近距离地看到休眠火山，这不是每天都能看到的。然而，在火山的北面和南"
+#~ "面，您会看到令人难以置信的不同景色。这些侧面是郁郁葱葱的，您将能够看到一些"
+#~ "美丽的瀑布和华丽的画笔。热带雨林在岛的这一侧比比皆是，除了飞机之外，其他方"
+#~ "式都不容易到达。"
+
+#~ msgid ""
+#~ "Then there’s the problem of the reviewer’s motivation. The more reviews "
+#~ "you read, the more you notice how they tend to cluster at the extremes of "
+#~ "opinion. On one end, you have angry reviewers with axes to grind; at the "
+#~ "other, you have delighted guests who lavish praise beyond belief. You’ll "
+#~ "not be surprised to learn that hotels sometimes post their own glowing "
+#~ "reviews, or that competitor’s line up for the chance to lambaste the "
+#~ "competition with bad reviews. It makes sense to consider what is really "
+#~ "important to you when selecting a hotel. You should then choose an online "
+#~ "hotel directory that gives up-to-date, independent, impartial information "
+#~ "that really matters."
+#~ msgstr ""
+#~ "还有一个问题是评论者的动机。您读的评论越多，您就越能注意到它们是如何聚集在"
+#~ "意见的两端的。在这一端，您有愤怒的评论者，他们怀有敌意；在另一端，您有高兴"
+#~ "的客人，他们对酒店的赞美超乎想象。您不会惊讶地发现，酒店有时会发布他们自己"
+#~ "的光辉评论，或者竞争对手排队等待机会，用差评来抨击竞争对手。在选择酒店时，"
+#~ "考虑什么对您真正重要是有意义的。然后，您应该选择一个线上酒店目录，提供最新"
+#~ "的、独立的、公正的、真正重要的信息。"
+
+#~ msgid ""
+#~ "There are other considerations to factor into your final purchase "
+#~ "decision."
+#~ msgstr "还有其他的考虑因素要纳入您的最终采购决定。"
+
+#~ msgid ""
+#~ "There is something timeless about the cosmos. The fact that the planets "
+#~ "and the moon and the stars beyond them have been there for ages does "
+#~ "something to our sense of our place in the universe. In fact, many of the "
+#~ "stars we “see” with our naked eye are actually light that came from that "
+#~ "star hundreds of thousands of years ago. That light is just now reaching "
+#~ "the earth. So in a very real way, looking up is like time travel."
+#~ msgstr ""
+#~ "宇宙有一种永恒的东西。行星和月球以及它们之外的星星已经存在了很久，这一事实"
+#~ "让我们对自己在宇宙中的位置有了一些认识。事实上，我们用肉眼 \"看到 \"的许多"
+#~ "恒星实际上是几十万年前从该恒星发出的光。这些光现在才到达地球。因此，从一个"
+#~ "非常真实的角度来看，抬头看就像时间旅行。"
+
+#~ msgid ""
+#~ "These things really do matter and any decent hotel directory should give "
+#~ "you this sort of advice on bedrooms – not just the number of rooms which "
+#~ "is the usual option!"
+#~ msgstr ""
+#~ "这些东西真的很重要，任何像样的酒店目录都应该给您提供这种关于卧室的建议--而"
+#~ "不仅仅是通常选择的房间数量！"
+
+#~ msgid "This box will not be visible to your visitors"
+#~ msgstr "您的来访者看不到这框"
+
+#~ msgid ""
+#~ "To gaze at the moon with the naked eye, making yourself familiar with the "
+#~ "lunar map will help you pick out the seas, craters and other geographic "
+#~ "phenomenon that others have already mapped to make your study more "
+#~ "enjoyable. Moon maps can be had from any astronomy shop or online and "
+#~ "they are well worth the investment."
+#~ msgstr ""
+#~ "要想用肉眼凝视月球，让自己熟悉月球地图将有助于您挑选出别人已经绘制好的海"
+#~ "洋、火山口和其他地理现象，使您的研究更加愉快。月球地图可以从任何天文商店或"
+#~ "线上买到，它们非常值得投资。"
+
+#~ msgid ""
+#~ "To get started in learning how to observe the stars much better, there "
+#~ "are some basic things we might need to look deeper, beyond just what we "
+#~ "can see with the naked eye and begin to study the stars as well as enjoy "
+#~ "them. The first thing you need isn’t equipment at all but literature. A "
+#~ "good star map will show you the major constellations, the location of the "
+#~ "key stars we use to navigate the sky and the planets that will appear "
+#~ "larger than stars. And if you add to that map some well done introductory "
+#~ "materials into the hobby of astronomy, you are well on your way."
+#~ msgstr ""
+#~ "为了开始学习如何更好地观察星星，我们可能需要一些基本的东西来深入观察，超越"
+#~ "我们肉眼所能看到的，开始研究星星以及享受它们。您需要的第一件事根本就不是设"
+#~ "备，而是文献。一张好的星图会告诉您主要的星座，我们用来导航天空的关键星星的"
+#~ "位置，以及会出现比星星更大的行星。而如果您在这张地图上加上一些做得很好的天"
+#~ "文学爱好的介绍材料，您就会很顺利。"
+
+#~ msgid ""
+#~ "To kick it up a notch, a good pair of binoculars can do wonders for the "
+#~ "detail you will see on the lunar surface. For best results, get a good "
+#~ "wide field in the binocular settings so you can take in the lunar "
+#~ "landscape in all its beauty. And because it is almost impossible to hold "
+#~ "the binoculars still for the length of time you will want to gaze at this "
+#~ "magnificent body in space, you may want to add to your equipment arsenal "
+#~ "a good tripod that you can affix the binoculars to so you can study the "
+#~ "moon in comfort and with a stable viewing platform."
+#~ msgstr ""
+#~ "为了提高一个档次，一副好的双筒望远镜可以为您在月球表面看到的细节创造奇迹。"
+#~ "为了获得最佳效果，在双筒望远镜的设置中要有良好的广角视野，这样您就可以把月"
+#~ "球景观的所有美景尽收眼底。由于几乎不可能在您想凝视这个宏伟的太空天体的时候"
+#~ "保持双筒望远镜不动，您可能想在您的设备库中增加一个好的三脚架，您可以把双筒"
+#~ "望远镜固定在上面，这样您就可以在舒适和稳定的观察平台上研究月亮。"
+
+#~ msgid ""
+#~ "To take it to a natural next level, you may want to take advantage of "
+#~ "partnerships with other astronomers or by visiting one of the truly great "
+#~ "telescopes that have been set up by professionals who have invested in "
+#~ "better techniques for eliminating atmospheric interference to see the "
+#~ "moon even better. The internet can give you access to the Hubble and many "
+#~ "of the huge telescopes that are pointed at the moon all the time. "
+#~ "Further, many astronomy clubs are working on ways to combine multiple "
+#~ "telescopes, carefully synchronized with computers for the best view of "
+#~ "the lunar landscape."
+#~ msgstr ""
+#~ "为了让它自然而然地更上一层楼，您可能想利用与其他天文学家的合作关系，或者通"
+#~ "过访问一个真正伟大的望远镜，这些望远镜是由专业人士建立的，他们投资了更好的"
+#~ "技术来消除大气干扰，以更好地看到月亮。互联网可以让您接触到哈勃和许多巨大的"
+#~ "望远镜，这些望远镜一直对准着月亮。此外，许多天文俱乐部正在研究如何将多台望"
+#~ "远镜结合起来，仔细地与计算机同步，以获得最佳的月球景观。"
+
+#~ msgid "Unpublished ("
+#~ msgstr "未发表的("
+
+#~ msgid "Viewpoints"
+#~ msgstr "观点"
+
+#~ msgid "What If They Let You Run The Hubble"
+#~ msgstr "如果他们让您运行哈勃会怎样"
+
+#~ msgid ""
+#~ "While anyone can look up and fall in love with the stars at any time, the "
+#~ "fun of astronomy is learning how to become more and more skilled and "
+#~ "equipped in star gazing that you see and understand more and more each "
+#~ "time you look up. Here are some steps you can take to make the moments "
+#~ "you can devote to your hobby of astronomy much more enjoyable."
+#~ msgstr ""
+#~ "虽然任何人都可以在任何时候抬头并爱上星星，但天文学的乐趣在于学习如何在仰望"
+#~ "星空时变得越来越熟练和有装备，每次抬头都能看到和理解更多。以下是您可以采取"
+#~ "的一些步骤，使您可以投入到天文学爱好中的时间更加愉快。"
+
+#~ msgid "With a View"
+#~ msgstr "视图"
+
+#~ msgid ""
+#~ "You should always carefully consider the type of facilities you need from "
+#~ "your bedroom and find the hotel that has those you consider important. "
+#~ "The hotel directory website should elaborate on matters such as: bed "
+#~ "size, Internet Access (its cost, whether there is WIFI or wired broadband "
+#~ "connection), Complimentary amenities, views from the room and luxury "
+#~ "offerings like a Pillow menu or Bath menu, choice of smoking or non "
+#~ "smoking rooms etc."
+#~ msgstr ""
+#~ "您应该始终仔细考虑您需要的卧室设施类型，并找到拥有那些您认为重要的设施的酒"
+#~ "店。酒店目录网站应详细说明以下事项：床的尺寸、互联网接入（其费用、是否有"
+#~ "WIFI或有线宽带连接）、免费设施、房间的景观和豪华产品，如枕头菜单或沐浴菜"
+#~ "单，选择吸烟或不吸烟房间等。"
+
+#~ msgid ""
+#~ "You will see all the beauty that Maui has to offer and can have a great "
+#~ "time for the entire family. Tours are not too expensive and last from "
+#~ "forty five minutes to over an hour. You can see places that are typically "
+#~ "inaccessible with Maui helicopter tours. Places that are not available by "
+#~ "foot or vehicle can be seen by air. Breathtaking sights await those who "
+#~ "are up for some fun Maui helicopter tours. If you will be staying on the "
+#~ "island for a considerable amount of time, you may want to think about "
+#~ "doing multiple Maui helicopter tours."
+#~ msgstr ""
+#~ "您将看到茂宜岛的所有美景，并能让整个家庭享受到美好的时光。旅游费用不高，持"
+#~ "续时间从四十五分钟到一个多小时。通过茂宜岛直升机旅游，您可以看到那些通常无"
+#~ "法到达的地方。徒步或乘车无法到达的地方可以在空中看到。令人叹为观止的景象在"
+#~ "等待着那些准备好参加茂宜岛直升机旅游的人。如果您将在岛上停留相当长的时间，"
+#~ "您可能会考虑进行多次茂宜岛直升机旅游。"
+
+#~ msgid "adventure"
+#~ msgstr "冒险"
+
+#~ msgid "by"
+#~ msgstr "由"
+
+#~ msgid "discovery"
+#~ msgstr "自动发现"
+
+#~ msgid "guides"
+#~ msgstr "指南"
+
+#~ msgid "hotels"
+#~ msgstr "酒店"
+
+#~ msgid "telescopes"
+#~ msgstr "望远镜"
+
+#~ msgid ""
+#~ "|\n"
+#~ "            <i class=\"oi oi-filled ms-1 text-muted\" data-"
+#~ "icon=\"chat_bubble\"/>"
+#~ msgstr ""
+#~ "|\n"
+#~ "            <i class=\"oi oi-filled ms-1 text-muted\" data-"
+#~ "icon=\"chat_bubble\"/>"
+
+#~ msgid "| No comments yet"
+#~ msgstr "| 还没有评论"

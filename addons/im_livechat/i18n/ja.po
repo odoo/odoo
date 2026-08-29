@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 04:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -38,6 +38,21 @@ msgstr ""
 "        ライブチャットの評価は、1(不満)、3(普通)、5(満足)のいずれか、\n"
 "        または空欄とし、ライブチャットチャネルでのみ管理設定可能です。\n"
 "        "
+
+#. module: im_livechat
+#: model:ir.module.module,description:base.module_im_livechat
+msgid ""
+"\n"
+"Live Chat Support\n"
+"==========================\n"
+"\n"
+"Allow to drop instant messaging widgets on any web page that will "
+"communicate\n"
+"with the current server and dispatch visitors request amongst several live\n"
+"chat operators.\n"
+"Help your customers with this chat, and analyse their feedback.\n"
+"\n"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-python
@@ -114,12 +129,6 @@ msgstr "%(title)s - ステップ %(sequence)d"
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
-msgid "%s (copy)"
-msgstr "%s (コピー)"
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script.py:0
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
 msgstr "'%(input_email)s' は有効なEメールではないようです。再度試しますか？"
@@ -146,14 +155,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* '表示' はページ上にチャットボタンを表示します。\n"
-"* '通知付きで表示'は'表示'に加え、ボタンのすぐ横にフローティングテキストを表"
-"示します。\n"
-"* '自動的に開く'はボタンを表示し、自動的に会話ペインを開きます。\n"
-"* '隠す'はページ上のチャットボタンを隠します。\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -516,6 +521,11 @@ msgstr ""
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
 msgstr "チャットでお問い合わせ"
+
+#. module: im_livechat
+#: model:ir.module.module,summary:base.module_im_livechat
+msgid "Chat with your website visitors"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -1549,8 +1559,6 @@ msgid "Leave %s"
 msgstr "退出%s"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "チャネルから退席"
@@ -1583,6 +1591,7 @@ msgstr "制限付き"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
+#: model:ir.module.module,shortdesc:base.module_im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 #: model:res.groups.privilege,name:im_livechat.res_groups_privilege_live_chat
@@ -1917,6 +1926,11 @@ msgid ""
 msgstr ""
 "ライブチャットでの会話において、訪問者から本名を保護するために使用されるニッ"
 "クネーム。"
+
+#. module: im_livechat
+#: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
+msgid "No"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
@@ -2809,6 +2823,12 @@ msgid "Unlimited"
 msgstr "無制限"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Unread"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 #, fuzzy
 msgid ""
@@ -3127,3 +3147,20 @@ msgstr "WebSocketメッセージ処理"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (コピー)"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* '表示' はページ上にチャットボタンを表示します。\n"
+#~ "* '通知付きで表示'は'表示'に加え、ボタンのすぐ横にフローティングテキストを"
+#~ "表示します。\n"
+#~ "* '自動的に開く'はボタンを表示し、自動的に会話ペインを開きます。\n"
+#~ "* '隠す'はページ上のチャットボタンを隠します。\n"

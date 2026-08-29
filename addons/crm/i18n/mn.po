@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 01:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-master/"
@@ -155,13 +155,6 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"<i class=\"oi\" data-icon=\"east\"/>\n"
-"                                Install Extension"
-msgstr ""
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"oi\" data-icon=\"payments\" title=\"Expected Revenue\"/>"
 msgstr ""
@@ -199,7 +192,7 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"ms-2 mb-1\"> at</span>"
+msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
 msgstr ""
 
 #. module: crm
@@ -334,8 +327,8 @@ msgid ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example."
-"com</t>\n"
+"    <br/>Email: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -533,6 +526,11 @@ msgid "Address:"
 msgstr ""
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Advanced Pipelines"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_tree
 msgid "Alias"
@@ -585,6 +583,13 @@ msgid "All set. Let’s <b>Schedule</b> it."
 msgstr ""
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Allow salespeople to belong to multiple teams and navigate between dedicated "
+"pipelines."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__unlimited
 msgid "Always in rotation"
 msgstr ""
@@ -618,11 +623,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
 msgstr "Сэжимүүдийг оноох"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Assign salespersons into multiple Sales Teams."
-msgstr "Борлуулалтын ажилтнуудыг олон борлуулалтын багт хуваарилах."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -731,6 +731,7 @@ msgid "Bring Odoo into your inbox:"
 msgstr ""
 
 #. module: crm
+#: model:ir.module.module,shortdesc:base.module_crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
 #: model_terms:ir.ui.view,arch_db:crm.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1295,6 +1296,7 @@ msgstr "Товч"
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__display_name
 #: model:ir.model.fields,field_description:crm.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:crm.field_ir_http__display_name
 #: model:ir.model.fields,field_description:crm.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:crm.field_res_partner__display_name
@@ -1664,6 +1666,11 @@ msgid "Go, go, go! Congrats for your first deal."
 msgstr "Урагшаа, урагшаа! Анхны борлуулт хийсэнд баяр хүргэе!"
 
 #. module: crm
+#: model:ir.model,name:crm.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__has_message
 msgid "Has Message"
 msgstr "Мессежтэй"
@@ -1715,6 +1722,7 @@ msgstr "Цаг"
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__id
 #: model:ir.model.fields,field_description:crm.field_digest_digest__id
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:crm.field_ir_http__id
 #: model:ir.model.fields,field_description:crm.field_mail_activity__id
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__id
 #: model:ir.model.fields,field_description:crm.field_res_partner__id
@@ -2356,14 +2364,13 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
-"messages, and get AI-powered transcripts of your conversations."
+msgid "Manage Recurring Plans"
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Manage Recurring Plans"
+#. odoo-javascript
+#: code:addons/crm/static/src/components/team_switcher/team_switcher.xml:0
+msgid "Manage Teams"
 msgstr ""
 
 #. module: crm
@@ -2555,9 +2562,13 @@ msgid "My Leads"
 msgstr "Миний сэжимүүд"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "My Opportunities"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
 msgstr "Миний суваг"
 
@@ -2784,6 +2795,128 @@ msgstr "Үйлдэл шаардсан зурвасын тоо"
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
+
+#. module: crm
+#: model:ir.module.module,description:base.module_crm
+msgid ""
+"Odoo CRM\n"
+"--------\n"
+"\n"
+"Boost sales productivity, improve win rates, grow revenue with the Odoo\n"
+"<a href=\"https://www.odoo.com/app/crm\">Open Source CRM</a>.\n"
+"\n"
+"Manage your sales funnel with no effort. Attract leads, follow-up on phone\n"
+"calls and meetings. Analyse the quality of your leads to make informed\n"
+"decisions and save time by integrating emails directly into the "
+"application.\n"
+"\n"
+"Your Sales Funnel, The Way You Like It\n"
+"--------------------------------------\n"
+"\n"
+"Track your opportunities pipeline with the revolutionary kanban view. Work\n"
+"inside your sales funnel and get instant visual information about next "
+"actions,\n"
+"new messages, top opportunities and expected revenues.\n"
+"\n"
+"Lead Management Made Easy\n"
+"-------------------------\n"
+"\n"
+"Create leads automatically from incoming emails. Analyse leads efficiency "
+"and\n"
+"compare performance by campaigns, channels or Sales Team.\n"
+"\n"
+"Find duplicates, merge leads and assign them to the right salesperson in "
+"one\n"
+"operation. Spend less time on administration and more time on qualifying "
+"leads.\n"
+"\n"
+"Organize Your Opportunities\n"
+"---------------------------\n"
+"\n"
+"Get your opportunities organized to stay focused on the best deals. Manage "
+"all\n"
+"your customer interactions from the opportunity like emails, phone calls,\n"
+"internal notes, meetings and quotations.\n"
+"\n"
+"Follow opportunities that interest you to get notified upon specific "
+"events:\n"
+"deal won or lost, stage changed, new customer demand, etc.\n"
+"\n"
+"Email Integration and Automation\n"
+"--------------------------------\n"
+"\n"
+"Work with the email applications you already use every day. Whether your\n"
+"company uses Microsoft Outlook or Gmail, no one needs to change the way "
+"they\n"
+"work, so everyone stays productive.\n"
+"\n"
+"Route, sort and filter incoming emails automatically. Odoo CRM handles "
+"incoming\n"
+"emails and route them to the right opportunities or Sales Team. New leads "
+"are\n"
+"created on the fly and interested salespersons are notified automatically.\n"
+"\n"
+"Collaborative Agenda\n"
+"--------------------\n"
+"\n"
+"Schedule your meetings and phone calls using the integrated calendar. You "
+"can\n"
+"see your agenda and your colleagues' in one view. As a manager, it's easy "
+"to\n"
+"see what your team is busy with.\n"
+"\n"
+"Lead Automation and Marketing Campaigns\n"
+"---------------------------------------\n"
+"\n"
+"Drive performance by automating tasks with Odoo <a href=\"https://"
+"www.odoo.com/app/crm\">CRM</a>.\n"
+"\n"
+"Use our marketing campaigns to automate lead acquisition, follow ups and\n"
+"promotions. Define automation rules (e.g. ask a salesperson to call, send "
+"an\n"
+"email, ...) based on triggers (no activity since 20 days, answered a\n"
+"promotional email, etc.)\n"
+"\n"
+"Optimize campaigns from lead to close, on every channel. Make smarter "
+"decisions\n"
+"about where to invest and show the impact of your marketing activities on "
+"your\n"
+"company's bottom line.\n"
+"\n"
+"Customize Your Sales Cycle\n"
+"--------------------------\n"
+"\n"
+"Customize your sales cycle by configuring sales stages that perfectly fit "
+"your\n"
+"sales approach. Control statistics to get accurate forecasts to improve "
+"your\n"
+"sales performance at every stage of your customer relationship.\n"
+"\n"
+"Drive Engagement with Gamification\n"
+"----------------------------------\n"
+"\n"
+"### Leverage your team's natural desire for competition\n"
+"\n"
+"Reinforce good habits and improve win rates with real-time recognition and\n"
+"rewards inspired by [game mechanics](http://en.wikipedia.org/wiki/"
+"Gamification).\n"
+"Align Sales Teams around clear business objectives with challenges, "
+"personal\n"
+"objectives and team leader boards.\n"
+"\n"
+"### Leaderboards\n"
+"\n"
+"Promote leaders and competition amongst Sales Team with performance ratios.\n"
+"\n"
+"### Personal Objectives\n"
+"\n"
+"Assign clear goals to users to align them with the company objectives.\n"
+"\n"
+"### Team Targets\n"
+"\n"
+"Compare revenues with forecasts and budgets in real time.\n"
+"\n"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -3083,6 +3216,12 @@ msgid "Pipeline"
 msgstr "Суваг"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
+msgid "Pipeline - %s"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
 msgid "Pipeline Activities"
 msgstr ""
@@ -3325,11 +3464,6 @@ msgstr "Эд хариуцагч"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Restore"
 msgstr "Сэргээх"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Ringover VOIP Phone"
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
@@ -3724,6 +3858,12 @@ msgid "Tags:"
 msgstr ""
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/views/crm_search_model.js:0
+msgid "Team"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Teams"
 msgstr "Багууд"
@@ -4009,6 +4149,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Top Positives"
+msgstr ""
+
+#. module: crm
+#: model:ir.module.module,summary:base.module_crm
+msgid "Track leads and close opportunities"
 msgstr ""
 
 #. module: crm
@@ -4402,6 +4547,11 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
 msgstr ""
@@ -4549,3 +4699,6 @@ msgstr ""
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr ""
+
+#~ msgid "Assign salespersons into multiple Sales Teams."
+#~ msgstr "Борлуулалтын ажилтнуудыг олон борлуулалтын багт хуваарилах."

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:42+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 14:45+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-master/"
@@ -35,6 +35,24 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: event
+#: model:ir.module.module,description:base.module_event
+msgid ""
+"\n"
+"Organization and management of Events.\n"
+"======================================\n"
+"\n"
+"The event module allows you to efficiently organize events and all related "
+"tasks: planning, registration tracking,\n"
+"attendances, etc.\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Manage your Events and Registrations\n"
+"* Use emails to automatically confirm and send acknowledgments for any event "
+"registration\n"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -102,12 +120,6 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (Sold out)"
 msgstr ""
-
-#. module: event
-#. odoo-python
-#: code:addons/event/models/event_event.py:0
-msgid "%s (copy)"
-msgstr "%s (хуулбар)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -235,6 +247,14 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Show the "
+"live schedule on dedicated location screens</span>"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<em>If you wish to make a presentation, please send your topic proposal as "
@@ -245,46 +265,50 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
-msgid "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
-msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
+msgid "<i class=\"oi me-2\" data-icon=\"east\" title=\"End date\"/>"
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
-"<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
-"are in <b>English</b>!"
+"<i class=\"oi me-2\" data-icon=\"info\"></i>This event and all the "
+"conferences are in <b>English</b>!"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
+msgid "<i class=\"oi mx-2\" data-icon=\"arrow_forward\" title=\"to\"/>"
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
-"<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
+"<i class=\"oi oi-filled mt-1 me-2 text-center\" data-icon=\"group\" "
+"title=\"Attendees\"/>"
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
-msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
+msgid ""
+"<i class=\"oi oi-filled mt-1 me-2 text-center\" data-icon=\"location_on\" "
+"title=\"Location\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Slot\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"oi\" data-icon=\"business\" title=\"Attendee Company\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid ""
+"<i class=\"oi\" data-icon=\"confirmation_number\" title=\"Ticket type\"/>"
 msgstr ""
 
 #. module: event
@@ -2378,7 +2402,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
-msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgid "Download Tickets <i class=\"oi ms-1\" data-icon=\"download\"/>"
 msgstr ""
 
 #. module: event
@@ -2743,6 +2767,11 @@ msgid "Events Mail Schedulers"
 msgstr "Арга хэмжээний мэйл төлөвлөгчүүд"
 
 #. module: event
+#: model:ir.module.module,shortdesc:base.module_event
+msgid "Events Organization"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
@@ -2817,12 +2846,6 @@ msgstr "Дагагчид"
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Дагагчид (Харилцагчид)"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event__activity_type_icon
-#: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icon ж.ш. fa-tasks"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3060,8 +3083,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_mail_template__id
 #: model:ir.model.fields,field_description:event.field_res_config_settings__id
 #: model:ir.model.fields,field_description:event.field_res_partner__id
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "ID"
 msgstr "ID"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "ID of your Google app"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_icon
@@ -3294,11 +3323,6 @@ msgid "Kanban State"
 msgstr "Канбан Төлөв"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Key"
-msgstr "Түлхүүр"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
 msgid "Kpi Nbr Of Registrations Value"
 msgstr ""
@@ -3416,6 +3440,12 @@ msgid "Live Music Festival"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_location_display
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Location Display"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_mail__template_ref__mail_template
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
@@ -3498,6 +3528,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Marketing"
 msgstr "Маркетинг"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -3593,6 +3629,8 @@ msgstr "Нэр"
 
 #. module: event
 #. odoo-javascript
+#. odoo-python
+#: code:addons/event/models/event_registration.py:0
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.xml:0
 #: model:event.stage,name:event.event_stage_new
 msgid "New"
@@ -3636,6 +3674,11 @@ msgstr "Дараагийн ажилбарын гарчиг"
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
 msgid "Next Activity Type"
 msgstr "Дараагийн ажилбарын төрөл"
+
+#. module: event
+#: model:res.groups.privilege,placeholder:event.res_groups_privilege_events
+msgid "No"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
@@ -4220,6 +4263,11 @@ msgid "Secret"
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Secret of your Google app"
+msgstr ""
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
@@ -4579,7 +4627,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid ""
-"The finest OpenWood furnitures are coming to your house in a brand new "
+"The finest OpenWood furniture is coming to your house in a brand new "
 "collection"
 msgstr ""
 
@@ -4889,6 +4937,11 @@ msgstr "Зам ба хэлэлцэх асуудал"
 #: model:event.type,name:event.event_type_1
 msgid "Training"
 msgstr "Сургалт"
+
+#. module: event
+#: model:ir.module.module,summary:base.module_event
+msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -5292,6 +5345,15 @@ msgstr ""
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (хуулбар)"
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Font awesome icon ж.ш. fa-tasks"
+
+#~ msgid "Key"
+#~ msgstr "Түлхүүр"
 
 #~ msgid "Continue"
 #~ msgstr "Үргэлжлүүлэх"

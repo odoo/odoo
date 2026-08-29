@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 19:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
@@ -35,6 +35,21 @@ msgid ""
 "(Happy)\n"
 "        or empty and can only be set on live chat channels.\n"
 "        "
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.module.module,description:base.module_im_livechat
+msgid ""
+"\n"
+"Live Chat Support\n"
+"==========================\n"
+"\n"
+"Allow to drop instant messaging widgets on any web page that will "
+"communicate\n"
+"with the current server and dispatch visitors request amongst several live\n"
+"chat operators.\n"
+"Help your customers with this chat, and analyse their feedback.\n"
+"\n"
 msgstr ""
 
 #. module: im_livechat
@@ -115,12 +130,6 @@ msgstr "%(title)s - الخطوة %(sequence)d"
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
-msgid "%s (copy)"
-msgstr "%s (نسخة)"
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script.py:0
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
 msgstr ""
@@ -147,13 +156,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* 'إظهار' تعرض زر الدردشة في الصفحات.\n"
-"* 'إظهار مع إشعار' هي 'إظهار' بالإضافة إلى نص عائم بجانب الزر.\n"
-"* 'الفتح تلقائياً' تعرض الزر وتقوم بفتح إطار المحادثة تلقائياً.\n"
-"* 'إخفاء' تخفي زر الدردشة في الصفحات.\n"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -523,6 +529,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.module.module,summary:base.module_im_livechat
+msgid "Chat with your website visitors"
 msgstr ""
 
 #. module: im_livechat
@@ -1557,8 +1568,6 @@ msgid "Leave %s"
 msgstr "مغادرة %s"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "مغادرة القناة"
@@ -1593,6 +1602,7 @@ msgstr "محدود"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
+#: model:ir.module.module,shortdesc:base.module_im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 #: model:res.groups.privilege,name:im_livechat.res_groups_privilege_live_chat
@@ -1933,6 +1943,11 @@ msgstr "جلسة جديدة"
 msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
+msgstr ""
+
+#. module: im_livechat
+#: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
+msgid "No"
 msgstr ""
 
 #. module: im_livechat
@@ -2818,6 +2833,12 @@ msgid "Unlimited"
 msgstr "غير محدودة"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Unread"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid ""
 "Use canned responses to define templates of messages in the Live Chat app. "
@@ -3138,3 +3159,19 @@ msgstr "التعامل مع رسائل websocket"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (نسخة)"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* 'إظهار' تعرض زر الدردشة في الصفحات.\n"
+#~ "* 'إظهار مع إشعار' هي 'إظهار' بالإضافة إلى نص عائم بجانب الزر.\n"
+#~ "* 'الفتح تلقائياً' تعرض الزر وتقوم بفتح إطار المحادثة تلقائياً.\n"
+#~ "* 'إخفاء' تخفي زر الدردشة في الصفحات.\n"

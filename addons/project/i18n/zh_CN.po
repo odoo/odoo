@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 19:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -30,11 +30,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " 所有内部用户和受邀门户用户"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -108,11 +103,7 @@ msgstr ""
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project_project.py:0
-#: code:addons/project/models/project_project_stage.py:0
-#: code:addons/project/models/project_role.py:0
 #: code:addons/project/models/project_task.py:0
-#: code:addons/project/models/project_task_type.py:0
 msgid "%s (copy)"
 msgstr "%s（副本）"
 
@@ -162,6 +153,63 @@ msgid ""
 msgstr "<b>记录内部备注</b>，使用 @<b>提及</b> 以通知您的同事。"
 
 #. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_9
+msgid "<b>Tip: Access your project easily</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_1
+msgid "<b>Tip: Create tasks from incoming emails</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_5
+msgid "<b>Tip: Create your tasks in an instant</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_7
+msgid "<b>Tip: Don't let stalled tasks slip under the radar</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_6
+msgid "<b>Tip: Filter your tasks with one click</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_4
+msgid "<b>Tip: Identify bottlenecks at a glance</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_3
+msgid "<b>Tip: Project-Specific Fields</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_8
+msgid "<b>Tip: Save time with task templates</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_0
+msgid "<b>Tip: Use task states to track progress</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_2
+msgid "<b>Tip: Your personal kanban</b>"
+msgstr ""
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_5
+msgid ""
+"<br>\n"
+"                    and watch the magic happen!"
+msgstr ""
+
+#. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
@@ -182,8 +230,9 @@ msgid ""
 "            Please take a moment to rate our services related to the <strong "
 "t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator()."
-"name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -204,25 +253,22 @@ msgid ""
 "top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/5\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Happy\" src=\"/rating/static/"
 "src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/3\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Neutral\" src=\"/rating/"
 "static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"Unhappy\" src=\"/rating/"
 "static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
@@ -242,9 +288,10 @@ msgid ""
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">This satisfaction survey is sent <b t-out=\"object."
-"stage_id.rating_status_period or ''\">weekly</b> as long as the task is in "
-"the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"color: #454748;\">This satisfaction survey is sent <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">weekly</b> as long as the "
+"task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage."
+"</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Best regards,</td></tr>\n"
@@ -256,14 +303,16 @@ msgid ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id."
-"email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -310,25 +359,22 @@ msgstr ""
 "top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/5\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"满意\" src=\"/rating/static/"
 "src/img/rating_5.png\" title=\"满意\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/3\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"一般\" src=\"/rating/static/"
 "src/img/rating_3.png\" title=\"一般\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/"
-"{{ access_token }}/1\" t-att-class=\"'pe-none' if object."
-"_rating_get_operator() else ''\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
 "                                    <img alt=\"不满意\" src=\"/rating/static/"
 "src/img/rating_1.png\" title=\"不满意\"/>\n"
 "                                </a>\n"
@@ -342,14 +388,14 @@ msgstr ""
 "            我们珍视您的反馈，这将帮助我们持续改进。\n"
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">此满意度调查会在您的任务进入 <b t-out=\"object.stage_id."
-"name or ''\">进行中</b> 阶段时发送。</span>\n"
+"color: #454748;\">此满意度调查会在您的任务进入 <b t-"
+"out=\"object.stage_id.name or ''\">进行中</b> 阶段时发送。</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">此满意度调查将<b t-out=\"object.stage_id."
-"rating_status_period or ''\">每周</b>发送一次，只要任务仍处于 <b t-"
-"out=\"object.stage_id.name or ''\">进行中</b> 阶段。</span>\n"
+"color: #454748;\">此满意度调查将<b t-"
+"out=\"object.stage_id.rating_status_period or ''\">每周</b>发送一次，只要任务"
+"仍处于 <b t-out=\"object.stage_id.name or ''\">进行中</b> 阶段。</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>此致，敬礼！</td></tr>\n"
@@ -361,14 +407,16 @@ msgstr ""
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id."
-"email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id."
-"website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object."
-"project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -918,9 +966,9 @@ msgstr "添加额外内容以显示在电子邮件中"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid ""
-"Add project-specific property fields on tasks to customize your project "
-"management process."
-msgstr "在任务上添加特定于项目的属性字段，以自定义您的项目管理流程。"
+"Add project-specific property fields to tasks to better customize your "
+"project management process."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -1020,6 +1068,11 @@ msgstr "所有任务"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "所有内部用户"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -1241,10 +1294,10 @@ msgstr "自动看板状态"
 msgid ""
 "Automatically modify the state when the customer replies to the feedback for "
 "this stage.\n"
-" * Good feedback from the customer will update the state to "
-"'Approved' (green bullet).\n"
-" * Neutral or bad feedback will set the kanban state to 'Changes "
-"Requested' (orange bullet).\n"
+" * Good feedback from the customer will update the state to 'Approved' "
+"(green bullet).\n"
+" * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
+"(orange bullet).\n"
 msgstr ""
 "当客户回复此阶段的反馈时，自动修改状态。\n"
 " * 客户的良好反馈会将状态更新为 \"已批准\" （绿色标记）。\n"
@@ -1389,6 +1442,13 @@ msgid "Changes Requested"
 msgstr "请求变更"
 
 #. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_4
+msgid ""
+"Check the stage tracker on tasks to quickly spot bottlenecks in your project "
+"workflow."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
@@ -1409,6 +1469,13 @@ msgstr "选择 <b>任务名称</b>。 <i>（例如网站设计，采购产品。
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
 msgstr "为合作者选择以下访问模式之一："
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_6
+msgid ""
+"Click the Kanban progress bar to quickly filter tasks by status within the "
+"current stage."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -1655,6 +1722,13 @@ msgid "Create a new sub-task"
 msgstr "创建新的子任务"
 
 #. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_2
+msgid ""
+"Create a personal workflow to organize your assigned tasks and private to-"
+"dos."
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Create project"
@@ -1675,9 +1749,11 @@ msgid ""
 msgstr "创建项目来组织你的任务。为每个项目定义不同的工作流程。"
 
 #. module: project
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_1
-msgid "Create tasks by sending an email to the email address of your project."
-msgstr "通过向您的项目的电子邮件地址发送电子邮件来创建任务。"
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_8
+msgid ""
+"Create reusable task templates to quickly set up tasks and standardize your "
+"workflows."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -2181,8 +2257,9 @@ msgstr "电子邮件域名，例如 'odoo@example.com' 中的 'example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
-msgid "Emails sent to"
-msgstr "发送到的电子邮件"
+msgid ""
+"Emails sent to your project's email address automatically create tasks in it."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
@@ -2301,6 +2378,14 @@ msgstr "关注者（合作伙伴）"
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__forever
 msgid "Forever"
 msgstr "永远"
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_9
+msgid ""
+"From the task Kanban view, use the top menu to quickly access all project "
+"items like timesheets and invoices. Customize actions with your favorite "
+"filters and views to suit your needs."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -2570,6 +2655,11 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr "如果设置，此内容将自动发送给未经授权的用户，而不是默认消息。"
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_5
+msgid "Improve the configuration screen 5h #feature #v20 @"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -2885,6 +2975,11 @@ msgid "Low priority"
 msgstr "低优先级"
 
 #. module: project
+#: model:ir.module.module,summary:base.module_project
+msgid "Manage tasks and collaborate on projects"
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
@@ -3056,6 +3151,7 @@ msgstr "我的更新"
 #: model:ir.model.fields,field_description:project.field_project_role__name
 #: model:ir.model.fields,field_description:project.field_project_tags__name
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__name
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_5
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -3169,6 +3265,11 @@ msgstr "下一活动摘要"
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_id
 msgid "Next Activity Type"
 msgstr "下一活动类型"
+
+#. module: project
+#: model:res.groups.privilege,placeholder:project.res_groups_privilege_project
+msgid "No"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3622,6 +3723,7 @@ msgstr "进度"
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__project_id
+#: model:ir.module.module,shortdesc:base.module_project
 #: model:ir.ui.menu,name:project.menu_main_pm
 #: model:res.groups.privilege,name:project.res_groups_privilege_project
 #: model_terms:ir.ui.view,arch_db:project.digest_digest_view_form
@@ -3645,6 +3747,91 @@ msgstr "项目"
 #: model:ir.model.fields,field_description:project.field_project_project__account_id
 msgid "Project Account"
 msgstr "项目账户"
+
+#. module: project
+#: model:ir.module.module,description:base.module_project
+msgid ""
+"Project Management\n"
+"------------------\n"
+"\n"
+"### Infinitely flexible. Incredibly easy to use.\n"
+"\n"
+"\n"
+"Odoo's collaborative and realtime <a href=\"https://www.odoo.com/app/"
+"project\">open source project management</a>\n"
+"helps your team get work done. Keep track of everything, from the big "
+"picture\n"
+"to the minute details, from the customer contract to the billing.\n"
+"\n"
+"Designed to Fit Your Own Process\n"
+"--------------------------------\n"
+"\n"
+"Organize projects around your own processes. Work on tasks and issues using "
+"the\n"
+"kanban view, schedule tasks using the gantt chart and control deadlines in "
+"the\n"
+"calendar view. Every project may have its own stages, allowing teams to\n"
+"optimize their job.\n"
+"\n"
+"Easy to Use\n"
+"-----------\n"
+"\n"
+"Get organized as fast as you can think. The easy-to-use interface takes no "
+"time\n"
+"to learn, and every action is instantaneous, so there’s nothing standing\n"
+"between you and your sweet productive flow.\n"
+"\n"
+"Work Together\n"
+"-------------\n"
+"\n"
+"### Real-time chats, document sharing, email integration\n"
+"\n"
+"Use the chatter to communicate with your team or customers and share "
+"comments\n"
+"and documents on tasks and issues. Integrate discussion fast with the email\n"
+"integration.\n"
+"\n"
+"Talk to other users or customers with the website live chat feature.\n"
+"\n"
+"Collaborative Writing\n"
+"---------------------\n"
+"\n"
+"### The power of etherpad, inside your tasks\n"
+"\n"
+"Collaboratively edit the same specifications or meeting minutes right "
+"inside\n"
+"the application. The integrated etherpad feature allows several people to\n"
+"work on the same tasks, at the same time.\n"
+"\n"
+"This is very efficient for scrum meetings, meeting minutes or complex\n"
+"specifications. Every user has their own color and you can replay the whole\n"
+"creation of the content.\n"
+"\n"
+"Get Work Done\n"
+"-------------\n"
+"\n"
+"Get alerts on followed events to stay up to date with what interests you. "
+"Use\n"
+"instant green/red visual indicators to scan through what has been done and "
+"what\n"
+"requires your attention.\n"
+"\n"
+"Timesheets, Contracts & Invoicing\n"
+"---------------------------------\n"
+"\n"
+"Projects are automatically integrated with customer contracts, allowing you "
+"to\n"
+"invoice based on time & materials and record timesheets easily.\n"
+"\n"
+"Track Issues\n"
+"------------\n"
+"\n"
+"Single out the issues that arise in a project in order to have a better "
+"focus\n"
+"on resolving them. Integrate customer interaction on every issue and get\n"
+"accurate reports on your team's performance.\n"
+"\n"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -3967,12 +4154,15 @@ msgstr "每季度"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid ""
-"Quickly check the status of tasks for approvals or change requests and "
-"identify those on hold until dependencies are resolved with the hourglass "
-"icon."
+"Quickly identify tasks awaiting approval or change requests, and spot those "
+"on hold due to unresolved dependencies."
 msgstr ""
-"使用沙漏图标，快速检查待批准或变更请求的任务状态，并标识那些在依赖关系解决之"
-"前被暂停的任务。"
+
+#. module: project
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_7
+msgid ""
+"Quickly identify tasks that have been stuck in the same stage for too long."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4316,6 +4506,8 @@ msgid "Script"
 msgstr "脚本"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
 msgstr "搜索项目"
@@ -5200,8 +5392,6 @@ msgstr "本月"
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_2
 #: model:project.task.type,name:project.project_personal_stage_demo_2
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "This Week"
 msgstr "本周"
 
@@ -5335,28 +5525,54 @@ msgid "Time Management"
 msgstr "时间管理"
 
 #. module: project
+#: model:digest.tip,name:project.digest_tip_project_9
+msgid "Tip: Access your project easily"
+msgstr ""
+
+#. module: project
 #: model:digest.tip,name:project.digest_tip_project_1
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
 msgstr "提示：从收到的电子邮件中创建任务"
 
 #. module: project
+#: model:digest.tip,name:project.digest_tip_project_5
+msgid "Tip: Create your tasks in an instant"
+msgstr ""
+
+#. module: project
+#: model:digest.tip,name:project.digest_tip_project_7
+msgid "Tip: Don't let stalled tasks slip under the radar"
+msgstr ""
+
+#. module: project
+#: model:digest.tip,name:project.digest_tip_project_6
+msgid "Tip: Filter your tasks with one click"
+msgstr ""
+
+#. module: project
+#: model:digest.tip,name:project.digest_tip_project_4
+msgid "Tip: Identify bottlenecks at a glance"
+msgstr ""
+
+#. module: project
 #: model:digest.tip,name:project.digest_tip_project_3
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
 msgstr "提示：项目特定字段"
 
 #. module: project
+#: model:digest.tip,name:project.digest_tip_project_8
+msgid "Tip: Save time with task templates"
+msgstr ""
+
+#. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_0
-msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr "提示：使用任务状态跟踪任务进度"
+msgid "Tip: Use task states to track progress"
+msgstr ""
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_2
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_2
-msgid "Tip: Your Own Personal Kanban"
-msgstr "提示：您自己的个人看板"
+msgid "Tip: Your personal kanban"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -5413,8 +5629,6 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:project.task.type,name:project.project_personal_stage_admin_1
 #: model:project.task.type,name:project.project_personal_stage_demo_1
-#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Today"
 msgstr "今天"
 
@@ -5594,10 +5808,11 @@ msgid "Use This For My Project"
 msgstr "将此用于我的项目"
 
 #. module: project
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_2
+#: model_terms:digest.tip,tip_description:project.digest_tip_project_5
 msgid ""
-"Use personal stages to organize your tasks and create your own workflow."
-msgstr "使用个人阶段来组织您的任务并创建您自己的工作流程。"
+"Use keywords in the title to set task details automatically. For example, "
+"type:<br>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5840,12 +6055,12 @@ msgstr "年"
 #: code:addons/project/models/project_project_stage.py:0
 msgid ""
 "You are not able to switch the company of this stage to %(company_name)s "
-"since it currently includes projects associated with "
-"%(project_company_name)s. Please ensure that this stage exclusively consists "
+"since it currently includes projects associated with %"
+"(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
-"您无法将该阶段的公司更改为 %(company_name)s，因为它目前包括与 "
-"%(project_company_name)s 相关的项目。请确保该阶段只包含与 %(company_name)s 相"
+"您无法将该阶段的公司更改为 %(company_name)s，因为它目前包括与 %"
+"(project_company_name)s 相关的项目。请确保该阶段只包含与 %(company_name)s 相"
 "关的项目。"
 
 #. module: project
@@ -6076,11 +6291,6 @@ msgid "icon."
 msgstr ""
 
 #. module: project
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_1
-msgid "project."
-msgstr "项目."
-
-#. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "project_id"
@@ -6144,11 +6354,6 @@ msgid "to signalize what is the current status of your Idea."
 msgstr ""
 
 #. module: project
-#: model_terms:digest.tip,tip_description:project.digest_tip_project_1
-msgid "will generate tasks in your"
-msgstr "将创建任务在您的"
-
-#. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
@@ -6173,3 +6378,42 @@ msgstr "👤 未指派"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " 所有内部用户和受邀门户用户"
+
+#~ msgid ""
+#~ "Add project-specific property fields on tasks to customize your project "
+#~ "management process."
+#~ msgstr "在任务上添加特定于项目的属性字段，以自定义您的项目管理流程。"
+
+#~ msgid ""
+#~ "Create tasks by sending an email to the email address of your project."
+#~ msgstr "通过向您的项目的电子邮件地址发送电子邮件来创建任务。"
+
+#~ msgid "Emails sent to"
+#~ msgstr "发送到的电子邮件"
+
+#~ msgid ""
+#~ "Quickly check the status of tasks for approvals or change requests and "
+#~ "identify those on hold until dependencies are resolved with the hourglass "
+#~ "icon."
+#~ msgstr ""
+#~ "使用沙漏图标，快速检查待批准或变更请求的任务状态，并标识那些在依赖关系解决"
+#~ "之前被暂停的任务。"
+
+#~ msgid "Tip: Use task states to keep track of your tasks' progression"
+#~ msgstr "提示：使用任务状态跟踪任务进度"
+
+#~ msgid "Tip: Your Own Personal Kanban"
+#~ msgstr "提示：您自己的个人看板"
+
+#~ msgid ""
+#~ "Use personal stages to organize your tasks and create your own workflow."
+#~ msgstr "使用个人阶段来组织您的任务并创建您自己的工作流程。"
+
+#~ msgid "project."
+#~ msgstr "项目."
+
+#~ msgid "will generate tasks in your"
+#~ msgstr "将创建任务在您的"

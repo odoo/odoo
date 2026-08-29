@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 08:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -29,8 +29,13 @@ msgid ""
 "Aaaaaw that's really cute but, you know, bots don't work that way. You're "
 "too human for me! Let's keep it professional ❤️"
 msgstr ""
-"哈哈，那真的很可愛，但是，您知道，機器人不是這樣工作的。您對我來說太人性化了"
-"！讓我們保持專業 ❤️"
+"哈哈，那真的很可愛，但是，您知道，機器人不是這樣工作的。您對我來說太人性化"
+"了！讓我們保持專業 ❤️"
+
+#. module: mail_bot
+#: model:ir.module.module,summary:base.module_mail_bot
+msgid "Add OdooBot in discussions"
+msgstr ""
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
@@ -51,28 +56,23 @@ msgstr "顯示名稱"
 
 #. module: mail_bot
 #. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-msgid ""
-"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
-"Discuss app."
+#: code:addons/mail_bot/models/res_users.py:0
+msgid "Go ahead - Try sending me an emoji 😊"
 msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
-"sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
-"help."
+"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
+"Discuss app settings."
 msgstr ""
-"太棒了！ 👍%(new_line)s若要使用特殊指令，請以 %(command_start)s/%"
-"(command_end)s（斜線）%(bold_start)s起首%(bold_end)s。試試要求幫助。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
-msgid "Hello,"
-msgstr "您好!"
+msgid "Hello 👋"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
@@ -109,19 +109,18 @@ msgid "Idle"
 msgstr "閒置"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_bot
-msgid "Mail Bot"
-msgstr "信件機器人"
-
-#. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
-"(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+"It looks like you're not sure what to do next. Please type %(command_start)s/"
+"%(command_end)s to see the suggestions, then select %(command_start)shelp%"
+"(command_end)s and press Enter."
 msgstr ""
-"不完全是。要繼續導覽，請發送表情符號：%(bold_start)s輸入%(bold_end)s%"
-"(command_start)s :)%(command_end)s 並按 Enter。"
+
+#. module: mail_bot
+#: model:ir.model,name:mail_bot.model_mail_bot
+msgid "Mail Bot"
+msgstr "信件機器人"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -132,30 +131,31 @@ msgstr "未初始化"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s/%(command_end)s "
-"and wait for the propositions. Select %(command_start)shelp%(command_end)s "
-"and press enter."
+"Not quite. To continue the tour, please send an emoji by typing %"
+"(command_start)s:)%(command_end)s and pressing Enter, or by clicking the %"
+"(smile_icon)s icon to pick one."
 msgstr ""
-"不肯定你想做甚麼。請鍵入「%(command_start)s:%(command_end)s」並等待建議顯示，"
-"選取%(command_start)s幫助%(command_end)s，然後按輸入鍵。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
-"and wait for the propositions. Select one of them and press enter."
+"Not sure what you're doing? Please type %(command_start)s::%(command_end)s "
+"to see canned responses. Select one and press Enter."
 msgstr ""
-"不肯定你想做甚麼。請鍵入「%(command_start)s:%(command_end)s」並等待建議顯示，"
-"選取其中一項，然後按輸入鍵。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid ""
-"Odoo's chat helps employees collaborate efficiently. I'm here to help you "
-"discover its features."
-msgstr "Odoo 的聊天功能可協助員工有效率地協作。我會幫助你發現它的功能。"
+"Odoo's Discuss application helps employees collaborate efficiently. I'm here "
+"to help you explore its features."
+msgstr ""
+
+#. module: mail_bot
+#: model:ir.module.module,shortdesc:base.module_mail_bot
+msgid "OdooBot"
+msgstr ""
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -201,19 +201,17 @@ msgid ""
 "(command_start)sstart the tour%(command_end)s."
 msgstr ""
 "對不起，我睏倦了——但也可能不是！或許我只是想隱藏自己對人類語言一知半解⋯⋯%"
-"(new_line)s如果你寫：%(command_start)sstart the tour%(command_end)s（開始導覽"
-"），我可以向你展示功能。"
+"(new_line)s如果你寫：%(command_start)sstart the tour%(command_end)s（開始導"
+"覽），我可以向你展示功能。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
-"him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
-"me."
+"Sorry, I'm not listening right now. To get my attention, %"
+"(bold_start)smention me%(bold_end)s by typing %(command_start)s@OdooBot%"
+"(command_end)s and selecting me."
 msgstr ""
-"對不起，我沒在聽。要引起某人的注意，%(bold_start)s直接聯絡他%(bold_end)s。試"
-"試寫下 %(command_start)s@OdooBot%(command_end)s 然後選擇我。"
 
 #. module: mail_bot
 #. odoo-python
@@ -237,7 +235,7 @@ msgstr "這讓我感覺藍瘦香菇，我雖然是機器人但...我也有知覺
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"That’s the end of this overview. You can %(bold_start)sclose this "
+"That's the end of this overview. You can %(bold_start)sclose this "
 "conversation%(bold_end)s or type %(command_start)sstart the tour%"
 "(command_end)s to see it again. Enjoy exploring Odoo!"
 msgstr ""
@@ -245,43 +243,35 @@ msgstr ""
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-msgid "This is a temporary canned response to see how canned responses work."
-msgstr "這是一個臨時的預設回應，展示預設回應是如何運作。"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
-"(paperclip_icon)s icon and select a file."
+"To %(bold_start)ssend an attachment%(bold_end)s, first click the %"
+"(plus_icon)s icon, then select %(paperclip_icon)s Attach files."
 msgstr ""
-"要%(bold_start)s傳送附件%(bold_end)s，請按一下 %(paperclip_icon)s 圖示，然後"
-"選取檔案。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-msgid "To start, try to send me an emoji :)"
-msgstr "開始，嘗試發給我一個笑臉 :)"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/res_users.py:0
-msgid "Try to send me an emoji"
-msgstr "試試向我發送表情符號"
+msgid "To get started, try sending me an emoji 😊"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
-"discovering our product, please check %(document_link_start)sour "
+"To use special commands, %(bold_start)sstart your message with a %"
+"(bold_end)s %(command_start)s/%(command_end)s. For example, try typing %"
+"(command_start)s/help%(command_end)s."
+msgstr ""
+
+#. module: mail_bot
+#. odoo-python
+#: code:addons/mail_bot/models/mail_bot.py:0
+msgid ""
+"Unfortunately, I'm just a bot 😞 I don't understand that.%(new_line)sIf you "
+"need help exploring our apps, please check out %(document_link_start)sour "
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
-"很可惜，我只是一個機器人 😞 我不明白！如果你在發掘產品功能上需要幫助，請查看"
-"我們的%(document_link_start)s使用說明%(document_link_end)s或%"
-"(slides_link_start)s教學影片%(slides_link_end)s。"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -293,32 +283,25 @@ msgstr "使用者"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
-"use canned responses. I've created a temporary one for you."
+"use canned responses. I've created a temporary one just for you."
 msgstr ""
-"真好！ 😇%(new_line)s試試輸入 %(command_start)s::%(command_end)s 以使用預設回"
-"覆。我已為你建立一個預設回覆，作臨時使用。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Wow you are a natural!%(new_line)sPing someone with @username to grab their "
-"attention. %(bold_start)sTry to ping me using%(bold_end)s %"
-"(command_start)s@OdooBot%(command_end)s in a sentence."
+"Wow, you're a natural!%(new_line)s Use @username to mention someone and grab "
+"their attention.%(new_line)s %(bold_start)sTry mentioning me by typing%"
+"(bold_end)s %(command_start)s@OdooBot%(command_end)s in your message."
 msgstr ""
-"哇，你是個天才！%(new_line)s使用 @username（使用者名稱）引起他們的注意。%"
-"(bold_start)s嘗試在一個句子中使用%(bold_end)s %(command_start)s@OdooBot%"
-"(command_end)s，直接找我。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
-"(bold_end)s, like a picture of your cute dog..."
+"Yep, I'm here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
+"(bold_end)s 📎 - maybe a picture of your cute dog... 🐕"
 msgstr ""
-"沒錯，是我！ 🎉 %(new_line)s現在，嘗試%(bold_start)s傳送附件%(bold_end)s，例"
-"如你可愛小狗的照片⋯"
 
 #. module: mail_bot
 #. odoo-python
@@ -349,3 +332,100 @@ msgstr "愛"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "start the tour"
 msgstr "開始導覽"
+
+#~ msgid ""
+#~ "Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
+#~ "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
+#~ "help."
+#~ msgstr ""
+#~ "太棒了！ 👍%(new_line)s若要使用特殊指令，請以 %(command_start)s/%"
+#~ "(command_end)s（斜線）%(bold_start)s起首%(bold_end)s。試試要求幫助。"
+
+#~ msgid "Hello,"
+#~ msgstr "您好!"
+
+#~ msgid ""
+#~ "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
+#~ "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+#~ msgstr ""
+#~ "不完全是。要繼續導覽，請發送表情符號：%(bold_start)s輸入%(bold_end)s%"
+#~ "(command_start)s :)%(command_end)s 並按 Enter。"
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s/%"
+#~ "(command_end)s and wait for the propositions. Select %"
+#~ "(command_start)shelp%(command_end)s and press enter."
+#~ msgstr ""
+#~ "不肯定你想做甚麼。請鍵入「%(command_start)s:%(command_end)s」並等待建議顯"
+#~ "示，選取%(command_start)s幫助%(command_end)s，然後按輸入鍵。"
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s:%"
+#~ "(command_end)s and wait for the propositions. Select one of them and "
+#~ "press enter."
+#~ msgstr ""
+#~ "不肯定你想做甚麼。請鍵入「%(command_start)s:%(command_end)s」並等待建議顯"
+#~ "示，選取其中一項，然後按輸入鍵。"
+
+#~ msgid ""
+#~ "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
+#~ "discover its features."
+#~ msgstr "Odoo 的聊天功能可協助員工有效率地協作。我會幫助你發現它的功能。"
+
+#~ msgid ""
+#~ "Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
+#~ "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and "
+#~ "select me."
+#~ msgstr ""
+#~ "對不起，我沒在聽。要引起某人的注意，%(bold_start)s直接聯絡他%(bold_end)s。"
+#~ "試試寫下 %(command_start)s@OdooBot%(command_end)s 然後選擇我。"
+
+#~ msgid ""
+#~ "This is a temporary canned response to see how canned responses work."
+#~ msgstr "這是一個臨時的預設回應，展示預設回應是如何運作。"
+
+#~ msgid ""
+#~ "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
+#~ "(paperclip_icon)s icon and select a file."
+#~ msgstr ""
+#~ "要%(bold_start)s傳送附件%(bold_end)s，請按一下 %(paperclip_icon)s 圖示，然"
+#~ "後選取檔案。"
+
+#~ msgid "To start, try to send me an emoji :)"
+#~ msgstr "開始，嘗試發給我一個笑臉 :)"
+
+#~ msgid "Try to send me an emoji"
+#~ msgstr "試試向我發送表情符號"
+
+#~ msgid ""
+#~ "Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
+#~ "discovering our product, please check %(document_link_start)sour "
+#~ "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
+#~ "(slides_link_end)s."
+#~ msgstr ""
+#~ "很可惜，我只是一個機器人 😞 我不明白！如果你在發掘產品功能上需要幫助，請查"
+#~ "看我們的%(document_link_start)s使用說明%(document_link_end)s或%"
+#~ "(slides_link_start)s教學影片%(slides_link_end)s。"
+
+#~ msgid ""
+#~ "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
+#~ "use canned responses. I've created a temporary one for you."
+#~ msgstr ""
+#~ "真好！ 😇%(new_line)s試試輸入 %(command_start)s::%(command_end)s 以使用預"
+#~ "設回覆。我已為你建立一個預設回覆，作臨時使用。"
+
+#~ msgid ""
+#~ "Wow you are a natural!%(new_line)sPing someone with @username to grab "
+#~ "their attention. %(bold_start)sTry to ping me using%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s in a sentence."
+#~ msgstr ""
+#~ "哇，你是個天才！%(new_line)s使用 @username（使用者名稱）引起他們的注意。%"
+#~ "(bold_start)s嘗試在一個句子中使用%(bold_end)s %(command_start)s@OdooBot%"
+#~ "(command_end)s，直接找我。"
+
+#~ msgid ""
+#~ "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
+#~ "attachment%(bold_end)s, like a picture of your cute dog..."
+#~ msgstr ""
+#~ "沒錯，是我！ 🎉 %(new_line)s現在，嘗試%(bold_start)s傳送附件%(bold_end)s，"
+#~ "例如你可愛小狗的照片⋯"

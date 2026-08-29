@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 08:12+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -21,31 +21,10 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_loyalty
-#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
-msgid ""
-"\n"
-"        Technical field used to link multiple reward lines from the same "
-"reward together.\n"
-"    "
-msgstr ""
-"\n"
-"        Trường kỹ thuật dùng để liên kết nhiều dòng phần thưởng từ cùng một "
-"phần thưởng với nhau.\n"
-"    "
-
-#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/partner_list_screen/partner_line/partner_line.js:0
 msgid "%s Points"
 msgstr "%s Điểm"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid ""
-"%s: %s\n"
-"Balance: %s"
-msgstr ""
 
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
@@ -59,15 +38,21 @@ msgstr "15% cho đơn hàng của bạn"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "A better global discount is already applied."
-msgstr "Chiết khấu hấp dẫn hơn đã được áp dụng."
-
-#. module: pos_loyalty
-#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "A coupon/loyalty card must have a unique code."
 msgstr "Phiếu giảm giá/thẻ khách hàng thân thiết phải có mã không trùng."
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/loyalty_card.py:0
+msgid "A customer is required to create a %s card."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
+msgid "A gift card or eWallet top-up can't have a negative quantity."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -85,10 +70,14 @@ msgstr ""
 "khi mã khuyến mại thay đổi."
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__loyalty_card_count
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_users__loyalty_card_count
-msgid "Active loyalty cards"
-msgstr "Thẻ khách hàng thân thiết đang hoạt động"
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__active_payment_programs
+msgid "Active Payment Programs"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__active_rewards
+msgid "Active Rewards"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -125,25 +114,8 @@ msgid "Any Product"
 msgstr "Bất kỳ sản phẩm nào"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid ""
-"Are you sure you want to remove %s from this order?\n"
-" You will still be able to claim it through the reward button."
-msgstr ""
-"Bạn có chắc muốn loại bỏ %s khỏi đơn hàng này?\n"
-" Bạn vẫn có thể nhận lại thông qua nút phần thưởng."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid "Assigning order %s"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid "Assigning partner %s"
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__applied_codes
+msgid "Applied Codes"
 msgstr ""
 
 #. module: pos_loyalty
@@ -153,8 +125,10 @@ msgid "Available rewards"
 msgstr "Phần thưởng có sẵn"
 
 #. module: pos_loyalty
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Balance:"
 msgstr ""
 
@@ -169,12 +143,11 @@ msgid "Barcode Rule"
 msgstr "Quy tắc mã vạch"
 
 #. module: pos_loyalty
-#: model:ir.model,name:pos_loyalty.model_res_partner
-msgid "Contact"
-msgstr "Liên hệ"
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__card_id
+msgid "Card"
+msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__coupon_id
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__barcode_rule__type__coupon
 msgid "Coupon"
 msgstr "Phiếu giảm giá"
@@ -185,27 +158,15 @@ msgid "Coupon point(s)"
 msgstr "Điểm phiếu giảm giá"
 
 #. module: pos_loyalty
-#: model:ir.model,website_form_label:pos_loyalty.model_res_partner
-msgid "Create a Customer"
-msgstr "Tạo một khách hàng"
-
-#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Current Balance:"
 msgstr ""
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "Customer needed"
-msgstr "Cần có khách hàng"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "Deactivating reward"
-msgstr "Hủy kích hoạt phần thưởng"
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__disabled_program_ids
+msgid "Disabled Program"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
@@ -228,7 +189,6 @@ msgstr "Chiết khấu & khách hàng thân thiết"
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_session__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_product__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_template__display_name
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -252,15 +212,15 @@ msgstr "Nhập số tiền"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
-msgid "Error validating rewards"
-msgstr "Lỗi khi xác nhận phần thưởng"
-
-#. module: pos_loyalty
-#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Expiration"
 msgstr "Ngày hết hạn"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
+msgid "Free Product - %s"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
@@ -274,10 +234,21 @@ msgid "Gift Card"
 msgstr ""
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__gift_card_vals
+msgid "Gift Card Vals"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Gift card or Discount code"
 msgstr "Thẻ quà tặng hoặc mã giảm giá"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
+msgid "Gift card printing failed"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
@@ -287,8 +258,8 @@ msgstr "Thẻ quà tặng & ví điện tử"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
-msgid "How many point this reward cost on the coupon."
-msgstr "Cần bao nhiêu điểm trên phiếu giảm giá để đổi phần thưởng này."
+msgid "How many points this reward cost."
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
@@ -305,7 +276,6 @@ msgstr "Cần bao nhiêu điểm trên phiếu giảm giá để đổi phần t
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_session__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_product__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_product_template__id
-#: model:ir.model.fields,field_description:pos_loyalty.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -314,34 +284,6 @@ msgstr "ID"
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
 msgid "Invalid Gift Card Code"
 msgstr ""
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr ""
-"Phần thưởng chương trình thẻ quà tặng không hợp lệ. Sử dụng 1 đơn vị tiền tệ "
-"cho mỗi điểm giảm giá."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr ""
-"Quy tắc chương trình thẻ quà tặng không hợp lệ. Sử dụng 1 điểm cho mỗi đơn "
-"vị tiền tệ được chi tiêu."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "Invalid gift card program. More than one reward."
-msgstr "Chương trình thẻ quà tặng không hợp lệ. Vượt quá một phần thưởng."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "Invalid gift card program. More than one rule."
-msgstr "Chương trình thẻ quà tặng không hợp lệ. Vượt quá một quy tắc."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
@@ -385,22 +327,10 @@ msgid "Loyalty Rule"
 msgstr "Quy tắc khách hàng thân thiết"
 
 #. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid "Loyalty coupon sold"
-msgstr ""
-
-#. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "No"
-msgstr "Không"
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "No reward can be claimed with this coupon."
-msgstr "Không thể dùng phiếu giảm giá này để đổi thưởng."
+#: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
+msgid "Negative quantity not allowed"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -409,16 +339,26 @@ msgid "No valid eWallet found"
 msgstr "Không tìm thấy ví điện tử hợp lệ nào"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-msgid "Oh snap !"
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid ""
+"Not enough points to claim the rewards of program '%(program)s'(needed: %"
+"(needed)s, available: %(available)s). Remove the reward lines from the order "
+"and validate again."
 msgstr ""
 
 #. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid "Onsite %s"
-msgstr "Tại cửa hàng %s"
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
+msgid "POS Order Reference"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__gift_card_vals
+msgid ""
+"POS-only: the gift-card/eWallet program (and optional physical code and "
+"expiration date) this funding line sold. The loyalty.card is created from it "
+"when the order is saved; afterwards card_id holds the durable link."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -429,8 +369,15 @@ msgstr "Vui lòng chọn một khách hàng và một ví điện tử hợp l�
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "Please select a product for this reward"
 msgstr "Vui lòng chọn một sản phẩm cho phần thưởng này"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
+msgid "Please select a reward"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
@@ -438,25 +385,14 @@ msgid "PoS Order Count"
 msgstr "Số đơn hàng POS"
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_partner_id
-msgid "PoS Order Customer"
-msgstr "Khách hàng của đơn hàng POS"
-
-#. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
-msgid "PoS Order Reference"
-msgstr "Tham chiếu đơn hàng POS"
-
-#. module: pos_loyalty
-#: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
-msgid "PoS order where this coupon was generated."
-msgstr "Đơn hàng POS mà phiếu giảm giá này được tạo."
-
-#. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "Point of Sale"
 msgstr "POS"
+
+#. module: pos_loyalty
+#: model:ir.module.module,shortdesc:base.module_pos_loyalty
+msgid "Point of Sale - Coupons & Loyalty"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_config
@@ -489,10 +425,9 @@ msgid "Point of Sales"
 msgstr "POS"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "Points"
-msgstr "Điểm"
+#: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
+msgid "Point of sale"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
@@ -514,18 +449,6 @@ msgstr "Sản phẩm"
 #: model:ir.model,name:pos_loyalty.model_product_product
 msgid "Product Variant"
 msgstr "Biến thể sản phẩm"
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
-msgstr "Chương trình: %(name)s, Sản phẩm thưởng: `%(reward_product)s`"
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
-msgstr "Chương trình: %(name)s, Sản phẩm quy định: `%(rule_product)s`"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -556,9 +479,10 @@ msgid "Reward"
 msgstr "Phần thưởng"
 
 #. module: pos_loyalty
-#: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
-msgid "Reward Identifier Code"
-msgstr "Mã định danh phần thưởng"
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "Select a product"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -584,55 +508,63 @@ msgid "Simple Pen"
 msgstr "Bút viết thường"
 
 #. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid ""
-"Some coupons are invalid. The applied coupons have been updated. Please "
-"check the order."
-msgstr ""
-"Một số phiếu giảm giá không hợp lệ. Các phiếu giảm giá được áp dụng đã được "
-"cập nhật. Vui lòng kiểm tra đơn hàng."
-
-#. module: pos_loyalty
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
 msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
-msgid "Technical field, whether all product match"
-msgstr "Trường kỹ thuật, tất cả sản phẩm phù hợp hay không"
+msgid "Technical field, whether all products match"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
+msgid "That card code belongs to someone else."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
+msgid "That card code has already been scanned and activated."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
+msgid "That card code is invalid (%s)."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "That coupon code has already been scanned and activated."
-msgstr "Mã phiếu giảm giá đó đã được quét và kích hoạt."
+msgid "That card has expired (%s)."
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
+msgid "That card program requires a specific pricelist."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "That promo code program has already been activated."
-msgstr "Chương trình mã khuyến mại đó đã được kích hoạt."
+msgid "That coupon is invalid (%s)."
+msgstr ""
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "That promo code program is expired."
-msgstr "Chương trình mã khuyến mại đó đã hết hạn."
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
+msgid "The POS order from which coupon is generated"
+msgstr ""
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "That promo code program is not yet valid."
-msgstr "Chương trình mã khuyến mại đó chưa có hiệu lực."
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "That promo code program requires a specific pricelist."
-msgstr "Chương trình mã khuyến mãi đó yêu cầu một bảng giá cụ thể."
+#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__card_id
+msgid "The card used to claim that reward."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -643,20 +575,10 @@ msgid ""
 msgstr ""
 
 #. module: pos_loyalty
-#: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
-msgid "The coupon used to claim that reward."
-msgstr "Phiếu giảm giá được sử dụng để đổi phần thưởng đó."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid ""
-"The following codes already exist in the database, perhaps they were already "
-"sold?\n"
-"%s"
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
+msgid "The gift card could not be printed. Reprint it from the order."
 msgstr ""
-"Các mã sau đã tồn tại trong cơ sở dữ liệu, có thể chúng đã được bán?\n"
-"%s"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
@@ -671,11 +593,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid ""
-"The reward \"%s\" contain an error in its domain, your domain must be "
+"The reward \"%s\" contains an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
-"Phần thưởng \"%s\" chứa lỗi trong miền, miền phải tương thích với máy khách "
-"POS."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -684,76 +604,9 @@ msgstr "Phần thưởng liên kết với dòng này."
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "The reward could not be applied."
-msgstr "Không thể áp dụng phần thưởng."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_order.py:0
-msgid "There are not enough points for the coupon: %s."
-msgstr "Không đủ điểm trên phiếu giảm giá: %s."
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "There are not enough points on the coupon to claim this reward."
-msgstr "Phiếu giảm giá không đủ điểm để đổi phần thưởng này."
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "There are not enough products in the basket to claim this reward."
-msgstr "Giỏ hàng không có đủ sản phẩm để đổi phần thưởng này."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid ""
-"There is no email template on the gift card program and your pos is set to "
-"print them."
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "This eWallet has no product available to refund to."
 msgstr ""
-"Không có mẫu email nào trong chương trình thẻ quà tặng và POS của bạn được "
-"thiết lập để in chúng."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid ""
-"There is no print report on the gift card program and your pos is set to "
-"print them."
-msgstr ""
-"Không có báo cáo nào trong chương trình thẻ quà tặng và POS của bạn được "
-"thiết lập để in chúng."
-
-#. module: pos_loyalty
-#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
-msgid "These are the products that are valid for this rule."
-msgstr "Đây là những sản phẩm khả dụng cho quy tắc này."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "This coupon is expired (%s)."
-msgstr "Phiếu giảm giá này đã hết hạn (%s)."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "This coupon is invalid (%s)."
-msgstr "Phiếu giảm giá này không hợp lệ (%s)."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "This coupon is not available with the current pricelist."
-msgstr "Phiếu giảm giá này không khả dụng cho bảng giá hiện tại."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "This coupon is not yet valid (%s)."
-msgstr "Phiếu giảm giá này không hợp lệ (%s)."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -771,29 +624,9 @@ msgid "This is used to print the generated gift cards from PoS."
 msgstr "Được sử dụng để in thẻ quà tặng đã tạo từ POS."
 
 #. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid "This programs requires a code to be applied."
-msgstr "Chương trình này yêu cầu áp dụng mã."
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/pos_config.py:0
-msgid ""
-"To continue, make the following reward products available in Point of Sale."
-msgstr ""
-"Để tiếp tục, hãy đặt các sản phẩm thưởng sau ở trạng thái có sẵn trong POS."
-
-#. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
 msgid "Type"
 msgstr "Loại"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "Unknown discount type"
-msgstr "Loại giảm giá không xác định"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -810,6 +643,11 @@ msgstr "Thẻ quà tặng chưa thanh toán bị từ chối."
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
 msgid "Until:"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.module.module,summary:base.module_pos_loyalty
+msgid "Use Coupons, Gift Cards and Loyalty programs in Point of Sale"
 msgstr ""
 
 #. module: pos_loyalty
@@ -835,30 +673,18 @@ msgid "Whether this line is part of a reward or not."
 msgstr "Dù dòng này là một phần của phần thưởng hay không."
 
 #. module: pos_loyalty
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
 msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "Yes"
-msgstr "Có"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You cannot change the quantity or the price of a physical gift card."
 msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "You cannot set negative quantity or price to gift card or ewallet."
-msgstr ""
-"Bạn không thể đặt số lượng hoặc giá nhỏ hơn 0 cho thẻ quà tặng hoặc ví điện "
-"tử."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -868,32 +694,13 @@ msgstr ""
 "Bạn phải thiết lập '%(mail_template)s' trước khi thiết lập '%(report)s'."
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "eWallet"
-msgstr "Ví điện tử"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "eWallet Pay"
-msgstr "Thanh toán ví điện tử"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "eWallet Refund"
-msgstr "Hoàn tiền ví điện tử"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid "eWallet requires a customer to be selected"
-msgstr "Ví điện tử yêu cầu chọn khách hàng"
-
-#. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
 msgid "no expiration"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
+msgid "these are the products that are valid for this rule."
 msgstr ""
 
 #. module: pos_loyalty
@@ -901,6 +708,211 @@ msgstr ""
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 msgid "used"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "        Technical field used to link multiple reward lines from the same "
+#~ "reward together.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Trường kỹ thuật dùng để liên kết nhiều dòng phần thưởng từ cùng "
+#~ "một phần thưởng với nhau.\n"
+#~ "    "
+
+#~ msgid "A better global discount is already applied."
+#~ msgstr "Chiết khấu hấp dẫn hơn đã được áp dụng."
+
+#~ msgid "Active loyalty cards"
+#~ msgstr "Thẻ khách hàng thân thiết đang hoạt động"
+
+#~ msgid ""
+#~ "Are you sure you want to remove %s from this order?\n"
+#~ " You will still be able to claim it through the reward button."
+#~ msgstr ""
+#~ "Bạn có chắc muốn loại bỏ %s khỏi đơn hàng này?\n"
+#~ " Bạn vẫn có thể nhận lại thông qua nút phần thưởng."
+
+#~ msgid "Contact"
+#~ msgstr "Liên hệ"
+
+#~ msgid "Create a Customer"
+#~ msgstr "Tạo một khách hàng"
+
+#~ msgid "Customer needed"
+#~ msgstr "Cần có khách hàng"
+
+#~ msgid "Deactivating reward"
+#~ msgstr "Hủy kích hoạt phần thưởng"
+
+#~ msgid "Error validating rewards"
+#~ msgstr "Lỗi khi xác nhận phần thưởng"
+
+#~ msgid "How many point this reward cost on the coupon."
+#~ msgstr "Cần bao nhiêu điểm trên phiếu giảm giá để đổi phần thưởng này."
+
+#~ msgid "Invalid gift card program reward. Use 1 currency per point discount."
+#~ msgstr ""
+#~ "Phần thưởng chương trình thẻ quà tặng không hợp lệ. Sử dụng 1 đơn vị tiền "
+#~ "tệ cho mỗi điểm giảm giá."
+
+#~ msgid "Invalid gift card program rule. Use 1 point per currency spent."
+#~ msgstr ""
+#~ "Quy tắc chương trình thẻ quà tặng không hợp lệ. Sử dụng 1 điểm cho mỗi "
+#~ "đơn vị tiền tệ được chi tiêu."
+
+#~ msgid "Invalid gift card program. More than one reward."
+#~ msgstr "Chương trình thẻ quà tặng không hợp lệ. Vượt quá một phần thưởng."
+
+#~ msgid "Invalid gift card program. More than one rule."
+#~ msgstr "Chương trình thẻ quà tặng không hợp lệ. Vượt quá một quy tắc."
+
+#~ msgid "No"
+#~ msgstr "Không"
+
+#~ msgid "No reward can be claimed with this coupon."
+#~ msgstr "Không thể dùng phiếu giảm giá này để đổi thưởng."
+
+#~ msgid "Onsite %s"
+#~ msgstr "Tại cửa hàng %s"
+
+#~ msgid "PoS Order Customer"
+#~ msgstr "Khách hàng của đơn hàng POS"
+
+#~ msgid "PoS Order Reference"
+#~ msgstr "Tham chiếu đơn hàng POS"
+
+#~ msgid "PoS order where this coupon was generated."
+#~ msgstr "Đơn hàng POS mà phiếu giảm giá này được tạo."
+
+#~ msgid "Points"
+#~ msgstr "Điểm"
+
+#~ msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
+#~ msgstr "Chương trình: %(name)s, Sản phẩm thưởng: `%(reward_product)s`"
+
+#~ msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
+#~ msgstr "Chương trình: %(name)s, Sản phẩm quy định: `%(rule_product)s`"
+
+#~ msgid "Reward Identifier Code"
+#~ msgstr "Mã định danh phần thưởng"
+
+#~ msgid ""
+#~ "Some coupons are invalid. The applied coupons have been updated. Please "
+#~ "check the order."
+#~ msgstr ""
+#~ "Một số phiếu giảm giá không hợp lệ. Các phiếu giảm giá được áp dụng đã "
+#~ "được cập nhật. Vui lòng kiểm tra đơn hàng."
+
+#~ msgid "Technical field, whether all product match"
+#~ msgstr "Trường kỹ thuật, tất cả sản phẩm phù hợp hay không"
+
+#~ msgid "That coupon code has already been scanned and activated."
+#~ msgstr "Mã phiếu giảm giá đó đã được quét và kích hoạt."
+
+#~ msgid "That promo code program has already been activated."
+#~ msgstr "Chương trình mã khuyến mại đó đã được kích hoạt."
+
+#~ msgid "That promo code program is expired."
+#~ msgstr "Chương trình mã khuyến mại đó đã hết hạn."
+
+#~ msgid "That promo code program is not yet valid."
+#~ msgstr "Chương trình mã khuyến mại đó chưa có hiệu lực."
+
+#~ msgid "That promo code program requires a specific pricelist."
+#~ msgstr "Chương trình mã khuyến mãi đó yêu cầu một bảng giá cụ thể."
+
+#~ msgid "The coupon used to claim that reward."
+#~ msgstr "Phiếu giảm giá được sử dụng để đổi phần thưởng đó."
+
+#~ msgid ""
+#~ "The following codes already exist in the database, perhaps they were "
+#~ "already sold?\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Các mã sau đã tồn tại trong cơ sở dữ liệu, có thể chúng đã được bán?\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "The reward \"%s\" contain an error in its domain, your domain must be "
+#~ "compatible with the PoS client"
+#~ msgstr ""
+#~ "Phần thưởng \"%s\" chứa lỗi trong miền, miền phải tương thích với máy "
+#~ "khách POS."
+
+#~ msgid "The reward could not be applied."
+#~ msgstr "Không thể áp dụng phần thưởng."
+
+#~ msgid "There are not enough points for the coupon: %s."
+#~ msgstr "Không đủ điểm trên phiếu giảm giá: %s."
+
+#~ msgid "There are not enough points on the coupon to claim this reward."
+#~ msgstr "Phiếu giảm giá không đủ điểm để đổi phần thưởng này."
+
+#~ msgid "There are not enough products in the basket to claim this reward."
+#~ msgstr "Giỏ hàng không có đủ sản phẩm để đổi phần thưởng này."
+
+#~ msgid ""
+#~ "There is no email template on the gift card program and your pos is set "
+#~ "to print them."
+#~ msgstr ""
+#~ "Không có mẫu email nào trong chương trình thẻ quà tặng và POS của bạn "
+#~ "được thiết lập để in chúng."
+
+#~ msgid ""
+#~ "There is no print report on the gift card program and your pos is set to "
+#~ "print them."
+#~ msgstr ""
+#~ "Không có báo cáo nào trong chương trình thẻ quà tặng và POS của bạn được "
+#~ "thiết lập để in chúng."
+
+#~ msgid "These are the products that are valid for this rule."
+#~ msgstr "Đây là những sản phẩm khả dụng cho quy tắc này."
+
+#~ msgid "This coupon is expired (%s)."
+#~ msgstr "Phiếu giảm giá này đã hết hạn (%s)."
+
+#~ msgid "This coupon is invalid (%s)."
+#~ msgstr "Phiếu giảm giá này không hợp lệ (%s)."
+
+#~ msgid "This coupon is not available with the current pricelist."
+#~ msgstr "Phiếu giảm giá này không khả dụng cho bảng giá hiện tại."
+
+#~ msgid "This coupon is not yet valid (%s)."
+#~ msgstr "Phiếu giảm giá này không hợp lệ (%s)."
+
+#~ msgid "This programs requires a code to be applied."
+#~ msgstr "Chương trình này yêu cầu áp dụng mã."
+
+#~ msgid ""
+#~ "To continue, make the following reward products available in Point of "
+#~ "Sale."
+#~ msgstr ""
+#~ "Để tiếp tục, hãy đặt các sản phẩm thưởng sau ở trạng thái có sẵn trong "
+#~ "POS."
+
+#~ msgid "Unknown discount type"
+#~ msgstr "Loại giảm giá không xác định"
+
+#~ msgid "Yes"
+#~ msgstr "Có"
+
+#~ msgid "You cannot set negative quantity or price to gift card or ewallet."
+#~ msgstr ""
+#~ "Bạn không thể đặt số lượng hoặc giá nhỏ hơn 0 cho thẻ quà tặng hoặc ví "
+#~ "điện tử."
+
+#~ msgid "eWallet"
+#~ msgstr "Ví điện tử"
+
+#~ msgid "eWallet Pay"
+#~ msgstr "Thanh toán ví điện tử"
+
+#~ msgid "eWallet Refund"
+#~ msgstr "Hoàn tiền ví điện tử"
+
+#~ msgid "eWallet requires a customer to be selected"
+#~ msgstr "Ví điện tử yêu cầu chọn khách hàng"
 
 #~ msgid "Reset Programs"
 #~ msgstr "Đặt lại chương trình"

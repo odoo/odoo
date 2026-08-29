@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 01:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -27,12 +27,29 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
+#: model:ir.module.module,description:base.module_auth_totp_mail
+msgid ""
+"\n"
+"2FA Invite mail\n"
+"===============\n"
+"Allow the users to invite another user to use Two-Factor authentication\n"
+"by sending an email to the target user. This email redirects them to:\n"
+"- the users security settings if the user is internal.\n"
+"- the portal security settings page if the user is not internal.\n"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 #, fuzzy
 msgid ""
 ".\n"
 "                <br/>"
 msgstr ". <br/>"
+
+#. module: auth_totp_mail
+#: model:ir.module.module,shortdesc:base.module_auth_totp_mail
+msgid "2FA Invite mail"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -155,14 +172,11 @@ msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-envelope-o\"/>\n"
+"<i class=\"oi\" data-icon=\"mail\"/>\n"
 "                To login, enter below the six-digit authentication code just "
 "sent via email to"
 msgstr ""
-"<i class=\"fa fa-envelope-o\"/> Kirish uchun quyida elektron pochta orqali "
-"yuborilgan olti xonali tasdiqlash kodini kiriting"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -468,3 +482,12 @@ msgstr "Ikki bosqichli tasdiqlash kodingiz"
 #, fuzzy
 msgid "activating Two-factor Authentication"
 msgstr "Ikki bosqichli tasdiqlashni faollashtirish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-envelope-o\"/>\n"
+#~ "                To login, enter below the six-digit authentication code "
+#~ "just sent via email to"
+#~ msgstr ""
+#~ "<i class=\"fa fa-envelope-o\"/> Kirish uchun quyida elektron pochta "
+#~ "orqali yuborilgan olti xonali tasdiqlash kodini kiriting"

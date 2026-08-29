@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-22 00:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -24,6 +24,23 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: phone_validation
+#: model:ir.module.module,description:base.module_phone_validation
+msgid ""
+"\n"
+"Phone Numbers Validation\n"
+"========================\n"
+"\n"
+"This module adds the feature of validation and formatting phone numbers\n"
+"according to a destination country.\n"
+"\n"
+"It also adds phone blacklist management through a specific model storing\n"
+"blacklisted phone numbers.\n"
+"\n"
+"It adds mail.thread.phone mixin that handles sanitation and blacklist of\n"
+"records numbers. "
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python
@@ -361,6 +378,11 @@ msgid "Phone Number"
 msgstr "Telefonnummer"
 
 #. module: phone_validation
+#: model:ir.module.module,shortdesc:base.module_phone_validation
+msgid "Phone Numbers Validation"
+msgstr ""
+
+#. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Please enter at least 3 characters when searching a Phone number."
@@ -413,6 +435,11 @@ msgstr "Fjern blokkeringsårsak: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Bruker"
+
+#. module: phone_validation
+#: model:ir.module.module,summary:base.module_phone_validation
+msgid "Validate and format phone numbers"
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python

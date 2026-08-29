@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:39+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 23:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -19,6 +19,21 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_presence
+#: model:ir.module.module,description:base.module_hr_presence
+msgid ""
+"\n"
+"Control Employees Presence\n"
+"==========================\n"
+"\n"
+"Based on:\n"
+"    * The IP Address\n"
+"    * The User's Session\n"
+"    * The Sent Emails\n"
+"\n"
+"Allows to contact directly the employee in case of unjustified absence.\n"
+msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -39,8 +54,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    <t t-out=\"object.name or ''\">Abigail Peterson</t>様"
-"、<br/><br/>\n"
+"                    <t t-out=\"object.name or ''\">Abigail Peterson</t>様、"
+"<br/><br/>\n"
 "お疲れ様です。現在、出社されておらず、休暇申請の記録もありません。本日の欠勤"
 "がこちらの見落としである場合には、混乱をさせてしまい申し訳ありません。\n"
 "の無断欠勤に対処するために必要なご対応をお願いします。質問やサポートが必要な"
@@ -90,6 +105,11 @@ msgstr "Eメール送信済"
 #: model:ir.model,name:hr_presence.model_hr_employee
 msgid "Employee"
 msgstr "従業員"
+
+#. module: hr_presence
+#: model:ir.module.module,shortdesc:base.module_hr_presence
+msgid "Employee Presence Control"
+msgstr ""
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence

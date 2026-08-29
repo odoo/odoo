@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 20:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-master/"
@@ -372,33 +372,29 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid ""
-"<i class=\"fa fa-2x fa-clock-o\" role=\"img\" aria-label=\"Activities\"/>"
+"<i class=\"oi oi-2x\" data-icon=\"schedule\" role=\"img\" aria-"
+"label=\"Activities\"/>"
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid ""
-"<i class=\"fa fa-envelope flex-shrink-0 me-1 text-center\" title=\"Email\"/>"
+"<i class=\"oi oi-filled flex-shrink-0 me-1 text-center\" data-icon=\"mail\" "
+"title=\"Email\"/>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"person\" "
+"title=\"new_applications_icon\" aria-hidden=\"true\"/>"
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid ""
-"<i class=\"fa fa-user\" title=\"new_applications_icon\" aria-hidden=\"true\"/"
-">"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle pe-1\"/>\n"
-"                                    All applications will lose their hired "
-"date and hired status."
+"<i class=\"oi\" data-icon=\"attach_file\" role=\"img\" aria-"
+"label=\"Documents\"/>"
 msgstr ""
 
 #. module: hr_recruitment
@@ -409,6 +405,14 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid ""
+"<span class=\"oi pe-1\" data-icon=\"warning\"/>\n"
+"                                    All applications will lose their hired "
+"date and hired status."
 msgstr ""
 
 #. module: hr_recruitment
@@ -706,6 +710,7 @@ msgstr "Шинжилгээ"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_new
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__applicant_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -751,10 +756,12 @@ msgstr "Горилогчийн нэр"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__applicant_without_email
 msgid "Applicant(s) not having email"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_partner__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_users__applicant_ids
@@ -914,6 +921,7 @@ msgstr "Хавсралтын тоо"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__attachment_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__attachment_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
 msgid "Attachments"
 msgstr "Хавсралтууд"
@@ -952,6 +960,7 @@ msgstr "Түгжигдсэн"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body_has_template_value
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr ""
 
@@ -998,6 +1007,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__can_edit_body
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__can_edit_body
 msgid "Can Edit Body"
 msgstr "Засвар хийх боломжтой Эх бие"
 
@@ -1080,6 +1090,7 @@ msgstr "Агуулга"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__body
 msgid "Contents"
 msgstr "Агуулга"
 
@@ -1161,6 +1172,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_uid
@@ -1177,6 +1189,7 @@ msgstr "Үүсгэсэн этгээд"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_date
@@ -1382,6 +1395,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__display_name
@@ -1449,16 +1463,19 @@ msgstr "Хуулбарлан үүсгэх"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids_domain
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicate_applicant_ids_domain
 msgid "Duplicate Applicant Ids Domain"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicate_applicant_ids
 msgid "Duplicate Applications"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicates_count
 msgid "Duplicates Count"
 msgstr ""
 
@@ -1490,11 +1507,13 @@ msgstr "Ерөнхий имэйл"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 msgid "Email Body..."
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__template_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__template_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid "Email Template"
@@ -1658,12 +1677,6 @@ msgid "Followers (Partners)"
 msgstr "Дагагчид (Харилцагчид)"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
-#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icon ж.ш. fa-tasks"
-
-#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "For all companies"
 msgstr ""
@@ -1726,6 +1739,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
@@ -1925,6 +1939,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__is_mail_template_editor
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__is_mail_template_editor
 msgid "Is Editor"
 msgstr ""
 
@@ -2072,6 +2087,7 @@ msgstr "Kpi Hr Recruitment New Colleagues Value"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__lang
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__lang
 msgid "Language"
 msgstr "Хэл"
 
@@ -2094,6 +2110,7 @@ msgstr "Сүүлийн үе шат дах шинэчлэл"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_uid
@@ -2110,6 +2127,7 @@ msgstr "Сүүлд зассан этгээд"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_date
@@ -2193,6 +2211,56 @@ msgid "Main Attachment"
 msgstr "Үндсэн хавсралт"
 
 #. module: hr_recruitment
+#: model:ir.module.module,description:base.module_hr_recruitment
+msgid ""
+"Manage Recruitment and Job applications\n"
+"---------------------------------------\n"
+"\n"
+"Publish, promote and organize your job offers with the Odoo\n"
+"<a href=\"https://www.odoo.com/app/recruitment\">Open Source Recruitment "
+"Application</a>.\n"
+"\n"
+"Organize your job board, promote your job announces and keep track of\n"
+"application submissions easily. Follow every applicant and build up a "
+"database\n"
+"of skills and profiles with indexed documents.\n"
+"\n"
+"Post Your Jobs on Best Job Boards\n"
+"---------------------------------\n"
+"\n"
+"Connect automatically to most famous job board websites; linkedIn, Monster,\n"
+"Craigslist, ... Every job position has a new email address automatically\n"
+"assigned to route applications automatically to the right job position.\n"
+"\n"
+"Whether applicants contact you by email or using an online form, you get "
+"all\n"
+"the data indexed automatically (resumes, motivation letter) and you can "
+"answer\n"
+"in just a click, reusing templates of answers.\n"
+"\n"
+"Customize Your Recruitment Process\n"
+"----------------------------------\n"
+"\n"
+"Use the kanban view and customize the steps of your recruitments process;\n"
+"pre-qualification, first interview, second interview, negociaiton, ...\n"
+"\n"
+"Get accurate statistics on your recruitment pipeline. Get reports to "
+"compare\n"
+"the performance of your different investments on external job boards.\n"
+"\n"
+"Streamline Your Recruitment Process\n"
+"-----------------------------------\n"
+"\n"
+"Follow applicants in your recruitment process with the smart kanban view. "
+"Save\n"
+"time by automating some communications with email templates.\n"
+"\n"
+"Documents like resumes and motivation letters are indexed automatically,\n"
+"allowing you to easily find for specific skills and build up a database of\n"
+"profiles.\n"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
 msgstr "Магистрын зэрэг"
@@ -2201,6 +2269,12 @@ msgstr "Магистрын зэрэг"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 msgid "Matching Talents"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2373,6 +2447,11 @@ msgstr "Дараагийн ажилбарын төрөл"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Next Meeting"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:res.groups.privilege,placeholder:hr_recruitment.res_groups_privilege_recruitment
+msgid "No"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2558,6 +2637,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
+#: model:ir.model.fields,help:hr_recruitment.field_applicant_refuse_single__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
@@ -2704,6 +2784,7 @@ msgstr "Илүү үр дүнтэйгээр сонгон шалгаруулалт
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 msgid "Reason"
 msgstr "Шалтгаан"
 
@@ -2724,6 +2805,7 @@ msgid "Recruiter Work Email"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.module.module,shortdesc:base.module_hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
 #: model:res.groups.privilege,name:hr_recruitment.res_groups_privilege_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.digest_digest_view_form
@@ -2785,6 +2867,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2798,6 +2881,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__duplicates
 msgid "Refuse Duplicate Applications"
 msgstr ""
 
@@ -2806,8 +2890,10 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__refuse_reason_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_reason_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2823,6 +2909,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_applicant_refuse_single
+msgid "Refuse a single applicant"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2859,6 +2950,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__model
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__model
 msgid "Related Document Model"
 msgstr ""
 
@@ -2875,6 +2967,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__render_model
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__render_model
 msgid "Rendering Model"
 msgstr ""
 
@@ -2996,6 +3089,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__scheduled_date
 msgid "Scheduled Date"
 msgstr "Товлогдсон огноо"
 
@@ -3064,6 +3158,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicant_mass_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__send_mail
 msgid "Send Email"
 msgstr "Имэйл илгээх"
 
@@ -3242,11 +3337,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__subject
+#: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__subject
 msgid "Subject"
 msgstr "Гарчиг"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_refuse_single_view_form
 msgid "Subject..."
 msgstr "Гарчиг..."
 
@@ -3478,6 +3575,11 @@ msgstr "Өнөөдрийн ажилбар"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Нийт ажилтны төлөвлөсөн тоо"
+
+#. module: hr_recruitment
+#: model:ir.module.module,summary:base.module_hr_recruitment
+msgid "Track your recruitment pipeline"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -3806,6 +3908,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
+#: model:ir.model.fields,help:hr_recruitment.field_applicant_refuse_single__scheduled_date
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
@@ -3821,6 +3924,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
 msgstr ""
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Font awesome icon ж.ш. fa-tasks"
 
 #~ msgid "Graduate"
 #~ msgstr "Бүрэн дунд"

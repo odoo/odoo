@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 08:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/bus/"
@@ -41,8 +41,8 @@ msgid ""
 "Bus logs contain confidential information and must only be shared with "
 "trusted recipients."
 msgstr ""
-"バスログには機密情報が含まれているため、信頼できる相手にのみ共有してください"
-"。"
+"バスログには機密情報が含まれているため、信頼できる相手にのみ共有してくださ"
+"い。"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_listener_mixin
@@ -65,6 +65,11 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Create Date"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,website_form_label:bus.model_res_partner
 msgid "Create a Customer"
 msgstr "顧客を作成"
@@ -73,11 +78,6 @@ msgstr "顧客を作成"
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "作成者"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
-msgid "Created on"
-msgstr "作成日"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -133,6 +133,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: bus
+#: model:ir.module.module,shortdesc:base.module_bus
+msgid "IM Bus"
+msgstr ""
+
+#. module: bus
+#: model:ir.module.module,description:base.module_bus
+msgid "Instant Messaging Bus allow you to send messages to users, in live."
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
@@ -159,31 +169,15 @@ msgstr "Qweb"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/services/bus_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "Refresh"
 msgstr "リフレッシュ"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid ""
-"Save your work and refresh to get the latest updates and avoid potential "
-"issues."
-msgstr ""
-"作業を保存して更新すると、最新の更新が表示され、潜在的な問題を回避できます。"
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "The page appears to be out of date."
 msgstr "ページが古くなっているようです。"
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid "The page is out of date"
-msgstr "ページが古くなっています"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -217,3 +211,16 @@ msgstr ""
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
 msgstr "WebSocketメッセージ処理"
+
+#~ msgid "Created on"
+#~ msgstr "作成日"
+
+#~ msgid ""
+#~ "Save your work and refresh to get the latest updates and avoid potential "
+#~ "issues."
+#~ msgstr ""
+#~ "作業を保存して更新すると、最新の更新が表示され、潜在的な問題を回避できま"
+#~ "す。"
+
+#~ msgid "The page is out of date"
+#~ msgstr "ページが古くなっています"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-19 05:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -25,6 +25,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: mail_group
+#: model:ir.module.module,description:base.module_mail_group
+msgid ""
+"\n"
+"Manage your mailing lists from Odoo.\n"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -135,112 +142,81 @@ msgstr ""
 "out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p> </div>"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+"<i class=\"oi me-1\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Sana\" title=\"Sana\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" role=\"img\" aria-"
+"label=\"Date\" title=\"Date\"/>"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"person\" role=\"img\" aria-"
+"label=\"Recipients\" title=\"Recipients\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Taxallus\" "
-"title=\"Taxallus\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"oi oi-fw\" data-icon=\"mail\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-label=\"Hide "
+"replies\" title=\"Hide replies\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi\" data-icon=\"east\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Show attachments\" title=\"Show attachments\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi\" data-icon=\"keyboard_arrow_down\" role=\"img\" aria-"
+"label=\"Show replies\" title=\"Show replies\"/>"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"<i class=\"oi\" data-icon=\"mail\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Taxallus\" "
-"title=\"Taxallus\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
-"title=\"Traffic\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Trafik\" "
-"title=\"Trafik\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
-"title=\"Recipients\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Qabul qiluvchilar\" "
-"title=\"Qabul qiluvchilar\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
-#, fuzzy
 msgid ""
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
-"title=\"Previous message\"/>"
+"<i class=\"oi\" data-icon=\"west\" role=\"img\" aria-label=\"Previous "
+"message\" title=\"Previous message\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Oldingi xabar\" "
-"title=\"Oldingi xabar\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_message
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
-"title=\"Next message\"/>"
-msgstr ""
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Keyingi xabar\" "
-"title=\"Keyingi xabar\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
-"title=\"Show attachments\"/>"
-msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Ilovalarni "
-"ko‘rsatish\" title=\"Ilovalarni ko‘rsatish\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
-"title=\"Show replies\"/>"
-msgstr ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Javoblarni "
-"ko‘rsatish\" title=\"Javoblarni ko‘rsatish\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
-"attachments\" title=\"Hide attachments\"/>"
-msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Ilovalarni "
-"yashirish\" title=\"Ilovalarni yashirish\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
-"title=\"Hide replies\"/>"
-msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Javoblarni "
-"yashirish\" title=\"Javoblarni yashirish\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -736,7 +712,8 @@ msgstr "Guruh nomi"
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, fuzzy
 msgid "Group message can only be linked to mail group. Current model is %s."
-msgstr "Guruh xabari faqat pochta guruhiga bog‘lanishi mumkin. Joriy model: %s."
+msgstr ""
+"Guruh xabari faqat pochta guruhiga bog‘lanishi mumkin. Joriy model: %s."
 
 #. module: mail_group
 #. odoo-python
@@ -914,6 +891,7 @@ msgstr "Mahalliy qismga asoslangan kiruvchi xabarlarni aniqlash"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
+#: model:ir.module.module,shortdesc:base.module_mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #, fuzzy
 msgid "Mail Group"
@@ -1002,6 +980,11 @@ msgstr ""
 #, fuzzy
 msgid "Mailing-List:"
 msgstr "Xat ro‘yxati:"
+
+#. module: mail_group
+#: model:ir.module.module,summary:base.module_mail_group
+msgid "Manage your mailing lists"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_member_action
@@ -1180,14 +1163,11 @@ msgstr "Nom"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid ""
-"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
-"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi oi-2x float-"
+"end\" data-icon=\"south\" role=\"img\" aria-label=\"\" title=\"Read this !\"/"
+">"
 msgstr ""
-"Obunani bekor qilishni xohlaysizmi? <br/>Mana shu yerda! <span class=\"oi fa-"
-"2x oi-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Buni "
-"o‘qing!\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
@@ -1914,3 +1894,101 @@ msgstr "obunani bekor qildi"
 #, fuzzy
 msgid "your email..."
 msgstr "elektron pochta manzilingiz..."
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" "
+#~ "title=\"Date\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Sana\" "
+#~ "title=\"Sana\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+#~ "title=\"Alias\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Taxallus\" "
+#~ "title=\"Taxallus\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+#~ "title=\"Alias\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Taxallus\" "
+#~ "title=\"Taxallus\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+#~ "title=\"Traffic\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Trafik\" "
+#~ "title=\"Trafik\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+#~ "title=\"Recipients\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Qabul "
+#~ "qiluvchilar\" title=\"Qabul qiluvchilar\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous "
+#~ "message\" title=\"Previous message\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Oldingi xabar\" "
+#~ "title=\"Oldingi xabar\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+#~ "title=\"Next message\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Keyingi xabar\" "
+#~ "title=\"Keyingi xabar\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show "
+#~ "attachments\" title=\"Show attachments\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Ilovalarni "
+#~ "ko‘rsatish\" title=\"Ilovalarni ko‘rsatish\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+#~ "title=\"Show replies\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Javoblarni "
+#~ "ko‘rsatish\" title=\"Javoblarni ko‘rsatish\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+#~ "attachments\" title=\"Hide attachments\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Ilovalarni "
+#~ "yashirish\" title=\"Ilovalarni yashirish\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+#~ "title=\"Hide replies\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Javoblarni "
+#~ "yashirish\" title=\"Javoblarni yashirish\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-"
+#~ "arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/"
+#~ ">"
+#~ msgstr ""
+#~ "Obunani bekor qilishni xohlaysizmi? <br/>Mana shu yerda! <span class=\"oi "
+#~ "fa-2x oi-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Buni "
+#~ "o‘qing!\"/>"

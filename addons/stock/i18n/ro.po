@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 23:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
@@ -267,7 +267,6 @@ msgstr "%(warehouse)s: Produs de aprovizionare de la %(supplier)s"
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%s (copy)"
@@ -377,12 +376,6 @@ msgid "(serial barcode)"
 msgstr "(cod de bare serie)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "), a replenishment must be done to reach the maximum level of stock ("
-msgstr ""
-"), trebuie făcută o reaprovizionare pentru a atinge nivelul maxim de stoc ("
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
 msgid ""
@@ -442,8 +435,8 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
-msgid "+ %d day(s)"
-msgstr "+ %d zi(le)"
+msgid "+ %d days"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -465,8 +458,7 @@ msgstr ""
 "            Pot fi necesare acțiuni manuale."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "/day"
 msgstr "/zi"
 
@@ -614,7 +606,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"<i class=\"oi\" data-icon=\"warning\"/>\n"
 "                                All products could not be reserved. Click on "
 "the \"Reserve\" button to try to reserve products."
 msgstr ""
@@ -775,6 +767,13 @@ msgstr "<span class=\"text-muted small\"> În stoc</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"<span class=\"text-muted\">When forecasted inventory reaches the minimum, "
+"replenish to reach maximum.</span>"
 msgstr ""
 
 #. module: stock
@@ -1255,7 +1254,9 @@ msgid "After"
 msgstr "După"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_3
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_3
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_3
 msgid "After next month last year"
 msgstr "După luna următoare anul trecut"
 
@@ -1690,12 +1691,6 @@ msgstr ""
 "cu tip 'intern'."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Average Stock:"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
 msgstr "Restanță la"
@@ -1766,9 +1761,16 @@ msgid "Barcode is valid EAN"
 msgstr "Codul de bare este un EAN valid"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__based_on
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__based_on
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__min_max_based_on
 msgid "Based on"
 msgstr "Bazat pe"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Based on average daily demands from"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -2052,6 +2054,18 @@ msgid "Choose destination location"
 msgstr "Alegeți locația de destinație"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"Choose how many days of demand are covered by the Minimum level based on the "
+"average daily demand.\rThis number of days should at least be equal to "
+"Replenishment Lead Times - Availability Time to not run out of stock while "
+"waiting for a new replenishment to arrive. Include extra days of safety to "
+"buffer unusual situations.\r\rGreen if > Replenishment Lead Times - "
+"Availability Time\rOrange if = Replenishment Lead Times - Availability "
+"Time\rRed if < Replenishment Lead Times - Availability Time"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
 msgstr "Alegeți aspectul foii pentru a imprima etichetele lotului"
@@ -2071,11 +2085,6 @@ msgstr "Alegeți dacă să imprimați etichetele produsului sau lotului/sn"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
 msgstr "Golește"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "Close"
-msgstr "Închide"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__closest_location
@@ -2432,6 +2441,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_uid
@@ -2475,6 +2485,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_date
@@ -2523,16 +2534,6 @@ msgid "Creation date"
 msgstr "Data creării"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move_line__date
-msgid ""
-"Creation date of this move line until updated due to: quantity being "
-"increased, 'picked' status has updated, or move line is done."
-msgstr ""
-"Data creării acestei linii de mișcare până la actualizare din cauza: "
-"creșterii cantității, actualizării stării 'ridicat' sau finalizării liniei "
-"de mișcare."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Cross Dock"
@@ -2579,6 +2580,13 @@ msgid "Custom"
 msgstr "Personalizat"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__custom
+#: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__custom
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__custom
+msgid "Custom Demand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
@@ -2620,9 +2628,13 @@ msgid "Cyclic Counting"
 msgstr "Numărare ciclică"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Daily Demand:"
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__daily_demand
+msgid "Daily Demand"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__danger_level
+msgid "Danger Level"
 msgstr ""
 
 #. module: stock
@@ -3016,6 +3028,11 @@ msgid "Demand in Product UoM"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__daily_demand
+msgid "Demand is"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3232,6 +3249,7 @@ msgstr "Dimensiuni"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Discard"
 msgstr "Abandonează"
@@ -3294,6 +3312,7 @@ msgstr "Afișați loturi și numere de serie în livrare"
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__display_name
@@ -3506,13 +3525,13 @@ msgid "Enter a description"
 msgstr "Introduceți o descriere"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_orderpoint_suggest__based_on
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__min_max_based_on
 msgid ""
-"Estimate the sales volume for the period based on past period or order the "
-"forecasted quantity for that period."
+"Estimate the daily average future demand volume based on past period or "
+"choose Custom Demand to enter manually average daily demand."
 msgstr ""
-"Estimați volumul vânzărilor pentru perioadă pe baza perioadei trecute sau "
-"comandați cantitatea estimată pentru acea perioadă."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -3641,12 +3660,6 @@ msgid "Followers (Partners)"
 msgstr "Urmăritori (Parteneri)"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
-#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "For"
@@ -3768,6 +3781,18 @@ msgid "Forecasted Weight"
 msgstr "Greutate prognozată"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
+msgid ""
+"Forecasted stock level when replenishing.\n"
+"Automatically calculated as = Min + Max (Order frequency x Daily Demand x "
+"Growth factor, MoQ) with MoQ = Minimum quantity from vendor pricelist / "
+"BOM.\n"
+"Won't be reached by on Hand stock if unforecasted demand is delivered while "
+"waiting for arrival."
+msgstr ""
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted with Pending"
@@ -3832,6 +3857,7 @@ msgid "Full Package Name"
 msgstr "Nume pachet complet"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Activități viitoare"
@@ -4049,6 +4075,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__id
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__id
 #: model:ir.model.fields,field_description:stock.field_stock_package__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__id
@@ -4374,12 +4401,6 @@ msgid "Import Serials"
 msgstr "Import seriale"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/stock_replenishment_info.py:0
-msgid "In %s day(s)"
-msgstr "În %s zi(e)"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Tip intrare"
@@ -4606,6 +4627,7 @@ msgstr "Cantitate inventariată"
 #: model:ir.actions.server,name:stock.action_view_quants
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_inventory
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_inventory
+#: model:ir.module.module,shortdesc:base.module_stock
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: model:res.groups.privilege,name:stock.res_groups_privilege_inventory
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4926,7 +4948,9 @@ msgid "Last 12 Months"
 msgstr "Ultimele 12 luni"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_year
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_year
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_year
 msgid "Last 12 months"
 msgstr "Ultimele 12 luni"
 
@@ -4936,7 +4960,9 @@ msgid "Last 3 Months"
 msgstr "Ultimele 3 luni"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__three_months
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__three_months
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__three_months
 msgid "Last 3 months"
 msgstr "Ultimele 2 luni"
 
@@ -4946,12 +4972,16 @@ msgid "Last 30 Days"
 msgstr "Ultimele 30 zile"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_month
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_month
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_month
 msgid "Last 30 days"
 msgstr "Ultimele 30 zile"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_week
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_week
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_week
 msgid "Last 7 days"
 msgstr "Ultimele 7 zile"
 
@@ -4985,6 +5015,7 @@ msgstr "Ultimul inventar"
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_uid
@@ -5028,6 +5059,7 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_date
@@ -5067,7 +5099,9 @@ msgid "Last time the Quantity was Updated"
 msgstr "Ultima dată când cantitatea a fost actualizată"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_quarter
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_quarter
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_quarter
 msgid "Last year quarter"
 msgstr "Ultimul trimestru al anului trecut"
 
@@ -5078,6 +5112,7 @@ msgid "Late"
 msgstr "Întârziat"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Activități întârziate"
@@ -5118,12 +5153,6 @@ msgstr "Termen livrare"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Lead Time Information"
 msgstr "Informații termen de livrare"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Lead Time:"
-msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -5474,6 +5503,11 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "Gestionare procese de tragere și împingere stoc"
 
 #. module: stock
+#: model:ir.module.module,summary:base.module_stock
+msgid "Manage your stock and logistics activities"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Manual"
@@ -5503,6 +5537,12 @@ msgstr "Martie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as To Do"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: stock
@@ -5597,13 +5637,33 @@ msgstr "Min"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "Min - Max"
-msgstr "Min - Max"
+msgid "Min - Max Suggestion"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__min_coverage
+msgid "Min Coverage"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__min_max_based_on_factor
+msgid "Min Max Based On Factor"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
 msgstr "Cantitate minimă"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
+msgid ""
+"Minimum Forecasted stock level that will trigger a replenishment.\n"
+"A safety stock is included in the min to cover unusual situations if days of "
+"demand covered by the Minimum Level is > Replenishment Lead Times - "
+"Availability Time."
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -5614,6 +5674,13 @@ msgstr "Regula inventarului minim"
 #: model:ir.model.fields,field_description:stock.field_product_product__orderpoint_ids
 msgid "Minimum Stock Rules"
 msgstr "Reguli stoc minim"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid ""
+"Minimum days of coverage and order frequency to be achieved by Min and Max "
+"stock levels must first be defined for each product."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5725,6 +5792,7 @@ msgid "Multiple destinations"
 msgstr "Destinații multiple"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Activitățile mele"
@@ -5873,7 +5941,9 @@ msgid "Next date the On Hand Quantity should be counted."
 msgstr "Următoarea dată când cantitatea din stoc ar trebui să fie numărată."
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_2
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_2
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_2
 msgid "Next month last year"
 msgstr "Luna următoare anul trecut"
 
@@ -5884,6 +5954,7 @@ msgstr "Transferul (transferurile) următoare:"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__no
+#: model:res.groups.privilege,placeholder:stock.res_groups_privilege_inventory
 msgid "No"
 msgstr "Nu"
 
@@ -6312,19 +6383,8 @@ msgid "Ordered"
 msgstr "Comandat"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Ordering Frequency:"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Ordering Frequency: On demand"
-msgstr "Frecvența de comandare: La cerere"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__orderpoint_id
 msgid "Orderpoint"
 msgstr "Orderpoint"
@@ -6823,6 +6883,7 @@ msgid "Pay now"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
 msgid "Percent Factor"
 msgstr "Factor procentual"
@@ -7812,6 +7873,12 @@ msgid "References"
 msgstr "Referințe"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+msgid "Refresh"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_stock_quant_relocate
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Relocate"
@@ -7903,6 +7970,11 @@ msgid "Replenish"
 msgstr "Reaprovizionare"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__replenish_frequency
+msgid "Replenish Frequency"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__replenish_on_order
@@ -7932,6 +8004,14 @@ msgstr "Reaprovizionare"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Replenishment"
 msgstr "Reaprovizionare"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"Replenishment Frequency: choose how many days there are between "
+"replenishment requests to optimize the balance between your storage costs "
+"and order costs and calculate your Maximum level."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
@@ -7966,6 +8046,12 @@ msgstr "Raport de reaprovizionare"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
 msgstr "Căutare Raport Reaprovizionare"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+msgid "Replenishment Time ("
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
@@ -8335,7 +8421,9 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "TERMENI ȘI CONDIȚII STANDARD DE VÂNZARE"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year
 msgid "Same month last year"
 msgstr "Aceeași lună a anului trecut"
 
@@ -8365,9 +8453,9 @@ msgstr "Programat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__scheduled_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
 msgstr "Dată planificată"
@@ -8379,7 +8467,7 @@ msgstr "Programat la"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
-#: model:ir.model.fields,help:stock.field_stock_move_line__scheduled_date
+#: model:ir.model.fields,help:stock.field_stock_move_line__date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
 "Data programată până când se face mutarea, apoi data procesării efective a "
@@ -9163,6 +9251,11 @@ msgid "Stock Operation"
 msgstr "Operație stoc"
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_orderpoint_suggest
+msgid "Stock Orderpoint Min-Max Suggestion"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
 msgstr "Destinație pachet stoc"
@@ -9242,10 +9335,9 @@ msgid "Stock To Reserve:"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
-msgid "Stock level to reach when replenishing."
-msgstr "Nivelul stocului de atins la reaprovizionare."
+#: model:ir.model,name:stock.model_stock_replenishment_info
+msgid "Stock delivery time information"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -9271,11 +9363,6 @@ msgstr "Tip pachet stoc"
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Raport Regulă Stoc"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_replenishment_info
-msgid "Stock supplier replenishment information"
-msgstr "Informații de reaprovizionare furnizor stoc"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
@@ -9369,6 +9456,18 @@ msgstr "Stocare în sublocația"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sublocation
 msgid "Sublocation"
 msgstr "Sublocație"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/stock_orderpoint_list_view.xml:0
+msgid "Suggest"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_orderpoint_suggest
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Suggest Min-Max"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -9611,12 +9710,6 @@ msgstr "Transferurile inter- depozit au fost generate"
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr "Frecvența de inventar (zile) pentru o locație trebuie să fie negativă"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
-msgid "The minimum Stock level that will trigger a replenishment."
-msgstr "Nivelul minim de stoc care va declanșa o reaprovizionare."
 
 #. module: stock
 #. odoo-python
@@ -10190,6 +10283,7 @@ msgid "Today"
 msgstr "Astăzi"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Activitățile de astăzi"
@@ -10565,6 +10659,11 @@ msgstr "Anulați rezervarea"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
 msgstr "Reaprovizionare nedorită"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Update"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -11033,11 +11132,6 @@ msgstr ""
 "Când se face ridicarea, acest lucru permite schimbarea cantităților făcute."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "When the stock level at the forecasted date is below the minimum ("
-msgstr "Când nivelul stocului la data prognozată este sub minim ("
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
 msgid "When ticked, carrier of shipment will be propagated."
 msgstr "Când este bifat, transportatorul de expediere va fi propagat."
@@ -11107,6 +11201,11 @@ msgstr "Lățimea trebuie sa fie pozitivă"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Write one lot/serial name per line, followed by the quantity."
 msgstr "Scrieți un lot/nume serial per linie, urmat de cantitate."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "X"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -11598,13 +11697,8 @@ msgstr "cel mai apropiat, cea mai apropiată"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "day(s)"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_orderpoint_search_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "days"
 msgstr "zile"
@@ -11618,6 +11712,13 @@ msgstr "zile înainte când este marcat"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "days before/"
 msgstr "zile înainte/"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "days)"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -11817,6 +11918,57 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comanda de livrare (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "), a replenishment must be done to reach the maximum level of stock ("
+#~ msgstr ""
+#~ "), trebuie făcută o reaprovizionare pentru a atinge nivelul maxim de stoc "
+#~ "("
+
+#~ msgid "+ %d day(s)"
+#~ msgstr "+ %d zi(le)"
+
+#~ msgid "Close"
+#~ msgstr "Închide"
+
+#~ msgid ""
+#~ "Creation date of this move line until updated due to: quantity being "
+#~ "increased, 'picked' status has updated, or move line is done."
+#~ msgstr ""
+#~ "Data creării acestei linii de mișcare până la actualizare din cauza: "
+#~ "creșterii cantității, actualizării stării 'ridicat' sau finalizării "
+#~ "liniei de mișcare."
+
+#~ msgid ""
+#~ "Estimate the sales volume for the period based on past period or order "
+#~ "the forecasted quantity for that period."
+#~ msgstr ""
+#~ "Estimați volumul vânzărilor pentru perioadă pe baza perioadei trecute sau "
+#~ "comandați cantitatea estimată pentru acea perioadă."
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
+
+#~ msgid "In %s day(s)"
+#~ msgstr "În %s zi(e)"
+
+#~ msgid "Min - Max"
+#~ msgstr "Min - Max"
+
+#~ msgid "Ordering Frequency: On demand"
+#~ msgstr "Frecvența de comandare: La cerere"
+
+#~ msgid "Stock level to reach when replenishing."
+#~ msgstr "Nivelul stocului de atins la reaprovizionare."
+
+#~ msgid "Stock supplier replenishment information"
+#~ msgstr "Informații de reaprovizionare furnizor stoc"
+
+#~ msgid "The minimum Stock level that will trigger a replenishment."
+#~ msgstr "Nivelul minim de stoc care va declanșa o reaprovizionare."
+
+#~ msgid "When the stock level at the forecasted date is below the minimum ("
+#~ msgstr "Când nivelul stocului la data prognozată este sub minim ("
 
 #~ msgid "Choose your date"
 #~ msgstr "Alegeți data"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 01:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -34,6 +34,7 @@ msgstr "水泥"
 #: model:ir.model.fields,field_description:project_purchase.field_project_project__display_name
 #: model:ir.model.fields,field_description:project_purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:project_purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_report__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -41,14 +42,26 @@ msgstr "显示名称"
 #: model:ir.model.fields,field_description:project_purchase.field_project_project__id
 #: model:ir.model.fields,field_description:project_purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:project_purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_report__id
 msgid "ID"
 msgstr "ID"
 
 #. module: project_purchase
+#: model:ir.module.module,summary:base.module_project_purchase
+msgid "Monitor purchase in project"
+msgstr ""
+
+#. module: project_purchase
 #: model:ir.model,name:project_purchase.model_project_project
 #: model:ir.model.fields,field_description:project_purchase.field_purchase_order__project_id
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_report__project_id
 msgid "Project"
 msgstr "项目"
+
+#. module: project_purchase
+#: model:ir.module.module,shortdesc:base.module_project_purchase
+msgid "Project Purchase"
+msgstr ""
 
 #. module: project_purchase
 #: model:ir.model,name:project_purchase.model_purchase_order
@@ -66,6 +79,11 @@ msgstr "采购订单明细"
 #: model_terms:ir.ui.view,arch_db:project_purchase.project_view_form_inherit_project_purchase
 msgid "Purchase Orders"
 msgstr "采购订单"
+
+#. module: project_purchase
+#: model:ir.model,name:project_purchase.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
 
 #. module: project_purchase
 #: model:product.template,name:project_purchase.product_product_sand_product_template

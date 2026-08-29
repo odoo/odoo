@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 00:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
@@ -53,6 +53,13 @@ msgstr ""
 "fiecare proiect. \""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid ""
+"\" Their team understood our needs from day one. The result was a reliable "
+"solution that made our daily work much easier. \""
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
 msgid ""
@@ -61,6 +68,13 @@ msgid ""
 msgstr ""
 "\" Această companie ne-a transformat afacerea. <br/>Soluțiile lor sunt "
 "inovatoare și de încredere. \""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid ""
+"\" We were impressed by their attention to detail. Every step was clear, "
+"efficient, and focused on delivering real value. \""
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote
@@ -240,6 +254,18 @@ msgstr ""
 "produsele dumneavoastră.\""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_llms
+msgid ""
+"# Title \n"
+"\n"
+" > Optional description goes here \n"
+"\n"
+" Optional details go here \n"
+"\n"
+" Write the document in markdown language"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "Pagini vizitate"
@@ -373,6 +399,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/a11y_new_tab_link.js:0
+msgid "(Open in new tab)"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "+ Field"
 msgstr ""
@@ -458,10 +490,36 @@ msgstr ""
 
 #. module: website
 #: model:website,contact_us_link_url:website.website2
+#: model:website.page,url:website.contactus_page
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
 msgstr "/contactus"
+
+#. module: website
+#: model:website.page,url:website.contactus_thanks
+msgid "/contactus-thank-you"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.privacy_policy_page
+msgid "/privacy"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.bs_debug_page
+msgid "/website/demo/bootstrap"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.color_combinations_debug_page
+msgid "/website/demo/color-combinations"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.snippets_debug_page
+msgid "/website/demo/snippets"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -787,20 +845,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
-"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-"
+"to:info@yourcompany.example.com\" title=\"Send an "
+"email\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
-"com\" title=\"Trimite un email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-"
+"to:info@yourcompany.example.com\" title=\"Trimite un "
+"email\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
-"com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" "
+"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
-"com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" "
+"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -843,9 +903,16 @@ msgstr ""
 "role=\"button\">Mai multe detalii</a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Get started</a>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_shape_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Learn more</a>"
 msgstr ""
@@ -1063,6 +1130,16 @@ msgstr ""
 "Rămânând la curent cu actualizările, puteți beneficia de cele mai noi "
 "instrumente și funcționalități, asigurând competitivitatea și eficiența "
 "afacerii dumneavoastră."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
+msgid "<font class=\"text-o-color-2\">DISCOVER</font>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid "<font class=\"text-o-color-2\">WHY CHOOSE US</font>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
@@ -1722,6 +1799,11 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_projects_list
+msgid "<span class=\"base-fs\">Motion &amp; Animation</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_projects_list
 msgid "<span class=\"base-fs\">UX/UI &amp; Strategy</span>"
 msgstr ""
 
@@ -1731,7 +1813,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 msgid ""
 "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Next slide</span>"
+"                                <span class=\"visually-hidden\">Next slide</"
+"span>"
 msgstr ""
 
 #. module: website
@@ -1756,8 +1839,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 msgid ""
 "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Previous slide</"
-"span>"
+"                                <span class=\"visually-hidden\">Previous "
+"slide</span>"
 msgstr ""
 
 #. module: website
@@ -1925,6 +2008,27 @@ msgstr "<span class=\"list-inline-item\">|</span>"
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_kanban_view
 msgid "<span class=\"me-1\">On:</span>"
 msgstr "<span class=\"me-1\">Pe:</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+msgid ""
+"<span class=\"o_carousel_pause_icon oi oi-filled\" data-icon=\"pause\" aria-"
+"hidden=\"true\"/>\n"
+"                        <span class=\"visually-hidden\">Pause slides</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid ""
+"<span class=\"o_carousel_pause_icon oi oi-filled\" data-icon=\"pause\" aria-"
+"hidden=\"true\"/>\n"
+"                <span class=\"visually-hidden\">Pause slides</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2417,9 +2521,9 @@ msgid ""
 "<span invisible=\"website_language_count &lt; 2\">Website visitors see the "
 "version matching their browser language, or the default if unavailable.</"
 "span>\n"
-"                                <span invisible=\"website_language_count &gt;"
-"= 2\">Install multiple languages to enable translation across your website.</"
-"span>"
+"                                <span invisible=\"website_language_count "
+"&gt;= 2\">Install multiple languages to enable translation across your "
+"website.</span>"
 msgstr ""
 
 #. module: website
@@ -3041,6 +3145,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+msgid "AI recommended"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 msgid "API Key"
 msgstr "Cheie API"
@@ -3124,8 +3234,8 @@ msgstr "Acordeon Imagine"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Accounts are usable across all your multiple websites"
-msgstr "Conturile sunt utilizabile pe toate site-urile dvs. multiple"
+msgid "Accounts created on this website are usable across all other websites"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -3209,8 +3319,8 @@ msgid ""
 "Add 3rd-party service domains <em>(\"www.example.com\" or \"example.com\")</"
 "em>, one per line."
 msgstr ""
-"Adăugați domenii de servicii terțe <em>(„www.exemplu.com” sau „exemplu."
-"com”)</em>, câte unul pe linie."
+"Adăugați domenii de servicii terțe <em>(„www.exemplu.com” sau "
+"„exemplu.com”)</em>, câte unul pe linie."
 
 #. module: website
 #. odoo-javascript
@@ -3222,12 +3332,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 msgid "Add Card"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "Add Cards"
 msgstr ""
 
 #. module: website
@@ -3265,12 +3369,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/media_list_option.xml:0
 msgid "Add Media"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.xml:0
-msgid "Add Mega Menu Item"
 msgstr ""
 
 #. module: website
@@ -3429,6 +3527,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Add analytics or marketing tags? Inject code in <head> or <body>."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Add context for people using screen readers."
 msgstr ""
 
 #. module: website
@@ -3786,8 +3890,7 @@ msgstr "Toate articolele"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/floating_snippets_plugin.js:0
 msgid "All pages"
 msgstr "Toate paginile"
 
@@ -3833,6 +3936,12 @@ msgstr ""
 msgid "Allow to specify for one page of the website to be trackable or not"
 msgstr ""
 "Permiteți să specificați pentru o pagină urmărirea sau nu a site-ului web"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+msgid "Allow your visitors to pause the carousel"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_access
@@ -3885,6 +3994,18 @@ msgstr "Subliniază întotdeauna"
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_showcase
 msgid "Amazing pages"
 msgstr "Pagini uimitoare"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Amber"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Amethyst"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -4206,6 +4327,12 @@ msgid "Audios"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Aurora"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "Authenticate users, protect user data and allow the website to deliver the "
@@ -4374,7 +4501,7 @@ msgstr "Fundal"
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/breadcrumb_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/icon_list_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_description_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 msgid "Background Color"
@@ -4435,6 +4562,11 @@ msgstr "Banner categorii"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Banner Contained"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Banner Glow"
 msgstr ""
 
 #. module: website
@@ -4657,6 +4789,12 @@ msgstr "Jurnale"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Bloom"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 msgid "Bluesky"
 msgstr "Cer senin"
@@ -4664,8 +4802,15 @@ msgstr "Cer senin"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
 msgid "Blur"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Blush"
 msgstr ""
 
 #. module: website
@@ -4875,6 +5020,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Bronze"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Build my website"
 msgstr "Construiește site-ul meu"
@@ -4920,6 +5071,12 @@ msgstr "Pachet"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Burgundy"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
@@ -4951,6 +5108,14 @@ msgstr "Cumpără Acum"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_banner
 msgid "Buy now"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid ""
+"By default, fonts are copied on your website. You can use Google's servers "
+"for fonts, but keep in mind it may impact GDPR compliance."
 msgstr ""
 
 #. module: website
@@ -4989,53 +5154,43 @@ msgstr "CTA Mobil"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "CTA, button, btn, action, engagement, link, offer, appeal"
-msgstr "CTA, buton, btn, acțiune, implicare, link, ofertă, apel"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger"
+msgid "CTA, buttons, btn, actions, engagement, links, offers, appeal"
 msgstr ""
-"CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
-"prompt, interacționează, declanșator"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, items, checklists, entries, sequences, bullets, "
-"points, list, group, benefits, features, advantages"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger"
 msgstr ""
-"CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
-"prompt, interacționează, declanșator, elemente, liste de verificare, "
-"înregistrări, secvențe, puncte, listă, grup, beneficii, caracteristici, "
-"avantaje"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, mockup"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger, items, checklists, entries, sequences, "
+"bullets, points, lists, group, benefits, features, advantages"
 msgstr ""
-"CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
-"prompt, interacționează, declanșator, machetă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, mockups"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger, mockup"
 msgstr ""
-"CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
-"prompt, interacționează, declanșator, machete"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, call to action, offer, centered, minimal, conversion, signup, "
-"subscribe, join, card"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger, mockups"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"CTA, buttons, call to action, offers, centered, minimal, conversions, "
+"signup, subscribe, join, cards"
 msgstr ""
 
 #. module: website
@@ -5084,6 +5239,12 @@ msgstr "Poate Publica"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Candy"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option_plugin.js:0
 msgid ""
 "Cannot apply this option on current text selection. Try clearing the format "
@@ -5100,8 +5261,7 @@ msgstr "Nu se poate dezactiva o limbă folosită în prezent pe un site web."
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Cannot load google map."
 msgstr "Nu se poate încărca harta google."
 
@@ -5144,6 +5304,16 @@ msgstr "Titlu card"
 #: code:addons/website/static/src/builder/plugins/options/card_width_option.xml:0
 msgid "Card Width"
 msgstr "Lățime Card"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "Card actions"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "Card layout"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5220,11 +5390,6 @@ msgstr "Tort de morcovi"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
 msgid "Case Studies"
 msgstr "Studii de caz"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "Catalog"
-msgstr "Catalog"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -5404,15 +5569,13 @@ msgstr "Vezi noutățile din compania noastră!"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Check your configuration."
 msgstr "Verificați configurația."
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Check your connection and try again"
 msgstr "Verificați conexiunea și încercați din nou"
 
@@ -5523,12 +5686,6 @@ msgid "Children"
 msgstr "Subordonati"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-msgid "Choose a preset palette"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_frame
 msgid ""
 "Choose a vibrant image and write an inspiring paragraph about it. It does "
@@ -5569,6 +5726,12 @@ msgid "Circle"
 msgstr "Cerc"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Citron"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_manifesto
 msgid "Clarity"
 msgstr ""
@@ -5593,6 +5756,12 @@ msgid ""
 msgstr ""
 "Pizza clasică cu mozzarella proaspătă, roșii San Marzano și frunze de "
 "busuioc, stropită cu ulei de măsline extravirgin."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Clay"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -5687,8 +5856,10 @@ msgstr "Clienții au economisit 32 milioane $ cu serviciile noastre."
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: code:addons/website/static/src/interactions/image_lightbox.xml:0
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -5699,6 +5870,7 @@ msgstr "Închide"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/cookies_bar_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Close Button Color"
 msgstr "Închidere Buton Culoare"
@@ -5713,6 +5885,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Closer Look"
 msgstr "Privire mai atentă"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Coast"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Cobalt"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -5820,6 +6004,13 @@ msgstr "Coloana"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
 msgstr "Coloane"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid ""
+"Combine images and text to highlight key details, using color options to "
+"match the card to your design."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -6249,6 +6440,12 @@ msgid "Copyright &amp;copy;"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Coral"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Core Features"
 msgstr "Funcționalități de bază"
@@ -6410,6 +6607,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_uid
+#: model:ir.model.fields,field_description:website.field_website_llms__create_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page_properties__create_uid
@@ -6443,6 +6641,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_date
+#: model:ir.model.fields,field_description:website.field_website_llms__create_date
 #: model:ir.model.fields,field_description:website.field_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_page_properties__create_date
@@ -6458,6 +6657,12 @@ msgstr "Creat în"
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
 msgid "Creating solutions that drive growth and long-term value."
 msgstr "Creăm soluții care stimulează creșterea și valoarea pe termen lung."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Crimson"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -6586,6 +6791,12 @@ msgid "Customize Show"
 msgstr "Personalizare Show"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Cyan"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid ""
 "Cyclists can follow the Bay Trail south from downtown and connect through "
@@ -6663,6 +6874,7 @@ msgstr "Dataset Color"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_field_option.js:0
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Date"
@@ -6923,7 +7135,8 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_description_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
 #: code:addons/website/static/src/builder/plugins/translation/options/attribute_translation_plugin.js:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
@@ -6931,12 +7144,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__help
 msgid "Description"
 msgstr "Descriere"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
-msgid "Description Text"
-msgstr ""
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_our_services
@@ -7006,6 +7213,11 @@ msgstr "Conceput <br/>pentru companii"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "Designed for companies"
 msgstr "Conceput pentru companii"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid "Designed to make a difference"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
@@ -7132,6 +7344,7 @@ msgstr "Abandon"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_connected
+#: model_terms:ir.ui.view,arch_db:website.s_banner_glow
 #: model_terms:ir.ui.view,arch_db:website.s_card
 #: model_terms:ir.ui.view,arch_db:website.s_framed_intro
 #: model_terms:ir.ui.view,arch_db:website.s_quadrant
@@ -7142,6 +7355,12 @@ msgstr "Descoperă"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_splash_intro
 msgid "Discover More"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid "Discover Now"
 msgstr ""
 
 #. module: website
@@ -7240,9 +7459,23 @@ msgid "Discover outstanding and highly engaging web pages."
 msgstr "Descoperă pagini web remarcabile și captivante."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid
+msgid ""
+"Discover responsibly sourced furniture made with durable materials, designed "
+"to bring lasting comfort, natural beauty, and warmth to your home.\n"
+"                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
+"><br/><br/><br/><br/><br/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons_horizontal
 msgid "Discover what is the best pricing for you."
 msgstr "Descoperiți care este cel mai bun preț pentru dvs."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_banner_glow
+msgid "Discover what makes our story unique and see how it all comes together."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7362,6 +7595,7 @@ msgstr "Afișează în interior"
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__display_name
 #: model:ir.model.fields,field_description:website.field_website_html_text_processor__display_name
+#: model:ir.model.fields,field_description:website.field_website_llms__display_name
 #: model:ir.model.fields,field_description:website.field_website_located_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__display_name
@@ -7565,6 +7799,11 @@ msgid "Doughnut"
 msgstr "Gogoașă"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_dropzone
+msgid "Drag blocks into this mega menu"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Drag to the right to get a submenu"
@@ -7605,6 +7844,12 @@ msgstr "Listă derulantă"
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Dropdown menu"
 msgstr "Meniul derulant"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
+msgid "Dropzone"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7686,6 +7931,13 @@ msgstr ""
 "care le-am creat pentru dumneavoastră.\n"
 "                       <br/>\n"
 "                        <br/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid ""
+"Each milestone marks progress and shows how the journey has evolved over "
+"time."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -7815,9 +8067,22 @@ msgid "Edit embedded code"
 msgstr "Editare cod încorporat"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid ""
+"Edit headings and paragraphs <b>directly on the page</b>, then add buttons "
+"and links to guide visitors. Fine-tune spacing and alignment, and preview "
+"each change on phones, tablets, and desktops before publishing."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 msgid "Edit in backend"
 msgstr "Editează în spate"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Edit llms.txt"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7873,6 +8138,12 @@ msgid "Either action_server_id or filter_id must be provided."
 msgstr "Fie acțiunea_server_id sau filtrul_id trebuie să fie furnizat."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Electric"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Electronics"
 msgstr "Electronice"
@@ -7902,20 +8173,6 @@ msgstr ""
 "                        <br/><br/><br/><br/><br/><br/>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_bento_grid
-msgid ""
-"Elevate your living space with furniture that blends modern aesthetics and "
-"classic charm, crafted to bring both comfort and style to your home.\n"
-"                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
-"><br/><br/><br/><br/><br/>"
-msgstr ""
-"Îmbunătățiți spațiul dvs. de locuit cu mobilier care îmbină estetica modernă "
-"și farmecul clasic, creat pentru a aduce atât confort, cât și stil casei "
-"dvs.\n"
-"                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
-"><br/><br/><br/><br/>"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
@@ -7939,6 +8196,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Embed Code"
 msgstr "Cod ascuns"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Ember"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Emerald"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -8008,6 +8277,12 @@ msgid "Enable to make the slide clickable"
 msgstr "Activați pentru a face slide-ul clicabil"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+msgid "End date"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 #: model_terms:ir.ui.view,arch_db:website.s_showcase_square
 msgid "Engages Visitors"
@@ -8021,6 +8296,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid "Enhance your experience"
 msgstr ""
 
@@ -8132,8 +8408,8 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Entered date or time is not correct! It must be %(start)s (%(format)s)."
 msgstr ""
-"Data sau ora introdusă nu este corectă! Trebuie să fie %(start)s "
-"(%(format)s)."
+"Data sau ora introdusă nu este corectă! Trebuie să fie %(start)s (%"
+"(format)s)."
 
 #. module: website
 #. odoo-javascript
@@ -8141,8 +8417,8 @@ msgstr ""
 msgid ""
 "Entered date or time is not correct! It must be after %(start)s (%(format)s)."
 msgstr ""
-"Data sau ora introdusă nu este corectă! Trebuie să fie după %(start)s "
-"(%(format)s)."
+"Data sau ora introdusă nu este corectă! Trebuie să fie după %(start)s (%"
+"(format)s)."
 
 #. module: website
 #. odoo-javascript
@@ -8151,15 +8427,15 @@ msgid ""
 "Entered date or time is not correct! It must be after or equal to %(start)s "
 "(%(format)s)."
 msgstr ""
-"Data sau ora introdusă nu este corectă! Trebuie să fie după sau egală cu "
-"%(start)s (%(format)s)."
+"Data sau ora introdusă nu este corectă! Trebuie să fie după sau egală cu %"
+"(start)s (%(format)s)."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must be before %(start)s "
-"(%(format)s)."
+"Entered date or time is not correct! It must be before %(start)s (%"
+"(format)s)."
 msgstr ""
 "Data sau ora introdusă nu este corectă! Trebuie să fie înainte de %(start)s "
 "(%(format)s)."
@@ -8171,8 +8447,8 @@ msgid ""
 "Entered date or time is not correct! It must be before or equal to %(start)s "
 "(%(format)s)."
 msgstr ""
-"Data sau ora introdusă nu este corectă! Trebuie să fie înainte sau egală cu "
-"%(start)s (%(format)s)."
+"Data sau ora introdusă nu este corectă! Trebuie să fie înainte sau egală cu %"
+"(start)s (%(format)s)."
 
 #. module: website
 #. odoo-javascript
@@ -8181,8 +8457,8 @@ msgid ""
 "Entered date or time is not correct! It must be within %(start)s and %(end)s "
 "(%(format)s)."
 msgstr ""
-"Data sau ora introdusă nu este corectă! Trebuie să fie între %(start)s și "
-"%(end)s (%(format)s)."
+"Data sau ora introdusă nu este corectă! Trebuie să fie între %(start)s și %"
+"(end)s (%(format)s)."
 
 #. module: website
 #. odoo-javascript
@@ -8190,18 +8466,23 @@ msgstr ""
 msgid ""
 "Entered date or time is not correct! It must not be %(start)s (%(format)s)."
 msgstr ""
-"Data sau ora introdusă nu este corectă! Nu trebuie să fie %(start)s "
-"(%(format)s)."
+"Data sau ora introdusă nu este corectă! Nu trebuie să fie %(start)s (%"
+"(format)s)."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must not be within %(start)s and "
-"%(end)s (%(format)s)."
+"Entered date or time is not correct! It must not be within %(start)s and %"
+"(end)s (%(format)s)."
 msgstr ""
 "Data sau ora introdusă nu este corectă! Nu trebuie să fie între %(start)s și "
 "%(end)s (%(format)s)."
+
+#. module: website
+#: model:ir.module.module,summary:base.module_website
+msgid "Enterprise website builder"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -8225,8 +8506,21 @@ msgstr "Eroare"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
 msgid "Error Message"
 msgstr "Mesaj de eroare"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "Error Page %s"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/http_error_demo_card.edit.xml:0
+msgid "Error message:"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_cafe
@@ -8265,6 +8559,14 @@ msgstr "Evenimente"
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "Every Time"
 msgstr "De fiecare dată"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid ""
+"Every great story deserves its moment in the spotlight. Explore the standout "
+"pieces we handpicked and put front and center, each one chosen to capture "
+"attention and spark a little curiosity."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_sidegrid
@@ -8332,6 +8634,11 @@ msgid "Experience the Future of Innovation in Every Interaction"
 msgstr "Experimentează viitorul inovației în fiecare interacțiune"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid "Experience the real innovation"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid ""
 "Experience unparalleled comfort, cutting-edge design, and performance-"
@@ -8385,6 +8692,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Explore"
 msgstr "Explorează"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "Explore More"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
@@ -8502,6 +8814,11 @@ msgstr "Întrebări frecvente"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "FAQ Block"
 msgstr "Bloc Întrebări frecvente"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "FAQ Centered"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -8898,12 +9215,6 @@ msgid "Floating Cards"
 msgstr "Carduri plutitoare"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "Floating blocks alert"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references_social
 msgid "Flourishing together since 2016"
 msgstr "Înflorim împreună din 2016"
@@ -8995,6 +9306,12 @@ msgstr "Numele fontului este deja folosit"
 #: model:ir.model.fields,field_description:website.field_website_page_visibility_options_mixin__footer_visible
 msgid "Footer Visible"
 msgstr "Subsol Vizibil"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Forest"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -9100,6 +9417,11 @@ msgid "Framed Intro"
 msgstr "Introducere Înrămată"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
+msgid "Free Shipping • Secure payment • Easy Return •"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Free grid"
 msgstr "Grilă liberă"
@@ -9123,6 +9445,11 @@ msgstr "Înregistrare liberă"
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Frequently asked questions"
 msgstr "Întrebări frecvente"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_centered
+msgid "Frequently<br/>asked questions"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -9193,12 +9520,6 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
-msgid "Full-Width"
-msgstr "Lățime Maximă"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
 msgid "Full-width"
 msgstr ""
@@ -9260,6 +9581,12 @@ msgstr "Fii livrat"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_intro_pill
 msgid "Get Started"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "Get a"
 msgstr ""
 
 #. module: website
@@ -9364,6 +9691,12 @@ msgstr "Mergeți înapoi"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/website_auth_form.js:0
+msgid "Go back to the homepage"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
 msgid "Go to"
 msgstr "Mergi la"
@@ -9442,6 +9775,14 @@ msgstr "Google Maps API Key"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/services/google_maps_service.js:0
+msgid ""
+"Google Maps configuration has changed. Please reload the page for changes to "
+"take effect."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_cta_mobile
 msgid "Google Play"
@@ -9468,6 +9809,12 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
 msgstr "Cheie Google, sau activați pentru a accesa prima răspuns"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Graphite"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9521,6 +9868,12 @@ msgstr "Grup"
 #: model:ir.model.fields,field_description:website.field_website_page_properties__group_ids
 msgid "Groups"
 msgstr "Grupuri"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Grove"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_services_pack
@@ -9602,6 +9955,11 @@ msgstr "Aniversare fericită Odoo!"
 #: model_terms:ir.ui.view,arch_db:website.s_avatars
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_lite
 msgid "Happy customers"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_cookie_policy
+msgid "Has Cookie Policy"
 msgstr ""
 
 #. module: website
@@ -9725,6 +10083,8 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.js:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
@@ -9841,6 +10201,12 @@ msgstr "Ascunde marginile"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
+msgid "Hide Error Message"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Hide For"
 msgstr "Ascundeți pentru"
@@ -9870,6 +10236,12 @@ msgstr "Ascundeți această pagină de rezultatele căutării"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
+msgid "Hides an error message."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 msgid "High"
 msgstr "Ridicat"
@@ -9891,6 +10263,18 @@ msgstr "Evidențiază activul"
 #: code:addons/website/static/src/builder/plugins/options/emphasize_animated_text.xml:0
 msgid "Highlight Animated Text"
 msgstr "Evidențiază text animat"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Highlight the quality behind every customer project"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid ""
+"Highlight what sets you apart. Focus on the value you bring and the problems "
+"you solve, and keep the message clear and concise."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -10005,7 +10389,7 @@ msgstr "Atribute orizontale"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
-msgid "Horizontal and Vertical Offset"
+msgid "Horizontal and Vertical offset"
 msgstr ""
 
 #. module: website
@@ -10131,6 +10515,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__id
 #: model:ir.model.fields,field_description:website.field_website_html_text_processor__id
+#: model:ir.model.fields,field_description:website.field_website_llms__id
 #: model:ir.model.fields,field_description:website.field_website_located_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__id
@@ -10331,6 +10716,11 @@ msgstr "Imagine"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image - Text"
 msgstr "Imagine - Text"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Image - Text Full Width"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10926,9 +11316,19 @@ msgid "Intro Pill"
 msgstr "Pastilă introducere"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Intro Spotlight"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks
 msgid "Introducing"
 msgstr "Introducere"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_banner_glow
+msgid "Introducing<br/>Our New Collection"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -10937,8 +11337,7 @@ msgstr "Sistem intuitiv"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Invalid API Key. The following error was returned by Google: %(error)s"
 msgstr ""
 "Cheie API invalidă. Următoarea eroare a fost returnată de Google: %(error)s"
@@ -11000,6 +11399,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Inverted colors"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Iris"
 msgstr ""
 
 #. module: website
@@ -11458,6 +11863,27 @@ msgid "Kpi Website Visitor Count Value"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model:ir.model.fields,field_description:website.field_website__llms_txt
+#: model:ir.model.fields,field_description:website.field_website_llms__content
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "LLMs.txt"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_llms
+msgid "LLMs.txt Editor"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"LLMs.txt: This file tells LLMs how your content should be accessed and used. "
+"Write it as a plain text, human-readable markdown document."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_projects_list
 msgid "LUMEN"
 msgstr ""
@@ -11496,6 +11922,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Labels Width"
 msgstr "Lățimea etichetelor"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Lagoon"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_ecomm_categories_showcase
@@ -11610,6 +12042,7 @@ msgstr "Ultima Pagină"
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_uid
+#: model:ir.model.fields,field_description:website.field_website_llms__write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page_properties__write_uid
@@ -11631,6 +12064,7 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_date
+#: model:ir.model.fields,field_description:website.field_website_llms__write_date
 #: model:ir.model.fields,field_description:website.field_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_website_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_page_properties__write_date
@@ -11745,6 +12179,11 @@ msgid "Leading the future with innovation and strategy"
 msgstr "Conducem viitorul prin inovație și strategie"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "Learn More"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 msgid "Learn about our offerings"
 msgstr "Află despre ofertele noastre"
@@ -11762,6 +12201,11 @@ msgid ""
 msgstr ""
 "Află cum să configurezi rapid și să începi să folosești serviciile noastre "
 "cu ajutorul procesului nostru de onboarding pas cu pas."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hero_minimalist
+msgid "Learn more"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -11868,6 +12312,12 @@ msgstr "Luminos"
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 msgid "Light & Dark"
 msgstr "Lumină și întuneric"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Lilac"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
@@ -12043,6 +12493,12 @@ msgid "Logo"
 msgstr "Sigla"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+msgid "Logo colors"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
@@ -12084,6 +12540,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 msgid "Low"
 msgstr "Scăzut"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Luna"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
@@ -12168,6 +12630,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Map"
 msgstr "Hartă"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "Map ID"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_google_map/google_map.js:0
+msgid "Map Marker"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -12363,12 +12837,6 @@ msgid "Mega menu default image"
 msgstr "Imagine implicită mega meniu"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.js:0
-msgid "Mega menu item"
-msgstr "Element de meniu mega"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Men"
 msgstr "Bărbaț"
@@ -12428,7 +12896,7 @@ msgstr "Ordine meniu"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.js:0
+#: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Menu item"
 msgstr "Element de meniu"
 
@@ -12465,6 +12933,12 @@ msgstr "Meniurile cu meniuri copil nu pot fi adăugate ca submeniu."
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
 msgstr "Expert partener îmbinare"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Merlot"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -12536,6 +13010,12 @@ msgstr "Mijloc"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Midnight"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/timeline_list_option.xml:0
 #: code:addons/website/static/src/builder/plugins/timeline_images_option.xml:0
 msgid "Milestones"
@@ -12575,6 +13055,18 @@ msgstr "Minimalist"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
 msgid "Minimum Age"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Mink"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Mint"
 msgstr ""
 
 #. module: website
@@ -12881,12 +13373,6 @@ msgid "Name, id or key"
 msgstr "Nume, id sau cheie"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
-msgid "Narrow"
-msgstr "Îngust"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Nav and tabs"
 msgstr "Navigare și tab-uri"
@@ -12936,6 +13422,12 @@ msgid ""
 msgstr ""
 "Aveți nevoie să ridicați comanda la una dintre magazinele noastre? "
 "Descoperiți cel mai apropiat de dvs."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Neon"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13055,7 +13547,6 @@ msgstr "Notificări prin SMS pentru buletinul informativ"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Next"
@@ -13097,6 +13588,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
+#: model:res.groups.privilege,placeholder:website.res_groups_privilege_website
 #: model_terms:ir.ui.view,arch_db:website.s_age_verification_popup
 msgid "No"
 msgstr ""
@@ -13374,6 +13866,11 @@ msgid "OUR PROJECTS"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_animated_cover
+msgid "OUR SERVICES •"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block_split
 msgid "OUR STORY"
 msgstr ""
@@ -13394,6 +13891,146 @@ msgstr "Meniu Odoo"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
 msgstr "Versiune Odoo"
+
+#. module: website
+#: model:ir.module.module,description:base.module_website
+msgid ""
+"Odoo Website Builder\n"
+"--------------------\n"
+"\n"
+"Get an awesome and <a href=\"https://www.odoo.com/app/website\">free "
+"website</a>,\n"
+"easily customizable with the Odoo <a href=\"https://www.odoo.com/app/"
+"website\">website builder</a>.\n"
+"\n"
+"Create enterprise grade website with our super easy builder. Use finely\n"
+"designed building blocks and edit everything inline.\n"
+"\n"
+"Benefit from out-of-the-box business features; e-Commerce, events, blogs, "
+"jobs\n"
+"announces, customer references, call-to-actions, etc.\n"
+"\n"
+"Edit Anything Inline\n"
+"--------------------\n"
+"\n"
+"Create beautiful websites with no technical knowledge. Odoo's unique *'edit\n"
+"inline'* approach makes website creation surprisingly easy. No more complex\n"
+"backend; just click anywhere to change any content.\n"
+"\n"
+"\"Want to change the price of a product? or put it in bold? Want to change "
+"a\n"
+"blog title?\" Just click and change. What you see is what you get. Really.\n"
+"\n"
+"Awesome. Astonishingly Beautiful.\n"
+"---------------------------------\n"
+"\n"
+"Odoo's building blocks allow to design modern websites that are not "
+"possible\n"
+"with traditional WYSIWYG page editors.\n"
+"\n"
+"Whether it's for products descriptions, blogs or static pages, you don't "
+"need\n"
+"to be a professional designer to create clean contents. Just drag and drop "
+"and\n"
+"customize predefined building blocks.\n"
+"\n"
+"Enterprise-Ready, out-of-the-box\n"
+"--------------------------------\n"
+"\n"
+"Activate ready-to-use enterprise features in just a click; e-commerce,\n"
+"call-to-actions, jobs announces, events, customer references, blogs, etc.\n"
+"\n"
+"Traditional eCommerce and CMS have poorly designed backends as it's not "
+"their\n"
+"core focus. With the Odoo integration, you benefit from the best management\n"
+"software to follow-up on your orders, your jobs applicants, your leads, "
+"etc.\n"
+"\n"
+"A Great Mobile Experience\n"
+"-------------------------\n"
+"\n"
+"Get a mobile friendly website thanks to our responsive design based on\n"
+"bootstrap. All your pages adapt automatically to the screen size. (mobile\n"
+"phones, tablets, desktop) You don't have to worry about mobile contents, it\n"
+"works by default.\n"
+"\n"
+"SEO tools at your finger tips\n"
+"-----------------------------\n"
+"\n"
+"The *Promote* tool suggests keywords according to Google most searched "
+"terms.\n"
+"Search Engine Optimization tools are ready to use, with no configuration\n"
+"required.\n"
+"\n"
+"Google Analytics tracks your shopping cart events by default. Sitemap and\n"
+"structured content are created automatically for Google indexation.\n"
+"\n"
+"Multi-Languages Made Easy\n"
+"-------------------------\n"
+"\n"
+"Get your website translated in multiple languages with no effort. Odoo "
+"proposes\n"
+"and propagates translations automatically across pages, following what you "
+"edit\n"
+"on the master page.\n"
+"\n"
+"Designer-Friendly Templates\n"
+"---------------------------\n"
+"\n"
+"Templates are awesome and easy to design. You don't need to develop to "
+"create\n"
+"new pages, themes or building blocks. We use a clean HTML structure, a\n"
+"[bootstrap](http://getbootstrap.com/) CSS.\n"
+"\n"
+"Customize every page on the fly with the integrated template editor. "
+"Distribute\n"
+"your work easily as an Odoo module.\n"
+"\n"
+"Fluid Grid Layouting\n"
+"--------------------\n"
+"\n"
+"Design perfect pages by drag and dropping building blocks. Move and scale "
+"them\n"
+"to fit the layout you are looking for.\n"
+"\n"
+"Building blocks are based on a responsive, mobile friendly fluid grid "
+"system\n"
+"that appropriately scales up to 12 columns as the device or viewport size\n"
+"increases.\n"
+"\n"
+"Professional Themes\n"
+"-------------------\n"
+"\n"
+"Design a custom theme or reuse pre-defined themes to customize the look and\n"
+"feel of your website.\n"
+"\n"
+"Test new color scheme easily; you can change your theme at any time in just "
+"a\n"
+"click.\n"
+"\n"
+"Integrated With Odoo Apps\n"
+"-------------------------\n"
+"\n"
+"### e-Commerce\n"
+"\n"
+"Promote products, sell online, optimize visitors' shopping experience.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"\n"
+"### Online Events\n"
+"\n"
+"Schedule, organize, promote or sell events online; conferences, trainings, "
+"webinars, etc.\n"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Offer the support your customers need to succeed"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13708,6 +14345,12 @@ msgstr "Facultativ"
 msgid "Optional help text describing the filter usage and/or purpose."
 msgstr ""
 "Text de ajutor opțional care descrie utilizarea și/sau scopul filtrului."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Orbit"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14256,6 +14899,13 @@ msgid "Paid ads"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline_images
+msgid ""
+"Pair each milestone with an image to bring the story of your progress to "
+"life."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "Pantaloni"
@@ -14376,6 +15026,26 @@ msgid "Pause"
 msgstr "Pauză"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+msgid "Pause Button"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/interactions/carousel/carousel_slider.js:0
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Pause slides"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Pay"
 msgstr "Plată"
@@ -14456,6 +15126,12 @@ msgstr "Pastile"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Pine"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
 msgid "Pinterest"
@@ -14472,8 +15148,8 @@ msgstr "Substitut"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
-msgid "Places API"
-msgstr "API locuri"
+msgid "Places API (NEW)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14508,6 +15184,12 @@ msgstr "Cheie de autentificare Plausible"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/carousel/carousel_slider.js:0
+msgid "Play slides"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Please choose any one option"
@@ -14528,6 +15210,12 @@ msgid ""
 msgstr ""
 "Vă rugăm să completați formularul corect. Fișierul „%(fileName)s” este prea "
 "mare. (Maxim %(max)s MB)"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Plum"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14618,6 +15306,11 @@ msgstr "Adăugare la început"
 #. odoo-python
 #: code:addons/website/models/website_menu.py:0
 msgid "Presence of publishing branding in html content is forbidden"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Present the results that your customers can expect"
 msgstr ""
 
 #. module: website
@@ -15324,6 +16017,12 @@ msgid "Reliability"
 msgstr "Fiabilitate"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Rely on Google servers to serve font"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "Remember information about the preferred look or behavior of the website, "
@@ -15607,6 +16306,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_partner__website_id
 #: model:ir.model.fields,help:website.field_res_users__website_id
 #: model:ir.model.fields,help:website.field_website_controller_page__website_id
+#: model:ir.model.fields,help:website.field_website_llms__website_id
 #: model:ir.model.fields,help:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,help:website.field_website_page__website_id
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
@@ -15745,6 +16445,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Rose"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
@@ -15817,6 +16523,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Ruby"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "SCSS file: %s"
 msgstr "Fișier SCSS: %s"
@@ -15853,6 +16565,18 @@ msgstr "Optimizat SEO"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "SVG images are not supported. Please select a PNG, JPG, WEBP, or GIF"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Saffron"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Sage"
 msgstr ""
 
 #. module: website
@@ -15906,6 +16630,7 @@ msgstr "Saturație"
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 #: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+#: model_terms:ir.ui.view,arch_db:website.view_edit_llms
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "Save"
@@ -16028,6 +16753,12 @@ msgstr "Derulați în jos la secțiunea următoare"
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Scrolling Mode"
 msgstr "Modul de derulare"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Seafoam"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -16358,7 +17089,6 @@ msgstr "Legătură separată"
 #: code:addons/website/static/src/builder/plugins/options/pricelist_option/pricelist_cafe_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/pricelist_option/product_catalog_option.xml:0
 #: code:addons/website/static/src/builder/plugins/snippets_powerbox_plugin.js:0
-#: model_terms:ir.ui.view,arch_db:website.s_about_bold
 #: model_terms:ir.ui.view,arch_db:website.s_awards_list
 #: model_terms:ir.ui.view,arch_db:website.s_manifesto
 #: model_terms:ir.ui.view,arch_db:website.s_services_grid
@@ -16376,12 +17106,6 @@ msgstr "Separator"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Secvență"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
-msgid "Serve font from Google servers"
-msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -16638,8 +17362,7 @@ msgstr "Afișați vizualizările inactive"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/show_on_option.xml:0
 msgid "Show on"
 msgstr "Afișează mai departe"
 
@@ -16692,6 +17415,11 @@ msgstr "Showcase"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase Square"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Showcase the expertise that supports your services"
 msgstr ""
 
 #. module: website
@@ -16791,7 +17519,6 @@ msgstr "Site"
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
@@ -16839,6 +17566,12 @@ msgstr "Dimensiune 5x"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Skip and start from scratch"
 msgstr "Sari peste și începe de la zero"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Slate"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -17255,12 +17988,17 @@ msgid "Start Now <span class=\"oi ms-2\" data-icon=\"keyboard_arrow_right\"/>"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_field_option.js:0
+msgid "Start date"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
 msgid "Start saving  <span class=\"oi\" data-icon=\"east\" role=\"img\"/>"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_card_offset
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
@@ -17287,6 +18025,12 @@ msgstr ""
 "întâmpla în următoarele săptămâni."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Steel"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid "Step Up Your Game"
 msgstr "Treci la următorul nivel"
@@ -17309,6 +18053,12 @@ msgstr "Pași"
 #: code:addons/website/static/src/builder/plugins/options/table_of_content_option.xml:0
 msgid "Sticky"
 msgstr "Lipicios"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Stone"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -17520,12 +18270,6 @@ msgstr "SUGESTIE"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "TIP:"
-msgstr "SFAT:"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tab"
@@ -17714,6 +18458,12 @@ msgstr "Termeni și condiții"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Terra"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
 msgid "Terrain"
 msgstr "Teren"
@@ -17745,6 +18495,11 @@ msgid "Text - Image"
 msgstr "Text - Imagine"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Image Full Width"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 msgid "Text Alignment"
@@ -17759,7 +18514,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/base_visibility_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 msgid "Text Color"
 msgstr "Culoare text"
 
@@ -17821,6 +18575,11 @@ msgid "Thanks (Contact us)"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_card_offset
+msgid "The Future of Innovation"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 msgid "The Innovation Behind Our Product"
 msgstr "Inovația din spatele produsului nostru"
@@ -17835,8 +18594,8 @@ msgstr "Numele paginii de Instagram nu este valid"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid ""
-"The URL “%(url)s“ is contained in the “%(field)s” of the following "
-"“%(model)s”"
+"The URL “%(url)s“ is contained in the “%(field)s” of the following “%"
+"(model)s”"
 msgstr ""
 
 #. module: website
@@ -17934,8 +18693,8 @@ msgstr "Următorul domeniu nu este valid:"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): "
-"%(allowedMimeTypesLabels)s."
+"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %"
+"(allowedMimeTypesLabels)s."
 msgstr ""
 
 #. module: website
@@ -18009,6 +18768,12 @@ msgstr ""
 "utilizatorului fără a necesita cunoștințe tehnice."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid ""
+"The latest entry celebrates recent growth and points toward the next chapter."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
 msgstr "Limita este numărul maxim de înregistrări recuperate"
@@ -18025,6 +18790,12 @@ msgstr "Limita trebuie să fie între 1 și 16."
 msgid "The logo is too large. Please upload a logo smaller than 2.5 MB."
 msgstr ""
 "Logo-ul este prea mare. Vă rugăm să încărcați un logo mai mic de 2.5 MB."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "The logo must be an image (PNG, JPEG, GIF, WEBP or SVG)."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18074,8 +18845,8 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 msgid ""
 "The new default website is %(default_website_name)s. The following default "
-"settings were copied from the old default website to the new one: "
-"%(transferred_settings)s. Note that these settings are still present on the "
+"settings were copied from the old default website to the new one: %"
+"(transferred_settings)s. Note that these settings are still present on the "
 "old default website."
 msgstr ""
 
@@ -18394,11 +19165,6 @@ msgstr ""
 "de prezentare."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_key_images
-msgid "This is a small title related to the current image"
-msgstr "Acesta este un titlu mic legat de imaginea curentă"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid ""
 "This is a wider card with supporting text below as a natural lead-in to "
@@ -18438,8 +19204,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/floating_snippets_plugin.js:0
 #: model:ir.ui.menu,name:website.menu_current_page
 msgid "This page"
 msgstr "Această pagină"
@@ -18509,6 +19274,13 @@ msgid "This website does not have a domain configured."
 msgstr "Acest site nu are un domeniu configurat."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/http_error_demo_card.edit.xml:0
+msgid ""
+"This will provide technical details about the error encountered by the user."
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/website_page.py:0
 msgid "This would create a circular page hierarchy."
@@ -18544,6 +19316,12 @@ msgstr "Parteneriat de succes din 2021"
 #: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
 msgid "Thumbnails"
 msgstr "Miniaturi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Tide"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18991,6 +19769,14 @@ msgid "Translation Info"
 msgstr "Informații despre traducere"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/seo.xml:0
+msgid ""
+"Translation may differ from original content. Click on \"Edit/Translate\" to "
+"see most recent changes."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_features
 msgid "Transparent pricing"
 msgstr ""
@@ -19023,6 +19809,13 @@ msgstr "Referințe de încredere"
 msgid "Turn every feature into a benefit for your reader."
 msgstr ""
 "Transformă fiecare caracteristică într-un beneficiu pentru cititorul tău."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid ""
+"Turn the entire card into a clickable link, or add a clear call to action "
+"guiding visitors to key details."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_striped_center_top
@@ -19160,8 +19953,8 @@ msgstr ""
 "Înțelegeți modul în care vizitatorii interacționează cu site-ul nostru web, "
 "prin intermediul Google Analytics.\n"
 "Aflați mai multe despre cookie-urile de analiză și informațiile privind "
-"confidențialitatea d <a class=\"o_translate_inline\" href=\"https://support."
-"google.com/analytics/answer/11397207?hl=en\">.</a>"
+"confidențialitatea d <a class=\"o_translate_inline\" href=\"https://"
+"support.google.com/analytics/answer/11397207?hl=en\">.</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quadrant
@@ -19255,6 +20048,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+msgid "Upload your"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__url
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__url
@@ -19266,6 +20065,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Url"
 msgstr "Url"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_page_properties__url_in_website_default_lang
+msgid "Url In Website Default Lang"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_menu__manual_url
+msgid "Url defined by user"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__country_flag
@@ -19294,13 +20103,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses"
 msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
-msgid "Use Google’s servers for fonts. It may impact GDPR compliance"
-msgstr ""
-"Utilizați serverele Google pentru fonturi. Poate afecta conformitatea GDPR"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
@@ -19381,12 +20183,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Use this theme"
 msgstr "Folosiți această temă"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-msgid "Use your"
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_key
@@ -19536,6 +20332,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Velvet"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
 msgid "Verify"
 msgstr ""
@@ -19613,6 +20415,11 @@ msgid "View Hierarchy"
 msgstr "Vizualizați ierarhia"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "View More"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__type
 #: model:ir.model.fields,field_description:website.field_website_page__type
 msgid "View Type"
@@ -19646,6 +20453,12 @@ msgstr "Vizualizări folosind o copie a mea"
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
 msgstr "Vizualizări care moștenesc de la acesta"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Violet"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -19745,7 +20558,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_description.edit.xml:0
 msgid ""
 "Visit us: Our office is located in the northeast of Brussels. TEL (555) 432 "
 "2365"
@@ -20287,6 +21100,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__website_id
+#: model:ir.model.fields,field_description:website.field_website_llms__website_id
 #: model:ir.model.fields,field_description:website.field_website_menu__website_id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,field_description:website.field_website_page__website_id
@@ -20296,6 +21110,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__website_id
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_id
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_id
+#: model:ir.module.module,shortdesc:base.module_website
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:res.groups.privilege,name:website.res_groups_privilege_website
 #: model_terms:ir.ui.view,arch_db:website.digest_digest_view_form
@@ -20705,11 +21520,6 @@ msgid "Where innovation meets performance"
 msgstr "Unde inovația întâlnește performanța"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_card_offset
-msgid "Why Our Product is the Future of Innovation"
-msgstr "De ce produsul nostru este viitorul inovației"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 msgid "Wide - 16/9"
@@ -20781,6 +21591,13 @@ msgid "Write custom error message"
 msgstr "Scrieți un mesaj de eroare personalizat"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+msgid "Write down your address or a GPS position"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Write down your message"
 msgstr ""
@@ -20802,6 +21619,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
 "Write one or two paragraphs describing your product or services. To be "
 "successful your content needs to be useful to your readers."
@@ -20935,9 +21753,10 @@ msgstr "Puteți utiliza doar șablonul prefixat de dynamic_filter_template_ "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
 msgid ""
-"You can reach our customer support team by emailing info@yourcompany.example."
-"com, calling +1 555-555-5556, or using the live chat on our website. Our "
-"dedicated team is available 24/7 to assist with any inquiries or issues."
+"You can reach our customer support team by emailing "
+"info@yourcompany.example.com, calling +1 555-555-5556, or using the live "
+"chat on our website. Our dedicated team is available 24/7 to assist with any "
+"inquiries or issues."
 msgstr ""
 "Puteți contacta echipa noastră de asistență clienți prin e-mail la "
 "info@yourcompany.example.com, telefonând la +1 555-555-5556 sau folosind "
@@ -20972,6 +21791,8 @@ msgstr "Nu puteți duplica acest câmp."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_block_option_plugin.js:0
+#: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/timeline_list_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/timeline_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/timeline_images_option_plugin.js:0
@@ -21034,17 +21855,11 @@ msgid ""
 "if you reject or discard those cookies."
 msgstr ""
 "Puteți renunța la utilizarea cookie-urilor de către o terță parte vizitând "
-"<a class=\"o_translate_inline\" href=\"https://optout.networkadvertising."
-"org/?c=1\" rel=\"nofollow\">pagina de renunțare la inițiativa de publicitate "
-"în rețea</a>.\n"
+"<a class=\"o_translate_inline\" href=\"https://"
+"optout.networkadvertising.org/?c=1\" rel=\"nofollow\">pagina de renunțare la "
+"inițiativa de publicitate în rețea</a>.\n"
 "                                                Site-ul web va funcționa în "
 "continuare dacă respingeți sau eliminați acele cookie-uri."
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "You need at least two cards to perform the effect"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_searchbar
@@ -21284,7 +22099,7 @@ msgstr "un site web"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "achievements, awards, recognitions, certifications, press, records, "
-"milestones, honors, two columns, list, stats, numbers, accomplishments, "
+"milestones, honors, two columns, lists, stats, numbers, accomplishments, "
 "highlights"
 msgstr ""
 
@@ -21327,17 +22142,15 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"awards, achievements, prizes, honors, recognition, list, accomplishments"
+"awards, achievements, prizes, honors, recognition, lists, accomplishments"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"banner, announcement, scrolling text, trust indicators, info bar, site-wide "
-"banner, minimal design, trendy, bold, presentation"
+"banners, announcements, scrolling text, trust indicators, info bar, site-"
+"wide banner, minimal design, trendy, bold, presentation"
 msgstr ""
-"banner, anunț, text derulant, indicatori de încredere, bară de informații, "
-"banner pe întreg site-ul, design minimalist, la modă, îndrăzneț, prezentare"
 
 #. module: website
 #. odoo-python
@@ -21348,14 +22161,16 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
-msgstr "bloc, blog, postare, catalog, flux, articole, intrări, colecție"
+msgid ""
+"block, blogs, posts, ecommerce, catalogs, feed, items, entries, entry, "
+"collections"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "bold, bold text, paragraph, statement, large text, tagline, typography, "
-"impactful, mission statement, quote, big text"
+"impactful, mission statement, quotes, big text"
 msgstr ""
 
 #. module: website
@@ -21394,19 +22209,20 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"cards, shop, grid, avatars, column, cart, product, ecommerce, categories, "
-"highlights, pictures, photos, illustration, media, visuals, intro, home, "
-"coupon, code, description, rounded, card, call to action, cta, marketing, "
-"showcase, mosaic, collage, arrangement, collection, visual-grid"
+"cards, shop, grids, avatars, columns, carts, products, ecommerce, "
+"categories, highlights, pictures, photos, illustration, media, visuals, "
+"intro, home, coupons, codes, descriptions, rounded, cards, call to action, "
+"cta, marketing, showcase, mosaic, collages, arrangement, collections, visual-"
+"grid"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"cards, shop, grid, column, cart, product, ecommerce, categories, highlights, "
-"pictures, photos, illustration, media, visuals, intro, home, coupon, code, "
-"description, rounded, card, call to action, cta, marketing, showcase, "
-"mosaic, collage, arrangement, collection, visual-grid"
+"cards, shop, grids, columns, carts, products, ecommerce, categories, "
+"highlights, pictures, photos, illustration, media, visuals, intro, home, "
+"coupons, codes, descriptions, rounded, cards, call to action, cta, "
+"marketing, showcase, mosaic, collages, arrangement, collections, visual-grid"
 msgstr ""
 
 #. module: website
@@ -21432,11 +22248,9 @@ msgstr "sărbătoare, lansare"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"cite, slogan, tagline, mantra, catchphrase, statements, sayings, comments, "
+"cite, slogan, tagline, mantra, catchphrases, statements, sayings, comments, "
 "mission, citations, maxim, quotes, principle, ethos, values"
 msgstr ""
-"citat, slogan, motto, mantră, expresie, afirmații, ziceri, comentarii, "
-"misiune, citate, maxime, principii, valori"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -21451,10 +22265,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "cite, testimonials, endorsements, reviews, feedback, statements, references, "
-"sayings, comments, appreciations, citations, carousel"
+"sayings, comments, appreciations, citations, carousels"
 msgstr ""
-"citate, mărturii, recomandări, recenzii, feedback, declarații, referințe, "
-"zicale, comentarii, aprecieri, citate, carusel"
 
 #. module: website
 #. odoo-javascript
@@ -21469,12 +22281,6 @@ msgid "color"
 msgstr "culoare"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-msgid "colors"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "columns, containers, layouts, large, panels, modules"
 msgstr "coloane, containere, machete, mari, panouri, module"
@@ -21482,19 +22288,16 @@ msgstr "coloane, containere, machete, mari, panouri, module"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"columns, gallery, pictures, photos, media, text, content, album, showcase, "
-"visuals, portfolio, arrangement, collection, visual-grid, split, alignment, "
-"added value"
+"columns, gallery, galleries, pictures, photos, media, text, content, albums, "
+"showcase, visuals, portfolios, arrangement, collections, visual-grid, split, "
+"alignment, added value"
 msgstr ""
-"coloane, galerie, poze, fotografii, media, text, conținut, album, "
-"prezentare, vizuale, portofoliu, aranjament, colecție, grilă-vizuală, "
-"împărțire, aliniere, valoare adăugată"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"coming soon, countdown, launch, waitlist, timer, days hours minutes seconds, "
-"social media, teaser, pre-launch, fullscreen, dark"
+"coming soon, countdowns, launch, waitlist, timer, days hours minutes "
+"seconds, social media, teaser, pre-launch, fullscreen, dark"
 msgstr ""
 
 #. module: website
@@ -21505,193 +22308,164 @@ msgstr "răspunsuri comune, întrebări frecvente"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"common answers, common questions, faq, QA, collapse, expandable, toggle, "
-"collapsible, hide-show, movement, information, image, picture, photo, "
+"common answers, common questions, faqs, QA, collapse, expandable, toggle, "
+"collapsible, hide-show, movement, information, images, pictures, photos, "
 "illustration, media, visual"
 msgstr ""
-"răspunsuri comune, întrebări frecvente, faq, QA, pliere, extensibil, "
-"comutare, pliabil, ascunde-afișează, mișcare, informație, imagine, poză, "
-"fotografie, ilustrație, media, vizual"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"comparison, price, pricing, engage, call to action, cta, box, shop, table, "
-"cart, product, cost, charges, fees, tariffs, prices, expenses"
+"comparisons, price, pricing plans, engage, call to action, cta, boxes, shop, "
+"tables, carts, products, costs, charges, fees, tariffs, prices, expenses"
 msgstr ""
-"comparație, preț, stabilirea prețului, implicare, îndemn la acțiune, CTA, "
-"casetă, magazin, tabel, coș, produs, cost, taxe, tarife, prețuri, cheltuieli"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "consent, confirmation, restriction, adult, eligibility, validation"
+msgid "consent, confirmations, restriction, adult, eligibility, validation"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
+"contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request"
 msgstr ""
-"contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
-"înregistrare, solicitare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request, image, picture, photo, illustration, media, visual"
+"contacts, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, images, pictures, photos, illustration, media, visual"
 msgstr ""
-"contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
-"înregistrare, solicitare, imagine, fotografie, ilustrație, media, vizual"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request, image, picture, photo, illustration, media, visual, "
-"company, organization, address, phone, email, location, get-in-touch"
-msgstr ""
-"contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
-"înregistrare, solicitare, imagine, fotografie, ilustrație, media, vizual, "
-"companie, organizație, adresă, telefon, e-mail, locație, contact"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request, image, picture, photo, illustration, media, visual, "
+"contacts, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, images, pictures, photos, illustration, media, "
+"visual, company, companies, organization, address, phone, email, location, "
 "get-in-touch"
 msgstr ""
-"contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
-"înregistrare, solicitare, imagine, fotografie, ilustrație, media, vizual, "
-"contact"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "content, paragraph, article, body, description, information"
-msgstr "conținut, paragraf, articol, corp, descriere, informație"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, connection, cover, shape, background, image, "
-"headings, hero, light, experience, parallax"
+"contacts, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, images, pictures, photos, illustration, media, "
+"visual, get-in-touch"
 msgstr ""
-"conținut, imagine, fotografie, conexiune, copertă, formă, fundal, imagine, "
-"titluri, erou, lumină, experiență, paralaxă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination"
+msgid "content, paragraph, articles, body, descriptions, information"
 msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, engage, call to action, cta, box, showcase"
+"content, pictures, photos, connections, covers, shape, backgrounds, images, "
+"headings, heroes, light, experience, parallax"
 msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, implicare, apel la acțiune, cta, cutie, prezentare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, heading, headline"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination"
 msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, titlu, antet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, more, hexagon, geometric"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, engage, call to action, cta, boxes, showcase"
 msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, mai mult, hexagon, geometric"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, network, relationships, interactions, connectivity, "
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, full width, fullwidth, bleed, grids"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, heading, headline"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, more, hexagon, geometric"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, network, relationships, interactions, connectivity, "
 "collaborations"
 msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, rețea, relații, interacțiuni, conectivitate, colaborări"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, showcase, announcements, reveal"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design"
-msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, modern, model, design"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned"
-msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, modern, model, design, formă, geometric, cu model"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned, contrast"
-msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, modern, model, design, formă, geometric, cu model, contrast"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned, contrast, "
-"collage, arrangement, gallery, creative, mosaic"
-msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, modern, model, design, formă, geometric, cu model, contrast, "
-"colaj, aranjament, galerie, creativ, mozaic"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, focus, in-depth, "
-"analysis, more, contact, detailed, mockup, explore, insight"
-msgstr ""
-"conținut, imagine, fotografie, ilustrație, media, vizual, focus, detaliat, "
-"analiză, mai mult, contact, detaliat, machetă, explorare, perspectivă"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"cta, whatsapp, social, e-commerce, selling-points, prompt, form, chatbot, "
-"call-to-action, assistant, assistance, customer, 24, 7, support, talk"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"customers, clients, sponsors, partners, logos, brand, supporters, "
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design, shape, geometric, patterned"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design, shape, geometric, patterned, "
+"contrast"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design, shape, geometric, patterned, "
+"contrast, collages, arrangement, gallery, galleries, creative, mosaic"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, focus, in-depth, "
+"analysis, more, contacts, detailed, mockup, explore, insight"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"cta, whatsapp, social, e-commerce, selling-points, prompt, forms, chatbots, "
+"call-to-action, assistants, assistance, customers, 24, 7, support, talk"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"customers, clients, sponsors, partners, logos, brands, supporters, "
 "collaborators, associations, trusted, references, tiles"
 msgstr ""
 
@@ -21722,33 +22496,25 @@ msgstr "zile"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"description, containers, layouts, structures, multi-columns, modules, boxes"
+"descriptions, containers, layouts, structures, multi-columns, modules, boxes"
 msgstr ""
-"descriere, containere, machete, structuri, multi-coloane, module, casete"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"description, containers, layouts, structures, multi-columns, modules, boxes, "
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal"
+"descriptions, containers, layouts, structures, multi-columns, modules, "
+"boxes, content, pictures, photos, illustration, media, visual, articles, "
+"story, stories, combination, showcase, announcements, reveal"
 msgstr ""
-"descriere, containere, machete, structuri, multi-coloane, module, casete, "
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, prezentare, anunț, dezvăluire"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"description, containers, layouts, structures, multi-columns, modules, boxes, "
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal, trendy, design, shape, "
-"geometric, engage, call to action, cta, button"
+"descriptions, containers, layouts, structures, multi-columns, modules, "
+"boxes, content, pictures, photos, illustration, media, visual, articles, "
+"story, stories, combination, showcase, announcements, reveal, trendy, "
+"design, shape, geometric, engage, call to action, cta, buttons"
 msgstr ""
-"descriere, containere, machete, structuri, multi-coloane, module, casete, "
-"conținut, imagine, fotografie, ilustrație, media, vizual, articol, poveste, "
-"combinație, prezentare, anunț, dezvăluire, modern, design, formă, geometric, "
-"implicare, apel la acțiune, cta, buton"
 
 #. module: website
 #. odoo-javascript
@@ -21756,6 +22522,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/clickable_card_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 msgid "e.g. /page or URL"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "e.g. DEMO_MAP_ID"
 msgstr ""
 
 #. module: website
@@ -21771,6 +22543,7 @@ msgstr "e.g. Home Page"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "eCommerce"
 msgstr "eCommerce"
 
@@ -21806,22 +22579,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"features, benefits, highlights, cards, photo cards, image cards, grid, two "
+"features, benefits, highlights, cards, photo cards, image cards, grids, two "
 "columns, product features, services, quality"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"features, highlights, image, showcase, split layout, icon list, checklist, "
-"bullet points, product features, benefits, description, photo, key features"
+"features, highlights, images, showcase, split layout, icon list, checklists, "
+"bullet points, product features, benefits, descriptions, photos, key features"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"features, icons, benefits, product features, split layout, image, icon list, "
-"advantages, highlights, product showcase, 4 features"
+"features, icons, benefits, product features, split layout, images, icon "
+"list, advantages, highlights, product showcase, 4 features"
 msgstr ""
 
 #. module: website
@@ -21845,20 +22618,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"four sections, column, grid, division, split, segments, pictures, "
-"illustration, media, photos, tiles, arrangement, gallery, images-grid, "
-"mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
-"thumbnails, engage, call to action, cta, showcase"
+"four sections, columns, grids, divisions, split, segments, pictures, "
+"illustration, media, photos, tiles, arrangement, gallery, galleries, images-"
+"grid, mixed, collections, stacking, visual-grid, showcase, visuals, "
+"portfolios, thumbnails, engage, call to action, cta, showcase"
 msgstr ""
-"patru secțiuni, coloană, grilă, diviziune, împărțire, segmente, poze, "
-"ilustrație, media, fotografii, plăci, aranjament, galerie, grilă-imagini, "
-"mixte, colecție, suprapunere, grilă-vizuală, prezentare, vizuale, "
-"portofoliu, miniaturi, implicare, apel la acțiune, cta, prezentare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "free website"
 msgstr "site gratuit"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "from your Google Cloud console."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -21868,31 +22643,32 @@ msgstr "frontend_lang (Odoo)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
-"thumbnails, slideshow"
+"gallery, galleries, carousels, pictures, photos, albums, showcase, visuals, "
+"portfolios, thumbnails, slideshow"
 msgstr ""
-"galerie, carusel, poze, fotografii, album, prezentare, vizuale, portofoliu, "
-"miniaturi, slideshow"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-"rotating, swipe, transition, media-carousel, movement"
+"gallery, galleries, carousels, slider, slideshow, pictures, photos, image-"
+"slider, rotating, swipe, transition, media-carousel, movement"
 msgstr ""
-"galerie, carusel, slider, slideshow, imagine, fotografie, slider-imagini, "
-"rotativ, glisare, tranziție, carusel-media, mișcare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-"rotating, swipe, transition, media-carousel, movement, cta, engagement, call "
-"to action"
+"gallery, galleries, carousels, slider, slideshow, pictures, photos, image-"
+"slider, rotating, swipe, transition, media-carousel, movement, cta, "
+"engagement, call to action"
 msgstr ""
-"galerie, carusel, glisor, prezentare de diapozitive, imagine, fotografie, "
-"glisor de imagini, rotire, glisare, tranziție, carusel media, mișcare, cta, "
-"implicare, îndemn la acțiune"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"glow, intro, heroes, headline, headers, banners, products, promo, "
+"backgrounds, pictures, photos, highlights, shop, call to action, shape, "
+"gradient"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -21902,75 +22678,60 @@ msgstr "google1234567890123456.html"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"graph, table, diagram, pie, plot, bar, metrics, figures, data-visualization, "
-"statistics, stats, analytics, infographic, skills, report"
-msgstr ""
-"grafic, tabel, diagramă, plăcintă, plot, bară, metrici, cifre, vizualizare-"
-"date, statistici, analize, infografic, abilități, raport"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
-"mosaic, collage, arrangement, collection, visual-grid"
-msgstr ""
-"grilă, galerie, poze, fotografii, album, prezentare, vizuale, portofoliu, "
-"mozaic, colaj, aranjament, colecție, grilă-vizuală"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"grid, gallery, pictures, photos, media, text, content, album, showcase, "
-"visuals, portfolio, mosaic, collage, arrangement, collection, visual-grid, "
-"split, alignment"
-msgstr ""
-"grilă, galerie, poze, fotografii, media, text, conținut, album, prezentare, "
-"vizuale, portofoliu, mozaic, colaj, aranjament, colecție, grilă-vizuală, "
-"împărțire, aliniere"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"header, introduction, home, content, introduction, overview, spotlight, "
-"presentation, welcome, context, description, primary, highlight, lead"
-msgstr ""
-"antet, introducere, acasă, conținut, prezentare generală, spotlight, "
-"prezentare, bun venit, context, descriere, principal, evidențiere, lead"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"heading, h1, headline, header, main, top, caption, introductory, principal, "
-"key"
-msgstr ""
-"titlu, h1, antet, principal, sus, legendă, introductiv, esențial, cheie"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"heading, headline, header, split, split text, split content, two columns, "
-"description, intro, section header, typography, large text"
+"graphs, tables, diagrams, pie, plot, bars, metrics, figures, data-"
+"visualization, statistics, stats, analytics, infographic, skills, report"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"headline, header, content, picture, photo, illustration, media, visual, "
-"article, combination, trendy, pattern, design, bold, impactful, vibrant, "
+"grids, gallery, galleries, pictures, photos, albums, showcase, visuals, "
+"portfolios, mosaic, collages, arrangement, collections, visual-grid"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"grids, gallery, galleries, pictures, photos, media, text, content, albums, "
+"showcase, visuals, portfolios, mosaic, collages, arrangement, collections, "
+"visual-grid, split, alignment"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"headers, introduction, home, content, introduction, overview, spotlight, "
+"presentation, welcome, context, descriptions, primary, highlights, lead"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"heading, h1, headline, headers, main, top, captions, introductory, "
+"principal, key"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"heading, headline, headers, split, split text, split content, two columns, "
+"descriptions, intro, section header, typography, large text"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"headline, headers, content, pictures, photos, illustration, media, visual, "
+"articles, combination, trendy, pattern, design, bold, impactful, vibrant, "
 "standout"
 msgstr ""
-"titlu, antet, conținut, imagine, fotografie, ilustrație, media, vizual, "
-"articol, combinație, modern, model, design, îndrăzneț, impactant, vibrant, "
-"remarcabil"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"headline, header, content, picture, photo, illustration, media, visual, "
+"headline, headers, content, pictures, photos, illustration, media, visual, "
 "combination"
 msgstr ""
-"titlu, antet, conținut, imagine, fotografie, ilustrație, media, vizual, "
-"combinație"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -21981,192 +22742,154 @@ msgstr "hello@mycompany.com"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, animation, animated, cards, float, stacked, promo, categories, "
+"heroes, animation, animated, cards, float, stacked, promo, categories, "
 "ecommerce, shop"
 msgstr ""
-"erou, animație, animat, cărți, plutitor, stivuit, promoție, categorii, "
-"comerț electronic, magazin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, banner, picture, photo, cover, shape, background image, fullscreen, "
-"headline, intro, landing page, impactful"
+"heroes, banners, pictures, photos, covers, shape, background image, "
+"fullscreen, headline, intro, landing page, impactful"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, categories, ecommerce, shop, illustration, buy, photos, shop, product, "
-"grid, pictures"
+"heroes, categories, ecommerce, shop, illustration, buy, photos, shop, "
+"products, grids, pictures"
 msgstr ""
-"erou, categorii, comerț electronic, magazin, ilustrație, cumpărare, "
-"fotografii, magazin, produs, grilă, imagini"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, headline, header, centered, maintenance, under maintenance, coming "
+"heroes, headline, headers, centered, maintenance, under maintenance, coming "
 "soon, fullscreen, social media, status page, offline, temporary"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, headline, header, intro, home, landing page, animated, movement, "
+"heroes, headline, headers, intro, home, landing page, animated, movement, "
 "marquee, scrolling text, avatars, social proof, background image, immersive, "
-"cover"
+"covers"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, headline, header, introduction, home, picture, photo, about page, "
-"company, story, history, brand, mission, statement"
+"heroes, headline, headers, introduction, home, pictures, photos, about page, "
+"company, companies, story, stories, history, brands, mission, statement"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, branding, intro, home, showcase, "
-"spotlight, lead, welcome, announcement, splash, top, main"
+"heroes, jumbotron, headline, headers, branding, intro, home, showcase, "
+"spotlight, lead, welcome, announcements, splash, top, main"
 msgstr ""
-"erou, jumbotron, titlu, antet, branding, intro, acasă, prezentare, "
-"spotlight, lead, bun venit, anunț, splash, sus, principal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, branding, intro, home, showcase, "
+"heroes, jumbotron, headline, headers, branding, intro, home, showcase, "
 "spotlight, main, landing, presentation, top, splash, parallax"
 msgstr ""
-"erou, jumbotron, titlu, antet, branding, intro, acasă, vitrină, reflector, "
-"principal, aterizare, prezentare, top, splash, paralaxă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, intro, home, content, description, "
-"primary, highlight, lead"
+"heroes, jumbotron, headline, headers, intro, home, content, descriptions, "
+"primary, highlights, lead"
 msgstr ""
-"erou, jumbotron, titlu, antet, intro, acasă, conținut, descriere, principal, "
-"evidențiere, lead"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, banner, call to action, "
-"cta, button, highlight, showcase, spotlight, sober, trendy, design, picture, "
-"photo, illustration, visual, description, containers, layouts, product, buy"
+"heroes, jumbotron, headline, headers, introduction, banners, call to action, "
+"cta, buttons, highlights, showcase, spotlight, sober, trendy, design, "
+"pictures, photos, illustration, visual, descriptions, containers, layouts, "
+"products, buy"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, banner, îndemn la acțiune, cta, "
-"buton, evidențiere, prezentare, reflector, sobru, la modă, design, imagine, "
-"fotografie, ilustrație, vizual, descriere, containere, machete, produs, "
-"cumpărare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead"
+"descriptions, primary, highlights, lead"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
-"generală, spotlight, prezentare, bun venit, context, descriere, principal, "
-"evidențiere, lead"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, CTA, promote, promotion"
+"descriptions, primary, highlights, lead, CTA, promote, promotion"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
-"generală, spotlight, prezentare, bun venit, context, descriere, principal, "
-"evidențiere, lead, CTA, promovare, promoție"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, discover, exploration, reveal"
+"descriptions, primary, highlights, lead, discover, exploration, reveal"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
-"generală, spotlight, prezentare, bun venit, context, descriere, principal, "
-"evidențiere, lead, descoperă, explorare, dezvăluire"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, journey, skills, expertises, experts, "
-"accomplishments, knowledge"
+"descriptions, primary, highlights, lead, journey, skills, expertises, "
+"experts, accomplishments, knowledge"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
-"generală, spotlight, prezentare, bun venit, context, descriere, principal, "
-"evidențiere, lead, călătorie, abilități, expertiză, experți, realizări, "
-"cunoștințe"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, picture, "
-"photo, illustration, media, visual, article, combination, trendy, pattern, "
+"heroes, jumbotron, headline, headers, introduction, home, content, pictures, "
+"photos, illustration, media, visual, articles, combination, trendy, pattern, "
 "design"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, acasă, conținut, imagine, "
-"fotografie, ilustrație, media, vizual, articol, combinație, modern, model, "
-"design"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, picture, "
-"photo, illustration, media, visual, article, combination, trendy, pattern, "
+"heroes, jumbotron, headline, headers, introduction, home, content, pictures, "
+"photos, illustration, media, visual, articles, combination, trendy, pattern, "
 "design, centered"
 msgstr ""
-"erou, jumbotron, titlu, antet, introducere, acasă, conținut, imagine, "
-"fotografie, ilustrație, media, vizual, articol, combinație, modern, model, "
-"design, centrat"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, shop, cart, product, ecommerce, picture, "
-"photo, illustration, media, visual, intro, home, content, description, call "
-"to action, cta, minimalist, marketing"
+"heroes, jumbotron, headline, headers, shop, carts, products, ecommerce, "
+"pictures, photos, illustration, media, visual, intro, home, content, "
+"descriptions, call to action, cta, minimalist, marketing"
 msgstr ""
-"erou, jumbotron, titlu, antet, magazin, coș, produs, comerț electronic, "
-"imagine, fotografie, ilustrație, media, vizual, intro, acasă, conținut, "
-"descriere, îndemn la acțiune, cta, minimalist, marketing"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, shop, cart, product, ecommerce, picture, "
-"photo, illustration, media, visual, intro, home, content, description, "
-"rounded, card, call to action, cta, minimalist, marketing"
+"heroes, jumbotron, headline, headers, shop, carts, products, ecommerce, "
+"pictures, photos, illustration, media, visual, intro, home, content, "
+"descriptions, rounded, cards, call to action, cta, minimalist, marketing"
 msgstr ""
-"erou, jumbotron, titlu, antet, magazin, coș, produs, comerț electronic, "
-"imagine, fotografie, ilustrație, media, vizual, intro, acasă, conținut, "
-"descriere, rotunjit, card, îndemn la acțiune, cta, minimalist, marketing"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, minimalist, headline, header, introduction, home, picture, photo, "
+"heroes, minimalist, headline, headers, introduction, home, pictures, photos, "
 "split layout, two column, large image, tagline, landing page"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, splash, fullscreen, image, background, headline, header, branding, "
-"intro, home, showcase, spotlight, main, landing, presentation, top, cover, "
-"immersive, visual, impactful"
+"heroes, splash, fullscreen, images, backgrounds, headline, headers, "
+"branding, intro, home, showcase, spotlight, main, landing, presentation, "
+"top, covers, immersive, visual, impactful"
 msgstr ""
 
 #. module: website
@@ -22178,31 +22901,24 @@ msgstr "selectare evidențiere"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements"
+"history, story, stories, events, milestones, chronology, sequence, "
+"progression, achievements"
 msgstr ""
-"istorie, poveste, evenimente, repere, cronologie, secvență, progres, "
-"realizări"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements, changelog, updates, announcements, recent, latest"
+"history, story, stories, events, milestones, chronology, sequence, "
+"progression, achievements, changelogs, updates, announcements, recent, latest"
 msgstr ""
-"istorie, poveste, evenimente, repere, cronologie, secvență, progres, "
-"realizări, jurnal modificări, actualizări, anunțuri, recent, ultimele"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements, changelog, updates, announcements, recent, latest, picture, "
-"photo, illustration, media, visual"
+"history, story, stories, events, milestones, chronology, sequence, "
+"progression, achievements, changelogs, updates, announcements, recent, "
+"latest, pictures, photos, illustration, media, visual"
 msgstr ""
-"istorie, poveste, evenimente, repere, cronologie, secvență, progres, "
-"realizări, jurnal de modificări, actualizări, anunțuri, recent, ultimele "
-"noutăți, imagine, fotografie, ilustrație, media, vizual"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -22282,10 +22998,8 @@ msgstr "ir.ui.view"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "journey, exploration, travel, outdoor, excitement, quest, start, onboarding, "
-"discovery, thrill"
+"discovery, discoveries, thrill"
 msgstr ""
-"călătorie, explorare, aventură, exterior, entuziasm, misiune, început, "
-"onboarding, descoperire, emoție"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -22309,35 +23023,28 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"masonry, grid, column, pictures, photos, album, showcase, visuals, "
-"portfolio, mosaic, collage, arrangement, collection, visual-grid"
+"masonry, grids, columns, pictures, photos, albums, showcase, visuals, "
+"portfolios, mosaic, collages, arrangement, collections, visual-grid"
 msgstr ""
-"masonry, grilă, coloană, poze, fotografii, album, prezentare, vizuale, "
-"portofoliu, mozaic, colaj, aranjament, colecție, grilă-vizuală"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-"prices, expenses"
+"menus, pricing plans, shop, tables, carts, products, costs, charges, fees, "
+"rates, prices, expenses"
 msgstr ""
-"meniu, prețuri, magazin, tabel, coș, produs, cost, taxe, tarife, prețuri, "
-"cheltuieli"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-"prices, expenses, columns"
+"menus, pricing plans, shop, tables, carts, products, costs, charges, fees, "
+"rates, prices, expenses, columns"
 msgstr ""
-"meniu, prețuri, magazin, tabel, coș, produs, cost, taxe, tarife, prețuri, "
-"cheltuieli, coloane"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "navigation, index, outline, chapters, sections, overview, menu, tab"
+msgid "navigation, index, outline, chapters, sections, overview, menus, tabs"
 msgstr ""
-"navigare, index, schiță, capitole, secțiuni, prezentare generală, meniu, filă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -22366,7 +23073,6 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 msgid "or"
 msgstr ""
@@ -22380,47 +23086,37 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, column, members, staffs, profiles, bios, "
-"roles, personnel, crew"
+"organization, company, companies, person, people, columns, members, staffs, "
+"profiles, bios, roles, personnel, crew"
 msgstr ""
-"organizație, companie, oameni, coloană, membri, personal, profiluri, "
-"biografii, roluri, echipă, colectiv"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned"
+"organization, company, companies, person, people, members, staffs, profiles, "
+"bios, roles, personnel, crew, patterned"
 msgstr ""
-"organizație, companie, oameni, membri, personal, profiluri, biografii, "
-"roluri, personal, echipaj, modelat"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned, trendy"
+"organization, company, companies, person, people, members, staffs, profiles, "
+"bios, roles, personnel, crew, patterned, trendy"
 msgstr ""
-"organizație, companie, oameni, membri, personal, profiluri, biografii, "
-"roluri, echipă, colectiv, cu model, modern"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned, trendy, social"
+"organization, company, companies, person, people, members, staffs, profiles, "
+"bios, roles, personnel, crew, patterned, trendy, social"
 msgstr ""
-"organizație, companie, oameni, membri, personal, profiluri, biografii, "
-"roluri, echipă, colectiv, cu model, modern, social"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, structure, people, team, name, role, position, image, "
-"portrait, photo, employees, shapes"
+"organization, structure, person, people, teams, name, role, position, "
+"images, portrait, photos, employees, shapes"
 msgstr ""
-"organizație, structură, oameni, echipă, nume, rol, poziție, imagine, "
-"portret, fotografie, angajați, forme"
 
 #. module: website
 #. odoo-javascript
@@ -22431,8 +23127,8 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"paragraph, description, information, split, split text, split content, "
-"story, typography, two columns, minimal, narrative, editorial"
+"paragraph, descriptions, information, split, split text, split content, "
+"story, stories, typography, two columns, minimal, narrative, editorial"
 msgstr ""
 
 #. module: website
@@ -22445,17 +23141,15 @@ msgstr "telefon"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"picture, photo, illustration, media, visual, start, launch, commencement, "
+"pictures, photos, illustration, media, visual, start, launch, commencement, "
 "initiation, opening, kick-off, kickoff, beginning, events, parallax"
 msgstr ""
-"imagine, fotografie, ilustrație, media, vizual, start, lansare, începere, "
-"inițiere, deschidere, kick-off, kickoff, început, evenimente, paralaxă"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"picture, photo, illustration, media, visual, two images, side by side, duo, "
-"gallery, photography, two columns, before after, comparison"
+"pictures, photos, illustration, media, visual, two images, side by side, "
+"duo, gallery, galleries, photography, two columns, before after, comparisons"
 msgstr ""
 
 #. module: website
@@ -22478,83 +23172,68 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
-"competitive, overview"
+"pricing plans, promotion, price, feature-comparison, side-by-side, "
+"evaluation, competitive, overview"
 msgstr ""
-"prețuri, promoție, preț, comparație-funcții, alăturat, evaluare, competitiv, "
-"prezentare generală"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"process, progression, guide, workflow, sequence, instructions, stages, "
+"process, progression, guides, workflow, sequence, instructions, stages, "
 "procedure, roadmap"
 msgstr ""
-"proces, progres, ghid, flux de lucru, secvență, instrucțiuni, etape, "
-"procedură, plan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"projects, list, portfolio, showcase, work, case studies, collection, "
-"typography, agency, creative, clients, work list"
+"projects, lists, portfolios, showcase, work, case studies, collections, "
+"typography, agency, agencies, creative, clients, work list"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"projects, portfolio, showcase, gallery, images, images-grid, collection, "
-"visual-grid, work, case studies, minimal, two columns, creative"
+"projects, portfolios, showcase, gallery, galleries, images, images-grid, "
+"collections, visual-grid, work, case studies, minimal, two columns, creative"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"projects, portfolio, showcase, gallery, images, images-grid, collection, "
-"visual-grid, work, case studies, mixed layout, creative"
+"projects, portfolios, showcase, gallery, galleries, images, images-grid, "
+"collections, visual-grid, work, case studies, mixed layout, creative"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion"
 msgstr ""
-"promovare, caracteristică, calitate, puncte forte, specificații, avantaje, "
-"funcționalități, expunere, detalii, capabilități, atribute, promovare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "headline, content, overview, spotlight"
 msgstr ""
-"promovare, caracteristică, calitate, puncte forte, specificații, avantaje, "
-"funcționalități, expunere, detalii, capabilități, atribute, promovare, "
-"titlu, conținut, prezentare generală, spotlight"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
-"presentation, demo, feature"
+"presentation, demos, features"
 msgstr ""
-"promovare, caracteristică, calitate, puncte forte, specificații, avantaje, "
-"funcționalități, expunere, detalii, capabilități, atribute, promovare, "
-"prezentare, demo, funcție"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, features, exhibit, details, capabilities, attributes, "
 "promotion, headline, content, overview, spotlight"
 msgstr ""
-"promovare, caracteristică, calitate, puncte forte, specificații, avantaje, "
-"funcționalități, funcții, expunere, detalii, capabilități, atribute, "
-"promovare, titlu, conținut, prezentare generală, spotlight"
 
 #. module: website
 #. odoo-javascript
@@ -22565,23 +23244,17 @@ msgstr "px"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"questions, answers, common answers, common questions, faq, help, support, "
-"information, knowledge, guide, troubleshooting, assistance, QA, terms of "
+"questions, answers, common answers, common questions, faqs, help, support, "
+"information, knowledge, guides, troubleshooting, assistance, QA, terms of "
 "services"
 msgstr ""
-"întrebări, răspunsuri, răspunsuri frecvente, întrebări frecvente, faq, "
-"ajutor, suport, informații, cunoștințe, ghid, depanare, asistență, QA, "
-"termeni și condiții"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"questions, answers, common answers, common questions, faq, help, support, "
-"information, knowledge, guide, troubleshooting, assistance, columns, QA"
+"questions, answers, common answers, common questions, faqs, help, support, "
+"information, knowledge, guides, troubleshooting, assistance, columns, QA"
 msgstr ""
-"întrebări, răspunsuri, răspunsuri frecvente, întrebări frecvente, faq, "
-"ajutor, suport, informații, cunoștințe, ghid, depanare, asistență, coloane, "
-"QA"
 
 #. module: website
 #. odoo-javascript
@@ -22605,20 +23278,16 @@ msgstr "rezultate"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"reveal, showcase, launch, presentation, announcement, content, picture, "
-"photo, illustration, media, visual, article, combination"
+"reveal, showcase, launch, presentation, announcements, content, pictures, "
+"photos, illustration, media, visual, articles, combination"
 msgstr ""
-"dezvăluire, prezentare, lansare, prezentare, anunț, conținut, imagine, "
-"fotografie, ilustrație, media, vizual, articol, combinație"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"reveal, showcase, launch, presentation, announcement, content, picture, "
-"photo, illustration, media, visual, combination"
+"reveal, showcase, launch, presentation, announcements, content, pictures, "
+"photos, illustration, media, visual, combination"
 msgstr ""
-"dezvăluire, prezentare, lansare, prezentare, anunț, conținut, imagine, "
-"fotografie, ilustrație, media, vizual, combinație"
 
 #. module: website
 #. odoo-javascript
@@ -22634,30 +23303,28 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "scrolling, depth, effect, background, layer, visual, movement, parallax"
-msgstr "derulare, adâncime, efect, fundal, strat, vizual, mișcare, paralaxă"
+msgid ""
+"scrolling, depth, effect, backgrounds, layer, visual, movement, parallax"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "services, features, grid, images, three columns, overview"
+msgid "services, features, grids, images, three columns, overview"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"services, icons, features, characteristic, specs, advantages, "
+"services, icons, features, characteristics, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "overview, specifications"
 msgstr ""
-"servicii, pictograme, caracteristici, specificații, avantaje, "
-"funcționalități, expoziție, detalii, capacități, atribute, promovare, "
-"prezentare generală, specificații"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"services, offer, package, features, list, catalog, agency, deliverables, "
-"skills, expertise"
+"services, offers, package, features, lists, catalogs, agency, agencies, "
+"deliverables, skills, expertise"
 msgstr ""
 
 #. module: website
@@ -22668,20 +23335,16 @@ msgstr "session_id (Odoo)<br/>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"shop, cart, product, categories, ecommerce, e-commerce, cards, trendy, "
-"column, layouts, picture, photo, illustration, media, visual"
+"shop, carts, products, categories, ecommerce, e-commerce, cards, trendy, "
+"columns, layouts, pictures, photos, illustration, media, visual"
 msgstr ""
-"magazin, coș, produs, categorii, comerț electronic, comerț electronic, "
-"carduri, la modă, coloană, machete, imagine, fotografie, ilustrație, media, "
-"vizual"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"shop, group, list, card, cart, products, inventory, catalog, merchandise, "
-"goods"
+"shop, group, lists, cards, carts, products, inventory, ecommerce, catalogs, "
+"merchandise, goods"
 msgstr ""
-"magazin, grup, listă, card, coș, produse, inventar, catalog, marfă, bunuri"
 
 #. module: website
 #. odoo-javascript
@@ -22711,94 +23374,81 @@ msgstr "social media, ig, feed"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"performance, achievements, benchmarks, milestones, indicators, data, "
+"spotlight, intro, hero, headline, header, grid, gallery, pictures, photos, "
+"media, showcase, feature, focus, center stage, reveal, collection, product, "
+"call to action, cta, button"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, performance, achievements, benchmarks, milestones, indicators, "
+"data, measurements, reports, trends, results"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, performance, achievements, benchmarks, milestones, indicators, "
+"data, measurements, reports, trends, results, analytics, summaries, summary"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results"
 msgstr ""
-"statistici, statistici, KPI, metrici, tablou de bord, analize, aspecte "
-"importante, cifre, performanță, realizări, repere, indicatori, date, "
-"măsurători, rapoarte, tendințe, rezultate"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"performance, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results, analytics, summaries, summary"
-msgstr ""
-"statistici, statistici, KPI, metrici, tablou de bord, analize, aspecte "
-"importante, cifre, performanță, realizări, repere, indicatori, date, "
-"măsurători, rapoarte, tendințe, rezultate, analize, rezumate, rezumat"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results"
-msgstr ""
-"statistici, indicatori, KPI, metrici, tablou de bord, analize, evidențieri, "
-"cifre, abilități, realizări, repere, praguri, indicatori, date, măsurători, "
-"rapoarte, tendințe, rezultate"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, cta, call to action, "
-"button"
+"buttons"
 msgstr ""
-"statistici, indicatori, KPI, metrici, tablou de bord, analize, evidențieri, "
-"cifre, abilități, realizări, repere, praguri, indicatori, date, măsurători, "
-"rapoarte, tendințe, rezultate, analize, cta, apel la acțiune, buton"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, summaries, summary"
 msgstr ""
-"statistici, indicatori, KPI, metrici, tablou de bord, analize, evidențieri, "
-"cifre, abilități, realizări, repere, praguri, indicatori, date, măsurători, "
-"rapoarte, tendințe, rezultate, analize, rezumate, sumar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, summaries, summary, large-"
 "figures, prominent, standout"
 msgstr ""
-"statistici, indicatori, KPI, metrici, tablou de bord, analize, evidențieri, "
-"cifre, abilități, realizări, repere, praguri, indicatori, date, măsurători, "
-"rapoarte, tendințe, rezultate, analize, rezumate, sumar, cifre-mari, "
-"proeminent, remarcabil"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, highlights, figures, achievements, "
-"milestones, data, results, trends, count, counter, compact, simple"
+"statistics, stats, KPIs, metrics, highlights, figures, achievements, "
+"milestones, data, results, trends, counts, counters, compact, simple"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"store, locator, map, address, hours, opening hours, directions, location, "
-"visit us, find us, contact"
+"store, locator, maps, address, hours, opening hours, directions, location, "
+"visit us, find us, contacts"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"stores, button, engagement, appeal, mockup, text, content, picture, photo, "
-"illustration, media, visual, article, story"
+"stores, buttons, engagement, appeal, mockup, text, content, pictures, "
+"photos, illustration, media, visual, articles, story, stories"
 msgstr ""
-"magazine, buton, implicare, apel, machetă, text, conținut, imagine, "
-"fotografie, ilustrație, media, vizual, articol, poveste"
 
 #. module: website
 #. odoo-javascript
@@ -22922,22 +23572,6 @@ msgid "“Our furniture balances style, comfort, and sustainability.”<br/>"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
-msgid "• Free Shipping • Secure payment • Easy Return"
-msgstr "• Transport gratuit • Plată securizată • Returnare ușoară"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_animated_cover
-msgid "• OUR SERVICES"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
-msgid "⌙ Style"
-msgstr "⌙ Stil"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_boxed
 msgid "✽  Pastas"
 msgstr "✽  Paste"
@@ -22951,3 +23585,760 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Ce Oferim"
+
+#~ msgid "Accounts are usable across all your multiple websites"
+#~ msgstr "Conturile sunt utilizabile pe toate site-urile dvs. multiple"
+
+#~ msgid "CTA, button, btn, action, engagement, link, offer, appeal"
+#~ msgstr "CTA, buton, btn, acțiune, implicare, link, ofertă, apel"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger"
+#~ msgstr ""
+#~ "CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
+#~ "prompt, interacționează, declanșator"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, items, checklists, entries, sequences, "
+#~ "bullets, points, list, group, benefits, features, advantages"
+#~ msgstr ""
+#~ "CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
+#~ "prompt, interacționează, declanșator, elemente, liste de verificare, "
+#~ "înregistrări, secvențe, puncte, listă, grup, beneficii, caracteristici, "
+#~ "avantaje"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, mockup"
+#~ msgstr ""
+#~ "CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
+#~ "prompt, interacționează, declanșator, machetă"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, mockups"
+#~ msgstr ""
+#~ "CTA, buton, btn, acțiune, implicare, link, ofertă, apel, apel la acțiune, "
+#~ "prompt, interacționează, declanșator, machete"
+
+#~ msgid "Catalog"
+#~ msgstr "Catalog"
+
+#~ msgid ""
+#~ "Elevate your living space with furniture that blends modern aesthetics "
+#~ "and classic charm, crafted to bring both comfort and style to your home.\n"
+#~ "                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
+#~ "><br/><br/><br/><br/><br/>"
+#~ msgstr ""
+#~ "Îmbunătățiți spațiul dvs. de locuit cu mobilier care îmbină estetica "
+#~ "modernă și farmecul clasic, creat pentru a aduce atât confort, cât și "
+#~ "stil casei dvs.\n"
+#~ "                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
+#~ "><br/><br/><br/><br/>"
+
+#~ msgid "Full-Width"
+#~ msgstr "Lățime Maximă"
+
+#~ msgid "Mega menu item"
+#~ msgstr "Element de meniu mega"
+
+#~ msgid "Narrow"
+#~ msgstr "Îngust"
+
+#~ msgid "Places API"
+#~ msgstr "API locuri"
+
+#~ msgid "TIP:"
+#~ msgstr "SFAT:"
+
+#~ msgid "This is a small title related to the current image"
+#~ msgstr "Acesta este un titlu mic legat de imaginea curentă"
+
+#~ msgid "Use Google’s servers for fonts. It may impact GDPR compliance"
+#~ msgstr ""
+#~ "Utilizați serverele Google pentru fonturi. Poate afecta conformitatea GDPR"
+
+#~ msgid "Why Our Product is the Future of Innovation"
+#~ msgstr "De ce produsul nostru este viitorul inovației"
+
+#~ msgid ""
+#~ "banner, announcement, scrolling text, trust indicators, info bar, site-"
+#~ "wide banner, minimal design, trendy, bold, presentation"
+#~ msgstr ""
+#~ "banner, anunț, text derulant, indicatori de încredere, bară de "
+#~ "informații, banner pe întreg site-ul, design minimalist, la modă, "
+#~ "îndrăzneț, prezentare"
+
+#~ msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
+#~ msgstr "bloc, blog, postare, catalog, flux, articole, intrări, colecție"
+
+#~ msgid ""
+#~ "cite, slogan, tagline, mantra, catchphrase, statements, sayings, "
+#~ "comments, mission, citations, maxim, quotes, principle, ethos, values"
+#~ msgstr ""
+#~ "citat, slogan, motto, mantră, expresie, afirmații, ziceri, comentarii, "
+#~ "misiune, citate, maxime, principii, valori"
+
+#~ msgid ""
+#~ "cite, testimonials, endorsements, reviews, feedback, statements, "
+#~ "references, sayings, comments, appreciations, citations, carousel"
+#~ msgstr ""
+#~ "citate, mărturii, recomandări, recenzii, feedback, declarații, referințe, "
+#~ "zicale, comentarii, aprecieri, citate, carusel"
+
+#~ msgid ""
+#~ "columns, gallery, pictures, photos, media, text, content, album, "
+#~ "showcase, visuals, portfolio, arrangement, collection, visual-grid, "
+#~ "split, alignment, added value"
+#~ msgstr ""
+#~ "coloane, galerie, poze, fotografii, media, text, conținut, album, "
+#~ "prezentare, vizuale, portofoliu, aranjament, colecție, grilă-vizuală, "
+#~ "împărțire, aliniere, valoare adăugată"
+
+#~ msgid ""
+#~ "common answers, common questions, faq, QA, collapse, expandable, toggle, "
+#~ "collapsible, hide-show, movement, information, image, picture, photo, "
+#~ "illustration, media, visual"
+#~ msgstr ""
+#~ "răspunsuri comune, întrebări frecvente, faq, QA, pliere, extensibil, "
+#~ "comutare, pliabil, ascunde-afișează, mișcare, informație, imagine, poză, "
+#~ "fotografie, ilustrație, media, vizual"
+
+#~ msgid ""
+#~ "comparison, price, pricing, engage, call to action, cta, box, shop, "
+#~ "table, cart, product, cost, charges, fees, tariffs, prices, expenses"
+#~ msgstr ""
+#~ "comparație, preț, stabilirea prețului, implicare, îndemn la acțiune, CTA, "
+#~ "casetă, magazin, tabel, coș, produs, cost, taxe, tarife, prețuri, "
+#~ "cheltuieli"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request"
+#~ msgstr ""
+#~ "contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
+#~ "înregistrare, solicitare"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request, image, picture, photo, illustration, media, visual"
+#~ msgstr ""
+#~ "contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
+#~ "înregistrare, solicitare, imagine, fotografie, ilustrație, media, vizual"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request, image, picture, photo, illustration, media, "
+#~ "visual, company, organization, address, phone, email, location, get-in-"
+#~ "touch"
+#~ msgstr ""
+#~ "contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
+#~ "înregistrare, solicitare, imagine, fotografie, ilustrație, media, vizual, "
+#~ "companie, organizație, adresă, telefon, e-mail, locație, contact"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request, image, picture, photo, illustration, media, "
+#~ "visual, get-in-touch"
+#~ msgstr ""
+#~ "contact, colectare, trimitere, introducere, câmpuri, chestionar, sondaj, "
+#~ "înregistrare, solicitare, imagine, fotografie, ilustrație, media, vizual, "
+#~ "contact"
+
+#~ msgid "content, paragraph, article, body, description, information"
+#~ msgstr "conținut, paragraf, articol, corp, descriere, informație"
+
+#~ msgid ""
+#~ "content, picture, photo, connection, cover, shape, background, image, "
+#~ "headings, hero, light, experience, parallax"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, conexiune, copertă, formă, fundal, "
+#~ "imagine, titluri, erou, lumină, experiență, paralaxă"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, engage, call to action, cta, box, showcase"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, implicare, apel la acțiune, cta, cutie, prezentare"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, heading, headline"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, titlu, antet"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, more, hexagon, geometric"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, mai mult, hexagon, geometric"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, network, relationships, interactions, connectivity, "
+#~ "collaborations"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, rețea, relații, interacțiuni, conectivitate, "
+#~ "colaborări"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, modern, model, design"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, modern, model, design, formă, geometric, cu model"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
+#~ "contrast"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, modern, model, design, formă, geometric, cu model, "
+#~ "contrast"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
+#~ "contrast, collage, arrangement, gallery, creative, mosaic"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, modern, model, design, formă, geometric, cu model, "
+#~ "contrast, colaj, aranjament, galerie, creativ, mozaic"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, focus, in-depth, "
+#~ "analysis, more, contact, detailed, mockup, explore, insight"
+#~ msgstr ""
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, focus, "
+#~ "detaliat, analiză, mai mult, contact, detaliat, machetă, explorare, "
+#~ "perspectivă"
+
+#~ msgid ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes"
+#~ msgstr ""
+#~ "descriere, containere, machete, structuri, multi-coloane, module, casete"
+
+#~ msgid ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes, content, picture, photo, illustration, media, visual, article, "
+#~ "story, combination, showcase, announcement, reveal"
+#~ msgstr ""
+#~ "descriere, containere, machete, structuri, multi-coloane, module, casete, "
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, prezentare, anunț, dezvăluire"
+
+#~ msgid ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes, content, picture, photo, illustration, media, visual, article, "
+#~ "story, combination, showcase, announcement, reveal, trendy, design, "
+#~ "shape, geometric, engage, call to action, cta, button"
+#~ msgstr ""
+#~ "descriere, containere, machete, structuri, multi-coloane, module, casete, "
+#~ "conținut, imagine, fotografie, ilustrație, media, vizual, articol, "
+#~ "poveste, combinație, prezentare, anunț, dezvăluire, modern, design, "
+#~ "formă, geometric, implicare, apel la acțiune, cta, buton"
+
+#~ msgid ""
+#~ "four sections, column, grid, division, split, segments, pictures, "
+#~ "illustration, media, photos, tiles, arrangement, gallery, images-grid, "
+#~ "mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
+#~ "thumbnails, engage, call to action, cta, showcase"
+#~ msgstr ""
+#~ "patru secțiuni, coloană, grilă, diviziune, împărțire, segmente, poze, "
+#~ "ilustrație, media, fotografii, plăci, aranjament, galerie, grilă-imagini, "
+#~ "mixte, colecție, suprapunere, grilă-vizuală, prezentare, vizuale, "
+#~ "portofoliu, miniaturi, implicare, apel la acțiune, cta, prezentare"
+
+#~ msgid ""
+#~ "gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
+#~ "thumbnails, slideshow"
+#~ msgstr ""
+#~ "galerie, carusel, poze, fotografii, album, prezentare, vizuale, "
+#~ "portofoliu, miniaturi, slideshow"
+
+#~ msgid ""
+#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
+#~ "rotating, swipe, transition, media-carousel, movement"
+#~ msgstr ""
+#~ "galerie, carusel, slider, slideshow, imagine, fotografie, slider-imagini, "
+#~ "rotativ, glisare, tranziție, carusel-media, mișcare"
+
+#~ msgid ""
+#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
+#~ "rotating, swipe, transition, media-carousel, movement, cta, engagement, "
+#~ "call to action"
+#~ msgstr ""
+#~ "galerie, carusel, glisor, prezentare de diapozitive, imagine, fotografie, "
+#~ "glisor de imagini, rotire, glisare, tranziție, carusel media, mișcare, "
+#~ "cta, implicare, îndemn la acțiune"
+
+#~ msgid ""
+#~ "graph, table, diagram, pie, plot, bar, metrics, figures, data-"
+#~ "visualization, statistics, stats, analytics, infographic, skills, report"
+#~ msgstr ""
+#~ "grafic, tabel, diagramă, plăcintă, plot, bară, metrici, cifre, "
+#~ "vizualizare-date, statistici, analize, infografic, abilități, raport"
+
+#~ msgid ""
+#~ "grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
+#~ "mosaic, collage, arrangement, collection, visual-grid"
+#~ msgstr ""
+#~ "grilă, galerie, poze, fotografii, album, prezentare, vizuale, portofoliu, "
+#~ "mozaic, colaj, aranjament, colecție, grilă-vizuală"
+
+#~ msgid ""
+#~ "grid, gallery, pictures, photos, media, text, content, album, showcase, "
+#~ "visuals, portfolio, mosaic, collage, arrangement, collection, visual-"
+#~ "grid, split, alignment"
+#~ msgstr ""
+#~ "grilă, galerie, poze, fotografii, media, text, conținut, album, "
+#~ "prezentare, vizuale, portofoliu, mozaic, colaj, aranjament, colecție, "
+#~ "grilă-vizuală, împărțire, aliniere"
+
+#~ msgid ""
+#~ "header, introduction, home, content, introduction, overview, spotlight, "
+#~ "presentation, welcome, context, description, primary, highlight, lead"
+#~ msgstr ""
+#~ "antet, introducere, acasă, conținut, prezentare generală, spotlight, "
+#~ "prezentare, bun venit, context, descriere, principal, evidențiere, lead"
+
+#~ msgid ""
+#~ "heading, h1, headline, header, main, top, caption, introductory, "
+#~ "principal, key"
+#~ msgstr ""
+#~ "titlu, h1, antet, principal, sus, legendă, introductiv, esențial, cheie"
+
+#~ msgid ""
+#~ "headline, header, content, picture, photo, illustration, media, visual, "
+#~ "article, combination, trendy, pattern, design, bold, impactful, vibrant, "
+#~ "standout"
+#~ msgstr ""
+#~ "titlu, antet, conținut, imagine, fotografie, ilustrație, media, vizual, "
+#~ "articol, combinație, modern, model, design, îndrăzneț, impactant, "
+#~ "vibrant, remarcabil"
+
+#~ msgid ""
+#~ "headline, header, content, picture, photo, illustration, media, visual, "
+#~ "combination"
+#~ msgstr ""
+#~ "titlu, antet, conținut, imagine, fotografie, ilustrație, media, vizual, "
+#~ "combinație"
+
+#~ msgid ""
+#~ "hero, animation, animated, cards, float, stacked, promo, categories, "
+#~ "ecommerce, shop"
+#~ msgstr ""
+#~ "erou, animație, animat, cărți, plutitor, stivuit, promoție, categorii, "
+#~ "comerț electronic, magazin"
+
+#~ msgid ""
+#~ "hero, categories, ecommerce, shop, illustration, buy, photos, shop, "
+#~ "product, grid, pictures"
+#~ msgstr ""
+#~ "erou, categorii, comerț electronic, magazin, ilustrație, cumpărare, "
+#~ "fotografii, magazin, produs, grilă, imagini"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
+#~ "spotlight, lead, welcome, announcement, splash, top, main"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, branding, intro, acasă, prezentare, "
+#~ "spotlight, lead, bun venit, anunț, splash, sus, principal"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
+#~ "spotlight, main, landing, presentation, top, splash, parallax"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, branding, intro, acasă, vitrină, "
+#~ "reflector, principal, aterizare, prezentare, top, splash, paralaxă"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, intro, home, content, description, "
+#~ "primary, highlight, lead"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, intro, acasă, conținut, descriere, "
+#~ "principal, evidențiere, lead"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, banner, call to action, "
+#~ "cta, button, highlight, showcase, spotlight, sober, trendy, design, "
+#~ "picture, photo, illustration, visual, description, containers, layouts, "
+#~ "product, buy"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, banner, îndemn la acțiune, "
+#~ "cta, buton, evidențiere, prezentare, reflector, sobru, la modă, design, "
+#~ "imagine, fotografie, ilustrație, vizual, descriere, containere, machete, "
+#~ "produs, cumpărare"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
+#~ "generală, spotlight, prezentare, bun venit, context, descriere, "
+#~ "principal, evidențiere, lead"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, CTA, promote, promotion"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
+#~ "generală, spotlight, prezentare, bun venit, context, descriere, "
+#~ "principal, evidențiere, lead, CTA, promovare, promoție"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, discover, exploration, reveal"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
+#~ "generală, spotlight, prezentare, bun venit, context, descriere, "
+#~ "principal, evidențiere, lead, descoperă, explorare, dezvăluire"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, journey, skills, expertises, "
+#~ "experts, accomplishments, knowledge"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, acasă, conținut, prezentare "
+#~ "generală, spotlight, prezentare, bun venit, context, descriere, "
+#~ "principal, evidențiere, lead, călătorie, abilități, expertiză, experți, "
+#~ "realizări, cunoștințe"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
+#~ "photo, illustration, media, visual, article, combination, trendy, "
+#~ "pattern, design"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, acasă, conținut, imagine, "
+#~ "fotografie, ilustrație, media, vizual, articol, combinație, modern, "
+#~ "model, design"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
+#~ "photo, illustration, media, visual, article, combination, trendy, "
+#~ "pattern, design, centered"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, introducere, acasă, conținut, imagine, "
+#~ "fotografie, ilustrație, media, vizual, articol, combinație, modern, "
+#~ "model, design, centrat"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, shop, cart, product, ecommerce, "
+#~ "picture, photo, illustration, media, visual, intro, home, content, "
+#~ "description, call to action, cta, minimalist, marketing"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, magazin, coș, produs, comerț electronic, "
+#~ "imagine, fotografie, ilustrație, media, vizual, intro, acasă, conținut, "
+#~ "descriere, îndemn la acțiune, cta, minimalist, marketing"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, shop, cart, product, ecommerce, "
+#~ "picture, photo, illustration, media, visual, intro, home, content, "
+#~ "description, rounded, card, call to action, cta, minimalist, marketing"
+#~ msgstr ""
+#~ "erou, jumbotron, titlu, antet, magazin, coș, produs, comerț electronic, "
+#~ "imagine, fotografie, ilustrație, media, vizual, intro, acasă, conținut, "
+#~ "descriere, rotunjit, card, îndemn la acțiune, cta, minimalist, marketing"
+
+#~ msgid ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements"
+#~ msgstr ""
+#~ "istorie, poveste, evenimente, repere, cronologie, secvență, progres, "
+#~ "realizări"
+
+#~ msgid ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements, changelog, updates, announcements, recent, latest"
+#~ msgstr ""
+#~ "istorie, poveste, evenimente, repere, cronologie, secvență, progres, "
+#~ "realizări, jurnal modificări, actualizări, anunțuri, recent, ultimele"
+
+#~ msgid ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements, changelog, updates, announcements, recent, latest, picture, "
+#~ "photo, illustration, media, visual"
+#~ msgstr ""
+#~ "istorie, poveste, evenimente, repere, cronologie, secvență, progres, "
+#~ "realizări, jurnal de modificări, actualizări, anunțuri, recent, ultimele "
+#~ "noutăți, imagine, fotografie, ilustrație, media, vizual"
+
+#~ msgid ""
+#~ "journey, exploration, travel, outdoor, excitement, quest, start, "
+#~ "onboarding, discovery, thrill"
+#~ msgstr ""
+#~ "călătorie, explorare, aventură, exterior, entuziasm, misiune, început, "
+#~ "onboarding, descoperire, emoție"
+
+#~ msgid ""
+#~ "masonry, grid, column, pictures, photos, album, showcase, visuals, "
+#~ "portfolio, mosaic, collage, arrangement, collection, visual-grid"
+#~ msgstr ""
+#~ "masonry, grilă, coloană, poze, fotografii, album, prezentare, vizuale, "
+#~ "portofoliu, mozaic, colaj, aranjament, colecție, grilă-vizuală"
+
+#~ msgid ""
+#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
+#~ "prices, expenses"
+#~ msgstr ""
+#~ "meniu, prețuri, magazin, tabel, coș, produs, cost, taxe, tarife, prețuri, "
+#~ "cheltuieli"
+
+#~ msgid ""
+#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
+#~ "prices, expenses, columns"
+#~ msgstr ""
+#~ "meniu, prețuri, magazin, tabel, coș, produs, cost, taxe, tarife, prețuri, "
+#~ "cheltuieli, coloane"
+
+#~ msgid "navigation, index, outline, chapters, sections, overview, menu, tab"
+#~ msgstr ""
+#~ "navigare, index, schiță, capitole, secțiuni, prezentare generală, meniu, "
+#~ "filă"
+
+#~ msgid ""
+#~ "organization, company, people, column, members, staffs, profiles, bios, "
+#~ "roles, personnel, crew"
+#~ msgstr ""
+#~ "organizație, companie, oameni, coloană, membri, personal, profiluri, "
+#~ "biografii, roluri, echipă, colectiv"
+
+#~ msgid ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned"
+#~ msgstr ""
+#~ "organizație, companie, oameni, membri, personal, profiluri, biografii, "
+#~ "roluri, personal, echipaj, modelat"
+
+#~ msgid ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned, trendy"
+#~ msgstr ""
+#~ "organizație, companie, oameni, membri, personal, profiluri, biografii, "
+#~ "roluri, echipă, colectiv, cu model, modern"
+
+#~ msgid ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned, trendy, social"
+#~ msgstr ""
+#~ "organizație, companie, oameni, membri, personal, profiluri, biografii, "
+#~ "roluri, echipă, colectiv, cu model, modern, social"
+
+#~ msgid ""
+#~ "organization, structure, people, team, name, role, position, image, "
+#~ "portrait, photo, employees, shapes"
+#~ msgstr ""
+#~ "organizație, structură, oameni, echipă, nume, rol, poziție, imagine, "
+#~ "portret, fotografie, angajați, forme"
+
+#~ msgid ""
+#~ "picture, photo, illustration, media, visual, start, launch, commencement, "
+#~ "initiation, opening, kick-off, kickoff, beginning, events, parallax"
+#~ msgstr ""
+#~ "imagine, fotografie, ilustrație, media, vizual, start, lansare, începere, "
+#~ "inițiere, deschidere, kick-off, kickoff, început, evenimente, paralaxă"
+
+#~ msgid ""
+#~ "pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
+#~ "competitive, overview"
+#~ msgstr ""
+#~ "prețuri, promoție, preț, comparație-funcții, alăturat, evaluare, "
+#~ "competitiv, prezentare generală"
+
+#~ msgid ""
+#~ "process, progression, guide, workflow, sequence, instructions, stages, "
+#~ "procedure, roadmap"
+#~ msgstr ""
+#~ "proces, progres, ghid, flux de lucru, secvență, instrucțiuni, etape, "
+#~ "procedură, plan"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion"
+#~ msgstr ""
+#~ "promovare, caracteristică, calitate, puncte forte, specificații, "
+#~ "avantaje, funcționalități, expunere, detalii, capabilități, atribute, "
+#~ "promovare"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "headline, content, overview, spotlight"
+#~ msgstr ""
+#~ "promovare, caracteristică, calitate, puncte forte, specificații, "
+#~ "avantaje, funcționalități, expunere, detalii, capabilități, atribute, "
+#~ "promovare, titlu, conținut, prezentare generală, spotlight"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "presentation, demo, feature"
+#~ msgstr ""
+#~ "promovare, caracteristică, calitate, puncte forte, specificații, "
+#~ "avantaje, funcționalități, expunere, detalii, capabilități, atribute, "
+#~ "promovare, prezentare, demo, funcție"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, features, exhibit, details, capabilities, attributes, "
+#~ "promotion, headline, content, overview, spotlight"
+#~ msgstr ""
+#~ "promovare, caracteristică, calitate, puncte forte, specificații, "
+#~ "avantaje, funcționalități, funcții, expunere, detalii, capabilități, "
+#~ "atribute, promovare, titlu, conținut, prezentare generală, spotlight"
+
+#~ msgid ""
+#~ "questions, answers, common answers, common questions, faq, help, support, "
+#~ "information, knowledge, guide, troubleshooting, assistance, QA, terms of "
+#~ "services"
+#~ msgstr ""
+#~ "întrebări, răspunsuri, răspunsuri frecvente, întrebări frecvente, faq, "
+#~ "ajutor, suport, informații, cunoștințe, ghid, depanare, asistență, QA, "
+#~ "termeni și condiții"
+
+#~ msgid ""
+#~ "questions, answers, common answers, common questions, faq, help, support, "
+#~ "information, knowledge, guide, troubleshooting, assistance, columns, QA"
+#~ msgstr ""
+#~ "întrebări, răspunsuri, răspunsuri frecvente, întrebări frecvente, faq, "
+#~ "ajutor, suport, informații, cunoștințe, ghid, depanare, asistență, "
+#~ "coloane, QA"
+
+#~ msgid ""
+#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
+#~ "photo, illustration, media, visual, article, combination"
+#~ msgstr ""
+#~ "dezvăluire, prezentare, lansare, prezentare, anunț, conținut, imagine, "
+#~ "fotografie, ilustrație, media, vizual, articol, combinație"
+
+#~ msgid ""
+#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
+#~ "photo, illustration, media, visual, combination"
+#~ msgstr ""
+#~ "dezvăluire, prezentare, lansare, prezentare, anunț, conținut, imagine, "
+#~ "fotografie, ilustrație, media, vizual, combinație"
+
+#~ msgid ""
+#~ "scrolling, depth, effect, background, layer, visual, movement, parallax"
+#~ msgstr "derulare, adâncime, efect, fundal, strat, vizual, mișcare, paralaxă"
+
+#~ msgid ""
+#~ "services, icons, features, characteristic, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "overview, specifications"
+#~ msgstr ""
+#~ "servicii, pictograme, caracteristici, specificații, avantaje, "
+#~ "funcționalități, expoziție, detalii, capacități, atribute, promovare, "
+#~ "prezentare generală, specificații"
+
+#~ msgid ""
+#~ "shop, cart, product, categories, ecommerce, e-commerce, cards, trendy, "
+#~ "column, layouts, picture, photo, illustration, media, visual"
+#~ msgstr ""
+#~ "magazin, coș, produs, categorii, comerț electronic, comerț electronic, "
+#~ "carduri, la modă, coloană, machete, imagine, fotografie, ilustrație, "
+#~ "media, vizual"
+
+#~ msgid ""
+#~ "shop, group, list, card, cart, products, inventory, catalog, merchandise, "
+#~ "goods"
+#~ msgstr ""
+#~ "magazin, grup, listă, card, coș, produse, inventar, catalog, marfă, bunuri"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, performance, achievements, benchmarks, milestones, indicators, "
+#~ "data, measurements, reports, trends, results"
+#~ msgstr ""
+#~ "statistici, statistici, KPI, metrici, tablou de bord, analize, aspecte "
+#~ "importante, cifre, performanță, realizări, repere, indicatori, date, "
+#~ "măsurători, rapoarte, tendințe, rezultate"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, performance, achievements, benchmarks, milestones, indicators, "
+#~ "data, measurements, reports, trends, results, analytics, summaries, "
+#~ "summary"
+#~ msgstr ""
+#~ "statistici, statistici, KPI, metrici, tablou de bord, analize, aspecte "
+#~ "importante, cifre, performanță, realizări, repere, indicatori, date, "
+#~ "măsurători, rapoarte, tendințe, rezultate, analize, rezumate, rezumat"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results"
+#~ msgstr ""
+#~ "statistici, indicatori, KPI, metrici, tablou de bord, analize, "
+#~ "evidențieri, cifre, abilități, realizări, repere, praguri, indicatori, "
+#~ "date, măsurători, rapoarte, tendințe, rezultate"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, cta, call to action, "
+#~ "button"
+#~ msgstr ""
+#~ "statistici, indicatori, KPI, metrici, tablou de bord, analize, "
+#~ "evidențieri, cifre, abilități, realizări, repere, praguri, indicatori, "
+#~ "date, măsurători, rapoarte, tendințe, rezultate, analize, cta, apel la "
+#~ "acțiune, buton"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, summaries, summary"
+#~ msgstr ""
+#~ "statistici, indicatori, KPI, metrici, tablou de bord, analize, "
+#~ "evidențieri, cifre, abilități, realizări, repere, praguri, indicatori, "
+#~ "date, măsurători, rapoarte, tendințe, rezultate, analize, rezumate, sumar"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, summaries, summary, "
+#~ "large-figures, prominent, standout"
+#~ msgstr ""
+#~ "statistici, indicatori, KPI, metrici, tablou de bord, analize, "
+#~ "evidențieri, cifre, abilități, realizări, repere, praguri, indicatori, "
+#~ "date, măsurători, rapoarte, tendințe, rezultate, analize, rezumate, "
+#~ "sumar, cifre-mari, proeminent, remarcabil"
+
+#~ msgid ""
+#~ "stores, button, engagement, appeal, mockup, text, content, picture, "
+#~ "photo, illustration, media, visual, article, story"
+#~ msgstr ""
+#~ "magazine, buton, implicare, apel, machetă, text, conținut, imagine, "
+#~ "fotografie, ilustrație, media, vizual, articol, poveste"
+
+#~ msgid "• Free Shipping • Secure payment • Easy Return"
+#~ msgstr "• Transport gratuit • Plată securizată • Returnare ușoară"
+
+#~ msgid "⌙ Style"
+#~ msgstr "⌙ Stil"

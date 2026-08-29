@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 01:49+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -38,6 +38,11 @@ msgstr ""
 "insoniysiz! Keling, munosabatimizni professional tarzda davom ettiramiz ❤️"
 
 #. module: mail_bot
+#: model:ir.module.module,summary:base.module_mail_bot
+msgid "Add OdooBot in discussions"
+msgstr ""
+
+#. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
 #, fuzzy
 msgid "Disabled"
@@ -59,34 +64,23 @@ msgstr "Ko‘rsatiladigan nom"
 
 #. module: mail_bot
 #. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
-msgid ""
-"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
-"Discuss app."
+#: code:addons/mail_bot/models/res_users.py:0
+msgid "Go ahead - Try sending me an emoji 😊"
 msgstr ""
-"Ajoyib! %(bold_start)sTayyor javoblar%(bold_end)sni Discuss ilovasida "
-"sozlashingiz mumkin."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
-"sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
-"help."
+"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
+"Discuss app settings."
 msgstr ""
-"Zo‘r! 👍%(new_line)sMaxsus buyruqlardan foydalanish uchun, %(bold_start)"
-"sgapingizni%(bold_end)s %(command_start)s/%(command_end)s bilan boshlang. "
-"Yordam so‘rashga urinib ko‘ring."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
-#, fuzzy
-msgid "Hello,"
-msgstr "Salom,"
+msgid "Hello 👋"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
@@ -110,9 +104,9 @@ msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide, "
 "ask: %(command_start)sstart the tour%(command_end)s."
 msgstr ""
-"Savolingizga javob berish uchun yetarlicha aqlli emasman.%(new_line)"
-"sQo‘llanmamni boshlash uchun so‘rang: %(command_start)ssayohatni boshlash%"
-"(command_end)s."
+"Savolingizga javob berish uchun yetarlicha aqlli emasman.%"
+"(new_line)sQo‘llanmamni boshlash uchun so‘rang: %(command_start)ssayohatni "
+"boshlash%(command_end)s."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
@@ -129,22 +123,19 @@ msgid "Idle"
 msgstr "Faoliyatsiz"
 
 #. module: mail_bot
+#. odoo-python
+#: code:addons/mail_bot/models/mail_bot.py:0
+msgid ""
+"It looks like you're not sure what to do next. Please type %(command_start)s/"
+"%(command_end)s to see the suggestions, then select %(command_start)shelp%"
+"(command_end)s and press Enter."
+msgstr ""
+
+#. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_bot
 #, fuzzy
 msgid "Mail Bot"
 msgstr "Pochta boti"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
-msgid ""
-"Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
-"(bold_end)s%(command_start)s :)%(command_end)s and press enter."
-msgstr ""
-"Unday emas. Sayohatni davom ettirish uchun emoji yuboring: %(bold_start)"
-"syozing%(bold_end)s%(command_start)s :)%(command_end)s va enter tugmasini "
-"bosing."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -155,38 +146,32 @@ msgstr "Ishga tushirilmagan"
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s/%(command_end)s "
-"and wait for the propositions. Select %(command_start)shelp%(command_end)s "
-"and press enter."
+"Not quite. To continue the tour, please send an emoji by typing %"
+"(command_start)s:)%(command_end)s and pressing Enter, or by clicking the %"
+"(smile_icon)s icon to pick one."
 msgstr ""
-"Nima qilayotganingizni tushunmayapman. Iltimos, %(command_start)s/%"
-"(command_end)s deb yozing va takliflarni kuting. %(command_start)syordam%"
-"(command_end)sni tanlang va enter tugmasini bosing."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
-"and wait for the propositions. Select one of them and press enter."
+"Not sure what you're doing? Please type %(command_start)s::%(command_end)s "
+"to see canned responses. Select one and press Enter."
 msgstr ""
-"Nima qilayotganingizni tushunmayapman. Iltimos, %(command_start)s:%"
-"(command_end)s deb yozing va takliflarni kuting. Ulardan birini tanlang va "
-"enter tugmasini bosing."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
-#, fuzzy
 msgid ""
-"Odoo's chat helps employees collaborate efficiently. I'm here to help you "
-"discover its features."
+"Odoo's Discuss application helps employees collaborate efficiently. I'm here "
+"to help you explore its features."
 msgstr ""
-"Odoo chati xodimlarga samarali hamkorlik qilishga yordam beradi. Men uning "
-"xususiyatlarini kashf etishingizga ko‘maklashaman."
+
+#. module: mail_bot
+#: model:ir.module.module,shortdesc:base.module_mail_bot
+msgid "OdooBot"
+msgstr ""
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -247,15 +232,11 @@ msgstr ""
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
-"him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
-"me."
+"Sorry, I'm not listening right now. To get my attention, %"
+"(bold_start)smention me%(bold_end)s by typing %(command_start)s@OdooBot%"
+"(command_end)s and selecting me."
 msgstr ""
-"Kechirasiz, men quloq solmayapman. Kimningdir e'tiborini jalb qilish uchun, %"
-"(bold_start)suni ping qiling%(bold_end)s. %(command_start)s@OdooBot%"
-"(command_end)s deb yozing va meni tanlang."
 
 #. module: mail_bot
 #. odoo-python
@@ -282,7 +263,7 @@ msgstr "Bu yaxshi emas! Men botman, lekin his-tuyg‘ularim bor... 💔"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"That’s the end of this overview. You can %(bold_start)sclose this "
+"That's the end of this overview. You can %(bold_start)sclose this "
 "conversation%(bold_end)s or type %(command_start)sstart the tour%"
 "(command_end)s to see it again. Enjoy exploring Odoo!"
 msgstr ""
@@ -290,50 +271,35 @@ msgstr ""
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
-msgid "This is a temporary canned response to see how canned responses work."
-msgstr ""
-"Bu tayyor javoblar qanday ishlashini ko‘rish uchun vaqtinchalik tayyor javob."
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
-"(paperclip_icon)s icon and select a file."
+"To %(bold_start)ssend an attachment%(bold_end)s, first click the %"
+"(plus_icon)s icon, then select %(paperclip_icon)s Attach files."
 msgstr ""
-"%(bold_start)sFayl biriktirish%(bold_end)s uchun %(paperclip_icon)s "
-"belgisini bosing va faylni tanlang."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
-msgid "To start, try to send me an emoji :)"
-msgstr "Boshlash uchun menga emoji yuboring :)"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/res_users.py:0
-#, fuzzy
-msgid "Try to send me an emoji"
-msgstr "Menga emoji yuborishga harakat qiling"
+msgid "To get started, try sending me an emoji 😊"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
-"discovering our product, please check %(document_link_start)sour "
+"To use special commands, %(bold_start)sstart your message with a %"
+"(bold_end)s %(command_start)s/%(command_end)s. For example, try typing %"
+"(command_start)s/help%(command_end)s."
+msgstr ""
+
+#. module: mail_bot
+#. odoo-python
+#: code:addons/mail_bot/models/mail_bot.py:0
+msgid ""
+"Unfortunately, I'm just a bot 😞 I don't understand that.%(new_line)sIf you "
+"need help exploring our apps, please check out %(document_link_start)sour "
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
-"Afsuski, men shunchaki botman 😞 Tushunmayapman! Agar mahsulotimiz haqida "
-"ko‘proq ma'lumot olishga yordam kerak bo‘lsa, iltimos, %(document_link_start)"
-"sbizning hujjatlarimiz%(document_link_end)s yoki %(slides_link_start)"
-"svideolarimiz%(slides_link_end)s bilan tanishing."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -344,38 +310,27 @@ msgstr "Foydalanuvchi"
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
-"use canned responses. I've created a temporary one for you."
+"use canned responses. I've created a temporary one just for you."
 msgstr ""
-"Ajoyib! 😇%(new_line)sTayyor javoblardan foydalanish uchun %(command_start)"
-"s::%(command_end)s yozib ko‘ring. Men siz uchun vaqtinchalik javob yaratdim."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Wow you are a natural!%(new_line)sPing someone with @username to grab their "
-"attention. %(bold_start)sTry to ping me using%(bold_end)s %"
-"(command_start)s@OdooBot%(command_end)s in a sentence."
+"Wow, you're a natural!%(new_line)s Use @username to mention someone and grab "
+"their attention.%(new_line)s %(bold_start)sTry mentioning me by typing%"
+"(bold_end)s %(command_start)s@OdooBot%(command_end)s in your message."
 msgstr ""
-"Voy, siz bunga juda qobiliyatli ekansiz!%(new_line)sKimningdir e'tiborini "
-"tortish uchun @foydalanuvchi_nomi orqali murojaat qiling. %(bold_start)"
-"sMenga murojaat qilish uchun gapda%(bold_end)s %(command_start)s@OdooBot%"
-"(command_end)s dan foydalaning."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-#, fuzzy
 msgid ""
-"Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
-"(bold_end)s, like a picture of your cute dog..."
+"Yep, I'm here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
+"(bold_end)s 📎 - maybe a picture of your cute dog... 🐕"
 msgstr ""
-"Ha, men shu yerdaman! 🎉 %(new_line)sEndi, %(bold_start)sfayl biriktirish%"
-"(bold_end)sni sinab ko‘ring, masalan, yoqimtoy itingizning rasmini..."
 
 #. module: mail_bot
 #. odoo-python
@@ -411,3 +366,135 @@ msgstr "sevgi"
 #, fuzzy
 msgid "start the tour"
 msgstr "sayyohatni boshlash"
+
+#, fuzzy
+#~ msgid ""
+#~ "Great! You can customize %(bold_start)scanned responses%(bold_end)s in "
+#~ "the Discuss app."
+#~ msgstr ""
+#~ "Ajoyib! %(bold_start)sTayyor javoblar%(bold_end)sni Discuss ilovasida "
+#~ "sozlashingiz mumkin."
+
+#, fuzzy
+#~ msgid ""
+#~ "Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
+#~ "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
+#~ "help."
+#~ msgstr ""
+#~ "Zo‘r! 👍%(new_line)sMaxsus buyruqlardan foydalanish uchun, %"
+#~ "(bold_start)sgapingizni%(bold_end)s %(command_start)s/%(command_end)s "
+#~ "bilan boshlang. Yordam so‘rashga urinib ko‘ring."
+
+#, fuzzy
+#~ msgid "Hello,"
+#~ msgstr "Salom,"
+
+#, fuzzy
+#~ msgid ""
+#~ "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
+#~ "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+#~ msgstr ""
+#~ "Unday emas. Sayohatni davom ettirish uchun emoji yuboring: %"
+#~ "(bold_start)syozing%(bold_end)s%(command_start)s :)%(command_end)s va "
+#~ "enter tugmasini bosing."
+
+#, fuzzy
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s/%"
+#~ "(command_end)s and wait for the propositions. Select %"
+#~ "(command_start)shelp%(command_end)s and press enter."
+#~ msgstr ""
+#~ "Nima qilayotganingizni tushunmayapman. Iltimos, %(command_start)s/%"
+#~ "(command_end)s deb yozing va takliflarni kuting. %(command_start)syordam%"
+#~ "(command_end)sni tanlang va enter tugmasini bosing."
+
+#, fuzzy
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s:%"
+#~ "(command_end)s and wait for the propositions. Select one of them and "
+#~ "press enter."
+#~ msgstr ""
+#~ "Nima qilayotganingizni tushunmayapman. Iltimos, %(command_start)s:%"
+#~ "(command_end)s deb yozing va takliflarni kuting. Ulardan birini tanlang "
+#~ "va enter tugmasini bosing."
+
+#, fuzzy
+#~ msgid ""
+#~ "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
+#~ "discover its features."
+#~ msgstr ""
+#~ "Odoo chati xodimlarga samarali hamkorlik qilishga yordam beradi. Men "
+#~ "uning xususiyatlarini kashf etishingizga ko‘maklashaman."
+
+#, fuzzy
+#~ msgid ""
+#~ "Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
+#~ "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and "
+#~ "select me."
+#~ msgstr ""
+#~ "Kechirasiz, men quloq solmayapman. Kimningdir e'tiborini jalb qilish "
+#~ "uchun, %(bold_start)suni ping qiling%(bold_end)s. %"
+#~ "(command_start)s@OdooBot%(command_end)s deb yozing va meni tanlang."
+
+#, fuzzy
+#~ msgid ""
+#~ "This is a temporary canned response to see how canned responses work."
+#~ msgstr ""
+#~ "Bu tayyor javoblar qanday ishlashini ko‘rish uchun vaqtinchalik tayyor "
+#~ "javob."
+
+#, fuzzy
+#~ msgid ""
+#~ "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
+#~ "(paperclip_icon)s icon and select a file."
+#~ msgstr ""
+#~ "%(bold_start)sFayl biriktirish%(bold_end)s uchun %(paperclip_icon)s "
+#~ "belgisini bosing va faylni tanlang."
+
+#, fuzzy
+#~ msgid "To start, try to send me an emoji :)"
+#~ msgstr "Boshlash uchun menga emoji yuboring :)"
+
+#, fuzzy
+#~ msgid "Try to send me an emoji"
+#~ msgstr "Menga emoji yuborishga harakat qiling"
+
+#, fuzzy
+#~ msgid ""
+#~ "Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
+#~ "discovering our product, please check %(document_link_start)sour "
+#~ "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
+#~ "(slides_link_end)s."
+#~ msgstr ""
+#~ "Afsuski, men shunchaki botman 😞 Tushunmayapman! Agar mahsulotimiz haqida "
+#~ "ko‘proq ma'lumot olishga yordam kerak bo‘lsa, iltimos, %"
+#~ "(document_link_start)sbizning hujjatlarimiz%(document_link_end)s yoki %"
+#~ "(slides_link_start)svideolarimiz%(slides_link_end)s bilan tanishing."
+
+#, fuzzy
+#~ msgid ""
+#~ "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
+#~ "use canned responses. I've created a temporary one for you."
+#~ msgstr ""
+#~ "Ajoyib! 😇%(new_line)sTayyor javoblardan foydalanish uchun %"
+#~ "(command_start)s::%(command_end)s yozib ko‘ring. Men siz uchun "
+#~ "vaqtinchalik javob yaratdim."
+
+#, fuzzy
+#~ msgid ""
+#~ "Wow you are a natural!%(new_line)sPing someone with @username to grab "
+#~ "their attention. %(bold_start)sTry to ping me using%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s in a sentence."
+#~ msgstr ""
+#~ "Voy, siz bunga juda qobiliyatli ekansiz!%(new_line)sKimningdir e'tiborini "
+#~ "tortish uchun @foydalanuvchi_nomi orqali murojaat qiling. %"
+#~ "(bold_start)sMenga murojaat qilish uchun gapda%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s dan foydalaning."
+
+#, fuzzy
+#~ msgid ""
+#~ "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
+#~ "attachment%(bold_end)s, like a picture of your cute dog..."
+#~ msgstr ""
+#~ "Ha, men shu yerdaman! 🎉 %(new_line)sEndi, %(bold_start)sfayl biriktirish%"
+#~ "(bold_end)sni sinab ko‘ring, masalan, yoqimtoy itingizning rasmini..."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 01:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -20,6 +20,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sales_team
+#: model:ir.module.module,description:base.module_sales_team
+msgid ""
+"\n"
+"Using this application you can manage Sales Teams with CRM and/or Sales\n"
+"=======================================================================\n"
+msgstr ""
 
 #. module: sales_team
 #. odoo-python
@@ -254,7 +262,6 @@ msgstr "Botón del tablero"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "Establecer un nuevo equipo de ventas"
 
@@ -435,6 +442,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: sales_team
+#: model:res.groups.privilege,placeholder:sales_team.res_groups_privilege_sales
+msgid "No"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
@@ -536,8 +548,9 @@ msgstr "Miembros del equipo de ventas (incluidos los inactivos)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
-#: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.module.module,shortdesc:base.module_sales_team
+#: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Teams"
 msgstr "Equipos de ventas"
 
@@ -637,8 +650,8 @@ msgid ""
 "The following team members are not allowed in company '%(company)s' of the "
 "Sales Team '%(team)s': %(users)s"
 msgstr ""
-"Los siguientes miembros del equipo no tienen permisos en la empresa "
-"\"%(company)s\" del equipo de ventas \"%(team)s\": %(users)s"
+"Los siguientes miembros del equipo no tienen permisos en la empresa \"%"
+"(company)s\" del equipo de ventas \"%(team)s\": %(users)s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
@@ -679,7 +692,6 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
@@ -708,8 +720,8 @@ msgid ""
 "User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
 "Team '%(team)s'."
 msgstr ""
-"El usuario \"%(user)s\" no tiene permisos de acceso en la empresa "
-"\"%(company)s\" del equipo de ventas \"%(team)s\"."
+"El usuario \"%(user)s\" no tiene permisos de acceso en la empresa \"%"
+"(company)s\" del equipo de ventas \"%(team)s\"."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -761,8 +773,8 @@ msgstr "¿Trabaja en varios equipos?"
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that "
-"%(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
 msgstr ""
 "Está intentando crear membresías duplicadas, ya existen %(duplicates)s."
 

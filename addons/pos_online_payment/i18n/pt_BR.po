@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-19 17:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -22,8 +22,20 @@ msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
-msgid "<span class=\"visually-hidden\">Loading...</span>"
-msgstr "<span class=\"visually-hidden\">Carregando...</span>"
+msgid ""
+"<i class=\"oi me-2\" data-icon=\"lock\"/>Payment secured · Don't close this "
+"window"
+msgstr ""
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
+msgid "<span class=\"text-500\">Order</span>"
+msgstr ""
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
+msgid "<span class=\"text-500\">Total</span>"
+msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -118,8 +130,8 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
-"Não foi possível criar uma forma de pagamento on-line "
-"(company_id=%(company_id)d, pos_config_id=%(pos_config_id)d)"
+"Não foi possível criar uma forma de pagamento on-line (company_id=%"
+"(company_id)d, pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
@@ -294,6 +306,11 @@ msgstr "Pagamento no Ponto de Venda"
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
 msgstr "Método de pagamento no Ponto de Venda"
+
+#. module: pos_online_payment
+#: model:ir.module.module,shortdesc:base.module_pos_online_payment
+msgid "Point of Sale online payment"
+msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -559,8 +576,7 @@ msgstr "Você não ativou"
 msgid ""
 "You should receive an email confirming your payment within a few minutes.<br/"
 ">\n"
-"                            Don't hesitate to contact us if you don't "
-"receive it."
+"                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
 
 #. module: pos_online_payment
@@ -577,3 +593,6 @@ msgstr "um provedor de pagamento"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
 msgstr "para permitir pagamentos online."
+
+#~ msgid "<span class=\"visually-hidden\">Loading...</span>"
+#~ msgstr "<span class=\"visually-hidden\">Carregando...</span>"

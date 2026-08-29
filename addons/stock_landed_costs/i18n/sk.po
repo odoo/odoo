@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-22 01:06+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/"
@@ -26,6 +26,17 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: stock_landed_costs
+#: model:ir.module.module,description:base.module_stock_landed_costs
+msgid ""
+"\n"
+"Landed Costs Management\n"
+"=======================\n"
+"This module allows you to easily add extra costs on pickings and decide the "
+"split of these costs among their stock moves in order to take them into "
+"account in your stock valuation.\n"
+msgstr ""
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -42,7 +53,8 @@ msgstr ""
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid ""
-"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+"<i class=\"oi\" data-icon=\"schedule\" title=\"Date\" role=\"img\" aria-"
+"label=\"Date\"/>"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -301,11 +313,6 @@ msgid "Followers (Partners)"
 msgstr "Odberatelia (partneri)"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Úžasná ikona fronty napr. fa-tasks"
-
-#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Future Activities"
 msgstr "Budúce aktivity"
@@ -415,6 +422,7 @@ msgstr "Náklad dodania"
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
+#: model:ir.module.module,summary:base.module_stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -464,6 +472,11 @@ msgstr "Omeškané aktivity"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -728,6 +741,11 @@ msgid "Volume"
 msgstr "Objem"
 
 #. module: stock_landed_costs
+#: model:ir.module.module,shortdesc:base.module_stock_landed_costs
+msgid "WMS Landed Costs"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
 msgid "Weight"
 msgstr "Hmotnosť"
@@ -747,6 +765,9 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the "
 "product is used in a journal item."
 msgstr ""
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Úžasná ikona fronty napr. fa-tasks"
 
 #~ msgid "Website Messages"
 #~ msgstr "Správy webstránok"

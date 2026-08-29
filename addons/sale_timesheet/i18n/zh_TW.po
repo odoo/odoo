@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 06:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -72,6 +72,18 @@ msgstr ""
 "                    重新向客戶開立發票。\n"
 "                </p>\n"
 "            "
+
+#. module: sale_timesheet
+#: model:ir.module.module,description:base.module_sale_timesheet
+msgid ""
+"\n"
+"Allows to sell timesheets in your sales order\n"
+"=============================================\n"
+"\n"
+"This module set the right product on all timesheet lines\n"
+"according to the order/contract you work on. This allows to\n"
+"have real delivered quantities in sales orders.\n"
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1144,6 +1156,11 @@ msgid "Sales Orders"
 msgstr "銷售訂單"
 
 #. module: sale_timesheet
+#: model:ir.module.module,shortdesc:base.module_sale_timesheet
+msgid "Sales Timesheet"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid ""
 "Sales order item that will be selected by default on the timesheets of the "
@@ -1192,6 +1209,11 @@ msgstr "在發票內搜尋"
 #: code:addons/sale_timesheet/controllers/portal.py:0
 msgid "Search in Sales Order Item"
 msgstr "於銷售訂單明細中搜尋"
+
+#. module: sale_timesheet
+#: model:ir.module.module,summary:base.module_sale_timesheet
+msgid "Sell based on timesheets"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form

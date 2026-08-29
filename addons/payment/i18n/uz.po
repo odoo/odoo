@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 08:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -27,16 +27,39 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_provider.py:0
-msgid "%s (copy)"
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"east\"></i> Configure a payment provider"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
+msgid ""
+"<i class=\"oi oe_inline\" data-icon=\"info\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.token_form
+msgid ""
+"<i class=\"oi oi-filled\" data-icon=\"delete\" title=\"Delete payment "
+"method\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-"
+"delay=\"0\"/>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid ""
+"<i class=\"oi\" data-icon=\"home\" role=\"img\" title=\"Home\" aria-"
+"label=\"Home\"/>"
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
+"<i class=\"oi\" data-icon=\"warning\"/> These properties are set to\n"
 "                                match the behavior of providers and that of "
 "their integration with\n"
 "                                Odoo regarding this payment method. Any "
@@ -44,50 +67,6 @@ msgid ""
 "                                and should be tested on a test database "
 "first."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> Ushbu xususiyatlar "
-"provayderlarning xatti-harakatlari va ularning mazkur to‘lov usuli bo‘yicha "
-"Odoo bilan integratsiyasiga mos kelishi uchun o‘rnatilgan. Har qanday "
-"o‘zgartirishlar xatolarga olib kelishi mumkin, shuning uchun avval sinov "
-"ma'lumotlar bazasida tekshirilishi lozim."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr ""
-"<i class=\"fa-home\" role=\"img\" title=\"Bosh sahifa\" aria-label=\"Bosh "
-"sahifa\"/>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
-"transactions you intend to capture can only be captured in full. Handle the "
-"transactions individually to capture a partial amount.\"/>"
-msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture!"
-"= 'full_only'\" title=\"Siz olmoqchi bo‘lgan ba'zi tranzaksiyalarni faqat "
-"to‘liq miqdorda olish mumkin. Qisman summani ushlab qolish uchun "
-"tranzaksiyalarni alohida boshqaring.\"/>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.token_form
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
-msgstr ""
-"<i class=\"fa fa-trash\" title=\"To‘lov usulini o‘chirish\" data-bs-"
-"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
-
-#. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_method
-#, fuzzy
-msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> To‘lov provayderini sozlash"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -147,18 +126,15 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
-#, fuzzy
-msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> Tomonidan himoyalangan</span>"
+msgid "<span><i class=\"oi\" data-icon=\"lock\"/> Secured by</span>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-#, fuzzy
 msgid ""
-"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+"<strong><i class=\"oi oi-filled\" data-icon=\"article\"/> Show availability "
+"report</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-file-text\"/> Mavjudlik hisobotini ko‘rsatish</"
-"strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -478,9 +454,8 @@ msgstr "Qo‘shimcha tranzaksiyalar"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-#, fuzzy
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr "Boshqa usulni tanlang <i class=\"oi oi-arrow-down\"/>"
+msgid "Choose another method <i class=\"oi\" data-icon=\"south\"/>"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -834,9 +809,8 @@ msgstr "To‘lov havolasini yaratish va nusxalash"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
-#, fuzzy
-msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "Hisobimga o‘tish <i class=\"oi oi-arrow-right ms-2\"/>"
+msgid "Go to my Account <i class=\"oi ms-2\" data-icon=\"east\"/>"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -1357,6 +1331,11 @@ msgid "Payment Details"
 msgstr "To‘lov tafsilotlari"
 
 #. module: payment
+#: model:ir.module.module,shortdesc:base.module_payment
+msgid "Payment Engine"
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Payment History"
@@ -1593,6 +1572,11 @@ msgstr "Telefon"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Please choose another payment method."
+msgstr ""
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please find the payment details below."
 msgstr ""
 
 #. module: payment
@@ -2172,6 +2156,11 @@ msgstr ""
 msgid ""
 "The minimum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
+msgstr ""
+
+#. module: payment
+#: model:ir.module.module,summary:base.module_payment
+msgid "The payment engine used by payment provider modules."
 msgstr ""
 
 #. module: payment
@@ -2896,6 +2885,74 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
+#~ "                                match the behavior of providers and that "
+#~ "of their integration with\n"
+#~ "                                Odoo regarding this payment method. Any "
+#~ "change may result in errors\n"
+#~ "                                and should be tested on a test database "
+#~ "first."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/> Ushbu xususiyatlar "
+#~ "provayderlarning xatti-harakatlari va ularning mazkur to‘lov usuli "
+#~ "bo‘yicha Odoo bilan integratsiyasiga mos kelishi uchun o‘rnatilgan. Har "
+#~ "qanday o‘zgartirishlar xatolarga olib kelishi mumkin, shuning uchun avval "
+#~ "sinov ma'lumotlar bazasida tekshirilishi lozim."
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa-home\" role=\"img\" title=\"Bosh sahifa\" aria-label=\"Bosh "
+#~ "sahifa\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-info-circle oe_inline\" "
+#~ "invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+#~ "transactions you intend to capture can only be captured in full. Handle "
+#~ "the transactions individually to capture a partial amount.\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-info-circle oe_inline\" "
+#~ "invisible=\"support_partial_capture!= 'full_only'\" title=\"Siz olmoqchi "
+#~ "bo‘lgan ba'zi tranzaksiyalarni faqat to‘liq miqdorda olish mumkin. Qisman "
+#~ "summani ushlab qolish uchun tranzaksiyalarni alohida boshqaring.\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
+#~ "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-trash\" title=\"To‘lov usulini o‘chirish\" data-bs-"
+#~ "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
+#~ msgstr ""
+#~ "<i class=\"oi oi-arrow-right me-1\"></i> To‘lov provayderini sozlash"
+
+#, fuzzy
+#~ msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
+#~ msgstr "<span><i class=\"fa fa-lock\"/> Tomonidan himoyalangan</span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+#~ msgstr ""
+#~ "<strong><i class=\"fa fa-file-text\"/> Mavjudlik hisobotini ko‘rsatish</"
+#~ "strong>"
+
+#, fuzzy
+#~ msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
+#~ msgstr "Boshqa usulni tanlang <i class=\"oi oi-arrow-down\"/>"
+
+#, fuzzy
+#~ msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
+#~ msgstr "Hisobimga o‘tish <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #, fuzzy
 #~ msgid ""

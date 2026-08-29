@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 00:46+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -26,7 +26,8 @@ msgstr ""
 msgid ""
 "A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
 "to be converted to a valid date: '%(error_message)s'"
-msgstr "已匹配 GS1 条形码命名模式。但条形码未能转换为有效日期：'%(error_message)s"
+msgstr ""
+"已匹配 GS1 条形码命名模式。但条形码未能转换为有效日期：'%(error_message)s"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -38,12 +39,18 @@ msgstr "字母数字名称"
 msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
-msgstr "FNC1的替代性正则表达式分隔符。分隔符不能与任何相关规则模式的开始/结束匹配。"
+msgstr ""
+"FNC1的替代性正则表达式分隔符。分隔符不能与任何相关规则模式的开始/结束匹配。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
 msgstr "相关联的Uom"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.module.module,shortdesc:base.module_barcodes_gs1_nomenclature
+msgid "Barcode - GS1 Nomenclature"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
@@ -177,6 +184,11 @@ msgstr "服务包"
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
 msgid "Package Type"
 msgstr "包裹类型"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.module.module,summary:base.module_barcodes_gs1_nomenclature
+msgid "Parse barcodes according to the GS1-128 specifications"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity

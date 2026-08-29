@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 06:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -26,6 +26,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: survey
+#: model:ir.module.module,description:base.module_survey
+msgid ""
+"\n"
+"Create beautiful surveys and visualize answers\n"
+"==============================================\n"
+"\n"
+"It depends on the answers or reviews of some questions by different users. "
+"A\n"
+"survey may have multiple pages. Each page may contain multiple questions "
+"and\n"
+"each question may have multiple answers. Different users may give different\n"
+"answers of question and according to that survey is done. Partners are also\n"
+"sent mails with personal token for the invitation of the survey.\n"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -42,12 +58,6 @@ msgstr "# Câu hỏi được chọn ngẫu nhiên"
 #: code:addons/survey/models/survey_user_input.py:0
 msgid "%(participant)s just participated in \"%(survey_title)s\"."
 msgstr "%(participant)s vừa tham gia \"%(survey_title)s\"."
-
-#. module: survey
-#. odoo-python
-#: code:addons/survey/models/survey_survey.py:0
-msgid "%s (copy)"
-msgstr "%s (sao chép)"
 
 #. module: survey
 #. odoo-python
@@ -162,17 +172,17 @@ msgstr ""
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey "
 "(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
-"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
-"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
-"width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -199,17 +209,17 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:"
-"Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- Chúng tôi sử dụng logo của công ty đã tạo khảo sát (để "
 "xử lý các trường hợp liên quan đến nhiều công ty) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid."
-"company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object."
-"survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-"
-"width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Chứng nhận: <t t-out=\"object.survey_id.display_name or "
 "''\">Biểu mẫu phản hồi</t>\n"
@@ -265,8 +275,8 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object."
-"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-"
+"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -302,8 +312,8 @@ msgstr ""
 "            </a>\n"
 "       </div> \n"
 "        <t t-if=\"object.deadline\">\n"
-"            Vui lòng trả lời khảo sát ngày <t t-out=\"format_date(object."
-"deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Vui lòng trả lời khảo sát ngày <t t-"
+"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Chúc bạn may mắn!\n"
@@ -2950,6 +2960,7 @@ msgid "Nickname"
 msgstr "Nickname"
 
 #. module: survey
+#: model:res.groups.privilege,placeholder:survey.res_groups_privilege_surveys
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug2
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q2_sug2
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_1_choice_1
@@ -3236,8 +3247,8 @@ msgid ""
 msgstr ""
 "Ngôn ngữ dịch thuật tùy chọn (mã ISO) cần chọn khi gửi email. Nếu không được "
 "thiết lập, ngôn ngữ của đối tác chính sẽ được sử dụng. Đây thường là một "
-"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: {{ object.partner_id."
-"lang }}."
+"biểu thức giữ chỗ cung cấp ngôn ngữ phù hợp, ví dụ: "
+"{{ object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3938,6 +3949,11 @@ msgid "Send by Email"
 msgstr "Gửi qua email"
 
 #. module: survey
+#: model:ir.module.module,summary:base.module_survey
+msgid "Send your surveys or share them live."
+msgstr ""
+
+#. module: survey
 #: model:mail.template,description:survey.mail_template_certification
 msgid "Sent to participant if they succeeded the certification"
 msgstr "Gửi cho người tham gia nếu họ đã đạt được chứng nhận"
@@ -4367,6 +4383,7 @@ msgstr "Khảo sát: Lời mời"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
+#: model:ir.module.module,shortdesc:base.module_survey
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 #: model:res.groups.privilege,name:survey.res_groups_privilege_surveys
@@ -5486,3 +5503,6 @@ msgid ""
 msgstr ""
 "⚠️ Câu hỏi này được đặt trước một số hoặc tất cả câu hỏi kích hoạt và có thể "
 "được bỏ qua."
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (sao chép)"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:39+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-22 01:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/sms/uz/"
@@ -25,6 +25,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sms
+#: model:ir.module.module,description:base.module_sms
+msgid ""
+"\n"
+"This module gives a framework for SMS text messaging\n"
+"----------------------------------------------------\n"
+"\n"
+"The service is provided by the In App Purchase Odoo platform.\n"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -51,13 +61,6 @@ msgstr ""
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/models/sms_template.py:0
-#, fuzzy
-msgid "%s (copy)"
-msgstr "%s (nusxa)"
-
-#. module: sms
-#. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 #, fuzzy
 msgid "%s invalid recipients"
@@ -65,39 +68,31 @@ msgstr "%s ta noto‘g‘ri qabul qiluvchi"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
-"contact the support for more information..."
-msgstr ""
-"<i class=\"fa fa-warning\"/> Hisobingizda xatolik yuz berdi. Batafsil "
-"ma'lumot uchun qo‘llab-quvvatlash xizmatiga murojaat qiling..."
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
-"registered."
-msgstr ""
-"<i class=\"fa fa-warning\"/> Hisobingiz ro‘yxatdan o‘tkazilmaguncha SMS "
-"yubora olmaysiz."
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-arrow-right\"/>\n"
+"<i class=\"oi\" data-icon=\"east\"/>\n"
 "                            Register"
-msgstr "<i class=\"oi oi-arrow-right\"/> Ro‘yxatdan o‘tish"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
-#, fuzzy
 msgid ""
-"<i class=\"oi oi-arrow-right\"/>\n"
+"<i class=\"oi\" data-icon=\"east\"/>\n"
 "                            Set Sender Name"
-msgstr "<i class=\"oi oi-arrow-right\"/> Yuboruvchi nomini o‘rnatish"
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> An error occurred with your account. "
+"Please contact the support for more information..."
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
+msgid ""
+"<i class=\"oi\" data-icon=\"warning\"/> You cannot send SMS while your "
+"account is not registered."
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -135,38 +130,6 @@ msgid ""
 msgstr ""
 "<span class=\"text-warning\" invisible=\"not no_record\">Yozuvlar mavjud "
 "emas</span>"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
-#, fuzzy
-msgid ""
-"<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to "
-"the recipients of the template\n"
-"                                    and will not appear in the messaging "
-"history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only "
-"be posted as an\n"
-"                                    internal note in the messaging history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the "
-"recipients of the\n"
-"                                    template and it will also be posted as "
-"an internal note\n"
-"                                    in the messaging history.\n"
-"                                </span>"
-msgstr ""
-"<span invisible=\"sms_method != 'sms'\"> Xabar shablon qabul qiluvchilarga "
-"SMS sifatida yuboriladi va xabarlar tarixida ko‘rinmaydi. </span> <span "
-"invisible=\"sms_method != 'note'\"> SMS yuborilmaydi, u faqat xabarlar "
-"tarixida ichki eslatma sifatida joylashtiriladi. </span> <span "
-"invisible=\"sms_method != 'comment'\"> SMS shablon qabul qiluvchilarga SMS "
-"sifatida yuboriladi va shuningdek, xabarlar tarixida ichki eslatma sifatida "
-"ham joylashtiriladi. </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -372,13 +335,6 @@ msgstr "Qo‘llab-quvvatlanmaydigan mamlakat"
 #, fuzzy
 msgid "Country-specific Registration Required"
 msgstr "Mamlakatga xos ro‘yxatdan o‘tish talab qilinadi"
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-#, fuzzy
-msgid "Country-specific registration required."
-msgstr "Mamlakatga xos ro‘yxatdan o‘tish talab qilinadi."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -838,12 +794,6 @@ msgid "Not enough credits to send SMS"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
-#, fuzzy
-msgid "Note only"
-msgstr "Faqat eslatma"
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 #, fuzzy
 msgid ""
@@ -1002,13 +952,6 @@ msgid "Register Account"
 msgstr "Hisobni ro‘yxatdan o‘tkazish"
 
 #. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-#, fuzzy
-msgid "Register now."
-msgstr "Hoziroq ro‘yxatdan o‘ting."
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 #, fuzzy
@@ -1086,18 +1029,6 @@ msgstr "SMS"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
 msgstr ""
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
-#, fuzzy
-msgid "SMS (with note)"
-msgstr "SMS (izoh bilan)"
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
-#, fuzzy
-msgid "SMS (without note)"
-msgstr "SMS (izohsiz)"
 
 #. module: sms
 #. odoo-javascript
@@ -1247,6 +1178,11 @@ msgid "SMS Templates have been reset"
 msgstr "SMS shablonlari asl holatiga qaytarildi"
 
 #. module: sms
+#: model:ir.module.module,summary:base.module_sms
+msgid "SMS Text Messaging"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 #, fuzzy
 msgid "SMS Trackers"
@@ -1257,6 +1193,11 @@ msgstr "SMS kuzatuvchilari"
 #, fuzzy
 msgid "SMS content"
 msgstr "SMS mazmuni"
+
+#. module: sms
+#: model:ir.module.module,shortdesc:base.module_sms
+msgid "SMS gateway"
+msgstr ""
 
 #. module: sms
 #. odoo-python
@@ -1333,13 +1274,6 @@ msgstr "SMS yuborish"
 #, fuzzy
 msgid "Send SMS (%s)"
 msgstr "SMS yuborish (%s)"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
-#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
-#, fuzzy
-msgid "Send SMS As"
-msgstr "SMS sifatida yuborish"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1487,6 +1421,7 @@ msgstr "Muvaffaqiyat"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 #, fuzzy
 msgid "Template"
 msgstr "Shablon"
@@ -1915,6 +1850,94 @@ msgstr ""
 #, fuzzy
 msgid "record:"
 msgstr "yozuv:"
+
+#, fuzzy
+#~ msgid "%s (copy)"
+#~ msgstr "%s (nusxa)"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
+#~ "contact the support for more information..."
+#~ msgstr ""
+#~ "<i class=\"fa fa-warning\"/> Hisobingizda xatolik yuz berdi. Batafsil "
+#~ "ma'lumot uchun qo‘llab-quvvatlash xizmatiga murojaat qiling..."
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is "
+#~ "not registered."
+#~ msgstr ""
+#~ "<i class=\"fa fa-warning\"/> Hisobingiz ro‘yxatdan o‘tkazilmaguncha SMS "
+#~ "yubora olmaysiz."
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-arrow-right\"/>\n"
+#~ "                            Register"
+#~ msgstr "<i class=\"oi oi-arrow-right\"/> Ro‘yxatdan o‘tish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-arrow-right\"/>\n"
+#~ "                            Set Sender Name"
+#~ msgstr "<i class=\"oi oi-arrow-right\"/> Yuboruvchi nomini o‘rnatish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span invisible=\"sms_method != 'sms'\">\n"
+#~ "                                    The message will be sent as an SMS to "
+#~ "the recipients of the template\n"
+#~ "                                    and will not appear in the messaging "
+#~ "history.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'note'\">\n"
+#~ "                                    The SMS will not be sent, it will "
+#~ "only be posted as an\n"
+#~ "                                    internal note in the messaging "
+#~ "history.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'comment'\">\n"
+#~ "                                    The SMS will be sent as an SMS to the "
+#~ "recipients of the\n"
+#~ "                                    template and it will also be posted "
+#~ "as an internal note\n"
+#~ "                                    in the messaging history.\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span invisible=\"sms_method != 'sms'\"> Xabar shablon qabul "
+#~ "qiluvchilarga SMS sifatida yuboriladi va xabarlar tarixida ko‘rinmaydi. </"
+#~ "span> <span invisible=\"sms_method != 'note'\"> SMS yuborilmaydi, u faqat "
+#~ "xabarlar tarixida ichki eslatma sifatida joylashtiriladi. </span> <span "
+#~ "invisible=\"sms_method != 'comment'\"> SMS shablon qabul qiluvchilarga "
+#~ "SMS sifatida yuboriladi va shuningdek, xabarlar tarixida ichki eslatma "
+#~ "sifatida ham joylashtiriladi. </span>"
+
+#, fuzzy
+#~ msgid "Country-specific registration required."
+#~ msgstr "Mamlakatga xos ro‘yxatdan o‘tish talab qilinadi."
+
+#, fuzzy
+#~ msgid "Note only"
+#~ msgstr "Faqat eslatma"
+
+#, fuzzy
+#~ msgid "Register now."
+#~ msgstr "Hoziroq ro‘yxatdan o‘ting."
+
+#, fuzzy
+#~ msgid "SMS (with note)"
+#~ msgstr "SMS (izoh bilan)"
+
+#, fuzzy
+#~ msgid "SMS (without note)"
+#~ msgstr "SMS (izohsiz)"
+
+#, fuzzy
+#~ msgid "Send SMS As"
+#~ msgstr "SMS sifatida yuborish"
 
 #, fuzzy
 #~ msgid "Base"

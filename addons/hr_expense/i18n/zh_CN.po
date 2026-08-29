@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 18:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -28,6 +28,33 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_expense
+#: model:ir.module.module,description:base.module_hr_expense
+msgid ""
+"\n"
+"Manage expenses by Employees\n"
+"============================\n"
+"\n"
+"This application allows you to manage your employees' daily expenses. It "
+"gives you access to your employees’ fee notes and give you the right to "
+"complete and validate or refuse the notes. After validation it creates an "
+"invoice for the employee.\n"
+"Employee can encode their own expenses and the validation flow puts it "
+"automatically in the accounting after validation by managers.\n"
+"\n"
+"\n"
+"The whole flow is implemented as:\n"
+"---------------------------------\n"
+"* Draft expense\n"
+"* Submitted by the employee to his manager\n"
+"* Approved by his manager\n"
+"* Validation by the accountant and accounting entries creation\n"
+"\n"
+"This module also uses analytic accounting and is compatible with the invoice "
+"on timesheet module so that you are able to automatically re-invoice your "
+"customers' expenses if your work by project.\n"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -336,7 +363,6 @@ msgstr "审批状态"
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -681,10 +707,14 @@ msgstr "公司支付的每笔费用都必须有单独的专用日记账分录。
 #: model:ir.model,name:hr_expense.model_hr_employee
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__employee_id
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Employee"
 msgstr "员工"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
+msgid "Employee (Through a Purchase Receipt)"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -895,6 +925,7 @@ msgstr "费用拆分"
 #: code:addons/hr_expense/models/account_payment.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
+#: model:ir.module.module,shortdesc:base.module_hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.template,name:hr_expense.product_product_no_cost_product_template
 #: model:res.groups.privilege,name:hr_expense.res_groups_privilege_expenses
@@ -1053,6 +1084,11 @@ msgstr ""
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "酒店、机票、出租车等"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -1343,8 +1379,14 @@ msgstr "管理人员可在此批准支出，然后会计人员可在此过账会
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-msgid "Managers can inspect all expenses from here."
-msgstr "经理可以从这里检查所有费用。"
+msgid "Managers can inspect and select expenses from here."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+msgid "Managers can inspect expenses from here."
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -1442,6 +1484,11 @@ msgid "Next Activity Type"
 msgstr "下一活动类型"
 
 #. module: hr_expense
+#: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
+msgid "No"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "No (Direct Expense)"
 msgstr ""
@@ -1471,7 +1518,7 @@ msgstr "未找到员工%(name)s的工作联系人，请设定一个。"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
-msgid "None (company)"
+msgid "None (Paid by Company)"
 msgstr ""
 
 #. module: hr_expense
@@ -2080,6 +2127,11 @@ msgid "Submit Expense"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.module.module,summary:base.module_hr_expense
+msgid "Submit, validate and reinvoice employee expenses"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__submitted
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__submitted
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_split__approval_state__submitted
@@ -2678,3 +2730,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "连通相同的收据，已经存在。"
+
+#~ msgid "Managers can inspect all expenses from here."
+#~ msgstr "经理可以从这里检查所有费用。"

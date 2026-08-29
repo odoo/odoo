@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 14:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -152,6 +152,7 @@ msgstr "快遞送貨（Gelato）"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Gelato"
@@ -205,11 +206,11 @@ msgstr "Gelato 網絡鈎子秘密"
 #. odoo-python
 #: code:addons/sale_gelato/controllers/main.py:0
 msgid ""
-"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
-"%(gelato_message)s"
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
+"(gelato_message)s"
 msgstr ""
-"Gelato 未能繼續為訂單履行配送。訂單參考編號：%(order_reference)s，錯誤訊息："
-"%(gelato_message)s"
+"Gelato 未能繼續為訂單履行配送。訂單參考編號：%(order_reference)s，錯誤訊息：%"
+"(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
@@ -279,6 +280,11 @@ msgstr ""
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
 msgstr "缺漏的產品款式變體及圖片，已成功建立。"
+
+#. module: sale_gelato
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form

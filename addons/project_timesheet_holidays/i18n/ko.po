@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 13:04+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -22,6 +22,17 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: project_timesheet_holidays
+#: model:ir.module.module,description:base.module_project_timesheet_holidays
+msgid ""
+"\n"
+"Bridge module to integrate leaves in timesheet\n"
+"================================================\n"
+"\n"
+"This module allows to automatically log timesheets when employees are\n"
+"on leaves. Project and task can be configured company-wide.\n"
+msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -97,6 +108,11 @@ msgid "Resource Time Off Detail"
 msgstr "자원별 휴가 세부사항"
 
 #. module: project_timesheet_holidays
+#: model:ir.module.module,summary:base.module_project_timesheet_holidays
+msgid "Schedule timesheet when on time off"
+msgstr ""
+
+#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
@@ -145,6 +161,11 @@ msgid "Time Types Count"
 msgstr ""
 
 #. module: project_timesheet_holidays
+#: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
+msgid "Timesheet when on Time Off"
+msgstr ""
+
+#. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "Timesheets linked to public holidays cannot be deleted."
@@ -188,8 +209,8 @@ msgstr ""
 "        !! 작업 우선순위를 높음으로 설정\n"
 "       !!! 작업 우선순위를 긴급으로 설정\n"
 "\n"
-"        형식과 순서가 알맞게 지정되어 있는지 확인하세요.예: 환경설정 화면 "
-"개선 5h #feature #v16 @Mitchell !"
+"        형식과 순서가 알맞게 지정되어 있는지 확인하세요.예: 환경설정 화면 개"
+"선 5h #feature #v16 @Mitchell !"
 
 #. module: project_timesheet_holidays
 #. odoo-python

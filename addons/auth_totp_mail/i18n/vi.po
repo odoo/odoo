@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 12:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -21,6 +21,18 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
+#: model:ir.module.module,description:base.module_auth_totp_mail
+msgid ""
+"\n"
+"2FA Invite mail\n"
+"===============\n"
+"Allow the users to invite another user to use Two-Factor authentication\n"
+"by sending an email to the target user. This email redirects them to:\n"
+"- the users security settings if the user is internal.\n"
+"- the portal security settings page if the user is not internal.\n"
+msgstr ""
+
+#. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 ".\n"
@@ -28,6 +40,11 @@ msgid ""
 msgstr ""
 ".\n"
 "                <br/>"
+
+#. module: auth_totp_mail
+#: model:ir.module.module,shortdesc:base.module_auth_totp_mail
+msgid "2FA Invite mail"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -118,9 +135,9 @@ msgid ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
-"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
-"border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
 "        Activate my two-factor authentication\n"
 "    </a>\n"
 "</p>\n"
@@ -163,9 +180,9 @@ msgstr ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:"
-"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
-"border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
 "        Kích hoạt xác thực hai yếu tố của tôi\n"
 "    </a>\n"
 "</p>\n"
@@ -208,8 +225,8 @@ msgstr "Một thiết bị mới đã được sử dụng để đăng nhập v
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
-"Một thiết bị đáng tin cậy vừa được gỡ khỏi tài khoản của bạn: "
-"%(device_names)s"
+"Một thiết bị đáng tin cậy vừa được gỡ khỏi tài khoản của bạn: %"
+"(device_names)s"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required

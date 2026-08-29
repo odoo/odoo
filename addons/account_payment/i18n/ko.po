@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 08:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -287,6 +287,13 @@ msgid "Early Payment Discount of"
 msgstr "선납 할인"
 
 #. module: account_payment
+#: model:ir.module.module,summary:base.module_account_payment
+msgid ""
+"Enable customers to pay invoices on the portal and post payments when "
+"transactions are processed."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
 msgstr "전체 적용"
@@ -414,6 +421,11 @@ msgstr ""
 "수 없습니다."
 
 #. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Online Payments"
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
@@ -489,6 +501,11 @@ msgid "Payment"
 msgstr "결제"
 
 #. module: account_payment
+#: model:ir.module.module,shortdesc:base.module_account_payment
+msgid "Payment - Account"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
 msgstr "결제 금액"
@@ -509,19 +526,9 @@ msgid "Payment Method Line"
 msgstr "결제 수단 항목"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_method_menu
-msgid "Payment Methods"
-msgstr "지급 방법"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "결제대행업체"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_provider_menu
-msgid "Payment Providers"
 msgstr "결제대행업체"
 
 #. module: account_payment
@@ -530,22 +537,12 @@ msgid "Payment Refund Wizard"
 msgstr "결제 환불 마법사"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_token_menu
-msgid "Payment Tokens"
-msgstr "결제 토큰"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "지불 거래"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
-msgid "Payment Transactions"
-msgstr "결제 거래"
 
 #. module: account_payment
 #. odoo-python
@@ -804,3 +801,15 @@ msgstr "기한 초과"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid "Payment Methods"
+#~ msgstr "지급 방법"
+
+#~ msgid "Payment Providers"
+#~ msgstr "결제대행업체"
+
+#~ msgid "Payment Tokens"
+#~ msgstr "결제 토큰"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "결제 거래"

@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 08:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
@@ -45,6 +45,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: maintenance
+#: model:ir.module.module,description:base.module_maintenance
+msgid ""
+"\n"
+"Track equipment and maintenance requests"
+msgstr ""
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -638,12 +645,6 @@ msgid "Followers (Partners)"
 msgstr "Takipçiler (İş ortakları)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Yazı tipi harika simgesi ör. fa-görevler"
-
-#. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__forever
 msgid "Forever"
 msgstr "Sonsuza dek"
@@ -837,6 +838,7 @@ msgstr "MTTR"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__maintenance_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__maintenance_ids
+#: model:ir.module.module,shortdesc:base.module_maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_request
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_title
 #: model:res.groups.privilege,name:maintenance.res_groups_privilege_maintenance
@@ -961,6 +963,12 @@ msgid "Maintenance Type"
 msgstr "Bakım Tipi"
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time Between Failure"
 msgstr "Hatalar Arasındaki Ortalama Zaman"
@@ -1072,6 +1080,11 @@ msgstr "Sonraki Aktivite Özeti"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_id
 msgid "Next Activity Type"
 msgstr "Sonraki Aktivitie Türü"
+
+#. module: maintenance
+#: model:res.groups.privilege,placeholder:maintenance.res_groups_privilege_maintenance
+msgid "No"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__2
@@ -1549,6 +1562,11 @@ msgstr ""
 "yönetebileceksiniz."
 
 #. module: maintenance
+#: model:ir.module.module,summary:base.module_maintenance
+msgid "Track equipment and manage maintenance requests"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Type of the exception activity on record."
@@ -1681,3 +1699,6 @@ msgstr "Örneğin. Ekran çalışmıyor"
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
 msgstr "örn. sirketim.com"
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Yazı tipi harika simgesi ör. fa-görevler"

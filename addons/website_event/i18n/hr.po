@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 06:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-master/"
@@ -94,45 +94,35 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
+#: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
+msgid ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"location_on\" title=\"Location\"/"
+">"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
-msgid "<i class=\"fa fa-caret-left me-2\"/><small>Previous</small>"
+msgid "<i class=\"oi me-2\" data-icon=\"arrow_left\"/><small>Previous</small>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid "<i class=\"oi me-2\" data-icon=\"block\"/>Sold Out"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
+msgid "<i class=\"oi me-2\" data-icon=\"check\" role=\"img\"/>Registered"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "<i class=\"fa fa-check me-2\"/>Registered"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
-msgid ""
-"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
-"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
+msgid "<i class=\"oi me-2\" data-icon=\"check\"/>Registered"
 msgstr ""
 
 #. module: website_event
@@ -157,10 +147,11 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.navbar
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
 msgid ""
-"<i class=\"oi oi-chevron-left\"/>\n"
-"                <span>All Events</span>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"settings\" role=\"img\" aria-"
+"label=\"Configure\" title=\"Configure event tickets\"/><em>Configure "
+"Tickets</em>"
 msgstr ""
 
 #. module: website_event
@@ -168,6 +159,19 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"calendar_today\" "
 "role=\"presentation\"/>August 23, 2025"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_backward\"/>\n"
+"                <span>All Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid ""
+"<i class=\"oi\" data-icon=\"location_on\" title=\"Location\"/> Online event"
 msgstr ""
 
 #. module: website_event
@@ -187,12 +191,7 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
-msgid "<small>Next</small><i class=\"fa fa-caret-right ms-2\"/>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
+msgid "<small>Next</small><i class=\"oi ms-2\" data-icon=\"arrow_right\"/>"
 msgstr ""
 
 #. module: website_event
@@ -253,11 +252,16 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Create an Event"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
 "<span class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Sold "
-"Out\n"
+"                                        <i class=\"oi me-2\" data-"
+"icon=\"block\"/>Sold Out\n"
 "                                    </span>"
 msgstr ""
 
@@ -436,6 +440,12 @@ msgstr "Sve države"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "All Events"
 msgstr "Svi događaji"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/event_page_option_plugin.js:0
+msgid "All events"
+msgstr ""
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -750,7 +760,7 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
+msgid "Event Info <i class=\"oi\" data-icon=\"chevron_right\"/>"
 msgstr ""
 
 #. module: website_event
@@ -854,6 +864,7 @@ msgstr ""
 #: code:addons/website_event/models/website.py:0
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 #: code:addons/website_event/static/src/website_builder/event_searchbar_option.xml:0
+#: model:ir.module.module,shortdesc:base.module_website_event
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -929,7 +940,7 @@ msgstr "Podnožje vidljivo"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
+msgid "Get Tickets <i class=\"oi\" data-icon=\"chevron_right\"/>"
 msgstr ""
 
 #. module: website_event
@@ -1092,7 +1103,7 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
-msgid "Join online <i class=\"ms-1 fa fa-globe\"/>"
+msgid "Join online <i class=\"oi ms-1\" data-icon=\"public\"/>"
 msgstr ""
 
 #. module: website_event
@@ -1253,6 +1264,148 @@ msgid "OpenWood Collection Online Reveal"
 msgstr ""
 
 #. module: website_event
+#: model:ir.module.module,description:base.module_website_event
+msgid ""
+"Organize Events, Trainings & Webinars\n"
+"-------------------------------------\n"
+"\n"
+"### Schedule, Promote, Sell, Organize\n"
+"\n"
+"Organize, promote and sell events online. Whether you organize meetings, "
+"conferences, trainings or webinars, Odoo gives you all the features you need "
+"to manage your events.\n"
+"\n"
+"Create Awesome Event Pages\n"
+"--------------------------\n"
+"\n"
+"### Get rid of old WYSIWYG editors\n"
+"\n"
+"Create beautiful event pages by drag & droping well designed *'Building "
+"Blocks'*. Publish event photos, speakers, schedule, etc.\n"
+"\n"
+"Odoo's unique *'edit inline'* approach makes website creation surprisingly "
+"easy. \"Want to introduce a speaker? to change the price of a ticket? to "
+"update a banner? promote sponsors?\" just click and change.\n"
+"\n"
+"Sell Tickets Online\n"
+"-------------------\n"
+"\n"
+"### Automate the registration and payment process\n"
+"\n"
+"Sell registrations to your event with the multi-ticketing feature. Events "
+"can be free or for a fee. Attendees can pay online with a credit card or on "
+"invoice, based on your configuration.\n"
+"\n"
+"Boost your sales with early-bird prices, special conditions for members, or "
+"extra services with multiple tickets.\n"
+"\n"
+"A Clean Google Analytics Integration\n"
+"------------------------------------\n"
+"\n"
+"### Control your sales funnel with Google Analytics\n"
+"\n"
+"Get a clear visibility of your sales funnel. Odoo's Google Analytics "
+"trackers are configured by default to track all kind of events related to "
+"shopping carts, call-to-actions, etc.\n"
+"\n"
+"As Odoo marketing tools (mass mailing, campaigns, etc) are also linked with "
+"Google Analytics, you get a full view of your business.\n"
+"\n"
+"Promote Events Efficiently\n"
+"--------------------------\n"
+"\n"
+"### Mass Mailing & Social Media\n"
+"\n"
+"Use the segmentation, the social network integration and mass mailing "
+"features to promote your events to the right audience. Setup automated "
+"emails to attendees to send them last minute details.\n"
+"\n"
+"Designer-Friendly Themes\n"
+"------------------------\n"
+"\n"
+"### Designers love working on Odoo\n"
+"\n"
+"Themes are awesome and easy to design. You don't need to develop to create "
+"new pages, themes or building blocks. We use a clean HTML structure, a "
+"[bootstrap](http://getbootstrap.com/) CSS and our modularity allows to "
+"distribute your themes easily.\n"
+"\n"
+"The building block approach allows the website to stay clean after the end-"
+"users start creating new contents.\n"
+"\n"
+"Make Your Event More Visible\n"
+"----------------------------\n"
+"\n"
+"### SEO tools at your finger tips\n"
+"\n"
+"SEO tools are ready to use, with no configuration required. Odoo suggests "
+"keywords according to Google most searched terms, Google Analytics tracks "
+"your shopping cart events and sitemap are created automatically.\n"
+"\n"
+"We even do structured content automatically to promote your events and "
+"products efficiently in Google.\n"
+"\n"
+"Leverage Social Media\n"
+"---------------------\n"
+"\n"
+"### Optimize: from Ads to Conversions\n"
+"\n"
+"Create new landing pages easily with the Odoo inline editing feature. Send "
+"visitors of your different marketing campaigns to event landing pages to "
+"optimize conversions.\n"
+"\n"
+"And Much More...\n"
+"----------------\n"
+"\n"
+"### Schedule\n"
+"\n"
+"-   Calendar of Events\n"
+"-   Publish related documents\n"
+"-   Ressources allocation\n"
+"-   Automate purchases (catering...)\n"
+"-   Multiple locations and organizers\n"
+"-   Mobile Interface\n"
+"\n"
+"### Sell\n"
+"\n"
+"-   Online or offline sales\n"
+"-   Automated invoicing\n"
+"-   Cancellation policies\n"
+"-   Specific prices for members\n"
+"-   Dashboards and reporting\n"
+"\n"
+"### Organize\n"
+"\n"
+"-   Advanced Planification\n"
+"-   Print Badges\n"
+"-   Automate Follow-up Emails\n"
+"-   Min/Max capacities\n"
+"-   Manage classes and ressources\n"
+"-   Create group of attendees\n"
+"-   Automate statisfaction surveys\n"
+"\n"
+"Fully Integrated With Others Apps\n"
+"---------------------------------\n"
+"\n"
+"### Get hundreds of open source apps for free\n"
+"\n"
+"\n"
+"### eCommerce\n"
+"\n"
+"Promote products, sell online, optimize visitors' shopping experiences.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"\n"
+"### Our Team\n"
+"\n"
+"Create a great \"About us\" page by presenting your team efficiently.\n"
+msgstr ""
+
+#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1319,6 +1472,11 @@ msgstr "Javni"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Publish"
 msgstr "Objavi"
+
+#. module: website_event
+#: model:ir.module.module,summary:base.module_website_event
+msgid "Publish events, sell tickets"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.3a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 23:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-master/"
@@ -18,6 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: pos_razorpay
+#: model:ir.module.module,description:base.module_pos_razorpay
+msgid ""
+"\n"
+"Allow Razorpay POS payments\n"
+"==============================\n"
+"\n"
+"This module allows customers to pay for their orders with debit/credit\n"
+"cards and UPI. The transactions are processed by Razorpay POS. A Razorpay "
+"merchant account is necessary. It allows the\n"
+"following:\n"
+"\n"
+"* Fast payment by just swiping/scanning a credit/debit card or a QR code "
+"while on the payment screen\n"
+"* Supported cards: Visa, MasterCard, Rupay, UPI\n"
+msgstr ""
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -112,6 +129,16 @@ msgid "ID"
 msgstr "ລະຫັດ"
 
 #. module: pos_razorpay
+#: model:ir.module.module,summary:base.module_pos_razorpay
+msgid "Integrate your POS with a Razorpay payment terminal"
+msgstr ""
+
+#. module: pos_razorpay
+#: model:ir.module.module,shortdesc:base.module_pos_razorpay
+msgid "POS Razorpay"
+msgstr ""
+
+#. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
 #, fuzzy
@@ -119,8 +146,8 @@ msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
 msgstr ""
-"ການຊຳລະເງິນຖືກຈັດເຂົ້າຄິວແລ້ວ. ທ່ານສາມາດເລືອກລໍຖ້າໃຫ້ການຊຳລະເງິນເລີ່ມຕົ້ນຢູ່ເຄື່ອງຮູດບັດ ຫຼື ດຳເນີນການຍົ"
-"ກເລີກທຸລະກຳນີ້"
+"ການຊຳລະເງິນຖືກຈັດເຂົ້າຄິວແລ້ວ. ທ່ານສາມາດເລືອກລໍຖ້າໃຫ້ການຊຳລະເງິນເລີ່ມຕົ້ນຢູ່ເຄື່ອງຮູດບັດ ຫຼື "
+"ດຳເນີນການຍົກເລີກທຸລະກຳນີ້"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment
@@ -170,8 +197,7 @@ msgstr "ຂໍ້ຜິດພາດຈາກ Razorpay"
 msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
-msgstr ""
-"ຄຳຂໍຍົກເລີກການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
+msgstr "ຄຳຂໍຍົກເລີກການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -188,8 +214,7 @@ msgstr "ຄຳຂໍການຊຳລະເງິນ Razorpay POS ຄາດວ�
 msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
-msgstr ""
-"ຄຳຂໍສະຖານະການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
+msgstr "ຄຳຂໍສະຖານະການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -293,8 +318,8 @@ msgstr "UPI"
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
 #, fuzzy
 msgid ""
-"Used when connecting to Razorpay: "
-"https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
+"Used when connecting to Razorpay: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
 msgstr ""
 "ໃຊ້ໃນເວລາເຊື່ອມຕໍ່ຫາ Razorpay: https://razorpay.com/docs/payments/dashboard/"
 "account-settings/api-keys/"

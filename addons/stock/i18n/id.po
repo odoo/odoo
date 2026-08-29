@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 19:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
@@ -263,7 +263,6 @@ msgstr "%(warehouse)s: Supply Produk dari %(supplier)s"
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%s (copy)"
@@ -374,11 +373,6 @@ msgid "(serial barcode)"
 msgstr "(barcode seri)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "), a replenishment must be done to reach the maximum level of stock ("
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
 msgid ""
@@ -437,8 +431,8 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
-msgid "+ %d day(s)"
-msgstr "+ %d hari"
+msgid "+ %d days"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -460,8 +454,7 @@ msgstr ""
 "            Tindakan manual mungkin dibutuhkan."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "/day"
 msgstr "/hari"
 
@@ -609,7 +602,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"<i class=\"oi\" data-icon=\"warning\"/>\n"
 "                                All products could not be reserved. Click on "
 "the \"Reserve\" button to try to reserve products."
 msgstr ""
@@ -770,6 +763,13 @@ msgstr "<span class=\"text-muted small\"> Di Tangan</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"<span class=\"text-muted\">When forecasted inventory reaches the minimum, "
+"replenish to reach maximum.</span>"
 msgstr ""
 
 #. module: stock
@@ -1248,7 +1248,9 @@ msgid "After"
 msgstr "Setelah"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_3
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_3
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_3
 msgid "After next month last year"
 msgstr "Setelah bulan depan tahun lalu"
 
@@ -1682,12 +1684,6 @@ msgstr ""
 "tipe 'internal'."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Average Stock:"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
 msgstr "Backorder dari"
@@ -1758,9 +1754,16 @@ msgid "Barcode is valid EAN"
 msgstr "Barcode adalah EAN valid"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__based_on
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__based_on
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__min_max_based_on
 msgid "Based on"
 msgstr "Berdasarkan pada"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Based on average daily demands from"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -2045,6 +2048,18 @@ msgid "Choose destination location"
 msgstr "Pilih lokasi tujua"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"Choose how many days of demand are covered by the Minimum level based on the "
+"average daily demand.\rThis number of days should at least be equal to "
+"Replenishment Lead Times - Availability Time to not run out of stock while "
+"waiting for a new replenishment to arrive. Include extra days of safety to "
+"buffer unusual situations.\r\rGreen if > Replenishment Lead Times - "
+"Availability Time\rOrange if = Replenishment Lead Times - Availability "
+"Time\rRed if < Replenishment Lead Times - Availability Time"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
 msgstr "Pilih layout lembar untuk mencetak label iot"
@@ -2064,11 +2079,6 @@ msgstr "Pilih apakh untuk mencetak produk atau label lot/nomor seri"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
 msgstr "Bersihkan"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "Close"
-msgstr "Tutup"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__closest_location
@@ -2419,6 +2429,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_uid
@@ -2462,6 +2473,7 @@ msgstr "Dibuat oleh"
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_date
@@ -2512,16 +2524,6 @@ msgid "Creation date"
 msgstr "Tanggal pembuatan"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move_line__date
-msgid ""
-"Creation date of this move line until updated due to: quantity being "
-"increased, 'picked' status has updated, or move line is done."
-msgstr ""
-"Tanggal pembuatan baris pergerakan ini sampai diupdate oleh karena: "
-"kuantitas ditingkatkan, status 'picked' telah diupdate, atau baris "
-"pergerakan sudah selesai."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Cross Dock"
@@ -2566,6 +2568,13 @@ msgid "Custom"
 msgstr "Khusus"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__custom
+#: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__custom
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__custom
+msgid "Custom Demand"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
@@ -2607,9 +2616,13 @@ msgid "Cyclic Counting"
 msgstr "Penghitungan Siklus"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Daily Demand:"
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__daily_demand
+msgid "Daily Demand"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__danger_level
+msgid "Danger Level"
 msgstr ""
 
 #. module: stock
@@ -2998,6 +3011,11 @@ msgid "Demand in Product UoM"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__daily_demand
+msgid "Demand is"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3215,6 +3233,7 @@ msgstr "Dimensi"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Discard"
 msgstr "Buang"
@@ -3277,6 +3296,7 @@ msgstr "Tampilkan Nomor Seri & Lot pada Slip Pengiriman"
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__display_name
@@ -3487,13 +3507,13 @@ msgid "Enter a description"
 msgstr "Masukkan keterangan"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_orderpoint_suggest__based_on
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__min_max_based_on
 msgid ""
-"Estimate the sales volume for the period based on past period or order the "
-"forecasted quantity for that period."
+"Estimate the daily average future demand volume based on past period or "
+"choose Custom Demand to enter manually average daily demand."
 msgstr ""
-"Estimasikan volume sales untuk periode berdasarkan periode masa lalu atau "
-"pesan kuantitas yang di-forecast untuk periode tersebut."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -3622,12 +3642,6 @@ msgid "Followers (Partners)"
 msgstr "Follower (Mitra)"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
-#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Ikon font awesome, misalnya fa-tasks"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "For"
@@ -3748,6 +3762,18 @@ msgid "Forecasted Weight"
 msgstr "Forecasted Weight"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
+msgid ""
+"Forecasted stock level when replenishing.\n"
+"Automatically calculated as = Min + Max (Order frequency x Daily Demand x "
+"Growth factor, MoQ) with MoQ = Minimum quantity from vendor pricelist / "
+"BOM.\n"
+"Won't be reached by on Hand stock if unforecasted demand is delivered while "
+"waiting for arrival."
+msgstr ""
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted with Pending"
@@ -3812,6 +3838,7 @@ msgid "Full Package Name"
 msgstr "Nama Lengkap Pangket"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Kegiatan - Kegiatan Mendatang"
@@ -4027,6 +4054,7 @@ msgstr "Bagaimana produk dalam transfer tipe operasi ini harusnya direservasi."
 #: model:ir.model.fields,field_description:stock.field_stock_move__id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__id
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__id
 #: model:ir.model.fields,field_description:stock.field_stock_package__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__id
@@ -4352,12 +4380,6 @@ msgid "Import Serials"
 msgstr "Impor Seri"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/stock_replenishment_info.py:0
-msgid "In %s day(s)"
-msgstr "Dalam %s hari"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Dalam Tipe"
@@ -4582,6 +4604,7 @@ msgstr "Kuantitas yang Diinventarisasi"
 #: model:ir.actions.server,name:stock.action_view_quants
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_inventory
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_inventory
+#: model:ir.module.module,shortdesc:base.module_stock
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: model:res.groups.privilege,name:stock.res_groups_privilege_inventory
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4903,7 +4926,9 @@ msgid "Last 12 Months"
 msgstr "12 Bulan Terakhir"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_year
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_year
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_year
 msgid "Last 12 months"
 msgstr "12 bulan terakhir"
 
@@ -4913,7 +4938,9 @@ msgid "Last 3 Months"
 msgstr "3 Bulan Terakhir"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__three_months
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__three_months
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__three_months
 msgid "Last 3 months"
 msgstr "3 bulan terakhir"
 
@@ -4923,12 +4950,16 @@ msgid "Last 30 Days"
 msgstr "30 Hari Terakhir"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_month
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_month
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_month
 msgid "Last 30 days"
 msgstr "30 hari terakhir"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_week
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_week
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_week
 msgid "Last 7 days"
 msgstr "7 hari terakhir"
 
@@ -4962,6 +4993,7 @@ msgstr "Inventaris Terakhir"
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_uid
@@ -5005,6 +5037,7 @@ msgstr "Terakhir Diperbarui oleh"
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_date
@@ -5044,7 +5077,9 @@ msgid "Last time the Quantity was Updated"
 msgstr "Terakhir kali Kuantitas di-Update"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_quarter
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_quarter
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_quarter
 msgid "Last year quarter"
 msgstr "Triwulan tahun lalu"
 
@@ -5055,6 +5090,7 @@ msgid "Late"
 msgstr "Terlambat"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Aktivitas terakhir"
@@ -5095,12 +5131,6 @@ msgstr "Lama Waktu"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Lead Time Information"
 msgstr "Informasi Waktu Tunggu"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Lead Time:"
-msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -5449,6 +5479,11 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "Kelola Alur Dorong dan Tarik Stok Persediaan"
 
 #. module: stock
+#: model:ir.module.module,summary:base.module_stock
+msgid "Manage your stock and logistics activities"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Manual"
@@ -5478,6 +5513,12 @@ msgstr "Maret"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as To Do"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: stock
@@ -5572,13 +5613,33 @@ msgstr "Min"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "Min - Max"
+msgid "Min - Max Suggestion"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__min_coverage
+msgid "Min Coverage"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__min_max_based_on_factor
+msgid "Min Max Based On Factor"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
 msgstr "Kuantitas Maksimal"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
+msgid ""
+"Minimum Forecasted stock level that will trigger a replenishment.\n"
+"A safety stock is included in the min to cover unusual situations if days of "
+"demand covered by the Minimum Level is > Replenishment Lead Times - "
+"Availability Time."
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -5589,6 +5650,13 @@ msgstr "Aturan Stok Persediaan Minimum"
 #: model:ir.model.fields,field_description:stock.field_product_product__orderpoint_ids
 msgid "Minimum Stock Rules"
 msgstr "Aturan Stok Minimum"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid ""
+"Minimum days of coverage and order frequency to be achieved by Min and Max "
+"stock levels must first be defined for each product."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5700,6 +5768,7 @@ msgid "Multiple destinations"
 msgstr "Lebih dari satu tujuan"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Aktivitas Saya"
@@ -5848,7 +5917,9 @@ msgid "Next date the On Hand Quantity should be counted."
 msgstr "Tanggal berikutnya di mana Kuantitas Di Tangan harus dihitung."
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_2
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_2
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_2
 msgid "Next month last year"
 msgstr "Bulan depan tahun lalu"
 
@@ -5859,6 +5930,7 @@ msgstr "Transfer berikutnya yang terdampak:"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__no
+#: model:res.groups.privilege,placeholder:stock.res_groups_privilege_inventory
 msgid "No"
 msgstr "Tidak"
 
@@ -6287,19 +6359,8 @@ msgid "Ordered"
 msgstr "Memerintahkan"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Ordering Frequency:"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Ordering Frequency: On demand"
-msgstr "Frekuensi Pemesanan: Saat diminta"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__orderpoint_id
 msgid "Orderpoint"
 msgstr "Titik Order"
@@ -6798,6 +6859,7 @@ msgid "Pay now"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
 msgid "Percent Factor"
 msgstr "Persentase Faktor"
@@ -7780,6 +7842,12 @@ msgid "References"
 msgstr "Referensi"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+msgid "Refresh"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_stock_quant_relocate
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Relocate"
@@ -7871,6 +7939,11 @@ msgid "Replenish"
 msgstr "Replenis"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__replenish_frequency
+msgid "Replenish Frequency"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__replenish_on_order
@@ -7905,6 +7978,14 @@ msgid "Replenishment"
 msgstr "Replenishment"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"Replenishment Frequency: choose how many days there are between "
+"replenishment requests to optimize the balance between your storage costs "
+"and order costs and calculate your Maximum level."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__horizon_days
 msgid "Replenishment Horizon"
@@ -7937,6 +8018,12 @@ msgstr "Laporan Replenishment"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
 msgstr "Cari Laporan Replenishment"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+msgid "Replenishment Time ("
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
@@ -8306,7 +8393,9 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "SYARAT DAN KETENTUAN STANDAR PENJUALAN"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year
 msgid "Same month last year"
 msgstr "Bulan yang sama tahun lalu"
 
@@ -8334,9 +8423,9 @@ msgstr "Dijadwalkan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__scheduled_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
 msgstr "Tanggal Terjadwal"
@@ -8348,7 +8437,7 @@ msgstr "Dijadwalkan pada"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
-#: model:ir.model.fields,help:stock.field_stock_move_line__scheduled_date
+#: model:ir.model.fields,help:stock.field_stock_move_line__date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
 "Jadwalkan tanggal sampai pergerakan selesai, lalu proses tanggal pergerakan "
@@ -9127,6 +9216,11 @@ msgid "Stock Operation"
 msgstr "Operasi Stok"
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_orderpoint_suggest
+msgid "Stock Orderpoint Min-Max Suggestion"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
 msgstr "Tujuan Paket Stok"
@@ -9206,10 +9300,9 @@ msgid "Stock To Reserve:"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
-msgid "Stock level to reach when replenishing."
-msgstr "Tingkat stok untuk diraih saat memulihkan."
+#: model:ir.model,name:stock.model_stock_replenishment_info
+msgid "Stock delivery time information"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -9235,11 +9328,6 @@ msgstr "Tipe paket stok"
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Laporan peraturan stok"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_replenishment_info
-msgid "Stock supplier replenishment information"
-msgstr "Stok informasi supplier replenishment"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
@@ -9333,6 +9421,18 @@ msgstr "Simpan ke sub-lokasi"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sublocation
 msgid "Sublocation"
 msgstr "Sublokasi"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/stock_orderpoint_list_view.xml:0
+msgid "Suggest"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_orderpoint_suggest
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Suggest Min-Max"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -9575,12 +9675,6 @@ msgstr "Transfer inter-gudang telah dibuat"
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr "Frekuensi (hari) inventaris untuk sebuah lokasi harus non-negatif"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
-msgid "The minimum Stock level that will trigger a replenishment."
-msgstr "Tingkat Stok minimal yang akan memicu pemulihan."
 
 #. module: stock
 #. odoo-python
@@ -10157,6 +10251,7 @@ msgid "Today"
 msgstr "Hari Ini"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Aktivitas Hari ini"
@@ -10530,6 +10625,11 @@ msgstr "Batalkan Reservasi"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
 msgstr "Replenish Tidak Diinginkan"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Update"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -10997,11 +11097,6 @@ msgstr ""
 "mengubah kuantitas yang sudah selesai."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-msgid "When the stock level at the forecasted date is below the minimum ("
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
 msgid "When ticked, carrier of shipment will be propagated."
 msgstr "Saat dicentang, carrier pengiriman akan disebarkan."
@@ -11069,6 +11164,11 @@ msgstr "Lebar harus positif"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Write one lot/serial name per line, followed by the quantity."
 msgstr "Tulis satu nama seri/lot per baris, diikuti oleh kuantitas."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "X"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -11564,13 +11664,8 @@ msgstr "terdekat"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "day(s)"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_orderpoint_search_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "days"
 msgstr "hari"
@@ -11584,6 +11679,13 @@ msgstr "days before when starred"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "days before/"
 msgstr "hari sebelum/"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "days)"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -11782,6 +11884,45 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "+ %d day(s)"
+#~ msgstr "+ %d hari"
+
+#~ msgid "Close"
+#~ msgstr "Tutup"
+
+#~ msgid ""
+#~ "Creation date of this move line until updated due to: quantity being "
+#~ "increased, 'picked' status has updated, or move line is done."
+#~ msgstr ""
+#~ "Tanggal pembuatan baris pergerakan ini sampai diupdate oleh karena: "
+#~ "kuantitas ditingkatkan, status 'picked' telah diupdate, atau baris "
+#~ "pergerakan sudah selesai."
+
+#~ msgid ""
+#~ "Estimate the sales volume for the period based on past period or order "
+#~ "the forecasted quantity for that period."
+#~ msgstr ""
+#~ "Estimasikan volume sales untuk periode berdasarkan periode masa lalu atau "
+#~ "pesan kuantitas yang di-forecast untuk periode tersebut."
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Ikon font awesome, misalnya fa-tasks"
+
+#~ msgid "In %s day(s)"
+#~ msgstr "Dalam %s hari"
+
+#~ msgid "Ordering Frequency: On demand"
+#~ msgstr "Frekuensi Pemesanan: Saat diminta"
+
+#~ msgid "Stock level to reach when replenishing."
+#~ msgstr "Tingkat stok untuk diraih saat memulihkan."
+
+#~ msgid "Stock supplier replenishment information"
+#~ msgstr "Stok informasi supplier replenishment"
+
+#~ msgid "The minimum Stock level that will trigger a replenishment."
+#~ msgstr "Tingkat Stok minimal yang akan memicu pemulihan."
 
 #~ msgid "Choose your date"
 #~ msgstr "Pilih tanggal"

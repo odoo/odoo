@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 10:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
@@ -42,6 +42,15 @@ msgstr ""
 "être atteints afin de réussir.\n"
 "                </p>\n"
 "            "
+
+#. module: sale_project
+#: model:ir.module.module,description:base.module_sale_project
+msgid ""
+"\n"
+"Allows to create task from your sales order\n"
+"=============================================\n"
+"This module allows to generate a project/task from sales orders.\n"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
@@ -645,6 +654,11 @@ msgid "Sales & Invoicing"
 msgstr "Ventes & Facturation"
 
 #. module: sale_project
+#: model:ir.module.module,shortdesc:base.module_sale_project
+msgid "Sales - Project"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
 msgid "Sales Analysis Report"
 msgstr "Rapport d'analyse des ventes"
@@ -796,6 +810,11 @@ msgstr "Tâche"
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
 msgstr "Tâche créée (%(name)s) : %(link)s"
+
+#. module: sale_project
+#: model:ir.module.module,summary:base.module_sale_project
+msgid "Task Generation from Sales Orders"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -961,8 +980,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"Vous ne pouvez pas lier la ligne de la commande %(order_id)s - "
-"%(product_id)s à cette tâche car il s'agit d'une dépense refacturée."
+"Vous ne pouvez pas lier la ligne de la commande %(order_id)s - %"
+"(product_id)s à cette tâche car il s'agit d'une dépense refacturée."
 
 #. module: sale_project
 #. odoo-python

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 18:43+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-master/"
@@ -37,6 +37,23 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: website_slides
+#: model:ir.module.module,description:base.module_website_slides
+msgid ""
+"\n"
+"Create Online Courses\n"
+"=====================\n"
+"\n"
+"Featuring\n"
+"\n"
+" * Integrated course and lesson management\n"
+" * Fullscreen navigation\n"
+" * Support Youtube videos, Google documents, PDF, images, articles\n"
+" * Test knowledge with quizzes\n"
+" * Filter and Tag\n"
+" * Statistics\n"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -239,8 +256,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
-"name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -264,8 +281,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -289,11 +306,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
-"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -418,10 +435,11 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: {{object.user_id.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -1134,6 +1152,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Access Rights"
 msgstr "Prava pristupa"
+
+#. module: website_slides
+#: model:portal.entry,description:website_slides.portal_slides_client
+msgid "Access all your e-learning courses"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
@@ -2388,6 +2411,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_courses
+#: model:portal.entry,name:website_slides.portal_slides_client
 #: model:website.menu,name:website_slides.website_menu_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_search_bar
@@ -3479,16 +3503,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses "
-"%(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
+"(course_names)s first"
 msgstr ""
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses "
-"%(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses %"
+"(course_names)s first"
 msgstr ""
 
 #. module: website_slides
@@ -3864,6 +3888,11 @@ msgid "Latest achievements"
 msgstr ""
 
 #. module: website_slides
+#: model:website.snippet.filter,name:website_slides.dynamic_filter_latest_courses
+msgid "Latest eLearning Courses"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/website_builder/courses_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
@@ -3886,7 +3915,7 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_1
-msgid "Learn to identify quality wood in order to create solid furnitures."
+msgid "Learn to identify quality wood in order to create solid furniture."
 msgstr ""
 
 #. module: website_slides
@@ -3993,6 +4022,11 @@ msgstr "Slanje mailova"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_0
 msgid "Main Trees Categories"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.module.module,summary:base.module_website_slides
+msgid "Manage and publish an eLearning platform"
 msgstr ""
 
 #. module: website_slides
@@ -4247,6 +4281,7 @@ msgstr "Sljedeća lekcija"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/interactions/slides_course_quiz_edit.js:0
+#: model:res.groups.privilege,placeholder:website_slides.res_groups_privilege_elearning
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_0_1
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_1
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_0_1
@@ -6193,6 +6228,11 @@ msgid "View course"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.dynamic_filter_template_slide_channel_card
+msgid "View {{0}}"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Views"
@@ -6734,12 +6774,6 @@ msgid "by email."
 msgstr ""
 
 #. module: website_slides
-#. odoo-python
-#: code:addons/website_slides/models/slide_channel.py:0
-msgid "copy"
-msgstr "kopija"
-
-#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "course"
@@ -6840,6 +6874,7 @@ msgstr "npr. Vaša razina"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
+#: model:ir.module.module,shortdesc:base.module_website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root
 #: model:res.groups.privilege,name:website_slides.res_groups_privilege_elearning
 #: model_terms:ir.ui.view,arch_db:website_slides.digest_digest_view_form
@@ -6925,6 +6960,7 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
+#: model_terms:ir.ui.view,arch_db:website_slides.dynamic_filter_template_slide_channel_card
 msgid "steps"
 msgstr ""
 
@@ -6997,3 +7033,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr ""
+
+#~ msgid "copy"
+#~ msgstr "kopija"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 00:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -33,9 +33,9 @@ msgid ""
 msgstr ""
 "\n"
 "                {{ object.company_id.name }} : Đơn hàng của bạn có mã tham "
-"chiếu: {{ object.pos_reference }} đã được xử lý thành công với số tiền là {"
-"{  object.currency_id.format(object.amount_total) }}. Hãy sử dụng mã {{ "
-"object.pos_reference }}  để tra cứu thông tin\n"
+"chiếu: {{ object.pos_reference }} đã được xử lý thành công với số tiền là "
+"{{  object.currency_id.format(object.amount_total) }}. Hãy sử dụng mã "
+"{{ object.pos_reference }}  để tra cứu thông tin\n"
 "            "
 
 #. module: pos_sms
@@ -56,6 +56,11 @@ msgstr "Tên hiển thị"
 #: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
+
+#. module: pos_sms
+#: model:ir.module.module,shortdesc:base.module_pos_sms
+msgid "POS - SMS"
+msgstr ""
 
 #. module: pos_sms
 #: model:sms.template,name:pos_sms.sms_template_data_point_of_sale
@@ -88,3 +93,8 @@ msgstr "Tin nhắn SMS sẽ được gửi đến khách hàng dựa trên mẫu
 #: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
 msgid "Sms Receipt template"
 msgstr "Mẫu biên lai SMS"
+
+#. module: pos_sms
+#: model:ir.module.module,description:base.module_pos_sms
+msgid "This module integrates the Point of Sale with SMS"
+msgstr ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 07:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
@@ -297,6 +297,13 @@ msgid "Early Payment Discount of"
 msgstr "Remise escompte de"
 
 #. module: account_payment
+#: model:ir.module.module,summary:base.module_account_payment
+msgid ""
+"Enable customers to pay invoices on the portal and post payments when "
+"transactions are processed."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
 msgstr "Intégral uniquement"
@@ -428,6 +435,11 @@ msgstr ""
 "les transactions (au lieu de capturer le montant) ne sont pas disponibles."
 
 #. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Online Payments"
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
@@ -505,6 +517,11 @@ msgid "Payment"
 msgstr "Paiement"
 
 #. module: account_payment
+#: model:ir.module.module,shortdesc:base.module_account_payment
+msgid "Payment - Account"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
 msgstr "Montant du paiement"
@@ -525,30 +542,15 @@ msgid "Payment Method Line"
 msgstr "Ligne de mode de paiement"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_method_menu
-msgid "Payment Methods"
-msgstr "Modes de paiement"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
 msgstr "Fournisseur de paiement"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_provider_menu
-msgid "Payment Providers"
-msgstr "Fournisseurs de paiement"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
 msgstr "Assistant du remboursement de paiement"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_token_menu
-msgid "Payment Tokens"
-msgstr "Jetons de paiement"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
@@ -557,11 +559,6 @@ msgstr "Jetons de paiement"
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "Transaction de paiement"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
-msgid "Payment Transactions"
-msgstr "Transactions"
 
 #. module: account_payment
 #. odoo-python
@@ -831,3 +828,15 @@ msgstr "en retard"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr "liste de prix non autorisée"
+
+#~ msgid "Payment Methods"
+#~ msgstr "Modes de paiement"
+
+#~ msgid "Payment Providers"
+#~ msgstr "Fournisseurs de paiement"
+
+#~ msgid "Payment Tokens"
+#~ msgstr "Jetons de paiement"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "Transactions"

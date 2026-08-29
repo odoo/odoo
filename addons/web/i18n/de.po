@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 19:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-master/web/"
@@ -32,6 +32,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: web
+#: model:ir.module.module,description:base.module_web
+msgid ""
+"\n"
+"Odoo Web core module.\n"
+"========================\n"
+"\n"
+"This module provides the core of the Odoo Web Client.\n"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -72,6 +82,7 @@ msgstr "%s Datensätze"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
 #: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
 msgid "%s to schedule"
@@ -306,15 +317,15 @@ msgstr "<span id=\"line_tax_ids\">15 %</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
-"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
-"to partially invalid result in case of concurrent profiles.<br/>Use with "
-"caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
+"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
+"<br/>It can lead to partially invalid result in case of concurrent profiles."
+"<br/>Use with caution </span>"
 msgstr ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
-"none\"><b>Warnung:</b> Der temporäre Modus führt alle Muster zusammen.<br/"
-">Bei gleichzeitigen Profilen kann dies zu teilweise ungültigen Ergebnissen "
-"führen.<br/>Mit Vorsicht verwenden. </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
+"style=\"display:none\"><b>Warnung:</b> Der temporäre Modus führt alle Muster "
+"zusammen.<br/>Bei gleichzeitigen Profilen kann dies zu teilweise ungültigen "
+"Ergebnissen führen.<br/>Mit Vorsicht verwenden. </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -583,6 +594,7 @@ msgstr "Geldautomatzeichen"
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#: code:addons/web/static/src/views/fields/many2one_binary/many2one_binary_field.js:0
 msgid "Accepted file extensions"
 msgstr "Akzeptierte Dateierweiterung"
 
@@ -953,6 +965,12 @@ msgstr "Anwenden"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation/translation_model.js:0
+msgid "Apply to all languages"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/clickbot/clickbot_overlay.xml:0
 msgid "Apps"
 msgstr ""
@@ -1094,7 +1112,7 @@ msgstr "Zuweisen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 msgid "Attach"
 msgstr "Anhängen"
 
@@ -1588,6 +1606,7 @@ msgstr "Alle leeren"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 #: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 msgid "Clear search"
 msgstr "Suche löschen"
@@ -1611,6 +1630,12 @@ msgstr "Hier klicken, um die Verbindung zu überprüfen und zu synchronisieren"
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 msgid "Click to collapse all groups"
 msgstr "Hier klicken, um alle Gruppen einzuklappen"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.xml:0
+msgid "Click to edit the row"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1766,6 +1791,7 @@ msgstr "Unternehmensname"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
 #: model_terms:ir.ui.view,arch_db:web.external_layout_center
+#: model_terms:ir.ui.view,arch_db:web.external_layout_compact
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
 #: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
@@ -1966,7 +1992,6 @@ msgstr "Scan konnte nicht gestartet werden. %(message)s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/progress_bar_hook.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/utils.js:0
 msgid "Count"
 msgstr "Anzahl"
@@ -2101,13 +2126,18 @@ msgstr "Benutzerdefinierte Farben"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
+msgid "Custom Date..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Custom Embedded Action"
 msgstr "Benutzerdefinierte eingebettete Aktion"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Custom Filter"
 msgstr "Benutzerdefinierter Filter"
@@ -2340,7 +2370,7 @@ msgstr ""
 #: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
@@ -2465,12 +2495,11 @@ msgstr "Aufgrund einer ungültigen Konfiguration deaktiviert"
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
 #: code:addons/web/static/src/core/signature/signature_dialog.xml:0
-#: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/fields/translation_dialog.xml:0
+#: code:addons/web/static/src/views/fields/translation/translation_components.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
@@ -2593,8 +2622,8 @@ msgstr "Zeigt die Zeit im Datum/Zeit-Wert an oder blendet in aus."
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
 msgstr ""
-"Zeigt das Datum entweder im Format 31/01/%(year)s oder als 31. Januar "
-"%(year)s an"
+"Zeigt das Datum entweder im Format 31/01/%(year)s oder als 31. Januar %"
+"(year)s an"
 
 #. module: web
 #. odoo-javascript
@@ -2673,7 +2702,7 @@ msgstr "Feld für Punktfarbe"
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 msgid "Download"
 msgstr "Herunterladen"
@@ -3153,6 +3182,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
+msgid "Find the perfect emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 msgid "Flip axis"
 msgstr "Achse spiegeln"
@@ -3380,6 +3415,12 @@ msgstr "Google Slide Viewer"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+msgid "Graph actions"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "Grün"
@@ -3439,8 +3480,8 @@ msgid ""
 "exit this tab."
 msgstr ""
 "Achtung! Ihre letzten Änderungen sind zu umfangreich, um automatisch "
-"gespeichert zu werden. Klicken Sie jetzt auf die Schaltfläche "
-"%(uploadIcon)s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor "
+"gespeichert zu werden. Klicken Sie jetzt auf die Schaltfläche %"
+"(uploadIcon)s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor "
 "Sie diesen Reiter schließen."
 
 #. module: web
@@ -3452,8 +3493,8 @@ msgid ""
 "saved before you exit this tab."
 msgstr ""
 "Achtung! Ihre letzten Änderungen können nicht automatisch gespeichert "
-"werden, solange Sie offline sind. Klicken Sie jetzt auf die Schaltfläche "
-"%(uploadIcon)s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor "
+"werden, solange Sie offline sind. Klicken Sie jetzt auf die Schaltfläche %"
+"(uploadIcon)s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor "
 "Sie diesen Reiter schließen."
 
 #. module: web
@@ -3944,8 +3985,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" "
-"%(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" %"
+"(parentFieldLabel)s."
 msgstr ""
 "Es wird für alle entfernt, die %(parentFieldLabel)s „%(parentName)s“ "
 "verwenden."
@@ -4393,6 +4434,7 @@ msgstr "Anmelden"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
 #: model_terms:ir.ui.view,arch_db:web.external_layout_center
+#: model_terms:ir.ui.view,arch_db:web.external_layout_compact
 #: model_terms:ir.ui.view,arch_db:web.external_layout_dual
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
 #: model_terms:ir.ui.view,arch_db:web.external_layout_lines
@@ -5018,6 +5060,12 @@ msgstr "Nächsten Monat"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+msgid "Next period"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Next year"
 msgstr "Nächstes Jahr"
@@ -5200,6 +5248,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
 #: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
 msgid "Nothing to schedule"
@@ -5359,8 +5408,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"Von den %(selectedRecord)s ausgewählten Datensätzen wurden nur die ersten "
-"%(firstRecords)s archiviert bzw. deren Archivierung aufgehoben."
+"Von den %(selectedRecord)s ausgewählten Datensätzen wurden nur die ersten %"
+"(firstRecords)s archiviert bzw. deren Archivierung aufgehoben."
 
 #. module: web
 #. odoo-javascript
@@ -5426,21 +5475,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type %"
+"(field_type)s)"
 msgstr ""
-"Nur Typen %(supported_types)s werden für Kategorie (gefundener Typ "
-"%(field_type)s) unterstützt"
+"Nur Typen %(supported_types)s werden für Kategorie (gefundener Typ %"
+"(field_type)s) unterstützt"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type %"
+"(field_type)s)"
 msgstr ""
-"Nur Typen %(supported_types)s werden für Filter unterstützt (gefundener Typ "
-"%(field_type)s)"
+"Nur Typen %(supported_types)s werden für Filter unterstützt (gefundener Typ %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -5862,6 +5911,12 @@ msgstr "Vorheriger Monat"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+msgid "Previous period"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Previous year"
 msgstr "Vorheriges Jahr"
@@ -5942,7 +5997,20 @@ msgstr "Eigenschaft 1"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_selection.js:0
+msgid "Property Field Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_selection.js:0
+msgid "Property Model Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_selection.js:0
 msgid "Property Name"
 msgstr "Eigenschaftsname"
 
@@ -6403,7 +6471,7 @@ msgstr "Sa"
 #: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/fields/translation_dialog.xml:0
+#: code:addons/web/static/src/views/fields/translation/translation_components.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -6462,7 +6530,7 @@ msgstr "Manuell speichern"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/translation_button.js:0
+#: code:addons/web/static/src/views/fields/translation/translation_button.js:0
 msgid "Save this record and its parent to translate"
 msgstr ""
 
@@ -6487,7 +6555,6 @@ msgstr "Skorpion"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/record_selectors/record_autocomplete.js:0
-#: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
@@ -6503,12 +6570,6 @@ msgstr "Suchen"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "Mehr suchen ..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
-msgid "Search emoji"
-msgstr "Emoji suchen"
 
 #. module: web
 #. odoo-javascript
@@ -7314,6 +7375,14 @@ msgid "The app seems to be installed on your device"
 msgstr "Die App scheint auf Ihrem Gerät installiert zu sein"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
@@ -7354,11 +7423,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": "
-"“%(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": “%"
+"(action_ids)s”"
 msgstr ""
-"Die ID in %(field_name)s dürfen nur Ganzzahlen oder „false“ sein: "
-"„%(action_ids)s“"
+"Die ID in %(field_name)s dürfen nur Ganzzahlen oder „false“ sein: „%"
+"(action_ids)s“"
 
 #. module: web
 #. odoo-javascript
@@ -7393,8 +7462,8 @@ msgstr "Das ausgewählte Feld wird zum Ausfüllen der Signatur verwendet"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size "
-"(%(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
+"(maxSize)sB)."
 msgstr ""
 "Die ausgewählte Datei (%(size)sB) ist größer als die maximal zulässige "
 "Dateigröße (%(maxSize)sB)."
@@ -7450,6 +7519,30 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 msgid "There was a problem while uploading your file."
 msgstr "Beim Hochladen Ihrer Datei gab es ein Problem"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Month"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Quarter"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Week"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Year"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -7597,6 +7690,7 @@ msgstr "Auf vorherige Kategorien"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
+#: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 msgid "Today"
 msgstr "Heute"
@@ -7613,6 +7707,12 @@ msgstr "Ein/Aus"
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
 msgstr "Suchfeld ein/aus"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+msgid "Toggle Side Panel"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7671,9 +7771,21 @@ msgstr "Turm"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/translation_dialog.js:0
-msgid "Translate: %s"
-msgstr "Übersetzen: %s"
+#: code:addons/web/static/src/views/fields/translation/translation_components.js:0
+msgid "Translate"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation/translation_button.js:0
+msgid "Translate \"%s\""
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation/translation_components.xml:0
+msgid "Translate into"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7942,19 +8054,20 @@ msgstr "Ihre Datei hochladen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 msgid "Uploaded"
 msgstr "Hochgeladen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 msgid "Uploading"
 msgstr "Lade hoch"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#: code:addons/web/static/src/views/fields/many2one_binary/many2one_binary_field.js:0
 msgid "Uploading error"
 msgstr "Uploadfehler"
 
@@ -8010,16 +8123,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days "
-"(%(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days (%"
+"(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
 msgstr ""
-"Verwenden Sie die Operatoren „+=“ und „-=“, um das aktuelle Datum um Tage "
-"(%(days)s), \n"
-"Wochen (%(weeks)s), Monate (%(months)s), Jahre (%(years)s), Stunden "
-"(%(hours)s), \n"
+"Verwenden Sie die Operatoren „+=“ und „-=“, um das aktuelle Datum um Tage (%"
+"(days)s), \n"
+"Wochen (%(weeks)s), Monate (%(months)s), Jahre (%(years)s), Stunden (%"
+"(hours)s), \n"
 "Minuten (%(minutes)s) und Sekunden (%(seconds)s) zu aktualisieren."
 
 #. module: web
@@ -8286,6 +8399,11 @@ msgid "Way"
 msgstr "Weg"
 
 #. module: web
+#: model:ir.module.module,shortdesc:base.module_web
+msgid "Web"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_res_config_settings__web_app_name
 msgid "Web App Name"
 msgstr "Name der Web-App"
@@ -8316,13 +8434,19 @@ msgstr "Woche"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/l10n/dates.js:0
+msgid "Week %(week)s, %(startDate)s - %(endDate)s"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Week numbers"
 msgstr "Kalenderwochen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/effects/effect_service.js:0
+#: code:addons/web/static/src/core/effects/effect_plugin.js:0
 msgid "Well Done!"
 msgstr "Gut gemacht!"
 
@@ -8448,8 +8572,8 @@ msgid ""
 msgstr ""
 "Sie verwenden derzeit einen unsicheren Kontext. Daher sind einige Odoo-"
 "Funktionen möglicherweise nicht verfügbar oder funktionieren nicht "
-"ordnungsgemäß. Weitere Informationen finden Sie unter: https://developer."
-"mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts"
+"ordnungsgemäß. Weitere Informationen finden Sie unter: https://"
+"developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
@@ -27635,3 +27759,9 @@ msgstr "秘"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr "空"
+
+#~ msgid "Search emoji"
+#~ msgstr "Emoji suchen"
+
+#~ msgid "Translate: %s"
+#~ msgstr "Übersetzen: %s"

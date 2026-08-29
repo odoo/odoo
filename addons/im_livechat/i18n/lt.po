@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 04:28+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
@@ -46,6 +46,21 @@ msgid ""
 "(Happy)\n"
 "        or empty and can only be set on live chat channels.\n"
 "        "
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.module.module,description:base.module_im_livechat
+msgid ""
+"\n"
+"Live Chat Support\n"
+"==========================\n"
+"\n"
+"Allow to drop instant messaging widgets on any web page that will "
+"communicate\n"
+"with the current server and dispatch visitors request amongst several live\n"
+"chat operators.\n"
+"Help your customers with this chat, and analyse their feedback.\n"
+"\n"
 msgstr ""
 
 #. module: im_livechat
@@ -122,12 +137,6 @@ msgstr ""
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
-msgid "%s (copy)"
-msgstr "%s (kopija)"
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script.py:0
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
 msgstr ""
@@ -153,7 +162,8 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
 
@@ -165,29 +175,30 @@ msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "<i class=\"fa fa-sign-in o-me-1_5\" role=\"img\"/>Join"
+msgid "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Join"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "<i class=\"fa fa-sign-out o-me-1_5\" role=\"img\"/>Leave"
+msgid "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Leave"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
+msgid "<i class=\"oi oi-fw\" data-icon=\"east\"/>Back to edit mode"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid ""
-"<i class=\"fa fa-smile-o text-success\" role=\"img\" aria-label=\"Happy "
-"face\"/>"
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Back to edit mode"
+"<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
+"aria-label=\"Happy face\"/>"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "<i title=\"Remove operator\" class=\"fa fa-fw fa-lg fa-close\"/>"
+msgid ""
+"<i title=\"Remove operator\" class=\"oi oi-fw oi-lg\" data-icon=\"close\"/>"
 msgstr ""
 
 #. module: im_livechat
@@ -501,6 +512,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.module.module,summary:base.module_im_livechat
+msgid "Chat with your website visitors"
 msgstr ""
 
 #. module: im_livechat
@@ -1512,8 +1528,6 @@ msgid "Leave %s"
 msgstr ""
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Palikti kanalą"
@@ -1544,6 +1558,7 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
+#: model:ir.module.module,shortdesc:base.module_im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_technical
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 #: model:res.groups.privilege,name:im_livechat.res_groups_privilege_live_chat
@@ -1871,6 +1886,11 @@ msgstr "Nauja sesija"
 msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
+msgstr ""
+
+#. module: im_livechat
+#: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
+msgid "No"
 msgstr ""
 
 #. module: im_livechat
@@ -2727,6 +2747,12 @@ msgid "Unlimited"
 msgstr "Neribotas"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
+msgid "Unread"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid ""
 "Use canned responses to define templates of messages in the Live Chat app. "
@@ -3035,3 +3061,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (kopija)"

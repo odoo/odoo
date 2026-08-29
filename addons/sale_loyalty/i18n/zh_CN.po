@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 13:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -39,6 +39,21 @@ msgid "%(points_name)s Used"
 msgstr ""
 
 #. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"fw-bold\">Total</small>"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"text-muted\">Issued</small>"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+msgid "<small class=\"text-muted\">Used</small>"
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "<span class=\"oi\" data-icon=\"assignment\"/> Copy"
 msgstr "<span class=\"oi\" data-icon=\"assignment\"/> 拷贝"
@@ -53,8 +68,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "<strong>Loyalty Card</strong>"
-msgstr "<strong>会员卡</strong>"
+msgid ""
+"<strong class=\"smaller text-uppercase text-muted\">Loyalty Card</strong>"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -225,6 +241,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_loyalty
+#: model:ir.module.module,description:base.module_sale_loyalty
+msgid "Integrate discount and loyalty programs mechanisms in sales orders."
+msgstr ""
+
+#. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Invalid product to claim."
@@ -240,11 +261,6 @@ msgstr "销售订单无效。"
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
 msgstr "是一个方案奖励行"
-
-#. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "Issued"
-msgstr "已充值"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
@@ -265,6 +281,11 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
 msgid "Last Updated on"
 msgstr "上次更新日期"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_template
+msgid "Loyalty Card"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -390,6 +411,11 @@ msgstr "奖励产品"
 #, fuzzy
 msgid "Rewards Available"
 msgstr "可用奖励"
+
+#. module: sale_loyalty
+#: model:ir.module.module,shortdesc:base.module_sale_loyalty
+msgid "Sale Loyalty"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -581,9 +607,9 @@ msgid "Update current promotional lines and select new rewards if applicable."
 msgstr "更新当前的促销项目，并选择新的奖励（如适用）。"
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "Used"
-msgstr "已使用"
+#: model:ir.module.module,summary:base.module_sale_loyalty
+msgid "Use discounts and loyalty programs in sales orders"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -614,3 +640,12 @@ msgstr ""
 #, fuzzy
 msgid "order_id"
 msgstr "order_id"
+
+#~ msgid "<strong>Loyalty Card</strong>"
+#~ msgstr "<strong>会员卡</strong>"
+
+#~ msgid "Issued"
+#~ msgstr "已充值"
+
+#~ msgid "Used"
+#~ msgstr "已使用"

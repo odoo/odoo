@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:42+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-18 23:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
@@ -24,6 +24,12 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
 msgstr "\"Codici QR\""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "(Tips included)"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -229,6 +235,18 @@ msgstr ""
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+msgid "Add a Tip"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Add a tip"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Add an order note"
 msgstr ""
 
@@ -238,6 +256,13 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Add to cart"
 msgstr "Aggiungi al carrello"
+
+#. module: pos_self_order
+#: model:ir.module.module,summary:base.module_pos_self_order
+msgid ""
+"Addon for the POS App that allows customers to view the menu on their "
+"smartphone."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -455,6 +480,7 @@ msgstr "Impostazioni di configurazione"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/pills_selection_popup/pills_selection_popup.xml:0
 msgid "Confirm"
 msgstr ""
@@ -482,6 +508,7 @@ msgstr "Contatto"
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
 msgid "Continue"
 msgstr "Continua"
 
@@ -602,14 +629,15 @@ msgstr "Disattiva"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/language_popup/language_popup.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_interface/product_interface.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Discard"
 msgstr "Abbandona"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_mail_template__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
@@ -660,7 +688,7 @@ msgstr "Scarica codici QR"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-msgid "Download your receipt here"
+msgid "Download receipt"
 msgstr ""
 
 #. module: pos_self_order
@@ -711,6 +739,12 @@ msgid ""
 msgstr ""
 "Attiva il menu QR nelle impostazioni del ristorante per ottenere codici QR "
 "gratuiti da mettere sui tavoli."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.js:0
+msgid "Enter Amount"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -850,6 +884,7 @@ msgstr "Come usare"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:pos_self_order.field_mail_template__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
@@ -940,8 +975,26 @@ msgstr "Connessione internet persa"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
 msgstr "Set di impostazioni non valido"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -969,6 +1022,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
 msgstr "Chiosco multimediale"
+
+#. module: pos_self_order
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Kiosk Order"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -1128,6 +1189,7 @@ msgstr "No"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
 msgid "No Thanks"
 msgstr ""
 
@@ -1197,6 +1259,12 @@ msgstr "Apri chiosco multimediale"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
+msgid "Options"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
 msgid "Order"
@@ -1227,10 +1295,20 @@ msgstr "Origine"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Other"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Out of stock"
 msgstr "Esaurito"
+
+#. module: pos_self_order
+#: model:ir.module.module,shortdesc:base.module_pos_self_order
+msgid "POS Self Order"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1241,7 +1319,6 @@ msgstr "Pagato"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
-#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
 msgid "Pay"
 msgstr "Paga"
@@ -1256,12 +1333,6 @@ msgstr "Paga in seguito:"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Pay after"
 msgstr "Paga in seguito"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
-msgid "Payment failed"
-msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1304,12 +1375,6 @@ msgstr "Scegli un tavolo per il tuo ordine."
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Please choose a time slot for your order."
 msgstr "Scegli una fascia oraria per il tuo ordine."
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
-msgid "Please try again or select another payment method"
-msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -1375,6 +1440,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
 msgstr ""
 
 #. module: pos_self_order
@@ -1488,11 +1565,6 @@ msgid "Required"
 msgstr "Richiesto"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Reset QR Codes"
-msgstr "Resetta codici QR"
-
-#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_floor
 msgid "Restaurant Floor"
 msgstr "Piano ristorante"
@@ -1598,8 +1670,11 @@ msgid "Selection"
 msgstr "Selezione"
 
 #. module: pos_self_order
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Self Order"
 msgstr "Ordine fai da te"
 
@@ -1793,10 +1868,12 @@ msgid "Table Stand Number"
 msgstr "Numero tavolo"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_change_receipt
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
-msgid "Table Tracker:"
-msgstr "Cercapersone tavolo:"
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Table Tracker %s"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
@@ -1841,7 +1918,9 @@ msgstr "L'utente predefinito per l'ordine fai da te deve essere un utente POS"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_preset.py:0
 msgid ""
-"The delivery address could not be geolocated. Please enter a valid address."
+"The delivery address could not be geolocated. Please check the address. If "
+"the address is valid, your geolocation service may be unavailable or unable "
+"to resolve it"
 msgstr ""
 
 #. module: pos_self_order
@@ -1849,6 +1928,14 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "Il modello e-mail con xmlid %s è stato eliminato."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1868,6 +1955,18 @@ msgstr "L'utente deve essere un utente POS"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "This combination does not exist."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "To pay at the counter"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "To pay in cash at the counter"
 msgstr ""
 
 #. module: pos_self_order
@@ -1927,6 +2026,11 @@ msgstr "Convalida la scelta"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Validating..."
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_ir_ui_view
+msgid "View"
 msgstr ""
 
 #. module: pos_self_order
@@ -2071,18 +2175,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-msgid "at the counter"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-msgid "by cash"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "close"
 msgstr "chiudi"
@@ -2167,6 +2259,12 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Reset QR Codes"
+#~ msgstr "Resetta codici QR"
+
+#~ msgid "Table Tracker:"
+#~ msgstr "Cercapersone tavolo:"
 
 #~ msgid "Point of Sale Product Snooze"
 #~ msgstr "Punto vendita Prodotto Snooze"

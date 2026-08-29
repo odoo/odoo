@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 17:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Latvian <https://translate.odoo.com/projects/odoo-master/"
@@ -28,6 +28,33 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_expense
+#: model:ir.module.module,description:base.module_hr_expense
+msgid ""
+"\n"
+"Manage expenses by Employees\n"
+"============================\n"
+"\n"
+"This application allows you to manage your employees' daily expenses. It "
+"gives you access to your employees’ fee notes and give you the right to "
+"complete and validate or refuse the notes. After validation it creates an "
+"invoice for the employee.\n"
+"Employee can encode their own expenses and the validation flow puts it "
+"automatically in the accounting after validation by managers.\n"
+"\n"
+"\n"
+"The whole flow is implemented as:\n"
+"---------------------------------\n"
+"* Draft expense\n"
+"* Submitted by the employee to his manager\n"
+"* Approved by his manager\n"
+"* Validation by the accountant and accounting entries creation\n"
+"\n"
+"This module also uses analytic accounting and is compatible with the invoice "
+"on timesheet module so that you are able to automatically re-invoice your "
+"customers' expenses if your work by project.\n"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -103,7 +130,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Setup your alias domain"
+msgid "<i class=\"oi\" data-icon=\"east\"/> Setup your alias domain"
 msgstr ""
 
 #. module: hr_expense
@@ -335,7 +362,6 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -678,10 +704,14 @@ msgstr ""
 #: model:ir.model,name:hr_expense.model_hr_employee
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__employee_id
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Employee"
 msgstr "Darbinieks"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
+msgid "Employee (Through a Purchase Receipt)"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -892,6 +922,7 @@ msgstr ""
 #: code:addons/hr_expense/models/account_payment.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
+#: model:ir.module.module,shortdesc:base.module_hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.template,name:hr_expense.product_product_no_cost_product_template
 #: model:res.groups.privilege,name:hr_expense.res_groups_privilege_expenses
@@ -984,11 +1015,6 @@ msgid "Followers (Partners)"
 msgstr "Sekotāji (Partneri)"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Fonts awesome icon piem. fa-tasks"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__former_sheet_id
 msgid "Former Report"
 msgstr ""
@@ -1054,6 +1080,11 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
 msgstr ""
 
 #. module: hr_expense
@@ -1345,12 +1376,23 @@ msgstr ""
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-msgid "Managers can inspect all expenses from here."
+msgid "Managers can inspect and select expenses from here."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+msgid "Managers can inspect expenses from here."
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Marc Demo"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: hr_expense
@@ -1439,6 +1481,11 @@ msgid "Next Activity Type"
 msgstr "Nākamās darbības veids"
 
 #. module: hr_expense
+#: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
+msgid "No"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "No (Direct Expense)"
 msgstr ""
@@ -1468,7 +1515,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
-msgid "None (company)"
+msgid "None (Paid by Company)"
 msgstr ""
 
 #. module: hr_expense
@@ -2072,6 +2119,11 @@ msgid "Submit Expense"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.module.module,summary:base.module_hr_expense
+msgid "Submit, validate and reinvoice employee expenses"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__submitted
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__submitted
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_split__approval_state__submitted
@@ -2666,6 +2718,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr ""
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Fonts awesome icon piem. fa-tasks"
 
 #~ msgid "Submit to Manager"
 #~ msgstr "Nosūtīt vadītājam"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-18 22:51+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/web/"
@@ -29,6 +29,16 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: web
+#: model:ir.module.module,description:base.module_web
+msgid ""
+"\n"
+"Odoo Web core module.\n"
+"========================\n"
+"\n"
+"This module provides the core of the Odoo Web Client.\n"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -69,6 +79,7 @@ msgstr "%s سجلات"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
 #: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
 msgid "%s to schedule"
@@ -291,10 +302,10 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
-"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
-"to partially invalid result in case of concurrent profiles.<br/>Use with "
-"caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
+"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
+"<br/>It can lead to partially invalid result in case of concurrent profiles."
+"<br/>Use with caution </span>"
 msgstr ""
 
 #. module: web
@@ -536,6 +547,7 @@ msgstr "علامة الصراف الآلي"
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#: code:addons/web/static/src/views/fields/many2one_binary/many2one_binary_field.js:0
 msgid "Accepted file extensions"
 msgstr "ملحقات الملفات المقبولة"
 
@@ -906,6 +918,12 @@ msgstr "تطبيق"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation/translation_model.js:0
+msgid "Apply to all languages"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/clickbot/clickbot_overlay.xml:0
 msgid "Apps"
 msgstr ""
@@ -1042,7 +1060,7 @@ msgstr "تعيين"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 msgid "Attach"
 msgstr "إرفاق"
 
@@ -1533,6 +1551,7 @@ msgstr "مسح الكل"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
 #: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 msgid "Clear search"
 msgstr ""
@@ -1553,6 +1572,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 msgid "Click to collapse all groups"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_renderer.xml:0
+msgid "Click to edit the row"
 msgstr ""
 
 #. module: web
@@ -1709,6 +1734,7 @@ msgstr "اسم الشركة"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
 #: model_terms:ir.ui.view,arch_db:web.external_layout_center
+#: model_terms:ir.ui.view,arch_db:web.external_layout_compact
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
 #: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
@@ -1907,7 +1933,6 @@ msgstr "تعذر بدء المسح. %(message)s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/progress_bar_hook.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/utils.js:0
 msgid "Count"
 msgstr "التعداد"
@@ -2042,13 +2067,18 @@ msgstr "ألوان مخصصة"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
+msgid "Custom Date..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 msgid "Custom Embedded Action"
 msgstr "إجراء مضمن مخصص"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Custom Filter"
 msgstr "فلتر مخصص"
@@ -2279,7 +2309,7 @@ msgstr "قم بتأخير ظهور الصورة المكبرة مع قيمة ت�
 #: code:addons/web/static/src/search/control_panel/embedded_actions.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
@@ -2404,12 +2434,11 @@ msgstr ""
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
 #: code:addons/web/static/src/core/signature/signature_dialog.xml:0
-#: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/fields/translation_dialog.xml:0
+#: code:addons/web/static/src/views/fields/translation/translation_components.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
@@ -2605,7 +2634,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 msgid "Download"
 msgstr "تنزيل"
@@ -3085,6 +3114,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
+msgid "Find the perfect emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 msgid "Flip axis"
 msgstr "عكس المحاور"
@@ -3304,6 +3339,12 @@ msgstr "الذهاب إلى رابط URL"
 #: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
 msgid "Google Slide Viewer"
 msgstr "أداة عرض شرائح Google"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+msgid "Graph actions"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3846,8 +3887,8 @@ msgstr "لم يتم العثور على السجلات مع المعرفات %s.
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" "
-"%(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" %"
+"(parentFieldLabel)s."
 msgstr ""
 
 #. module: web
@@ -4293,6 +4334,7 @@ msgstr "تسجيل الدخول"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bubble
 #: model_terms:ir.ui.view,arch_db:web.external_layout_center
+#: model_terms:ir.ui.view,arch_db:web.external_layout_compact
 #: model_terms:ir.ui.view,arch_db:web.external_layout_dual
 #: model_terms:ir.ui.view,arch_db:web.external_layout_folder
 #: model_terms:ir.ui.view,arch_db:web.external_layout_lines
@@ -4915,6 +4957,12 @@ msgstr "الشهر القادم"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+msgid "Next period"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Next year"
 msgstr "السنة القادمة"
@@ -5094,6 +5142,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/calendar/calendar_schedule_section/calendar_schedule_section.js:0
 #: code:addons/web/static/src/views/calendar/calendar_side_panel/calendar_side_panel.js:0
 msgid "Nothing to schedule"
@@ -5253,8 +5302,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"من بين الـ %(selectedRecord)s سجلات التي قمت بتحديدها، فقط أول "
-"%(firstRecords)s سجلات تمت أرشفتها/إلغاء أرشفتها."
+"من بين الـ %(selectedRecord)s سجلات التي قمت بتحديدها، فقط أول %"
+"(firstRecords)s سجلات تمت أرشفتها/إلغاء أرشفتها."
 
 #. module: web
 #. odoo-javascript
@@ -5317,18 +5366,18 @@ msgstr "فقط أول %(count)s سجلات تم حذفها (من بين %(total)
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type %"
+"(field_type)s)"
 msgstr ""
-"فقط أنواع الفئة %(supported_types)s مدعومة (النوع الذي تم العثور عليه "
-"%(field_type)s)"
+"فقط أنواع الفئة %(supported_types)s مدعومة (النوع الذي تم العثور عليه %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type %"
+"(field_type)s)"
 msgstr ""
 "فقط أنواع عوامل التصفية %(supported_types)s مدعومة (النوع الذي تم العثور "
 "عليه %(field_type)s)"
@@ -5748,6 +5797,12 @@ msgstr "الشهر الماضي"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+msgid "Previous period"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Previous year"
 msgstr "السنة الماضية"
@@ -5828,7 +5883,20 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_selection.js:0
+msgid "Property Field Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_selection.js:0
+msgid "Property Model Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_selection.js:0
 msgid "Property Name"
 msgstr "اسم الخاصية"
 
@@ -6283,7 +6351,7 @@ msgstr "السبت"
 #: code:addons/web/static/src/search/control_panel/embedded_actions.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
-#: code:addons/web/static/src/views/fields/translation_dialog.xml:0
+#: code:addons/web/static/src/views/fields/translation/translation_components.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -6342,7 +6410,7 @@ msgstr "الحفظ يدوياً"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/translation_button.js:0
+#: code:addons/web/static/src/views/fields/translation/translation_button.js:0
 msgid "Save this record and its parent to translate"
 msgstr ""
 
@@ -6367,7 +6435,6 @@ msgstr "العقرب"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/record_selectors/record_autocomplete.js:0
-#: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/badges_many2one/badges_many2one_field.js:0
@@ -6383,12 +6450,6 @@ msgstr "بحث"
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
 msgid "Search More..."
 msgstr "البحث عن المزيد..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
-msgid "Search emoji"
-msgstr "البحث عن رمز تعبيري"
 
 #. module: web
 #. odoo-javascript
@@ -7188,6 +7249,14 @@ msgid "The app seems to be installed on your device"
 msgstr "يبدو أن التطبيق مثبت بالفعل على جهازك"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
@@ -7225,8 +7294,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": "
-"“%(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": “%"
+"(action_ids)s”"
 msgstr ""
 
 #. module: web
@@ -7262,8 +7331,8 @@ msgstr "سيتم استخدام الحقل المحدد لملء التوقيع 
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size "
-"(%(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
+"(maxSize)sB)."
 msgstr ""
 "الملف المحدد (%(size)sB) تجاوز الحجم المسموح به للملفات (%(maxSize)sB)."
 
@@ -7313,6 +7382,30 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 msgid "There was a problem while uploading your file."
 msgstr "حدثت مشكلة أثناء رفع ملفك."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Month"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Quarter"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Week"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/utils/dates.js:0
+msgid "This Year"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -7457,6 +7550,7 @@ msgstr "إلى الفئات السابقة"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
+#: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 msgid "Today"
 msgstr "اليوم"
@@ -7473,6 +7567,12 @@ msgstr "تبديل"
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
 msgstr "تبديل لوحة البحث"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+msgid "Toggle Side Panel"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7531,9 +7631,21 @@ msgstr "برج"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/translation_dialog.js:0
-msgid "Translate: %s"
-msgstr "ترجمة: %s"
+#: code:addons/web/static/src/views/fields/translation/translation_components.js:0
+msgid "Translate"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation/translation_button.js:0
+msgid "Translate \"%s\""
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation/translation_components.xml:0
+msgid "Translate into"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7798,19 +7910,20 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 msgid "Uploaded"
 msgstr "تم الرفع"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
+#: code:addons/web/static/src/views/fields/many2x_binary/many2x_binary.xml:0
 msgid "Uploading"
 msgstr "جاري الرفع"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#: code:addons/web/static/src/views/fields/many2one_binary/many2one_binary_field.js:0
 msgid "Uploading error"
 msgstr "خطأ في التحميل"
 
@@ -7862,8 +7975,8 @@ msgstr "استخدمها مع خيار 'التنسيق سهل الاستخدام
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days "
-"(%(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days (%"
+"(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -8129,6 +8242,11 @@ msgid "Way"
 msgstr "طريق"
 
 #. module: web
+#: model:ir.module.module,shortdesc:base.module_web
+msgid "Web"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_res_config_settings__web_app_name
 msgid "Web App Name"
 msgstr "اسم تطبيق الويب"
@@ -8159,13 +8277,19 @@ msgstr "الأسبوع"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/l10n/dates.js:0
+msgid "Week %(week)s, %(startDate)s - %(endDate)s"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Week numbers"
 msgstr "أعداد الأسابيع"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/effects/effect_service.js:0
+#: code:addons/web/static/src/core/effects/effect_plugin.js:0
 msgid "Well Done!"
 msgstr "أحسنت!"
 
@@ -27459,3 +27583,9 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#~ msgid "Search emoji"
+#~ msgstr "البحث عن رمز تعبيري"
+
+#~ msgid "Translate: %s"
+#~ msgstr "ترجمة: %s"

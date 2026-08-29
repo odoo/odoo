@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 23:43+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-master/sms/"
@@ -34,6 +34,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sms
+#: model:ir.module.module,description:base.module_sms
+msgid ""
+"\n"
+"This module gives a framework for SMS text messaging\n"
+"----------------------------------------------------\n"
+"\n"
+"The service is provided by the In App Purchase Odoo platform.\n"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -53,12 +63,6 @@ msgid ""
 "been resent."
 msgstr ""
 "%(count)s valitud tekstisõnumitest %(total)s on edukalt uuesti saadetud."
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/models/sms_template.py:0
-msgid "%s (copy)"
-msgstr "%s (koopia)"
 
 #. module: sms
 #. odoo-python
@@ -130,30 +134,6 @@ msgid ""
 msgstr ""
 "<span class=\"text-warning\" invisible=\"not no_record\">Kirjed puuduvad</"
 "span>"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
-msgid ""
-"<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to "
-"the recipients of the template\n"
-"                                    and will not appear in the messaging "
-"history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only "
-"be posted as an\n"
-"                                    internal note in the messaging history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the "
-"recipients of the\n"
-"                                    template and it will also be posted as "
-"an internal note\n"
-"                                    in the messaging history.\n"
-"                                </span>"
-msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -329,12 +309,6 @@ msgstr "Riiki ei toetata"
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
 msgstr "Riigipõhine registreerimine on nõutav"
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Country-specific registration required."
-msgstr "Riigipõhine registreerimine on vajalik."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -602,8 +576,8 @@ msgstr "Vigane sihtkoht"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
-"Invalid phone number. Please make sure to follow the international format, i."
-"e. a plus sign (+), then country code, city code, and local phone number. "
+"Invalid phone number. Please make sure to follow the international format, "
+"i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
 
@@ -741,11 +715,6 @@ msgid "Not enough credits to send SMS"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
-msgid "Note only"
-msgstr "Ainult märkus"
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
@@ -874,12 +843,6 @@ msgid "Register Account"
 msgstr "Registreeri konto"
 
 #. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Register now."
-msgstr "Registreeri nüüd."
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
@@ -947,16 +910,6 @@ msgstr "SMS"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
 msgstr ""
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
-msgid "SMS (with note)"
-msgstr "SMS (märkusega)"
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
-msgid "SMS (without note)"
-msgstr "SMS (ilma märkuseta)"
 
 #. module: sms
 #. odoo-javascript
@@ -1089,6 +1042,11 @@ msgid "SMS Templates have been reset"
 msgstr "Sõnumi mallid on lähtestatud"
 
 #. module: sms
+#: model:ir.module.module,summary:base.module_sms
+msgid "SMS Text Messaging"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
 msgstr "SMS jälgijad"
@@ -1097,6 +1055,11 @@ msgstr "SMS jälgijad"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
 msgstr "Sõnumi sisu"
+
+#. module: sms
+#: model:ir.module.module,shortdesc:base.module_sms
+msgid "SMS gateway"
+msgstr ""
 
 #. module: sms
 #. odoo-python
@@ -1162,12 +1125,6 @@ msgstr "Saada SMS"
 #: code:addons/sms/models/sms_template.py:0
 msgid "Send SMS (%s)"
 msgstr "Saada SMS (%s)"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
-#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
-msgid "Send SMS As"
-msgstr "Saada SMS kui"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1292,6 +1249,7 @@ msgstr "Edukas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Template"
 msgstr "Mall"
 
@@ -1634,3 +1592,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "dokument"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (koopia)"
+
+#~ msgid "Country-specific registration required."
+#~ msgstr "Riigipõhine registreerimine on vajalik."
+
+#~ msgid "Note only"
+#~ msgstr "Ainult märkus"
+
+#~ msgid "Register now."
+#~ msgstr "Registreeri nüüd."
+
+#~ msgid "SMS (with note)"
+#~ msgstr "SMS (märkusega)"
+
+#~ msgid "SMS (without note)"
+#~ msgstr "SMS (ilma märkuseta)"
+
+#~ msgid "Send SMS As"
+#~ msgstr "Saada SMS kui"

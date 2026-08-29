@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:42+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-22 01:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -24,6 +24,12 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
 msgstr "\"QR-koodit\""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "(Tips included)"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -229,6 +235,18 @@ msgstr ""
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+msgid "Add a Tip"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Add a tip"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Add an order note"
 msgstr ""
 
@@ -238,6 +256,13 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Add to cart"
 msgstr "Lisää ostoskoriin"
+
+#. module: pos_self_order
+#: model:ir.module.module,summary:base.module_pos_self_order
+msgid ""
+"Addon for the POS App that allows customers to view the menu on their "
+"smartphone."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -455,6 +480,7 @@ msgstr "Asetukset"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/pills_selection_popup/pills_selection_popup.xml:0
 msgid "Confirm"
 msgstr ""
@@ -482,6 +508,7 @@ msgstr "Yhteydenotto"
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
 msgid "Continue"
 msgstr "Jatka"
 
@@ -602,14 +629,15 @@ msgstr "Poista käytöstä"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/language_popup/language_popup.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_interface/product_interface.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Discard"
 msgstr "Hylkää"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_mail_template__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
@@ -660,7 +688,7 @@ msgstr "Lataa QR-koodit"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-msgid "Download your receipt here"
+msgid "Download receipt"
 msgstr ""
 
 #. module: pos_self_order
@@ -711,6 +739,12 @@ msgid ""
 msgstr ""
 "Ota QR-ruokalistat käyttöön ravintolan asetuksissa saadaksesi ilmaiset QR-"
 "koodit pöytiin."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.js:0
+msgid "Enter Amount"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -850,6 +884,7 @@ msgstr "Näin käytät lomaketta"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:pos_self_order.field_mail_template__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
@@ -940,7 +975,25 @@ msgstr "Internet-yhteys katkesi"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
 msgstr ""
 
 #. module: pos_self_order
@@ -969,6 +1022,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
 msgstr "Itsepalvelupääte"
+
+#. module: pos_self_order
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Kiosk Order"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -1126,6 +1187,7 @@ msgstr "Ei"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
 msgid "No Thanks"
 msgstr ""
 
@@ -1195,6 +1257,12 @@ msgstr "Avoin Itsepalvelupääte"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
+msgid "Options"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
 msgid "Order"
@@ -1225,10 +1293,20 @@ msgstr "Alkuperä"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Other"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Out of stock"
 msgstr "Loppu varastosta"
+
+#. module: pos_self_order
+#: model:ir.module.module,shortdesc:base.module_pos_self_order
+msgid "POS Self Order"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1239,7 +1317,6 @@ msgstr "Maksettu"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
-#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
 msgid "Pay"
 msgstr "Maksa"
@@ -1254,12 +1331,6 @@ msgstr "Maksa jälkeen:"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Pay after"
 msgstr "Maksa jälkeen"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
-msgid "Payment failed"
-msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1301,12 +1372,6 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Please choose a time slot for your order."
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
-msgid "Please try again or select another payment method"
 msgstr ""
 
 #. module: pos_self_order
@@ -1373,6 +1438,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
 msgstr ""
 
 #. module: pos_self_order
@@ -1484,11 +1561,6 @@ msgid "Required"
 msgstr ""
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Reset QR Codes"
-msgstr "Nollaa QR-koodit"
-
-#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_floor
 msgid "Restaurant Floor"
 msgstr "Ravintolan kerros"
@@ -1594,8 +1666,11 @@ msgid "Selection"
 msgstr "Valinta"
 
 #. module: pos_self_order
+#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Self Order"
 msgstr "Itsepalvelutilaus"
 
@@ -1789,10 +1864,12 @@ msgid "Table Stand Number"
 msgstr "Pöydän numero"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_change_receipt
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
-msgid "Table Tracker:"
-msgstr "Pöytäseuranta:"
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
+#: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
+msgid "Table Tracker %s"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
@@ -1837,7 +1914,9 @@ msgstr "Itsepalvelutilauksen oletuskäyttäjän on oltava kassakäyttäjä"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_preset.py:0
 msgid ""
-"The delivery address could not be geolocated. Please enter a valid address."
+"The delivery address could not be geolocated. Please check the address. If "
+"the address is valid, your geolocation service may be unavailable or unable "
+"to resolve it"
 msgstr ""
 
 #. module: pos_self_order
@@ -1845,6 +1924,14 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "Xmlid %s -sähköpostipohja on poistettu."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1864,6 +1951,18 @@ msgstr "Käyttäjän on oltava kassakäyttäjä"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "This combination does not exist."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "To pay at the counter"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "To pay in cash at the counter"
 msgstr ""
 
 #. module: pos_self_order
@@ -1923,6 +2022,11 @@ msgstr "Vahvista valintasi"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Validating..."
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_ir_ui_view
+msgid "View"
 msgstr ""
 
 #. module: pos_self_order
@@ -2065,18 +2169,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-msgid "at the counter"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-msgid "by cash"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "close"
 msgstr "sulje"
@@ -2161,6 +2253,12 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Reset QR Codes"
+#~ msgstr "Nollaa QR-koodit"
+
+#~ msgid "Table Tracker:"
+#~ msgstr "Pöytäseuranta:"
 
 #~ msgid "Point of Sale Product Snooze"
 #~ msgstr "Kassajärjestelmän tuotteen torkutustoiminto"

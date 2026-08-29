@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 06:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
@@ -45,29 +45,18 @@ msgstr ""
 "            "
 
 #. module: sale_project
+#: model:ir.module.module,description:base.module_sale_project
+msgid ""
+"\n"
+"Allows to create task from your sales order\n"
+"=============================================\n"
+"This module allows to generate a project/task from sales orders.\n"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Margins"
-msgstr ""
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this project has been cancelled. We recommend either "
-"updating the sales order item or cancelling this project in alignment with "
-"the cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
-msgstr ""
-
-#. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
-"order associated with this task has been cancelled. We recommend either "
-"updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
 msgstr ""
 
 #. module: sale_project
@@ -103,6 +92,26 @@ msgstr "<span class=\"o_stat_text\">Widok klienta</span>"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">Zamówienie sprzedaży</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -619,6 +628,11 @@ msgid "Sales & Invoicing"
 msgstr "Sprzedaż i fakturowanie"
 
 #. module: sale_project
+#: model:ir.module.module,shortdesc:base.module_sale_project
+msgid "Sales - Project"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
 msgid "Sales Analysis Report"
 msgstr "Raport analityczny sprzedaży"
@@ -771,6 +785,11 @@ msgstr "Zadanie"
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
 msgstr "Zadanie utworzone (%(name)s): %(link)s"
+
+#. module: sale_project
+#: model:ir.module.module,summary:base.module_sale_project
+msgid "Task Generation from Sales Orders"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence

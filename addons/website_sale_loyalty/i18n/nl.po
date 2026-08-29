@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 06:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
@@ -19,6 +19,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: website_sale_loyalty
+#: model:ir.module.module,description:base.module_website_sale_loyalty
+msgid ""
+"\n"
+"Create coupons, promotion codes, gift cards and loyalty programs to boost "
+"your sales (free products,\n"
+"discounts, etc.). Shoppers can use them in the eCommerce checkout.\n"
+"\n"
+"Coupon & promotion programs can be edited in the Catalog menu of the Website "
+"app.\n"
+msgstr ""
 
 #. module: website_sale_loyalty
 #. odoo-python
@@ -38,20 +50,15 @@ msgid "All websites"
 msgstr "Alle websites"
 
 #. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/models/sale_order.py:0
+msgid "Applied rewards have changed. Please review your cart."
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__ecommerce_ok
 msgid "Available on Website"
 msgstr "Beschikbaar op website"
-
-#. module: website_sale_loyalty
-#. odoo-python
-#: code:addons/website_sale_loyalty/controllers/payment.py:0
-msgid ""
-"Cannot process payment: applied reward was changed or has expired.\n"
-"Please refresh the page and try again."
-msgstr ""
-"De betaling kan niet worden verwerkt: de toegepaste beloning is gewijzigd of "
-"is verlopen.\n"
-"Herlaad de pagina en probeer het opnieuw."
 
 #. module: website_sale_loyalty
 #. odoo-javascript
@@ -79,6 +86,11 @@ msgstr "Kortingsbon"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Coupons -"
 msgstr "Kortingsbonnen –"
+
+#. module: website_sale_loyalty
+#: model:ir.module.module,shortdesc:base.module_website_sale_loyalty
+msgid "Coupons, Promotions, Gift Card and Loyalty for eCommerce"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
@@ -316,7 +328,8 @@ msgstr "De promotiecode moet uniek zijn."
 #. odoo-python
 #: code:addons/website_sale_loyalty/wizard/coupon_share.py:0
 msgid "The shared website should correspond to the website of the program."
-msgstr "De gedeelde website moet overeenkomen met de website van het programma."
+msgstr ""
+"De gedeelde website moet overeenkomen met de website van het programma."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
@@ -338,6 +351,13 @@ msgstr "Opladen"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Use"
 msgstr "Gebruiken"
+
+#. module: website_sale_loyalty
+#: model:ir.module.module,summary:base.module_website_sale_loyalty
+msgid ""
+"Use coupon, promotion, gift cards and loyalty programs in your eCommerce "
+"store"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__website_id
@@ -362,3 +382,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "You have successfully applied the following code:"
 msgstr "Je hebt succesvol de volgende code toegepast:"
+
+#~ msgid ""
+#~ "Cannot process payment: applied reward was changed or has expired.\n"
+#~ "Please refresh the page and try again."
+#~ msgstr ""
+#~ "De betaling kan niet worden verwerkt: de toegepaste beloning is gewijzigd "
+#~ "of is verlopen.\n"
+#~ "Herlaad de pagina en probeer het opnieuw."

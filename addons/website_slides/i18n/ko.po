@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 09:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -25,6 +25,23 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: website_slides
+#: model:ir.module.module,description:base.module_website_slides
+msgid ""
+"\n"
+"Create Online Courses\n"
+"=====================\n"
+"\n"
+"Featuring\n"
+"\n"
+" * Integrated course and lesson management\n"
+" * Fullscreen navigation\n"
+" * Support Youtube videos, Google documents, PDF, images, articles\n"
+" * Test knowledge with quizzes\n"
+" * Filter and Tag\n"
+" * Statistics\n"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -231,8 +248,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been enrolled to a new course: <t t-out=\"object.channel_id."
-"name or ''\">Basics of Gardening</t>.\n"
+"        You have been enrolled to a new course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -276,8 +293,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello<br/><br/>\n"
-"        You have been invited to check out this course: <t t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        You have been invited to check out this course: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -297,8 +314,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        안녕하세요<br/><br/>\n"
-"        다음 강좌를 확인하실 수 있도록 초대합니다: <t t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</t>.\n"
+"        다음 강좌를 확인하실 수 있도록 초대합니다: <t t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
 "<div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -321,11 +338,11 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object."
-"partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Congratulations!</b></p>\n"
-"                        <p>You've completed the course <b t-out=\"object."
-"channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>You've completed the course <b t-"
+"out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
 "                        <p>Check out the other available courses.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
@@ -491,8 +508,8 @@ msgstr ""
 "\">\n"
 "                        안녕하세요<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> 님이 "
-"<t t-out=\"object.slide_category or ''\">문서 </t> <strong t-out=\"object."
-"name or ''\">Trees</strong> 항목을 공유했습니다!\n"
+"<t t-out=\"object.slide_category or ''\">문서 </t> <strong t-"
+"out=\"object.name or ''\">Trees</strong> 항목을 공유했습니다!\n"
 "                        </p><div style=\"margin: 16px 8px 16px 8px; text-"
 "align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?"
@@ -545,10 +562,11 @@ msgid ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: {{object.user_id.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -564,9 +582,9 @@ msgstr ""
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
 "                        안녕하세요<br/><br/>\n"
-"                        현재 팔로우 중인 <strong t-out=\"object.channel_id."
-"name or ''\">Trees, Wood and Gardens</strong> 강좌에 신규 항목이 추가되었습니"
-"다:<br/><br/>\n"
+"                        현재 팔로우 중인 <strong t-"
+"out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> 강좌에 "
+"신규 항목이 추가되었습니다:<br/><br/>\n"
 "                        </p><center><strong t-out=\"object.name or "
 "''\">Trees</strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
@@ -582,10 +600,11 @@ msgstr ""
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.website_share_url\" t-"
-"attf-style=\"background-color: {{object.user_id.company_id."
-"email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: {{object.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; border-radius: 5px;\">View content</a>\n"
+"attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px;\">View content</a>\n"
 "                        </div>\n"
 "                        독점 제공 콘텐츠를 즐겨 보세요!\n"
 "                        <t t-if=\"user.signature\">\n"
@@ -1404,6 +1423,11 @@ msgstr "액세스 요청됨"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Access Rights"
 msgstr "액세스 권한"
+
+#. module: website_slides
+#: model:portal.entry,description:website_slides.portal_slides_client
+msgid "Access all your e-learning courses"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
@@ -2676,6 +2700,7 @@ msgstr "강좌: %s"
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_courses
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report_courses
+#: model:portal.entry,name:website_slides.portal_slides_client
 #: model:website.menu,name:website_slides.website_menu_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_search_bar
@@ -3770,8 +3795,8 @@ msgstr "이미지 소스"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid ""
-"Impossible to send emails. Select a \"Channel Share Template\" for courses "
-"%(course_names)s first"
+"Impossible to send emails. Select a \"Channel Share Template\" for courses %"
+"(course_names)s first"
 msgstr ""
 "이메일을 전송할 수 없습니다. %(course_names)s 강좌에 대한 \"채널 공유 양식"
 "\"을 먼저 선택하세요"
@@ -3780,8 +3805,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid ""
-"Impossible to send emails. Select a \"Share Template\" for courses "
-"%(course_names)s first"
+"Impossible to send emails. Select a \"Share Template\" for courses %"
+"(course_names)s first"
 msgstr ""
 "이메일을 전송할 수 없습니다. %(course_names)s 강좌에 대한 \"공유 양식\"을 먼"
 "저 선택하세요"
@@ -4165,6 +4190,11 @@ msgid "Latest achievements"
 msgstr "최근 달성"
 
 #. module: website_slides
+#: model:website.snippet.filter,name:website_slides.dynamic_filter_latest_courses
+msgid "Latest eLearning Courses"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/website_builder/courses_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
@@ -4189,9 +4219,8 @@ msgstr "원예의 기초에 대해 배워보세요!"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_1
-msgid "Learn to identify quality wood in order to create solid furnitures."
+msgid "Learn to identify quality wood in order to create solid furniture."
 msgstr ""
-"튼튼한 가구를 만들기 위해 품질이 좋은 목재를 구분하는 방법을 배워보세요."
 
 #. module: website_slides
 #. odoo-javascript
@@ -4298,6 +4327,11 @@ msgstr "메일링"
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_0
 msgid "Main Trees Categories"
 msgstr "주요 나무 범주"
+
+#. module: website_slides
+#: model:ir.module.module,summary:base.module_website_slides
+msgid "Manage and publish an eLearning platform"
+msgstr ""
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -4555,6 +4589,7 @@ msgstr "다음 강의"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/interactions/slides_course_quiz_edit.js:0
+#: model:res.groups.privilege,placeholder:website_slides.res_groups_privilege_elearning
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_0_1
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_1_4_question_1_1
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_0_1
@@ -6529,6 +6564,11 @@ msgid "View course"
 msgstr "강좌 보기"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.dynamic_filter_template_slide_channel_card
+msgid "View {{0}}"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Views"
@@ -7100,12 +7140,6 @@ msgid "by email."
 msgstr ""
 
 #. module: website_slides
-#. odoo-python
-#: code:addons/website_slides/models/slide_channel.py:0
-msgid "copy"
-msgstr "사본"
-
-#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "course"
@@ -7205,6 +7239,7 @@ msgstr "예. 나의 레벨"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
+#: model:ir.module.module,shortdesc:base.module_website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root
 #: model:res.groups.privilege,name:website_slides.res_groups_privilege_elearning
 #: model_terms:ir.ui.view,arch_db:website_slides.digest_digest_view_form
@@ -7290,6 +7325,7 @@ msgstr "시작"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
+#: model_terms:ir.ui.view,arch_db:website_slides.dynamic_filter_template_slide_channel_card
 msgid "steps"
 msgstr "단계"
 
@@ -7362,3 +7398,10 @@ msgstr "{{ user.name }}님이 {{ object.slide_category }}를 공유했습니다!
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└<span class=\"ms-1\">미분류</span>"
+
+#~ msgid "Learn to identify quality wood in order to create solid furnitures."
+#~ msgstr ""
+#~ "튼튼한 가구를 만들기 위해 품질이 좋은 목재를 구분하는 방법을 배워보세요."
+
+#~ msgid "copy"
+#~ msgstr "사본"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 11:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -239,6 +239,11 @@ msgstr "2X"
 #: code:addons/mass_mailing/static/src/builder/options/image_tool_option.xml:0
 msgid "2X Size"
 msgstr "2Xサイズ"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.s_rating
+msgid "3 out of 5 stars"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -631,15 +636,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                    To track replies, this "
 "address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
 "<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing."
-"contact', 'res.partner', 'mailing.list']\">\n"
+"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
+"['mailing.contact', 'res.partner', 'mailing.list']\">\n"
 "                                                   返信を追跡するには、このア"
 "ドレスがこのデータベースに属している必要があります\n"
 "                                                </small>"
@@ -816,7 +821,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_special_offer_cta
 msgid ""
-"<span class=\"oi oi-fw\" data-icon=\"label\" contenteditable=\"false\"/"
+"<span class=\"oi oi-fw\" data-icon=\"sell\" contenteditable=\"false\"/"
 ">  <strong>Special Offers</strong>. Complimentary care packs included with "
 "every sofa."
 msgstr ""
@@ -1855,8 +1860,8 @@ msgstr "ポータルからのブロックリスト削除要求"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist removal request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist removal request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 "メーリング %(mailing_link)s (ドキュメント %(record_link)s)のポータルからのブ"
 "ロックリスト削除要求"
@@ -1871,8 +1876,8 @@ msgstr "ポータルからのブロックリスト要求"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid ""
-"Blocklist request from portal of mailing %(mailing_link)s (document "
-"%(record_link)s)"
+"Blocklist request from portal of mailing %(mailing_link)s (document %"
+"(record_link)s)"
 msgstr ""
 "メーリング %(mailing_link)s (ドキュメント %(record_link)s)のポータルからのブ"
 "ロックリスト削除要求"
@@ -2765,6 +2770,11 @@ msgid "Design removed from the templates!"
 msgstr "デザインがテンプレートから削除されました！"
 
 #. module: mass_mailing
+#: model:ir.module.module,summary:base.module_mass_mailing
+msgid "Design, send and track emails"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_cta_card
 msgid "Designed for You"
 msgstr ""
@@ -3048,6 +3058,7 @@ msgstr "メールコンテンツ"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/res_users.py:0
+#: model:ir.module.module,shortdesc:base.module_mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu_root
 #: model:res.groups.privilege,name:mass_mailing.res_groups_privilege_email_marketing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -4320,6 +4331,11 @@ msgid "Manage mass mailing campaigns"
 msgstr "メール一括配信キャンペーンを管理"
 
 #. module: mass_mailing
+#: model:portal.entry,description:mass_mailing.portal_entry_newsletters
+msgid "Manage your subscribed newsletters"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__manual
 msgid "Manual"
 msgstr "手動"
@@ -4629,6 +4645,11 @@ msgid "Next Departure Is Past"
 msgstr "次の配信が過ぎています"
 
 #. module: mass_mailing
+#: model:res.groups.privilege,placeholder:mass_mailing.res_groups_privilege_email_marketing
+msgid "No"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "No Link Tracker for that mailing!"
@@ -4820,6 +4841,131 @@ msgstr "数字"
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "OPENED (%i)"
 msgstr "開封済(%i)"
+
+#. module: mass_mailing
+#: model:ir.module.module,description:base.module_mass_mailing
+msgid ""
+"Odoo Mass Mailing\n"
+"-----------------\n"
+"\n"
+"Easily send mass mailing to your leads, opportunities or customers\n"
+"with Odoo <a href=\"https://www.odoo.com/app/email-marketing\">Email "
+"Marketing</a>. Track\n"
+"marketing campaigns performance to improve conversion rates. Design\n"
+"professional emails and reuse templates in a few clicks.\n"
+"\n"
+"Send Professional Emails\n"
+"------------------------\n"
+"\n"
+"Import database of prospects or filter on existing leads, opportunities and\n"
+"customers in just a few clicks.\n"
+"\n"
+"Define email templates to reuse content or specific design for your "
+"newsletter.\n"
+"Setup several email servers with their own IP/domain to optimise opening "
+"rates.\n"
+"\n"
+"Organize Marketing Campaigns\n"
+"----------------------------\n"
+"\n"
+"Design, Send, Track by Campaigns with our <a href=\"https://www.odoo.com/app/"
+"email-marketing\">Lead Automation</a> app.\n"
+"\n"
+"Get real time statistics on campaigns performance to improve your "
+"conversion\n"
+"rate. Track mails sent, received, opened and answered.\n"
+"\n"
+"Easily manage your marketing campaigns, discussion groups, leads and\n"
+"opportunities in one simple and powerful platform.\n"
+"\n"
+"Integrated with Odoo Apps\n"
+"-------------------------\n"
+"\n"
+"Get access to mass mailing features from every Odoo app to improve the way "
+"your\n"
+"users communicate.\n"
+"\n"
+"Send template of emails from Odoo <a href=\"https://www.odoo.com/app/email-"
+"marketing\">CRM opportunities</a>, select leads based\n"
+"on marketing segments, send <a href=\"https://www.odoo.com/app/"
+"recruitment\">job offers</a> and automate\n"
+"answers to applicants, reuse email template in the lead automation "
+"marketing\n"
+"campaigns.\n"
+"\n"
+"Answers to your emails appears automatically in the history of every "
+"document\n"
+"with the social network module.\n"
+"\n"
+"Clean Your Lead Database\n"
+"------------------------\n"
+"\n"
+"Get a clean lead database that improves over the time using the performance "
+"of\n"
+"your mails. Odoo handle bounce mails efficiently, flag erroneous leads\n"
+"accordingly and gives you statistics on the quality of your leads.\n"
+"\n"
+"One click emails send\n"
+"---------------------\n"
+"\n"
+"The marketing department will love working on campaigns. But you can also "
+"give\n"
+"a one click mass mailing facility to all others users on their own prospects "
+"or\n"
+"documents.\n"
+"\n"
+"Select a few documents (e.g. leads, support tickets, suppliers, applicants,\n"
+"...) and send emails to their contacts in one click, reusing existing "
+"emails\n"
+"templates.\n"
+"\n"
+"Follow-up On Answers\n"
+"--------------------\n"
+"\n"
+"The chatter feature enables you to communicate faster and more efficiently "
+"with\n"
+"your customer. Get documents created automatically (leads, opportunities,\n"
+"tasks, ...) based on answers to your mass mailing campaigns Follow the\n"
+"discussion directly on the business documents within Odoo or via email.\n"
+"\n"
+"Get all the negotiations and discussions attached to the right document and\n"
+"relevent managers notified on specific events.\n"
+"\n"
+"Campaigns Dashboard\n"
+"-------------------\n"
+"\n"
+"Get the insights you need to make smarter marketing campaign. Track "
+"statistics\n"
+"per campaign: bounce rates, sent mails, best content, etc. The clear "
+"dashboards\n"
+"gives you a direct overview of your campaign performance.\n"
+"\n"
+"Fully Integrated With Others Apps\n"
+"---------------------------------\n"
+"\n"
+"Define automation rules (e.g. ask a salesperson to call, send an "
+"email, ...)\n"
+"based on triggers (no activity since 20 days, answered a promotional email,\n"
+"etc.)\n"
+"\n"
+"Optimize campaigns from lead to close, on every channel. Make smarter "
+"decisions\n"
+"about where to invest and show the impact of your marketing activities on "
+"your\n"
+"company's bottom line.\n"
+"\n"
+"Integrate a contact form in your website easily. Forms submissions create "
+"leads\n"
+"automatically in Odoo CRM. Leads can be used in marketing campaigns.\n"
+"\n"
+"Manage your <a href=\"https://www.odoo.com/app/crm\">sales funnel</a> with "
+"no\n"
+"effort. Attract leads, follow-up on phone calls and meetings. Analyse the\n"
+"quality of your leads to make informed decisions and save time by "
+"integrating\n"
+"emails directly into the application.\n"
+"\n"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_section_mobile
@@ -5087,6 +5233,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Pick a dedicated outgoing mail server for your mass mailings"
 msgstr "大量送信のための専用送信メールサーバーを選択"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Pick a mailing list."
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5548,6 +5700,12 @@ msgid "Save for later"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Save your changes."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_tree
 msgid "Saved by"
@@ -5678,6 +5836,12 @@ msgstr "メール配信リストを選択"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select recipients..."
 msgstr "受信者を選択..."
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Select this mailing list."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
@@ -6033,6 +6197,12 @@ msgid "Start by creating your first <b>Mailing</b>."
 msgstr "初めての <b>メール配信</b>を作成することから始めましょう。"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
+msgid "Start by creating your first Mailing."
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_content_card_2
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_image_text
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_image
@@ -6106,6 +6276,11 @@ msgstr "ニュースレターに登録"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Subscribed"
 msgstr "購読済"
+
+#. module: mass_mailing
+#: model:portal.entry,name:mass_mailing.portal_entry_newsletters
+msgid "Subscribed Newsletters"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -6209,19 +6384,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Test Traces"
 msgstr "テスト送信のトレース"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
-msgid ""
-"Test email sent to %(success)s recipient(s), could not send to %(failed)s."
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/wizard/mailing_mailing_test.py:0
-msgid "Test email sent to %(success)s recipient(s)."
-msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -6489,6 +6651,12 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Title Position"
 msgstr "タイトル位置"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mass_mailing_preview_record_field.xml:0
+msgid "To"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 20:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -24,6 +24,17 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_attendance
+#: model:ir.module.module,description:base.module_hr_attendance
+msgid ""
+"\n"
+"This module aims to manage employee's attendances.\n"
+"==================================================\n"
+"\n"
+"Keeps account of the attendances of the employees on the basis of the\n"
+"actions(Check in/Check out) performed by them.\n"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-python
@@ -465,6 +476,7 @@ msgstr "考勤：偵測員工缺勤"
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_reporting
+#: model:ir.module.module,shortdesc:base.module_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendance_reporting
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:res.groups.privilege,name:hr_attendance.res_groups_privilege_attendances
@@ -579,11 +591,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "條碼識別證，儲存在平板電腦上"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Balance"
-msgstr "結餘"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
 msgstr "條碼 / RFID"
@@ -640,6 +647,12 @@ msgstr "可編輯"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Can be converted as Time Off (cfr Time Off configuration)."
 msgstr "可轉換為休假（請參看：休假配置）。"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
+msgid "Cancel"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-python
@@ -829,6 +842,12 @@ msgid "Country"
 msgstr "國家"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/calendar/attendance_calendar_controller.js:0
+msgid "Create"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
 msgstr "建立一位新員工"
@@ -896,6 +915,11 @@ msgid "Definition"
 msgstr "定義"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
+msgid "Delete"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
@@ -915,11 +939,6 @@ msgstr "說明"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Device & Location Tracking"
 msgstr "裝置及位置追蹤"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Difference"
-msgstr "差異"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_attendances
@@ -1073,10 +1092,7 @@ msgid "Errors"
 msgstr "錯誤"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
 msgstr "加班時數"
 
@@ -1481,6 +1497,12 @@ msgid "Linked Overtime"
 msgstr "已連結加班"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
+msgid "Load Sample Data"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_load_demo_data
 msgid "Load demo data"
 msgstr "載入模擬資料"
@@ -1632,6 +1654,11 @@ msgstr "名稱"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "New Set-up (Employee/Badge)"
+msgstr ""
+
+#. module: hr_attendance
+#: model:res.groups.privilege,placeholder:hr_attendance.res_groups_privilege_attendances
+msgid "No"
 msgstr ""
 
 #. module: hr_attendance
@@ -1804,11 +1831,6 @@ msgstr "不在時間表中：%(schedule_name)s"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__schedule
 msgid "Outside of a specific schedule"
 msgstr "不在指定時間表中"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
-msgid "Over Time"
-msgstr "超時"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
@@ -2151,6 +2173,11 @@ msgid "Saturday"
 msgstr ""
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
+msgid "Save & Close"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
 msgid "Scan Badge"
@@ -2351,6 +2378,14 @@ msgid "There are no employees without this overtime ruleset."
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
+msgid ""
+"This action will generate several fake records across multiple apps. Are you "
+"sure you want to proceed?"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
@@ -2462,6 +2497,11 @@ msgid "Total Overtime"
 msgstr "總加班時間"
 
 #. module: hr_attendance
+#: model:ir.module.module,summary:base.module_hr_attendance
+msgid "Track employee attendance"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_try_kiosk
 msgid "Try kiosk"
 msgstr "試試使用自助服務機"
@@ -2535,6 +2575,11 @@ msgid "Usual work hours"
 msgstr "正常工作時數"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
+msgid "Validated Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Validation Error"
@@ -2599,9 +2644,7 @@ msgid "With a tolerance in favor of the employer of"
 msgstr "使用有利僱主的容差值："
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 msgid "Worked Extra Hours"
 msgstr "已加班時數"
 
@@ -2777,3 +2820,12 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "- 使用可選用的 PIN 個人密碼"
+
+#~ msgid "Balance"
+#~ msgstr "結餘"
+
+#~ msgid "Difference"
+#~ msgstr "差異"
+
+#~ msgid "Over Time"
+#~ msgstr "超時"

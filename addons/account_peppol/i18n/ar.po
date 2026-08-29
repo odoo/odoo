@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 00:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
@@ -21,6 +21,15 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: account_peppol
+#: model:ir.module.module,description:base.module_account_peppol
+msgid ""
+"\n"
+"- Register as a Peppol participant\n"
+"- Send and receive documents via Peppol network in Peppol BIS Billing 3.0 "
+"format\n"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1004,8 +1013,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
 msgstr ""
 
@@ -1020,6 +1028,12 @@ msgstr "Free on Odoo"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Fully automated"
 msgstr "Fully automated"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Go to module"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1304,6 +1318,7 @@ msgstr "بانتظار الاستقبال"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
+#: model:ir.module.module,shortdesc:base.module_account_peppol
 msgid "Peppol"
 msgstr "Peppol"
 
@@ -1338,6 +1353,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Contact Email"
 msgstr "البريد الإلكتروني للاتصال بـ Peppol"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Peppol Disconnected"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1427,6 +1448,11 @@ msgstr "دور المشاركة في Peppol"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
 msgstr "Peppol Purchase Journal"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
+msgid "Peppol Purchase Journal Required"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -2272,6 +2298,11 @@ msgid "This invoice has also been"
 msgstr "This invoice has also been"
 
 #. module: account_peppol
+#: model:ir.module.module,summary:base.module_account_peppol
+msgid "This module is used to send/receive documents with Peppol"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
@@ -2303,8 +2334,18 @@ msgstr "لإنشاء فواتير إلكترونية كاملة، قم أيضا�
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "To use the Approved Platform for French E-Invoicing install the module"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module '%s'."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module "
+"'%s'.\n"
+"The module was not found. Please update the app list first."
 msgstr ""
 
 #. module: account_peppol
@@ -2347,6 +2388,12 @@ msgid "Unknown Peppol Error: %s"
 msgstr "Unknown Peppol Error: %s"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Update App List"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
 msgid "Use Parent Connection"
 msgstr "Use Parent Connection"
@@ -2366,11 +2413,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "تأكيد"
-
-#. module: account_peppol
-#: model:ir.actions.server,name:account_peppol.partner_action_verify_peppol
-msgid "Verify Peppol"
-msgstr "Verify Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2678,6 +2720,9 @@ msgstr "to send invoices, but this one"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "الاستخدامات"
+
+#~ msgid "Verify Peppol"
+#~ msgstr "Verify Peppol"
 
 #~ msgid "<b>Authentify with itsme</b>"
 #~ msgstr "<b>التحقق من الهوية باستخدام itsme</b>"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-20 06:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
@@ -21,19 +21,32 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model:ir.module.module,description:base.module_http_routing
+msgid ""
+"\n"
+"Proposes advanced routing options not available in web or base to keep\n"
+"base modules simple.\n"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_400_layout_1
 msgid "400: Bad Request"
 msgstr "400: Bad Request"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_403_layout_1
 msgid "403: Forbidden"
 msgstr "403: Dilarang"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_415_layout_1
 msgid "415: Unsupported Media Type"
 msgstr "415: Tipe Media Tidak Didukung"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_422_layout_1
+msgid "422: Unprocessable Entity"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
@@ -60,6 +73,24 @@ msgstr "Kembali"
 #: model:ir.model.fields,field_description:http_routing.field_res_lang__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+msgid "Drag blocks here to add them above the error message"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+msgid "Drag blocks here to add them below the error message"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -90,10 +121,17 @@ msgid "ID"
 msgstr "ID"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_415_layout_1
 msgid ""
 "It looks like the URL you are accessing doesn't support the format of the "
-"request. Take a look at the error message below."
+"request."
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_422_layout_1
+msgid ""
+"It looks like the request you made could not be processed due to semantic "
+"errors."
 msgstr ""
 
 #. module: http_routing
@@ -107,8 +145,7 @@ msgid "Maybe you were looking for one of these <b>popular pages?</b>"
 msgstr "Mungkin Anda sedang mencari salah satu <b>halaman populer</b> ini?"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.422
-#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_4xx_layout_1
 msgid "Oops! Something went wrong."
 msgstr "Oops! Terjadi kesalahan."
 
@@ -123,26 +160,18 @@ msgid "Qweb"
 msgstr "Qweb"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.422
-#: model_terms:ir.ui.view,arch_db:http_routing.4xx
-msgid "Take a look at the error message below."
-msgstr "Silakan lihat pesan error di bawah."
-
-#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "The error occurred while rendering the template"
 msgstr "Error terjadi saat render templat"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_403_layout_1
 msgid "The page you were looking for could not be authorized."
 msgstr "Halaman yang Anda cari tidak dapat disahkan."
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
-msgid ""
-"The server couldn't understand the request. Take a look at the error message "
-"below."
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_400_layout_1
+msgid "The server couldn't understand the request."
 msgstr ""
 
 #. module: http_routing
@@ -156,6 +185,12 @@ msgid "We couldn't find the page you're looking for!"
 msgstr "Kita tidak dapat mencari halaman yang Anda cari!"
 
 #. module: http_routing
+#: model:ir.module.module,shortdesc:base.module_http_routing
+#: model:ir.module.module,summary:base.module_http_routing
+msgid "Web Routing"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "and evaluating the following expression:"
 msgstr "dan mengevaluasi ekspresi berikut:"
@@ -164,3 +199,6 @@ msgstr "dan mengevaluasi ekspresi berikut:"
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "this page"
 msgstr "halaman ini"
+
+#~ msgid "Take a look at the error message below."
+#~ msgstr "Silakan lihat pesan error di bawah."

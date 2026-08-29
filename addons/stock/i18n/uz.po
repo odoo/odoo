@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 16:32+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/stock/"
@@ -265,7 +265,6 @@ msgstr "%(warehouse)s: %(supplier)s dan mahsulot ta'minoti"
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
 #: code:addons/stock/models/stock_picking.py:0
-#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #: code:addons/stock/models/stock_warehouse.py:0
 #, fuzzy
@@ -395,14 +394,6 @@ msgid "(serial barcode)"
 msgstr "(seriya shtrix-kodi)"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
-msgid "), a replenishment must be done to reach the maximum level of stock ("
-msgstr ""
-"), zaxiralarning maksimal darajasiga erishish uchun to‘ldirish amalga "
-"oshirilishi kerak ("
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
 #, fuzzy
@@ -459,9 +450,8 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
-#, fuzzy
-msgid "+ %d day(s)"
-msgstr "+ %d kun"
+msgid "+ %d days"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -484,8 +474,7 @@ msgid ""
 msgstr ". Qo‘lda bajarish zarur bo‘lishi mumkin."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #, fuzzy
 msgid "/day"
 msgstr "/kun"
@@ -641,7 +630,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"<i class=\"oi\" data-icon=\"warning\"/>\n"
 "                                All products could not be reserved. Click on "
 "the \"Reserve\" button to try to reserve products."
 msgstr ""
@@ -823,6 +812,13 @@ msgstr "<span class=\"text-muted small\">Qo‘lda mavjud</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"<span class=\"text-muted\">When forecasted inventory reaches the minimum, "
+"replenish to reach maximum.</span>"
 msgstr ""
 
 #. module: stock
@@ -1372,7 +1368,9 @@ msgid "After"
 msgstr "Keyin"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_3
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_3
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_3
 #, fuzzy
 msgid "After next month last year"
 msgstr "O‘tgan yilning keyingi oyidan so‘ng"
@@ -1872,12 +1870,6 @@ msgstr ""
 "tovarlarni o‘z ichiga oladi."
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Average Stock:"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 #, fuzzy
 msgid "Back Order of"
@@ -1961,10 +1953,17 @@ msgid "Barcode is valid EAN"
 msgstr "Shtrix-kod to‘g‘ri EAN"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__based_on
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__based_on
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__min_max_based_on
 #, fuzzy
 msgid "Based on"
 msgstr "Asosida"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Based on average daily demands from"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -2287,6 +2286,18 @@ msgid "Choose destination location"
 msgstr "Belgilangan manzilni tanlang"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"Choose how many days of demand are covered by the Minimum level based on the "
+"average daily demand.\rThis number of days should at least be equal to "
+"Replenishment Lead Times - Availability Time to not run out of stock while "
+"waiting for a new replenishment to arrive. Include extra days of safety to "
+"buffer unusual situations.\r\rGreen if > Replenishment Lead Times - "
+"Availability Time\rOrange if = Replenishment Lead Times - Availability "
+"Time\rRed if < Replenishment Lead Times - Availability Time"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 #, fuzzy
 msgid "Choose the sheet layout to print lot labels"
@@ -2310,12 +2321,6 @@ msgstr "Mahsulot yoki partiya/seriya raqami yorliqlarini chop etishni tanlang"
 #, fuzzy
 msgid "Clear"
 msgstr "Tozalash"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
-msgid "Close"
-msgstr "Yopish"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__closest_location
@@ -2718,6 +2723,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_uid
@@ -2762,6 +2768,7 @@ msgstr "Yaratuvchi"
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__create_date
@@ -2815,17 +2822,6 @@ msgid "Creation date"
 msgstr "Yaratilgan sana"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move_line__date
-#, fuzzy
-msgid ""
-"Creation date of this move line until updated due to: quantity being "
-"increased, 'picked' status has updated, or move line is done."
-msgstr ""
-"Ushbu harakat qatorining yaratilish sanasi quyidagi sabablar tufayli "
-"yangilanmaguncha: miqdor ko‘paytirildi, \"terilgan\" holati yangilandi yoki "
-"harakat qatori bajarildi."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, fuzzy
@@ -2873,6 +2869,13 @@ msgstr ""
 #, fuzzy
 msgid "Custom"
 msgstr "Maxsus"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__custom
+#: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__custom
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__custom
+msgid "Custom Demand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__serial_prefix_format
@@ -2923,9 +2926,13 @@ msgid "Cyclic Counting"
 msgstr "Davriy sanoq"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Daily Demand:"
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__daily_demand
+msgid "Daily Demand"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__danger_level
+msgid "Danger Level"
 msgstr ""
 
 #. module: stock
@@ -3368,6 +3375,11 @@ msgid "Demand in Product UoM"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__daily_demand
+msgid "Demand is"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 #, fuzzy
@@ -3619,6 +3631,7 @@ msgstr "O‘lchamlar"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 #, fuzzy
 msgid "Discard"
@@ -3687,6 +3700,7 @@ msgstr "Yuk xatlarida partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__display_name
@@ -3926,14 +3940,13 @@ msgid "Enter a description"
 msgstr "Tavsif kiriting"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_orderpoint_suggest__based_on
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
-#, fuzzy
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__min_max_based_on
 msgid ""
-"Estimate the sales volume for the period based on past period or order the "
-"forecasted quantity for that period."
+"Estimate the daily average future demand volume based on past period or "
+"choose Custom Demand to enter manually average daily demand."
 msgstr ""
-"O‘tgan davr asosida davr uchun sotuv hajmini baholang yoki shu davr uchun "
-"bashorat qilingan miqdorni buyurtma qiling"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -4080,13 +4093,6 @@ msgid "Followers (Partners)"
 msgstr "Kuzatuvchilar (Hamkorlar)"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
-#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
-#, fuzzy
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome belgisi, masalan fa-tasks"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "For"
@@ -4222,6 +4228,18 @@ msgid "Forecasted Weight"
 msgstr "Prognozlangan og‘irlik"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
+msgid ""
+"Forecasted stock level when replenishing.\n"
+"Automatically calculated as = Min + Max (Order frequency x Daily Demand x "
+"Growth factor, MoQ) with MoQ = Minimum quantity from vendor pricelist / "
+"BOM.\n"
+"Won't be reached by on Hand stock if unforecasted demand is delivered while "
+"waiting for arrival."
+msgstr ""
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, fuzzy
@@ -4297,6 +4315,7 @@ msgid "Full Package Name"
 msgstr "Paketning to‘liq nomi"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "Future Activities"
@@ -4547,6 +4566,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__id
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__id
 #: model:ir.model.fields,field_description:stock.field_stock_package__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__id
@@ -4910,13 +4930,6 @@ msgid "Import Serials"
 msgstr "Seriya raqamlarini import qilish"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/stock_replenishment_info.py:0
-#, fuzzy
-msgid "In %s day(s)"
-msgstr "%s kundan so‘ng"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 #, fuzzy
 msgid "In Type"
@@ -5180,6 +5193,7 @@ msgstr "Hisobga olingan miqdor"
 #: model:ir.actions.server,name:stock.action_view_quants
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_inventory
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_inventory
+#: model:ir.module.module,shortdesc:base.module_stock
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: model:res.groups.privilege,name:stock.res_groups_privilege_inventory
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5548,7 +5562,9 @@ msgid "Last 12 Months"
 msgstr "So‘nggi 12 oy"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_year
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_year
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_year
 #, fuzzy
 msgid "Last 12 months"
 msgstr "So‘nggi 12 oy"
@@ -5560,7 +5576,9 @@ msgid "Last 3 Months"
 msgstr "So‘nggi 3 oy"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__three_months
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__three_months
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__three_months
 #, fuzzy
 msgid "Last 3 months"
 msgstr "So‘nggi 3 oy"
@@ -5572,13 +5590,17 @@ msgid "Last 30 Days"
 msgstr "So‘nggi 30 kun"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_month
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_month
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_month
 #, fuzzy
 msgid "Last 30 days"
 msgstr "So‘nggi 30 kun"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__one_week
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_week
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__one_week
 #, fuzzy
 msgid "Last 7 days"
 msgstr "So‘nggi 7 kun"
@@ -5616,6 +5638,7 @@ msgstr "Oxirgi inventarizatsiya"
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_uid
@@ -5660,6 +5683,7 @@ msgstr "Oxirgi yangilovchi"
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__write_date
@@ -5702,7 +5726,9 @@ msgid "Last time the Quantity was Updated"
 msgstr "Miqdor oxirgi marta yangilangan vaqt"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_quarter
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_quarter
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_quarter
 #, fuzzy
 msgid "Last year quarter"
 msgstr "O‘tgan yil choragi"
@@ -5715,6 +5741,7 @@ msgid "Late"
 msgstr "Kechikkan"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "Late Activities"
@@ -5763,12 +5790,6 @@ msgstr "Yetkazib berish vaqti"
 #, fuzzy
 msgid "Lead Time Information"
 msgstr "Yetkazib berish vaqti haqida ma'lumot"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Lead Time:"
-msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -6168,6 +6189,11 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "Zaxirani itarish va tortish oqimlarini boshqarish"
 
 #. module: stock
+#: model:ir.module.module,summary:base.module_stock
+msgid "Manage your stock and logistics activities"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #, fuzzy
@@ -6202,6 +6228,12 @@ msgstr "Mart"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as To Do"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: stock
@@ -6311,15 +6343,34 @@ msgstr "Minimal"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
-msgid "Min - Max"
-msgstr "Minimal - Maksimal"
+msgid "Min - Max Suggestion"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__min_coverage
+msgid "Min Coverage"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__min_max_based_on_factor
+msgid "Min Max Based On Factor"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 #, fuzzy
 msgid "Min Quantity"
 msgstr "Minimal miqdor"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
+msgid ""
+"Minimum Forecasted stock level that will trigger a replenishment.\n"
+"A safety stock is included in the min to cover unusual situations if days of "
+"demand covered by the Minimum Level is > Replenishment Lead Times - "
+"Availability Time."
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -6332,6 +6383,13 @@ msgstr "Minimal zaxira qoidasi"
 #, fuzzy
 msgid "Minimum Stock Rules"
 msgstr "Minimal zaxira qoidalari"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid ""
+"Minimum days of coverage and order frequency to be achieved by Min and Max "
+"stock levels must first be defined for each product."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6462,6 +6520,7 @@ msgid "Multiple destinations"
 msgstr "Bir nechta manzillar"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "My Activities"
@@ -6634,7 +6693,9 @@ msgid "Next date the On Hand Quantity should be counted."
 msgstr "Mavjud miqdor hisoblanishi kerak bo‘lgan keyingi sana."
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year_2
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_2
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year_2
 #, fuzzy
 msgid "Next month last year"
 msgstr "O‘tgan yilning keyingi oyi"
@@ -6647,6 +6708,7 @@ msgstr "Ta'sir qilingan keyingi o‘tkazma(lar):"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__no
+#: model:res.groups.privilege,placeholder:stock.res_groups_privilege_inventory
 #, fuzzy
 msgid "No"
 msgstr "Yo‘q"
@@ -7137,20 +7199,8 @@ msgid "Ordered"
 msgstr "Buyurtma qilingan"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "Ordering Frequency:"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-#, fuzzy
-msgid "Ordering Frequency: On demand"
-msgstr "Buyurtma berish chastotasi: talab bo‘yicha"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__orderpoint_id
 #, fuzzy
 msgid "Orderpoint"
@@ -7727,6 +7777,7 @@ msgid "Pay now"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
 #, fuzzy
 msgid "Percent Factor"
@@ -8856,6 +8907,12 @@ msgid "References"
 msgstr "Havolalar"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+msgid "Refresh"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_stock_quant_relocate
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #, fuzzy
@@ -8961,6 +9018,11 @@ msgid "Replenish"
 msgstr "To‘ldirish"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__replenish_frequency
+msgid "Replenish Frequency"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__replenish_on_order
@@ -8993,6 +9055,14 @@ msgstr "To‘ldirish yordamchisi"
 #, fuzzy
 msgid "Replenishment"
 msgstr "To‘ldirish"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid ""
+"Replenishment Frequency: choose how many days there are between "
+"replenishment requests to optimize the balance between your storage costs "
+"and order costs and calculate your Maximum level."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
@@ -9034,6 +9104,12 @@ msgstr "To‘ldirish hisoboti"
 #, fuzzy
 msgid "Replenishment Report Search"
 msgstr "To‘ldirish hisobotini qidirish"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+msgid "Replenishment Time ("
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
@@ -9457,7 +9533,9 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "SOTISHNING STANDART SHARTLARI VA QOIDALARI"
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_suggest__based_on__last_year
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year
+#: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__min_max_based_on__last_year
 #, fuzzy
 msgid "Same month last year"
 msgstr "O‘tgan yilning shu oyi"
@@ -9489,9 +9567,9 @@ msgstr "Rejalashtirilgan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__scheduled_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
+#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "Scheduled Date"
@@ -9505,7 +9583,7 @@ msgstr "Rejalashtirilgan vaqt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
-#: model:ir.model.fields,help:stock.field_stock_move_line__scheduled_date
+#: model:ir.model.fields,help:stock.field_stock_move_line__date
 #, fuzzy
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
@@ -10392,6 +10470,11 @@ msgid "Stock Operation"
 msgstr "Zaxira operatsiyasi"
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_orderpoint_suggest
+msgid "Stock Orderpoint Min-Max Suggestion"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 #, fuzzy
 msgid "Stock Package Destination"
@@ -10485,11 +10568,9 @@ msgid "Stock To Reserve:"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
-#, fuzzy
-msgid "Stock level to reach when replenishing."
-msgstr "To‘ldirishda erishiladigan zaxira darajasi"
+#: model:ir.model,name:stock.model_stock_replenishment_info
+msgid "Stock delivery time information"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -10520,12 +10601,6 @@ msgstr "Zaxira paketi turi"
 #, fuzzy
 msgid "Stock rule report"
 msgstr "Zaxira qoidasi hisoboti"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_replenishment_info
-#, fuzzy
-msgid "Stock supplier replenishment information"
-msgstr "Ta'minotchi zaxirasini to‘ldirish ma'lumoti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
@@ -10633,6 +10708,18 @@ msgstr "Sublokatsiyaga saqlash"
 #, fuzzy
 msgid "Sublocation"
 msgstr "Sublokatsiya"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/stock_orderpoint_list_view.xml:0
+msgid "Suggest"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_orderpoint_suggest
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Suggest Min-Max"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -10902,13 +10989,6 @@ msgstr "Omborlararo o‘tkazmalar yaratildi"
 msgid "The inventory frequency (days) for a location must be non-negative"
 msgstr ""
 "Joy uchun inventarizatsiya chastotasi (kunlarda) manfiy bo‘lmasligi kerak"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
-#, fuzzy
-msgid "The minimum Stock level that will trigger a replenishment."
-msgstr "To‘ldirishni ishga tushiradigan minimal zaxira darajasi."
 
 #. module: stock
 #. odoo-python
@@ -11551,6 +11631,7 @@ msgid "Today"
 msgstr "Bugun"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, fuzzy
 msgid "Today Activities"
@@ -11980,6 +12061,11 @@ msgstr "Bandni bekor qilish"
 #, fuzzy
 msgid "Unwanted Replenish"
 msgstr "Keraksiz to‘ldirish"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "Update"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -12517,13 +12603,6 @@ msgstr ""
 "o‘zgartirish imkonini beradi."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
-msgid "When the stock level at the forecasted date is below the minimum ("
-msgstr ""
-"Bashorat qilingan sanadagi zaxira darajasi minimal darajadan past bo‘lganda ("
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
 #, fuzzy
 msgid "When ticked, carrier of shipment will be propagated."
@@ -12600,6 +12679,11 @@ msgid "Write one lot/serial name per line, followed by the quantity."
 msgstr ""
 "Har bir qatorga bittadan partiya/seriya raqamini yozing, keyin miqdorini "
 "ko‘rsating."
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_orderpoint_suggest_form
+msgid "X"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -13148,13 +13232,8 @@ msgstr "eng yaqin"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/widgets/json_widget.xml:0
-msgid "day(s)"
-msgstr ""
-
-#. module: stock
-#. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_orderpoint_search_panel.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 #, fuzzy
 msgid "days"
@@ -13171,6 +13250,13 @@ msgstr "yulduzcha qo‘yilganda necha kun oldin"
 #, fuzzy
 msgid "days before/"
 msgstr "kun oldin/"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "days)"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -13403,6 +13489,72 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid ""
+#~ "), a replenishment must be done to reach the maximum level of stock ("
+#~ msgstr ""
+#~ "), zaxiralarning maksimal darajasiga erishish uchun to‘ldirish amalga "
+#~ "oshirilishi kerak ("
+
+#, fuzzy
+#~ msgid "+ %d day(s)"
+#~ msgstr "+ %d kun"
+
+#, fuzzy
+#~ msgid "Close"
+#~ msgstr "Yopish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Creation date of this move line until updated due to: quantity being "
+#~ "increased, 'picked' status has updated, or move line is done."
+#~ msgstr ""
+#~ "Ushbu harakat qatorining yaratilish sanasi quyidagi sabablar tufayli "
+#~ "yangilanmaguncha: miqdor ko‘paytirildi, \"terilgan\" holati yangilandi "
+#~ "yoki harakat qatori bajarildi."
+
+#, fuzzy
+#~ msgid ""
+#~ "Estimate the sales volume for the period based on past period or order "
+#~ "the forecasted quantity for that period."
+#~ msgstr ""
+#~ "O‘tgan davr asosida davr uchun sotuv hajmini baholang yoki shu davr uchun "
+#~ "bashorat qilingan miqdorni buyurtma qiling"
+
+#, fuzzy
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Font awesome belgisi, masalan fa-tasks"
+
+#, fuzzy
+#~ msgid "In %s day(s)"
+#~ msgstr "%s kundan so‘ng"
+
+#, fuzzy
+#~ msgid "Min - Max"
+#~ msgstr "Minimal - Maksimal"
+
+#, fuzzy
+#~ msgid "Ordering Frequency: On demand"
+#~ msgstr "Buyurtma berish chastotasi: talab bo‘yicha"
+
+#, fuzzy
+#~ msgid "Stock level to reach when replenishing."
+#~ msgstr "To‘ldirishda erishiladigan zaxira darajasi"
+
+#, fuzzy
+#~ msgid "Stock supplier replenishment information"
+#~ msgstr "Ta'minotchi zaxirasini to‘ldirish ma'lumoti"
+
+#, fuzzy
+#~ msgid "The minimum Stock level that will trigger a replenishment."
+#~ msgstr "To‘ldirishni ishga tushiradigan minimal zaxira darajasi."
+
+#, fuzzy
+#~ msgid "When the stock level at the forecasted date is below the minimum ("
+#~ msgstr ""
+#~ "Bashorat qilingan sanadagi zaxira darajasi minimal darajadan past "
+#~ "bo‘lganda ("
 
 #, fuzzy
 #~ msgid "Choose your date"

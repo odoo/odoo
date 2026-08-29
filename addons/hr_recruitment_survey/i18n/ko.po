@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 11:55+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -23,6 +23,15 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_recruitment_survey
+#: model:ir.module.module,description:base.module_hr_recruitment_survey
+msgid ""
+"\n"
+"Use interview forms during recruitment process.\n"
+"This module is integrated with the survey module\n"
+"to allow you to define interviews for different jobs.\n"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -60,16 +69,16 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        안녕하세요, <t t-out=\"object.partner_id.name or 'applicant'\">"
-"[applicant name]</t>님.<br/><br/>\n"
+"        안녕하세요, <t t-out=\"object.partner_id.name or "
+"'applicant'\">[applicant name]</t>님.<br/><br/>\n"
 "        <t>\n"
 "            채용 절차를 위한 몇 가지 질문에 답변 부탁드립니다.\n"
 "        </t>\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
-"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t>\n"
 "                    서면 인터뷰 시작하기\n"
@@ -77,8 +86,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            인터뷰에 대한 답변은 <t t-out=\"format_date(object.deadline)\">"
-"[deadline date]</t>까지 등록해 주세요.<br/><br/>\n"
+"            인터뷰에 대한 답변은 <t t-out=\"format_date(object.deadline)"
+"\">[deadline date]</t>까지 등록해 주세요.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            좋은 결과 있으시길 기원합니다. 참여해 주셔서 감사합니다.\n"
@@ -89,8 +98,8 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
-msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>채용으로 이동"
+msgid "<i class=\"oi me-2\" data-icon=\"east\"/>Go to Recruitment"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -190,8 +199,8 @@ msgid ""
 "Choose an interview form for this job position and you will be able to print/"
 "answer this interview from all applicants who apply for this job"
 msgstr ""
-"이 직무 영역에 대한 면접 양식을 선택하면 이 직무 영역에 지원하는 모든 "
-"지원자의 면접을 인쇄/답변할 수 있습니다."
+"이 직무 영역에 대한 면접 양식을 선택하면 이 직무 영역에 지원하는 모든 지원자"
+"의 면접을 인쇄/답변할 수 있습니다."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body
@@ -281,6 +290,11 @@ msgstr "차, 커피, 문구류 등 무료 제공"
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__hide_url
 msgid "Hide Url"
 msgstr "URL 숨기기"
+
+#. module: hr_recruitment_survey
+#: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
+msgid "Hr Recruitment Interview Forms"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -408,10 +422,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"이메일 전송 시 번역할 언어 (ISO 코드)를 선택할 수 있습니다. 선택하지 않을 "
-"경우, 기본 파트너의 사용 언어가 기본 언어로 적용됩니다. 언어를 알맞게 선택할 "
-"수 있도록 다음과 같이 예시용 메시지가 자리표지자로 나타납니다. 예:{{ "
-"object.partner_id.lang }}"
+"이메일 전송 시 번역할 언어 (ISO 코드)를 선택할 수 있습니다. 선택하지 않을 경"
+"우, 기본 파트너의 사용 언어가 기본 언어로 적용됩니다. 언어를 알맞게 선택할 "
+"수 있도록 다음과 같이 예시용 메시지가 자리표지자로 나타납니다. 예:"
+"{{ object.partner_id.lang }}"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__mail_server_id
@@ -581,6 +595,7 @@ msgstr "설문 조사 사용자 입력"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_ids
+#: model:ir.module.module,summary:base.module_hr_recruitment_survey
 msgid "Surveys"
 msgstr "설문 조사"
 
@@ -688,3 +703,6 @@ msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
 msgstr ""
+
+#~ msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
+#~ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>채용으로 이동"

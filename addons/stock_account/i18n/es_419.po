@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-22 01:03+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -21,6 +21,25 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: stock_account
+#: model:ir.module.module,description:base.module_stock_account
+msgid ""
+"\n"
+"WMS Accounting module\n"
+"======================\n"
+"This module makes the link between the 'stock' and 'account' modules and "
+"allows you to create accounting entries to value your stock movements\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Stock Valuation (periodical or automatic)\n"
+"* Invoice from Picking\n"
+"\n"
+"Dashboard / Reports for Warehouse Management includes:\n"
+"------------------------------------------------------\n"
+"* Stock Inventory Value at given date (support dates in the past)\n"
+msgstr ""
 
 #. module: stock_account
 #. odoo-python
@@ -79,6 +98,11 @@ msgstr "Cuenta"
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Plantilla de plan de cuentas"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
+msgid "Account move lines using this move in order to compute their COGS"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -211,6 +235,16 @@ msgstr "BC46282798"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
 msgstr "Tocino"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
+msgid "COGS lines"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
+msgid "COGS stock moves"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
@@ -577,6 +611,16 @@ msgid "Inventory Valuation"
 msgstr "Valuación de inventario"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
+msgid "Inventory moves used to compute COGS values."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.module.module,summary:base.module_stock_account
+msgid "Inventory, Logistic, Valuation, Accounting"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
 msgid "Invoice Line"
 msgstr ""
@@ -602,14 +646,9 @@ msgid "Is Valued"
 msgstr "Está valuado"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_internal
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued
 msgid "Is valued inside the company"
 msgstr "Está valuado dentro de la empresa"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_external
-msgid "Is valued outside the company"
-msgstr "Está valuado fuera de la empresa"
 
 #. module: stock_account
 #. odoo-python
@@ -833,6 +872,14 @@ msgstr "Valor del producto"
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
 msgstr "Variante del producto"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"Product should be passed as an argument in order to get the unit price for "
+"moves in a kit."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -1168,6 +1215,11 @@ msgid "Variation Account Active"
 msgstr "Cuenta activa de variación"
 
 #. module: stock_account
+#: model:ir.module.module,shortdesc:base.module_stock_account
+msgid "WMS Accounting"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
@@ -1204,16 +1256,6 @@ msgstr "Solo puedes ajustar la valuación de un movimiento a la vez."
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
-msgid ""
-"You can only get the standard price at a given date for products with "
-"'Standard Price' as cost method."
-msgstr ""
-"Solo es posible obtener el precio estándar en una fecha determinada para los "
-"productos que tienen \"Precio estándar\" como método de costo."
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
 "Solo puedes usar el operador \"=\" para buscar en un campo de valuación."
@@ -1246,6 +1288,16 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "unidades"
+
+#~ msgid "Is valued outside the company"
+#~ msgstr "Está valuado fuera de la empresa"
+
+#~ msgid ""
+#~ "You can only get the standard price at a given date for products with "
+#~ "'Standard Price' as cost method."
+#~ msgstr ""
+#~ "Solo es posible obtener el precio estándar en una fecha determinada para "
+#~ "los productos que tienen \"Precio estándar\" como método de costo."
 
 #~ msgid ""
 #~ "Value of the product (automatically computed in AVCO).\n"

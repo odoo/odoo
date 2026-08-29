@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-20 06:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/sms/nl/"
@@ -24,6 +24,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sms
+#: model:ir.module.module,description:base.module_sms
+msgid ""
+"\n"
+"This module gives a framework for SMS text messaging\n"
+"----------------------------------------------------\n"
+"\n"
+"The service is provided by the In App Purchase Odoo platform.\n"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -44,12 +54,6 @@ msgid ""
 msgstr ""
 "%(count)s van de %(total)s geselecteerde sms-berichten zijn opnieuw "
 "verzonden."
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/models/sms_template.py:0
-msgid "%s (copy)"
-msgstr "%s (kopie)"
 
 #. module: sms
 #. odoo-python
@@ -126,50 +130,6 @@ msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
 "<span class=\"text-warning\" invisible=\"not no_record\">Geen records</span>"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
-msgid ""
-"<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to "
-"the recipients of the template\n"
-"                                    and will not appear in the messaging "
-"history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only "
-"be posted as an\n"
-"                                    internal note in the messaging history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the "
-"recipients of the\n"
-"                                    template and it will also be posted as "
-"an internal note\n"
-"                                    in the messaging history.\n"
-"                                </span>"
-msgstr ""
-"<span invisible=\"sms_method != 'sms'\">\n"
-"                                    Het bericht wordt als sms verzonden naar "
-"de ontvangers van het sjabloon\n"
-"                                    en verschijnt niet in de "
-"berichtengeschiedenis.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    De sms wordt niet verzonden, maar "
-"toegevoegd\n"
-"                                    als een interne notitie in de "
-"berichtengeschiedenis.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != "
-"'comment'\">\n"
-"                                    De sms wordt als sms verzonden naar de "
-"ontvangers van het\n"
-"                                    sjabloon en ook toegevoegd als een "
-"interne notitie\n"
-"                                    in de berichtengeschiedenis.\n"
-"                                </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -351,12 +311,6 @@ msgstr "Land niet ondersteund"
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
 msgstr "Landspecifieke registratie vereist"
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Country-specific registration required."
-msgstr "Landspecifieke registratie vereist."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -627,8 +581,8 @@ msgstr "Ongeldige bestemming"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
-"Invalid phone number. Please make sure to follow the international format, i."
-"e. a plus sign (+), then country code, city code, and local phone number. "
+"Invalid phone number. Please make sure to follow the international format, "
+"i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
 "Ongeldig telefoonnummer. Zorg ervoor dat je het internationale formaat "
@@ -769,11 +723,6 @@ msgid "Not enough credits to send SMS"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
-msgid "Note only"
-msgstr "Alleen opmerking"
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
@@ -910,12 +859,6 @@ msgid "Register Account"
 msgstr "Registreren"
 
 #. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Register now."
-msgstr "Registreer nu."
-
-#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
@@ -983,16 +926,6 @@ msgstr "SMS"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
 msgstr "SMS ("
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
-msgid "SMS (with note)"
-msgstr "SMS (met notitie)"
-
-#. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
-msgid "SMS (without note)"
-msgstr "SMS (zonder notitie)"
 
 #. module: sms
 #. odoo-javascript
@@ -1125,6 +1058,11 @@ msgid "SMS Templates have been reset"
 msgstr "SMS-sjablonen zijn opnieuw gereset"
 
 #. module: sms
+#: model:ir.module.module,summary:base.module_sms
+msgid "SMS Text Messaging"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
 msgstr "SMS-trackers"
@@ -1133,6 +1071,11 @@ msgstr "SMS-trackers"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
 msgstr "SMS inhoud"
+
+#. module: sms
+#: model:ir.module.module,shortdesc:base.module_sms
+msgid "SMS gateway"
+msgstr ""
 
 #. module: sms
 #. odoo-python
@@ -1200,12 +1143,6 @@ msgstr "Sms verzenden"
 #: code:addons/sms/models/sms_template.py:0
 msgid "Send SMS (%s)"
 msgstr "Verzend SMS (%s)"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
-#: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
-msgid "Send SMS As"
-msgstr "Sms verzenden als"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1333,6 +1270,7 @@ msgstr "Succes"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
+#: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Template"
 msgstr "Sjabloon"
 
@@ -1541,8 +1479,8 @@ msgstr ""
 "componist\n"
 "'email_outgoing': gegenereerd door een mailing\n"
 "'melding': gegenereerd door systeem, b.v. berichten volgen\n"
-"'auto_comment': gegenereerd door een geautomatiseerd meldingsmechanisme, b."
-"v. erkenning\n"
+"'auto_comment': gegenereerd door een geautomatiseerd meldingsmechanisme, "
+"b.v. erkenning\n"
 "'user_notification': gegenereerd voor een specifieke ontvanger"
 
 #. module: sms
@@ -1715,3 +1653,69 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "regel:"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (kopie)"
+
+#~ msgid ""
+#~ "<span invisible=\"sms_method != 'sms'\">\n"
+#~ "                                    The message will be sent as an SMS to "
+#~ "the recipients of the template\n"
+#~ "                                    and will not appear in the messaging "
+#~ "history.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'note'\">\n"
+#~ "                                    The SMS will not be sent, it will "
+#~ "only be posted as an\n"
+#~ "                                    internal note in the messaging "
+#~ "history.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'comment'\">\n"
+#~ "                                    The SMS will be sent as an SMS to the "
+#~ "recipients of the\n"
+#~ "                                    template and it will also be posted "
+#~ "as an internal note\n"
+#~ "                                    in the messaging history.\n"
+#~ "                                </span>"
+#~ msgstr ""
+#~ "<span invisible=\"sms_method != 'sms'\">\n"
+#~ "                                    Het bericht wordt als sms verzonden "
+#~ "naar de ontvangers van het sjabloon\n"
+#~ "                                    en verschijnt niet in de "
+#~ "berichtengeschiedenis.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'note'\">\n"
+#~ "                                    De sms wordt niet verzonden, maar "
+#~ "toegevoegd\n"
+#~ "                                    als een interne notitie in de "
+#~ "berichtengeschiedenis.\n"
+#~ "                                </span>\n"
+#~ "                                <span invisible=\"sms_method != "
+#~ "'comment'\">\n"
+#~ "                                    De sms wordt als sms verzonden naar "
+#~ "de ontvangers van het\n"
+#~ "                                    sjabloon en ook toegevoegd als een "
+#~ "interne notitie\n"
+#~ "                                    in de berichtengeschiedenis.\n"
+#~ "                                </span>"
+
+#~ msgid "Country-specific registration required."
+#~ msgstr "Landspecifieke registratie vereist."
+
+#~ msgid "Note only"
+#~ msgstr "Alleen opmerking"
+
+#~ msgid "Register now."
+#~ msgstr "Registreer nu."
+
+#~ msgid "SMS (with note)"
+#~ msgstr "SMS (met notitie)"
+
+#~ msgid "SMS (without note)"
+#~ msgstr "SMS (zonder notitie)"
+
+#~ msgid "Send SMS As"
+#~ msgstr "Sms verzenden als"

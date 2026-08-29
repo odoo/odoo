@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 17:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-master/"
@@ -51,8 +51,8 @@ msgid ""
 msgstr ""
 "<i>Nomenklature črtnih kod</i> določite, kako se črtne kode prepoznavajo in "
 "kategorizirajo.\n"
-"                                Ko je črtna koda skenirana, je povezana z <i>"
-"prvim</i> pravilom ujemajočim se z\n"
+"                                Ko je črtna koda skenirana, je povezana z "
+"<i>prvim</i> pravilom ujemajočim se z\n"
 "                                vzorcem. Sintaksa vzorca je regularni izraz, "
 "črtna koda pa se ujema\n"
 "                                če se regularni izraz ujema s predpono črtne "
@@ -107,6 +107,7 @@ msgstr ""
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+#: model:ir.module.module,shortdesc:base.module_barcodes
 msgid "Barcode"
 msgstr "Črtna koda"
 
@@ -249,14 +250,14 @@ msgid ""
 msgstr ""
 "Vzorci lahko določajo tudi, kako se lahko prikažejo numerične vrednosti, kot "
 "sta teža ali cena\n"
-"                                kodirane v črtno kodo. Označene so z <code>"
-"{ŠŠŠ}</code>kjer Š'ka\n"
+"                                kodirane v črtno kodo. Označene so z "
+"<code>{ŠŠŠ}</code>kjer Š'ka\n"
 "                                določa, kje so kodirane števke števila. "
 "Podprte so tudi plavajoče številske vrednosti za\n"
 "                                decimalna števila, označena z D-ji, kot na "
 "primer <code>{ŠŠŠDD}</code>. V teh primerih,\n"
-"                                mora polje s črtno kodo na povezanih  <i>"
-"zapisih\n"
+"                                mora polje s črtno kodo na povezanih  "
+"<i>zapisih\n"
 "</i> prikazati te številke kot\n"
 "                                ničle."
 
@@ -275,6 +276,11 @@ msgstr "Ime pravila"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
 msgstr "Pravila"
+
+#. module: barcodes
+#: model:ir.module.module,summary:base.module_barcodes
+msgid "Scan and Parse Barcodes"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
@@ -302,7 +308,8 @@ msgstr "Vzorec ujemanja črtne kode"
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
-msgstr "Vzorec črtne kode %(pattern)s ne vodi do veljavnega regularnega izraza."
+msgstr ""
+"Vzorec črtne kode %(pattern)s ne vodi do veljavnega regularnega izraza."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -339,7 +346,8 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr "V vzorcu črtne kode je sintaktična napaka %(pattern)s: prazne oklepaje."
+msgstr ""
+"V vzorcu črtne kode je sintaktična napaka %(pattern)s: prazne oklepaje."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding

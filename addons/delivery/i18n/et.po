@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 01:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-master/"
@@ -45,6 +45,16 @@ msgid ""
 msgstr ""
 
 #. module: delivery
+#: model:ir.module.module,description:base.module_delivery
+msgid ""
+"\n"
+"Allows you to add delivery methods in sale orders.\n"
+"==================================================\n"
+"You can define your own carrier for prices.\n"
+"The system is able to add and compute the shipping line.\n"
+msgstr ""
+
+#. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
@@ -59,12 +69,6 @@ msgid ""
 msgstr ""
 "%s\n"
 "Tasuta tarne"
-
-#. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/delivery_carrier.py:0
-msgid "%s (copy)"
-msgstr "%s (koopia)"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_note
@@ -420,6 +424,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr "Tarnekulu"
+
+#. module: delivery
+#: model:ir.module.module,shortdesc:base.module_delivery
+msgid "Delivery Costs"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
@@ -1317,6 +1326,9 @@ msgstr "nt https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_note
 msgid ""
-"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref {{ object."
-"so_id.name or 'n/a' }})"
+"{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
+"{{ object.so_id.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (koopia)"

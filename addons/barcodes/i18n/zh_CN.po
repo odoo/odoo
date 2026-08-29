@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 20:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -96,6 +96,7 @@ msgstr ""
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+#: model:ir.module.module,shortdesc:base.module_barcodes
 msgid "Barcode"
 msgstr "条形码"
 
@@ -237,8 +238,8 @@ msgid ""
 "                                zeroes."
 msgstr ""
 "模式还可以定义如何将重量或价格等数值\n"
-"                                编码到条形码中。它们用<code>{NNN}</code> 表示"
-"，其中 N\n"
+"                                编码到条形码中。它们用<code>{NNN}</code> 表"
+"示，其中 N\n"
 "                                代表数字的编码位置。也支持浮点数，\n"
 "                                用 D 表示小数，如<code>{NNNDD}</code>。 在这"
 "种情况下，\n"
@@ -261,6 +262,11 @@ msgstr "规则名称"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
 msgstr "规则"
+
+#. module: barcodes
+#: model:ir.module.module,summary:base.module_barcodes
+msgid "Scan and Parse Barcodes"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 06:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
@@ -53,6 +53,13 @@ msgstr ""
 "trong mọi dự án.\""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid ""
+"\" Their team understood our needs from day one. The result was a reliable "
+"solution that made our daily work much easier. \""
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
 msgid ""
@@ -61,6 +68,13 @@ msgid ""
 msgstr ""
 "\"Công ty này đã chuyển đổi hoạt động kinh doanh của chúng tôi. <br/>Giải "
 "pháp của họ rất sáng tạo và đáng tin cậy.\""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid ""
+"\" We were impressed by their attention to detail. Every step was clear, "
+"efficient, and focused on delivering real value. \""
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote
@@ -237,6 +251,18 @@ msgstr ""
 "tuyệt vời để xây dựng niềm tin vào sản phẩm hoặc dịch vụ của bạn.\""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_llms
+msgid ""
+"# Title \n"
+"\n"
+" > Optional description goes here \n"
+"\n"
+" Optional details go here \n"
+"\n"
+" Write the document in markdown language"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "# Các trang đã truy cập"
@@ -368,6 +394,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/a11y_new_tab_link.js:0
+msgid "(Open in new tab)"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "+ Field"
 msgstr ""
@@ -453,10 +485,36 @@ msgstr ""
 
 #. module: website
 #: model:website,contact_us_link_url:website.website2
+#: model:website.page,url:website.contactus_page
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
 msgstr "/contactus"
+
+#. module: website
+#: model:website.page,url:website.contactus_thanks
+msgid "/contactus-thank-you"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.privacy_policy_page
+msgid "/privacy"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.bs_debug_page
+msgid "/website/demo/bootstrap"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.color_combinations_debug_page
+msgid "/website/demo/color-combinations"
+msgstr ""
+
+#. module: website
+#: model:website.page,url:website.snippets_debug_page
+msgid "/website/demo/snippets"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -782,20 +840,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
-"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-"
+"to:info@yourcompany.example.com\" title=\"Send an "
+"email\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
-"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-"
+"to:info@yourcompany.example.com\" title=\"Send an "
+"email\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
-"com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" "
+"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
-"com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" "
+"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -838,9 +898,16 @@ msgstr ""
 "role=\"button\">Thêm thông tin</a>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Get started</a>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_shape_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Learn more</a>"
 msgstr ""
@@ -1055,6 +1122,16 @@ msgstr ""
 "tương lai của nền tảng. Bằng cách cập nhật liên tục, bạn có thể tận dụng các "
 "công cụ và tính năng mới nhất, đảm bảo doanh nghiệp của bạn vẫn cạnh tranh "
 "và hiệu quả."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
+msgid "<font class=\"text-o-color-2\">DISCOVER</font>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid "<font class=\"text-o-color-2\">WHY CHOOSE US</font>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
@@ -1713,6 +1790,11 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_projects_list
+msgid "<span class=\"base-fs\">Motion &amp; Animation</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_projects_list
 msgid "<span class=\"base-fs\">UX/UI &amp; Strategy</span>"
 msgstr ""
 
@@ -1722,7 +1804,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 msgid ""
 "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Next slide</span>"
+"                                <span class=\"visually-hidden\">Next slide</"
+"span>"
 msgstr ""
 
 #. module: website
@@ -1747,8 +1830,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 msgid ""
 "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Previous slide</"
-"span>"
+"                                <span class=\"visually-hidden\">Previous "
+"slide</span>"
 msgstr ""
 
 #. module: website
@@ -1920,6 +2003,27 @@ msgstr "<span class=\"list-inline-item\">|</span>"
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_kanban_view
 msgid "<span class=\"me-1\">On:</span>"
 msgstr "<span class=\"me-1\">Trên:</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+msgid ""
+"<span class=\"o_carousel_pause_icon oi oi-filled\" data-icon=\"pause\" aria-"
+"hidden=\"true\"/>\n"
+"                        <span class=\"visually-hidden\">Pause slides</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid ""
+"<span class=\"o_carousel_pause_icon oi oi-filled\" data-icon=\"pause\" aria-"
+"hidden=\"true\"/>\n"
+"                <span class=\"visually-hidden\">Pause slides</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
@@ -2415,9 +2519,9 @@ msgid ""
 "<span invisible=\"website_language_count &lt; 2\">Website visitors see the "
 "version matching their browser language, or the default if unavailable.</"
 "span>\n"
-"                                <span invisible=\"website_language_count &gt;"
-"= 2\">Install multiple languages to enable translation across your website.</"
-"span>"
+"                                <span invisible=\"website_language_count "
+"&gt;= 2\">Install multiple languages to enable translation across your "
+"website.</span>"
 msgstr ""
 
 #. module: website
@@ -3037,6 +3141,12 @@ msgstr "ACME Corp"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+msgid "AI recommended"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 msgid "API Key"
 msgstr "Khóa API"
@@ -3120,8 +3230,8 @@ msgstr "Hình ảnh accordion"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Accounts are usable across all your multiple websites"
-msgstr "Tài khoản có thể sử dụng được trên tất cả các trang web của bạn"
+msgid "Accounts created on this website are usable across all other websites"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -3205,8 +3315,8 @@ msgid ""
 "Add 3rd-party service domains <em>(\"www.example.com\" or \"example.com\")</"
 "em>, one per line."
 msgstr ""
-"Thêm miền dịch vụ của bên thứ 3 <em>(\"www.example.com\" hoặc \"example."
-"com\")</em>, mỗi miền một dòng."
+"Thêm miền dịch vụ của bên thứ 3 <em>(\"www.example.com\" hoặc "
+"\"example.com\")</em>, mỗi miền một dòng."
 
 #. module: website
 #. odoo-javascript
@@ -3218,12 +3328,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 msgid "Add Card"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "Add Cards"
 msgstr ""
 
 #. module: website
@@ -3261,12 +3365,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/media_list_option.xml:0
 msgid "Add Media"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.xml:0
-msgid "Add Mega Menu Item"
 msgstr ""
 
 #. module: website
@@ -3425,6 +3523,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Add analytics or marketing tags? Inject code in <head> or <body>."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Add context for people using screen readers."
 msgstr ""
 
 #. module: website
@@ -3783,8 +3887,7 @@ msgstr "Tất cả mặt hàng"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/floating_snippets_plugin.js:0
 msgid "All pages"
 msgstr "Tất cả trang"
 
@@ -3831,6 +3934,12 @@ msgstr ""
 msgid "Allow to specify for one page of the website to be trackable or not"
 msgstr ""
 "Cho phép chỉ định một trang của trang web có thể theo dõi được hay không"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+msgid "Allow your visitors to pause the carousel"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_access
@@ -3883,6 +3992,18 @@ msgstr "Luôn gạch chân"
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_showcase
 msgid "Amazing pages"
 msgstr "Trang tuyệt vời"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Amber"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Amethyst"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -4202,6 +4323,12 @@ msgid "Audios"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Aurora"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "Authenticate users, protect user data and allow the website to deliver the "
@@ -4369,7 +4496,7 @@ msgstr "Nền"
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/breadcrumb_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/icon_list_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_description_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/portal_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 msgid "Background Color"
@@ -4430,6 +4557,11 @@ msgstr "Danh mục banner"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Banner Contained"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Banner Glow"
 msgstr ""
 
 #. module: website
@@ -4652,6 +4784,12 @@ msgstr "Blogs"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Bloom"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 msgid "Bluesky"
 msgstr "Trời xanh"
@@ -4659,9 +4797,16 @@ msgstr "Trời xanh"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
 msgid "Blur"
 msgstr "Làm mờ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Blush"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -4870,6 +5015,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Bronze"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Build my website"
 msgstr "Dựng website của tôi"
@@ -4915,6 +5066,12 @@ msgstr "Nhóm"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Burgundy"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
@@ -4947,6 +5104,14 @@ msgstr "Mua Ngay"
 #: model_terms:ir.ui.view,arch_db:website.s_bento_banner
 msgid "Buy now"
 msgstr "Mua ngay"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid ""
+"By default, fonts are copied on your website. You can use Google's servers "
+"for fonts, but keep in mind it may impact GDPR compliance."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
@@ -4984,52 +5149,43 @@ msgstr "CTA trên thiết bị di động"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "CTA, button, btn, action, engagement, link, offer, appeal"
-msgstr "CTA, button, btn, action, engagement, link, offer, appeal"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger"
+msgid "CTA, buttons, btn, actions, engagement, links, offers, appeal"
 msgstr ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, items, checklists, entries, sequences, bullets, "
-"points, list, group, benefits, features, advantages"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger"
 msgstr ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, items, checklists, entries, sequences, bullets, "
-"points, list, group, benefits, features, advantages"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, mockup"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger, items, checklists, entries, sequences, "
+"bullets, points, lists, group, benefits, features, advantages"
 msgstr ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, mockup"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, mockups"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger, mockup"
 msgstr ""
-"CTA, button, btn, action, engagement, link, offer, appeal, call to action, "
-"prompt, interact, trigger, mockups"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"CTA, button, call to action, offer, centered, minimal, conversion, signup, "
-"subscribe, join, card"
+"CTA, buttons, btn, actions, engagement, links, offers, appeal, call to "
+"action, prompt, interact, trigger, mockups"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"CTA, buttons, call to action, offers, centered, minimal, conversions, "
+"signup, subscribe, join, cards"
 msgstr ""
 
 #. module: website
@@ -5078,6 +5234,12 @@ msgstr "Có thể đăng"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Candy"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option_plugin.js:0
 msgid ""
 "Cannot apply this option on current text selection. Try clearing the format "
@@ -5095,8 +5257,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Cannot load google map."
 msgstr "Không thể tải bản đồ google."
 
@@ -5139,6 +5300,16 @@ msgstr "Tiêu đề thẻ"
 #: code:addons/website/static/src/builder/plugins/options/card_width_option.xml:0
 msgid "Card Width"
 msgstr "Chiều rộng thẻ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "Card actions"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "Card layout"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -5215,11 +5386,6 @@ msgstr "Bánh cà rốt"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
 msgid "Case Studies"
 msgstr "Nghiên cứu điển hình"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "Catalog"
-msgstr "Danh mục"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -5401,15 +5567,13 @@ msgstr "Hãy xem có gì mới trong công ty chúng tôi!"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Check your configuration."
 msgstr "Kiểm tra cấu hình của bạn."
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Check your connection and try again"
 msgstr "Kiểm tra kết nối và thử lại"
 
@@ -5520,12 +5684,6 @@ msgid "Children"
 msgstr "Phụ"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-msgid "Choose a preset palette"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_frame
 msgid ""
 "Choose a vibrant image and write an inspiring paragraph about it. It does "
@@ -5566,6 +5724,12 @@ msgid "Circle"
 msgstr "Tròn"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Citron"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_manifesto
 msgid "Clarity"
 msgstr ""
@@ -5590,6 +5754,12 @@ msgid ""
 msgstr ""
 "Pizza cổ điển với phô mai mozzarella tươi, cà chua San Marzano và lá húng "
 "quế, rưới thêm dầu ô liu nguyên chất."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Clay"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -5685,8 +5855,10 @@ msgstr ""
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: code:addons/website/static/src/interactions/image_lightbox.xml:0
+#: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -5697,6 +5869,7 @@ msgstr "Đóng"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/cookies_bar_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Close Button Color"
 msgstr "Màu nút đóng"
@@ -5711,6 +5884,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Closer Look"
 msgstr "Nhìn gần"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Coast"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Cobalt"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -5817,6 +6002,13 @@ msgstr "Cột"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
 msgstr "Cột"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid ""
+"Combine images and text to highlight key details, using color options to "
+"match the card to your design."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -6247,6 +6439,12 @@ msgid "Copyright &amp;copy;"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Coral"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Core Features"
 msgstr "Tính năng cốt lõi"
@@ -6408,6 +6606,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_uid
+#: model:ir.model.fields,field_description:website.field_website_llms__create_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page_properties__create_uid
@@ -6441,6 +6640,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_date
+#: model:ir.model.fields,field_description:website.field_website_llms__create_date
 #: model:ir.model.fields,field_description:website.field_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_page_properties__create_date
@@ -6456,6 +6656,12 @@ msgstr "Được tạo vào"
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
 msgid "Creating solutions that drive growth and long-term value."
 msgstr "Tạo ra các giải pháp thúc đẩy tăng trưởng và giá trị lâu dài."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Crimson"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -6583,6 +6789,12 @@ msgid "Customize Show"
 msgstr "Tùy chỉnh trình chiếu"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Cyan"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid ""
 "Cyclists can follow the Bay Trail south from downtown and connect through "
@@ -6663,6 +6875,7 @@ msgstr "Màu tập dữ liệu"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_field_option.js:0
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Date"
@@ -6924,7 +7137,8 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_description_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
 #: code:addons/website/static/src/builder/plugins/translation/options/attribute_translation_plugin.js:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
@@ -6932,12 +7146,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__help
 msgid "Description"
 msgstr "Mô tả"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
-msgid "Description Text"
-msgstr ""
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_our_services
@@ -7006,6 +7214,11 @@ msgstr "Thiết kế <br/>cho các công ty"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "Designed for companies"
 msgstr "Thiết kế cho các công ty"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid "Designed to make a difference"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
@@ -7132,6 +7345,7 @@ msgstr "Discord"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_connected
+#: model_terms:ir.ui.view,arch_db:website.s_banner_glow
 #: model_terms:ir.ui.view,arch_db:website.s_card
 #: model_terms:ir.ui.view,arch_db:website.s_framed_intro
 #: model_terms:ir.ui.view,arch_db:website.s_quadrant
@@ -7143,6 +7357,12 @@ msgstr "Khám phá"
 #: model_terms:ir.ui.view,arch_db:website.s_splash_intro
 msgid "Discover More"
 msgstr "Khám phá thêm"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid "Discover Now"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase_square
@@ -7241,9 +7461,23 @@ msgid "Discover outstanding and highly engaging web pages."
 msgstr "Khám phá những trang web nổi bật và hấp dẫn."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_bento_grid
+msgid ""
+"Discover responsibly sourced furniture made with durable materials, designed "
+"to bring lasting comfort, natural beauty, and warmth to your home.\n"
+"                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
+"><br/><br/><br/><br/><br/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons_horizontal
 msgid "Discover what is the best pricing for you."
 msgstr "Khám phá mức giá tốt nhất dành cho bạn."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_banner_glow
+msgid "Discover what makes our story unique and see how it all comes together."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7363,6 +7597,7 @@ msgstr "Hiển thị bên trong"
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__display_name
 #: model:ir.model.fields,field_description:website.field_website_html_text_processor__display_name
+#: model:ir.model.fields,field_description:website.field_website_llms__display_name
 #: model:ir.model.fields,field_description:website.field_website_located_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__display_name
@@ -7564,6 +7799,11 @@ msgid "Doughnut"
 msgstr "Bánh vòng"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_dropzone
+msgid "Drag blocks into this mega menu"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Drag to the right to get a submenu"
@@ -7604,6 +7844,12 @@ msgstr "Danh sách thả xuống"
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Dropdown menu"
 msgstr "Menu thả xuống"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
+msgid "Dropzone"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7684,6 +7930,13 @@ msgstr ""
 "nhau mà chúng tôi đã tuyển chọn cho bạn.\n"
 "<br/>\n"
 "<br/>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid ""
+"Each milestone marks progress and shows how the journey has evolved over "
+"time."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -7813,9 +8066,22 @@ msgid "Edit embedded code"
 msgstr "Sửa mã nhúng"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid ""
+"Edit headings and paragraphs <b>directly on the page</b>, then add buttons "
+"and links to guide visitors. Fine-tune spacing and alignment, and preview "
+"each change on phones, tablets, and desktops before publishing."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 msgid "Edit in backend"
 msgstr "Sửa ở backend"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Edit llms.txt"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7871,6 +8137,12 @@ msgid "Either action_server_id or filter_id must be provided."
 msgstr "Hoặc action_server_id hoặc filter_id phải được cấp."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Electric"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Electronics"
 msgstr "Thiết bị điện tử"
@@ -7903,20 +8175,6 @@ msgstr ""
 "                        <br/><br/><br/><br/><br/><br/>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_bento_grid
-msgid ""
-"Elevate your living space with furniture that blends modern aesthetics and "
-"classic charm, crafted to bring both comfort and style to your home.\n"
-"                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
-"><br/><br/><br/><br/><br/>"
-msgstr ""
-"Nâng tầm không gian sống của bạn với những món nội thất kết hợp giữa nét "
-"thẩm mỹ hiện đại và vẻ quyến rũ cổ điển, được chế tác để mang lại cả sự "
-"thoải mái lẫn phong cách cho ngôi nhà của bạn.\n"
-"                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
-"><br/><br/><br/><br/><br/>"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
@@ -7940,6 +8198,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Embed Code"
 msgstr "Mã nhúng"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Ember"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Emerald"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -8007,6 +8277,12 @@ msgid "Enable to make the slide clickable"
 msgstr "Cho phép nhấp chuột vào slide"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+msgid "End date"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 #: model_terms:ir.ui.view,arch_db:website.s_showcase_square
 msgid "Engages Visitors"
@@ -8020,6 +8296,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid "Enhance your experience"
 msgstr ""
 
@@ -8142,15 +8419,15 @@ msgid ""
 "Entered date or time is not correct! It must be after or equal to %(start)s "
 "(%(format)s)."
 msgstr ""
-"Ngày hoặc giờ đã nhập không hợp lệ! Phải sau hoặc bằng %(start)s "
-"(%(format)s)."
+"Ngày hoặc giờ đã nhập không hợp lệ! Phải sau hoặc bằng %(start)s (%"
+"(format)s)."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must be before %(start)s "
-"(%(format)s)."
+"Entered date or time is not correct! It must be before %(start)s (%"
+"(format)s)."
 msgstr "Ngày hoặc giờ đã nhập không hợp lệ! Phải trước %(start)s (%(format)s)."
 
 #. module: website
@@ -8160,8 +8437,8 @@ msgid ""
 "Entered date or time is not correct! It must be before or equal to %(start)s "
 "(%(format)s)."
 msgstr ""
-"Ngày hoặc giờ đã nhập không hợp lệ! Phải trước hoặc bằng %(start)s "
-"(%(format)s)."
+"Ngày hoặc giờ đã nhập không hợp lệ! Phải trước hoặc bằng %(start)s (%"
+"(format)s)."
 
 #. module: website
 #. odoo-javascript
@@ -8179,18 +8456,23 @@ msgstr ""
 msgid ""
 "Entered date or time is not correct! It must not be %(start)s (%(format)s)."
 msgstr ""
-"Ngày hoặc giờ đã nhập không chính xác! Nó không được là %(start)s "
-"(%(format)s)."
+"Ngày hoặc giờ đã nhập không chính xác! Nó không được là %(start)s (%"
+"(format)s)."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"Entered date or time is not correct! It must not be within %(start)s and "
-"%(end)s (%(format)s)."
+"Entered date or time is not correct! It must not be within %(start)s and %"
+"(end)s (%(format)s)."
 msgstr ""
 "Ngày hoặc giờ đã nhập không hợp lệ! Không được nằm trong khoảng từ %(start)s "
 "đến %(end)s (%(format)s)."
+
+#. module: website
+#: model:ir.module.module,summary:base.module_website
+msgid "Enterprise website builder"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -8214,8 +8496,21 @@ msgstr "Lỗi"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
 msgid "Error Message"
 msgstr "Thông điệp lỗi"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "Error Page %s"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/http_error_demo_card.edit.xml:0
+msgid "Error message:"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_cafe
@@ -8254,6 +8549,14 @@ msgstr "Sự kiện"
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "Every Time"
 msgstr "Mọi lần"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid ""
+"Every great story deserves its moment in the spotlight. Explore the standout "
+"pieces we handpicked and put front and center, each one chosen to capture "
+"attention and spark a little curiosity."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_sidegrid
@@ -8323,6 +8626,11 @@ msgid "Experience the Future of Innovation in Every Interaction"
 msgstr "Trải nghiệm tương lai của sự đổi mới trong mọi tương tác"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid "Experience the real innovation"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid ""
 "Experience unparalleled comfort, cutting-edge design, and performance-"
@@ -8376,6 +8684,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Explore"
 msgstr "Explore"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
+msgid "Explore More"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
@@ -8493,6 +8806,11 @@ msgstr "Hỏi - Đáp."
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "FAQ Block"
 msgstr "Khối FAQ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "FAQ Centered"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -8895,12 +9213,6 @@ msgid "Floating Cards"
 msgstr "Thẻ nổi"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "Floating blocks alert"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references_social
 msgid "Flourishing together since 2016"
 msgstr "Cùng nhau phát triển từ năm 2016"
@@ -8994,6 +9306,12 @@ msgid "Footer Visible"
 msgstr "Footer hiển thị"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Forest"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 #: model_terms:ir.ui.view,arch_db:website.s_title_form
@@ -9036,8 +9354,8 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
-"Nhãn tác vụ trong biểu mẫu. Ví dụ: crm.lead có thể là 'Gửi email' và project."
-"issue là 'Tạo sự cố."
+"Nhãn tác vụ trong biểu mẫu. Ví dụ: crm.lead có thể là 'Gửi email' và "
+"project.issue là 'Tạo sự cố."
 
 #. module: website
 #. odoo-javascript
@@ -9098,6 +9416,11 @@ msgid "Framed Intro"
 msgstr "Giới thiệu khung"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
+msgid "Free Shipping • Secure payment • Easy Return •"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Free grid"
 msgstr "Lưới tự do"
@@ -9121,6 +9444,11 @@ msgstr "Đăng ký miễn phí"
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Frequently asked questions"
 msgstr "Các câu hỏi thường gặp"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_centered
+msgid "Frequently<br/>asked questions"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -9192,12 +9520,6 @@ msgstr "Toàn màn hình"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
-msgid "Full-Width"
-msgstr "Chiều rộng đầy đủ"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
 msgid "Full-width"
 msgstr "Toàn chiều rộng"
@@ -9260,6 +9582,12 @@ msgstr "Nhận giao hàng"
 #: model_terms:ir.ui.view,arch_db:website.s_intro_pill
 msgid "Get Started"
 msgstr "Bắt đầu"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "Get a"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hours_and_place
@@ -9363,6 +9691,12 @@ msgstr "Quay lại"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/website_auth_form.js:0
+msgid "Go back to the homepage"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/fields/redirect_field.xml:0
 msgid "Go to"
 msgstr "Đi đến"
@@ -9441,6 +9775,14 @@ msgstr "Khóa API của Google Maps"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/services/google_maps_service.js:0
+msgid ""
+"Google Maps configuration has changed. Please reload the page for changes to "
+"take effect."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_cta_mobile
 msgid "Google Play"
@@ -9467,6 +9809,12 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
 msgstr "Khóa Google hoặc Bật để truy cập câu trả lời đầu tiên"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Graphite"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9520,6 +9868,12 @@ msgstr "Nhóm"
 #: model:ir.model.fields,field_description:website.field_website_page_properties__group_ids
 msgid "Groups"
 msgstr "Nhóm"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Grove"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_services_pack
@@ -9600,6 +9954,11 @@ msgstr "Chúc mừng kỷ niệm BizApps!"
 #: model_terms:ir.ui.view,arch_db:website.s_avatars
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_lite
 msgid "Happy customers"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_cookie_policy
+msgid "Has Cookie Policy"
 msgstr ""
 
 #. module: website
@@ -9723,6 +10082,8 @@ msgstr "Nhịp tim"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.js:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
@@ -9838,6 +10199,12 @@ msgstr "Ẩn đường viền"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
+msgid "Hide Error Message"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Hide For"
 msgstr "Ẩn Đối với"
@@ -9867,6 +10234,12 @@ msgstr "Ẩn trang này khỏi kết quả tìm kiếm"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
+msgid "Hides an error message."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 msgid "High"
 msgstr "Cao"
@@ -9888,6 +10261,18 @@ msgstr "Highlight Active"
 #: code:addons/website/static/src/builder/plugins/options/emphasize_animated_text.xml:0
 msgid "Highlight Animated Text"
 msgstr "Tô màu văn bản hoạt hoạ"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Highlight the quality behind every customer project"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_text_full
+msgid ""
+"Highlight what sets you apart. Focus on the value you bring and the problems "
+"you solve, and keep the message clear and concise."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -10002,7 +10387,7 @@ msgstr "Thuộc tính theo chiều ngang"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
-msgid "Horizontal and Vertical Offset"
+msgid "Horizontal and Vertical offset"
 msgstr ""
 
 #. module: website
@@ -10128,6 +10513,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__id
 #: model:ir.model.fields,field_description:website.field_website_html_text_processor__id
+#: model:ir.model.fields,field_description:website.field_website_llms__id
 #: model:ir.model.fields,field_description:website.field_website_located_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__id
@@ -10323,6 +10709,11 @@ msgstr "Hình ảnh"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image - Text"
 msgstr "Hình ảnh - Văn bản"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Image - Text Full Width"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10920,9 +11311,19 @@ msgid "Intro Pill"
 msgstr "Intro Pill"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Intro Spotlight"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks
 msgid "Introducing"
 msgstr "Giới thiệu"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_banner_glow
+msgid "Introducing<br/>Our New Collection"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -10931,8 +11332,7 @@ msgstr "Hệ thống trực quan"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_service.js:0
-#: code:addons/website/static/src/core/website_map_service.js:0
+#: code:addons/website/static/src/services/google_maps_service.js:0
 msgid "Invalid API Key. The following error was returned by Google: %(error)s"
 msgstr "Mã khóa API không hợp lệ. Google đã báo lỗi sau: %(error)s"
 
@@ -10993,6 +11393,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Inverted colors"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Iris"
 msgstr ""
 
 #. module: website
@@ -11450,6 +11856,27 @@ msgid "Kpi Website Visitor Count Value"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model:ir.model.fields,field_description:website.field_website__llms_txt
+#: model:ir.model.fields,field_description:website.field_website_llms__content
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "LLMs.txt"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_llms
+msgid "LLMs.txt Editor"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"LLMs.txt: This file tells LLMs how your content should be accessed and used. "
+"Write it as a plain text, human-readable markdown document."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_projects_list
 msgid "LUMEN"
 msgstr ""
@@ -11488,6 +11915,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Labels Width"
 msgstr "Độ rộng nhãn"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Lagoon"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_ecomm_categories_showcase
@@ -11602,6 +12035,7 @@ msgstr "Trang mới"
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_uid
+#: model:ir.model.fields,field_description:website.field_website_llms__write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page_properties__write_uid
@@ -11623,6 +12057,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_date
+#: model:ir.model.fields,field_description:website.field_website_llms__write_date
 #: model:ir.model.fields,field_description:website.field_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_website_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_page_properties__write_date
@@ -11737,6 +12172,11 @@ msgid "Leading the future with innovation and strategy"
 msgstr "Dẫn đầu tương lai bằng sự đổi mới và chiến lược"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "Learn More"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
 msgid "Learn about our offerings"
 msgstr "Tìm hiểu các đề xuất của chúng tôi"
@@ -11756,6 +12196,11 @@ msgid ""
 msgstr ""
 "Tìm hiểu cách thiết lập và bắt đầu sử dụng dịch vụ của chúng tôi một cách "
 "nhanh chóng thông qua quy trình onboarding chi tiết."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_hero_minimalist
+msgid "Learn more"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -11862,6 +12307,12 @@ msgstr "Sáng"
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 msgid "Light & Dark"
 msgstr "Sáng & tối"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Lilac"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
@@ -12037,6 +12488,12 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+msgid "Logo colors"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
@@ -12077,6 +12534,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 msgid "Low"
 msgstr "Thấp"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Luna"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
@@ -12161,6 +12624,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Map"
 msgstr "Bản đồ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "Map ID"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_google_map/google_map.js:0
+msgid "Map Marker"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -12356,12 +12831,6 @@ msgid "Mega menu default image"
 msgstr "Hình ảnh mặc định của menu chính"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.js:0
-msgid "Mega menu item"
-msgstr "Mục menu mega"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Men"
 msgstr "Nam"
@@ -12421,7 +12890,7 @@ msgstr "Thứ tự menu"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.js:0
+#: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Menu item"
 msgstr "Mục menu"
 
@@ -12458,6 +12927,12 @@ msgstr "Các menu có menu phụ không thể được thêm vào như một men
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
 msgstr "Tính năng gộp đối tác"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Merlot"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -12529,6 +13004,12 @@ msgstr "Giữa"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Midnight"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/timeline_list_option.xml:0
 #: code:addons/website/static/src/builder/plugins/timeline_images_option.xml:0
 msgid "Milestones"
@@ -12568,6 +13049,18 @@ msgstr "Tối giản"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
 msgid "Minimum Age"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Mink"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Mint"
 msgstr ""
 
 #. module: website
@@ -12873,12 +13366,6 @@ msgid "Name, id or key"
 msgstr "Tên, ID hoặc khóa"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
-msgid "Narrow"
-msgstr "Hẹp"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Nav and tabs"
 msgstr "Điều hướng và tab"
@@ -12926,6 +13413,12 @@ msgstr "Bạn cần trợ giúp?"
 msgid ""
 "Need to pick up your order at one of our stores? Discover the nearest to you."
 msgstr "Muốn nhận hàng ở cửa hàng? Khám phá cửa hàng gần bạn nhất."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Neon"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13045,7 +13538,6 @@ msgstr "Thông báo SMS bản tin email"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Next"
@@ -13087,6 +13579,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
+#: model:res.groups.privilege,placeholder:website.res_groups_privilege_website
 #: model_terms:ir.ui.view,arch_db:website.s_age_verification_popup
 msgid "No"
 msgstr ""
@@ -13363,6 +13856,11 @@ msgid "OUR PROJECTS"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_animated_cover
+msgid "OUR SERVICES •"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block_split
 msgid "OUR STORY"
 msgstr ""
@@ -13383,6 +13881,146 @@ msgstr "Odoo Menu"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
 msgstr "Phiên bản hệ thống"
+
+#. module: website
+#: model:ir.module.module,description:base.module_website
+msgid ""
+"Odoo Website Builder\n"
+"--------------------\n"
+"\n"
+"Get an awesome and <a href=\"https://www.odoo.com/app/website\">free "
+"website</a>,\n"
+"easily customizable with the Odoo <a href=\"https://www.odoo.com/app/"
+"website\">website builder</a>.\n"
+"\n"
+"Create enterprise grade website with our super easy builder. Use finely\n"
+"designed building blocks and edit everything inline.\n"
+"\n"
+"Benefit from out-of-the-box business features; e-Commerce, events, blogs, "
+"jobs\n"
+"announces, customer references, call-to-actions, etc.\n"
+"\n"
+"Edit Anything Inline\n"
+"--------------------\n"
+"\n"
+"Create beautiful websites with no technical knowledge. Odoo's unique *'edit\n"
+"inline'* approach makes website creation surprisingly easy. No more complex\n"
+"backend; just click anywhere to change any content.\n"
+"\n"
+"\"Want to change the price of a product? or put it in bold? Want to change "
+"a\n"
+"blog title?\" Just click and change. What you see is what you get. Really.\n"
+"\n"
+"Awesome. Astonishingly Beautiful.\n"
+"---------------------------------\n"
+"\n"
+"Odoo's building blocks allow to design modern websites that are not "
+"possible\n"
+"with traditional WYSIWYG page editors.\n"
+"\n"
+"Whether it's for products descriptions, blogs or static pages, you don't "
+"need\n"
+"to be a professional designer to create clean contents. Just drag and drop "
+"and\n"
+"customize predefined building blocks.\n"
+"\n"
+"Enterprise-Ready, out-of-the-box\n"
+"--------------------------------\n"
+"\n"
+"Activate ready-to-use enterprise features in just a click; e-commerce,\n"
+"call-to-actions, jobs announces, events, customer references, blogs, etc.\n"
+"\n"
+"Traditional eCommerce and CMS have poorly designed backends as it's not "
+"their\n"
+"core focus. With the Odoo integration, you benefit from the best management\n"
+"software to follow-up on your orders, your jobs applicants, your leads, "
+"etc.\n"
+"\n"
+"A Great Mobile Experience\n"
+"-------------------------\n"
+"\n"
+"Get a mobile friendly website thanks to our responsive design based on\n"
+"bootstrap. All your pages adapt automatically to the screen size. (mobile\n"
+"phones, tablets, desktop) You don't have to worry about mobile contents, it\n"
+"works by default.\n"
+"\n"
+"SEO tools at your finger tips\n"
+"-----------------------------\n"
+"\n"
+"The *Promote* tool suggests keywords according to Google most searched "
+"terms.\n"
+"Search Engine Optimization tools are ready to use, with no configuration\n"
+"required.\n"
+"\n"
+"Google Analytics tracks your shopping cart events by default. Sitemap and\n"
+"structured content are created automatically for Google indexation.\n"
+"\n"
+"Multi-Languages Made Easy\n"
+"-------------------------\n"
+"\n"
+"Get your website translated in multiple languages with no effort. Odoo "
+"proposes\n"
+"and propagates translations automatically across pages, following what you "
+"edit\n"
+"on the master page.\n"
+"\n"
+"Designer-Friendly Templates\n"
+"---------------------------\n"
+"\n"
+"Templates are awesome and easy to design. You don't need to develop to "
+"create\n"
+"new pages, themes or building blocks. We use a clean HTML structure, a\n"
+"[bootstrap](http://getbootstrap.com/) CSS.\n"
+"\n"
+"Customize every page on the fly with the integrated template editor. "
+"Distribute\n"
+"your work easily as an Odoo module.\n"
+"\n"
+"Fluid Grid Layouting\n"
+"--------------------\n"
+"\n"
+"Design perfect pages by drag and dropping building blocks. Move and scale "
+"them\n"
+"to fit the layout you are looking for.\n"
+"\n"
+"Building blocks are based on a responsive, mobile friendly fluid grid "
+"system\n"
+"that appropriately scales up to 12 columns as the device or viewport size\n"
+"increases.\n"
+"\n"
+"Professional Themes\n"
+"-------------------\n"
+"\n"
+"Design a custom theme or reuse pre-defined themes to customize the look and\n"
+"feel of your website.\n"
+"\n"
+"Test new color scheme easily; you can change your theme at any time in just "
+"a\n"
+"click.\n"
+"\n"
+"Integrated With Odoo Apps\n"
+"-------------------------\n"
+"\n"
+"### e-Commerce\n"
+"\n"
+"Promote products, sell online, optimize visitors' shopping experience.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"\n"
+"### Online Events\n"
+"\n"
+"Schedule, organize, promote or sell events online; conferences, trainings, "
+"webinars, etc.\n"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Offer the support your customers need to succeed"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13698,6 +14336,12 @@ msgstr "Tuỳ chọn"
 msgid "Optional help text describing the filter usage and/or purpose."
 msgstr ""
 "Văn bản trợ giúp tùy chọn mô tả cách sử dụng và/hoặc mục đích của bộ lọc."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Orbit"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14246,6 +14890,13 @@ msgid "Paid ads"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline_images
+msgid ""
+"Pair each milestone with an image to bring the story of your progress to "
+"life."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "Quần"
@@ -14367,6 +15018,26 @@ msgid "Pause"
 msgstr "Tạm dừng"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+msgid "Pause Button"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/interactions/carousel/carousel_slider.js:0
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Pause slides"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Pay"
 msgstr "Thanh toán"
@@ -14447,6 +15118,12 @@ msgstr "Viên"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Pine"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
 msgid "Pinterest"
@@ -14463,8 +15140,8 @@ msgstr "Phần giữ chỗ"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
-msgid "Places API"
-msgstr "API địa điểm"
+msgid "Places API (NEW)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14499,6 +15176,12 @@ msgstr "Khóa chia sẻ Plausible"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/carousel/carousel_slider.js:0
+msgid "Play slides"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Please choose any one option"
@@ -14519,6 +15202,12 @@ msgid ""
 msgstr ""
 "Vui lòng điền vào biểu mẫu một cách chính xác. Tệp “%(fileName)s” quá lớn. "
 "(Giới hạn tối đa %(max)s MB)"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Plum"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14608,6 +15297,11 @@ msgstr "Prepend"
 #. odoo-python
 #: code:addons/website/models/website_menu.py:0
 msgid "Presence of publishing branding in html content is forbidden"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Present the results that your customers can expect"
 msgstr ""
 
 #. module: website
@@ -15315,6 +16009,12 @@ msgid "Reliability"
 msgstr "Độ tin cậy"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Rely on Google servers to serve font"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "Remember information about the preferred look or behavior of the website, "
@@ -15598,6 +16298,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_partner__website_id
 #: model:ir.model.fields,help:website.field_res_users__website_id
 #: model:ir.model.fields,help:website.field_website_controller_page__website_id
+#: model:ir.model.fields,help:website.field_website_llms__website_id
 #: model:ir.model.fields,help:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,help:website.field_website_page__website_id
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
@@ -15737,6 +16438,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Rose"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
@@ -15809,6 +16516,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Ruby"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "SCSS file: %s"
 msgstr "Tệp SCSS: %s"
@@ -15845,6 +16558,18 @@ msgstr "Tối ưu SEO"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "SVG images are not supported. Please select a PNG, JPG, WEBP, or GIF"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Saffron"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Sage"
 msgstr ""
 
 #. module: website
@@ -15898,6 +16623,7 @@ msgstr "Bão hòa"
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 #: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+#: model_terms:ir.ui.view,arch_db:website.view_edit_llms
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "Save"
@@ -16020,6 +16746,12 @@ msgstr "Cuộn xuống phần tiếp theo"
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Scrolling Mode"
 msgstr "Chế độ cuộn"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Seafoam"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -16351,7 +17083,6 @@ msgstr "Link riêng biệt"
 #: code:addons/website/static/src/builder/plugins/options/pricelist_option/pricelist_cafe_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/pricelist_option/product_catalog_option.xml:0
 #: code:addons/website/static/src/builder/plugins/snippets_powerbox_plugin.js:0
-#: model_terms:ir.ui.view,arch_db:website.s_about_bold
 #: model_terms:ir.ui.view,arch_db:website.s_awards_list
 #: model_terms:ir.ui.view,arch_db:website.s_manifesto
 #: model_terms:ir.ui.view,arch_db:website.s_services_grid
@@ -16369,12 +17100,6 @@ msgstr "Phân cách"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Trình tự"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
-msgid "Serve font from Google servers"
-msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -16630,8 +17355,7 @@ msgstr "Hiện dạng xem không hoạt động"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/show_on_option.xml:0
 msgid "Show on"
 msgstr "Hiển thị trên"
 
@@ -16684,6 +17408,11 @@ msgstr "Hiển thị"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase Square"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_key_images
+msgid "Showcase the expertise that supports your services"
 msgstr ""
 
 #. module: website
@@ -16781,7 +17510,6 @@ msgstr "Trang"
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
@@ -16829,6 +17557,12 @@ msgstr "Kích thước 5x"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Skip and start from scratch"
 msgstr "Bỏ qua và bắt đầu từ đầu"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Slate"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -17245,12 +17979,17 @@ msgid "Start Now <span class=\"oi ms-2\" data-icon=\"keyboard_arrow_right\"/>"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_field_option.js:0
+msgid "Start date"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
 msgid "Start saving  <span class=\"oi\" data-icon=\"east\" role=\"img\"/>"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_card_offset
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_box
@@ -17274,6 +18013,12 @@ msgid ""
 "weeks."
 msgstr ""
 "Nhận thông tin mới nhất và khám phá sự kiện sẽ diễn ra trong các tuần tới."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Steel"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -17301,6 +18046,12 @@ msgstr "Bước"
 #: code:addons/website/static/src/builder/plugins/options/table_of_content_option.xml:0
 msgid "Sticky"
 msgstr "Sticky"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Stone"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -17511,12 +18262,6 @@ msgstr "LỜI KHUYÊN"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "TIP:"
-msgstr "MẸO:"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tab"
@@ -17708,6 +18453,12 @@ msgstr "Điều khoản Dịch vụ"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Terra"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
 msgid "Terrain"
 msgstr "Terrain"
@@ -17739,6 +18490,11 @@ msgid "Text - Image"
 msgstr "Văn bản - hình ảnh"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Image Full Width"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 msgid "Text Alignment"
@@ -17753,7 +18509,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/base_visibility_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 msgid "Text Color"
 msgstr "Màu chữ"
 
@@ -17815,6 +18570,11 @@ msgid "Thanks (Contact us)"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_card_offset
+msgid "The Future of Innovation"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 msgid "The Innovation Behind Our Product"
 msgstr "Sự đổi mới nằm sau sản phẩm của chúng tôi"
@@ -17829,8 +18589,8 @@ msgstr "Tên trang Instagram không hợp lệ"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid ""
-"The URL “%(url)s“ is contained in the “%(field)s” of the following "
-"“%(model)s”"
+"The URL “%(url)s“ is contained in the “%(field)s” of the following “%"
+"(model)s”"
 msgstr ""
 
 #. module: website
@@ -17863,8 +18623,8 @@ msgid ""
 "website “%(website_name)s”.\n"
 "Change that website's company first."
 msgstr ""
-"Không thể lưu trữ công ty “%(company_name)s” vì có trang web "
-"“%(website_name)s” được liên kết với công ty này.\n"
+"Không thể lưu trữ công ty “%(company_name)s” vì có trang web “%"
+"(website_name)s” được liên kết với công ty này.\n"
 "Trước tiên hãy thay đổi công ty của trang web đó."
 
 #. module: website
@@ -17927,8 +18687,8 @@ msgstr "Miền sau đây không hợp lệ:"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
-"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): "
-"%(allowedMimeTypesLabels)s."
+"The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %"
+"(allowedMimeTypesLabels)s."
 msgstr ""
 
 #. module: website
@@ -17995,6 +18755,12 @@ msgstr ""
 "người dùng mà không cần chuyên môn kỹ thuật."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_timeline
+msgid ""
+"The latest entry celebrates recent growth and points toward the next chapter."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
 msgstr "Giới hạn là số lượng dữ liệu tối đa được truy xuất"
@@ -18010,6 +18776,12 @@ msgstr "Giới hạn phải từ 1 đến 16."
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "The logo is too large. Please upload a logo smaller than 2.5 MB."
 msgstr "Logo quá lớn. Vui lòng tải lên logo có kích thước nhỏ hơn 2,5 MB."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "The logo must be an image (PNG, JPEG, GIF, WEBP or SVG)."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18059,8 +18831,8 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 msgid ""
 "The new default website is %(default_website_name)s. The following default "
-"settings were copied from the old default website to the new one: "
-"%(transferred_settings)s. Note that these settings are still present on the "
+"settings were copied from the old default website to the new one: %"
+"(transferred_settings)s. Note that these settings are still present on the "
 "old default website."
 msgstr ""
 
@@ -18381,11 +19153,6 @@ msgstr ""
 "giúp thu hút sự chú ý đối với nội dung và thông tin nổi bật."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_key_images
-msgid "This is a small title related to the current image"
-msgstr "Đây là một tiêu đề nhỏ liên quan đến hình ảnh hiện tại"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid ""
 "This is a wider card with supporting text below as a natural lead-in to "
@@ -18424,8 +19191,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/floating_snippets_plugin.js:0
 #: model:ir.ui.menu,name:website.menu_current_page
 msgid "This page"
 msgstr "Trang này"
@@ -18494,6 +19260,13 @@ msgid "This website does not have a domain configured."
 msgstr "Trang web này không có miền nào được cấu hình."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/http_error_demo_card.edit.xml:0
+msgid ""
+"This will provide technical details about the error encountered by the user."
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/website_page.py:0
 msgid "This would create a circular page hierarchy."
@@ -18529,6 +19302,12 @@ msgstr "Đối tác hùng mạnh từ năm 2021"
 #: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
 msgid "Thumbnails"
 msgstr "Hình thu nhỏ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Tide"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18976,6 +19755,14 @@ msgid "Translation Info"
 msgstr "Thông tin dịch thuật"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/seo.xml:0
+msgid ""
+"Translation may differ from original content. Click on \"Edit/Translate\" to "
+"see most recent changes."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_features
 msgid "Transparent pricing"
 msgstr ""
@@ -19007,6 +19794,13 @@ msgstr "Tham khảo đáng tin cậy"
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Turn every feature into a benefit for your reader."
 msgstr "Biến mọi tính năng thành một lợi ích cho người đọc của bạn."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid ""
+"Turn the entire card into a clickable link, or add a clear call to action "
+"guiding visitors to key details."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_striped_center_top
@@ -19141,9 +19935,9 @@ msgid ""
 msgstr ""
 "Tìm hiểu cách khách truy cập tương tác với trang web thông qua Google "
 "Analytics.\n"
-"Tìm hiểu thêm về <a class=\"o_translate_inline\" href=\"https://support."
-"google.com/analytics/answer/11397207?hl=en\">cookie Analytics và thông tin "
-"về quyền riêng tư.</a>"
+"Tìm hiểu thêm về <a class=\"o_translate_inline\" href=\"https://"
+"support.google.com/analytics/answer/11397207?hl=en\">cookie Analytics và "
+"thông tin về quyền riêng tư.</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quadrant
@@ -19237,6 +20031,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+msgid "Upload your"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__url
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__url
@@ -19248,6 +20048,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Url"
 msgstr "Url"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_page_properties__url_in_website_default_lang
+msgid "Url In Website Default Lang"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_menu__manual_url
+msgid "Url defined by user"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__country_flag
@@ -19270,21 +20080,13 @@ msgstr "Url & Trang"
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
 msgstr ""
-"Sử dụng Google Map trên trang web của bạn (trang Liên hệ, các đoạn trích, v."
-"v.)."
+"Sử dụng Google Map trên trang web của bạn (trang Liên hệ, các đoạn trích, "
+"v.v.)."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses"
 msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
-msgid "Use Google’s servers for fonts. It may impact GDPR compliance"
-msgstr ""
-"Sử dụng máy chủ của Google để lưu trữ phông chữ. Điều này có thể ảnh hưởng "
-"đến việc tuân thủ GDPR"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
@@ -19360,12 +20162,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Use this theme"
 msgstr "Dùng giao diện này"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-msgid "Use your"
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_key
@@ -19513,6 +20309,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Velvet"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/age_verification_popup_option.xml:0
 msgid "Verify"
 msgstr ""
@@ -19590,6 +20392,11 @@ msgid "View Hierarchy"
 msgstr "Xem phân cấp"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+msgid "View More"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__type
 #: model:ir.model.fields,field_description:website.field_website_page__type
 msgid "View Type"
@@ -19623,6 +20430,12 @@ msgstr "Xem sử dụng bản sao của tôi"
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
 msgstr "Giao diện mà kế thừa từ giao diện này"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "Violet"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -19722,7 +20535,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_description.edit.xml:0
 msgid ""
 "Visit us: Our office is located in the northeast of Brussels. TEL (555) 432 "
 "2365"
@@ -20268,6 +21081,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__website_id
+#: model:ir.model.fields,field_description:website.field_website_llms__website_id
 #: model:ir.model.fields,field_description:website.field_website_menu__website_id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,field_description:website.field_website_page__website_id
@@ -20277,6 +21091,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__website_id
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_id
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_id
+#: model:ir.module.module,shortdesc:base.module_website
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:res.groups.privilege,name:website.res_groups_privilege_website
 #: model_terms:ir.ui.view,arch_db:website.digest_digest_view_form
@@ -20686,11 +21501,6 @@ msgid "Where innovation meets performance"
 msgstr "Nơi đổi mới gặp hiệu suất"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_card_offset
-msgid "Why Our Product is the Future of Innovation"
-msgstr "Tại sao sản phẩm của chúng tôi là tương lai của sự đổi mới"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 msgid "Wide - 16/9"
@@ -20762,6 +21572,13 @@ msgid "Write custom error message"
 msgstr "Viết thông báo lỗi tùy chỉnh"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
+msgid "Write down your address or a GPS position"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 msgid "Write down your message"
 msgstr ""
@@ -20782,6 +21599,7 @@ msgstr "Viết một hoặc hai đoạn văn miêu tả sản phẩm hoặc dị
 #: model_terms:ir.ui.view,arch_db:website.s_image_text_overlap
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
+#: model_terms:ir.ui.view,arch_db:website.s_text_image_full
 msgid ""
 "Write one or two paragraphs describing your product or services. To be "
 "successful your content needs to be useful to your readers."
@@ -20913,9 +21731,10 @@ msgstr "Bạn chỉ có thể sử dụng mẫu có tiền tố là dynamic_filt
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
 msgid ""
-"You can reach our customer support team by emailing info@yourcompany.example."
-"com, calling +1 555-555-5556, or using the live chat on our website. Our "
-"dedicated team is available 24/7 to assist with any inquiries or issues."
+"You can reach our customer support team by emailing "
+"info@yourcompany.example.com, calling +1 555-555-5556, or using the live "
+"chat on our website. Our dedicated team is available 24/7 to assist with any "
+"inquiries or issues."
 msgstr ""
 "Bạn có thể liên hệ với bộ phận hỗ trợ khách hàng của chúng tôi bằng cách gửi "
 "email đến info@yourcompany.example.com, gọi đến số +1 555-555-5556 hoặc sử "
@@ -20950,6 +21769,8 @@ msgstr "Bạn không thể nhân bản trường này."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_block_option_plugin.js:0
+#: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/timeline_list_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/timeline_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/timeline_images_option_plugin.js:0
@@ -21017,12 +21838,6 @@ msgstr ""
 "a>.\n"
 "Trang web vẫn sẽ hoạt động bình thường ngay cả khi bạn từ chối hoặc loại bỏ "
 "các cookie đó."
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
-msgid "You need at least two cards to perform the effect"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_searchbar
@@ -21264,7 +22079,7 @@ msgstr "một trang web"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "achievements, awards, recognitions, certifications, press, records, "
-"milestones, honors, two columns, list, stats, numbers, accomplishments, "
+"milestones, honors, two columns, lists, stats, numbers, accomplishments, "
 "highlights"
 msgstr ""
 
@@ -21307,17 +22122,15 @@ msgstr "tự động"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"awards, achievements, prizes, honors, recognition, list, accomplishments"
+"awards, achievements, prizes, honors, recognition, lists, accomplishments"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"banner, announcement, scrolling text, trust indicators, info bar, site-wide "
-"banner, minimal design, trendy, bold, presentation"
+"banners, announcements, scrolling text, trust indicators, info bar, site-"
+"wide banner, minimal design, trendy, bold, presentation"
 msgstr ""
-"banner, thông báo, văn bản cuộn, chỉ báo tin cậy, thanh thông tin, banner "
-"toàn trang, thiết kế tối giản, thời thượng, nổi bật, trình bày"
 
 #. module: website
 #. odoo-python
@@ -21327,14 +22140,16 @@ msgstr "URL cơ bản của 'URL đến' không được trùng với 'URL từ'
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
-msgstr "block, blog, post, catalog, feed, items, entries, entry, collection"
+msgid ""
+"block, blogs, posts, ecommerce, catalogs, feed, items, entries, entry, "
+"collections"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "bold, bold text, paragraph, statement, large text, tagline, typography, "
-"impactful, mission statement, quote, big text"
+"impactful, mission statement, quotes, big text"
 msgstr ""
 
 #. module: website
@@ -21373,30 +22188,21 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"cards, shop, grid, avatars, column, cart, product, ecommerce, categories, "
-"highlights, pictures, photos, illustration, media, visuals, intro, home, "
-"coupon, code, description, rounded, card, call to action, cta, marketing, "
-"showcase, mosaic, collage, arrangement, collection, visual-grid"
+"cards, shop, grids, avatars, columns, carts, products, ecommerce, "
+"categories, highlights, pictures, photos, illustration, media, visuals, "
+"intro, home, coupons, codes, descriptions, rounded, cards, call to action, "
+"cta, marketing, showcase, mosaic, collages, arrangement, collections, visual-"
+"grid"
 msgstr ""
-"thẻ, cửa hàng, lưới, avatar, cột, giỏ hàng, sản phẩm, thương mại điện tử, "
-"danh mục, điểm nổi bật, hình ảnh, ảnh, minh họa, phương tiện truyền thông, "
-"hình ảnh, giới thiệu, trang chủ, mã giảm giá, mã, mô tả, thẻ tròn, thẻ, lời "
-"kêu gọi hành động, CTA, tiếp thị, trưng bày, mô-đun, collage, bố cục, bộ sưu "
-"tập, lưới hình ảnh"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"cards, shop, grid, column, cart, product, ecommerce, categories, highlights, "
-"pictures, photos, illustration, media, visuals, intro, home, coupon, code, "
-"description, rounded, card, call to action, cta, marketing, showcase, "
-"mosaic, collage, arrangement, collection, visual-grid"
+"cards, shop, grids, columns, carts, products, ecommerce, categories, "
+"highlights, pictures, photos, illustration, media, visuals, intro, home, "
+"coupons, codes, descriptions, rounded, cards, call to action, cta, "
+"marketing, showcase, mosaic, collages, arrangement, collections, visual-grid"
 msgstr ""
-"thẻ, cửa hàng, lưới, cột, giỏ hàng, sản phẩm, thương mại điện tử, danh mục, "
-"điểm nổi bật, hình ảnh, ảnh, minh họa, phương tiện truyền thông, hình ảnh, "
-"giới thiệu, trang chủ, mã giảm giá, mã, mô tả, thẻ tròn, thẻ, lời kêu gọi "
-"hành động, CTA, tiếp thị, trưng bày, mô-zaic, collage, bố cục, bộ sưu tập, "
-"lưới hình ảnh"
 
 #. module: website
 #. odoo-javascript
@@ -21421,11 +22227,9 @@ msgstr "lễ kỷ niệm, ra mắt"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"cite, slogan, tagline, mantra, catchphrase, statements, sayings, comments, "
+"cite, slogan, tagline, mantra, catchphrases, statements, sayings, comments, "
 "mission, citations, maxim, quotes, principle, ethos, values"
 msgstr ""
-"cite, slogan, tagline, mantra, catchphrase, statements, sayings, comments, "
-"mission, citations, maxim, quotes, principle, ethos, values"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -21440,10 +22244,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "cite, testimonials, endorsements, reviews, feedback, statements, references, "
-"sayings, comments, appreciations, citations, carousel"
+"sayings, comments, appreciations, citations, carousels"
 msgstr ""
-"trích dẫn, lời chứng thực, sự ủng hộ, đánh giá, phản hồi, phát biểu, tham "
-"khảo, câu nói, bình luận, lời cảm ơn, trích dẫn, băng chuyền"
 
 #. module: website
 #. odoo-javascript
@@ -21458,12 +22260,6 @@ msgid "color"
 msgstr "màu"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
-msgid "colors"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "columns, containers, layouts, large, panels, modules"
 msgstr "columns, containers, layouts, large, panels, modules"
@@ -21471,19 +22267,16 @@ msgstr "columns, containers, layouts, large, panels, modules"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"columns, gallery, pictures, photos, media, text, content, album, showcase, "
-"visuals, portfolio, arrangement, collection, visual-grid, split, alignment, "
-"added value"
+"columns, gallery, galleries, pictures, photos, media, text, content, albums, "
+"showcase, visuals, portfolios, arrangement, collections, visual-grid, split, "
+"alignment, added value"
 msgstr ""
-"columns, gallery, pictures, photos, media, text, content, album, showcase, "
-"visuals, portfolio, arrangement, collection, visual-grid, split, alignment, "
-"added value"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"coming soon, countdown, launch, waitlist, timer, days hours minutes seconds, "
-"social media, teaser, pre-launch, fullscreen, dark"
+"coming soon, countdowns, launch, waitlist, timer, days hours minutes "
+"seconds, social media, teaser, pre-launch, fullscreen, dark"
 msgstr ""
 
 #. module: website
@@ -21494,193 +22287,164 @@ msgstr "câu trả lời phổ biến, câu hỏi phổ biến"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"common answers, common questions, faq, QA, collapse, expandable, toggle, "
-"collapsible, hide-show, movement, information, image, picture, photo, "
+"common answers, common questions, faqs, QA, collapse, expandable, toggle, "
+"collapsible, hide-show, movement, information, images, pictures, photos, "
 "illustration, media, visual"
 msgstr ""
-"common answers, common questions, faq, QA, collapse, expandable, toggle, "
-"collapsible, hide-show, movement, information, image, picture, photo, "
-"illustration, media, visual"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"comparison, price, pricing, engage, call to action, cta, box, shop, table, "
-"cart, product, cost, charges, fees, tariffs, prices, expenses"
+"comparisons, price, pricing plans, engage, call to action, cta, boxes, shop, "
+"tables, carts, products, costs, charges, fees, tariffs, prices, expenses"
 msgstr ""
-"so sánh, giá cả, định giá, thu hút, kêu gọi hành động, cta, ô, cửa hàng, "
-"bảng, giỏ hàng, sản phẩm, chi phí, phí, lệ phí, thuế quan, giá cả, chi phí"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "consent, confirmation, restriction, adult, eligibility, validation"
+msgid "consent, confirmations, restriction, adult, eligibility, validation"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
+"contacts, collect, submission, input, fields, questionnaire, survey, "
 "registration, request"
 msgstr ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request, image, picture, photo, illustration, media, visual"
+"contacts, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, images, pictures, photos, illustration, media, visual"
 msgstr ""
-"liên hệ, thu thập, gửi, thông tin nhập vào, trường, bảng câu hỏi, khảo sát, "
-"đăng ký, yêu cầu, hình ảnh, ảnh, ảnh minh họa, phương tiện, trực quan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request, image, picture, photo, illustration, media, visual, "
-"company, organization, address, phone, email, location, get-in-touch"
-msgstr ""
-"liên hệ, thu thập, gửi,  thông tin nhập vào, trường, bảng câu hỏi, khảo sát, "
-"đăng ký, yêu cầu, hình ảnh, ảnh, ảnh minh họa, phương tiện, trực quan, công "
-"ty, tổ chức, địa chỉ, điện thoại, email, vị trí, liên hệ"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"contact, collect, submission, input, fields, questionnaire, survey, "
-"registration, request, image, picture, photo, illustration, media, visual, "
+"contacts, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, images, pictures, photos, illustration, media, "
+"visual, company, companies, organization, address, phone, email, location, "
 "get-in-touch"
 msgstr ""
-"liên hệ, thu thập, gửi, nhập liệu, trường thông tin, bảng câu hỏi, khảo sát, "
-"đăng ký, yêu cầu, hình ảnh, ảnh chụp, ảnh minh họa, phương tiện truyền "
-"thông, trực quan, liên lạc"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "content, paragraph, article, body, description, information"
-msgstr "content, paragraph, article, body, description, information"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, connection, cover, shape, background, image, "
-"headings, hero, light, experience, parallax"
+"contacts, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, images, pictures, photos, illustration, media, "
+"visual, get-in-touch"
 msgstr ""
-"nội dung, hình ảnh, ảnh chụp, kết nối, ảnh bìa, hình dạng, nền, ảnh, tiêu "
-"đề, phần nổi bật, ánh sáng, trải nghiệm, hiệu ứng parallax."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination"
+msgid "content, paragraph, articles, body, descriptions, information"
 msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, engage, call to action, cta, box, showcase"
+"content, pictures, photos, connections, covers, shape, backgrounds, images, "
+"headings, heroes, light, experience, parallax"
 msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, engage, call to action, cta, box, showcase"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, heading, headline"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination"
 msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, heading, headline"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, more, hexagon, geometric"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, engage, call to action, cta, boxes, showcase"
 msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, more, hexagon, geometric"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, network, relationships, interactions, connectivity, "
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, full width, fullwidth, bleed, grids"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, heading, headline"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, more, hexagon, geometric"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, network, relationships, interactions, connectivity, "
 "collaborations"
 msgstr ""
-"nội dung, hình ảnh, ảnh, ảnh minh họa, phương tiện, trực quan, bài viết, câu "
-"chuyện, kết hợp, mạng lưới, mối quan hệ, tương tác, kết nối, cộng tác"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, showcase, announcements, reveal"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design"
-msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned"
-msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned, contrast"
-msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned, contrast"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned, contrast, "
-"collage, arrangement, gallery, creative, mosaic"
-msgstr ""
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, trendy, pattern, design, shape, geometric, patterned, contrast, "
-"collage, arrangement, gallery, creative, mosaic"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"content, picture, photo, illustration, media, visual, focus, in-depth, "
-"analysis, more, contact, detailed, mockup, explore, insight"
-msgstr ""
-"content, picture, photo, illustration, media, visual, focus, in-depth, "
-"analysis, more, contact, detailed, mockup, explore, insight"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"cta, whatsapp, social, e-commerce, selling-points, prompt, form, chatbot, "
-"call-to-action, assistant, assistance, customer, 24, 7, support, talk"
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"customers, clients, sponsors, partners, logos, brand, supporters, "
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design, shape, geometric, patterned"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design, shape, geometric, patterned, "
+"contrast"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, articles, story, "
+"stories, combination, trendy, pattern, design, shape, geometric, patterned, "
+"contrast, collages, arrangement, gallery, galleries, creative, mosaic"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"content, pictures, photos, illustration, media, visual, focus, in-depth, "
+"analysis, more, contacts, detailed, mockup, explore, insight"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"cta, whatsapp, social, e-commerce, selling-points, prompt, forms, chatbots, "
+"call-to-action, assistants, assistance, customers, 24, 7, support, talk"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"customers, clients, sponsors, partners, logos, brands, supporters, "
 "collaborators, associations, trusted, references, tiles"
 msgstr ""
 
@@ -21711,33 +22475,25 @@ msgstr "ngày"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"description, containers, layouts, structures, multi-columns, modules, boxes"
+"descriptions, containers, layouts, structures, multi-columns, modules, boxes"
 msgstr ""
-"description, containers, layouts, structures, multi-columns, modules, boxes"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"description, containers, layouts, structures, multi-columns, modules, boxes, "
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal"
+"descriptions, containers, layouts, structures, multi-columns, modules, "
+"boxes, content, pictures, photos, illustration, media, visual, articles, "
+"story, stories, combination, showcase, announcements, reveal"
 msgstr ""
-"description, containers, layouts, structures, multi-columns, modules, boxes, "
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"description, containers, layouts, structures, multi-columns, modules, boxes, "
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal, trendy, design, shape, "
-"geometric, engage, call to action, cta, button"
+"descriptions, containers, layouts, structures, multi-columns, modules, "
+"boxes, content, pictures, photos, illustration, media, visual, articles, "
+"story, stories, combination, showcase, announcements, reveal, trendy, "
+"design, shape, geometric, engage, call to action, cta, buttons"
 msgstr ""
-"description, containers, layouts, structures, multi-columns, modules, boxes, "
-"content, picture, photo, illustration, media, visual, article, story, "
-"combination, showcase, announcement, reveal, trendy, design, shape, "
-"geometric, engage, call to action, cta, button"
 
 #. module: website
 #. odoo-javascript
@@ -21745,6 +22501,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/clickable_card_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 msgid "e.g. /page or URL"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "e.g. DEMO_MAP_ID"
 msgstr ""
 
 #. module: website
@@ -21760,6 +22522,7 @@ msgstr "ví dụ. Trang chủ"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "eCommerce"
 msgstr "Thương mại điện tử"
 
@@ -21795,22 +22558,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"features, benefits, highlights, cards, photo cards, image cards, grid, two "
+"features, benefits, highlights, cards, photo cards, image cards, grids, two "
 "columns, product features, services, quality"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"features, highlights, image, showcase, split layout, icon list, checklist, "
-"bullet points, product features, benefits, description, photo, key features"
+"features, highlights, images, showcase, split layout, icon list, checklists, "
+"bullet points, product features, benefits, descriptions, photos, key features"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"features, icons, benefits, product features, split layout, image, icon list, "
-"advantages, highlights, product showcase, 4 features"
+"features, icons, benefits, product features, split layout, images, icon "
+"list, advantages, highlights, product showcase, 4 features"
 msgstr ""
 
 #. module: website
@@ -21834,20 +22597,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"four sections, column, grid, division, split, segments, pictures, "
-"illustration, media, photos, tiles, arrangement, gallery, images-grid, "
-"mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
-"thumbnails, engage, call to action, cta, showcase"
+"four sections, columns, grids, divisions, split, segments, pictures, "
+"illustration, media, photos, tiles, arrangement, gallery, galleries, images-"
+"grid, mixed, collections, stacking, visual-grid, showcase, visuals, "
+"portfolios, thumbnails, engage, call to action, cta, showcase"
 msgstr ""
-"four sections, column, grid, division, split, segments, pictures, "
-"illustration, media, photos, tiles, arrangement, gallery, images-grid, "
-"mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
-"thumbnails, engage, call to action, cta, showcase"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "free website"
 msgstr "website miễn phí"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
+msgid "from your Google Cloud console."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -21857,31 +22622,32 @@ msgstr "frontend_lang (Odoo)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
-"thumbnails, slideshow"
+"gallery, galleries, carousels, pictures, photos, albums, showcase, visuals, "
+"portfolios, thumbnails, slideshow"
 msgstr ""
-"gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
-"thumbnails, slideshow"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-"rotating, swipe, transition, media-carousel, movement"
+"gallery, galleries, carousels, slider, slideshow, pictures, photos, image-"
+"slider, rotating, swipe, transition, media-carousel, movement"
 msgstr ""
-"gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-"rotating, swipe, transition, media-carousel, movement"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-"rotating, swipe, transition, media-carousel, movement, cta, engagement, call "
-"to action"
+"gallery, galleries, carousels, slider, slideshow, pictures, photos, image-"
+"slider, rotating, swipe, transition, media-carousel, movement, cta, "
+"engagement, call to action"
 msgstr ""
-"bộ sưu tập, băng chuyền, thanh trượt, trình chiếu, hình ảnh, ảnh chụp, thanh "
-"trượt hình ảnh, xoay vòng, vuốt, chuyển tiếp, băng chuyền truyền thông, "
-"chuyển động, lời kêu gọi hành động, tương tác, kêu gọi hành động"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"glow, intro, heroes, headline, headers, banners, products, promo, "
+"backgrounds, pictures, photos, highlights, shop, call to action, shape, "
+"gradient"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -21891,76 +22657,60 @@ msgstr "google1234567890123456.html"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"graph, table, diagram, pie, plot, bar, metrics, figures, data-visualization, "
-"statistics, stats, analytics, infographic, skills, report"
-msgstr ""
-"graph, table, diagram, pie, plot, bar, metrics, figures, data-visualization, "
-"statistics, stats, analytics, infographic, skills, report"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
-"mosaic, collage, arrangement, collection, visual-grid"
-msgstr ""
-"grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
-"mosaic, collage, arrangement, collection, visual-grid"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"grid, gallery, pictures, photos, media, text, content, album, showcase, "
-"visuals, portfolio, mosaic, collage, arrangement, collection, visual-grid, "
-"split, alignment"
-msgstr ""
-"grid, gallery, pictures, photos, media, text, content, album, showcase, "
-"visuals, portfolio, mosaic, collage, arrangement, collection, visual-grid, "
-"split, alignment"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"header, introduction, home, content, introduction, overview, spotlight, "
-"presentation, welcome, context, description, primary, highlight, lead"
-msgstr ""
-"header, introduction, home, content, introduction, overview, spotlight, "
-"presentation, welcome, context, description, primary, highlight, lead"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"heading, h1, headline, header, main, top, caption, introductory, principal, "
-"key"
-msgstr ""
-"heading, h1, headline, header, main, top, caption, introductory, principal, "
-"key"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid ""
-"heading, headline, header, split, split text, split content, two columns, "
-"description, intro, section header, typography, large text"
+"graphs, tables, diagrams, pie, plot, bars, metrics, figures, data-"
+"visualization, statistics, stats, analytics, infographic, skills, report"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"headline, header, content, picture, photo, illustration, media, visual, "
-"article, combination, trendy, pattern, design, bold, impactful, vibrant, "
+"grids, gallery, galleries, pictures, photos, albums, showcase, visuals, "
+"portfolios, mosaic, collages, arrangement, collections, visual-grid"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"grids, gallery, galleries, pictures, photos, media, text, content, albums, "
+"showcase, visuals, portfolios, mosaic, collages, arrangement, collections, "
+"visual-grid, split, alignment"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"headers, introduction, home, content, introduction, overview, spotlight, "
+"presentation, welcome, context, descriptions, primary, highlights, lead"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"heading, h1, headline, headers, main, top, captions, introductory, "
+"principal, key"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"heading, headline, headers, split, split text, split content, two columns, "
+"descriptions, intro, section header, typography, large text"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"headline, headers, content, pictures, photos, illustration, media, visual, "
+"articles, combination, trendy, pattern, design, bold, impactful, vibrant, "
 "standout"
 msgstr ""
-"headline, header, content, picture, photo, illustration, media, visual, "
-"article, combination, trendy, pattern, design, bold, impactful, vibrant, "
-"standout"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"headline, header, content, picture, photo, illustration, media, visual, "
+"headline, headers, content, pictures, photos, illustration, media, visual, "
 "combination"
 msgstr ""
-"headline, header, content, picture, photo, illustration, media, visual, "
-"combination"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -21971,195 +22721,154 @@ msgstr "support@openerp.vn"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, animation, animated, cards, float, stacked, promo, categories, "
+"heroes, animation, animated, cards, float, stacked, promo, categories, "
 "ecommerce, shop"
 msgstr ""
-"phần nổi bật, hoạt ảnh, hoạt hình, thẻ, nổi, xếp chồng, quảng bá, danh mục, "
-"thương mại điện tử, cửa hàng"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, banner, picture, photo, cover, shape, background image, fullscreen, "
-"headline, intro, landing page, impactful"
+"heroes, banners, pictures, photos, covers, shape, background image, "
+"fullscreen, headline, intro, landing page, impactful"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, categories, ecommerce, shop, illustration, buy, photos, shop, product, "
-"grid, pictures"
+"heroes, categories, ecommerce, shop, illustration, buy, photos, shop, "
+"products, grids, pictures"
 msgstr ""
-"hero, danh mục, thương mại điện tử, cửa hàng, minh họa, mua, hình ảnh, cửa "
-"hàng, sản phẩm, lưới, hình ảnh"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, headline, header, centered, maintenance, under maintenance, coming "
+"heroes, headline, headers, centered, maintenance, under maintenance, coming "
 "soon, fullscreen, social media, status page, offline, temporary"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, headline, header, intro, home, landing page, animated, movement, "
+"heroes, headline, headers, intro, home, landing page, animated, movement, "
 "marquee, scrolling text, avatars, social proof, background image, immersive, "
-"cover"
+"covers"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, headline, header, introduction, home, picture, photo, about page, "
-"company, story, history, brand, mission, statement"
+"heroes, headline, headers, introduction, home, pictures, photos, about page, "
+"company, companies, story, stories, history, brands, mission, statement"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, branding, intro, home, showcase, "
-"spotlight, lead, welcome, announcement, splash, top, main"
+"heroes, jumbotron, headline, headers, branding, intro, home, showcase, "
+"spotlight, lead, welcome, announcements, splash, top, main"
 msgstr ""
-"hero, jumbotron, headline, header, branding, intro, home, showcase, "
-"spotlight, lead, welcome, announcement, splash, top, main"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, branding, intro, home, showcase, "
+"heroes, jumbotron, headline, headers, branding, intro, home, showcase, "
 "spotlight, main, landing, presentation, top, splash, parallax"
 msgstr ""
-"phần nổi bật, jumbotron, tiêu đề chính, header, thương hiệu, phần giới "
-"thiệu, trang chủ, phần trưng bày, tiêu điểm, chính, trang đích, phần trình "
-"bày, đầu trang, màn hình chào, hiệu ứng thị sai"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, intro, home, content, description, "
-"primary, highlight, lead"
+"heroes, jumbotron, headline, headers, intro, home, content, descriptions, "
+"primary, highlights, lead"
 msgstr ""
-"hero, jumbotron, headline, header, intro, home, content, description, "
-"primary, highlight, lead"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, banner, call to action, "
-"cta, button, highlight, showcase, spotlight, sober, trendy, design, picture, "
-"photo, illustration, visual, description, containers, layouts, product, buy"
+"heroes, jumbotron, headline, headers, introduction, banners, call to action, "
+"cta, buttons, highlights, showcase, spotlight, sober, trendy, design, "
+"pictures, photos, illustration, visual, descriptions, containers, layouts, "
+"products, buy"
 msgstr ""
-"hero, jumbotron, tiêu đề, header, phần giới thiệu, banner, kêu gọi hành "
-"động, cta, nút, tiêu điểm, phần trưng bày, spotlight, tối giản, hợp xu "
-"hướng, thiết kế, hình ảnh, ảnh chụp, minh họa, hình trực quan, mô tả, khối/"
-"khung chứa, bố cục, sản phẩm, mua"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead"
+"descriptions, primary, highlights, lead"
 msgstr ""
-"hero, jumbotron, headline, header, introduction, home, content, "
-"introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, CTA, promote, promotion"
+"descriptions, primary, highlights, lead, CTA, promote, promotion"
 msgstr ""
-"hero, jumbotron, headline, header, introduction, home, content, "
-"introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, CTA, promote, promotion"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, discover, exploration, reveal"
+"descriptions, primary, highlights, lead, discover, exploration, reveal"
 msgstr ""
-"hero, jumbotron, headline, header, introduction, home, content, "
-"introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, discover, exploration, reveal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, "
+"heroes, jumbotron, headline, headers, introduction, home, content, "
 "introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, journey, skills, expertises, experts, "
-"accomplishments, knowledge"
+"descriptions, primary, highlights, lead, journey, skills, expertises, "
+"experts, accomplishments, knowledge"
 msgstr ""
-"hero, jumbotron, headline, header, introduction, home, content, "
-"introduction, overview, spotlight, presentation, welcome, context, "
-"description, primary, highlight, lead, journey, skills, expertises, experts, "
-"accomplishments, knowledge"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, picture, "
-"photo, illustration, media, visual, article, combination, trendy, pattern, "
+"heroes, jumbotron, headline, headers, introduction, home, content, pictures, "
+"photos, illustration, media, visual, articles, combination, trendy, pattern, "
 "design"
 msgstr ""
-"hero, jumbotron, headline, header, introduction, home, content, picture, "
-"photo, illustration, media, visual, article, combination, trendy, pattern, "
-"design"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, introduction, home, content, picture, "
-"photo, illustration, media, visual, article, combination, trendy, pattern, "
+"heroes, jumbotron, headline, headers, introduction, home, content, pictures, "
+"photos, illustration, media, visual, articles, combination, trendy, pattern, "
 "design, centered"
 msgstr ""
-"hero, jumbotron, headline, header, introduction, home, content, picture, "
-"photo, illustration, media, visual, article, combination, trendy, pattern, "
-"design, centered"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, shop, cart, product, ecommerce, picture, "
-"photo, illustration, media, visual, intro, home, content, description, call "
-"to action, cta, minimalist, marketing"
+"heroes, jumbotron, headline, headers, shop, carts, products, ecommerce, "
+"pictures, photos, illustration, media, visual, intro, home, content, "
+"descriptions, call to action, cta, minimalist, marketing"
 msgstr ""
-"hero, jumbotron, tiêu đề, header, cửa hàng, giỏ hàng, sản phẩm, thương mại "
-"điện tử, hình ảnh, ảnh, minh họa, media, nội dung trực quan, phần giới "
-"thiệu, trang chủ, nội dung, mô tả, kêu gọi hành động, cta, phong cách tối "
-"giản, marketing"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, jumbotron, headline, header, shop, cart, product, ecommerce, picture, "
-"photo, illustration, media, visual, intro, home, content, description, "
-"rounded, card, call to action, cta, minimalist, marketing"
+"heroes, jumbotron, headline, headers, shop, carts, products, ecommerce, "
+"pictures, photos, illustration, media, visual, intro, home, content, "
+"descriptions, rounded, cards, call to action, cta, minimalist, marketing"
 msgstr ""
-"hero, jumbotron, tiêu đề, header, cửa hàng, giỏ hàng, sản phẩm, thương mại "
-"điện tử, hình ảnh, ảnh chụp, minh họa, media, nội dung trực quan, phần giới "
-"thiệu, trang chủ, nội dung, mô tả, bo góc, thẻ, kêu gọi hành động, cta, tối "
-"giản, marketing"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, minimalist, headline, header, introduction, home, picture, photo, "
+"heroes, minimalist, headline, headers, introduction, home, pictures, photos, "
 "split layout, two column, large image, tagline, landing page"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"hero, splash, fullscreen, image, background, headline, header, branding, "
-"intro, home, showcase, spotlight, main, landing, presentation, top, cover, "
-"immersive, visual, impactful"
+"heroes, splash, fullscreen, images, backgrounds, headline, headers, "
+"branding, intro, home, showcase, spotlight, main, landing, presentation, "
+"top, covers, immersive, visual, impactful"
 msgstr ""
 
 #. module: website
@@ -22171,31 +22880,24 @@ msgstr "highlightPicker"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements"
+"history, story, stories, events, milestones, chronology, sequence, "
+"progression, achievements"
 msgstr ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements, changelog, updates, announcements, recent, latest"
+"history, story, stories, events, milestones, chronology, sequence, "
+"progression, achievements, changelogs, updates, announcements, recent, latest"
 msgstr ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements, changelog, updates, announcements, recent, latest"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"history, story, events, milestones, chronology, sequence, progression, "
-"achievements, changelog, updates, announcements, recent, latest, picture, "
-"photo, illustration, media, visual"
+"history, story, stories, events, milestones, chronology, sequence, "
+"progression, achievements, changelogs, updates, announcements, recent, "
+"latest, pictures, photos, illustration, media, visual"
 msgstr ""
-"lịch sử, câu chuyện, sự kiện, mốc, niên đại, trình tự, tiến trình, thành "
-"tựu, nhật ký thay đổi, cập nhật, thông báo, gần đây, mới nhất, hình ảnh, "
-"ảnh, ảnh minh họa, phương tiện, trực quan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -22257,8 +22959,8 @@ msgid ""
 "instance of Odoo, the <a class=\"o_translate_inline\" target=\"_blank\" "
 "href=\"https://www.odoo.com\">Open Source ERP</a>."
 msgstr ""
-"Odoo, <a class=\"o_translate_inline\" target=\"_blank\" href=\"https://www."
-"odoo.com\">một ERP open source</a>."
+"Odoo, <a class=\"o_translate_inline\" target=\"_blank\" href=\"https://"
+"www.odoo.com\">một ERP open source</a>."
 
 #. module: website
 #. odoo-python
@@ -22275,10 +22977,8 @@ msgstr "ir.ui.view"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "journey, exploration, travel, outdoor, excitement, quest, start, onboarding, "
-"discovery, thrill"
+"discovery, discoveries, thrill"
 msgstr ""
-"journey, exploration, travel, outdoor, excitement, quest, start, onboarding, "
-"discovery, thrill"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -22302,34 +23002,28 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"masonry, grid, column, pictures, photos, album, showcase, visuals, "
-"portfolio, mosaic, collage, arrangement, collection, visual-grid"
+"masonry, grids, columns, pictures, photos, albums, showcase, visuals, "
+"portfolios, mosaic, collages, arrangement, collections, visual-grid"
 msgstr ""
-"masonry, grid, column, pictures, photos, album, showcase, visuals, "
-"portfolio, mosaic, collage, arrangement, collection, visual-grid"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-"prices, expenses"
+"menus, pricing plans, shop, tables, carts, products, costs, charges, fees, "
+"rates, prices, expenses"
 msgstr ""
-"menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-"prices, expenses"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-"prices, expenses, columns"
+"menus, pricing plans, shop, tables, carts, products, costs, charges, fees, "
+"rates, prices, expenses, columns"
 msgstr ""
-"menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-"prices, expenses, columns"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "navigation, index, outline, chapters, sections, overview, menu, tab"
-msgstr "điều hướng, mục lục, dàn bài, chương, phần, tổng quan, menu, tab"
+msgid "navigation, index, outline, chapters, sections, overview, menus, tabs"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -22358,7 +23052,6 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 msgid "or"
 msgstr ""
@@ -22372,47 +23065,37 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, column, members, staffs, profiles, bios, "
-"roles, personnel, crew"
+"organization, company, companies, person, people, columns, members, staffs, "
+"profiles, bios, roles, personnel, crew"
 msgstr ""
-"organization, company, people, column, members, staffs, profiles, bios, "
-"roles, personnel, crew"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned"
+"organization, company, companies, person, people, members, staffs, profiles, "
+"bios, roles, personnel, crew, patterned"
 msgstr ""
-"tổ chức, công ty, con người, thành viên, nhân viên, hồ sơ, tiểu sử, vai trò, "
-"nhân sự, phi hành đoàn, có mẫu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned, trendy"
+"organization, company, companies, person, people, members, staffs, profiles, "
+"bios, roles, personnel, crew, patterned, trendy"
 msgstr ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned, trendy"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned, trendy, social"
+"organization, company, companies, person, people, members, staffs, profiles, "
+"bios, roles, personnel, crew, patterned, trendy, social"
 msgstr ""
-"organization, company, people, members, staffs, profiles, bios, roles, "
-"personnel, crew, patterned, trendy, social"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"organization, structure, people, team, name, role, position, image, "
-"portrait, photo, employees, shapes"
+"organization, structure, person, people, teams, name, role, position, "
+"images, portrait, photos, employees, shapes"
 msgstr ""
-"organization, structure, people, team, name, role, position, image, "
-"portrait, photo, employees, shapes"
 
 #. module: website
 #. odoo-javascript
@@ -22423,8 +23106,8 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"paragraph, description, information, split, split text, split content, "
-"story, typography, two columns, minimal, narrative, editorial"
+"paragraph, descriptions, information, split, split text, split content, "
+"story, stories, typography, two columns, minimal, narrative, editorial"
 msgstr ""
 
 #. module: website
@@ -22437,17 +23120,15 @@ msgstr "điện thoại"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"picture, photo, illustration, media, visual, start, launch, commencement, "
+"pictures, photos, illustration, media, visual, start, launch, commencement, "
 "initiation, opening, kick-off, kickoff, beginning, events, parallax"
 msgstr ""
-"hình ảnh, ảnh chụp, minh họa, phương tiện truyền thông, trực quan, khởi đầu, "
-"ra mắt, bắt đầu, khai mạc, mở đầu, khởi động, sự kiện, hiệu ứng thị sai"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"picture, photo, illustration, media, visual, two images, side by side, duo, "
-"gallery, photography, two columns, before after, comparison"
+"pictures, photos, illustration, media, visual, two images, side by side, "
+"duo, gallery, galleries, photography, two columns, before after, comparisons"
 msgstr ""
 
 #. module: website
@@ -22470,83 +23151,68 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
-"competitive, overview"
+"pricing plans, promotion, price, feature-comparison, side-by-side, "
+"evaluation, competitive, overview"
 msgstr ""
-"pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
-"competitive, overview"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"process, progression, guide, workflow, sequence, instructions, stages, "
+"process, progression, guides, workflow, sequence, instructions, stages, "
 "procedure, roadmap"
 msgstr ""
-"process, progression, guide, workflow, sequence, instructions, stages, "
-"procedure, roadmap"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"projects, list, portfolio, showcase, work, case studies, collection, "
-"typography, agency, creative, clients, work list"
+"projects, lists, portfolios, showcase, work, case studies, collections, "
+"typography, agency, agencies, creative, clients, work list"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"projects, portfolio, showcase, gallery, images, images-grid, collection, "
-"visual-grid, work, case studies, minimal, two columns, creative"
+"projects, portfolios, showcase, gallery, galleries, images, images-grid, "
+"collections, visual-grid, work, case studies, minimal, two columns, creative"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"projects, portfolio, showcase, gallery, images, images-grid, collection, "
-"visual-grid, work, case studies, mixed layout, creative"
+"projects, portfolios, showcase, gallery, galleries, images, images-grid, "
+"collections, visual-grid, work, case studies, mixed layout, creative"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion"
 msgstr ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
-"functionalities, exhibit, details, capabilities, attributes, promotion"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "headline, content, overview, spotlight"
 msgstr ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
-"functionalities, exhibit, details, capabilities, attributes, promotion, "
-"headline, content, overview, spotlight"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
-"presentation, demo, feature"
+"presentation, demos, features"
 msgstr ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
-"functionalities, exhibit, details, capabilities, attributes, promotion, "
-"presentation, demo, feature"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
+"promotion, characteristics, quality, highlights, specs, advantages, "
 "functionalities, features, exhibit, details, capabilities, attributes, "
 "promotion, headline, content, overview, spotlight"
 msgstr ""
-"promotion, characteristic, quality, highlights, specs, advantages, "
-"functionalities, features, exhibit, details, capabilities, attributes, "
-"promotion, headline, content, overview, spotlight"
 
 #. module: website
 #. odoo-javascript
@@ -22557,22 +23223,17 @@ msgstr "px"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"questions, answers, common answers, common questions, faq, help, support, "
-"information, knowledge, guide, troubleshooting, assistance, QA, terms of "
+"questions, answers, common answers, common questions, faqs, help, support, "
+"information, knowledge, guides, troubleshooting, assistance, QA, terms of "
 "services"
 msgstr ""
-"questions, answers, common answers, common questions, faq, help, support, "
-"information, knowledge, guide, troubleshooting, assistance, QA, terms of "
-"services"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"questions, answers, common answers, common questions, faq, help, support, "
-"information, knowledge, guide, troubleshooting, assistance, columns, QA"
+"questions, answers, common answers, common questions, faqs, help, support, "
+"information, knowledge, guides, troubleshooting, assistance, columns, QA"
 msgstr ""
-"questions, answers, common answers, common questions, faq, help, support, "
-"information, knowledge, guide, troubleshooting, assistance, columns, QA"
 
 #. module: website
 #. odoo-javascript
@@ -22596,20 +23257,16 @@ msgstr "kết quả"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"reveal, showcase, launch, presentation, announcement, content, picture, "
-"photo, illustration, media, visual, article, combination"
+"reveal, showcase, launch, presentation, announcements, content, pictures, "
+"photos, illustration, media, visual, articles, combination"
 msgstr ""
-"reveal, showcase, launch, presentation, announcement, content, picture, "
-"photo, illustration, media, visual, article, combination"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"reveal, showcase, launch, presentation, announcement, content, picture, "
-"photo, illustration, media, visual, combination"
+"reveal, showcase, launch, presentation, announcements, content, pictures, "
+"photos, illustration, media, visual, combination"
 msgstr ""
-"reveal, showcase, launch, presentation, announcement, content, picture, "
-"photo, illustration, media, visual, combination"
 
 #. module: website
 #. odoo-javascript
@@ -22625,29 +23282,28 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "scrolling, depth, effect, background, layer, visual, movement, parallax"
-msgstr "cuộn, độ sâu, hiệu ứng, nền, lớp, trực quan, chuyển động, thị sai"
+msgid ""
+"scrolling, depth, effect, backgrounds, layer, visual, movement, parallax"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "services, features, grid, images, three columns, overview"
+msgid "services, features, grids, images, three columns, overview"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"services, icons, features, characteristic, specs, advantages, "
+"services, icons, features, characteristics, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "overview, specifications"
 msgstr ""
-"dịch vụ, biểu tượng, tính năng, đặc điểm, thông số kỹ thuật, ưu điểm, chức "
-"năng, trưng bày, chi tiết, khả năng, thuộc tính, khuyến mãi, tổng quan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"services, offer, package, features, list, catalog, agency, deliverables, "
-"skills, expertise"
+"services, offers, package, features, lists, catalogs, agency, agencies, "
+"deliverables, skills, expertise"
 msgstr ""
 
 #. module: website
@@ -22658,21 +23314,16 @@ msgstr "session_id (Odoo)<br/>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"shop, cart, product, categories, ecommerce, e-commerce, cards, trendy, "
-"column, layouts, picture, photo, illustration, media, visual"
+"shop, carts, products, categories, ecommerce, e-commerce, cards, trendy, "
+"columns, layouts, pictures, photos, illustration, media, visual"
 msgstr ""
-"cửa hàng, giỏ hàng, sản phẩm, danh mục, thương mại điện tử, thẻ, xu hướng, "
-"cột, bố cục, hình ảnh, ảnh, minh họa, phương tiện truyền thông, hình ảnh "
-"trực quan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"shop, group, list, card, cart, products, inventory, catalog, merchandise, "
-"goods"
+"shop, group, lists, cards, carts, products, inventory, ecommerce, catalogs, "
+"merchandise, goods"
 msgstr ""
-"shop, group, list, card, cart, products, inventory, catalog, merchandise, "
-"goods"
 
 #. module: website
 #. odoo-javascript
@@ -22702,95 +23353,81 @@ msgstr "mạng xã hội, IG, trang chủ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"performance, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results"
+"spotlight, intro, hero, headline, header, grid, gallery, pictures, photos, "
+"media, showcase, feature, focus, center stage, reveal, collection, product, "
+"call to action, cta, button"
 msgstr ""
-"thống kê, số liệu, KPI, số đo, bảng điều khiển, phân tích, điểm nổi bật, con "
-"số, hiệu suất, thành tựu, chuẩn so sánh, cột mốc, chỉ báo, dữ liệu, phép đo, "
-"báo cáo, xu hướng, kết quả"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"performance, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results, analytics, summaries, summary"
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, performance, achievements, benchmarks, milestones, indicators, "
+"data, measurements, reports, trends, results"
 msgstr ""
-"thống kê, thống kê, KPI, số liệu, bảng điều khiển, phân tích, điểm nổi bật, "
-"số liệu, hiệu suất, thành tựu, tiêu chuẩn, mốc, chỉ báo, dữ liệu, phép đo, "
-"báo cáo, xu hướng, kết quả, tóm tắt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results"
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, performance, achievements, benchmarks, milestones, indicators, "
+"data, measurements, reports, trends, results, analytics, summaries, summary"
 msgstr ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
+"measurements, reports, trends, results"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, cta, call to action, "
-"button"
+"buttons"
 msgstr ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results, analytics, cta, call to action, "
-"button"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, summaries, summary"
 msgstr ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results, analytics, summaries, summary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
+"statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
+"figures, skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, summaries, summary, large-"
 "figures, prominent, standout"
 msgstr ""
-"statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, "
-"skills, achievements, benchmarks, milestones, indicators, data, "
-"measurements, reports, trends, results, analytics, summaries, summary, large-"
-"figures, prominent, standout"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"statistics, stats, KPI, metrics, highlights, figures, achievements, "
-"milestones, data, results, trends, count, counter, compact, simple"
+"statistics, stats, KPIs, metrics, highlights, figures, achievements, "
+"milestones, data, results, trends, counts, counters, compact, simple"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"store, locator, map, address, hours, opening hours, directions, location, "
-"visit us, find us, contact"
+"store, locator, maps, address, hours, opening hours, directions, location, "
+"visit us, find us, contacts"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
-"stores, button, engagement, appeal, mockup, text, content, picture, photo, "
-"illustration, media, visual, article, story"
+"stores, buttons, engagement, appeal, mockup, text, content, pictures, "
+"photos, illustration, media, visual, articles, story, stories"
 msgstr ""
-"cửa hàng, nút, tương tác, sự hấp dẫn, mockup, văn bản, nội dung, hình ảnh, "
-"ảnh, ảnh minh họa, phương tiện, trực quan, bài viết, câu chuyện"
 
 #. module: website
 #. odoo-javascript
@@ -22914,22 +23551,6 @@ msgid "“Our furniture balances style, comfort, and sustainability.”<br/>"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
-msgid "• Free Shipping • Secure payment • Easy Return"
-msgstr "• Giao hàng miễn phí • Thanh toán an toàn • Trả hàng dễ dàng"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_animated_cover
-msgid "• OUR SERVICES"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
-msgid "⌙ Style"
-msgstr "⌙ Kiểu"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_boxed
 msgid "✽  Pastas"
 msgstr "✽  Pasta"
@@ -22943,3 +23564,783 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Chúng tôi mang đến những gì"
+
+#~ msgid "Accounts are usable across all your multiple websites"
+#~ msgstr "Tài khoản có thể sử dụng được trên tất cả các trang web của bạn"
+
+#~ msgid "CTA, button, btn, action, engagement, link, offer, appeal"
+#~ msgstr "CTA, button, btn, action, engagement, link, offer, appeal"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger"
+#~ msgstr ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, items, checklists, entries, sequences, "
+#~ "bullets, points, list, group, benefits, features, advantages"
+#~ msgstr ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, items, checklists, entries, sequences, "
+#~ "bullets, points, list, group, benefits, features, advantages"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, mockup"
+#~ msgstr ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, mockup"
+
+#~ msgid ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, mockups"
+#~ msgstr ""
+#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
+#~ "action, prompt, interact, trigger, mockups"
+
+#~ msgid "Catalog"
+#~ msgstr "Danh mục"
+
+#~ msgid ""
+#~ "Elevate your living space with furniture that blends modern aesthetics "
+#~ "and classic charm, crafted to bring both comfort and style to your home.\n"
+#~ "                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
+#~ "><br/><br/><br/><br/><br/>"
+#~ msgstr ""
+#~ "Nâng tầm không gian sống của bạn với những món nội thất kết hợp giữa nét "
+#~ "thẩm mỹ hiện đại và vẻ quyến rũ cổ điển, được chế tác để mang lại cả sự "
+#~ "thoải mái lẫn phong cách cho ngôi nhà của bạn.\n"
+#~ "                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/"
+#~ "><br/><br/><br/><br/><br/>"
+
+#~ msgid "Full-Width"
+#~ msgstr "Chiều rộng đầy đủ"
+
+#~ msgid "Mega menu item"
+#~ msgstr "Mục menu mega"
+
+#~ msgid "Narrow"
+#~ msgstr "Hẹp"
+
+#~ msgid "Places API"
+#~ msgstr "API địa điểm"
+
+#~ msgid "TIP:"
+#~ msgstr "MẸO:"
+
+#~ msgid "This is a small title related to the current image"
+#~ msgstr "Đây là một tiêu đề nhỏ liên quan đến hình ảnh hiện tại"
+
+#~ msgid "Use Google’s servers for fonts. It may impact GDPR compliance"
+#~ msgstr ""
+#~ "Sử dụng máy chủ của Google để lưu trữ phông chữ. Điều này có thể ảnh "
+#~ "hưởng đến việc tuân thủ GDPR"
+
+#~ msgid "Why Our Product is the Future of Innovation"
+#~ msgstr "Tại sao sản phẩm của chúng tôi là tương lai của sự đổi mới"
+
+#~ msgid ""
+#~ "banner, announcement, scrolling text, trust indicators, info bar, site-"
+#~ "wide banner, minimal design, trendy, bold, presentation"
+#~ msgstr ""
+#~ "banner, thông báo, văn bản cuộn, chỉ báo tin cậy, thanh thông tin, banner "
+#~ "toàn trang, thiết kế tối giản, thời thượng, nổi bật, trình bày"
+
+#~ msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
+#~ msgstr "block, blog, post, catalog, feed, items, entries, entry, collection"
+
+#~ msgid ""
+#~ "cards, shop, grid, avatars, column, cart, product, ecommerce, categories, "
+#~ "highlights, pictures, photos, illustration, media, visuals, intro, home, "
+#~ "coupon, code, description, rounded, card, call to action, cta, marketing, "
+#~ "showcase, mosaic, collage, arrangement, collection, visual-grid"
+#~ msgstr ""
+#~ "thẻ, cửa hàng, lưới, avatar, cột, giỏ hàng, sản phẩm, thương mại điện tử, "
+#~ "danh mục, điểm nổi bật, hình ảnh, ảnh, minh họa, phương tiện truyền "
+#~ "thông, hình ảnh, giới thiệu, trang chủ, mã giảm giá, mã, mô tả, thẻ tròn, "
+#~ "thẻ, lời kêu gọi hành động, CTA, tiếp thị, trưng bày, mô-đun, collage, bố "
+#~ "cục, bộ sưu tập, lưới hình ảnh"
+
+#~ msgid ""
+#~ "cards, shop, grid, column, cart, product, ecommerce, categories, "
+#~ "highlights, pictures, photos, illustration, media, visuals, intro, home, "
+#~ "coupon, code, description, rounded, card, call to action, cta, marketing, "
+#~ "showcase, mosaic, collage, arrangement, collection, visual-grid"
+#~ msgstr ""
+#~ "thẻ, cửa hàng, lưới, cột, giỏ hàng, sản phẩm, thương mại điện tử, danh "
+#~ "mục, điểm nổi bật, hình ảnh, ảnh, minh họa, phương tiện truyền thông, "
+#~ "hình ảnh, giới thiệu, trang chủ, mã giảm giá, mã, mô tả, thẻ tròn, thẻ, "
+#~ "lời kêu gọi hành động, CTA, tiếp thị, trưng bày, mô-zaic, collage, bố "
+#~ "cục, bộ sưu tập, lưới hình ảnh"
+
+#~ msgid ""
+#~ "cite, slogan, tagline, mantra, catchphrase, statements, sayings, "
+#~ "comments, mission, citations, maxim, quotes, principle, ethos, values"
+#~ msgstr ""
+#~ "cite, slogan, tagline, mantra, catchphrase, statements, sayings, "
+#~ "comments, mission, citations, maxim, quotes, principle, ethos, values"
+
+#~ msgid ""
+#~ "cite, testimonials, endorsements, reviews, feedback, statements, "
+#~ "references, sayings, comments, appreciations, citations, carousel"
+#~ msgstr ""
+#~ "trích dẫn, lời chứng thực, sự ủng hộ, đánh giá, phản hồi, phát biểu, tham "
+#~ "khảo, câu nói, bình luận, lời cảm ơn, trích dẫn, băng chuyền"
+
+#~ msgid ""
+#~ "columns, gallery, pictures, photos, media, text, content, album, "
+#~ "showcase, visuals, portfolio, arrangement, collection, visual-grid, "
+#~ "split, alignment, added value"
+#~ msgstr ""
+#~ "columns, gallery, pictures, photos, media, text, content, album, "
+#~ "showcase, visuals, portfolio, arrangement, collection, visual-grid, "
+#~ "split, alignment, added value"
+
+#~ msgid ""
+#~ "common answers, common questions, faq, QA, collapse, expandable, toggle, "
+#~ "collapsible, hide-show, movement, information, image, picture, photo, "
+#~ "illustration, media, visual"
+#~ msgstr ""
+#~ "common answers, common questions, faq, QA, collapse, expandable, toggle, "
+#~ "collapsible, hide-show, movement, information, image, picture, photo, "
+#~ "illustration, media, visual"
+
+#~ msgid ""
+#~ "comparison, price, pricing, engage, call to action, cta, box, shop, "
+#~ "table, cart, product, cost, charges, fees, tariffs, prices, expenses"
+#~ msgstr ""
+#~ "so sánh, giá cả, định giá, thu hút, kêu gọi hành động, cta, ô, cửa hàng, "
+#~ "bảng, giỏ hàng, sản phẩm, chi phí, phí, lệ phí, thuế quan, giá cả, chi phí"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request"
+#~ msgstr ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request, image, picture, photo, illustration, media, visual"
+#~ msgstr ""
+#~ "liên hệ, thu thập, gửi, thông tin nhập vào, trường, bảng câu hỏi, khảo "
+#~ "sát, đăng ký, yêu cầu, hình ảnh, ảnh, ảnh minh họa, phương tiện, trực quan"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request, image, picture, photo, illustration, media, "
+#~ "visual, company, organization, address, phone, email, location, get-in-"
+#~ "touch"
+#~ msgstr ""
+#~ "liên hệ, thu thập, gửi,  thông tin nhập vào, trường, bảng câu hỏi, khảo "
+#~ "sát, đăng ký, yêu cầu, hình ảnh, ảnh, ảnh minh họa, phương tiện, trực "
+#~ "quan, công ty, tổ chức, địa chỉ, điện thoại, email, vị trí, liên hệ"
+
+#~ msgid ""
+#~ "contact, collect, submission, input, fields, questionnaire, survey, "
+#~ "registration, request, image, picture, photo, illustration, media, "
+#~ "visual, get-in-touch"
+#~ msgstr ""
+#~ "liên hệ, thu thập, gửi, nhập liệu, trường thông tin, bảng câu hỏi, khảo "
+#~ "sát, đăng ký, yêu cầu, hình ảnh, ảnh chụp, ảnh minh họa, phương tiện "
+#~ "truyền thông, trực quan, liên lạc"
+
+#~ msgid "content, paragraph, article, body, description, information"
+#~ msgstr "content, paragraph, article, body, description, information"
+
+#~ msgid ""
+#~ "content, picture, photo, connection, cover, shape, background, image, "
+#~ "headings, hero, light, experience, parallax"
+#~ msgstr ""
+#~ "nội dung, hình ảnh, ảnh chụp, kết nối, ảnh bìa, hình dạng, nền, ảnh, tiêu "
+#~ "đề, phần nổi bật, ánh sáng, trải nghiệm, hiệu ứng parallax."
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, engage, call to action, cta, box, showcase"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, engage, call to action, cta, box, showcase"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, heading, headline"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, heading, headline"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, more, hexagon, geometric"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, more, hexagon, geometric"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, network, relationships, interactions, connectivity, "
+#~ "collaborations"
+#~ msgstr ""
+#~ "nội dung, hình ảnh, ảnh, ảnh minh họa, phương tiện, trực quan, bài viết, "
+#~ "câu chuyện, kết hợp, mạng lưới, mối quan hệ, tương tác, kết nối, cộng tác"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
+#~ "contrast"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
+#~ "contrast"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
+#~ "contrast, collage, arrangement, gallery, creative, mosaic"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, article, story, "
+#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
+#~ "contrast, collage, arrangement, gallery, creative, mosaic"
+
+#~ msgid ""
+#~ "content, picture, photo, illustration, media, visual, focus, in-depth, "
+#~ "analysis, more, contact, detailed, mockup, explore, insight"
+#~ msgstr ""
+#~ "content, picture, photo, illustration, media, visual, focus, in-depth, "
+#~ "analysis, more, contact, detailed, mockup, explore, insight"
+
+#~ msgid ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes"
+#~ msgstr ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes"
+
+#~ msgid ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes, content, picture, photo, illustration, media, visual, article, "
+#~ "story, combination, showcase, announcement, reveal"
+#~ msgstr ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes, content, picture, photo, illustration, media, visual, article, "
+#~ "story, combination, showcase, announcement, reveal"
+
+#~ msgid ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes, content, picture, photo, illustration, media, visual, article, "
+#~ "story, combination, showcase, announcement, reveal, trendy, design, "
+#~ "shape, geometric, engage, call to action, cta, button"
+#~ msgstr ""
+#~ "description, containers, layouts, structures, multi-columns, modules, "
+#~ "boxes, content, picture, photo, illustration, media, visual, article, "
+#~ "story, combination, showcase, announcement, reveal, trendy, design, "
+#~ "shape, geometric, engage, call to action, cta, button"
+
+#~ msgid ""
+#~ "four sections, column, grid, division, split, segments, pictures, "
+#~ "illustration, media, photos, tiles, arrangement, gallery, images-grid, "
+#~ "mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
+#~ "thumbnails, engage, call to action, cta, showcase"
+#~ msgstr ""
+#~ "four sections, column, grid, division, split, segments, pictures, "
+#~ "illustration, media, photos, tiles, arrangement, gallery, images-grid, "
+#~ "mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
+#~ "thumbnails, engage, call to action, cta, showcase"
+
+#~ msgid ""
+#~ "gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
+#~ "thumbnails, slideshow"
+#~ msgstr ""
+#~ "gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
+#~ "thumbnails, slideshow"
+
+#~ msgid ""
+#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
+#~ "rotating, swipe, transition, media-carousel, movement"
+#~ msgstr ""
+#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
+#~ "rotating, swipe, transition, media-carousel, movement"
+
+#~ msgid ""
+#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
+#~ "rotating, swipe, transition, media-carousel, movement, cta, engagement, "
+#~ "call to action"
+#~ msgstr ""
+#~ "bộ sưu tập, băng chuyền, thanh trượt, trình chiếu, hình ảnh, ảnh chụp, "
+#~ "thanh trượt hình ảnh, xoay vòng, vuốt, chuyển tiếp, băng chuyền truyền "
+#~ "thông, chuyển động, lời kêu gọi hành động, tương tác, kêu gọi hành động"
+
+#~ msgid ""
+#~ "graph, table, diagram, pie, plot, bar, metrics, figures, data-"
+#~ "visualization, statistics, stats, analytics, infographic, skills, report"
+#~ msgstr ""
+#~ "graph, table, diagram, pie, plot, bar, metrics, figures, data-"
+#~ "visualization, statistics, stats, analytics, infographic, skills, report"
+
+#~ msgid ""
+#~ "grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
+#~ "mosaic, collage, arrangement, collection, visual-grid"
+#~ msgstr ""
+#~ "grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
+#~ "mosaic, collage, arrangement, collection, visual-grid"
+
+#~ msgid ""
+#~ "grid, gallery, pictures, photos, media, text, content, album, showcase, "
+#~ "visuals, portfolio, mosaic, collage, arrangement, collection, visual-"
+#~ "grid, split, alignment"
+#~ msgstr ""
+#~ "grid, gallery, pictures, photos, media, text, content, album, showcase, "
+#~ "visuals, portfolio, mosaic, collage, arrangement, collection, visual-"
+#~ "grid, split, alignment"
+
+#~ msgid ""
+#~ "header, introduction, home, content, introduction, overview, spotlight, "
+#~ "presentation, welcome, context, description, primary, highlight, lead"
+#~ msgstr ""
+#~ "header, introduction, home, content, introduction, overview, spotlight, "
+#~ "presentation, welcome, context, description, primary, highlight, lead"
+
+#~ msgid ""
+#~ "heading, h1, headline, header, main, top, caption, introductory, "
+#~ "principal, key"
+#~ msgstr ""
+#~ "heading, h1, headline, header, main, top, caption, introductory, "
+#~ "principal, key"
+
+#~ msgid ""
+#~ "headline, header, content, picture, photo, illustration, media, visual, "
+#~ "article, combination, trendy, pattern, design, bold, impactful, vibrant, "
+#~ "standout"
+#~ msgstr ""
+#~ "headline, header, content, picture, photo, illustration, media, visual, "
+#~ "article, combination, trendy, pattern, design, bold, impactful, vibrant, "
+#~ "standout"
+
+#~ msgid ""
+#~ "headline, header, content, picture, photo, illustration, media, visual, "
+#~ "combination"
+#~ msgstr ""
+#~ "headline, header, content, picture, photo, illustration, media, visual, "
+#~ "combination"
+
+#~ msgid ""
+#~ "hero, animation, animated, cards, float, stacked, promo, categories, "
+#~ "ecommerce, shop"
+#~ msgstr ""
+#~ "phần nổi bật, hoạt ảnh, hoạt hình, thẻ, nổi, xếp chồng, quảng bá, danh "
+#~ "mục, thương mại điện tử, cửa hàng"
+
+#~ msgid ""
+#~ "hero, categories, ecommerce, shop, illustration, buy, photos, shop, "
+#~ "product, grid, pictures"
+#~ msgstr ""
+#~ "hero, danh mục, thương mại điện tử, cửa hàng, minh họa, mua, hình ảnh, "
+#~ "cửa hàng, sản phẩm, lưới, hình ảnh"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
+#~ "spotlight, lead, welcome, announcement, splash, top, main"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
+#~ "spotlight, lead, welcome, announcement, splash, top, main"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
+#~ "spotlight, main, landing, presentation, top, splash, parallax"
+#~ msgstr ""
+#~ "phần nổi bật, jumbotron, tiêu đề chính, header, thương hiệu, phần giới "
+#~ "thiệu, trang chủ, phần trưng bày, tiêu điểm, chính, trang đích, phần "
+#~ "trình bày, đầu trang, màn hình chào, hiệu ứng thị sai"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, intro, home, content, description, "
+#~ "primary, highlight, lead"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, intro, home, content, description, "
+#~ "primary, highlight, lead"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, banner, call to action, "
+#~ "cta, button, highlight, showcase, spotlight, sober, trendy, design, "
+#~ "picture, photo, illustration, visual, description, containers, layouts, "
+#~ "product, buy"
+#~ msgstr ""
+#~ "hero, jumbotron, tiêu đề, header, phần giới thiệu, banner, kêu gọi hành "
+#~ "động, cta, nút, tiêu điểm, phần trưng bày, spotlight, tối giản, hợp xu "
+#~ "hướng, thiết kế, hình ảnh, ảnh chụp, minh họa, hình trực quan, mô tả, "
+#~ "khối/khung chứa, bố cục, sản phẩm, mua"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, CTA, promote, promotion"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, CTA, promote, promotion"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, discover, exploration, reveal"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, discover, exploration, reveal"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, journey, skills, expertises, "
+#~ "experts, accomplishments, knowledge"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, "
+#~ "introduction, overview, spotlight, presentation, welcome, context, "
+#~ "description, primary, highlight, lead, journey, skills, expertises, "
+#~ "experts, accomplishments, knowledge"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
+#~ "photo, illustration, media, visual, article, combination, trendy, "
+#~ "pattern, design"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
+#~ "photo, illustration, media, visual, article, combination, trendy, "
+#~ "pattern, design"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
+#~ "photo, illustration, media, visual, article, combination, trendy, "
+#~ "pattern, design, centered"
+#~ msgstr ""
+#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
+#~ "photo, illustration, media, visual, article, combination, trendy, "
+#~ "pattern, design, centered"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, shop, cart, product, ecommerce, "
+#~ "picture, photo, illustration, media, visual, intro, home, content, "
+#~ "description, call to action, cta, minimalist, marketing"
+#~ msgstr ""
+#~ "hero, jumbotron, tiêu đề, header, cửa hàng, giỏ hàng, sản phẩm, thương "
+#~ "mại điện tử, hình ảnh, ảnh, minh họa, media, nội dung trực quan, phần "
+#~ "giới thiệu, trang chủ, nội dung, mô tả, kêu gọi hành động, cta, phong "
+#~ "cách tối giản, marketing"
+
+#~ msgid ""
+#~ "hero, jumbotron, headline, header, shop, cart, product, ecommerce, "
+#~ "picture, photo, illustration, media, visual, intro, home, content, "
+#~ "description, rounded, card, call to action, cta, minimalist, marketing"
+#~ msgstr ""
+#~ "hero, jumbotron, tiêu đề, header, cửa hàng, giỏ hàng, sản phẩm, thương "
+#~ "mại điện tử, hình ảnh, ảnh chụp, minh họa, media, nội dung trực quan, "
+#~ "phần giới thiệu, trang chủ, nội dung, mô tả, bo góc, thẻ, kêu gọi hành "
+#~ "động, cta, tối giản, marketing"
+
+#~ msgid ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements"
+#~ msgstr ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements"
+
+#~ msgid ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements, changelog, updates, announcements, recent, latest"
+#~ msgstr ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements, changelog, updates, announcements, recent, latest"
+
+#~ msgid ""
+#~ "history, story, events, milestones, chronology, sequence, progression, "
+#~ "achievements, changelog, updates, announcements, recent, latest, picture, "
+#~ "photo, illustration, media, visual"
+#~ msgstr ""
+#~ "lịch sử, câu chuyện, sự kiện, mốc, niên đại, trình tự, tiến trình, thành "
+#~ "tựu, nhật ký thay đổi, cập nhật, thông báo, gần đây, mới nhất, hình ảnh, "
+#~ "ảnh, ảnh minh họa, phương tiện, trực quan"
+
+#~ msgid ""
+#~ "journey, exploration, travel, outdoor, excitement, quest, start, "
+#~ "onboarding, discovery, thrill"
+#~ msgstr ""
+#~ "journey, exploration, travel, outdoor, excitement, quest, start, "
+#~ "onboarding, discovery, thrill"
+
+#~ msgid ""
+#~ "masonry, grid, column, pictures, photos, album, showcase, visuals, "
+#~ "portfolio, mosaic, collage, arrangement, collection, visual-grid"
+#~ msgstr ""
+#~ "masonry, grid, column, pictures, photos, album, showcase, visuals, "
+#~ "portfolio, mosaic, collage, arrangement, collection, visual-grid"
+
+#~ msgid ""
+#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
+#~ "prices, expenses"
+#~ msgstr ""
+#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
+#~ "prices, expenses"
+
+#~ msgid ""
+#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
+#~ "prices, expenses, columns"
+#~ msgstr ""
+#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
+#~ "prices, expenses, columns"
+
+#~ msgid "navigation, index, outline, chapters, sections, overview, menu, tab"
+#~ msgstr "điều hướng, mục lục, dàn bài, chương, phần, tổng quan, menu, tab"
+
+#~ msgid ""
+#~ "organization, company, people, column, members, staffs, profiles, bios, "
+#~ "roles, personnel, crew"
+#~ msgstr ""
+#~ "organization, company, people, column, members, staffs, profiles, bios, "
+#~ "roles, personnel, crew"
+
+#~ msgid ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned"
+#~ msgstr ""
+#~ "tổ chức, công ty, con người, thành viên, nhân viên, hồ sơ, tiểu sử, vai "
+#~ "trò, nhân sự, phi hành đoàn, có mẫu"
+
+#~ msgid ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned, trendy"
+#~ msgstr ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned, trendy"
+
+#~ msgid ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned, trendy, social"
+#~ msgstr ""
+#~ "organization, company, people, members, staffs, profiles, bios, roles, "
+#~ "personnel, crew, patterned, trendy, social"
+
+#~ msgid ""
+#~ "organization, structure, people, team, name, role, position, image, "
+#~ "portrait, photo, employees, shapes"
+#~ msgstr ""
+#~ "organization, structure, people, team, name, role, position, image, "
+#~ "portrait, photo, employees, shapes"
+
+#~ msgid ""
+#~ "picture, photo, illustration, media, visual, start, launch, commencement, "
+#~ "initiation, opening, kick-off, kickoff, beginning, events, parallax"
+#~ msgstr ""
+#~ "hình ảnh, ảnh chụp, minh họa, phương tiện truyền thông, trực quan, khởi "
+#~ "đầu, ra mắt, bắt đầu, khai mạc, mở đầu, khởi động, sự kiện, hiệu ứng thị "
+#~ "sai"
+
+#~ msgid ""
+#~ "pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
+#~ "competitive, overview"
+#~ msgstr ""
+#~ "pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
+#~ "competitive, overview"
+
+#~ msgid ""
+#~ "process, progression, guide, workflow, sequence, instructions, stages, "
+#~ "procedure, roadmap"
+#~ msgstr ""
+#~ "process, progression, guide, workflow, sequence, instructions, stages, "
+#~ "procedure, roadmap"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion"
+#~ msgstr ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "headline, content, overview, spotlight"
+#~ msgstr ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "headline, content, overview, spotlight"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "presentation, demo, feature"
+#~ msgstr ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "presentation, demo, feature"
+
+#~ msgid ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, features, exhibit, details, capabilities, attributes, "
+#~ "promotion, headline, content, overview, spotlight"
+#~ msgstr ""
+#~ "promotion, characteristic, quality, highlights, specs, advantages, "
+#~ "functionalities, features, exhibit, details, capabilities, attributes, "
+#~ "promotion, headline, content, overview, spotlight"
+
+#~ msgid ""
+#~ "questions, answers, common answers, common questions, faq, help, support, "
+#~ "information, knowledge, guide, troubleshooting, assistance, QA, terms of "
+#~ "services"
+#~ msgstr ""
+#~ "questions, answers, common answers, common questions, faq, help, support, "
+#~ "information, knowledge, guide, troubleshooting, assistance, QA, terms of "
+#~ "services"
+
+#~ msgid ""
+#~ "questions, answers, common answers, common questions, faq, help, support, "
+#~ "information, knowledge, guide, troubleshooting, assistance, columns, QA"
+#~ msgstr ""
+#~ "questions, answers, common answers, common questions, faq, help, support, "
+#~ "information, knowledge, guide, troubleshooting, assistance, columns, QA"
+
+#~ msgid ""
+#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
+#~ "photo, illustration, media, visual, article, combination"
+#~ msgstr ""
+#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
+#~ "photo, illustration, media, visual, article, combination"
+
+#~ msgid ""
+#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
+#~ "photo, illustration, media, visual, combination"
+#~ msgstr ""
+#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
+#~ "photo, illustration, media, visual, combination"
+
+#~ msgid ""
+#~ "scrolling, depth, effect, background, layer, visual, movement, parallax"
+#~ msgstr "cuộn, độ sâu, hiệu ứng, nền, lớp, trực quan, chuyển động, thị sai"
+
+#~ msgid ""
+#~ "services, icons, features, characteristic, specs, advantages, "
+#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
+#~ "overview, specifications"
+#~ msgstr ""
+#~ "dịch vụ, biểu tượng, tính năng, đặc điểm, thông số kỹ thuật, ưu điểm, "
+#~ "chức năng, trưng bày, chi tiết, khả năng, thuộc tính, khuyến mãi, tổng "
+#~ "quan"
+
+#~ msgid ""
+#~ "shop, cart, product, categories, ecommerce, e-commerce, cards, trendy, "
+#~ "column, layouts, picture, photo, illustration, media, visual"
+#~ msgstr ""
+#~ "cửa hàng, giỏ hàng, sản phẩm, danh mục, thương mại điện tử, thẻ, xu "
+#~ "hướng, cột, bố cục, hình ảnh, ảnh, minh họa, phương tiện truyền thông, "
+#~ "hình ảnh trực quan"
+
+#~ msgid ""
+#~ "shop, group, list, card, cart, products, inventory, catalog, merchandise, "
+#~ "goods"
+#~ msgstr ""
+#~ "shop, group, list, card, cart, products, inventory, catalog, merchandise, "
+#~ "goods"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, performance, achievements, benchmarks, milestones, indicators, "
+#~ "data, measurements, reports, trends, results"
+#~ msgstr ""
+#~ "thống kê, số liệu, KPI, số đo, bảng điều khiển, phân tích, điểm nổi bật, "
+#~ "con số, hiệu suất, thành tựu, chuẩn so sánh, cột mốc, chỉ báo, dữ liệu, "
+#~ "phép đo, báo cáo, xu hướng, kết quả"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, performance, achievements, benchmarks, milestones, indicators, "
+#~ "data, measurements, reports, trends, results, analytics, summaries, "
+#~ "summary"
+#~ msgstr ""
+#~ "thống kê, thống kê, KPI, số liệu, bảng điều khiển, phân tích, điểm nổi "
+#~ "bật, số liệu, hiệu suất, thành tựu, tiêu chuẩn, mốc, chỉ báo, dữ liệu, "
+#~ "phép đo, báo cáo, xu hướng, kết quả, tóm tắt"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results"
+#~ msgstr ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, cta, call to action, "
+#~ "button"
+#~ msgstr ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, cta, call to action, "
+#~ "button"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, summaries, summary"
+#~ msgstr ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, summaries, summary"
+
+#~ msgid ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, summaries, summary, "
+#~ "large-figures, prominent, standout"
+#~ msgstr ""
+#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
+#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
+#~ "measurements, reports, trends, results, analytics, summaries, summary, "
+#~ "large-figures, prominent, standout"
+
+#~ msgid ""
+#~ "stores, button, engagement, appeal, mockup, text, content, picture, "
+#~ "photo, illustration, media, visual, article, story"
+#~ msgstr ""
+#~ "cửa hàng, nút, tương tác, sự hấp dẫn, mockup, văn bản, nội dung, hình "
+#~ "ảnh, ảnh, ảnh minh họa, phương tiện, trực quan, bài viết, câu chuyện"
+
+#~ msgid "• Free Shipping • Secure payment • Easy Return"
+#~ msgstr "• Giao hàng miễn phí • Thanh toán an toàn • Trả hàng dễ dàng"
+
+#~ msgid "⌙ Style"
+#~ msgstr "⌙ Kiểu"

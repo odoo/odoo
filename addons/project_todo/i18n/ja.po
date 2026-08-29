@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 09:04+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -29,6 +29,21 @@ msgid ""
 msgstr ""
 "&amp;#128075; <br/>\n"
 "    ToDoアプリへようこそ！"
+
+#. module: project_todo
+#: model_terms:digest.tip,tip_description:project_todo.digest_tip_project_todo_0
+msgid "<b>Alt + Shift + T</b> (Windows/Linux)"
+msgstr ""
+
+#. module: project_todo
+#: model_terms:digest.tip,tip_description:project_todo.digest_tip_project_todo_0
+msgid "<b>Ctrl + Shift + T</b> (macOS)"
+msgstr ""
+
+#. module: project_todo
+#: model_terms:digest.tip,tip_description:project_todo.digest_tip_project_todo_0
+msgid "<b>Tip: Create to-dos from anywhere</b>"
+msgstr ""
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -69,8 +84,8 @@ msgid ""
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
 "                    セパレータを追加\n"
-"                    (/<span style=\"font-style: italic;\">セパレータ</span>)"
-"\n"
+"                    (/<span style=\"font-style: italic;\">セパレータ</"
+"span>)\n"
 "                </span>"
 
 #. module: project_todo
@@ -128,10 +143,10 @@ msgid ""
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
 "            テキストを選び\n"
-"            <font style=\"background-color: #017E84; color: white\">"
-"ハイライト</font>、\n"
-"            <span style=\"text-decoration-line: line-through;\">取消線</span>"
-"\n"
+"            <font style=\"background-color: #017E84; color: white\">ハイライ"
+"ト</font>、\n"
+"            <span style=\"text-decoration-line: line-through;\">取消線</"
+"span>\n"
 "            または\n"
 "            <span style=\"font-weight: bolder;\">スタイル</span>\n"
 "            <span style=\"font-style: italic; text-decoration-line: "
@@ -174,8 +189,8 @@ msgid ""
 "    </span>"
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
-"        ToDoや割当タスクのある自分個人のパイプラインにアクセスするには、"
-"プロジェクトアプリで\n"
+"        ToDoや割当タスクのある自分個人のパイプラインにアクセスするには、プロ"
+"ジェクトアプリで\n"
 "        <span>\n"
 "            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">自"
 "分のタスク</font>をクリックします。\n"
@@ -230,8 +245,8 @@ msgstr ""
 "<span style=\"font-size: 14px;\">\n"
 "        ステージを\n"
 "        <span style=\"font-weight: bolder;\">\n"
-"            <font class=\"text-o-color-2\">かんばんビュー</font>から"
-"カスタマイズして\n"
+"            <font class=\"text-o-color-2\">かんばんビュー</font>からカスタマ"
+"イズして\n"
 "        </span>\n"
 "        お気に入りのワークフローを反映させましょう。\n"
 "    </span>"
@@ -251,11 +266,11 @@ msgid ""
 "    <br/>"
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
-"        もしあなたのToDoを特定のプロジェクトに割当たい場合は、 ⚙️ メニューを"
-"開いて\n"
+"        もしあなたのToDoを特定のプロジェクトに割当たい場合は、 ⚙️ メニューを開"
+"いて\n"
 "        <span>\n"
-"            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">"
-"タスクに変換</font>をクリックします。\n"
+"            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">タ"
+"スクに変換</font>をクリックします。\n"
 "        </span>\n"
 "        このアクションにより、他の人にもタスクが表示されます。\n"
 "    </span>\n"
@@ -319,8 +334,8 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
-"<span style=\"font-size: 14px;\">この非公開ToDoを使って自由に遊んでみましょ"
-"う</span>\n"
+"<span style=\"font-size: 14px;\">この非公開ToDoを使って自由に遊んでみましょう"
+"</span>\n"
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">試してみますか？</span>"
 
@@ -623,6 +638,11 @@ msgid "Organize your to-dos however you want"
 msgstr "ToDoを思いのままに整理"
 
 #. module: project_todo
+#: model:ir.module.module,summary:base.module_project_todo
+msgid "Organize your work with memos and to-do lists"
+msgstr ""
+
+#. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_calendar
 msgid "Personal Stage"
 msgstr "個人ステージ"
@@ -680,8 +700,6 @@ msgid "Tags"
 msgstr "タグ"
 
 #. module: project_todo
-#. odoo-python
-#: code:addons/project_todo/models/res_users.py:0
 #: model:ir.model,name:project_todo.model_project_task
 msgid "Task"
 msgstr "タスク"
@@ -700,10 +718,16 @@ msgid ""
 msgstr "To Do の説明には、現時点で復元できる過去のコンテンツが一切ありません。"
 
 #. module: project_todo
+#: model:digest.tip,name:project_todo.digest_tip_project_todo_0
+msgid "Tip: Create to-dos from anywhere"
+msgstr ""
+
+#. module: project_todo
 #. odoo-javascript
 #. odoo-python
 #: code:addons/project_todo/models/res_users.py:0
 #: code:addons/project_todo/static/src/webclient/share_target/todo_share_target_item.js:0
+#: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
 msgstr "To Do"
 
@@ -832,6 +856,13 @@ msgstr "バージョン履歴"
 #: code:addons/project_todo/models/res_users.py:0
 msgid "Welcome %s!"
 msgstr "ようこそ %s!"
+
+#. module: project_todo
+#: model_terms:digest.tip,tip_description:project_todo.digest_tip_project_todo_0
+msgid ""
+"Wherever you are, use the magic keyboard shortcut to set yourself a "
+"reminder: 💡<br>"
+msgstr ""
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding

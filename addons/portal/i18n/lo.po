@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.3a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-21 17:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-master/portal/"
@@ -17,6 +17,20 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: portal
+#: model:ir.module.module,description:base.module_portal
+msgid ""
+"\n"
+"This module adds required base code for a fully integrated customer portal.\n"
+"It contains the base controller class and base templates. Business addons\n"
+"will add their specific templates and controllers to extend the customer\n"
+"portal.\n"
+"\n"
+"This module contains most code coming from odoo v10 website_portal. Purpose\n"
+"of this module is to allow the display of a customer portal without having\n"
+"a dependency towards website editing and customization capabilities."
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -54,70 +68,83 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_account_link
-msgid ""
-"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
-"Account"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-sign-out small text-primary-emphasis\"/> Logout"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"fa fa-pencil\" title=\"Edit\"/>"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.side_content
-msgid "<i class=\"fa fa-pencil\"/> Edit information"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"fa fa-trash-o\" title=\"Clear\"/>"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
-msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
+msgid ""
+"<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid ""
+"<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Send Message\"/>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid ""
-"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
-"title=\"Next\"/>"
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
-msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
+msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\" title=\"Edit\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.side_content
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit information"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_account_link
+msgid ""
+"<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-icon=\"badge\"/> "
+"My Account"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+msgid ""
+"<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-"
+"icon=\"grid_view\"/> Apps"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+msgid ""
+"<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
+"Logout"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_backward\" role=\"img\" aria-"
+"label=\"Previous\" title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Next\" title=\"Next\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
+msgid "<i class=\"oi\" data-icon=\"delete\" title=\"Clear\"/>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid ""
-"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+"<i title=\"Documentation\" class=\"oi oi-fw o_button_icon\" data-"
+"icon=\"info\"/>"
 msgstr ""
 
 #. module: portal
@@ -134,15 +161,15 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid ""
-"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+"<span class=\"oi\" data-icon=\"chevron_backward\" role=\"img\" aria-"
+"label=\"Previous\" title=\"Previous\"/>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid ""
-"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
-"title=\"Next\"/>"
+"<span class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: portal
@@ -163,6 +190,11 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid "<span class=\"small text-muted\">Your Contact</span>"
 msgstr ""
 
 #. module: portal
@@ -298,8 +330,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
+"Changing %(field_description)s is not allowed once document(s) have been "
+"issued for your account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: portal
@@ -450,6 +482,12 @@ msgid "Customer API Keys"
 msgstr ""
 
 #. module: portal
+#: model:ir.module.module,shortdesc:base.module_portal
+#: model:ir.module.module,summary:base.module_portal
+msgid "Customer Portal"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
 msgstr ""
@@ -511,8 +549,8 @@ msgstr ""
 msgid ""
 "Disable your account, preventing any further login.<br/>\n"
 "                                        <b>\n"
-"                                            <i class=\"fa fa-exclamation-"
-"triangle text-danger\"/>\n"
+"                                            <i class=\"oi text-danger\" data-"
+"icon=\"warning\"/>\n"
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
@@ -1033,11 +1071,6 @@ msgid "Send"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
-msgid "Send message"
-msgstr ""
-
-#. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
@@ -1111,13 +1144,13 @@ msgstr ""
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The %(field_name)s is managed on your company account."
+msgid "The %(field_description)s is managed on your company account."
 msgstr ""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-msgid "The %(field_name)s is managed on your main account address."
+msgid "The %(field_description)s is managed on your main account address."
 msgstr ""
 
 #. module: portal

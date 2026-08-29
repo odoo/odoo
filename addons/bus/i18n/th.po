@@ -11,11 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 20:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/bus/th/>"
-"\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/bus/th/"
+">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,11 @@ msgid "Contact"
 msgstr "ติดต่อ"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Create Date"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,website_form_label:bus.model_res_partner
 msgid "Create a Customer"
 msgstr "สร้างลูกค้า"
@@ -70,11 +75,6 @@ msgstr "สร้างลูกค้า"
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "สร้างโดย"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
-msgid "Created on"
-msgstr "สร้างเมื่อ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -130,6 +130,16 @@ msgid "ID"
 msgstr "ไอดี"
 
 #. module: bus
+#: model:ir.module.module,shortdesc:base.module_bus
+msgid "IM Bus"
+msgstr ""
+
+#. module: bus
+#: model:ir.module.module,description:base.module_bus
+msgid "Instant Messaging Bus allow you to send messages to users, in live."
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "อัปเดตครั้งล่าสุดโดย"
@@ -156,30 +166,15 @@ msgstr ""
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/services/bus_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "Refresh"
 msgstr "รีเฟรช"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid ""
-"Save your work and refresh to get the latest updates and avoid potential "
-"issues."
-msgstr "บันทึกงานของคุณและรีเฟรชเพื่อรับการอัปเดตล่าสุดและหลีกเลี่ยงปัญหาที่อาจเกิดขึ้น"
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "The page appears to be out of date."
 msgstr "ดูเหมือนเพจจะล้าสมัยแล้ว"
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid "The page is out of date"
-msgstr "หน้านี้เลิกใช้งานแล้ว"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -205,10 +200,22 @@ msgid ""
 "users it is important to change it immediately for security reasons. I will "
 "keep nagging you about it!"
 msgstr ""
-"รหัสผ่านของคุณเป็นค่าเริ่มต้น (admin+)! หากระบบนี้เปิดเผยต่อผู้ใช้ที่ไม่น่าเชื่อถือสิ่งสำคัญคือต้องเปลี่ยน"
-"ทันทีด้วยเหตุผลด้านความปลอดภัย ฉันจะจู้จี้คุณเกี่ยวกับเรื่องนี้!"
+"รหัสผ่านของคุณเป็นค่าเริ่มต้น (admin+)! "
+"หากระบบนี้เปิดเผยต่อผู้ใช้ที่ไม่น่าเชื่อถือสิ่งสำคัญคือต้องเปลี่ยนทันทีด้วยเหตุผลด้านความปลอดภัย "
+"ฉันจะจู้จี้คุณเกี่ยวกับเรื่องนี้!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
 msgstr "การจัดการข้อความของ websocket"
+
+#~ msgid "Created on"
+#~ msgstr "สร้างเมื่อ"
+
+#~ msgid ""
+#~ "Save your work and refresh to get the latest updates and avoid potential "
+#~ "issues."
+#~ msgstr "บันทึกงานของคุณและรีเฟรชเพื่อรับการอัปเดตล่าสุดและหลีกเลี่ยงปัญหาที่อาจเกิดขึ้น"
+
+#~ msgid "The page is out of date"
+#~ msgstr "หน้านี้เลิกใช้งานแล้ว"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-18 21:40+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Kurdish (Sorani) <https://translate.odoo.com/projects/odoo-"
@@ -35,6 +35,14 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.module.module,description:base.module_sale
+msgid ""
+"\n"
+"This module contains all the common features of Sales Management and "
+"eCommerce.\n"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
 msgstr ""
@@ -47,11 +55,6 @@ msgstr "# لە هێڵەکان"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
-msgid "% Delivered"
 msgstr ""
 
 #. module: sale
@@ -81,13 +84,6 @@ msgstr ""
 msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid ""
-", it's 100% free! You'll save time creating beautiful quotations and track "
-"sales."
 msgstr ""
 
 #. module: sale
@@ -612,25 +608,77 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:mail.template,body_html:sale.email_template_edi_sale
+#: model:mail.template,body_html:sale.email_template_proforma
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
 "        Hello,\n"
 "        <br/><br/>\n"
-"        Your <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-"
-"weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"        <t t-if=\"object.state in ('draft', 'sent')\">\n"
+"            Your Pro forma invoice for quotation <span style=\"font-weight: "
+"bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Your Pro forma invoice for order <span style=\"font-weight: bold;"
+"\" t-out=\"object.name or ''\">S00052</span>\n"
+"        </t>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
 "        <t t-if=\"object.client_order_ref\">\n"
 "            (<t t-out=\"object.client_order_ref or ''\">CUSTOMER REF</t>)\n"
 "        </t>\n"
 "        amounting in <span style=\"font-weight: bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> is available.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: model:mail.template,body_html:sale.email_template_edi_sale
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.state in ('draft', 'sent')\">\n"
+"            Your quotation <span style=\"font-weight: bold;\" t-"
+"out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
+"            </t>\n"
+"            <t t-if=\"object.client_order_ref\">\n"
+"                (<t t-out=\"object.client_order_ref or ''\">CUSTOMER REF</"
+"t>)\n"
+"            </t>\n"
+"            amounting in <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "10.00</span> is ready for review.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Your order <span style=\"font-weight: bold;\" t-"
+"out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
+"            </t>\n"
+"            <t t-if=\"object.client_order_ref\">\n"
+"                (<t t-out=\"object.client_order_ref or ''\">CUSTOMER REF</"
+"t>)\n"
+"            </t>\n"
+"            amounting in <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> is ready for review.\n"
+"        </t>\n"
 "        <br/>\n"
 "        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
 ">\n"
@@ -664,108 +712,59 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:mail.template,body_html:sale.email_template_proforma
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<i class=\"oi me-1\" data-icon=\"refresh\"/>Order Again"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
-"        Hello,\n"
-"        <br/><br/>\n"
-"        Your Pro Forma invoice for <t t-out=\"doc_name or ''\">quotation</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
-"span>\n"
-"        <t t-if=\"object.origin\">\n"
-"            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
-"        </t>\n"
-"        <t t-if=\"object.client_order_ref\">\n"
-"            (<t t-out=\"object.client_order_ref or ''\">CUSTOMER REF</t>)\n"
-"        </t>\n"
-"        amounting in <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span> is available.\n"
-"        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
+"<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Contact us to get a "
+"new quotation."
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
-"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
+"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Quotations\" "
+"role=\"img\"/>"
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
-msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
+msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/> Cancelled"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Expired"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<i class=\"oi\" data-icon=\"close\"/> Reject"
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"<i class=\"fa fa-lock\"/>\n"
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
 "                    Locked"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"fa fa-print me-1\"/>View Details"
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span class=\"badge text-bg-info\">Billing</span>"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"fa fa-times\"/> Reject"
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span class=\"badge text-bg-info\">Delivery &amp; Billing</span>"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span class=\"badge text-bg-info\">Delivery</span>"
 msgstr ""
 
 #. module: sale
@@ -773,14 +772,6 @@ msgstr ""
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"This "
-"product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
-"is_product_archived\"/>"
 msgstr ""
 
 #. module: sale
@@ -804,6 +795,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
+"<span class=\"oi text-warning me-1\" data-icon=\"warning\" title=\"This "
+"product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
+"is_product_archived\"/>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<span class=\"text-muted fw-normal\">saved</span>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
 msgstr ""
@@ -816,9 +820,10 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<span>1.00 Units</span>"
+msgid ""
+"<span>1 Units</span>\n"
+"                                            <span>×</span>"
 msgstr ""
 
 #. module: sale
@@ -842,9 +847,18 @@ msgstr "<span>بڕ</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
 msgstr "<span>Disc.%</span>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span>Discount</span>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span>Tax:</span>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -863,9 +877,49 @@ msgid "<span>Warning: this order might be a duplicate of</span>"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span>·</span>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<span>×</span>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<strong class=\"smaller text-uppercase text-muted\">Invoices</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid ""
+"<strong class=\"smaller text-uppercase text-muted\">Your advantage</strong>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr "<strong class=\"d-block mt-3\">ناونیشانی گەیاندن</strong>"
+msgid ""
+"<strong>\n"
+"                        Invoicing Address\n"
+"                    </strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid ""
+"<strong>\n"
+"                        Shipping Address\n"
+"                    </strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid ""
+"<strong>\n"
+"                    Invoicing and Shipping Address\n"
+"                </strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1180,14 +1234,6 @@ msgid "Amount:"
 msgstr "بڕ:"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
-msgid ""
-"An order is to upsell when delivered quantities are above initially\n"
-"            ordered quantities, and the invoicing policy is based on ordered "
-"quantities."
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 msgid "Analytic Account"
 msgstr ""
@@ -1247,13 +1293,6 @@ msgid ""
 msgstr ""
 "ئایا دڵنیای کە دەتەوێت مامەڵە ڕێگەپێدراوەکە هەڵبوەشێنیتەوە؟ ئەم کارە "
 "ناتوانرێت پووچەڵ بکرێتەوە."
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
-msgid ""
-"As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
-"            to sell extra hours when all ordered hours have been consumed."
-msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -1337,6 +1376,11 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.action_service_material
+msgid "Bill for the work you deliver"
 msgstr ""
 
 #. module: sale
@@ -1645,11 +1689,6 @@ msgid "Connect Stripe"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Connect with your software!"
-msgstr "پەیوەندی بە سوفتوێرەکەتەوە بکە!"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
 msgstr ""
@@ -1668,11 +1707,6 @@ msgstr ""
 #: model:ir.model,name:sale.model_res_partner
 msgid "Contact"
 msgstr "پەیوەندی"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Copy"
-msgstr "لەبەرگرتنەوە"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
@@ -1778,7 +1812,6 @@ msgstr "دروستکراوە لە"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
-#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Creation Date"
 msgstr "بەرواری دروستکردن"
 
@@ -1875,16 +1908,17 @@ msgid "Customers"
 msgstr "کڕیاران"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
+msgid "D%:"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Date"
 msgstr "ڕێکەوت"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Date:"
-msgstr "ڕێکەوت:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__quotation_validity_days
@@ -1952,6 +1986,11 @@ msgid "Delivered"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
+msgid "Delivered (%)"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Delivered Quantity: %s"
@@ -1976,11 +2015,6 @@ msgstr "ناونیشانی گەیاندن"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
 msgstr "بەرواری گەیاندن"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Delivery Date:"
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -2285,6 +2319,8 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Download"
 msgstr ""
@@ -2301,13 +2337,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Draft Invoices"
 msgstr "ڕەشنووسی فاکتورەکان"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid ""
-"Drag and drop the request for quotation PDF file into your list of "
-"quotations in Odoo. Enjoy the automation!"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2364,11 +2393,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Expiration Date:"
 msgstr ""
 
 #. module: sale
@@ -2436,15 +2460,16 @@ msgid "Followers (Partners)"
 msgstr "فۆڵۆوەرەکان (هاوبەشەکان)"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                            sale orders."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_line_section_fields_null
+msgid ""
+"Forbidden section quantity or section UoM on non section sale order line"
 msgstr ""
 
 #. module: sale
@@ -2725,11 +2750,6 @@ msgid "Incoterm Location"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Incoterm:"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
@@ -2879,6 +2899,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "فاکتورەکان"
@@ -2900,12 +2921,6 @@ msgid "Invoicing"
 msgstr "فاکتورەکردن"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Invoicing Address"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_invoice_policy
@@ -2917,12 +2932,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Invoicing and Shipping Address"
 msgstr ""
 
 #. module: sale
@@ -3011,8 +3020,27 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Last Invoices"
+#. odoo-javascript
+#: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
+msgid "Last 30 days"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
+msgid "Last 365 days"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
+msgid "Last 7 days"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
+msgid "Last 90 days"
 msgstr ""
 
 #. module: sale
@@ -3098,6 +3126,25 @@ msgid "Locked orders cannot be modified."
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.actions.act_window,help:sale.action_service_material
+msgid ""
+"Log your services deliveries, additional materials and expenses to invoice "
+"accurately."
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
+msgid "M%:"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
+msgid "M:"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
@@ -3169,6 +3216,11 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_marketplaces
 msgid "Marketplaces"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: sale
@@ -3253,6 +3305,12 @@ msgid "My Sales Order Lines"
 msgstr ""
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.xml:0
+msgid "N/A"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__hidden
 msgid "Never"
 msgstr ""
@@ -3310,16 +3368,6 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
-msgid "No orders to invoice found"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
-msgid "No orders to upsell found."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "No, go back"
 msgstr ""
@@ -3328,11 +3376,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Not using Odoo?"
-msgstr "ئۆدۆ بەکارناهینێ"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
@@ -3379,11 +3422,6 @@ msgstr "ژمارەی ئەو نامانەی کە پێویستیان بە کردا
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "ژمارەی ئەو نامانەی کە هەڵەی گەیاندنیان هەیە"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Odoo"
-msgstr "ئۆدۆ"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
@@ -3519,11 +3557,6 @@ msgid "Order Date"
 msgstr "بەرواری داواکردن"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Order Date:"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
 msgstr "بەرواری داواکردن: کۆتا 365 ڕۆژ"
@@ -3590,14 +3623,26 @@ msgid "Orders"
 msgstr "داواکارییەکان"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_to_invoice
-#: model:ir.ui.menu,name:sale.menu_sale_order_invoice
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
+msgid "Orders to Confirm"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
+msgid "Orders to Deliver"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Invoice"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_upselling
-#: model:ir.ui.menu,name:sale.menu_sale_order_upselling
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Upsell"
 msgstr ""
 
@@ -3708,11 +3753,6 @@ msgstr "مامەڵەی پارەدان"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
 msgid "Payment Transactions Amount"
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Payment terms"
-msgstr "مەرجەکانی پارەدان"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_provider_menu
@@ -3924,6 +3964,11 @@ msgid "Promotions, Loyalty & Gift Card"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Provide feedback"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Qty"
 msgstr "بڕ"
@@ -4045,6 +4090,11 @@ msgid "Quotation confirmed"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Quotation for"
+msgstr ""
+
+#. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
@@ -4115,13 +4165,13 @@ msgid "Re-Invoice Policy visible"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Read the documentation"
-msgstr "بەڵگەنامەکان بخوێنەرەوە"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
 msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Ref:"
 msgstr ""
 
 #. module: sale
@@ -4142,7 +4192,17 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Reject"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Reject this quotation"
 msgstr ""
 
 #. module: sale
@@ -4240,11 +4300,6 @@ msgid "Sale"
 msgstr "فرۆشتن"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Sale Information"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sale Line Warn Msg"
@@ -4311,6 +4366,7 @@ msgid "Sale orders to cancel"
 msgstr ""
 
 #. module: sale
+#: model:ir.module.module,shortdesc:base.module_sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -4422,6 +4478,11 @@ msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Sales Order for"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
@@ -4429,6 +4490,8 @@ msgid "Sales Order(s)"
 msgstr ""
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
@@ -4447,6 +4510,12 @@ msgid "Sales Orders"
 msgstr ""
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
+msgid "Sales Revenue"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_crm_team
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__team_id
 #: model:ir.model.fields,field_description:sale.field_account_invoice_report__team_id
@@ -4461,9 +4530,13 @@ msgid "Sales Team"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.report_sales_team
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Sales Teams"
+msgstr ""
+
+#. module: sale
+#: model:ir.module.module,summary:base.module_sale
+msgid "Sales internal machinery"
 msgstr ""
 
 #. module: sale
@@ -4515,15 +4588,15 @@ msgid "Salespersons"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
-msgid "Search Sales Order"
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+msgid "Save the line."
 msgstr ""
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/tours/sale.js:0
-msgid "Search a customer name, or create one on the fly."
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
@@ -4537,9 +4610,27 @@ msgid "Section Name (eg. Products, Services)"
 msgstr "ناوی بەشی (بۆ نموونە بەرهەم، خزمەتگوزاری)"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/section_qty_field/section_qty_field.js:0
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__section_qty
+msgid "Section Quantity"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Section Summary"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__section_uom_id
+msgid "Section Unit of Measure"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/section_uom_field/section_uom_field.js:0
+msgid "Section UoM"
 msgstr ""
 
 #. module: sale
@@ -4550,7 +4641,7 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
-msgid "Select a product, or create a new one on the fly."
+msgid "Select New Quotation."
 msgstr ""
 
 #. module: sale
@@ -4650,11 +4741,6 @@ msgstr "هاوبەشکردن"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Shipping"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Shipping Address"
 msgstr ""
 
 #. module: sale
@@ -4768,11 +4854,6 @@ msgid "Specific Email"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Start on Odoo"
-msgstr "لە ئۆدۆ دەست پێ بکە"
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
 msgid "Started"
 msgstr ""
@@ -4852,13 +4933,24 @@ msgid "System Parameter"
 msgstr ""
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
+msgid "TE:"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
+msgid "TI:"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "تاگەکان"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Tax 15%"
 msgstr "باج ٪15"
 
@@ -4888,6 +4980,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__document_tax_mode__tax_included
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax Incl."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Tax Included"
 msgstr ""
 
 #. module: sale
@@ -4947,11 +5044,6 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 msgid "Terms & Conditions: %s"
 msgstr "مەرج و ڕێساکان: %s"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Terms &amp; Conditions"
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -5270,11 +5362,28 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+msgid "To Confirm"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+msgid "To Deliver"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__to_invoice
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__to_invoice
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__line_invoice_status__to_invoice
-#: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -5282,6 +5391,9 @@ msgid "To Invoice"
 msgstr "بۆ فاکتورەکردن"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/dashboard/dashboard.js:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
 msgstr ""
@@ -5412,6 +5524,11 @@ msgid "Un-invoiced Balance"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__is_unfulfilled
+msgid "Unfulfilled Orders"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
 msgid "Unit"
@@ -5498,13 +5615,6 @@ msgid "Use fixed-price and cost-based services and materials for re-invoicing"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid ""
-"Use the above REST URL to get structured data of the purchase order in UBL "
-"format."
-msgstr ""
-
-#. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send pro forma to prospects"
 msgstr ""
@@ -5517,6 +5627,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Valid until"
 msgstr ""
 
 #. module: sale
@@ -5535,8 +5650,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
 msgstr ""
 
 #. module: sale
@@ -5591,11 +5706,6 @@ msgid "Volume"
 msgstr "قەبارە"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Want to import this document in Odoo?"
-msgstr "دەتەوێت ئەم بەڵگەنامەیە لە ئۆدۆ هاوردە بکەیت؟"
-
-#. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
@@ -5630,13 +5740,6 @@ msgstr ""
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
-msgid ""
-"You can select all orders and invoice them in batch,<br>\n"
-"            or check every order and invoice them one by one."
 msgstr ""
 
 #. module: sale
@@ -5702,11 +5805,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "You don't use a good CRM software?"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
@@ -5719,11 +5817,6 @@ msgstr ""
 #: model:portal.entry,name:sale.portal_your_orders
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Your Reference:"
 msgstr ""
 
 #. module: sale
@@ -5755,6 +5848,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.payment_form_hide_tokens_heading
+msgid "Your payment methods"
 msgstr ""
 
 #. module: sale
@@ -5835,11 +5933,6 @@ msgid "sale order"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "to learn all the ways to connect your software with"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "یەکەکان"
@@ -5879,6 +5972,36 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+#~ msgstr "<strong class=\"d-block mt-3\">ناونیشانی گەیاندن</strong>"
+
+#~ msgid "Connect with your software!"
+#~ msgstr "پەیوەندی بە سوفتوێرەکەتەوە بکە!"
+
+#~ msgid "Copy"
+#~ msgstr "لەبەرگرتنەوە"
+
+#~ msgid "Date:"
+#~ msgstr "ڕێکەوت:"
+
+#~ msgid "Not using Odoo?"
+#~ msgstr "ئۆدۆ بەکارناهینێ"
+
+#~ msgid "Odoo"
+#~ msgstr "ئۆدۆ"
+
+#~ msgid "Payment terms"
+#~ msgstr "مەرجەکانی پارەدان"
+
+#~ msgid "Read the documentation"
+#~ msgstr "بەڵگەنامەکان بخوێنەرەوە"
+
+#~ msgid "Start on Odoo"
+#~ msgstr "لە ئۆدۆ دەست پێ بکە"
+
+#~ msgid "Want to import this document in Odoo?"
+#~ msgstr "دەتەوێت ئەم بەڵگەنامەیە لە ئۆدۆ هاوردە بکەیت؟"
 
 #~ msgid "with"
 #~ msgstr "لەگەڵ"

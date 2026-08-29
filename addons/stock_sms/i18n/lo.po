@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-22 00:04+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-master/"
@@ -22,7 +22,16 @@ msgstr ""
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                {{ (object.company_id.name + ': Your order n° ' + object.origin + ' has been collected.' if object.origin else object.company_id.name + ': Your order has been collected.') if hasattr(object, 'delivery_type') and object.delivery_type == 'in_store' else (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': Your order n° ' + "
+"object.origin + ' has been collected.' if object.origin else "
+"object.company_id.name + ': Your order has been collected.') if "
+"hasattr(object, 'delivery_type') and object.delivery_type == 'in_store' else "
+"(object.company_id.name + ': We are glad to inform you that your order n° ' "
+"+ object.origin + ' has been shipped.' if object.origin else "
+"object.company_id.name + ': We are glad to inform you that your order has "
+"been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 
@@ -122,6 +131,17 @@ msgid "SMS sent to the customer once the order is delivered."
 msgstr ""
 
 #. module: stock_sms
+#: model:ir.module.module,description:base.module_stock_sms
+#: model:ir.module.module,summary:base.module_stock_sms
+msgid "Send text messages when final stock move"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.module.module,shortdesc:base.module_stock_sms
+msgid "Stock - SMS"
+msgstr ""
+
+#. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
 msgid "Transfer"
 msgstr ""
@@ -130,5 +150,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+"                This feature can easily be disabled from the Settings of "
+"Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""

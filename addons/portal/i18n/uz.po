@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:43+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-21 19:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/portal/"
@@ -25,6 +25,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: portal
+#: model:ir.module.module,description:base.module_portal
+msgid ""
+"\n"
+"This module adds required base code for a fully integrated customer portal.\n"
+"It contains the base controller class and base templates. Business addons\n"
+"will add their specific templates and controllers to extend the customer\n"
+"portal.\n"
+"\n"
+"This module contains most code coming from odoo v10 website_portal. Purpose\n"
+"of this module is to allow the display of a customer portal without having\n"
+"a dependency towards website editing and customization capabilities."
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -69,88 +83,84 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_account_link
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid ""
-"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
-"Account"
-msgstr ""
-"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> Mening "
-"hisobim"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-msgid "<i class=\"fa fa-fw fa-sign-out small text-primary-emphasis\"/> Logout"
+"<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
-#, fuzzy
-msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid ""
+"<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Send Message\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Ilovalar"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+msgid "<i class=\"oi me-1\" data-icon=\"east\"/>Back to edit mode"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_addresses
+msgid "<i class=\"oi me-2\" data-icon=\"add\"/>Add Address"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"fa fa-pencil\" title=\"Edit\"/>"
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\" title=\"Edit\"/>"
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
-#, fuzzy
-msgid "<i class=\"fa fa-pencil\"/> Edit information"
-msgstr "<i class=\"fa fa-pencil\"/> Ma'lumotlarni tahrirlash"
+msgid "<i class=\"oi oi-filled\" data-icon=\"edit\"/> Edit information"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_account_link
+msgid ""
+"<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-icon=\"badge\"/> "
+"My Account"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+msgid ""
+"<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-"
+"icon=\"grid_view\"/> Apps"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+msgid ""
+"<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
+"Logout"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_backward\" role=\"img\" aria-"
+"label=\"Previous\" title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Next\" title=\"Next\"/>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.profile_picture_card
-msgid "<i class=\"fa fa-trash-o\" title=\"Clear\"/>"
+msgid "<i class=\"oi\" data-icon=\"delete\" title=\"Clear\"/>"
 msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.address_footer
-#, fuzzy
-msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Bekor qilish"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
-#, fuzzy
-msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>Tahrirlash rejimiga qaytish"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.record_pager
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
-msgstr ""
-"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Oldingi\" "
-"title=\"Oldingi\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.record_pager
-#, fuzzy
-msgid ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
-"title=\"Next\"/>"
-msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Keyingi\" "
-"title=\"Keyingi\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.my_addresses
-#, fuzzy
-msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr "<i class=\"oi oi-plus me-2\"/>Manzil qo‘shish"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-#, fuzzy
 msgid ""
-"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+"<i title=\"Documentation\" class=\"oi oi-fw o_button_icon\" data-"
+"icon=\"info\"/>"
 msgstr ""
-"<i title=\"Hujjatlar\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -169,23 +179,17 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
-#, fuzzy
 msgid ""
-"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+"<span class=\"oi\" data-icon=\"chevron_backward\" role=\"img\" aria-"
+"label=\"Previous\" title=\"Previous\"/>"
 msgstr ""
-"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Oldingi\" "
-"title=\"Oldingi\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
-#, fuzzy
 msgid ""
-"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
-"title=\"Next\"/>"
+"<span class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Next\" title=\"Next\"/>"
 msgstr ""
-"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Keyingi\" "
-"title=\"Keyingi\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -210,6 +214,11 @@ msgstr "<span class=\"small me-1 navbar-text\">Guruhlash:</span>"
 #, fuzzy
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
 msgstr "<span class=\"small me-1 navbar-text\">Saralash:</span>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
+msgid "<span class=\"small text-muted\">Your Contact</span>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -365,14 +374,10 @@ msgstr "Parolni o‘zgartirish"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-#, fuzzy
 msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
+"Changing %(field_description)s is not allowed once document(s) have been "
+"issued for your account. Please contact us directly for this operation."
 msgstr ""
-"Hisobingizga hujjat(lar) chiqarilgandan so‘ng QQS raqamini o‘zgartirishga "
-"ruxsat berilmaydi. Iltimos, bu amal uchun bizga to‘g‘ridan-to‘g‘ri murojaat "
-"qiling."
 
 #. module: portal
 #. odoo-python
@@ -545,6 +550,12 @@ msgid "Customer API Keys"
 msgstr "Mijoz API kalitlari"
 
 #. module: portal
+#: model:ir.module.module,shortdesc:base.module_portal
+#: model:ir.module.module,summary:base.module_portal
+msgid "Customer Portal"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 #, fuzzy
 msgid "Customer Portal URL"
@@ -613,18 +624,14 @@ msgstr "Dasturchi API kalitlari"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-#, fuzzy
 msgid ""
 "Disable your account, preventing any further login.<br/>\n"
 "                                        <b>\n"
-"                                            <i class=\"fa fa-exclamation-"
-"triangle text-danger\"/>\n"
+"                                            <i class=\"oi text-danger\" data-"
+"icon=\"warning\"/>\n"
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
-"Hisobingizni o‘chirib, keyingi kirishlarni oldini oling.<br/> <b> <i "
-"class=\"fa fa-exclamation-triangle text-danger\"/> Bu amalni qaytarib "
-"bo‘lmaydi. </b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1238,12 +1245,6 @@ msgid "Send"
 msgstr "Yuborish"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
-#, fuzzy
-msgid "Send message"
-msgstr "Xabar yuborish"
-
-#. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, fuzzy
@@ -1329,16 +1330,14 @@ msgstr "Rahmat!"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-#, fuzzy
-msgid "The %(field_name)s is managed on your company account."
-msgstr "%(field_name)s kompaniyangiz hisobida boshqariladi."
+msgid "The %(field_description)s is managed on your company account."
+msgstr ""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
-#, fuzzy
-msgid "The %(field_name)s is managed on your main account address."
-msgstr "%(field_name)s asosiy hisob manzilingizda boshqariladi."
+msgid "The %(field_description)s is managed on your main account address."
+msgstr ""
 
 #. module: portal
 #. odoo-python
@@ -1714,6 +1713,109 @@ msgstr ""
 #, fuzzy
 msgid "your account details"
 msgstr "hisobingiz ma'lumotlari"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
+#~ "Account"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> "
+#~ "Mening hisobim"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Ilovalar"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-pencil\"/> Edit information"
+#~ msgstr "<i class=\"fa fa-pencil\"/> Ma'lumotlarni tahrirlash"
+
+#, fuzzy
+#~ msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
+#~ msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Bekor qilish"
+
+#, fuzzy
+#~ msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
+#~ msgstr "<i class=\"oi oi-arrow-right me-1\"/>Tahrirlash rejimiga qaytish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+#~ "title=\"Previous\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Oldingi\" "
+#~ "title=\"Oldingi\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
+#~ "title=\"Next\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Keyingi\" "
+#~ "title=\"Keyingi\"/>"
+
+#, fuzzy
+#~ msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
+#~ msgstr "<i class=\"oi oi-plus me-2\"/>Manzil qo‘shish"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-"
+#~ "circle\"/>"
+#~ msgstr ""
+#~ "<i title=\"Hujjatlar\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+#~ "title=\"Previous\"/>"
+#~ msgstr ""
+#~ "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Oldingi\" "
+#~ "title=\"Oldingi\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
+#~ "title=\"Next\"/>"
+#~ msgstr ""
+#~ "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Keyingi\" "
+#~ "title=\"Keyingi\"/>"
+
+#, fuzzy
+#~ msgid ""
+#~ "Changing VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Hisobingizga hujjat(lar) chiqarilgandan so‘ng QQS raqamini o‘zgartirishga "
+#~ "ruxsat berilmaydi. Iltimos, bu amal uchun bizga to‘g‘ridan-to‘g‘ri "
+#~ "murojaat qiling."
+
+#, fuzzy
+#~ msgid ""
+#~ "Disable your account, preventing any further login.<br/>\n"
+#~ "                                        <b>\n"
+#~ "                                            <i class=\"fa fa-exclamation-"
+#~ "triangle text-danger\"/>\n"
+#~ "                                            This action cannot be "
+#~ "undone.\n"
+#~ "                                        </b>"
+#~ msgstr ""
+#~ "Hisobingizni o‘chirib, keyingi kirishlarni oldini oling.<br/> <b> <i "
+#~ "class=\"fa fa-exclamation-triangle text-danger\"/> Bu amalni qaytarib "
+#~ "bo‘lmaydi. </b>"
+
+#, fuzzy
+#~ msgid "Send message"
+#~ msgstr "Xabar yuborish"
+
+#, fuzzy
+#~ msgid "The %(field_name)s is managed on your company account."
+#~ msgstr "%(field_name)s kompaniyangiz hisobida boshqariladi."
+
+#, fuzzy
+#~ msgid "The %(field_name)s is managed on your main account address."
+#~ msgstr "%(field_name)s asosiy hisob manzilingizda boshqariladi."
 
 #, fuzzy
 #~ msgid ""

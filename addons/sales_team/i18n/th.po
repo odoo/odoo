@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-21 06:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
@@ -24,6 +24,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sales_team
+#: model:ir.module.module,description:base.module_sales_team
+msgid ""
+"\n"
+"Using this application you can manage Sales Teams with CRM and/or Sales\n"
+"=======================================================================\n"
+msgstr ""
 
 #. module: sales_team
 #. odoo-python
@@ -246,7 +254,6 @@ msgstr "ปุ่มแดชบอร์ด"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "กำหนดทีมขายใหม่"
 
@@ -419,6 +426,11 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: sales_team
+#: model:res.groups.privilege,placeholder:sales_team.res_groups_privilege_sales
+msgid "No"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of Actions"
@@ -520,8 +532,9 @@ msgstr "สมาชิกทีมขาย (รวมไม่เปิดใ�
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
-#: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.module.module,shortdesc:base.module_sales_team
+#: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Teams"
 msgstr "ทีมขาย"
 
@@ -653,7 +666,6 @@ msgstr "ใช้ทีมขายเพื่อจัดระเบียบ
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
@@ -731,8 +743,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"You are trying to create duplicate membership(s). We found that "
-"%(duplicates)s already exist(s)."
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
 msgstr "คุณกำลังพยายามสร้างสมาชิกซ้ำ เราพบว่า%(duplicates)s นั้นมีอยู่แล้ว"
 
 #. module: sales_team

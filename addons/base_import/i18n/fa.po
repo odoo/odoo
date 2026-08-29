@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 19:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-master/"
@@ -25,6 +25,31 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: base_import
+#: model:ir.module.module,description:base.module_base_import
+msgid ""
+"\n"
+"New extensible file import for Odoo\n"
+"======================================\n"
+"\n"
+"Re-implement Odoo's file import system:\n"
+"\n"
+"* Server side, the previous system forces most of the logic into the\n"
+"  client which duplicates the effort (between clients), makes the\n"
+"  import system much harder to use without a client (direct RPC or\n"
+"  other forms of automation) and makes knowledge about the\n"
+"  import/export system much harder to gather as it is spread over\n"
+"  3+ different projects.\n"
+"\n"
+"* In a more extensible manner, so users and partners can build their\n"
+"  own front-end to import from other file formats (e.g. OpenDocument\n"
+"  files) which may be simpler to handle in their work flow or from\n"
+"  their data production sources.\n"
+"\n"
+"* In a module, so that administrators and users of Odoo who do not\n"
+"  need or want an online import can avoid it being available to users.\n"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -76,9 +101,9 @@ msgid ""
 "import it at once."
 msgstr ""
 "یک مشکل ناشناخته در حین وارد کردن پیش آمد (احتمالاً قطع اتصال، تجاوز به حد "
-"داده یا تجاوز به محدودیت‌های حافظه). لطفاً در صورت موقتی بودن مشکل، دوباره تلاش "
-"کنید. اگر مشکل همچنان ادامه داشت، سعی کنید فایل را تقسیم کنید به جای اینکه "
-"آن را یکجا وارد کنید."
+"داده یا تجاوز به محدودیت‌های حافظه). لطفاً در صورت موقتی بودن مشکل، دوباره "
+"تلاش کنید. اگر مشکل همچنان ادامه داشت، سعی کنید فایل را تقسیم کنید به جای "
+"اینکه آن را یکجا وارد کنید."
 
 #. module: base_import
 #. odoo-javascript
@@ -100,6 +125,11 @@ msgstr "وارد کردن پایه"
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
 msgstr "مپینگ واردات پایه"
+
+#. module: base_import
+#: model:ir.module.module,shortdesc:base.module_base_import
+msgid "Base import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -425,15 +455,6 @@ msgid ""
 msgstr ""
 
 #. module: base_import
-#. odoo-python
-#: code:addons/base_import/models/base_import.py:0
-msgid ""
-"Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
-"اندازه تصویر بیش از حد است، تصاویر وارد شده باید کمتر از ۴۲ میلیون پیکسل "
-"باشند."
-
-#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
@@ -484,6 +505,18 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr "مقدار نامعتبر سلول در ردیف %(row)s, ستون %(col)s: %(cell_value)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Lang:"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Language"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -632,6 +665,12 @@ msgstr "ازسرگیری"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
 msgstr "جستجو یک فیلد..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Search a language..."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -844,8 +883,8 @@ msgid ""
 msgstr ""
 "از YYYY برای نمایش سال، از MM برای ماه و از DD برای روز استفاده کنید. "
 "جداکننده‌هایی مانند نقطه، اسلش یا خط تیره را شامل کنید. شما می‌توانید از یک "
-"فرمت سفارشی علاوه بر پیشنهادات ارائه‌شده استفاده کنید. برای اجازه دادن به اودو "
-"برای حدس زدن فرمت، آن را خالی بگذارید (توصیه‌شده)."
+"فرمت سفارشی علاوه بر پیشنهادات ارائه‌شده استفاده کنید. برای اجازه دادن به "
+"اودو برای حدس زدن فرمت، آن را خالی بگذارید (توصیه‌شده)."
 
 #. module: base_import
 #. odoo-javascript
@@ -947,3 +986,10 @@ msgstr "ثانیه‌ها"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "کد خطای ناشناخته %s"
+
+#~ msgid ""
+#~ "Image size excessive, imported images must be smaller than 42 million "
+#~ "pixel"
+#~ msgstr ""
+#~ "اندازه تصویر بیش از حد است، تصاویر وارد شده باید کمتر از ۴۲ میلیون پیکسل "
+#~ "باشند."

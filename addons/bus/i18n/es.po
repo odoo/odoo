@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 01:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/bus/"
@@ -62,6 +62,11 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Create Date"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,website_form_label:bus.model_res_partner
 msgid "Create a Customer"
 msgstr "Crear un cliente"
@@ -70,11 +75,6 @@ msgstr "Crear un cliente"
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Creado por"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
-msgid "Created on"
-msgstr "Creado el"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
@@ -130,6 +130,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: bus
+#: model:ir.module.module,shortdesc:base.module_bus
+msgid "IM Bus"
+msgstr ""
+
+#. module: bus
+#: model:ir.module.module,description:base.module_bus
+msgid "Instant Messaging Bus allow you to send messages to users, in live."
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
@@ -156,32 +166,15 @@ msgstr ""
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/services/bus_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "Refresh"
 msgstr "Actualizar"
 
 #. module: bus
 #. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid ""
-"Save your work and refresh to get the latest updates and avoid potential "
-"issues."
-msgstr ""
-"Guarde su trabajo y actualice la página para obtener las actualizaciones más "
-"recientes y evitar problemas potenciales."
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_plugin.js:0
 msgid "The page appears to be out of date."
 msgstr "Parece que la página no está actualizada."
-
-#. module: bus
-#. odoo-javascript
-#: code:addons/bus/static/src/services/bus_service.js:0
-msgid "The page is out of date"
-msgstr "La página no está actualizada"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -215,3 +208,16 @@ msgstr ""
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
 msgstr "gestión de mensajes de WebSocket"
+
+#~ msgid "Created on"
+#~ msgstr "Creado el"
+
+#~ msgid ""
+#~ "Save your work and refresh to get the latest updates and avoid potential "
+#~ "issues."
+#~ msgstr ""
+#~ "Guarde su trabajo y actualice la página para obtener las actualizaciones "
+#~ "más recientes y evitar problemas potenciales."
+
+#~ msgid "The page is out of date"
+#~ msgstr "La página no está actualizada"

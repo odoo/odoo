@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 10:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
@@ -34,6 +34,11 @@ msgstr ""
 "بشري أكثر من اللازم! فلنبقي علاقتنا مهنية ❤️"
 
 #. module: mail_bot
+#: model:ir.module.module,summary:base.module_mail_bot
+msgid "Add OdooBot in discussions"
+msgstr ""
+
+#. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
 msgid "Disabled"
 msgstr "معطل"
@@ -52,28 +57,23 @@ msgstr "اسم العرض"
 
 #. module: mail_bot
 #. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
-msgid ""
-"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
-"Discuss app."
+#: code:addons/mail_bot/models/res_users.py:0
+msgid "Go ahead - Try sending me an emoji 😊"
 msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
-"sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
-"help."
+"Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
+"Discuss app settings."
 msgstr ""
-"رائع! 👍%(new_line)sللوصول إلى الأوامر الخاصة، %(bold_start)sابدأ جملتك بـ%"
-"(bold_end)s %(command_start)s/%(command_end)s. حاول الحصول على المساعدة."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
-msgid "Hello,"
-msgstr "مرحبًا،"
+msgid "Hello 👋"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
@@ -94,8 +94,8 @@ msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide, "
 "ask: %(command_start)sstart the tour%(command_end)s."
 msgstr ""
-"لستُ ذكياً كفاية لفهم سؤالك.%(new_line)sلمتابعة دليلي، اسأل: %(command_start)"
-"sبدء الجولة%(command_end)s."
+"لستُ ذكياً كفاية لفهم سؤالك.%(new_line)sلمتابعة دليلي، اسأل: %"
+"(command_start)sبدء الجولة%(command_end)s."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
@@ -110,19 +110,18 @@ msgid "Idle"
 msgstr "خامل"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_bot
-msgid "Mail Bot"
-msgstr "Mail Bot"
-
-#. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
-"(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+"It looks like you're not sure what to do next. Please type %(command_start)s/"
+"%(command_end)s to see the suggestions, then select %(command_start)shelp%"
+"(command_end)s and press Enter."
 msgstr ""
-"ليس بالتحديد. لإكمال الجولة، قم بإرسال وجه باسم: %(bold_start)sاكتب%(bold_end)"
-"s %(command_start)s :)%(command_end)s ثم اضغط على إدخال."
+
+#. module: mail_bot
+#: model:ir.model,name:mail_bot.model_mail_bot
+msgid "Mail Bot"
+msgstr "Mail Bot"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -133,33 +132,31 @@ msgstr "لم يبدأ"
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s/%(command_end)s "
-"and wait for the propositions. Select %(command_start)shelp%(command_end)s "
-"and press enter."
+"Not quite. To continue the tour, please send an emoji by typing %"
+"(command_start)s:)%(command_end)s and pressing Enter, or by clicking the %"
+"(smile_icon)s icon to pick one."
 msgstr ""
-"لستُ متأكداً مما تفعله. يرجى كتابة %(command_start)s/%(command_end)s وانتظار "
-"المقترحات. قم باختيار %(command_start)sالمساعدة%(command_end)s ثم اضغط على "
-"إدخال."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
-"and wait for the propositions. Select one of them and press enter."
+"Not sure what you're doing? Please type %(command_start)s::%(command_end)s "
+"to see canned responses. Select one and press Enter."
 msgstr ""
-"لستُ متأكداً مما تفعله؟ قم بكتابة %(command_start)s/%(command_end)s وانتظر "
-"ظهور المقترحات. اختر إحداها ثم اضغط على إدخال."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid ""
-"Odoo's chat helps employees collaborate efficiently. I'm here to help you "
-"discover its features."
+"Odoo's Discuss application helps employees collaborate efficiently. I'm here "
+"to help you explore its features."
 msgstr ""
-"يساعد تطبيق الدردشة في أودو الموظفين على التعاون بكفاءة. أنا هنا لمساعدتك "
-"على استكشاف خصائصه."
+
+#. module: mail_bot
+#: model:ir.module.module,shortdesc:base.module_mail_bot
+msgid "OdooBot"
+msgstr ""
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -204,20 +201,18 @@ msgid ""
 "human language...%(new_line)sI can show you features if you write: %"
 "(command_start)sstart the tour%(command_end)s."
 msgstr ""
-"آسف، أشعر بالنعاس. أو لا! ربما أحاول إخفاء عدم علمي بلغة البشر...%(new_line)"
-"sبوسعي أن أريك الحصائص إذا قمت بكتابة: %(command_start)sبدء الجولة%"
+"آسف، أشعر بالنعاس. أو لا! ربما أحاول إخفاء عدم علمي بلغة البشر...%"
+"(new_line)sبوسعي أن أريك الحصائص إذا قمت بكتابة: %(command_start)sبدء الجولة%"
 "(command_end)s."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
-"him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
-"me."
+"Sorry, I'm not listening right now. To get my attention, %"
+"(bold_start)smention me%(bold_end)s by typing %(command_start)s@OdooBot%"
+"(command_end)s and selecting me."
 msgstr ""
-"عذراً، لم أكن مصغياً. للفت انتباه أحدهم، %(bold_start)sقم بمناداته%(bold_end)"
-"s. اكتب %(command_start)s@OdooBot%(command_end)s واخترني."
 
 #. module: mail_bot
 #. odoo-python
@@ -241,7 +236,7 @@ msgstr "هذا ليس لطيفًا! أنا بوت لكنني أملك مشاعر
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"That’s the end of this overview. You can %(bold_start)sclose this "
+"That's the end of this overview. You can %(bold_start)sclose this "
 "conversation%(bold_end)s or type %(command_start)sstart the tour%"
 "(command_end)s to see it again. Enjoy exploring Odoo!"
 msgstr ""
@@ -249,43 +244,35 @@ msgstr ""
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-msgid "This is a temporary canned response to see how canned responses work."
-msgstr "هذا الرد الجاهز مؤقت لاختبار كيفية همل الردود الجاهزة."
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
-"(paperclip_icon)s icon and select a file."
+"To %(bold_start)ssend an attachment%(bold_end)s, first click the %"
+"(plus_icon)s icon, then select %(paperclip_icon)s Attach files."
 msgstr ""
-"حتى تتمكن من %(bold_start)sإرسال مُرفق%(bold_end)s، اضغط على أيقونة %"
-"(paperclip_icon)s ثم قم بتحديد الملف."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
-msgid "To start, try to send me an emoji :)"
-msgstr "لنبدأ، جرب أن ترسل وجهاً باسماً لي :)"
-
-#. module: mail_bot
-#. odoo-python
-#: code:addons/mail_bot/models/res_users.py:0
-msgid "Try to send me an emoji"
-msgstr "جرب أن ترسل وجهاً باسماً لي"
+msgid "To get started, try sending me an emoji 😊"
+msgstr ""
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
-"discovering our product, please check %(document_link_start)sour "
+"To use special commands, %(bold_start)sstart your message with a %"
+"(bold_end)s %(command_start)s/%(command_end)s. For example, try typing %"
+"(command_start)s/help%(command_end)s."
+msgstr ""
+
+#. module: mail_bot
+#. odoo-python
+#: code:addons/mail_bot/models/mail_bot.py:0
+msgid ""
+"Unfortunately, I'm just a bot 😞 I don't understand that.%(new_line)sIf you "
+"need help exploring our apps, please check out %(document_link_start)sour "
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
-"للأسف، أنا مجرد ذكاء اصطناعي 😞 أنا لا أفهمك! إذا كنت بحاجة إلى المساعدة في "
-"فهم منتجنا، يرجى التحقق من %(document_link_start)sوثائقنا%(document_link_end)"
-"s أو %(slides_link_start)sمقاطع الفيديو لدينا%(slides_link_end)s."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -297,32 +284,25 @@ msgstr "المستخدم"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
-"use canned responses. I've created a temporary one for you."
+"use canned responses. I've created a temporary one just for you."
 msgstr ""
-"رائع! 😇%(new_line)sجرّب كتابة %(command_start)s::%(command_end)s لاستخدام "
-"الردود الجاهزة. لقد قمت بإنشاء واحد مؤقت حتى تتمكن من تجربته."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Wow you are a natural!%(new_line)sPing someone with @username to grab their "
-"attention. %(bold_start)sTry to ping me using%(bold_end)s %"
-"(command_start)s@OdooBot%(command_end)s in a sentence."
+"Wow, you're a natural!%(new_line)s Use @username to mention someone and grab "
+"their attention.%(new_line)s %(bold_start)sTry mentioning me by typing%"
+"(bold_end)s %(command_start)s@OdooBot%(command_end)s in your message."
 msgstr ""
-"واو أنت موهوب بالفطرة!%(new_line)sقم بمناداة أحدهم باستخدام @username للفت "
-"انتباهه. %(bold_start)sجرب مناداتي باستخدام%(bold_end)s %(command_start)"
-"s@OdooBot%(command_end)s في جملة."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid ""
-"Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
-"(bold_end)s, like a picture of your cute dog..."
+"Yep, I'm here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
+"(bold_end)s 📎 - maybe a picture of your cute dog... 🐕"
 msgstr ""
-"نعم، أنا هنا! 🎉 %(new_line)sوالآن، جرب %(bold_start)sإرسال مرفق%(bold_end)s "
-"كصورة لكلبك اللطيف..."
 
 #. module: mail_bot
 #. odoo-python
@@ -353,3 +333,105 @@ msgstr "حب"
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "start the tour"
 msgstr "بدء الجولة"
+
+#~ msgid ""
+#~ "Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
+#~ "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
+#~ "help."
+#~ msgstr ""
+#~ "رائع! 👍%(new_line)sللوصول إلى الأوامر الخاصة، %(bold_start)sابدأ جملتك "
+#~ "بـ%(bold_end)s %(command_start)s/%(command_end)s. حاول الحصول على "
+#~ "المساعدة."
+
+#~ msgid "Hello,"
+#~ msgstr "مرحبًا،"
+
+#~ msgid ""
+#~ "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
+#~ "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
+#~ msgstr ""
+#~ "ليس بالتحديد. لإكمال الجولة، قم بإرسال وجه باسم: %(bold_start)sاكتب%"
+#~ "(bold_end)s %(command_start)s :)%(command_end)s ثم اضغط على إدخال."
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s/%"
+#~ "(command_end)s and wait for the propositions. Select %"
+#~ "(command_start)shelp%(command_end)s and press enter."
+#~ msgstr ""
+#~ "لستُ متأكداً مما تفعله. يرجى كتابة %(command_start)s/%(command_end)s "
+#~ "وانتظار المقترحات. قم باختيار %(command_start)sالمساعدة%(command_end)s ثم "
+#~ "اضغط على إدخال."
+
+#~ msgid ""
+#~ "Not sure what you are doing. Please, type %(command_start)s:%"
+#~ "(command_end)s and wait for the propositions. Select one of them and "
+#~ "press enter."
+#~ msgstr ""
+#~ "لستُ متأكداً مما تفعله؟ قم بكتابة %(command_start)s/%(command_end)s وانتظر "
+#~ "ظهور المقترحات. اختر إحداها ثم اضغط على إدخال."
+
+#~ msgid ""
+#~ "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
+#~ "discover its features."
+#~ msgstr ""
+#~ "يساعد تطبيق الدردشة في أودو الموظفين على التعاون بكفاءة. أنا هنا لمساعدتك "
+#~ "على استكشاف خصائصه."
+
+#~ msgid ""
+#~ "Sorry, I am not listening. To get someone's attention, %(bold_start)sping "
+#~ "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and "
+#~ "select me."
+#~ msgstr ""
+#~ "عذراً، لم أكن مصغياً. للفت انتباه أحدهم، %(bold_start)sقم بمناداته%"
+#~ "(bold_end)s. اكتب %(command_start)s@OdooBot%(command_end)s واخترني."
+
+#~ msgid ""
+#~ "This is a temporary canned response to see how canned responses work."
+#~ msgstr "هذا الرد الجاهز مؤقت لاختبار كيفية همل الردود الجاهزة."
+
+#~ msgid ""
+#~ "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
+#~ "(paperclip_icon)s icon and select a file."
+#~ msgstr ""
+#~ "حتى تتمكن من %(bold_start)sإرسال مُرفق%(bold_end)s، اضغط على أيقونة %"
+#~ "(paperclip_icon)s ثم قم بتحديد الملف."
+
+#~ msgid "To start, try to send me an emoji :)"
+#~ msgstr "لنبدأ، جرب أن ترسل وجهاً باسماً لي :)"
+
+#~ msgid "Try to send me an emoji"
+#~ msgstr "جرب أن ترسل وجهاً باسماً لي"
+
+#~ msgid ""
+#~ "Unfortunately, I'm just a bot 😞 I don't understand! If you need help "
+#~ "discovering our product, please check %(document_link_start)sour "
+#~ "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
+#~ "(slides_link_end)s."
+#~ msgstr ""
+#~ "للأسف، أنا مجرد ذكاء اصطناعي 😞 أنا لا أفهمك! إذا كنت بحاجة إلى المساعدة "
+#~ "في فهم منتجنا، يرجى التحقق من %(document_link_start)sوثائقنا%"
+#~ "(document_link_end)s أو %(slides_link_start)sمقاطع الفيديو لدينا%"
+#~ "(slides_link_end)s."
+
+#~ msgid ""
+#~ "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
+#~ "use canned responses. I've created a temporary one for you."
+#~ msgstr ""
+#~ "رائع! 😇%(new_line)sجرّب كتابة %(command_start)s::%(command_end)s لاستخدام "
+#~ "الردود الجاهزة. لقد قمت بإنشاء واحد مؤقت حتى تتمكن من تجربته."
+
+#~ msgid ""
+#~ "Wow you are a natural!%(new_line)sPing someone with @username to grab "
+#~ "their attention. %(bold_start)sTry to ping me using%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s in a sentence."
+#~ msgstr ""
+#~ "واو أنت موهوب بالفطرة!%(new_line)sقم بمناداة أحدهم باستخدام @username "
+#~ "للفت انتباهه. %(bold_start)sجرب مناداتي باستخدام%(bold_end)s %"
+#~ "(command_start)s@OdooBot%(command_end)s في جملة."
+
+#~ msgid ""
+#~ "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
+#~ "attachment%(bold_end)s, like a picture of your cute dog..."
+#~ msgstr ""
+#~ "نعم، أنا هنا! 🎉 %(new_line)sوالآن، جرب %(bold_start)sإرسال مرفق%"
+#~ "(bold_end)s كصورة لكلبك اللطيف..."

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-21 10:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-master/"
@@ -25,28 +25,42 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Amount:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Bank Account:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Beneficiary:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Communication:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid ""
-"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking app</"
-"small>"
+"<small class=\"text-center text-wrap lh-sm\">\n"
+"                            Scan me in your banking app\n"
+"                        </small>"
 msgstr ""
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
-msgid "<strong class=\"mt-auto\">Communication: </strong>"
+#: model:ir.module.module,summary:base.module_payment_custom
+msgid "A payment provider for custom flows like wire transfers."
 msgstr ""
 
 #. module: payment_custom
-#. odoo-python
-#: code:addons/payment_custom/models/payment_provider.py:0
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__partner_bank_id
 msgid "Bank Account"
 msgstr "Bankkonto"
-
-#. module: payment_custom
-#. odoo-python
-#: code:addons/payment_custom/models/payment_provider.py:0
-msgid "Bank Accounts"
-msgstr "Bankkonti"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
@@ -94,13 +108,23 @@ msgid "ID"
 msgstr "ID"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid "OR"
 msgstr "ELLER"
 
 #. module: payment_custom
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Others"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__company_partner_id
+msgid "Partner"
 msgstr ""
 
 #. module: payment_custom
@@ -120,20 +144,14 @@ msgid "Payment Provider"
 msgstr "Betalingsudbyder"
 
 #. module: payment_custom
+#: model:ir.module.module,shortdesc:base.module_payment_custom
+msgid "Payment Provider: Custom Payment Modes"
+msgstr ""
+
+#. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransaktion"
-
-#. module: payment_custom
-#. odoo-python
-#: code:addons/payment_custom/models/payment_provider.py:0
-msgid "Please use the following transfer details"
-msgstr "Anvend venligst de følgende overførselsoplysninger"
-
-#. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
-msgid "Reload Pending Message"
-msgstr ""
 
 #. module: payment_custom
 #. odoo-python
@@ -151,3 +169,9 @@ msgstr ""
 #: model:payment.method,name:payment_custom.payment_method_wire_transfer
 msgid "Wire Transfer"
 msgstr "Bankoverførsel"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Bankkonti"
+
+#~ msgid "Please use the following transfer details"
+#~ msgstr "Anvend venligst de følgende overførselsoplysninger"

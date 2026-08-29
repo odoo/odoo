@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 06:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -41,13 +41,26 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
-"- Soliqlar guruhi: Soliq - bu kichik soliqlardan tashkil topgan "
-"to‘plam.     - Qat'iy belgilangan: Soliq miqdori narx qanday bo‘lishidan "
-"qat'i nazar o‘zgarmaydi.     - Foizli: Soliq summasi narxning foizi "
-"hisoblanadi: masalan, 100 * (1 + 10%) = 110 (narx kiritilmagan) masalan, "
-"110 / (1 + 10%) = 100 (narx kiritilgan) - Foiz solig‘i kiritilgan: Soliq "
-"summasi narxning bo‘linmasi hisoblanadi: masalan, 180 / (1 - 10%) = 200 "
-"(narx kiritilmagan) masalan, 200 * (1 - 10%) = 180 (narx kiritilgan)"
+"- Soliqlar guruhi: Soliq - bu kichik soliqlardan tashkil topgan to‘plam.     "
+"- Qat'iy belgilangan: Soliq miqdori narx qanday bo‘lishidan qat'i nazar "
+"o‘zgarmaydi.     - Foizli: Soliq summasi narxning foizi hisoblanadi: "
+"masalan, 100 * (1 + 10%) = 110 (narx kiritilmagan) masalan, 110 / (1 + 10%) "
+"= 100 (narx kiritilgan) - Foiz solig‘i kiritilgan: Soliq summasi narxning "
+"bo‘linmasi hisoblanadi: masalan, 180 / (1 - 10%) = 200 (narx kiritilmagan) "
+"masalan, 200 * (1 - 10%) = 180 (narx kiritilgan)"
+
+#. module: account_tax_python
+#: model:ir.module.module,description:base.module_account_tax_python
+msgid ""
+"\n"
+"A tax defined as python code consists of two snippets of python code which "
+"are executed in a local environment containing data such as the unit price, "
+"product or partner.\n"
+"\n"
+"\"Applicable Code\" defines if the tax is to be applied.\n"
+"\n"
+"\"Python Code\" defines the amount of the tax.\n"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -69,6 +82,11 @@ msgstr ""
 #, fuzzy
 msgid "Custom Formula"
 msgstr "Maxsus formula"
+
+#. module: account_tax_python
+#: model:ir.module.module,shortdesc:base.module_account_tax_python
+msgid "Define Taxes as Python Code"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
@@ -134,7 +152,8 @@ msgstr "Faqat int, float yoki None o‘zgarmas qiymatlar sifatida ruxsat etilgan
 #: code:addons/account_tax_python/models/account_tax.py:0
 #, fuzzy
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr "Python soliq formulasi kontekstida faqat sodda turlarga ruxsat beriladi"
+msgstr ""
+"Python soliq formulasi kontekstida faqat sodda turlarga ruxsat beriladi"
 
 #. module: account_tax_python
 #. odoo-python
@@ -174,3 +193,8 @@ msgstr "Noma'lum funksiya chaqiruvi"
 #, fuzzy
 msgid "Unknown identifier: %s"
 msgstr "Noma'lum identifikator: %s"
+
+#. module: account_tax_python
+#: model:ir.module.module,summary:base.module_account_tax_python
+msgid "Use python code to define taxes"
+msgstr ""

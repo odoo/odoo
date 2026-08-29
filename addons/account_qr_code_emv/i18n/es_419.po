@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 02:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -22,10 +22,24 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_qr_code_emv
+#: model:ir.module.module,description:base.module_account_qr_code_emv
+msgid ""
+"\n"
+"Bridge module addings support for EMV Merchant-Presented QR-code generation "
+"for Payment System.\n"
+msgstr ""
+
+#. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "A bank account is required for EMV QR Code generation."
 msgstr "Necesitas una cuenta bancaria para generar el código QR EMV."
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid "Account Identifier Type"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
@@ -44,6 +58,12 @@ msgid "Display Name"
 msgstr "Nombre en pantalla"
 
 #. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__company_qr_code
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__company_qr_code
+msgid "Display QR-code on invoices"
+msgstr ""
+
+#. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
 msgid "Display Qr Setting"
@@ -56,14 +76,15 @@ msgid "EMV Merchant-Presented QR-code"
 msgstr "Código QR EMV del comerciante"
 
 #. module: account_qr_code_emv
-#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
-msgid "EMV QR Settings"
-msgstr "Ajustes del código QR EMV"
-
-#. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid "Identifier Value"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -80,6 +101,18 @@ msgstr "Incluir la referencia en el código QR."
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Account Identifier Type."
+msgstr ""
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Identifier Value."
+msgstr ""
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Merchant Account Information."
 msgstr "Falta la información de la cuenta del comerciante."
 
@@ -88,18 +121,6 @@ msgstr "Falta la información de la cuenta del comerciante."
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Merchant City."
 msgstr "Falta la ciudad del comerciante."
-
-#. module: account_qr_code_emv
-#. odoo-python
-#: code:addons/account_qr_code_emv/models/res_bank.py:0
-msgid "Missing Proxy Type."
-msgstr "Falta el tipo de proxy."
-
-#. module: account_qr_code_emv
-#. odoo-python
-#: code:addons/account_qr_code_emv/models/res_bank.py:0
-msgid "Missing Proxy Value."
-msgstr "Falta el valor de proxy."
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -117,13 +138,42 @@ msgid "None"
 msgstr "Ninguno"
 
 #. module: account_qr_code_emv
-#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
-#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
-msgid "Proxy Type"
-msgstr "Tipo de proxy"
+#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
+msgid "Payment QR Settings"
+msgstr ""
 
 #. module: account_qr_code_emv
-#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
-#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
-msgid "Proxy Value"
-msgstr "Valor del proxy"
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid ""
+"The identification method linked to this bank account (e.g., Mobile Number, "
+"Company ID) used to route QR payments to this account."
+msgstr ""
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid ""
+"The specific number or ID linked to this bank account that matches the "
+"chosen Identifier Type."
+msgstr ""
+
+#. module: account_qr_code_emv
+#: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
+msgid "account_qr_code_emv"
+msgstr ""
+
+#~ msgid "EMV QR Settings"
+#~ msgstr "Ajustes del código QR EMV"
+
+#~ msgid "Missing Proxy Type."
+#~ msgstr "Falta el tipo de proxy."
+
+#~ msgid "Missing Proxy Value."
+#~ msgstr "Falta el valor de proxy."
+
+#~ msgid "Proxy Type"
+#~ msgstr "Tipo de proxy"
+
+#~ msgid "Proxy Value"
+#~ msgstr "Valor del proxy"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:39+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-20 02:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -23,6 +23,16 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: pos_hr
+#: model:ir.module.module,description:base.module_pos_hr
+msgid ""
+"\n"
+"This module allows Employees (and not users) to log in to the Point of Sale "
+"application using a barcode, a PIN number or both.\n"
+"The actual till still requires one user but an unlimited number of employees "
+"can log on to that till and process sales.\n"
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -111,10 +121,20 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: pos_hr
+#: model:ir.model,name:pos_hr.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Counted"
 msgstr "盤點數量"
+
+#. module: pos_hr
+#: model:ir.model,website_form_label:pos_hr.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -134,12 +154,14 @@ msgstr "捨棄"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order_receipt__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_product_product__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_res_partner__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -211,12 +233,14 @@ msgstr "輸入你的個人密碼"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order_receipt__id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__id
 #: model:ir.model.fields,field_description:pos_hr.field_product_product__id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_hr.field_res_partner__id
 msgid "ID"
 msgstr "識別號"
 
@@ -227,6 +251,11 @@ msgstr "識別號"
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "如果為空，所有員工都可以登錄PoS"
+
+#. module: pos_hr
+#: model:ir.module.module,summary:base.module_pos_hr
+msgid "Link module between Point of Sale and HR"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -298,6 +327,11 @@ msgid "PIN not found"
 msgstr "找不到 PIN 個人密碼"
 
 #. module: pos_hr
+#: model:ir.module.module,shortdesc:base.module_pos_hr
+msgid "POS - HR"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Password?"
@@ -322,6 +356,11 @@ msgstr "銷售點每日報告"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
 msgid "Point of Sale Order"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
 msgstr ""
 
 #. module: pos_hr

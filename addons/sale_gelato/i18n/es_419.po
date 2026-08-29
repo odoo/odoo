@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 00:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -151,6 +151,7 @@ msgstr "Entrega inmediata (Gelato)"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Gelato"
@@ -204,8 +205,8 @@ msgstr "Secreto del webhook de Gelato"
 #. odoo-python
 #: code:addons/sale_gelato/controllers/main.py:0
 msgid ""
-"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
-"%(gelato_message)s"
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
+"(gelato_message)s"
 msgstr "Gelato no pudo enviar la orden %(order_reference)s: %(gelato_message)s"
 
 #. module: sale_gelato
@@ -277,6 +278,11 @@ msgstr "Se crearon las imágenes faltantes."
 msgid "Missing product variants and images have been successfully created."
 msgstr ""
 "Las variantes e imágenes de producto que faltaban se crearon con éxito."
+
+#. module: sale_gelato
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
@@ -430,8 +436,8 @@ msgstr ""
 msgid ""
 "Unable to confirm the order %(order_reference)s on Gelato.%(error_message)s"
 msgstr ""
-"No fue posible confirmar la orden %(order_reference)s en Gelato. "
-"%(error_message)s"
+"No fue posible confirmar la orden %(order_reference)s en Gelato. %"
+"(error_message)s"
 
 #. module: sale_gelato
 #. odoo-python
@@ -439,8 +445,8 @@ msgstr ""
 msgid ""
 "Unable to delete the order %(order_reference)s on Gelato.%(error_message)s"
 msgstr ""
-"No fue posible eliminar la orden %(order_reference)s en Gelato. "
-"%(error_message)s"
+"No fue posible eliminar la orden %(order_reference)s en Gelato. %"
+"(error_message)s"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

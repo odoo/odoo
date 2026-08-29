@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-19 17:47+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/"
@@ -30,6 +30,30 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: product
+#: model:ir.module.module,description:base.module_product
+msgid ""
+"\n"
+"This is the base module for managing products and pricelists in Odoo.\n"
+"========================================================================\n"
+"\n"
+"Products support variants, different pricing methods, vendors information,\n"
+"make to stock/order, different units of measure, packaging and properties.\n"
+"\n"
+"Pricelists support:\n"
+"-------------------\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist\n"
+"        * Cost price\n"
+"        * List price\n"
+"        * Vendor price\n"
+"\n"
+"Pricelists preferences by product and/or partners.\n"
+"\n"
+"Print product labels with barcode.\n"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -50,20 +74,20 @@ msgstr "# Produkty"
 msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
 "fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
 "%(base)s s %(discount)s %% %(discount_type)s a %(surcharge)s prirážkou\n"
-"Napríklad: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Napríklad: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, fuzzy
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
 msgstr ""
 "%(item_name)s: koncový dátum (%(end_date)s) by mal byť po počiatočnom dátume "
 "(%(start_date)s)"
@@ -88,15 +112,6 @@ msgstr "%(percentage)s %% zľava z %(pricelist)s"
 #, fuzzy
 msgid "%(percentage)s %% discount on sales price"
 msgstr "%(percentage)s %% zľava z predajnej ceny"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_category.py:0
-#: code:addons/product/models/product_pricelist.py:0
-#: code:addons/product/models/product_tag.py:0
-#: code:addons/product/models/product_template.py:0
-msgid "%s (copy)"
-msgstr "%s (kópia)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
@@ -903,6 +918,11 @@ msgid "Barcode Database"
 msgstr "Databáza čiarových kódov"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Barcode Lookup"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, fuzzy
@@ -1083,8 +1103,8 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, fuzzy
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
@@ -2189,6 +2209,11 @@ msgid "Height"
 msgstr "Výška"
 
 #. module: product
+#: model:res.groups.privilege,description:product.res_groups_privilege_product
+msgid "Helps you manage your product catalog."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
 msgid ""
@@ -3132,16 +3157,16 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the "
 "attribute %(attribute)s because they do not match."
 msgstr ""
-"V produkte %(product)s nemôžete priradiť hodnotu %(value)s k atribútu "
-"%(attribute)s, pretože sa nezhodujú."
+"V produkte %(product)s nemôžete priradiť hodnotu %(value)s k atribútu %"
+"(attribute)s, pretože sa nezhodujú."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, fuzzy
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
 "V produkte %(product)s nemôžete transformovať atribút %(attribute_src)s na "
 "atribút %(attribute_dest)s."
@@ -3810,6 +3835,11 @@ msgid "Products"
 msgstr "Produkty"
 
 #. module: product
+#: model:ir.module.module,shortdesc:base.module_product
+msgid "Products & Pricelists"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
 msgstr "Cena produktov"
@@ -4030,13 +4060,6 @@ msgstr "Súvisiace varianty"
 #, fuzzy
 msgid "Related attachment"
 msgstr "Súvisiaca príloha"
-
-#. module: product
-#. odoo-javascript
-#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
-msgid "Remove"
-msgstr "Odstrániť"
 
 #. module: product
 #. odoo-javascript
@@ -4494,8 +4517,8 @@ msgstr "Referencia „%s“ už existuje."
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, fuzzy
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr ""
 "Atribút %(attribute)s produktu %(product)s musí mať aspoň jednu hodnotu."
 
@@ -4541,8 +4564,8 @@ msgstr "Typ zobrazenia, ktorý sa použil v konfigurátore produktu."
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "The exitings product has different attribute value. \"%(imported_values)s\" "
-"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
-"\"%(id)s\""
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
 msgstr ""
 
 #. module: product
@@ -5206,6 +5229,11 @@ msgid "Vendors"
 msgstr "Dodávatelia"
 
 #. module: product
+#: model:res.groups.privilege,placeholder:product.res_groups_privilege_product
+msgid "View"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
 msgstr "Titul: Virtual Home Staging"
@@ -5494,8 +5522,8 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, fuzzy
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
 "Nemôžete zmeniť produkt hodnoty %(value)s nastavenej na produkte %(product)s."
 
@@ -5504,8 +5532,8 @@ msgstr ""
 #: code:addons/product/models/product_template_attribute_value.py:0
 #, fuzzy
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
 "Hodnotu %(value)s nastavenú pre produkt %(product)s nie je možné zmeniť."
 
@@ -5751,12 +5779,6 @@ msgid "attribute_id"
 msgstr "attribute_id"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
-#, fuzzy
-msgid "barcodelookup.com"
-msgstr "barcodelookup.com"
-
-#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #, fuzzy
@@ -5876,3 +5898,14 @@ msgstr "na"
 #, fuzzy
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (kópia)"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "Odstrániť"
+
+#, fuzzy
+#~ msgid "barcodelookup.com"
+#~ msgstr "barcodelookup.com"

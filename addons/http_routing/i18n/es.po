@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-20 01:21+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
@@ -24,19 +24,32 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model:ir.module.module,description:base.module_http_routing
+msgid ""
+"\n"
+"Proposes advanced routing options not available in web or base to keep\n"
+"base modules simple.\n"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_400_layout_1
 msgid "400: Bad Request"
 msgstr "400: Bad Request"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_403_layout_1
 msgid "403: Forbidden"
 msgstr "403: Prohibido"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_415_layout_1
 msgid "415: Unsupported Media Type"
 msgstr "415: Unsupported Media Type"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_422_layout_1
+msgid "422: Unprocessable Entity"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
@@ -62,6 +75,24 @@ msgstr "Volver"
 #: model:ir.model.fields,field_description:http_routing.field_res_lang__display_name
 msgid "Display Name"
 msgstr "Nombre para mostrar"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+msgid "Drag blocks here to add them above the error message"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+msgid "Drag blocks here to add them below the error message"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -92,13 +123,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.415
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_415_layout_1
 msgid ""
 "It looks like the URL you are accessing doesn't support the format of the "
-"request. Take a look at the error message below."
+"request."
 msgstr ""
-"Parece que la URL a la que está accediendo no admite el formato de la "
-"solicitud. Eche un vistazo al mensaje de error que aparece a continuación."
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_422_layout_1
+msgid ""
+"It looks like the request you made could not be processed due to semantic "
+"errors."
+msgstr ""
 
 #. module: http_routing
 #: model:ir.model,name:http_routing.model_res_lang
@@ -111,8 +147,7 @@ msgid "Maybe you were looking for one of these <b>popular pages?</b>"
 msgstr "Tal vez buscaba alguna de estas <b>páginas populares</b>."
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.422
-#: model_terms:ir.ui.view,arch_db:http_routing.4xx
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_4xx_layout_1
 msgid "Oops! Something went wrong."
 msgstr "¡Uy! Algo salió mal."
 
@@ -127,29 +162,19 @@ msgid "Qweb"
 msgstr "Qweb"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.422
-#: model_terms:ir.ui.view,arch_db:http_routing.4xx
-msgid "Take a look at the error message below."
-msgstr "Revise el siguiente mensaje de error."
-
-#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "The error occurred while rendering the template"
 msgstr "El error ocurrió durante la visualización de la plantilla"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.403
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_403_layout_1
 msgid "The page you were looking for could not be authorized."
 msgstr "No está autorizado a ver la página que está buscando."
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
-msgid ""
-"The server couldn't understand the request. Take a look at the error message "
-"below."
+#: model_terms:ir.ui.view,arch_db:http_routing.custom_oe_structure_400_layout_1
+msgid "The server couldn't understand the request."
 msgstr ""
-"El servidor no pudo entender la solicitud. Lea el mensaje de error a "
-"continuación."
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -162,6 +187,12 @@ msgid "We couldn't find the page you're looking for!"
 msgstr "No pudimos encontrar la página que busca"
 
 #. module: http_routing
+#: model:ir.module.module,shortdesc:base.module_http_routing
+#: model:ir.module.module,summary:base.module_http_routing
+msgid "Web Routing"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "and evaluating the following expression:"
 msgstr "y evalúe la siguiente expresión:"
@@ -170,3 +201,20 @@ msgstr "y evalúe la siguiente expresión:"
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "this page"
 msgstr "esta página"
+
+#~ msgid ""
+#~ "It looks like the URL you are accessing doesn't support the format of the "
+#~ "request. Take a look at the error message below."
+#~ msgstr ""
+#~ "Parece que la URL a la que está accediendo no admite el formato de la "
+#~ "solicitud. Eche un vistazo al mensaje de error que aparece a continuación."
+
+#~ msgid "Take a look at the error message below."
+#~ msgstr "Revise el siguiente mensaje de error."
+
+#~ msgid ""
+#~ "The server couldn't understand the request. Take a look at the error "
+#~ "message below."
+#~ msgstr ""
+#~ "El servidor no pudo entender la solicitud. Lea el mensaje de error a "
+#~ "continuación."

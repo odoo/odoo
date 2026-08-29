@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-18 19:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
@@ -294,6 +294,13 @@ msgid "Early Payment Discount of"
 msgstr "Diskon Pembayaran Awal sebesar"
 
 #. module: account_payment
+#: model:ir.module.module,summary:base.module_account_payment
+msgid ""
+"Enable customers to pay invoices on the portal and post payments when "
+"transactions are processed."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
 msgstr "Hanya Penuh"
@@ -425,6 +432,11 @@ msgstr ""
 "mengotorisasi transaksi (alih-alih untuk mengambil jumlah)."
 
 #. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Online Payments"
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
@@ -500,6 +512,11 @@ msgid "Payment"
 msgstr "Pembayaran"
 
 #. module: account_payment
+#: model:ir.module.module,shortdesc:base.module_account_payment
+msgid "Payment - Account"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
 msgstr "Jumlah Pembayaran"
@@ -520,19 +537,9 @@ msgid "Payment Method Line"
 msgstr "Baris Metode Pembayaran"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_method_menu
-msgid "Payment Methods"
-msgstr "Metode-Metode Pembayaran"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr "Penyedia Pembayaran"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_provider_menu
-msgid "Payment Providers"
 msgstr "Penyedia Pembayaran"
 
 #. module: account_payment
@@ -541,22 +548,12 @@ msgid "Payment Refund Wizard"
 msgstr "Wizard Refund Pembayaran"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_token_menu
-msgid "Payment Tokens"
-msgstr "Token Pembayaran"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "Transaksi Pembayaran"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
-msgid "Payment Transactions"
-msgstr "Transaksi Tagihan"
 
 #. module: account_payment
 #. odoo-python
@@ -819,3 +816,15 @@ msgstr "terlambat"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid "Payment Methods"
+#~ msgstr "Metode-Metode Pembayaran"
+
+#~ msgid "Payment Providers"
+#~ msgstr "Penyedia Pembayaran"
+
+#~ msgid "Payment Tokens"
+#~ msgstr "Token Pembayaran"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "Transaksi Tagihan"

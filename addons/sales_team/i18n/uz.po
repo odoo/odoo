@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 00:59+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -25,6 +25,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sales_team
+#: model:ir.module.module,description:base.module_sales_team
+msgid ""
+"\n"
+"Using this application you can manage Sales Teams with CRM and/or Sales\n"
+"=======================================================================\n"
+msgstr ""
 
 #. module: sales_team
 #. odoo-python
@@ -42,37 +50,44 @@ msgstr "%(user_names)s allaqachon boshqa jamoalarda (%(team_names)s)."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-building\" title=\"Company\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"business\" "
+"title=\"Company\"/>"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Email\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"group\" "
+"title=\"Sales Team\"/>"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-phone\" title=\"Phone\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"mail\" "
+"title=\"Email\"/>"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
-msgid "<i class=\"d-none d-md-block fa fa-users\" title=\"Sales Team\"/>"
+msgid ""
+"<i class=\"d-none d-md-block oi oi-filled\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#, fuzzy
 msgid ""
-"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
-"title=\"Email\"/>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Email\" title=\"Email\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
-"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
-msgid "<i class=\"fa fa-fw me-1 fa-users text-primary\" title=\"Sales Team\"/>"
+msgid ""
+"<i class=\"oi oi-fw oi-filled me-1 text-primary\" data-icon=\"group\" "
+"title=\"Sales Team\"/>"
 msgstr ""
 
 #. module: sales_team
@@ -271,7 +286,6 @@ msgstr "Boshqaruv paneli tugmasi"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 #, fuzzy
 msgid "Define a new sales team"
 msgstr "Yangi savdo jamoasini belgilash"
@@ -481,6 +495,11 @@ msgid "Name"
 msgstr "Nomi"
 
 #. module: sales_team
+#: model:res.groups.privilege,placeholder:sales_team.res_groups_privilege_sales
+msgid "No"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 #, fuzzy
@@ -599,8 +618,9 @@ msgstr "Savdo jamoasi a'zolari (nofaollarni qo‘shgan holda)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
-#: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.module.module,shortdesc:base.module_sales_team
+#: model:ir.module.module,summary:base.module_sales_team
 #, fuzzy
 msgid "Sales Teams"
 msgstr "Savdo jamoalari"
@@ -762,7 +782,6 @@ msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 #, fuzzy
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
@@ -906,3 +925,11 @@ msgid ""
 msgstr ""
 "foydalanuvchi savdo sozlamalariga, shuningdek statistik hisobotlarga kirish "
 "huquqiga ega bo‘ladi."
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+#~ "title=\"Email\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+#~ "title=\"Email\"/>"

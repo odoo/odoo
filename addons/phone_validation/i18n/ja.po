@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2026-06-19 17:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -22,6 +22,23 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: phone_validation
+#: model:ir.module.module,description:base.module_phone_validation
+msgid ""
+"\n"
+"Phone Numbers Validation\n"
+"========================\n"
+"\n"
+"This module adds the feature of validation and formatting phone numbers\n"
+"according to a destination country.\n"
+"\n"
+"It also adds phone blacklist management through a specific model storing\n"
+"blacklisted phone numbers.\n"
+"\n"
+"It adds mail.thread.phone mixin that handles sanitation and blacklist of\n"
+"records numbers. "
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python
@@ -152,8 +169,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"サニタイズされた電話番号を保存するためのフィールド。検索や比較の"
-"スピードアップに役立ちます。"
+"サニタイズされた電話番号を保存するためのフィールド。検索や比較のスピードアッ"
+"プに役立ちます。"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -238,9 +255,9 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "ブラックリストに登録されたサニタイズされた電話番号が電話番号であるかどうかを"
-"示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合に、"
-"　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます"
-"。"
+"示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合"
+"に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ち"
+"ます。"
 
 #. module: phone_validation
 #. odoo-python
@@ -367,6 +384,11 @@ msgid "Phone Number"
 msgstr "電話番号"
 
 #. module: phone_validation
+#: model:ir.module.module,shortdesc:base.module_phone_validation
+msgid "Phone Numbers Validation"
+msgstr ""
+
+#. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 msgid "Please enter at least 3 characters when searching a Phone number."
@@ -419,6 +441,11 @@ msgstr "ブロック解除理由 : %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "ユーザ"
+
+#. module: phone_validation
+#: model:ir.module.module,summary:base.module_phone_validation
+msgid "Validate and format phone numbers"
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python

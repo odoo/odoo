@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2026-06-19 13:09+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-master/"
@@ -31,6 +31,24 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: sale_stock
+#: model:ir.module.module,description:base.module_sale_stock
+msgid ""
+"\n"
+"Manage sales quotations and orders\n"
+"==================================\n"
+"\n"
+"This module makes the link between the sales and warehouses management "
+"applications.\n"
+"\n"
+"Preferences\n"
+"-----------\n"
+"* Shipping: Choice of delivery at once or partial delivery\n"
+"* Invoicing: choose how invoices will be paid\n"
+"* Incoterms: International Commercial terms\n"
+"\n"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.actions.report,print_report_name:sale_stock.action_report_return_label
@@ -72,6 +90,13 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid ""
+"<i class=\"oi me-1\" data-icon=\"calendar_today\"/>\n"
+"                            Expected delivery:"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_template
 msgid "<i class=\"oi me-2\" data-icon=\"reply\"/>Return"
 msgstr ""
@@ -83,13 +108,13 @@ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/> لغو شد"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>لغو شد"
+msgid "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Received"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> دریافت شده است"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Received"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> دریافت شده است"
+msgid "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Shipped"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -98,8 +123,8 @@ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> در انتظار ورو�
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
-msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>آماده‌سازی"
+msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Preparation"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -110,21 +135,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
 msgstr "<span class=\"o_stat_text\">فروش</span>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"small badge rounded-pill text-bg-success "
-"orders_label_text_align\">\n"
-"                                        <i class=\"oi oi-fw\" data-"
-"icon=\"local_shipping\"/> Shipped\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success "
-"orders_label_text_align\">\n"
-"                                        <i class=\"oi oi-fw\" data-"
-"icon=\"local_shipping\"/> ارسال شد\n"
-"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -149,7 +159,7 @@ msgstr ""
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
-msgid "A return label has been downloaded for the following products:<br/>"
+msgid "A return label has been downloaded for the following products:"
 msgstr ""
 
 #. module: sale_stock
@@ -205,6 +215,11 @@ msgid "Availability"
 msgstr "دسترسی"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_replenishment_info__sale_delay
+msgid "Availability Time"
+msgstr ""
+
+#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.js:0
 msgid "Available"
@@ -214,6 +229,13 @@ msgstr "در دسترس"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Available in stock"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_replenishment_info__sale_delay
+msgid ""
+"Choose the maximum number of days within which the product should be "
+"available for delivery to a customer or for use in other situations."
 msgstr ""
 
 #. module: sale_stock
@@ -258,11 +280,6 @@ msgid "Customer reference"
 msgstr "مراجعه مشتری"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "Date:"
-msgstr "تاریخ:‌"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
 msgstr "انبار پیش‌فرض"
@@ -273,6 +290,7 @@ msgid "Delivered"
 msgstr "تحویل داده شد"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "تحویل"
@@ -320,6 +338,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
@@ -377,6 +396,11 @@ msgid "Expected Delivery"
 msgstr "تحویل مورد انتظار"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Expected delivery"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
 msgstr "پیش‌بینی تاریخ مورد انتظار"
@@ -422,6 +446,7 @@ msgstr "دارای تاخیر در برداشتن"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
@@ -477,11 +502,6 @@ msgstr "داده روزنامه"
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
 msgstr "آیتم روزنامه"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "Last Delivery Orders"
-msgstr "آخرین سفارشات تحویل"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_uid
@@ -651,6 +671,11 @@ msgid "Qty To Deliver"
 msgstr "تعداد برای تحویل"
 
 #. module: sale_stock
+#: model:ir.module.module,summary:base.module_sale_stock
+msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
+msgstr ""
+
+#. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 msgid "Quotations"
@@ -785,6 +810,11 @@ msgid "Sales Analysis Report"
 msgstr "گزارش تحلیل فروش"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_stock_replenishment_info_sale_stock_inherit
+msgid "Sales Availability Time"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
@@ -810,6 +840,11 @@ msgstr "سفارشات فروش"
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
 msgstr "فروش ایمن روز"
+
+#. module: sale_stock
+#: model:ir.module.module,shortdesc:base.module_sale_stock
+msgid "Sales and Warehouse Management"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -888,6 +923,11 @@ msgstr "قانون موجودی انبار"
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
 msgstr "گزارش قواعد انبار"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_replenishment_info
+msgid "Stock delivery time information"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -992,6 +1032,7 @@ msgstr "لغوشده"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_stock_replenishment_info_sale_stock_inherit
 msgid "days"
 msgstr "روز"
 
@@ -1016,3 +1057,28 @@ msgstr "پردازش شده به جای"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr ""
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>لغو شد"
+
+#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
+#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>آماده‌سازی"
+
+#~ msgid ""
+#~ "<span class=\"small badge rounded-pill text-bg-success "
+#~ "orders_label_text_align\">\n"
+#~ "                                        <i class=\"oi oi-fw\" data-"
+#~ "icon=\"local_shipping\"/> Shipped\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span class=\"small badge rounded-pill text-bg-success "
+#~ "orders_label_text_align\">\n"
+#~ "                                        <i class=\"oi oi-fw\" data-"
+#~ "icon=\"local_shipping\"/> ارسال شد\n"
+#~ "                                    </span>"
+
+#~ msgid "Date:"
+#~ msgstr "تاریخ:‌"
+
+#~ msgid "Last Delivery Orders"
+#~ msgstr "آخرین سفارشات تحویل"

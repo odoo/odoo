@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 14:43+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
@@ -101,65 +101,36 @@ msgid ""
 msgstr "<em>Ro‘yxatdan o‘tish <b>Yopilgan</b></em>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
-#, fuzzy
-msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
+#: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
+msgid "<i class=\"oi me-1\" data-icon=\"public\" title=\"Website\"/>"
 msgstr ""
-"<em>Bu yerga ishtirokchilaringizdan birining iqtibosini yozing. Bu "
-"tadbirlaringizga ishonch uyg‘otadi.</em>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_card
+msgid ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"location_on\" title=\"Location\"/"
+">"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
-#, fuzzy
-msgid "<i class=\"fa fa-caret-left me-2\"/><small>Previous</small>"
+msgid "<i class=\"oi me-2\" data-icon=\"arrow_left\"/><small>Previous</small>"
 msgstr ""
-"<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>2025-yil 23-avgust"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+msgid "<i class=\"oi me-2\" data-icon=\"block\"/>Sold Out"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-#, fuzzy
-msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
-msgstr "<i class=\"fa fa-caret-left me-2\"/><small>Oldingi</small>"
+msgid "<i class=\"oi me-2\" data-icon=\"check\" role=\"img\"/>Registered"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-#, fuzzy
-msgid "<i class=\"fa fa-check me-2\"/>Registered"
-msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>Ro‘yxatdan o‘tgan"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
-#, fuzzy
-msgid ""
-"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
-"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
+msgid "<i class=\"oi me-2\" data-icon=\"check\"/>Registered"
 msgstr ""
-"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
-"title=\"Facebook\"/>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
-#, fuzzy
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
-"<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/"
-">"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_card
-#, fuzzy
-msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
-msgstr ""
-"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
-"title=\"LinkedIn\"/>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-#, fuzzy
-msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
-msgstr ""
-"<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los-Anjeles, "
-"Kaliforniya, AQSH"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -183,20 +154,31 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.navbar
-#, fuzzy
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
 msgid ""
-"<i class=\"oi oi-chevron-left\"/>\n"
-"                <span>All Events</span>"
+"<i class=\"oi oi-filled me-1\" data-icon=\"settings\" role=\"img\" aria-"
+"label=\"Configure\" title=\"Configure event tickets\"/><em>Configure "
+"Tickets</em>"
 msgstr ""
-"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
-"title=\"Youtube\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"calendar_today\" "
 "role=\"presentation\"/>August 23, 2025"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
+msgid ""
+"<i class=\"oi\" data-icon=\"chevron_backward\"/>\n"
+"                <span>All Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid ""
+"<i class=\"oi\" data-icon=\"location_on\" title=\"Location\"/> Online event"
 msgstr ""
 
 #. module: website_event
@@ -219,15 +201,8 @@ msgstr "<small class=\"fw-bold\">Boshlanadi</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
-#, fuzzy
-msgid "<small>Next</small><i class=\"fa fa-caret-right ms-2\"/>"
-msgstr "<small class=\"text-muted\">Taqvimga qo‘shish:</small>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-#, fuzzy
-msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
-msgstr "<span class=\"fa fa-plus me-1\"/> Tadbir yaratish"
+msgid "<small>Next</small><i class=\"oi ms-2\" data-icon=\"arrow_right\"/>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_entry_preview_data
@@ -302,11 +277,16 @@ msgstr ""
 "class=\"o_countdown_metric\"/>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Create an Event"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
 "<span class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Sold "
-"Out\n"
+"                                        <i class=\"oi me-2\" data-"
+"icon=\"block\"/>Sold Out\n"
 "                                    </span>"
 msgstr ""
 
@@ -519,6 +499,12 @@ msgstr "Barcha mamlakatlar"
 #, fuzzy
 msgid "All Events"
 msgstr "Barcha tadbirlar"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/website_builder/event_page_option_plugin.js:0
+msgid "All events"
+msgstr ""
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -881,9 +867,8 @@ msgstr "Tadbir ma'lumotlari"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-#, fuzzy
-msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
-msgstr "Tadbir ma'lumotlari <i class=\"fa fa-chevron-right\"/>"
+msgid "Event Info <i class=\"oi\" data-icon=\"chevron_right\"/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
@@ -1000,6 +985,7 @@ msgstr ""
 #: code:addons/website_event/models/website.py:0
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 #: code:addons/website_event/static/src/website_builder/event_searchbar_option.xml:0
+#: model:ir.module.module,shortdesc:base.module_website_event
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -1090,9 +1076,8 @@ msgstr "Sahifa pastki qismi ko‘rinadi"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
-#, fuzzy
-msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
-msgstr "Chiptalarni olish <i class=\"fa fa-chevron-right\"/>"
+msgid "Get Tickets <i class=\"oi\" data-icon=\"chevron_right\"/>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1278,9 +1263,8 @@ msgstr "Onlayn qo‘shiling"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
-#, fuzzy
-msgid "Join online <i class=\"ms-1 fa fa-globe\"/>"
-msgstr "Onlayn qo‘shiling <i class=\"ms-1 fa fa-globe\"/>"
+msgid "Join online <i class=\"oi ms-1\" data-icon=\"public\"/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_uid
@@ -1472,6 +1456,148 @@ msgid "OpenWood Collection Online Reveal"
 msgstr "OpenWood kolleksiyasining onlayn taqdimoti"
 
 #. module: website_event
+#: model:ir.module.module,description:base.module_website_event
+msgid ""
+"Organize Events, Trainings & Webinars\n"
+"-------------------------------------\n"
+"\n"
+"### Schedule, Promote, Sell, Organize\n"
+"\n"
+"Organize, promote and sell events online. Whether you organize meetings, "
+"conferences, trainings or webinars, Odoo gives you all the features you need "
+"to manage your events.\n"
+"\n"
+"Create Awesome Event Pages\n"
+"--------------------------\n"
+"\n"
+"### Get rid of old WYSIWYG editors\n"
+"\n"
+"Create beautiful event pages by drag & droping well designed *'Building "
+"Blocks'*. Publish event photos, speakers, schedule, etc.\n"
+"\n"
+"Odoo's unique *'edit inline'* approach makes website creation surprisingly "
+"easy. \"Want to introduce a speaker? to change the price of a ticket? to "
+"update a banner? promote sponsors?\" just click and change.\n"
+"\n"
+"Sell Tickets Online\n"
+"-------------------\n"
+"\n"
+"### Automate the registration and payment process\n"
+"\n"
+"Sell registrations to your event with the multi-ticketing feature. Events "
+"can be free or for a fee. Attendees can pay online with a credit card or on "
+"invoice, based on your configuration.\n"
+"\n"
+"Boost your sales with early-bird prices, special conditions for members, or "
+"extra services with multiple tickets.\n"
+"\n"
+"A Clean Google Analytics Integration\n"
+"------------------------------------\n"
+"\n"
+"### Control your sales funnel with Google Analytics\n"
+"\n"
+"Get a clear visibility of your sales funnel. Odoo's Google Analytics "
+"trackers are configured by default to track all kind of events related to "
+"shopping carts, call-to-actions, etc.\n"
+"\n"
+"As Odoo marketing tools (mass mailing, campaigns, etc) are also linked with "
+"Google Analytics, you get a full view of your business.\n"
+"\n"
+"Promote Events Efficiently\n"
+"--------------------------\n"
+"\n"
+"### Mass Mailing & Social Media\n"
+"\n"
+"Use the segmentation, the social network integration and mass mailing "
+"features to promote your events to the right audience. Setup automated "
+"emails to attendees to send them last minute details.\n"
+"\n"
+"Designer-Friendly Themes\n"
+"------------------------\n"
+"\n"
+"### Designers love working on Odoo\n"
+"\n"
+"Themes are awesome and easy to design. You don't need to develop to create "
+"new pages, themes or building blocks. We use a clean HTML structure, a "
+"[bootstrap](http://getbootstrap.com/) CSS and our modularity allows to "
+"distribute your themes easily.\n"
+"\n"
+"The building block approach allows the website to stay clean after the end-"
+"users start creating new contents.\n"
+"\n"
+"Make Your Event More Visible\n"
+"----------------------------\n"
+"\n"
+"### SEO tools at your finger tips\n"
+"\n"
+"SEO tools are ready to use, with no configuration required. Odoo suggests "
+"keywords according to Google most searched terms, Google Analytics tracks "
+"your shopping cart events and sitemap are created automatically.\n"
+"\n"
+"We even do structured content automatically to promote your events and "
+"products efficiently in Google.\n"
+"\n"
+"Leverage Social Media\n"
+"---------------------\n"
+"\n"
+"### Optimize: from Ads to Conversions\n"
+"\n"
+"Create new landing pages easily with the Odoo inline editing feature. Send "
+"visitors of your different marketing campaigns to event landing pages to "
+"optimize conversions.\n"
+"\n"
+"And Much More...\n"
+"----------------\n"
+"\n"
+"### Schedule\n"
+"\n"
+"-   Calendar of Events\n"
+"-   Publish related documents\n"
+"-   Ressources allocation\n"
+"-   Automate purchases (catering...)\n"
+"-   Multiple locations and organizers\n"
+"-   Mobile Interface\n"
+"\n"
+"### Sell\n"
+"\n"
+"-   Online or offline sales\n"
+"-   Automated invoicing\n"
+"-   Cancellation policies\n"
+"-   Specific prices for members\n"
+"-   Dashboards and reporting\n"
+"\n"
+"### Organize\n"
+"\n"
+"-   Advanced Planification\n"
+"-   Print Badges\n"
+"-   Automate Follow-up Emails\n"
+"-   Min/Max capacities\n"
+"-   Manage classes and ressources\n"
+"-   Create group of attendees\n"
+"-   Automate statisfaction surveys\n"
+"\n"
+"Fully Integrated With Others Apps\n"
+"---------------------------------\n"
+"\n"
+"### Get hundreds of open source apps for free\n"
+"\n"
+"\n"
+"### eCommerce\n"
+"\n"
+"Promote products, sell online, optimize visitors' shopping experiences.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"\n"
+"### Our Team\n"
+"\n"
+"Create a great \"About us\" page by presenting your team efficiently.\n"
+msgstr ""
+
+#. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1550,6 +1676,11 @@ msgstr "Ommaviy"
 #, fuzzy
 msgid "Publish"
 msgstr "Nashr etish"
+
+#. module: website_event
+#: model:ir.module.module,summary:base.module_website_event
+msgid "Publish events, sell tickets"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -2332,6 +2463,79 @@ msgstr "w-100"
 #, fuzzy
 msgid "w-100 py-sm-3 mt-sm-2"
 msgstr "w-100 py-sm-3 mt-sm-2"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
+#~ msgstr ""
+#~ "<em>Bu yerga ishtirokchilaringizdan birining iqtibosini yozing. Bu "
+#~ "tadbirlaringizga ishonch uyg‘otadi.</em>"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-caret-left me-2\"/><small>Previous</small>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>2025-yil 23-avgust"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
+#~ msgstr "<i class=\"fa fa-caret-left me-2\"/><small>Oldingi</small>"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-check me-2\"/>Registered"
+#~ msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>Ro‘yxatdan o‘tgan"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+#~ "title=\"Configure event tickets\"/><em>Configure Tickets</em>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+#~ "title=\"Facebook\"/>"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-github text-github\" aria-label=\"Github\" "
+#~ "title=\"Github\"/>"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-map-marker me-2 text-muted\" title=\"Location\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+#~ "title=\"LinkedIn\"/>"
+
+#, fuzzy
+#~ msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
+#~ msgstr ""
+#~ "<i class=\"fa fa-map-marker me-2\" role=\"presentation\"/>Los-Anjeles, "
+#~ "Kaliforniya, AQSH"
+
+#, fuzzy
+#~ msgid ""
+#~ "<i class=\"oi oi-chevron-left\"/>\n"
+#~ "                <span>All Events</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+#~ "title=\"Youtube\"/>"
+
+#, fuzzy
+#~ msgid "<small>Next</small><i class=\"fa fa-caret-right ms-2\"/>"
+#~ msgstr "<small class=\"text-muted\">Taqvimga qo‘shish:</small>"
+
+#, fuzzy
+#~ msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
+#~ msgstr "<span class=\"fa fa-plus me-1\"/> Tadbir yaratish"
+
+#, fuzzy
+#~ msgid "Event Info <i class=\"fa fa-chevron-right\"/>"
+#~ msgstr "Tadbir ma'lumotlari <i class=\"fa fa-chevron-right\"/>"
+
+#, fuzzy
+#~ msgid "Get Tickets <i class=\"fa fa-chevron-right\"/>"
+#~ msgstr "Chiptalarni olish <i class=\"fa fa-chevron-right\"/>"
+
+#, fuzzy
+#~ msgid "Join online <i class=\"ms-1 fa fa-globe\"/>"
+#~ msgstr "Onlayn qo‘shiling <i class=\"ms-1 fa fa-globe\"/>"
 
 #, fuzzy
 #~ msgid ""

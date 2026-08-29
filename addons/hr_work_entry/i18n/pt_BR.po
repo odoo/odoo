@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:41+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 01:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -71,6 +71,11 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "<span class=\"fw-bold\">Availability</span>"
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid ""
 "<span class=\"text-muted fst-italic\">Define how this time type affects "
 "payslips and salary computation.</span>"
@@ -91,6 +96,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_attendance
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_flexi_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_attendance
@@ -203,11 +209,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
-msgid "Added to Monthly Pay"
-msgstr "Adicionado ao pagamento mensal"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_additional_hours_100
@@ -507,15 +508,6 @@ msgid "Caring Leave"
 msgstr "Licença para cuidados"
 
 #. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_extra_hours
-msgid ""
-"Check this setting if you want the hours to be considered as extra time and "
-"added as a bonus to the basic salary."
-msgstr ""
-"Marque esta opção se quiser que as horas sejam consideradas como horas "
-"extras e adicionadas como um bônus ao salário base."
-
-#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_child_adoption
 msgid "Child Adoption / Long-Term Foster Care (Circumstantial leave)"
 msgstr ""
@@ -676,6 +668,8 @@ msgstr "Configurações"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Considered as"
 msgstr "Considerado como"
 
@@ -961,6 +955,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/export_cog_menu/export_cog_menu.xml:0
 #: model:ir.actions.act_window,name:hr_work_entry.action_open_export_wizard
+#: model:ir.actions.server,name:hr_work_entry.action_hr_employee_export_work_entries
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Export Time Entries"
 msgstr ""
@@ -1072,6 +1067,11 @@ msgid "Flemish Educational Time Off (with Meal Voucher)"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flexi_attendance
+msgid "Flexi Attendance"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -1079,11 +1079,6 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
-
-#. module: hr_work_entry
-#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1610,6 +1605,11 @@ msgid "MTY"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.module.module,summary:base.module_hr_work_entry
+msgid "Manage work entries"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__3
 msgid "March"
 msgstr ""
@@ -1630,6 +1630,11 @@ msgstr "Licença marital"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_marriage_family
 msgid "Marriage of a Family Member (Circumstantial leave)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1963,6 +1968,11 @@ msgid "OT"
 msgstr "OT"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
+msgid "OT2"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
 msgid "Occupational Disease (Unpaid)"
 msgstr "Doença ocupacional (não remunerada)"
@@ -2053,6 +2063,11 @@ msgstr "Horas extras"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
 msgid "Overtime (1.5x)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
+msgid "Overtime 0% (recoverable)"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2249,7 +2264,33 @@ msgid "PDU"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.bd_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.in_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.my_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.nl_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.om_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.ph_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.pk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.pl_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.ro_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.sa_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.sk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_public_holiday
 msgid "PH"
 msgstr "PH"
 
@@ -2493,11 +2534,37 @@ msgid "Provide a description of the Time Type, in which case should it be used"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.in_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.it_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_bank_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_work_entry_type_bank_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.my_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.nl_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.om_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.ph_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.pk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.pl_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.ro_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.sa_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.sk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.tr_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
+#: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_public_holiday
 msgid "Public Holiday"
 msgstr "Feriado"
 
@@ -2672,7 +2739,6 @@ msgstr "SPT"
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_sick_leave_without_certificate
 #: model:hr.work.entry.type,display_code:hr_work_entry.ch_work_entry_type_sick_leave
-#: model:hr.work.entry.type,display_code:hr_work_entry.eg_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.fr_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.generic_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.hk_work_entry_type_sick_leave
@@ -2684,6 +2750,8 @@ msgstr "SPT"
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_senior_time_off
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_sick_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_sick_leave
@@ -2764,6 +2832,11 @@ msgid "Second Degree Relatives Compassionate Leave"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_selectable
+msgid "Selectable in Working Schedule"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_senior_time_off
 msgid "Senior Time Off"
 msgstr ""
@@ -2838,7 +2911,6 @@ msgstr "Licença médica 80%"
 #: model:hr.work.entry.type,name:hr_work_entry.bd_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ch_work_entry_type_sick_leave
-#: model:hr.work.entry.type,name:hr_work_entry.eg_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.fr_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.generic_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.hk_work_entry_type_sick_leave
@@ -2873,9 +2945,19 @@ msgid "Sick Time Off (Paid at 80%)"
 msgstr "Licença médica (remunerada a 80%)"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
+msgid "Sick Time Off (Unpaid)"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
 msgid "Sick Time Off (Without Guaranteed Salary)"
 msgstr "Licença médica (sem garantia de salário)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
+msgid "Sick Time Off 75%"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
@@ -3059,6 +3141,12 @@ msgstr ""
 "ambiental"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid ""
+"Tells whether this time type can be selected in working schedules or not"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee
 msgid "Temporary economic unemployment for employee"
 msgstr ""
@@ -3219,12 +3307,6 @@ msgstr "Folga de Treinamento"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_training
 msgid "Training with the exception of social promotion and educational leave"
 msgstr "Formação, com exceção da promoção social e da licença de estudos"
-
-#. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
-msgid "Type of Work"
-msgstr "Tipo de trabalho"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_exception_decoration
@@ -3508,6 +3590,11 @@ msgid "Work Detail"
 msgstr "Informações de trabalho"
 
 #. module: hr_work_entry
+#: model:ir.module.module,shortdesc:base.module_hr_work_entry
+msgid "Work Entries"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employee"
 msgstr "Funcionários dos registros de trabalho"
@@ -3562,6 +3649,11 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
 msgid "Workers Compensation"
 msgstr "Compensação de trabalhadores"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Working Schedule"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__working_time
@@ -3632,6 +3724,19 @@ msgstr "ex.: WORK100, LEAVE210, OUT, ..."
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "workentries_"
 msgstr ""
+
+#~ msgid "Added to Monthly Pay"
+#~ msgstr "Adicionado ao pagamento mensal"
+
+#~ msgid ""
+#~ "Check this setting if you want the hours to be considered as extra time "
+#~ "and added as a bonus to the basic salary."
+#~ msgstr ""
+#~ "Marque esta opção se quiser que as horas sejam consideradas como horas "
+#~ "extras e adicionadas como um bônus ao salário base."
+
+#~ msgid "Type of Work"
+#~ msgstr "Tipo de trabalho"
 
 #~ msgid "YSO"
 #~ msgstr "YSO"

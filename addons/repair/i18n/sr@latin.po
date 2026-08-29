@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-21 17:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -24,6 +24,22 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: repair
+#: model:ir.module.module,description:base.module_repair
+msgid ""
+"\n"
+"The aim is to have a complete module to manage all products repairs.\n"
+"====================================================================\n"
+"\n"
+"The following topics are covered by this module:\n"
+"------------------------------------------------------\n"
+"    * Add/remove products in the reparation\n"
+"    * Impact for stocks\n"
+"    * Warranty concept\n"
+"    * Repair quotation report\n"
+"    * Notes for the technician and for the final customer\n"
+msgstr ""
 
 #. module: repair
 #. odoo-python
@@ -509,11 +525,6 @@ msgid "Followers (Partners)"
 msgstr "Pratioci (Partneri)"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome ikonica npr. fa-tasks"
-
-#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
 msgstr "Buduće aktivnosti"
@@ -719,6 +730,11 @@ msgstr ""
 #: model:ir.model,name:repair.model_stock_lot
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: repair
@@ -1177,6 +1193,11 @@ msgid "Repair Tag"
 msgstr ""
 
 #. module: repair
+#: model:ir.module.module,summary:base.module_repair
+msgid "Repair damaged products"
+msgstr ""
+
+#. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Repair must be under repair in order to end reparation."
@@ -1207,6 +1228,7 @@ msgstr ""
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
+#: model:ir.module.module,shortdesc:base.module_repair
 #: model:ir.ui.menu,name:repair.menu_repair_order
 #: model:ir.ui.menu,name:repair.repair_menu
 #: model:stock.picking.type,name:repair.picking_type_warehouse0_repair
@@ -1662,6 +1684,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "text"
 msgstr ""
+
+#~ msgid "Font awesome icon e.g. fa-tasks"
+#~ msgstr "Font awesome ikonica npr. fa-tasks"
 
 #~ msgid "Website Messages"
 #~ msgstr "Website poruke"

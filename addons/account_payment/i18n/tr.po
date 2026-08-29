@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:09+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-20 09:12+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
@@ -300,6 +300,13 @@ msgid "Early Payment Discount of"
 msgstr "Şunun için erken ödeme indirimi"
 
 #. module: account_payment
+#: model:ir.module.module,summary:base.module_account_payment
+msgid ""
+"Enable customers to pay invoices on the portal and post payments when "
+"transactions are processed."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
 msgstr "Yalnızca Tamamı"
@@ -429,6 +436,11 @@ msgstr ""
 "belirteçlerin (tutarı yakalamak yerine) kullanılamadığını unutmayın."
 
 #. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Online Payments"
+msgstr ""
+
+#. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
@@ -504,6 +516,11 @@ msgid "Payment"
 msgstr "Ödeme"
 
 #. module: account_payment
+#: model:ir.module.module,shortdesc:base.module_account_payment
+msgid "Payment - Account"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
 msgstr "Ödeme Tutarı"
@@ -524,30 +541,15 @@ msgid "Payment Method Line"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_method_menu
-msgid "Payment Methods"
-msgstr "Ödeme Yöntemleri"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
 msgstr "Ödeme Sağlayıcı"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_provider_menu
-msgid "Payment Providers"
-msgstr "Ödeme Sağlayıcıları"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
 msgstr "Ödeme Geri Ödeme Sihirbazı"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_token_menu
-msgid "Payment Tokens"
-msgstr "Ödeme Token'ları"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
@@ -556,11 +558,6 @@ msgstr "Ödeme Token'ları"
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
-msgid "Payment Transactions"
-msgstr "Ödeme İşlemleri"
 
 #. module: account_payment
 #. odoo-python
@@ -820,3 +817,15 @@ msgstr "Vadesi geçmiş."
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr ""
+
+#~ msgid "Payment Methods"
+#~ msgstr "Ödeme Yöntemleri"
+
+#~ msgid "Payment Providers"
+#~ msgstr "Ödeme Sağlayıcıları"
+
+#~ msgid "Payment Tokens"
+#~ msgstr "Ödeme Token'ları"
+
+#~ msgid "Payment Transactions"
+#~ msgstr "Ödeme İşlemleri"

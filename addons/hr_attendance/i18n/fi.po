@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:08+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2026-06-19 00:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
@@ -32,6 +32,17 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: hr_attendance
+#: model:ir.module.module,description:base.module_hr_attendance
+msgid ""
+"\n"
+"This module aims to manage employee's attendances.\n"
+"==================================================\n"
+"\n"
+"Keeps account of the attendances of the employees on the basis of the\n"
+"actions(Check in/Check out) performed by them.\n"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-python
@@ -474,6 +485,7 @@ msgstr "Läsnäolo: Havaitse työntekijöiden poissaolot"
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_reporting
+#: model:ir.module.module,shortdesc:base.module_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendance_reporting
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:res.groups.privilege,name:hr_attendance.res_groups_privilege_attendances
@@ -588,11 +600,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "Tunnuskortti viivakoodilla tabletissa"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Balance"
-msgstr "Saldo"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
 msgstr "Viivakoodi / RFID"
@@ -650,6 +657,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Can be converted as Time Off (cfr Time Off configuration)."
 msgstr "Voidaan muuntaa vapaiksi (vrt. Vapaat-asetukset)."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
+msgid "Cancel"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-python
@@ -842,6 +855,12 @@ msgid "Country"
 msgstr "Maa"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/calendar/attendance_calendar_controller.js:0
+msgid "Create"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
 msgstr "Luo uusi työtekijä"
@@ -909,6 +928,11 @@ msgid "Definition"
 msgstr "Määritelmä"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
+msgid "Delete"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
@@ -928,11 +952,6 @@ msgstr "Kuvaus"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Device & Location Tracking"
 msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-msgid "Difference"
-msgstr "Ero"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_attendances
@@ -1084,10 +1103,7 @@ msgid "Errors"
 msgstr "Virheet"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__duration
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Extra Hours"
 msgstr "Lisätunnit"
 
@@ -1491,6 +1507,12 @@ msgid "Linked Overtime"
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
+msgid "Load Sample Data"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_load_demo_data
 msgid "Load demo data"
 msgstr "Lataa demodata"
@@ -1642,6 +1664,11 @@ msgstr "Nimi"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "New Set-up (Employee/Badge)"
+msgstr ""
+
+#. module: hr_attendance
+#: model:res.groups.privilege,placeholder:hr_attendance.res_groups_privilege_attendances
+msgid "No"
 msgstr ""
 
 #. module: hr_attendance
@@ -1814,11 +1841,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__schedule
 msgid "Outside of a specific schedule"
 msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
-msgid "Over Time"
-msgstr "Opt-out -aika"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
@@ -2161,6 +2183,11 @@ msgid "Saturday"
 msgstr ""
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
+msgid "Save & Close"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
 msgid "Scan Badge"
@@ -2355,8 +2382,8 @@ msgid ""
 "The user will have access to the attendance records and reporting of "
 "employees where he's set as an attendance manager"
 msgstr ""
-"Käyttäjällä on pääsy niiden työntekijöiden läsnäolotietoihin ja -"
-"kirjauksiin, joiden läsnäolopäälliköksi hänet on määritetty"
+"Käyttäjällä on pääsy niiden työntekijöiden läsnäolotietoihin ja "
+"-kirjauksiin, joiden läsnäolopäälliköksi hänet on määritetty"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view
@@ -2366,6 +2393,14 @@ msgstr "Tälle ylityösääntöjen joukolle ei ole määritetty työntekijöitä
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
 msgid "There are no employees without this overtime ruleset."
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
+msgid ""
+"This action will generate several fake records across multiple apps. Are you "
+"sure you want to proceed?"
 msgstr ""
 
 #. module: hr_attendance
@@ -2484,6 +2519,11 @@ msgid "Total Overtime"
 msgstr "Ylityöt yhteensä"
 
 #. module: hr_attendance
+#: model:ir.module.module,summary:base.module_hr_attendance
+msgid "Track employee attendance"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_try_kiosk
 msgid "Try kiosk"
 msgstr "Kokeile Itsepalvelupäätettä"
@@ -2559,6 +2599,11 @@ msgid "Usual work hours"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
+msgid "Validated Extra Hours"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Validation Error"
@@ -2623,9 +2668,7 @@ msgid "With a tolerance in favor of the employer of"
 msgstr ""
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 msgid "Worked Extra Hours"
 msgstr "Teki ylitöitä"
 
@@ -2801,3 +2844,12 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "valinnaisella PIN-koodilla"
+
+#~ msgid "Balance"
+#~ msgstr "Saldo"
+
+#~ msgid "Difference"
+#~ msgstr "Ero"
+
+#~ msgid "Over Time"
+#~ msgstr "Opt-out -aika"

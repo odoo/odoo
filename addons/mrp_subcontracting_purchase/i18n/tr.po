@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2026-06-21 01:57+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-master/"
@@ -23,6 +23,20 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
+msgid ""
+"\n"
+"This bridge module adds some smart buttons between Purchase and "
+"Subcontracting\n"
+msgstr ""
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/mrp_production.py:0
+msgid "%(name)s - Subcontracting"
+msgstr ""
+
+#. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
@@ -31,8 +45,8 @@ msgstr ""
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
-msgid "+ %d day(s)"
-msgstr "+ %d gün(ler)"
+msgid "+ %d days"
+msgstr ""
 
 #. module: mrp_subcontracting_purchase
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.purchase_order_form_mrp_subcontracting_purchase
@@ -66,7 +80,9 @@ msgid "Days to Supply Components"
 msgstr "Bileşenlerin Tedarik Edileceği Günler"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_report_mrp_report_bom_structure__display_name
@@ -77,7 +93,9 @@ msgid "Display Name"
 msgstr "İsim Göster"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move__id
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_mrp_production__id
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_report_mrp_report_bom_structure__id
@@ -88,15 +106,32 @@ msgid "ID"
 msgstr "ID"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_account_move_line
 msgid "Journal Item"
 msgstr "Yevmiye Kalemi"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,help:mrp_subcontracting_purchase.field_mrp_production__subcontract_extra_move_id
+msgid ""
+"Journal entry neutralising the subcontractor bill's stock valuation, so the "
+"finished move keeps the full cost while the bill is not counted twice."
+msgstr ""
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
 msgid "Manufacturing Lead Time"
 msgstr "Üretim Teslim Süresi"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_mrp_production
+msgid "Manufacturing Order"
+msgstr ""
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
@@ -125,6 +160,11 @@ msgid "Purchase Order"
 msgstr "Satınalma Siparişi"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_purchase
+msgid "Purchase and Subcontracting Management"
+msgstr ""
+
+#. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
 msgid "Receipt Date"
@@ -147,6 +187,11 @@ msgid "Stock Rule"
 msgstr "Stok Kuralı"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_mrp_production__subcontract_extra_move_id
+msgid "Subcontracting Cost Entry"
+msgstr ""
+
+#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_stock_picking
 msgid "Transfer"
 msgstr "Aktarım"
@@ -156,3 +201,6 @@ msgstr "Aktarım"
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
 msgid "Vendor Lead Time"
 msgstr "Tedarikçi Teslim Süresi"
+
+#~ msgid "+ %d day(s)"
+#~ msgstr "+ %d gün(ler)"
