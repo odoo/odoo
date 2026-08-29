@@ -1927,7 +1927,15 @@ class Base_ImportImport(models.TransientModel):
         """
         self.check_singleton()
         self._check_model_name(self.res_model)
-        import_savepoint = self.env.cr.savepoint(flush=False)
+        # Flushing savepoint (the `savepoint()` default), not `flush=False`: a
+        # dry-run rolls this back, and only the flushing kind restores ORM state
+        # with the SQL. See `BaseCursor.savepoint` -- a `flush=False` caller
+        # "must invalidate what it touched itself on the rollback path", and
+        # this module never did. Without it the rollback discarded whatever the
+        # caller had written but not yet flushed before the import (`load()`
+        # flushed it *inside* the savepoint), and left records the dry-run
+        # touched sitting in `env.cache` with the value the database dropped.
+        import_savepoint = self.env.cr.savepoint()
         # `try/finally`, not just the `except ImportValidationError` below: the
         # savepoint used to be released only on the success path and on that
         # one expected exception, so anything else escaping the conversion
