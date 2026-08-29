@@ -162,3 +162,25 @@ class TestAddressExtendedOnchanges(TransactionCase):
         self.assertFalse(partner.city)
         self.assertFalse(partner.zip)
         self.assertFalse(partner.state_id)
+
+    def test_onchange_city_id_keeps_typed_zip_when_city_has_none(self):
+        """A city with no zip must not wipe a zip the user already typed."""
+        city = self.env["res.city"].create(
+            {"name": "Nozipkeep", "country_id": self.country.id}
+        )
+        partner = self.env["res.partner"].new({"zip": "99999"})
+        partner.city_id = city
+        partner._onchange_city_id()
+        self.assertEqual(partner.city, "Nozipkeep")
+        self.assertEqual(partner.zip, "99999")
+
+    def test_onchange_city_id_keeps_state_when_city_has_none(self):
+        """A city with no state must not wipe the state already on the partner."""
+        city = self.env["res.city"].create(
+            {"name": "Nostatekeep", "zipcode": "12345", "country_id": self.country.id}
+        )
+        partner = self.env["res.partner"].new({"state_id": self.state.id})
+        partner.city_id = city
+        partner._onchange_city_id()
+        self.assertEqual(partner.zip, "12345")
+        self.assertEqual(partner.state_id, self.state)
