@@ -56,11 +56,16 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { localization } from "@web/core/l10n/localization";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { formatFloat } from "@web/core/utils/numbers";
-import { PosDataPlugin } from "../plugins/pos_data_plugin";
-import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
-import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
+import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
+import { PosAlertPlugin } from "@point_of_sale/app/plugins/pos_alert_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { BusPlugin } from "@bus/services/bus_plugin";
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -69,8 +74,6 @@ export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
     feedbackScreenAutoSkipDelay = 1500;
-    router = usePlugin(PosRouterPlugin);
-    customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -84,15 +87,7 @@ export class PosStore extends WithLazyGetterTrap {
         "showSaveOrderButton",
     ];
 
-    static serviceDependencies = [
-        "bus_service",
-        "barcode_reader",
-        "ui",
-        "dialog",
-        "notification",
-        "action",
-        "mail.sound_effects",
-    ];
+    static serviceDependencies = ["barcode_reader", "action"];
 
     constructor() {
         super({});
@@ -103,25 +98,24 @@ export class PosStore extends WithLazyGetterTrap {
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
-    async setup(
-        env,
-        { number_buffer, barcode_reader, ui, dialog, notification, bus_service, action }
-    ) {
+    async setup(env, { barcode_reader, action }) {
+        this.router = usePlugin(PosRouterPlugin);
+        this.customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
+        this.bus = usePlugin(BusPlugin);
+        this.dialog = usePlugin(DialogPlugin);
+        this.notification = usePlugin(NotificationPlugin);
+        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.data = usePlugin(PosDataPlugin);
         this.alert = usePlugin(PosAlertPlugin);
+        this.sound = usePlugin(SoundEffectsPlugin);
+        this.ui = usePlugin(UIPlugin);
         this.ticketPrinter = usePlugin(PosTicketPrinterPlugin);
         this.ticketPrinter.init(env);
         const debugMode = usePlugin(DebugModePlugin);
 
         this.env = env;
-        this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.barcodeReader = barcode_reader;
-        this.ui = ui;
-        this.dialog = dialog;
-        this.bus = bus_service;
         this.action = action;
-        this.sound = env.services["mail.sound_effects"];
-        this.notification = notification;
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
         this.searchProductDBState = null;
@@ -928,7 +922,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get productViewMode() {
-        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
+        const viewMode = this.productListView && this.ui.isSmall() ? this.productListView : "grid";
         if (viewMode === "grid") {
             return "flex-column";
         } else {
@@ -2447,7 +2441,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     showBackButton() {
         return (
-            this.ui.isSmall &&
+            this.ui.isSmall() &&
             this.numpadMode !== "table" &&
             (this.router.currentScreen() !== "ProductScreen" || this.mobile_pane === "left")
         );
@@ -2477,7 +2471,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     showSearchButton() {
         if (this.router.currentScreen() === "ProductScreen") {
-            return this.ui.isSmall ? this.mobile_pane === "right" : true;
+            return this.ui.isSmall() ? this.mobile_pane === "right" : true;
         }
         return false;
     }
@@ -2837,7 +2831,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get isSmallProductScreen() {
-        return this.ui.size < SIZES.MD;
+        return this.ui.size() < SIZES.MD;
     }
 
     getAvailableCategories() {
