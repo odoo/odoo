@@ -254,9 +254,7 @@ export class SpacingPlugin extends Plugin {
             }
         }
         if (isRelevant) {
-            const contextNode = this.getContextNode(emailNode);
-            const context = { style: this.getTableContextStyleInfo(contextNode) };
-            marginNode.layout.setAttributes(context, "cell");
+            marginNode.layout.setAttributes(this.getSpacingLayoutContext(emailNode), "cell");
             return marginNode;
         }
     }
@@ -279,11 +277,20 @@ export class SpacingPlugin extends Plugin {
             }
         }
         if (isRelevant) {
-            const contextNode = this.getContextNode(emailNode);
-            const context = { style: this.getTableContextStyleInfo(contextNode) };
-            paddingNode.layout.setAttributes(context, "cell");
+            paddingNode.layout.setAttributes(this.getSpacingLayoutContext(emailNode), "cell");
             return paddingNode;
         }
+    }
+
+    getSpacingLayoutContext(emailNode) {
+        const contextNode = this.getContextNode(emailNode);
+        let spacingStyleInfo = this.getTableContextStyleInfo(contextNode);
+        if (emailNode.analysis.facts.spacingContextStyleInfo) {
+            spacingStyleInfo = spacingStyleInfo.merge(
+                emailNode.analysis.facts.spacingContextStyleInfo
+            );
+        }
+        return { style: spacingStyleInfo };
     }
 
     hasPaddingSpacing(analysis) {

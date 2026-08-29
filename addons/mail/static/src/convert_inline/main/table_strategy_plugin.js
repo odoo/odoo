@@ -10,6 +10,7 @@ import { Rules } from "../core/rules_models";
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
 import { DIMENSIONS } from "../core/utils";
+import { HybridFluidCell } from "./hybrid_fluid_models";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -61,6 +62,7 @@ export class TableStrategyPlugin extends Plugin {
             this.analyzeElementLayout.bind(this),
             this.addBottomUpConstraintsForTables.bind(this),
             this.addAlignSelfConstraint.bind(this),
+            this.addCenterHRConstraint.bind(this),
         ],
         merge_layout_overrides: [this.mergeCellDescendant.bind(this)],
         should_discard_reference_node_predicates: this.isUnsupportedTableElement.bind(this),
@@ -76,6 +78,7 @@ export class TableStrategyPlugin extends Plugin {
             this.applyDescendantBackground.bind(this),
             this.applyDescendantBorder.bind(this),
             this.forceVerticalAlign.bind(this),
+            this.forceTextAlign.bind(this),
         ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         merge_fact_overrides: this.mergeTableStrategyReport.bind(this),
@@ -241,6 +244,30 @@ export class TableStrategyPlugin extends Plugin {
         );
     }
 
+    addCenterHRConstraint(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
+        if (!referenceNode.matches?.(":scope:has(> .s_hr:only-child)")) {
+            return defaultEmailNodeArguments;
+        }
+        const { analysis } = defaultEmailNodeArguments;
+        analysis.bottomUpConstraints.push((emailNode) => {
+            if (!emailNode.analysis.facts.isCell || emailNode.children.length !== 1) {
+                return;
+            }
+            return {
+                facts: { forceTextAlign: "center" },
+                topDownConstraints: [
+                    () => ({
+                        shouldPropagate: true,
+                        facts: {
+                            spacingContextStyleInfo: StyleInfo.from({ "text-align": "center" }),
+                        },
+                    }),
+                ],
+            };
+        });
+        return defaultEmailNodeArguments;
+    }
+
     addAlignSelfConstraint(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
             return defaultEmailNodeArguments;
@@ -253,7 +280,11 @@ export class TableStrategyPlugin extends Plugin {
         const verticalAlign = this.getVerticalAlign(alignSelf);
         const { analysis } = defaultEmailNodeArguments;
         analysis.bottomUpConstraints.push((emailNode) => {
-            if (!emailNode.analysis.facts.isCell || emailNode.children.length !== 1) {
+            if (
+                !emailNode.analysis.facts.isCell ||
+                emailNode.children.length !== 1 ||
+                emailNode.layout instanceof HybridFluidCell
+            ) {
                 return;
             }
             return { facts: { forceVerticalAlign: verticalAlign } };
@@ -261,9 +292,22 @@ export class TableStrategyPlugin extends Plugin {
         return defaultEmailNodeArguments;
     }
 
+    forceTextAlign(layout, { emailNode }) {
+        const textAlign = emailNode.analysis.facts.forceTextAlign;
+        if (!textAlign || !emailNode.analysis.facts.isCell) {
+            return layout;
+        }
+        const ref = layout.getRef(layout instanceof HybridFluidCell ? "styleContext" : undefined);
+        ref.styleInfo.setProperty("text-align", textAlign);
+        if (ref.attributes.align) {
+            ref.attributes.align = textAlign;
+        }
+        return layout;
+    }
+
     forceVerticalAlign(layout, { emailNode }) {
         const verticalAlign = emailNode.analysis.facts.forceVerticalAlign;
-        if (!verticalAlign) {
+        if (!verticalAlign || !emailNode.analysis.facts.isCell) {
             return layout;
         }
         const rootRef = layout.getRef();
