@@ -1335,6 +1335,8 @@ class ProductTemplate(models.Model):
         search_fields = [
             "name",
             "default_code",
+            "barcode",
+            "product_variant_ids.barcode",
             "variants_default_code",
             "description_ecommerce",
             "attribute_line_ids.value_ids.name",
@@ -1399,11 +1401,10 @@ class ProductTemplate(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         search_term = self.env.context.get("search_term", "")
-        search_words = search_term.lower().split() if search_term else []
 
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
-            values = product.mapped("attribute_line_ids.value_ids")
+            values = product.attribute_line_ids.value_ids
             data["attribute_value_ids"] = values.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.filtered(
                 "visible_to_customers"
@@ -1413,17 +1414,38 @@ class ProductTemplate(models.Model):
                 data["price"] = price
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 
-            if search_words and values:
-                matched_values = values.filtered(
-                    lambda attribute_value: any(
-                        word in (attribute_value.name or "").lower() for word in search_words
-                    )
-                )
-                if matched_values:
-                    data["website_url"] = product._get_product_url(
-                        grouped_attributes_values=matched_values.grouped("attribute_id")
-                    )
+            if search_term:
+                data["website_url"] = product._get_product_url(query_params={"search": search_term})
         return results_data
+
+    def _get_attribute_values_from_search_term(self, search_term):
+        """Return attribute values to preselect the matching product variant.
+
+        If the search term matches a variant barcode, return that variant's
+        attribute values. Otherwise, return the template's attribute values whose
+        names match the search term.
+        """
+        self.ensure_one()
+
+        # If the search term is a variant barcode, return the attribute values
+        # defining that variant so it is preselected on the product page.
+        matched_variant = (
+            self
+            .env["product.product"]
+            .sudo()
+            .search([("product_tmpl_id", "=", self.id), ("barcode", "=", search_term)], limit=1)
+        )
+        if matched_variant:
+            return matched_variant.product_template_attribute_value_ids.product_attribute_value_id
+
+        # Fall back to matching attribute values by name.
+        search_words = search_term.lower().split()
+        values = self.attribute_line_ids.value_ids
+        return values.filtered(
+            lambda attribute_value: any(
+                word in (attribute_value.name or "").lower() for word in search_words
+            )
+        )
 
     def _search_render_results_prices(self, mapping, combination_info):
         if combination_info.get("hide_price"):
