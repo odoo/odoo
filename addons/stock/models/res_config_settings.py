@@ -57,6 +57,12 @@ class ResConfigSettings(models.TransientModel):
     stock_text_confirmation = fields.Boolean(related='company_id.stock_text_confirmation', string='Stock Text Validation with stock move', readonly=False)
     stock_confirmation_type = fields.Selection(related='company_id.stock_confirmation_type', string='Stock Text Validation type', readonly=False)
     horizon_days = fields.Float(related='company_id.horizon_days', readonly=False)
+    orderpoint_round_down_to_max = fields.Boolean(
+        string="Cap Replenishment at Max",
+        config_parameter='stock.orderpoint_round_down_to_max',
+        help="If the replenishment Multiple would push quantity above Max, round down when stock would still reach Min. "
+             "When disabled (default), always round up, which may exceed Max.",
+    )
 
     def _compute_replenish_on_order(self):
         route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
@@ -98,7 +104,12 @@ class ResConfigSettings(models.TransientModel):
             raise UserError(_("You can't deactivate the multi-location if you have more than once warehouse by company"))
 
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
+        previous_round_down = self.env['ir.config_parameter'].sudo().get_param('stock.orderpoint_round_down_to_max')
         super().set_values()
+        if self.env['ir.config_parameter'].sudo().get_param('stock.orderpoint_round_down_to_max') != previous_round_down:
+            orderpoints = self.env['stock.warehouse.orderpoint'].search([])
+            orderpoints.invalidate_recordset(['qty_to_order_computed', 'qty_to_order'])
+            self.env.add_to_compute(orderpoints._fields['qty_to_order_computed'], orderpoints)
 
         if not self.env.user.has_group('stock.group_stock_manager'):
             return
