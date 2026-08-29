@@ -166,8 +166,21 @@ export class WebsocketWorker {
         this.messageWaitQueue = [];
         // Handle of the paced flush in progress, so `_stop` can cancel it.
         this._flushTimeout = null;
-        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
-        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
+        // Sticky for the whole debounce window: a forced request must not be
+        // downgraded by a plain one arriving after it. Consumed when the
+        // updater fires.
+        this._forceNextUpdate = false;
+        // ONE debounced updater for both the plain and the forced path. Two
+        // independent debouncers could each fire in the same window and send
+        // two identical subscribes, because `force` bypasses the dedup guard in
+        // `_updateChannels`. Discuss does exactly that on every thread pin:
+        // `addChannel` arms the plain path while mail's store patch calls
+        // `forceUpdateChannels`.
+        this._debouncedUpdateChannels = debounce(() => {
+            const force = this._forceNextUpdate;
+            this._forceNextUpdate = false;
+            this._updateChannels({ force });
+        }, 300);
         this._debouncedSendToServer = debounce(this._sendToServer, 300);
 
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
@@ -439,9 +452,14 @@ export class WebsocketWorker {
     /**
      * Update the channels on the server side even if the channels on
      * the client side are the same than the last time we subscribed.
+     *
+     * Shares the single debounced updater with the plain path: it only raises
+     * the sticky flag, so an add and a forced update in the same window
+     * collapse into one forced subscribe instead of two.
      */
     _forceUpdateChannels() {
-        this._updateChannels({ force: true });
+        this._forceNextUpdate = true;
+        this._debouncedUpdateChannels();
     }
 
     /**
@@ -1115,7 +1133,10 @@ export class WebsocketWorker {
         // a socket this stop is tearing down.
         this._debouncedUpdateChannels.cancel();
         this._debouncedSendToServer.cancel();
-        this._forceUpdateChannels.cancel();
+        // Drop the pending force with the timer it belonged to: otherwise the
+        // next connection's open-time update would inherit it and force a
+        // subscribe that nothing asked for.
+        this._forceNextUpdate = false;
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
         const connection = this._connection;

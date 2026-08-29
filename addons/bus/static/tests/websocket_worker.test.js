@@ -287,6 +287,43 @@ test("every reconnect re-subscribes with the current channels", async () => {
     expect(subscriptions).toEqual([["chA"]]);
 });
 
+test("an added channel and a forced update in one window send one subscribe", async () => {
+    // Discuss pins a thread and does both at once: `bus_service.addChannel()`
+    // arms the plain update, while mail's store patch calls
+    // `forceUpdateChannels()`. These used to be two independent debouncers, so
+    // both fired in the same window and the server received the identical
+    // subscription twice — `force` bypasses the dedup guard in
+    // `_updateChannels`, so the second frame was never filtered out.
+    const subscriptions = [];
+    onWebsocketEvent("subscribe", ({ channels }) => subscriptions.push(channels));
+    const worker = await startWebSocketWorker();
+    const client = { postMessage() {}, addEventListener() {} };
+    worker.registerClient(client);
+    await runAllTimers();
+    subscriptions.length = 0;
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "chA" });
+    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    await runAllTimers();
+    expect(subscriptions).toEqual([["chA"]]);
+});
+
+test("a forced update on its own still re-subscribes unchanged channels", async () => {
+    // The counterpart of the test above: collapsing the two debouncers must not
+    // cost `BUS:FORCE_UPDATE_CHANNELS` its reason to exist. Bypassing the dedup
+    // guard on an explicit force is the whole point of the action.
+    const subscriptions = [];
+    onWebsocketEvent("subscribe", ({ channels }) => subscriptions.push(channels));
+    const worker = await startWebSocketWorker();
+    const client = { postMessage() {}, addEventListener() {} };
+    worker.registerClient(client);
+    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "chA" });
+    await runAllTimers();
+    subscriptions.length = 0;
+    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    await runAllTimers();
+    expect(subscriptions).toEqual([["chA"]]);
+});
+
 test("a late event from a superseded socket is ignored (epoch guard)", async () => {
     // Once a newer connection replaces the socket, a straggler `message`/`close`
     // from the old socket must not act on the current connection.
