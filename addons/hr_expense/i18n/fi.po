@@ -35,7 +35,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-08-12 07:13+0000\n"
+"PO-Revision-Date: 2026-08-26 13:04+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_expense/fi/>\n"
@@ -44,7 +44,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -389,7 +389,7 @@ msgstr "Liitä kuitti - yleensä kuva tai PDF-tiedosto."
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Liite"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -497,6 +497,9 @@ msgid ""
 "Create prepaid virtual and physical cards for both one-time and recurring "
 "expenses, integrated into Odoo through Stripe Issuing."
 msgstr ""
+"Luo ennakkoon maksettuja virtuaalisia ja fyysisiä kortteja niin "
+"kertaluonteisia että toistuvia kuluja varten, integroituna Odooseen Stripe "
+"Issuing -palvelun kautta."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -745,7 +748,7 @@ msgstr "Kulujen hyväksyjä"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Card"
-msgstr ""
+msgstr "Kulukortti"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -980,7 +983,7 @@ msgstr "Lahjat asiakkaille tai toimittajille"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to Account"
-msgstr ""
+msgstr "Siirry tilille"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1533,7 +1536,7 @@ msgstr "Kumppani"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment_register
 msgid "Pay"
-msgstr ""
+msgstr "Maksu"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1589,7 +1592,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Post Entries"
-msgstr ""
+msgstr "Kirjaa viennit"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
@@ -1820,7 +1823,7 @@ msgstr "Tallenna tämä sivu ja palaa tähän, kun haluat määrittää ominaisu
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Scan"
-msgstr ""
+msgstr "Skannaa"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -2033,7 +2036,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
-msgstr ""
+msgstr "Tili %(name)s (%(code)s) on arkistoitu. Aktivoi se jatkaaksesi"
 
 #. module: hr_expense
 #. odoo-python
@@ -2042,6 +2045,8 @@ msgid ""
 "The attachment (%(attachment_name)s) has not been added to the report due to "
 "the following error: '%(error)s'"
 msgstr ""
+"Liitettä (%(attachment_name)s) ei lisätty raporttiin seuraavan virheen "
+"takia: '%(error)s'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2087,6 +2092,9 @@ msgid ""
 "this isn't supported:\n"
 "%(expenses)s"
 msgstr ""
+"Seuraavien kulujen maksutapa johtaa useisiin ostovelkoihin, eikä sitä "
+"tueta:\n"
+"%(expenses)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -2117,6 +2125,8 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the following expenses: %s"
 msgstr ""
+"SEPA-tilisiirtoa käyttäville kuluille vaaditaan tavarantoimittaja.\n"
+"Määritä toimittaja seuraaville kuluille: %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2264,7 +2274,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "Lataa"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -2351,14 +2361,14 @@ msgstr "Voit luoda kirjanpitoviennin vain hyväksytyille kuluille."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can't add an attachment to an expense once it has been approved."
-msgstr ""
+msgstr "Hyväksyttyyn kulutapahtumaan ei voi lisätä liitettä."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_attachment.py:0
 msgid ""
 "You can't delete attachments from an expense once it has been submitted."
-msgstr ""
+msgstr "Lähetetystä kulutapahtumasta ei voi poistaa liitteitä."
 
 #. module: hr_expense
 #. odoo-python
@@ -2457,7 +2467,7 @@ msgstr "Sinulla ei ole oikeuksia muokata tätä kulua."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You don't have the access rights to modify this expense."
-msgstr ""
+msgstr "Sinulla ei ole käyttöoikeuksia tämän kulun muokkaamiseen."
 
 #. module: hr_expense
 #. odoo-python

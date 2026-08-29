@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-08-18 12:11+0000\n"
+"PO-Revision-Date: 2026-08-27 07:26+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_payment/sv/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_payment
 #. odoo-python
@@ -165,7 +165,7 @@ msgstr "En token krävs för att skapa en ny betalningstransaktion."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
 msgid "All Pricelists"
-msgstr ""
+msgstr "Alla prislistor"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -186,7 +186,7 @@ msgstr "Belopp att betala"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Amount of"
-msgstr ""
+msgstr "Belopp"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -434,6 +434,8 @@ msgid ""
 "Only allow this payment provider when the partner's pricelist matches one of "
 "these."
 msgstr ""
+"Tillåt endast den här betalningsleverantören om partnerns prislista stämmer "
+"överens med någon av dessa."
 
 #. module: account_payment
 #. odoo-python
@@ -510,12 +512,12 @@ msgstr "Betalningsjournal"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Betalningsmetod"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method_line
 msgid "Payment Method Line"
-msgstr ""
+msgstr "Betalningsmetod"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_method_menu
@@ -565,7 +567,7 @@ msgstr "Logga in för att betala dina förfallna fakturor"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__available_pricelist_ids
 msgid "Pricelists"
-msgstr ""
+msgstr "Prislistor"
 
 #. module: account_payment
 #. odoo-python
@@ -770,6 +772,9 @@ msgid ""
 "You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Det är inte möjligt att radera en betalningsmetod som är kopplad till en "
+"installerad leverantör.\n"
+"Anslutna leverantörer: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -788,6 +793,9 @@ msgid ""
 "You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Betalningsleverantören måste först avinstalleras innan journalen kan "
+"raderas.\n"
+"Anslutna betalningsleverantörer: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -810,6 +818,8 @@ msgstr "har tillämpats."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "is already paid on this invoice, please make sure to not pay twice."
 msgstr ""
+"En betalning har redan genomförts för den här fakturan, var försiktig med "
+"att inte betala dubbelt."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -820,4 +830,4 @@ msgstr "försenad"
 #. odoo-python
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
-msgstr ""
+msgstr "ej tillåten prislista"

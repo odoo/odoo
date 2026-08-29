@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-07-22 00:20+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-28 03:24+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/hr/"
 "ja/>\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr
 #. odoo-python
@@ -175,6 +175,8 @@ msgid ""
 "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Work Email\" "
 "invisible=\"not work_email\"/>"
 msgstr ""
+"<i class=\"d-none d-md-block fa fa-envelope\" title=\"勤務先メール\" "
+"invisible=\"not work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -182,6 +184,8 @@ msgid ""
 "<i class=\"d-none d-md-block fa fa-mobile\" title=\"Work Mobile\" "
 "invisible=\"not mobile_phone\"/>"
 msgstr ""
+"<i class=\"d-none d-md-block fa fa-mobile\" title=\"勤務先携帯\" "
+"invisible=\"not mobile_phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -189,6 +193,8 @@ msgid ""
 "<i class=\"d-none d-md-block fa fa-phone\" title=\"Work Phone\" "
 "invisible=\"not work_phone\"/>"
 msgstr ""
+"<i class=\"d-none d-md-block fa fa-phone\" title=\"勤務先電話\" "
+"invisible=\"not work_phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -225,13 +231,14 @@ msgstr "<i class=\"d-none d-md-inline-flex fa fa-mobile\" title=\"会社携帯\"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid ""
 "<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw\" title=\"Work Phone\"/>"
-msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw\" title=\"会社電話\"/>"
+msgstr ""
+"<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw\" title=\"勤務先電話\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Work Phone\"/>"
-msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"仕事電話\"/>"
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"勤務先電話\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -397,7 +404,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr "<span invisible=\"not contract_date_start\">から</span>"
+msgstr "<span invisible=\"not contract_date_start\"> ~ </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -608,7 +615,7 @@ msgstr "同一の会社の中で1人のユーザーを複数の従業員に紐�
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "AI"
-msgstr ""
+msgstr "AI"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1067,7 +1074,7 @@ msgstr "平均時間"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Average hours per day must be between 0 and 24."
-msgstr ""
+msgstr "1日あたりの平均時間は0から24の間にしてください。"
 
 #. module: hr
 #. odoo-python
@@ -1190,7 +1197,7 @@ msgstr "誕生月"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "ブラックリスト対象の電話番号：電話"
 
 #. module: hr
 #. odoo-javascript
@@ -1421,7 +1428,7 @@ msgstr "確定"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Congratulations!"
-msgstr ""
+msgstr "おめでとうございます!"
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
@@ -1540,13 +1547,13 @@ msgstr "契約要更新"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Correct terms"
-msgstr ""
+msgstr "期間を修正"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Correction of contract terms"
-msgstr ""
+msgstr "契約期間の修正"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
@@ -1632,7 +1639,7 @@ msgstr "活動プランを作成"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Create an employee"
-msgstr ""
+msgstr "従業員を作成"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
@@ -1731,7 +1738,7 @@ msgstr "現在、最終学年に在籍中"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Dashboard"
-msgstr ""
+msgstr "ダッシュボード"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__date
@@ -1783,7 +1790,7 @@ msgstr "曜日文字列"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_dead
 msgid "Dead"
-msgstr ""
+msgstr "無効"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2343,7 +2350,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr "この従業員は給与計算から除外されます"
+msgstr "この従業員は給与処理から除外されます"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
@@ -2476,7 +2483,7 @@ msgstr "契約終了"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "End of contract?"
-msgstr ""
+msgstr "契約を終了しますか?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2661,12 +2668,14 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"サニタイズ(正規化)された電話番号を保存するフィールド。検索や比較の高速化に役"
+"立ちます。"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Find all the information on employees"
-msgstr ""
+msgstr "従業員に関するすべての情報を確認できます"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
@@ -2701,13 +2710,13 @@ msgstr "有期雇用"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Fixed-term Contract"
-msgstr ""
+msgstr "有期契約"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Fleet"
-msgstr ""
+msgstr "フリート"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2750,7 +2759,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone_formatted
 msgid "Formatted Number"
-msgstr ""
+msgstr "フォーマット済番号"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -2855,7 +2864,7 @@ msgstr "人事担当者"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "HR Responsible Update"
-msgstr ""
+msgstr "人事担当者の更新"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_apply_departure_ir_actions_server
@@ -2937,33 +2946,33 @@ msgstr "時間単価"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_day
 msgid "Hours Per Day"
-msgstr ""
+msgstr "1日あたりの時間"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_week
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Hours Per Week"
-msgstr ""
+msgstr "週あたりの時間"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_day
 #: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_day
 #: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "1日あたりの時間"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hours_per_week
 #: model:ir.model.fields,field_description:hr.field_hr_version__hours_per_week
 #: model:ir.model.fields,field_description:hr.field_resource_resource__hours_per_week
 msgid "Hours per Week"
-msgstr ""
+msgstr "週あたりの時間"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Hours per week must be between 0 and 168."
-msgstr ""
+msgstr "週あたりの時間は0から168の間でなければなりません。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -3057,7 +3066,7 @@ msgstr "例外活動を示すアイコン"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card_name
 msgid "Id Card Name"
-msgstr ""
+msgstr "IDカード名"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -3102,6 +3111,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
+"サニタイズされた電話番号がブラックリストに登録されている場合、その連絡先は、"
+"どのリストからも、一括送信のSMSを受信できなくなります"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -3152,6 +3163,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ブラックリストに登録されたサニタイズされた電話番号が電話番号であるかどうかを"
+"示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合に、"
+"　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます"
+"。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__split_legal_name
@@ -3159,6 +3174,8 @@ msgid ""
 "Indicates whether the legal name is split into first and last name fields "
 "based on the employee's country."
 msgstr ""
+"従業員の国に基づいて、正式氏名が「名」と「姓」のフィールドに分割されているか"
+"どうかを示します。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_all_count
@@ -3169,7 +3186,7 @@ msgstr "間接的な部下の数"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Indirect subordinates"
-msgstr ""
+msgstr "間接的な部下"
 
 #. module: hr
 #: model:hr.employee.type,name:hr.contract_type_interim
@@ -3440,7 +3457,7 @@ msgstr "会社のプロセスやツールを習得する"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Leaves"
-msgstr ""
+msgstr "休暇"
 
 #. module: hr
 #. odoo-python
@@ -3486,19 +3503,19 @@ msgstr "契約テンプレートの読み込み"
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Template"
-msgstr ""
+msgstr "テンプレートを読込"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load a Template"
-msgstr ""
+msgstr "テンプレートを読込"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/hr_employee_action_helper.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "サンプルデータを読込"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_id
@@ -3516,12 +3533,12 @@ msgstr "ロケーション番号"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Location Type"
-msgstr ""
+msgstr "勤務場所タイプ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_name
 msgid "Location name"
-msgstr ""
+msgstr "勤務場所名"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
@@ -3532,7 +3549,7 @@ msgstr "長期プロジェクト"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Lunch"
-msgstr ""
+msgstr "ランチ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -3630,7 +3647,7 @@ msgstr "５月"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "May I recommend you to setup an"
-msgstr ""
+msgstr "以下の設定を行うことをお勧めします。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
@@ -3640,7 +3657,7 @@ msgstr "部署メンバー"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
 msgid "Member of Department"
-msgstr ""
+msgstr "部署メンバー"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_version__member_of_department
@@ -3677,7 +3694,7 @@ msgstr "メッセージ"
 #. odoo-javascript
 #: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
 msgid "Minimum Date Field"
-msgstr ""
+msgstr "日付フィールドの最小値"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
@@ -3687,41 +3704,41 @@ msgstr "携帯電話"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone_formatted
 msgid "Mobile Phone Formatted"
-msgstr ""
+msgstr "携帯電話(フォーマット済み)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone_sanitized
 msgid "Mobile Phone Sanitized"
-msgstr ""
+msgstr "携帯電話(正規化済)"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Modified"
-msgstr ""
+msgstr "変更済"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Modified from %(start)s to %(end)s"
-msgstr ""
+msgstr "%(start)s から %(end)s に変更済"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Modified from %s"
-msgstr ""
+msgstr "%sから変更済"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__monday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__monday_location_id
 msgid "Monday"
-msgstr ""
+msgstr "月曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__monday_location_id
 msgid "Mondays"
-msgstr ""
+msgstr "月曜"
 
 #. module: hr
 #. odoo-javascript
@@ -3889,12 +3906,12 @@ msgstr "企業プロセス、真の責任、自律性に無駄はありません
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
-msgstr "退職済"
+msgstr "未雇用"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not limited"
-msgstr ""
+msgstr "制限なし"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
@@ -3911,7 +3928,7 @@ msgstr "メモ"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Notice Period"
-msgstr ""
+msgstr "予告期間"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__11
@@ -3982,7 +3999,7 @@ msgstr "募集予定の新規入社の数。"
 #. module: hr
 #: model:hr.employee.type,name:hr.contract_type_seasonal
 msgid "Occasional / Seasonal"
-msgstr ""
+msgstr "臨時 / 季節"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
@@ -4025,7 +4042,7 @@ msgstr "従業員の初回バージョン日には、人事ユーザのみがア
 msgid ""
 "Only one default work location and one exceptional work location per day per "
 "employee."
-msgstr ""
+msgstr "既定の勤務場所と例外的な勤務場所は、従業員1人につき1日1か所のみです。"
 
 #. module: hr
 #. odoo-python
@@ -4044,13 +4061,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 msgid "Open Contact Profile"
-msgstr ""
+msgstr "連絡先プロフィールを開く"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 msgid "Open Employee Profile (activates company)"
-msgstr ""
+msgstr "従業員プロフィールを開く (会社を有効化)"
 
 #. module: hr
 #. odoo-python
@@ -4124,7 +4141,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_company_id
 msgid "Parent Company"
-msgstr ""
+msgstr "親会社"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -4190,7 +4207,7 @@ msgstr "完璧な英語の文章"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Performance"
-msgstr ""
+msgstr "パフォーマンス"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4205,7 +4222,7 @@ msgstr "パークス"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Permanent Contract"
-msgstr ""
+msgstr "無期雇用契約"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__hr_responsible_id
@@ -4244,17 +4261,17 @@ msgstr "電話"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "ブラックリストに登録された電話番号"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone_mobile_search
 msgid "Phone Number"
-msgstr ""
+msgstr "電話番号"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone_sanitized
 msgid "Phone Sanitized"
-msgstr ""
+msgstr "電話 (正規化済)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -4296,7 +4313,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Planning"
-msgstr ""
+msgstr "計画"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -4425,7 +4442,7 @@ msgstr "個人メール"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private Information"
-msgstr ""
+msgstr "個人情報"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_phone
@@ -4576,13 +4593,13 @@ msgstr "採用"
 #. odoo-javascript
 #: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
 msgid "Reference another date/datetime field to use as minimum date"
-msgstr ""
+msgstr "最小日付として使用する別の日付/日時フィールドを参照"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Referral"
-msgstr ""
+msgstr "リファラル"
 
 #. module: hr
 #. odoo-python
@@ -4633,7 +4650,7 @@ msgstr "プライベート住所に基づいた関連する従業員"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__all_employee_ids
 msgid "Related employees from all companies"
-msgstr ""
+msgstr "全会社の関連従業員"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -4759,18 +4776,18 @@ msgstr "販売"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "電話番号(正規化済)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__saturday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__saturday_location_id
 msgid "Saturday"
-msgstr ""
+msgstr "土曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__saturday_location_id
 msgid "Saturdays"
-msgstr ""
+msgstr "土曜"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
@@ -4789,7 +4806,7 @@ msgstr "スケジュール"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/fields/many2many_avatar_employee_field/many2many_avatar_employee_field.js:0
 msgid "Search employee..."
-msgstr ""
+msgstr "従業員を検索..."
 
 #. module: hr
 #. odoo-javascript
@@ -4811,7 +4828,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Select employee type"
-msgstr ""
+msgstr "従業員タイプを選択"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -4825,7 +4842,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_partner_mass_mail
 msgid "Send Email"
-msgstr ""
+msgstr "メールを送信"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__9
@@ -4863,7 +4880,7 @@ msgstr "管理設定"
 #: model:ir.model.fields,field_description:hr.field_hr_version__sex
 #: model:ir.model.fields,field_description:hr.field_res_users__sex
 msgid "Sex"
-msgstr ""
+msgstr "性別"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__share
@@ -4875,7 +4892,7 @@ msgstr "共有ユーザ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday_public_display
 msgid "Show Birthday To Employees"
-msgstr ""
+msgstr "従業員に誕生日を表示"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
@@ -4887,7 +4904,7 @@ msgstr "人事アイコンを表示"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Show To All Employees"
-msgstr ""
+msgstr "すべての従業員に表示"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
@@ -4898,7 +4915,7 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Sign"
-msgstr ""
+msgstr "署名"
 
 #. module: hr
 #. odoo-python
@@ -4915,7 +4932,7 @@ msgstr "技術/スキル管理"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Some employee already has a work contact"
-msgstr ""
+msgstr "一部の従業員にはすでに業務用の連絡先があります"
 
 #. module: hr
 #. odoo-javascript
@@ -4924,11 +4941,13 @@ msgid ""
 "Some employees are present in a loop.\n"
 "                Click"
 msgstr ""
+"一部の従業員がループ内に存在します。\n"
+"                クリック"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
 msgid "Split Legal Name"
-msgstr ""
+msgstr "正式氏名の分割"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4967,7 +4986,7 @@ msgstr "開始日"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Start a new contract"
-msgstr ""
+msgstr "新しい契約を開始"
 
 #. module: hr
 #. odoo-python
@@ -5049,12 +5068,12 @@ msgstr "概要"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sunday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__sunday_location_id
 msgid "Sunday"
-msgstr ""
+msgstr "日曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__sunday_location_id
 msgid "Sundays"
-msgstr ""
+msgstr "日曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__currency_symbol
@@ -5084,7 +5103,7 @@ msgstr "タグ"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Talent"
-msgstr ""
+msgstr "人材"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -5131,7 +5150,7 @@ msgstr "テンプレート名"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Template for Employees"
-msgstr ""
+msgstr "従業員向けテンプレート"
 
 #. module: hr
 #. odoo-python
@@ -5209,7 +5228,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "The apply date isn't reached yet for the departure of %(emp)s."
-msgstr ""
+msgstr "%(emp)s の退職日はまだ到来していません。"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
@@ -5225,13 +5244,13 @@ msgstr "%(employee_name)s の契約期限がまもなくです。"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__first_contract_date
 msgid "The date of the first contract of the employee in the company."
-msgstr ""
+msgstr "会社における当該従業員の最初の雇用契約日。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The day after departure"
-msgstr ""
+msgstr "退職日の翌日"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -5242,7 +5261,7 @@ msgstr "デフォルト就労時間は設定内で設定されます。"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The departure process has been completed on"
-msgstr ""
+msgstr "退職手続きは以下の日付で完了済："
 
 #. module: hr
 #. odoo-python
@@ -5258,6 +5277,8 @@ msgstr "従業員は既に%s で契約中です。既存の契約期間外の日
 msgid ""
 "The employee's official name as per government-issued or legal documents."
 msgstr ""
+"政府発行のドキュメントまたは法的ドキュメントに記載されている従業員の正式な氏"
+"名。"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -5278,7 +5299,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The following employees have the same work email address: %s"
-msgstr ""
+msgstr "次の従業員は勤務先メールアドレスが同一です：%s"
 
 #. module: hr
 #. odoo-python
@@ -5336,7 +5357,7 @@ msgstr "%(employee_name)s の就労許可証がまもなく期限切れとなり
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "There is no valid version starting before the departure date for %s."
-msgstr ""
+msgstr "%s の退職日より前に開始する有効なバージョンがありません。"
 
 #. module: hr
 #: model:hr.employee.type,name:hr.contract_type_thesis
@@ -5348,7 +5369,7 @@ msgstr "論文"
 msgid ""
 "This action will delete the departure entirely. Are you sure you want to "
 "proceed?"
-msgstr ""
+msgstr "この操作により、退職情報が完全に削除されます。本当に続行しますか?"
 
 #. module: hr
 #. odoo-python
@@ -5365,6 +5386,10 @@ msgid ""
 "Change the employee type on the employees of the other company to be able to "
 "modify this."
 msgstr ""
+"この従業員タイプは別の会社で使用されているため、現時点では適用国を変更できま"
+"せん。\n"
+"変更するには、別会社側の従業員に設定されている従業員タイプを別のものに変更し"
+"てから、この従業員タイプを編集してください。"
 
 #. module: hr
 #. odoo-python
@@ -5384,7 +5409,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__exceptional_location_id
 msgid "This is the exceptional, non-weekly, location set for today."
-msgstr ""
+msgstr "これは、毎週ではなく、本日の例外的な場所設定です。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sex
@@ -5394,6 +5419,8 @@ msgid ""
 "This is the legal sex as recognized by the state, used for official and "
 "statutory purposes."
 msgstr ""
+"これは、国家によって認められた法的性別であり、公的および法的な目的で使用され"
+"ます。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -5410,17 +5437,17 @@ msgstr "これらの責任タイプは従業員計画に限定されます。"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__thursday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__thursday_location_id
 msgid "Thursday"
-msgstr ""
+msgstr "木曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__thursday_location_id
 msgid "Thursdays"
-msgstr ""
+msgstr "木曜"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_working_times
 msgid "Time Management"
-msgstr ""
+msgstr "時間管理"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -5461,13 +5488,13 @@ msgstr "本日の活動"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__today_location_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__today_location_name
 msgid "Today Location Name"
-msgstr ""
+msgstr "今日の勤務場所名"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
-msgstr ""
+msgstr "合計"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -5523,12 +5550,12 @@ msgstr "信頼できる"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tuesday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__tuesday_location_id
 msgid "Tuesday"
-msgstr ""
+msgstr "火曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__tuesday_location_id
 msgid "Tuesdays"
-msgstr ""
+msgstr "火曜"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
@@ -5576,7 +5603,7 @@ msgstr "未読メッセージ"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Unspecified"
-msgstr ""
+msgstr "未指定"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5592,7 +5619,7 @@ msgstr "プロジェクトドキュメンテーションの更新および管理
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Use Employee's current version information"
-msgstr ""
+msgstr "従業員の現在のバージョン情報を使用"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -5641,91 +5668,91 @@ msgstr "従業員 %s には、同じメールアドレスのユーザが既に�
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at home"
-msgstr ""
+msgstr "ユーザは在宅"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at home and busy"
-msgstr ""
+msgstr "ユーザは在宅で取込中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at home and idle"
-msgstr ""
+msgstr "ユーザは在宅で離席中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at home and offline"
-msgstr ""
+msgstr "ユーザは在宅でオフライン"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at home and online"
-msgstr ""
+msgstr "ユーザは在宅でオンライン"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at other location"
-msgstr ""
+msgstr "ユーザは別の勤務場所にいます"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at other location and busy"
-msgstr ""
+msgstr "ユーザは別の勤務場所で取込中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at other location and idle"
-msgstr ""
+msgstr "ユーザは別の勤務場所で離席中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at other location and offline"
-msgstr ""
+msgstr "ユーザは別の勤務場所でオフライン"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at other location and online"
-msgstr ""
+msgstr "ユーザは別の勤務場所でオンライン"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at the office"
-msgstr ""
+msgstr "ユーザは出社中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at the office and busy"
-msgstr ""
+msgstr "ユーザは出社で取込中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at the office and idle"
-msgstr ""
+msgstr "ユーザは出社で離席中"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at the office and offline"
-msgstr ""
+msgstr "ユーザは出社でオフライン"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/common/im_status_patch.js:0
 msgid "User is at the office and online"
-msgstr ""
+msgstr "ユーザは出社でオンライン"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
@@ -5747,7 +5774,7 @@ msgstr "ユーザ %s が正常に作成されました"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Usual Work Location"
-msgstr ""
+msgstr "通常の勤務場所"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -5773,29 +5800,29 @@ msgstr "ベルギーの有効なワークパーミット"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Variable Hours"
-msgstr ""
+msgstr "変動勤務時間"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_revision
 msgid "Version Revision"
-msgstr ""
+msgstr "バージョン改訂"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "View"
-msgstr ""
+msgstr "表示"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "View Employees"
-msgstr ""
+msgstr "従業員を表示"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/core/web/avatar_card/avatar_card_patch.xml:0
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 msgid "View Profile"
-msgstr ""
+msgstr "プロフィールを表示"
 
 #. module: hr
 #. odoo-javascript
@@ -5867,12 +5894,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__wednesday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__wednesday_location_id
 msgid "Wednesday"
-msgstr ""
+msgstr "水曜"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__wednesday_location_id
 msgid "Wednesdays"
-msgstr ""
+msgstr "水曜"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -5910,7 +5937,7 @@ msgstr "この連絡先が従業員か。"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Why did you change the contract end date?"
-msgstr ""
+msgstr "なぜ契約終了日を変更したのですか?"
 
 #. module: hr
 #. odoo-python
@@ -6051,17 +6078,17 @@ msgstr "勤務先電話"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone_formatted
 msgid "Work Phone Formatted"
-msgstr ""
+msgstr "勤務先電話(フォーマット済)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone_sanitized
 msgid "Work Phone Sanitized"
-msgstr ""
+msgstr "勤務先電話番号(正規化済み)"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Work location"
-msgstr ""
+msgstr "勤務場所"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -6124,13 +6151,15 @@ msgid ""
 "You can't end the collaboration of an employee without contract, archive it "
 "instead."
 msgstr ""
+"契約のない従業員の共同作業を終了させることはできません。代わりに、アーカイブ"
+"してください。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid ""
 "You can't modify the departure of an employee that has already departed."
-msgstr ""
+msgstr "すでに退職した従業員の退職日時は変更できません。"
 
 #. module: hr
 #. odoo-python
@@ -6160,7 +6189,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_work_location.py:0
 msgid "You cannot delete locations that are being used by your employees"
-msgstr ""
+msgstr "従業員が使用している勤務場所を削除することはできません"
 
 #. module: hr
 #. odoo-python
@@ -6172,7 +6201,7 @@ msgstr "このドキュメントへのアクセス権がありません。"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have the rights to load the Employees sample data."
-msgstr ""
+msgstr "「従業員」サンプルデータを読み込む権限がありません。"
 
 #. module: hr
 #. odoo-python
@@ -6270,7 +6299,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "Your HR Responsible has been updated to %s."
-msgstr ""
+msgstr "人事担当者情報が「%s 」に更新されました。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -6365,7 +6394,7 @@ msgstr "例: myprivateemail@example.com"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "eLearning"
-msgstr ""
+msgstr "eラーニング"
 
 #. module: hr
 #. odoo-javascript
@@ -6404,13 +6433,13 @@ msgstr "mi"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "onboarding plan"
-msgstr ""
+msgstr "オンボーディング計画"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/hr_employee_action_helper.xml:0
 msgid "or"
-msgstr ""
+msgstr "または"
 
 #. module: hr
 #. odoo-python
@@ -6434,7 +6463,7 @@ msgstr "従業員への制限"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "to see those employees."
-msgstr ""
+msgstr "これらの従業員を確認します。"
 
 #. module: hr
 #. odoo-python

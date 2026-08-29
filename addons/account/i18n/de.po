@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-19 08:32+0000\n"
+"PO-Revision-Date: 2026-08-28 13:58+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/de/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -58,8 +58,7 @@ msgstr ""
 "Lieferanten). \n"
 "        Wählen Sie „Kasse“, „Bank“ oder „Kreditkarte“ für Journale für "
 "Zahlungen von Kunden bzw. an Lieferanten. \n"
-"        Wählen Sie „Allgemein“ für Journale bei sonstigen "
-"Geschäftsvorgängen.\n"
+"        Wählen Sie „Allgemein“ für Journale für sonstige Geschäftsvorgänge.\n"
 "        "
 
 #. module: account
@@ -1348,8 +1347,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">11 750,00</"
-"span> $</span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">11 750,00</"
+"span> €</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1357,8 +1356,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">19 250,00</"
-"span> $</span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">19 250,00</"
+"span> €</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1367,7 +1366,7 @@ msgid ""
 "span></span>"
 msgstr ""
 "<span class=\"text-nowrap\"><span class=\"oe_currency_value\">7500,00</span> "
-"$</span>"
+"€</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1479,7 +1478,7 @@ msgstr "<span> auf </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span><span class=\"oe_currency_value\">19 250,00</span> €</span>"
+msgstr "<span><span class=\"oe_currency_value\">19 250,00</span> €</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2505,8 +2504,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Ein Python-Dictionary, das Standardwerte zur Verfügung stellt, wenn neue "
-"Datensätze für diesen Alias angelegt werden."
+"Ein Python-Dictionary, das Standardwerte bereitstellt, wenn neue Datensätze "
+"für diesen Alias erstellt werden."
 
 #. module: account
 #. odoo-python
@@ -10041,7 +10040,7 @@ msgstr "Hat Hauptbuch"
 #: model:ir.model.fields,field_description:account.field_res_company__has_message
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
 msgid "Has Message"
-msgstr "Hat Nachricht"
+msgstr "Hat eine Nachricht"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
@@ -13565,7 +13564,7 @@ msgstr "November"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Now, we'll create your first invoice"
-msgstr "Jetzt werden wir Ihre erste Rechnung erstellen"
+msgstr "Jetzt werden wir Ihre erste Rechnung erstellen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_bank
@@ -13784,8 +13783,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"Sobald alles eingestellt ist, können Sie fortfahren. Sie können dies später "
-"im Menü <b>Kunden</b> bearbeiten."
+"Fahren Sie fort, sobald alles konfiguriert ist. Sie können diese Angaben "
+"später im Menü <b>Kunden</b> bearbeiten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13801,7 +13800,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Once your invoice is ready, confirm it."
-msgstr "Sobald Ihre Rechnung fertig ist, bestätigen Sie sie."
+msgstr "Bestätigen Sie Ihre Rechnung, wenn sie fertig ist."
 
 #. module: account
 #. odoo-python
@@ -14798,9 +14797,9 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
-"Zahlungen werden zur Erfassung von Liquiditätsschwankungen verwendet. Sie "
-"können diese Zahlungen mit eigenen Mitteln oder über installierte "
-"Einrichtungen abwickeln."
+"Zahlungen dienen der Erfassung von Liquiditätsschwankungen. Sie können diese "
+"Zahlungen mit eigenen Mitteln oder über die installierten Einrichtungen "
+"abwickeln."
 
 #. module: account
 #. odoo-python
@@ -16892,7 +16891,7 @@ msgstr "Rechnungen automatisch senden"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Versenden Sie Rechnungen an Ihre Kunden im Handumdrehen mit <b>Odoo "
+"Versenden Sie im Handumdrehen Rechnungen an Ihre Kunden – mit <b>Odoo "
 "Rechnungsstellung</b>."
 
 #. module: account
@@ -16920,7 +16919,9 @@ msgstr "Belege per E-Mail senden"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Send the invoice to the customer and check what he'll receive."
-msgstr "Senden Sie die Rechnung an den Kunden und prüfen Sie, was er erhält."
+msgstr ""
+"Senden Sie die Rechnung an den Kunden. Sie können die Vorschau der "
+"Rechnungsmitteilung noch einmal prüfen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sending_data
@@ -21550,8 +21551,8 @@ msgstr "Arbeitsunfallversicherung"
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
-"Schreiben Sie einen Kundennamen, um es zu <b>erstellen</b> oder erhalten Sie "
-"<b>Vorschläge</b>."
+"Geben Sie einen Namen für Ihren Kunden ein, um diesen zu <b>erstellen</b> "
+"oder <b>Vorschläge</b> zu erhalten."
 
 #. module: account
 #. odoo-javascript
@@ -23086,7 +23087,7 @@ msgid ""
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
 "{{ object.company_id.name }} - Neue Rechnung im Journal {{ "
-"object.journal_id.display_name or 'Invoices' }}"
+"object.journal_id.display_name or 'Rechnungen' }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

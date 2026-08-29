@@ -41,7 +41,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-20 16:09+0000\n"
+"PO-Revision-Date: 2026-08-27 19:01+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/sv/>\n"
@@ -50,7 +50,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -408,7 +408,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
 msgid "- Ending"
-msgstr ""
+msgstr "- Avslutning"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1163,6 +1163,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\">\n"
+"                                        Att granska\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1193,7 +1196,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Bankkontot kan vara en dubblett av</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1312,7 +1315,7 @@ msgstr "<span class=\"o_stat_text\">Verifikation</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verifikationsrader</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1400,7 +1403,7 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
 msgid "<span invisible=\"not account_id\">on</span>"
-msgstr ""
+msgstr "<span invisible=\"not account_id\">den</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1427,7 +1430,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"repartition_type == 'base'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -2493,7 +2496,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique."
-msgstr ""
+msgstr "Namnet på en reskontragrupp måste vara unikt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2754,7 +2757,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "Account '%s' is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "Konto '%s' är av typen fordringar, men används vid en inköpsoperation."
 
 #. module: account
 #. odoo-python
@@ -2779,7 +2782,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Account (with children)"
-msgstr ""
+msgstr "Konto (med underordnade)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__account_active
@@ -2913,7 +2916,7 @@ msgstr "Leverantörsskuld"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_active
 msgid "Account Payable Active"
-msgstr ""
+msgstr "Aktiva leverantörsskulder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
@@ -2930,7 +2933,7 @@ msgstr "Kundfordran"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_active
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_active
 msgid "Account Receivable Active"
-msgstr ""
+msgstr "Aktiva kundfordringar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2971,7 +2974,7 @@ msgstr "Grupperade skattekonton"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
 msgid "Account Tax Repartition Line"
-msgstr ""
+msgstr "Skattefördelningsrad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -3291,37 +3294,37 @@ msgstr "Totalt periodiseringsbelopp"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
 msgid "Accumulated Amortization - Buildings"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Byggnader"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
 msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Möbler och inventarier"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
 msgid "Accumulated Amortization - Improvements"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Förbättringar"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
 msgid "Accumulated Amortization - Machines & Tools"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Maskiner och verktyg"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
 msgid "Accumulated Amortization - Other Property"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Övrigt ägande"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
 msgid "Accumulated Amortization - Technology"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Teknologi"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
 msgid "Accumulated Amortization - Vehicles"
-msgstr ""
+msgstr "Ackumulerade amorteringar - Fordon"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
@@ -3796,7 +3799,7 @@ msgstr "Alla icke-avstämda kontoutdragsrader före det valda datumet."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "Tillåt utländska skattenummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3969,6 +3972,8 @@ msgid ""
 "Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay "
 "twice."
 msgstr ""
+"Beloppet %(amount).2f %(currency)s är redan betalt. Kontrollera att du inte "
+"gör en dubbelbetalning."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_amount
@@ -4271,7 +4276,7 @@ msgstr "Tillämpa endast om leveranslandet matchar."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
-msgstr ""
+msgstr "Använd endast om partnern har ett skattenummer."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -4279,6 +4284,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"Använd kartläggning av skatter och konton automatiskt på fakturor om "
+"specifika kriterier (Skattenummer/Land) finns angivna."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -4520,7 +4527,7 @@ msgstr "Automatisk sekvens"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatically compute US and Canadian tax rates."
-msgstr ""
+msgstr "Beräkna automatiskt amerikanska och kanadensiska skattesatser."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
@@ -4592,7 +4599,7 @@ msgstr "Tillgänglig betalningsmetod"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_line_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_line_ids
 msgid "Available Payment Method Line"
-msgstr "Rad för tillgängliga betalningsmetoder"
+msgstr "Tillgängliga betalningsmetoder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__available_pdf_report_ids
@@ -4866,7 +4873,7 @@ msgstr "Bank interimskonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_active
 msgid "Bank Suspense Account Active"
-msgstr ""
+msgstr "Aktivt bankkonto interimskonto"
 
 #. module: account
 #. odoo-python
@@ -5296,7 +5303,7 @@ msgstr "CLABE"
 #. odoo-python
 #: code:addons/account/tools/bank_account_number.py:0
 msgid "CLABE should be a string of 18 digits."
-msgstr ""
+msgstr "CLIABE bör bestå av en serie av 18 siffror."
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
@@ -6061,7 +6068,7 @@ msgstr "Företaget har en kontoplan"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_company_id
 #: model:ir.model.fields,field_description:account.field_account_move__journal_company_id
 msgid "Company of the Journal"
-msgstr ""
+msgstr "Företaget som är kopplat till journalen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
@@ -6354,17 +6361,17 @@ msgstr "Det gick inte att ladda upp filerna"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Couldn't reload data."
-msgstr ""
+msgstr "Kunde inte ladda om data."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
 msgid "Count Reconciled Lines"
-msgstr ""
+msgstr "Antal avstämda rader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
 msgid "Count Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Antal avstämda rader förutom växelskillnader"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -6374,7 +6381,7 @@ msgstr "Motsvarande verifikationsrader"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a Tax ID"
-msgstr ""
+msgstr "Länder i vilka företaget har ett skattenummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -6798,7 +6805,7 @@ msgstr "Kreditfaktura"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 msgid "Credit Note :"
-msgstr ""
+msgstr "Kreditfaktura:"
 
 #. module: account
 #. odoo-python
@@ -6871,7 +6878,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
 msgid "Cumulative amortization recorded for building assets."
-msgstr ""
+msgstr "Ackumulerade amorteringar som registrerats för byggnadstillgångar."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
@@ -6902,7 +6909,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
 msgid "Cumulative amortization recorded for vehicle assets."
-msgstr ""
+msgstr "Ackumulerade amorteringar som registrerats för fordonstillgångar."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7094,7 +7101,7 @@ msgstr "Konto för rabatter på kundfakturor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_expense_allocation_active
 msgid "Customer Invoices Discounts Account Active"
-msgstr ""
+msgstr "Aktivt konto för rabatter på kundfakturor"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
@@ -7413,7 +7420,7 @@ msgstr "Standardkonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_active
 msgid "Default Account Active"
-msgstr ""
+msgstr "Aktivt standardkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
@@ -7673,7 +7680,7 @@ msgstr "Avskrivning"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
 msgid "Depreciation Expense - Buildings"
-msgstr ""
+msgstr "Avskrivningsutgift - Byggnader"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_furniture
@@ -7683,27 +7690,27 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_improvements
 msgid "Depreciation Expense - Improvements"
-msgstr ""
+msgstr "Avskrivningsutgift - Förbättringar"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_machines
 msgid "Depreciation Expense - Machines & Tools"
-msgstr ""
+msgstr "Avskrivningsutgift - Maskiner och verktyg"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_other_property
 msgid "Depreciation Expense - Other Property"
-msgstr ""
+msgstr "Avskrivningsutgift - Övriga fastigheter"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_technology
 msgid "Depreciation Expense - Technology"
-msgstr ""
+msgstr "Avskrivningsutgift - Teknologi"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_vehicles
 msgid "Depreciation Expense - Vehicles"
-msgstr ""
+msgstr "Avskrivningsutgift - Fordon"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__description
@@ -8560,7 +8567,7 @@ msgstr "EDI (Electronic Data Interchange)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Digital fakturering"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -10322,7 +10329,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
+msgstr ""
+"Om rutan är markerad, så finns det nya meddelanden som kräver din "
+"uppmärksamhet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error
@@ -10346,7 +10355,7 @@ msgstr "Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhe
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_has_error
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om ikryssad, så finns det meddelanden med leveransfel."
+msgstr "Om rutan är markerad, så har vissa meddelanden leveransfel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_composition
@@ -11313,7 +11322,7 @@ msgstr "Faktura: Skickas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "Fakturerad"
+msgstr "Fakturerat"
 
 #. module: account
 #. odoo-python
@@ -13292,7 +13301,7 @@ msgstr "Ingen bilaga hittades"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "No files found to download"
-msgstr ""
+msgstr "Inga filer hittades att ladda ner."
 
 #. module: account
 #. odoo-python
@@ -14259,7 +14268,7 @@ msgstr "Överordnad"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__parent_id
 msgid "Parent Account"
-msgstr ""
+msgstr "Överordnat konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__parent_id
@@ -14378,7 +14387,7 @@ msgstr "Platshållare för partners moms"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Partner set to %s"
-msgstr ""
+msgstr "Partner angiven som %s"
 
 #. module: account
 #. odoo-python
@@ -14438,7 +14447,7 @@ msgstr "Att betala"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__payable_account_id
 msgid "Payable Account"
-msgstr ""
+msgstr "Skuldkonto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__both
@@ -15025,7 +15034,7 @@ msgstr "Föregående delbelopp"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
-msgstr "Rad med föredragen betalningsmetod"
+msgstr "Föredragen betalningsmetod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
@@ -15162,7 +15171,7 @@ msgstr "Skriv ut på ny sida"
 #. module: account
 #: model:ir.actions.server,name:account.action_server_payment_receipt
 msgid "Print Payment Receipt"
-msgstr ""
+msgstr "Skriv ut betalningskvitto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15274,7 +15283,6 @@ msgstr "Produkter att ta emot"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Professional"
 msgstr "Professionell"
 
@@ -15586,7 +15594,7 @@ msgstr "Fordringar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__receivable_account_id
 msgid "Receivable Account"
-msgstr ""
+msgstr "Fordringskonto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -15837,7 +15845,7 @@ msgstr "Uppdatera"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reload Data"
-msgstr ""
+msgstr "Ladda om data"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16001,7 +16009,7 @@ msgstr "Kvarvarande"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__residual_at_date
 msgid "Residual (at date)"
-msgstr ""
+msgstr "Restbelopp (vid datum)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_residual
@@ -16029,7 +16037,7 @@ msgstr "Återstående belopp i valuta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__residual_currency_at_date
 msgid "Residual in currency (at date)"
-msgstr ""
+msgstr "Restbelopp i valuta (vid datum)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_user_id
@@ -16766,12 +16774,12 @@ msgstr "Skicka kopia till"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Send Invoice Batch Wizard"
-msgstr ""
+msgstr "Verktygsguide för att skicka fakturor i batcher"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
-msgstr ""
+msgstr "Verktygsguide för att skicka fakturor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__allow_out_payment
@@ -17129,7 +17137,7 @@ msgstr "Visa bokföringsfunktioner - skrivskyddade"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_clearing_number
 msgid "Show Clearing Number"
-msgstr ""
+msgstr "Visa clearingnummer"
 
 #. module: account
 #. odoo-javascript
@@ -21410,7 +21418,7 @@ msgstr "Avskrivning är konto för valutaomvandling"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
-msgstr "Fel kredit- eller debetvärde i verifikatet!"
+msgstr "Fel kredit- eller debetvärde i verifikationen!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -21643,7 +21651,7 @@ msgid ""
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
 "Det är inte möjligt att radera en bokförd verifikationsrad. Bokföring är "
-"inte att leka med; återställ relaterade verifikat till utkast innan du "
+"inte att leka med; återställ relaterade verifikation till utkast innan du "
 "raderar verifikationsraden."
 
 #. module: account
