@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 19:08+0000\n"
-"PO-Revision-Date: 2026-07-13 17:22+0000\n"
+"POT-Creation-Date: 2026-08-21 18:01+0000\n"
+"PO-Revision-Date: 2026-08-28 18:15+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4-l10n/l10n_ar_stock/es_419/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -294,8 +294,13 @@ msgstr "Secuencia Hasta"
 
 #. module: l10n_ar_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
-msgid "Sequence from"
-msgstr "Secuencia desde"
+msgid "Sequence from:"
+msgstr "Secuencia desde:"
+
+#. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
+msgid "Sequence to:"
+msgstr "Secuencia hasta:"
 
 #. module: l10n_ar_stock
 #: model:ir.model,name:l10n_ar_stock.model_stock_picking
@@ -319,11 +324,6 @@ msgid "The partner does not have an email address."
 msgstr "El contacto no tiene una dirección de correo electrónico."
 
 #. module: l10n_ar_stock
-#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
-msgid "to"
-msgstr "a"
-
-#. module: l10n_ar_stock
 #: model:mail.template,subject:l10n_ar_stock.email_template_ar_remitos_delivery_guide
 msgid ""
 "{{ object.company_id.name }} Document (Ref "
@@ -331,6 +331,12 @@ msgid ""
 msgstr ""
 "Documento de {{ object.company_id.name }} (Ref "
 "{{ object.l10n_ar_delivery_guide_number }})"
+
+#~ msgid "Sequence from"
+#~ msgstr "Secuencia desde"
+
+#~ msgid "to"
+#~ msgstr "a"
 
 #~ msgid "00000001"
 #~ msgstr "00000001"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 18:06+0000\n"
+"POT-Creation-Date: 2026-08-25 22:27+0000\n"
 "PO-Revision-Date: 2026-06-05 20:07+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -143,6 +143,11 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_config_wizard__account_peppol_edi_user
 msgid "Account Peppol Edi User"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
+msgid "Accounting Date"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1112,6 +1117,11 @@ msgid "Invalid partner VAT (%(vat)s)."
 msgstr ""
 
 #. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
+msgid "Invoice Date"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
 msgid "Invoices"
 msgstr ""
@@ -1338,6 +1348,12 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/account_move_send_wizard.py:0
+msgid "No Siren/Siret"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 msgid "No active PDP proxy user is configured for company %(company)s."
 msgstr ""
@@ -1549,6 +1565,11 @@ msgstr ""
 msgid ""
 "Participate in the Pilot Phase of the French E-Invoicing. This way you are "
 "able to test it before it becomes mandatory."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
+msgid "Partner"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2073,6 +2094,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_l10n_fr_pdp_reports_flow__state
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_response_wizard__status
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_flow_number__2
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_list
 msgid "Status"
@@ -2110,6 +2132,11 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__res_company__pdp_kyc_status__success
 msgid "Success"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
+msgid "Tax Excluded"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2231,12 +2258,6 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_edi_xml_ubl_21_fr.py:0
-msgid "The following partner's VAT is missing: %s"
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
 #: code:addons/l10n_fr_pdp/models/res_company.py:0
 msgid ""
 "The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, "
@@ -2317,6 +2338,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_response_wizard.py:0
 msgid "To refuse an invoice please select a Reason Code."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting
+msgid "Total"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2508,14 +2534,6 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
-#: code:addons/l10n_fr_pdp/models/account_move.py:0
-msgid ""
-"You cannot reset an invoice to draft if it was already sent to PDP. Create a "
-"credit note and issue a new invoice instead or cancel this invoice."
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 msgid "You need to have a valid siren number to authenticate."
 msgstr ""
@@ -2567,12 +2585,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_users__invoice_edi_format
 msgid "eInvoice format"
-msgstr ""
-
-#. module: l10n_fr_pdp
-#. odoo-python
-#: code:addons/l10n_fr_pdp/wizard/account_move_send_wizard.py:0
-msgid "no VAT"
 msgstr ""
 
 #. module: l10n_fr_pdp
