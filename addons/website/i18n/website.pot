@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 17:38+0000\n"
-"PO-Revision-Date: 2026-08-21 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"PO-Revision-Date: 2026-08-28 17:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -202,6 +202,18 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_edit_llms
+msgid ""
+"# Title \n"
+"\n"
+" > Optional description goes here \n"
+"\n"
+" Optional details go here \n"
+"\n"
+" Write the document in markdown language"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr ""
@@ -328,6 +340,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/attribute_translation_plugin.js:0
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/a11y_new_tab_link.js:0
+msgid "(Open in new tab)"
 msgstr ""
 
 #. module: website
@@ -2875,12 +2893,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
-msgid "Add Mega Menu Item"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Add Menu Item"
 msgstr ""
 
@@ -3034,6 +3046,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Add analytics or marketing tags? Inject code in <head> or <body>."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Add context for people using screen readers."
 msgstr ""
 
 #. module: website
@@ -4570,6 +4588,14 @@ msgid "Buy now"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid ""
+"By default, fonts are copied on your website. You can use Google's servers "
+"for fonts, but keep in mind it may impact GDPR compliance."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "By default, the domains of the following services are already blocked:"
 msgstr ""
@@ -5992,6 +6018,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_uid
+#: model:ir.model.fields,field_description:website.field_website_llms__create_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_page_properties__create_uid
@@ -6023,6 +6050,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_date
+#: model:ir.model.fields,field_description:website.field_website_llms__create_date
 #: model:ir.model.fields,field_description:website.field_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_website_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_page_properties__create_date
@@ -6506,6 +6534,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/map_description_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
 #: code:addons/website/static/src/builder/plugins/translation/options/attribute_translation_plugin.js:0
@@ -6723,6 +6752,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
 msgid "Discover Now"
 msgstr ""
 
@@ -6957,6 +6987,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__display_name
 #: model:ir.model.fields,field_description:website.field_website_html_text_processor__display_name
+#: model:ir.model.fields,field_description:website.field_website_llms__display_name
 #: model:ir.model.fields,field_description:website.field_website_located_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__display_name
@@ -7151,6 +7182,11 @@ msgid "Doughnut"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_dropzone
+msgid "Drag blocks into this mega menu"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Drag to the right to get a submenu"
@@ -7190,6 +7226,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Dropdown menu"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
+msgid "Dropzone"
 msgstr ""
 
 #. module: website
@@ -7405,6 +7447,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 msgid "Edit in backend"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Edit llms.txt"
 msgstr ""
 
 #. module: website
@@ -7773,6 +7820,11 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.module.module,summary:base.module_website
+msgid "Enterprise website builder"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
 msgid "Equal Widths"
@@ -7794,7 +7846,20 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
 msgid "Error Message"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/main.py:0
+msgid "Error Page %s"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/http_error_demo_card.edit.xml:0
+msgid "Error message:"
 msgstr ""
 
 #. module: website
@@ -7833,6 +7898,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "Every Time"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid ""
+"Every great story deserves its moment in the spotlight. Explore the standout"
+" pieces we handpicked and put front and center, each one chosen to capture "
+"attention and spark a little curiosity."
 msgstr ""
 
 #. module: website
@@ -7896,6 +7969,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_striped_top
 msgid "Experience the Future of Innovation in Every Interaction"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_intro_spotlight
+msgid "Experience the real innovation"
 msgstr ""
 
 #. module: website
@@ -8638,6 +8716,11 @@ msgid "Framed Intro"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
+msgid "Free Shipping • Secure payment • Easy Return •"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Free grid"
 msgstr ""
@@ -8727,12 +8810,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/snippet_model.js:0
 msgid "Full-Screen"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
-msgid "Full-Width"
 msgstr ""
 
 #. module: website
@@ -9165,6 +9242,11 @@ msgid "Happy customers"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_cookie_policy
+msgid "Has Cookie Policy"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_properties__has_parent_page
 msgid "Has Parent Page"
 msgstr ""
@@ -9398,6 +9480,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
+msgid "Hide Error Message"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Hide For"
 msgstr ""
@@ -9423,6 +9511,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/http_error_option.xml:0
+msgid "Hides an error message."
 msgstr ""
 
 #. module: website
@@ -9699,6 +9793,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__id
 #: model:ir.model.fields,field_description:website.field_website_html_text_processor__id
+#: model:ir.model.fields,field_description:website.field_website_llms__id
 #: model:ir.model.fields,field_description:website.field_website_located_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__id
@@ -10469,6 +10564,11 @@ msgid "Intro Pill"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Intro Spotlight"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks
 msgid "Introducing"
 msgstr ""
@@ -11000,6 +11100,27 @@ msgid "Kpi Website Visitor Count Value"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model:ir.model.fields,field_description:website.field_website__llms_txt
+#: model:ir.model.fields,field_description:website.field_website_llms__content
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "LLMs.txt"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_llms
+msgid "LLMs.txt Editor"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"LLMs.txt: This file tells LLMs how your content should be accessed and used."
+" Write it as a plain text, human-readable markdown document."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_projects_list
 msgid "LUMEN"
 msgstr ""
@@ -11158,6 +11279,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_uid
+#: model:ir.model.fields,field_description:website.field_website_llms__write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_page_properties__write_uid
@@ -11179,6 +11301,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_date
+#: model:ir.model.fields,field_description:website.field_website_llms__write_date
 #: model:ir.model.fields,field_description:website.field_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_website_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_page_properties__write_date
@@ -11939,12 +12062,6 @@ msgid "Mega menu default image"
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.js:0
-msgid "Mega menu item"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Men"
 msgstr ""
@@ -12004,7 +12121,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/components/dialog/edit_menu.js:0
+#: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Menu item"
 msgstr ""
 
@@ -12466,12 +12583,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
 msgid "Name, id or key"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
-msgid "Narrow"
 msgstr ""
 
 #. module: website
@@ -12955,6 +13066,11 @@ msgid "OUR PROJECTS"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_animated_cover
+msgid "OUR SERVICES •"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block_split
 msgid "OUR STORY"
 msgstr ""
@@ -12974,6 +13090,123 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
+msgstr ""
+
+#. module: website
+#: model:ir.module.module,description:base.module_website
+msgid ""
+"Odoo Website Builder\n"
+"--------------------\n"
+"\n"
+"Get an awesome and <a href=\"https://www.odoo.com/app/website\">free website</a>,\n"
+"easily customizable with the Odoo <a href=\"https://www.odoo.com/app/website\">website builder</a>.\n"
+"\n"
+"Create enterprise grade website with our super easy builder. Use finely\n"
+"designed building blocks and edit everything inline.\n"
+"\n"
+"Benefit from out-of-the-box business features; e-Commerce, events, blogs, jobs\n"
+"announces, customer references, call-to-actions, etc.\n"
+"\n"
+"Edit Anything Inline\n"
+"--------------------\n"
+"\n"
+"Create beautiful websites with no technical knowledge. Odoo's unique *'edit\n"
+"inline'* approach makes website creation surprisingly easy. No more complex\n"
+"backend; just click anywhere to change any content.\n"
+"\n"
+"\"Want to change the price of a product? or put it in bold? Want to change a\n"
+"blog title?\" Just click and change. What you see is what you get. Really.\n"
+"\n"
+"Awesome. Astonishingly Beautiful.\n"
+"---------------------------------\n"
+"\n"
+"Odoo's building blocks allow to design modern websites that are not possible\n"
+"with traditional WYSIWYG page editors.\n"
+"\n"
+"Whether it's for products descriptions, blogs or static pages, you don't need\n"
+"to be a professional designer to create clean contents. Just drag and drop and\n"
+"customize predefined building blocks.\n"
+"\n"
+"Enterprise-Ready, out-of-the-box\n"
+"--------------------------------\n"
+"\n"
+"Activate ready-to-use enterprise features in just a click; e-commerce,\n"
+"call-to-actions, jobs announces, events, customer references, blogs, etc.\n"
+"\n"
+"Traditional eCommerce and CMS have poorly designed backends as it's not their\n"
+"core focus. With the Odoo integration, you benefit from the best management\n"
+"software to follow-up on your orders, your jobs applicants, your leads, etc.\n"
+"\n"
+"A Great Mobile Experience\n"
+"-------------------------\n"
+"\n"
+"Get a mobile friendly website thanks to our responsive design based on\n"
+"bootstrap. All your pages adapt automatically to the screen size. (mobile\n"
+"phones, tablets, desktop) You don't have to worry about mobile contents, it\n"
+"works by default.\n"
+"\n"
+"SEO tools at your finger tips\n"
+"-----------------------------\n"
+"\n"
+"The *Promote* tool suggests keywords according to Google most searched terms.\n"
+"Search Engine Optimization tools are ready to use, with no configuration\n"
+"required.\n"
+"\n"
+"Google Analytics tracks your shopping cart events by default. Sitemap and\n"
+"structured content are created automatically for Google indexation.\n"
+"\n"
+"Multi-Languages Made Easy\n"
+"-------------------------\n"
+"\n"
+"Get your website translated in multiple languages with no effort. Odoo proposes\n"
+"and propagates translations automatically across pages, following what you edit\n"
+"on the master page.\n"
+"\n"
+"Designer-Friendly Templates\n"
+"---------------------------\n"
+"\n"
+"Templates are awesome and easy to design. You don't need to develop to create\n"
+"new pages, themes or building blocks. We use a clean HTML structure, a\n"
+"[bootstrap](http://getbootstrap.com/) CSS.\n"
+"\n"
+"Customize every page on the fly with the integrated template editor. Distribute\n"
+"your work easily as an Odoo module.\n"
+"\n"
+"Fluid Grid Layouting\n"
+"--------------------\n"
+"\n"
+"Design perfect pages by drag and dropping building blocks. Move and scale them\n"
+"to fit the layout you are looking for.\n"
+"\n"
+"Building blocks are based on a responsive, mobile friendly fluid grid system\n"
+"that appropriately scales up to 12 columns as the device or viewport size\n"
+"increases.\n"
+"\n"
+"Professional Themes\n"
+"-------------------\n"
+"\n"
+"Design a custom theme or reuse pre-defined themes to customize the look and\n"
+"feel of your website.\n"
+"\n"
+"Test new color scheme easily; you can change your theme at any time in just a\n"
+"click.\n"
+"\n"
+"Integrated With Odoo Apps\n"
+"-------------------------\n"
+"\n"
+"### e-Commerce\n"
+"\n"
+"Promote products, sell online, optimize visitors' shopping experience.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"\n"
+"### Online Events\n"
+"\n"
+"Schedule, organize, promote or sell events online; conferences, trainings, webinars, etc.\n"
 msgstr ""
 
 #. module: website
@@ -14891,6 +15124,12 @@ msgid "Reliability"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Rely on Google servers to serve font"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "Remember information about the preferred look or behavior of the website, "
@@ -15170,6 +15409,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_partner__website_id
 #: model:ir.model.fields,help:website.field_res_users__website_id
 #: model:ir.model.fields,help:website.field_website_controller_page__website_id
+#: model:ir.model.fields,help:website.field_website_llms__website_id
 #: model:ir.model.fields,help:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,help:website.field_website_page__website_id
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
@@ -15487,6 +15727,7 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 #: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+#: model_terms:ir.ui.view,arch_db:website.view_edit_llms
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "Save"
@@ -15932,7 +16173,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/pricelist_option/pricelist_cafe_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/pricelist_option/product_catalog_option.xml:0
 #: code:addons/website/static/src/builder/plugins/snippets_powerbox_plugin.js:0
-#: model_terms:ir.ui.view,arch_db:website.s_about_bold
 #: model_terms:ir.ui.view,arch_db:website.s_awards_list
 #: model_terms:ir.ui.view,arch_db:website.s_manifesto
 #: model_terms:ir.ui.view,arch_db:website.s_services_grid
@@ -15949,12 +16189,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page__priority
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
-msgid "Serve font from Google servers"
 msgstr ""
 
 #. module: website
@@ -16359,7 +16593,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
@@ -17587,6 +17820,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "The logo must be an image (PNG, JPEG, GIF, WEBP or SVG)."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "The maximum number of characters allowed."
 msgstr ""
@@ -18017,6 +18256,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_switcher_systray_item.js:0
 msgid "This website does not have a domain configured."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/interactions/http_error_demo_card.edit.xml:0
+msgid ""
+"This will provide technical details about the error encountered by the user."
 msgstr ""
 
 #. module: website
@@ -18487,6 +18733,14 @@ msgid "Translation Info"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/seo.xml:0
+msgid ""
+"Translation may differ from original content. Click on \"Edit/Translate\" to"
+" see most recent changes."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_features
 msgid "Transparent pricing"
 msgstr ""
@@ -18782,12 +19036,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
-msgid "Use Google’s servers for fonts. It may impact GDPR compliance"
 msgstr ""
 
 #. module: website
@@ -19684,6 +19932,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__website_id
+#: model:ir.model.fields,field_description:website.field_website_llms__website_id
 #: model:ir.model.fields,field_description:website.field_website_menu__website_id
 #: model:ir.model.fields,field_description:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,field_description:website.field_website_page__website_id
@@ -19693,6 +19942,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__website_id
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_id
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_id
+#: model:ir.module.module,shortdesc:base.module_website
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:res.groups.privilege,name:website.res_groups_privilege_website
 #: model_terms:ir.ui.view,arch_db:website.digest_digest_view_form
@@ -21883,6 +22133,14 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
+"spotlight, intro, hero, headline, header, grid, gallery, pictures, photos, "
+"media, showcase, feature, focus, center stage, reveal, collection, product, "
+"call to action, cta, button"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
 "statistics, stats, KPIs, metrics, dashboards, analytics, highlights, "
 "figures, performance, achievements, benchmarks, milestones, indicators, "
 "data, measurements, reports, trends, results"
@@ -22070,16 +22328,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid_avatars
 msgid "“Our furniture balances style, comfort, and sustainability.”<br/>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
-msgid "• Free Shipping • Secure payment • Easy Return"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_animated_cover
-msgid "• OUR SERVICES"
 msgstr ""
 
 #. module: website

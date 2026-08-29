@@ -6,14 +6,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 17:39+0000\n"
-"PO-Revision-Date: 2026-08-21 17:39+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"PO-Revision-Date: 2026-08-28 17:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: event
+#: model:ir.module.module,description:base.module_event
+msgid ""
+"\n"
+"Organization and management of Events.\n"
+"======================================\n"
+"\n"
+"The event module allows you to efficiently organize events and all related tasks: planning, registration tracking,\n"
+"attendances, etc.\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Manage your Events and Registrations\n"
+"* Use emails to automatically confirm and send acknowledgments for any event registration\n"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -80,12 +96,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
-
-#. module: event
-#. odoo-python
-#: code:addons/event/models/event_event.py:0
-msgid "%s (copy)"
 msgstr ""
 
 #. module: event
@@ -208,6 +218,13 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Show the live schedule on dedicated location screens</span>"
 msgstr ""
 
 #. module: event
@@ -2284,6 +2301,11 @@ msgid "Events Mail Schedulers"
 msgstr ""
 
 #. module: event
+#: model:ir.module.module,shortdesc:base.module_event
+msgid "Events Organization"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
@@ -2590,7 +2612,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_mail_template__id
 #: model:ir.model.fields,field_description:event.field_res_config_settings__id
 #: model:ir.model.fields,field_description:event.field_res_partner__id
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "ID"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "ID of your Google app"
 msgstr ""
 
 #. module: event
@@ -2819,11 +2847,6 @@ msgid "Kanban State"
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Key"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
 msgid "Kpi Nbr Of Registrations Value"
 msgstr ""
@@ -2938,6 +2961,12 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_location_display
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Location Display"
 msgstr ""
 
 #. module: event
@@ -3758,6 +3787,11 @@ msgid "Secret"
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Secret of your Google app"
+msgstr ""
+
+#. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
@@ -4419,6 +4453,11 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Training"
+msgstr ""
+
+#. module: event
+#: model:ir.module.module,summary:base.module_event
+msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
 msgstr ""
 
 #. module: event

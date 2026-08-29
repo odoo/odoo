@@ -4,16 +4,27 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.2a1\n"
+"Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:35+0000\n"
-"PO-Revision-Date: 2026-02-04 18:35+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"PO-Revision-Date: 2026-08-28 17:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: auth_passkey
+#: model:ir.module.module,description:base.module_auth_passkey
+msgid ""
+"\n"
+"The implementation of Passkeys using the webauthn protocol.\n"
+"===========================================================\n"
+"\n"
+"Passkeys are a secure alternative to a username and a password.\n"
+"When a user logs in with a Passkey, MFA will not be required.\n"
+msgstr ""
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
@@ -134,6 +145,11 @@ msgid "Last used:"
 msgstr ""
 
 #. module: auth_passkey
+#: model:ir.module.module,summary:base.module_auth_passkey
+msgid "Log in with a Passkey"
+msgstr ""
+
+#. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__name
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__name
 msgid "Name"
@@ -153,6 +169,7 @@ msgid "Passkey"
 msgstr ""
 
 #. module: auth_passkey
+#: model:ir.module.module,shortdesc:base.module_auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Passkeys"

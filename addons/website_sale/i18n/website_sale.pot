@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 17:38+0000\n"
-"PO-Revision-Date: 2026-08-21 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"PO-Revision-Date: 2026-08-28 17:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
+msgid ""
+"%(product_name)s requires a minimum of %(min_qty)g; please add "
+"%(missing_qty)g more to your cart."
 msgstr ""
 
 #. module: website_sale
@@ -491,18 +499,6 @@ msgstr ""
 msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                                        <i class=\"oi\" data-icon=\"close_small\" role=\"presentation\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_terms_and_conditions
-msgid ""
-"<small class=\"text-muted mb-0\">\n"
-"                <a href=\"/terms\" class=\"o_translate_inline text-muted\">\n"
-"                    <u>Terms and Conditions</u>\n"
-"                </a><br/>\n"
-"                30-day money-back guarantee<br/>\n"
-"                Shipping: 2-3 Business Days\n"
-"            </small>"
 msgstr ""
 
 #. module: website_sale
@@ -1198,6 +1194,12 @@ msgid "Add an address"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.container_dropzone_above_product_details
+#: model_terms:ir.ui.view,arch_db:website_sale.container_dropzone_below_product_details
+msgid "Add elements to all products"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Add one"
@@ -1259,12 +1261,12 @@ msgid "Alerts"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category__align_category_content
+#: model:ir.model.fields,field_description:website_sale.field_website__align_category_content
 msgid "Align Category Content"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_public_category__align_category_content
+#: model:ir.model.fields,help:website_sale.field_website__align_category_content
 msgid ""
 "Align the category content on the shop page. Corresponds to the 'Center "
 "Content' editor option."
@@ -2292,14 +2294,6 @@ msgid "Created by"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
-msgid ""
-"Created in 2021, the company is young and dynamic. Discover the composition "
-"of the team and their skills."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_date
@@ -2654,12 +2648,6 @@ msgid "Discounts, Loyalty & Gift Card"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
-msgid "Discover our team"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
@@ -2737,14 +2725,14 @@ msgid "Display estimated date to your customer. Editable if range is defined."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_description
+#: model:ir.model.fields,help:website_sale.field_website__show_category_description
 msgid ""
 "Display the category description on the shop page. Corresponds to the 'Show "
 "Description' editor option."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_title
+#: model:ir.model.fields,help:website_sale.field_website__show_category_title
 msgid ""
 "Display the category title on the shop page. Corresponds to the 'Show Title'"
 " editor option."
@@ -2852,6 +2840,18 @@ msgstr ""
 #: model:product.public.category,name:website_sale.public_category_drawers
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_preview_data
 msgid "Drawers"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__dropzone_above_price
+#: model:ir.model.fields,field_description:website_sale.field_product_template__dropzone_above_price
+msgid "Drop Zone Above Price"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__dropzone_above_specification
+#: model:ir.model.fields,field_description:website_sale.field_product_template__dropzone_above_specification
+msgid "Drop Zone Above Specification"
 msgstr ""
 
 #. module: website_sale
@@ -4053,11 +4053,6 @@ msgid "Medium"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menu_image_menu
-msgid "Mega menu default image"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__log_message
 msgid "Message"
 msgstr ""
@@ -4084,6 +4079,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Minimum"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__minimum_quantity
+#: model:ir.model.fields,field_description:website_sale.field_product_template__minimum_quantity
+msgid "Minimum Quantity"
 msgstr ""
 
 #. module: website_sale
@@ -4270,16 +4271,6 @@ msgid "No previous products available for reorder."
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in this category."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
 msgstr ""
@@ -4385,6 +4376,164 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
 msgid "Number of products in the grid on the shop"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.module.module,description:base.module_website_sale
+msgid ""
+"Odoo e-Commerce\n"
+"---------------\n"
+"\n"
+"### Optimize sales with an awesome online store.\n"
+"\n"
+"Odoo is an <a href=\"https://www.odoo.com/app/ecommerce\">Open Source eCommerce</a>\n"
+"unlike anything you have ever seen before. Get an awesome catalog of products\n"
+"and great product description pages.\n"
+"\n"
+"It's full-featured, integrated with your management software, fully\n"
+"customizable and super easy.\n"
+"\n"
+"Create Awesome Product Pages\n"
+"----------------------------\n"
+"\n"
+"Odoo's unique *'edit inline'* and building blocks approach makes product pages\n"
+"creation surprisingly easy. \"Want to change the price of a product? or put it\n"
+"in bold? Want to add a banner for a specific product?\" just click and change.\n"
+"What you see is what you get. Really.\n"
+"\n"
+"Drag & Drop well designed *'Building Blocks'* to create beautifull product\n"
+"pages that your customer will love.\n"
+"\n"
+"Increase Your Revenue Per Order\n"
+"-------------------------------\n"
+"\n"
+"The built-in cross-selling feature helps you offer extra products related to\n"
+"what the shopper put in his cart. (e.g. accessories)\n"
+"\n"
+"Odoo's upselling algorythm allows you to show visitors similar but more\n"
+"expensive products than the one in view, with incentives.\n"
+"\n"
+"The inline editing feature allows you to easily change a price, launch a\n"
+"promotion or fine tune the description of a product, in a just a click.\n"
+"\n"
+"A Clean Google Analytics Integration\n"
+"------------------------------------\n"
+"\n"
+"Get a clear visibility of your sales funnel. Odoo's Google Analytics trackers\n"
+"are configured by default to track all kind of events related to shopping\n"
+"carts, call-to-actions, etc.\n"
+"\n"
+"As Odoo marketing tools (mass mailing, campaigns, etc) are also linked with\n"
+"Google Analytics, you get a complete view of your business.\n"
+"\n"
+"Target New Markets\n"
+"------------------\n"
+"\n"
+"Get your website translated in multiple languages with no effort. Odoo proposes\n"
+"and propagates translations automatically across pages.\n"
+"\n"
+"Our translation \"on demand\" features allows you to benefit from professional\n"
+"translators to translate all your changes automatically. Just change any part\n"
+"of your website (a new blog post, a page modification, product descriptions,\n"
+"...) and the translated versions are updated automatically in around 32 hours.\n"
+"\n"
+"Fine Tune Your Catalog\n"
+"----------------------\n"
+"\n"
+"Get full control on how you display your products in the catalog page:\n"
+"promotional ribbons, related size of products, discounts, variants, grid/list\n"
+"view, etc.\n"
+"\n"
+"Edit any product inline to make your website evolve with your customer need.\n"
+"\n"
+"Acquire New Customers\n"
+"---------------------\n"
+"\n"
+"SEO tools are ready to use, with no configuration required. Odoo suggests\n"
+"keywords according to Google most searched terms, Google Analytics tracks your\n"
+"shopping cart events, sitemap are created automatically for Google indexation,\n"
+"etc.\n"
+"\n"
+"We even do structured content automatically to promote your product and events\n"
+"efficiently in Google.\n"
+"\n"
+"Leverage Social Media\n"
+"---------------------\n"
+"\n"
+"Create new landing pages easily with the Odoo inline editing feature. Send\n"
+"visitors of your different marketing campaigns to specific landing pages to\n"
+"optimize conversions.\n"
+"\n"
+"Manage a Reseller Network\n"
+"-------------------------\n"
+"\n"
+"Manage a reseller network to target new market, have local presences or broaden\n"
+"your distribution. Give them access to your reseller portal for an efficient\n"
+"collaboration.\n"
+"\n"
+"Promote your resellers online, forward leads to resellers (with built-in\n"
+"geolocalisation feature), define specific pricelists, launch a loyalty program\n"
+"(offer specific discounts to your best customers or resellers), etc.\n"
+"\n"
+"Benefit from the power of Odoo, in your online store: a powerfull tax engine,\n"
+"flexible pricing structures, a real inventory management solution, a reseller\n"
+"interface, support for products with different behaviours; physical goods,\n"
+"events, services, variants and options, etc.\n"
+"\n"
+"You don't need to interface with your warehouse, sales or accounting software.\n"
+"Everything is integrated with Odoo. No pain, real time.\n"
+"\n"
+"A Clean Checkout Process\n"
+"------------------------\n"
+"\n"
+"Convert most visitor interests into real orders with a clean checkout process\n"
+"with a minimal number of steps and a great useability on every page.\n"
+"\n"
+"Customize your checkout process to fit your business needs: payment modes,\n"
+"delivery methods, cross-selling, special conditions, etc.\n"
+"\n"
+"And much more...\n"
+"----------------\n"
+"\n"
+"### Online Sales\n"
+"\n"
+"-   Mobile Interface\n"
+"-   Sell products, events or services\n"
+"-   Flexible pricelists\n"
+"-   Product multi-variants\n"
+"-   Multiple stores\n"
+"-   Great checkout process\n"
+"\n"
+"### Customer Service\n"
+"\n"
+"-   Customer Portal to track orders\n"
+"-   Assisted shopping with website live chats\n"
+"-   Returns management\n"
+"-   Advanced shipping rules\n"
+"-   Coupons or gift certificates\n"
+"\n"
+"### Order Management\n"
+"\n"
+"-   Advanced warehouse management features\n"
+"-   Invoicing and accounting integration\n"
+"-   Mass mailing and customer segmentations\n"
+"-   Lead automation and marketing campaigns\n"
+"-   Persistent shopping cart\n"
+"\n"
+"Fully Integrated With Other Apps\n"
+"--------------------------------\n"
+"\n"
+"### CMS\n"
+"\n"
+"Easily create awesome websites with no technical knowledge required.\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"### Online Events\n"
+"\n"
+"Schedule, organize, promote or sell events online; conferences, webinars, trainings, etc.\n"
 msgstr ""
 
 #. module: website_sale
@@ -5505,6 +5654,8 @@ msgid "Remove image"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/product_page.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
@@ -5849,6 +6000,11 @@ msgid "Sell when Out-of-Stock"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.module.module,summary:base.module_website_sale
+msgid "Sell your products online"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__send_abandoned_cart_followup
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_followup
 msgid "Send Follow-up"
@@ -6056,12 +6212,12 @@ msgid "Show Available Quantity"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category__show_category_description
+#: model:ir.model.fields,field_description:website_sale.field_website__show_category_description
 msgid "Show Category Description"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category__show_category_title
+#: model:ir.model.fields,field_description:website_sale.field_website__show_category_title
 msgid "Show Category Title"
 msgstr ""
 
@@ -6254,6 +6410,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"Some products don't meet the minimum quantity required to be purchased."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sort By"
 msgstr ""
@@ -6293,11 +6456,6 @@ msgstr ""
 msgid ""
 "Specify a pricelist to localize the feed with a specific currency. If not set, the default website pricelist will be used.\n"
 "Note that the pricelist must be selectable on the website."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menus_logos
-msgid "Spring collection has arrived!"
 msgstr ""
 
 #. module: website_sale
@@ -6456,12 +6614,6 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
-msgid "Terms and Conditions"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 msgid "Text"
 msgstr ""
@@ -6592,6 +6744,23 @@ msgid "The minimum donation amount is %(amount)s"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.constraint,message:website_sale.constraint_product_template_minimum_quantity_non_negative
+msgid "The minimum quantity must be greater than or equal to 0."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
+msgid "The minimum quantity to purchase for this product is %(min_qty)s."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "The minimum quantity to purchase this product is %(min_qty)s."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product"
@@ -6620,12 +6789,6 @@ msgstr ""
 msgid ""
 "The selected delivery date was no longer available. Please pick another "
 "delivery date."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
-#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
-msgid "The team"
 msgstr ""
 
 #. module: website_sale
@@ -6876,6 +7039,11 @@ msgstr ""
 msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Try to refine your search criteria."
 msgstr ""
 
 #. module: website_sale
@@ -7592,6 +7760,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/footer_option_plugin.js:0
+#: model:ir.module.module,shortdesc:base.module_website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
@@ -7603,8 +7772,6 @@ msgid "eCommerce"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/mega_menu_option.xml:0
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
 msgid "eCommerce Categories"

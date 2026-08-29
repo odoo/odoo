@@ -6,14 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 17:38+0000\n"
-"PO-Revision-Date: 2026-08-21 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:40+0000\n"
+"PO-Revision-Date: 2026-08-28 17:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: pos_restaurant
+#: model:ir.module.module,description:base.module_pos_restaurant
+msgid ""
+"\n"
+"\n"
+"This module adds several features to the Point of Sale that are specific to restaurant management:\n"
+"- Bill Printing: Allows you to print a receipt before the order is paid\n"
+"- Bill Splitting: Allows you to split an order into different orders\n"
+"- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
+"\n"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1145,6 +1157,7 @@ msgstr ""
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
+#: model:ir.module.module,shortdesc:base.module_pos_restaurant
 #: model:pos.config,name:pos_restaurant.pos_config_main_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
 msgid "Restaurant"
@@ -1167,6 +1180,11 @@ msgstr ""
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.module.module,summary:base.module_pos_restaurant
+msgid "Restaurant extensions for the Point of Sale "
 msgstr ""
 
 #. module: pos_restaurant

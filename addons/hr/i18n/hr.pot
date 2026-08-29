@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 17:38+0000\n"
-"PO-Revision-Date: 2026-08-21 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"PO-Revision-Date: 2026-08-28 17:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,12 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid "%(calendar_name)s (%(employee_name)s)"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "%(employee_name)s has no manager."
 msgstr ""
@@ -43,12 +49,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "%(employee_name)s's manager (%(manager_name)s) has no user."
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_job.py:0
-msgid "%s (copy)"
 msgstr ""
 
 #. module: hr
@@ -1249,6 +1249,11 @@ msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
 
 #. module: hr
+#: model:ir.module.module,summary:base.module_hr
+msgid "Centralize employee information"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
 msgstr ""
@@ -2050,6 +2055,12 @@ msgid "Discover our products."
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+msgid "Discuss"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_discuss_channel
 msgid "Discussion Channel"
 msgstr ""
@@ -2135,6 +2146,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license_name
 msgid "Driving License Name"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.resource_calendar_form_view_inherit_hr
+msgid "Duplicate & Edit for Current Employee"
 msgstr ""
 
 #. module: hr
@@ -2415,6 +2431,7 @@ msgstr ""
 #. odoo-javascript
 #. odoo-python
 #: code:addons/hr/models/hr_department.py:0
+#: code:addons/hr/models/resource_calendar.py:0
 #: code:addons/hr/static/src/views/hr_employee_action_helper/hr_employee_action_helper.js:0
 #: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -2423,6 +2440,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_type__employees_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
+#: model:ir.module.module,shortdesc:base.module_hr
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:res.groups.privilege,name:hr.res_groups_privilege_employees
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
@@ -2436,6 +2454,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_search
+#: model_terms:ir.ui.view,arch_db:hr.resource_calendar_form_view_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2446,6 +2465,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
+#: model:ir.model.fields,field_description:hr.field_resource_calendar__employees_count
 msgid "Employees Count"
 msgstr ""
 
@@ -3666,10 +3686,20 @@ msgid "Master demos of our software"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_resource_calendar__material_resources_count
+msgid "Material Resources Count"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_type_icon
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
 #: model:ir.model.fields,help:hr.field_hr_version__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.resource_calendar_form_view_inherit_hr
+msgid "Materials"
 msgstr ""
 
 #. module: hr
@@ -3760,12 +3790,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
-msgstr ""
-
-#. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
-msgid "More..."
 msgstr ""
 
 #. module: hr
@@ -4037,6 +4061,103 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
 msgid "October"
+msgstr ""
+
+#. module: hr
+#: model:ir.module.module,description:base.module_hr
+msgid ""
+"Odoo Human Resources\n"
+"--------------------\n"
+"\n"
+"With Odoo <a href=\"https://www.odoo.com/app/employees\">Human Resources</a>,\n"
+"manage the most important asset in your company: People\n"
+"\n"
+"Get all your HR operations managed easily: knowledge sharing, recruitments,\n"
+"appraisals, timesheets, contracts, attendances, payroll, etc.\n"
+"\n"
+"Each need is provided by a specific app that you activate on demand.\n"
+"\n"
+"Manage Your Employees\n"
+"---------------------\n"
+"\n"
+"Oversee all important information in your company address book. Some\n"
+"information are restricted to HR managers, others are public to easily look\n"
+"colleagues.\n"
+"\n"
+"Record employee contracts and get alerts when they have to be renewed.\n"
+"\n"
+"Streamline Your Recruitment Process\n"
+"-----------------------------------\n"
+"\n"
+"Index resumes, track applicants, search profiles with <a href=\"https://www.odoo.com/app/employees\">Odoo HR</a>.\n"
+"\n"
+"Post job offers and keep track of each application received. Follow applicants\n"
+"in your recruitment process with the smart kanban view.\n"
+"\n"
+"Save time by automating some communications with email templates. Resumes are\n"
+"indexed automatically, allowing you to easily find for specific profiles.\n"
+"\n"
+"Enterprise Social Network\n"
+"-------------------------\n"
+"\n"
+"Break down information silos. Share knowledge and best practices amongst all\n"
+"employees. Follow specific people or documents and join groups of interests to\n"
+"share expertise and documents.\n"
+"\n"
+"Interact with your coworkers in real time with website live chat.\n"
+"\n"
+"Track time and attendances\n"
+"--------------------------\n"
+"\n"
+"Keep track of the time spent by project, client or task. It's easy to record\n"
+"timesheets or check attendances for each employee. Get your analytic accounting\n"
+"posted automatically based on time spent on your projects.\n"
+"\n"
+"Time Off Management\n"
+"-------------------\n"
+"\n"
+"Keep track of the vacation days accrued by each employee. Employees enter their\n"
+"requests (paid time off, sick time off, etc), for managers to approve and\n"
+"validate. It's all done in just a few clicks. The agenda of each employee is\n"
+"updated accordingly.\n"
+"\n"
+"Keep Track of Employee Expenses\n"
+"-------------------------------\n"
+"\n"
+"Get rid of the paper work and follow employee's expenses directly in Odoo.\n"
+"Don't loose time or money by controlling the full flow: expense validation,\n"
+"reimbursement of employees, posting in the accounting and re-invoicing to\n"
+"customers.\n"
+"\n"
+"Follow Periodic Appraisals\n"
+"--------------------------\n"
+"\n"
+"Set-up appraisals plans and/or surveys for your employees and watch their\n"
+"evolution. Define steps for interviews and Odoo will notify managers or\n"
+"subordinates automatically to prepare appraisals. Keep track of the progress of\n"
+"your staff periodically.\n"
+"\n"
+"Boost Engagement With Gamification\n"
+"----------------------------------\n"
+"\n"
+"### Define clear objective and provide real time feedback\n"
+"\n"
+"Inspire achievement with challenges, goals and rewards. Define clear objectives\n"
+"and provide real time feedback and tangible results. Showcase the top\n"
+"performers to the entire channel and publicly recognize a job well done.\n"
+"\n"
+"### Leaderboards\n"
+"\n"
+"Promote leaders and competition amongst Sales Team with performance ratios.\n"
+"\n"
+"### Personal Objectives\n"
+"\n"
+"Assign clear goals to users to align them with the company objectives.\n"
+"\n"
+"### Team Targets\n"
+"\n"
+"Compare revenues with forecasts and budgets in real time.\n"
+"\n"
 msgstr ""
 
 #. module: hr
@@ -5428,6 +5549,18 @@ msgid "This will create a new employee record for"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.resource_calendar_form_view_inherit_hr
+msgid ""
+"This will create a new schedule copy and automatically reassign it to the "
+"employee you navigated from. Continue?"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.resource_calendar_form_view_inherit_hr
+msgid "This working schedule is shared across"
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
 msgid ""
@@ -6069,6 +6202,8 @@ msgid "Working Hours"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Working Schedule"
 msgstr ""
@@ -6313,6 +6448,11 @@ msgid "employees at the selected date."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.resource_calendar_form_view_inherit_hr
+msgid "employees →"
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "here"
@@ -6371,6 +6511,12 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid "resource_calendar_id"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/models.py:0
 msgid "restricted to employees"
 msgstr ""
@@ -6379,6 +6525,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
 msgid "to see those employees."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/resource_calendar.py:0
+msgid "version_ids"
 msgstr ""
 
 #. module: hr

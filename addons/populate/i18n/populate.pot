@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 17:38+0000\n"
-"PO-Revision-Date: 2026-08-14 17:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"PO-Revision-Date: 2026-08-28 17:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,8 +41,26 @@ msgstr ""
 
 #. module: populate
 #. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "'%(import_ref)s' refers to '%(model)s', not a populate blueprint."
+msgstr ""
+
+#. module: populate
+#. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for generated values."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "<import> may only contain inheritance specifications."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "<import> requires a fully qualified XML ID in 'ref'."
 msgstr ""
 
 #. module: populate
@@ -70,6 +88,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Adapt the generator parameter to generate values within the constraint"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "An import namespace cannot be empty."
 msgstr ""
 
 #. module: populate
@@ -215,6 +239,12 @@ msgid "Create jobs cannot define a domain."
 msgstr ""
 
 #. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Create reference '%(ref)s' is declared more than once."
+msgstr ""
+
+#. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_uid
@@ -270,7 +300,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid ""
-"Error applying blueprint inheritance from %(parent)s' to %(child)s: "
+"Error applying blueprint inheritance from '%(parent)s' to '%(child)s': "
 "%(error)s"
 msgstr ""
 
@@ -313,6 +343,18 @@ msgid "Function blocks use 'ref', not 'id'."
 msgstr ""
 
 #. module: populate
+#: model:ir.module.module,summary:base.module_populate
+msgid "Generate synthetic data for an Odoo database"
+msgstr ""
+
+#. module: populate
+#: model:ir.module.module,description:base.module_populate
+msgid ""
+"Generate synthetic data for an Odoo database, following a predefined "
+"blueprint. Used for performance testing."
+msgstr ""
+
+#. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Generator: '%s'"
@@ -341,6 +383,18 @@ msgid "Image dimensions must be positive integers, got %(width)sx%(height)s."
 msgstr ""
 
 #. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Imported blueprint '%(import_ref)s' must use XML."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Imported blueprint '%(import_ref)s' was not found."
+msgstr ""
+
+#. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
 msgid "Inherited Blueprint"
 msgstr ""
@@ -348,6 +402,12 @@ msgstr ""
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__instructions
 msgid "Instructions"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Invalid import namespace '%(namespace)s'."
 msgstr ""
 
 #. module: populate
@@ -511,6 +571,11 @@ msgid "Parent Path"
 msgstr ""
 
 #. module: populate
+#: model:ir.module.module,shortdesc:base.module_populate
+msgid "Populate"
+msgstr ""
+
+#. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Positional arg names must be contiguous indexes from '0'."
@@ -534,6 +599,12 @@ msgstr ""
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__record_count
 msgid "Record Count"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Recursive blueprint composition detected for '%(blueprint)s'."
 msgstr ""
 
 #. module: populate
@@ -625,7 +696,7 @@ msgstr ""
 #: code:addons/populate/models/blueprint.py:0
 msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
-"inherit from it."
+"inherits from it."
 msgstr ""
 
 #. module: populate
@@ -678,6 +749,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Unique cannot be used with the selection generator."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Unknown <import> attribute(s): %(attributes)s."
 msgstr ""
 
 #. module: populate

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-26 19:10+0000\n"
-"PO-Revision-Date: 2026-07-26 19:10+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"PO-Revision-Date: 2026-08-28 17:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,6 +42,18 @@ msgid ""
 "                    customers if required.\n"
 "                </p>\n"
 "            "
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.module.module,description:base.module_sale_timesheet
+msgid ""
+"\n"
+"Allows to sell timesheets in your sales order\n"
+"=============================================\n"
+"\n"
+"This module set the right product on all timesheet lines\n"
+"according to the order/contract you work on. This allows to\n"
+"have real delivered quantities in sales orders.\n"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1077,6 +1089,11 @@ msgid "Sales Orders"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.module.module,shortdesc:base.module_sale_timesheet
+msgid "Sales Timesheet"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
 msgid ""
 "Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
@@ -1107,6 +1124,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 msgid "Search in Sales Order Item"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.module.module,summary:base.module_sale_timesheet
+msgid "Sell based on timesheets"
 msgstr ""
 
 #. module: sale_timesheet
