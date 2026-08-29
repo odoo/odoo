@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 
 export const stepUtils = {
+    // a change
     showAppsMenuItem() {
         return {
             isActive: ["community", "desktop"],
