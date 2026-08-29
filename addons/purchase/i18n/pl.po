@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 01:19+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/purchase/"
@@ -152,8 +152,8 @@ msgstr ""
 "        </t>\n"
 "        jest oczekiwana dnia\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">nieokreślonego</span>.\n"
@@ -217,11 +217,12 @@ msgstr ""
 "        W załączniku znajdziesz zamówienie zakupu <span style=\"font-"
 "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            o numerze referencyjnym: <t t-out=\"object.partner_ref or ''\">"
-"REF_XXX</t>\n"
+"            o numerze referencyjnym: <t t-out=\"object.partner_ref or "
+"''\">REF_XXX</t>\n"
 "        </t>\n"
-"        na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        na kwotę <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -281,8 +282,8 @@ msgstr ""
 "        W załączniku znajdziesz zapytanie ofertowe <span style=\"font-"
 "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            o numerze referencyjnym: <t t-out=\"object.partner_ref or ''\">"
-"REF_XXX</t>\n"
+"            o numerze referencyjnym: <t t-out=\"object.partner_ref or "
+"''\">REF_XXX</t>\n"
 "        </t>\n"
 "        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
@@ -338,8 +339,8 @@ msgid ""
 "Waiting for Bill</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
-"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\">"
-"Oczekujemy na rachunek</span>"
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-"
+"inline\">Oczekujemy na rachunek</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -396,8 +397,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Zapytanie ofertowe </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Zapytanie ofertowe </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Zamówienie zakupu </span>"
 
@@ -413,8 +414,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">"
-"(potwierdzone przez dostawcę)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(potwierdzone przez dostawcę)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -422,8 +423,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">"
-"(potwierdzone przez dostawcę)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(potwierdzone przez dostawcę)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -1333,7 +1334,8 @@ msgstr "Ikona Font awesome np. fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr "Niedozwolone wartości w wierszu zamówienia niepodlegającego rozliczeniu"
+msgstr ""
+"Niedozwolone wartości w wierszu zamówienia niepodlegającego rozliczeniu"
 
 #. module: purchase
 #. odoo-python
@@ -2179,6 +2181,7 @@ msgstr "Liczba zamówień zakupu"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -3422,8 +3425,8 @@ msgid ""
 msgstr ""
 "Twoja oferta zawiera produkty firmy%(product_company)s, natomiast Twoja "
 "oferta należy do firmy %(quote_company)s. \n"
-"Proszę zmienić firmę oferty lub usunąć produkty z innych firm (%"
-"(bad_products)s)."
+"Proszę zmienić firmę oferty lub usunąć produkty z innych firm "
+"(%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

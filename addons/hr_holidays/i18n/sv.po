@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-08-24 07:42+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
+"PO-Revision-Date: 2026-08-28 07:15+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays/sv/>\n"
@@ -40,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -579,8 +579,8 @@ msgid ""
 "'confirm'\"/>"
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Pil-ikon\" "
-"title=\"Pil\" invisible=\"fördelningstyp == 'periodiserad' eller tillstånd "
-"!= 'bekräfta'\"/>"
+"title=\"Pil\" invisible=\"fördelningstyp == 'periodiserad' eller tillstånd !"
+"= 'bekräfta'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -1167,7 +1167,8 @@ msgstr "Belopp i Negativt"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "An employee already booked time off which overlaps with this period:%s"
-msgstr "En anställd har redan bokat ledighet som överlappar med denna period:%s"
+msgstr ""
+"En anställd har redan bokat ledighet som överlappar med denna period:%s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1953,8 +1954,8 @@ msgstr ""
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
-"På grund av en förändring i globala ledigheter har du blivit beviljad %s dag"
-"(ar) tillbaka."
+"På grund av en förändring i globala ledigheter har du blivit beviljad %s "
+"dag(ar) tillbaka."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
@@ -2380,7 +2381,9 @@ msgstr "Inaktiv"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
+msgstr ""
+"Om rutan är markerad, så finns det nya meddelanden som kräver din "
+"uppmärksamhet."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
@@ -2388,7 +2391,7 @@ msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad, en del meddelanden har leveransfel."
+msgstr "Om rutan är markerad, så har vissa meddelanden leveransfel."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
@@ -2426,6 +2429,14 @@ msgid ""
 msgstr ""
 "Om det aktiva fältet är inställt på falskt kan du dölja frånvarotypen utan "
 "att ta bort den."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -2858,8 +2869,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Ny tilldelningsförfrågan skapad av %(user)s: %(count)s dagar av %"
-"(allocation_type)s"
+"Ny tilldelningsförfrågan skapad av %(user)s: %(count)s dagar av "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

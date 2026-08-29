@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
 "PO-Revision-Date: 2026-08-08 07:47+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -560,8 +560,8 @@ msgid ""
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
 "'confirm'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭嘴圖示\" title=\"箭"
-"嘴\" invisible=\"allocation_type == 'accrual' or state != 'confirm'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭嘴圖示\" title=\"箭嘴"
+"\" invisible=\"allocation_type == 'accrual' or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -569,8 +569,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭嘴圖示\" title=\"箭"
-"嘴\" invisible=\"allocation_type == 'accrual'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"箭嘴圖示\" title=\"箭嘴"
+"\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -2072,7 +2072,8 @@ msgstr "欄位允許以天或小時查看分配持續時間，具體取決於typ
 msgid ""
 "Field allowing to see the leave request duration in days or hours depending "
 "on the leave_type_request_unit"
-msgstr "允許以天或小時查看請假持續時間的欄位，具體取決於leave_type_request_unit"
+msgstr ""
+"允許以天或小時查看請假持續時間的欄位，具體取決於leave_type_request_unit"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -2372,6 +2373,14 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr "如果有效欄位設定為false，則允許您隱藏時間類型而不刪除它。"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -3551,8 +3560,8 @@ msgid ""
 msgstr ""
 "指定如果在付款期間中間發生等級轉換會發生什麼情況。\n"
 "\n"
-"                「立即」將在持續支付期間的確切日期將員工切換到新的應計等級"
-"。\n"
+"                「立即」將在持續支付期間的確切日期將員工切換到新的應計等"
+"級。\n"
 "\n"
 "                「在此應計期之後」將使員工保持相同的應計水平，直到持續的工資"
 "期結束。\n"
@@ -3673,7 +3682,8 @@ msgid ""
 "The accrual starts after a defined period from the allocation start date. "
 "This field defines the number of days, months or years after which accrual "
 "is used."
-msgstr "從分配開始日期後的定義時間段開始計算累計。此欄位定義累計的天數、月數或年數。"
+msgstr ""
+"從分配開始日期後的定義時間段開始計算累計。此欄位定義累計的天數、月數或年數。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3716,7 +3726,8 @@ msgstr "持續時間必須大於 0。"
 msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
-msgstr "缺少此請求的員工，部門，公司或員工類別。請確保您的使用者登入已連結到員工。"
+msgstr ""
+"缺少此請求的員工，部門，公司或員工類別。請確保您的使用者登入已連結到員工。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4234,8 +4245,8 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types "
 "without overriding limit."
 msgstr ""
-"分配給該員工的帶薪休假總數，更改此值以建立分配/休假請求。總根據所有的休假類型"
-"，沒有覆蓋限制。"
+"分配給該員工的帶薪休假總數，更改此值以建立分配/休假請求。總根據所有的休假類"
+"型，沒有覆蓋限制。"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training

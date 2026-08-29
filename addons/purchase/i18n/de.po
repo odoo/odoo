@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 23:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-17/purchase/"
@@ -147,8 +147,9 @@ msgstr ""
 "        </t>\n"
 "        am \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span> vorgesehen ist.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span> vorgesehen "
+"ist.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">nicht definiert</span>.\n"
@@ -391,8 +392,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Angebotsvorlage </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Angebotsvorlage </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Bestellung </span>"
 
@@ -671,7 +672,8 @@ msgstr "Fügen Sie mehrere Varianten aus einem Raster zur Bestellung hinzu."
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
-msgstr "Fügen Sie einige Produkte oder Dienstleistungen zu Ihrem Angebot hinzu."
+msgstr ""
+"Fügen Sie einige Produkte oder Dienstleistungen zu Ihrem Angebot hinzu."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1374,7 +1376,8 @@ msgstr "Aktivieren Sie 2 Genehmigungen zur Bestätigung einer Bestellung"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr "Erhalten Sie Warnungen bei Bestellungen von Produkten oder Lieferanten."
+msgstr ""
+"Erhalten Sie Warnungen bei Bestellungen von Produkten oder Lieferanten."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -2187,6 +2190,7 @@ msgstr "Anzahl Bestellungen"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2661,8 +2665,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Die Auswahl „Warnung“ wird dem Benutzer die Meldung zeigen. Die Auswahl „"
-"Blockierende Meldung“ wird die Meldung ausgeben und den Arbeitsablauf "
+"Die Auswahl „Warnung“ wird dem Benutzer die Meldung zeigen. Die Auswahl "
+"„Blockierende Meldung“ wird die Meldung ausgeben und den Arbeitsablauf "
 "blockieren. Die Meldung muss ins nächste Feld eingetragen werden."
 
 #. module: purchase
@@ -3456,4 +3460,5 @@ msgstr "Tag(e) vorher"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} Auftrag (Ref {{ object.name or 'k. A.' }})"
+msgstr ""
+"{{ object.company_id.name }} Auftrag (Ref {{ object.name or 'k. A.' }})"

@@ -25,9 +25,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-08-07 05:49+0000\n"
-"Last-Translator: \"Gerasimuk, Andrzej\" <a.gerasimuk@archimedes.pl>\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
+"PO-Revision-Date: 2026-08-29 12:08+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/account/"
 "pl/>\n"
 "Language: pl\n"
@@ -37,7 +37,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #. odoo-python
@@ -485,15 +485,16 @@ msgstr ""
 "<t t-if=\"object.invoice_origin\">\n"
 "(z referencją: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "</t>\n"
-"na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">143 750,00 USD</span>\n"
+"na kwotę <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
+"750,00 USD</span>\n"
 "od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "<br><br>\n"
 "W razie jakichkolwiek pytań prosimy o kontakt.\n"
 "<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "<br><br>\n"
-"<t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>"
-"\n"
+"<t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</"
+"t>\n"
 "</t>\n"
 "</p>\n"
 "</div>"
@@ -585,8 +586,9 @@ msgstr ""
 "            (z numerem referencyjnym: <t t-out=\"object.invoice_origin or "
 "''\">SUB003</t>)\n"
 "        </t>\n"
-"        na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        na kwotę <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        od <t t-out=\"object.company_id.name or ''\">TwojaFirma</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Ta faktura już została opłacona\n"
@@ -616,8 +618,8 @@ msgstr ""
 "kontaktować.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
-"Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -652,9 +654,9 @@ msgstr ""
 "<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "Drogi <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "Dziękujemy za dokonaną płatność.\n"
-"Oto potwierdzenie płatności <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> na "
-"kwotę\n"
+"Oto potwierdzenie płatności <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"na kwotę\n"
 "do <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, "
 "object.currency_id) or ''\">10,00 USD</span> od <t t-"
 "out=\"object.company_id.name or ''\">YourCompany</t>.\n"
@@ -838,8 +840,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1312,8 +1314,8 @@ msgid ""
 "rounding made on previous entries; possibly causing an inconsistency with "
 "the new ones."
 msgstr ""
-"<strong>Ta waluta została już wykorzystana do generowania zapisów "
-"księgowych.</strong><br/>\n"
+"<strong>Ta waluta została już wykorzystana do generowania zapisów księgowych."
+"</strong><br/>\n"
 "Zmiana jej współczynnika zaokrąglenia teraz nie zmieni zaokrąglenia "
 "dokonanego na poprzednich wpisach; być może powodując niespójność z nowymi."
 
@@ -1665,6 +1667,11 @@ msgid "Account Mapping"
 msgstr "Mapowanie konta"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "Wiersz ruchu na koncie"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Odwrócenie zapisu"
@@ -1716,6 +1723,11 @@ msgstr "Należności na koncie (PoS)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Uzgodnienie kont"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2042,8 +2054,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Wpis narastający utworzony w dniu %(date)s: %(accrual_entry)"
-"s.                Oraz jego wpis odwrotny: %(reverse_entry)s."
+"Wpis narastający utworzony w dniu %(date)s: "
+"%(accrual_entry)s.                Oraz jego wpis odwrotny: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -4383,7 +4395,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_sale_payment_items
 msgid "Cool, it looks like you don't have any customer credit notes to pay."
-msgstr "Super, wygląda na to, że nie masz żadnych not kredytowych do spłacenia."
+msgstr ""
+"Super, wygląda na to, że nie masz żadnych not kredytowych do spłacenia."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_open_payment_items
@@ -6135,7 +6148,8 @@ msgstr "Dynamiczne raporty"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr "Dynamiczna domena używana dla tagu, który może być ustawiony na podatku"
+msgstr ""
+"Dynamiczna domena używana dla tagu, który może być ustawiony na podatku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6204,8 +6218,8 @@ msgstr "Zniżka za wczesną płatność w wysokości"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Zniżka za wcześniejszą płatność:<b>%(amount)s</b> jeśli zapłacono przed <b>%"
-"(date)s</b>"
+"Zniżka za wcześniejszą płatność:<b>%(amount)s</b> jeśli zapłacono przed "
+"<b>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -8842,7 +8856,8 @@ msgstr "Dziennik używany domyślnie do przenoszenia okresu wpisu"
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
 "Journal where the opening entry of this company's accounting has been posted."
-msgstr "Dziennik, w którym opublikowano wpis otwierający księgowości tej firmy."
+msgstr ""
+"Dziennik, w którym opublikowano wpis otwierający księgowości tej firmy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
@@ -12657,7 +12672,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
-msgstr "Wyszukaj w nocie zestawienia, aby znaleźć odnośnik do faktury/płatności"
+msgstr ""
+"Wyszukaj w nocie zestawienia, aby znaleźć odnośnik do faktury/płatności"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
@@ -13100,7 +13116,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
-msgstr "Zmień stan z aktywnego na nieaktywny aby ukryć podatek bez usuwania go."
+msgstr ""
+"Zmień stan z aktywnego na nieaktywny aby ukryć podatek bez usuwania go."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14030,8 +14047,8 @@ msgstr ""
 "przechwytywania: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "Grupy prefix* są separatorami pomiędzy rokiem, miesiącem i rzeczywistym "
 "rosnącym numerem sekwencji (seq).\n"
-"np: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"np: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14107,8 +14124,8 @@ msgid ""
 "In doing so, you might want to resequence your entries in order to maintain "
 "a continuous date-based sequence."
 msgstr ""
-"%(date_field)s(%(date)s) nie pasuje do numeru sekwencji powiązanego %(model)s"
-"(%(sequence)s)\n"
+"%(date_field)s(%(date)s) nie pasuje do numeru sekwencji powiązanego "
+"%(model)s(%(sequence)s)\n"
 "Będziesz musiał wyczyścić %(model)s %(sequence_field)saby kontynuować.\n"
 "Robiąc to, możesz chcieć ponownie uszeregować swoje wpisy, aby zachować "
 "ciągłą sekwencję opartą na datach."
@@ -14417,7 +14434,8 @@ msgstr "Firma, do której należy ta linia dystrybucyjna."
 msgid ""
 "The country code of the foreign VAT number does not match any country in the "
 "group."
-msgstr "Kod kraju zagranicznego numeru VAT nie pasuje do żadnego kraju z grupy."
+msgstr ""
+"Kod kraju zagranicznego numeru VAT nie pasuje do żadnego kraju z grupy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14728,8 +14746,8 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
-"Ten ruch nie może zostać opublikowany z następującego powodu: %"
-"(error_message)s"
+"Ten ruch nie może zostać opublikowany z następującego powodu: "
+"%(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
@@ -15819,8 +15837,8 @@ msgstr "Razem podpisane"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Całkowita suma należna (włączając zamówienia sprzedaży i ten dokument): %"
-"(total_credit)s"
+"Całkowita suma należna (włączając zamówienia sprzedaży i ten dokument): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -16821,7 +16839,8 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr "Wpisz tutaj <b>swój własny adres e-mail</b>, aby przetestować przepływ."
+msgstr ""
+"Wpisz tutaj <b>swój własny adres e-mail</b>, aby przetestować przepływ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
@@ -18230,8 +18249,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) z %s zostały przelane na <strong>"
-"{account_target_name}</strong> przez {link}."
+"{amount} ({debit_credit}) z %s zostały przelane na "
+"<strong>{account_target_name}</strong> przez {link}."
 
 #. module: account
 #. odoo-python

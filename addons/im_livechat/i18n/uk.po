@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 04:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-17/"
@@ -19,10 +19,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: im_livechat
@@ -94,7 +94,8 @@ msgstr "%s приєднався"
 #, python-format
 msgid ""
 "'%(input_email)s' does not look like a valid email. Can you please try again?"
-msgstr "'%(input_email)s' виглядає як недійсний email. Можете спробувати знову?"
+msgstr ""
+"'%(input_email)s' виглядає як недійсний email. Можете спробувати знову?"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -103,15 +104,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* «Показати» відображає кнопку чату на сторінках.\n"
-"* «Показати зі сповіщенням» — це «Показати» додатково до плаваючого тексту "
-"поруч із кнопкою.\n"
-"* «Відкрити автоматично» відображає кнопку та автоматично відкриває панель "
-"розмови.\n"
-"* «Сховати» приховує кнопку чату на сторінках.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -140,7 +136,8 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Back to edit mode"
-msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Повернутися до режиму редагування"
+msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>Повернутися до режиму редагування"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -168,8 +165,8 @@ msgid ""
 "<span>Reminder: This step will only be played if no operator is available.</"
 "span>"
 msgstr ""
-"<span>Нагадування: Цей крок буде відтворено, лише якщо оператор "
-"недоступний.</span>"
+"<span>Нагадування: Цей крок буде відтворено, лише якщо оператор недоступний."
+"</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -1788,8 +1785,8 @@ msgid ""
 "chat button will be hidden on the specified URL from the visitors located in "
 "these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
-"Це правило застосовуватиметься лише до цих країн. Приклад: якщо ви вибрали «"
-"Бельгію» та «Сполучені Штати» та встановили дію «Приховати», кнопка чату "
+"Це правило застосовуватиметься лише до цих країн. Приклад: якщо ви вибрали "
+"«Бельгію» та «Сполучені Штати» та встановили дію «Приховати», кнопка чату "
 "буде прихована за вказаною URL-адресою від відвідувачів, які перебувають у "
 "цих 2 країнах. Ця функція вимагає встановлення GeoIP на вашому сервері."
 
@@ -2124,6 +2121,21 @@ msgstr "секунди"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "{{author_name}}"
 msgstr "{{author_name}}"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* «Показати» відображає кнопку чату на сторінках.\n"
+#~ "* «Показати зі сповіщенням» — це «Показати» додатково до плаваючого "
+#~ "тексту поруч із кнопкою.\n"
+#~ "* «Відкрити автоматично» відображає кнопку та автоматично відкриває "
+#~ "панель розмови.\n"
+#~ "* «Сховати» приховує кнопку чату на сторінках.\n"
 
 #, python-format
 #~ msgid "Conversation ended..."

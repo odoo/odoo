@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-08-06 13:36+0000\n"
-"Last-Translator: Deleted User <noreply+31@weblate.org>\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
+"PO-Revision-Date: 2026-08-29 12:09+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-17/"
 "account/vi/>\n"
 "Language: vi\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #. odoo-python
@@ -466,18 +466,19 @@ msgstr ""
 "            giấy báo có\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (với mã tham chiếu: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        có số tiền là <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        có số tiền là <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
-"Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -551,28 +552,29 @@ msgstr ""
 "0px; font-size: 13px;\">Kính thưa<t t-if=\"object.partner_id.parent_id\"><t "
 "t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t> (<t t-"
 "out=\"object.partner_id.parent_id.name or ''\"> Nội thất Azure</t> ),</t><t "
-"t-else=\"\"><t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t> "
-",</t><br><br> Đây là của bạn<t t-if=\"object.name\"> hóa đơn <span "
+"t-else=\"\"><t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t> ,"
+"</t><br><br> Đây là của bạn<t t-if=\"object.name\"> hóa đơn <span "
 "style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</"
 "span></t><t t-else=\"\"> hóa đơn</t><t t-if=\"object.invoice_origin\"> (có "
 "tham khảo:<t t-out=\"object.invoice_origin or ''\"> SUB003</t> )</t> với số "
-"tiền <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143.750,00</span> từ<t t-"
-"out=\"object.company_id.name or ''\"> Công ty của bạn</t> .<t t-"
-"if=\"object.payment_state in ('paid', 'in_payment')\"> Hóa đơn này đã được "
-"thanh toán.</t><t t-else=\"\"> Vui lòng chuyển tiền thanh toán thuận tiện "
-"sớm nhất của bạn.<t t-if=\"object.payment_reference\"><br><br> Vui lòng sử "
-"dụng thông tin liên lạc sau để thanh toán của bạn: <strong t-"
+"tiền <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143.750,00</span> từ<t t-out=\"object.company_id.name or ''\"> Công ty của "
+"bạn</t> .<t t-if=\"object.payment_state in ('paid', 'in_payment')\"> Hóa đơn "
+"này đã được thanh toán.</t><t t-else=\"\"> Vui lòng chuyển tiền thanh toán "
+"thuận tiện sớm nhất của bạn.<t t-if=\"object.payment_reference\"><br><br> "
+"Vui lòng sử dụng thông tin liên lạc sau để thanh toán của bạn: <strong t-"
 "out=\"object.payment_reference or ''\">INV/2021/05/0005</strong><t t-"
 "if=\"object.partner_bank_id\"> Trên tài khoản<strong t-"
 "out=\"object.partner_bank_id.acc_number\"></strong></t> .</t></t><t t-"
-"if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\"><br>"
-"<br> Tái bút: bạn có thể xem lại bảng chấm công của mình <a t-att-href=\"'my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">từ cổng thông "
-"tin.</a></t><br><br> Đừng ngần ngại liên hệ với chúng tôi nếu bạn có bất kỳ "
-"câu hỏi nào.<t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">"
-"<br><br><t t-out=\"object.invoice_user_id.signature or ''\"> --<br> Quản trị "
-"viên Mitchell</t></t></p></div>\n"
+"if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\"><br><br> Tái bút: bạn có thể xem lại bảng chấm công "
+"của mình <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % "
+"object.name\">từ cổng thông tin.</a></t><br><br> Đừng ngần ngại liên hệ với "
+"chúng tôi nếu bạn có bất kỳ câu hỏi nào.<t t-if=\"not "
+"is_html_empty(object.invoice_user_id.signature)\"><br><br><t t-"
+"out=\"object.invoice_user_id.signature or ''\"> --<br> Quản trị viên "
+"Mitchell</t></t></p></div>\n"
 "            "
 
 #. module: account
@@ -602,15 +604,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Xin chào <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br><br>\n"
+"        Xin chào <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br><br>\n"
 "        Cảm ơn bạn đã thanh toán!\n"
 "        Đây là biên lai thanh toán của bạn <span style=\"font-weight:bold;\" "
 "t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
 "span> có số tiền\n"
-"        là <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> từ <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        là <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi.\n"
 "        <br><br>\n"
@@ -794,8 +796,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1415,7 +1417,8 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "A payment tolerance defined as an amount should always be higher than 0"
-msgstr "Dung sai thanh toán được xác định dưới dạng số tiền phải luôn lớn hơn 0"
+msgstr ""
+"Dung sai thanh toán được xác định dưới dạng số tiền phải luôn lớn hơn 0"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1631,6 +1634,11 @@ msgid "Account Mapping"
 msgstr "Mapping tài khoản"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "Dòng bút toán kế toán"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Đảo bút toán tài khoản"
@@ -1682,6 +1690,11 @@ msgstr "Khoản phải thu (PoS)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Tài khoản đối chiếu"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2007,9 +2020,9 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"%(date)sGhi nhận khoản phải trả được tạo vào ngày 20/11/2012: %"
-"(accrual_entry)s.                Và ghi nhận hủy bỏ tương ứng: %"
-"(reverse_entry)s."
+"%(date)sGhi nhận khoản phải trả được tạo vào ngày 20/11/2012: "
+"%(accrual_entry)s.                Và ghi nhận hủy bỏ tương ứng: "
+"%(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2769,7 +2782,8 @@ msgstr "Áp dụng"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
-msgstr "Áp dụng thuế GTGT của quốc gia EU mà hàng hóa và dịch vụ được giao đến."
+msgstr ""
+"Áp dụng thuế GTGT của quốc gia EU mà hàng hóa và dịch vụ được giao đến."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -4893,7 +4907,8 @@ msgstr "Số dư tích lũy"
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
 msgid ""
 "Cumulated balance depending on the domain and the order chosen in the view."
-msgstr "Số dư tích lũy tùy thuộc vào miền và thứ tự được chọn trong chế độ xem."
+msgstr ""
+"Số dư tích lũy tùy thuộc vào miền và thứ tự được chọn trong chế độ xem."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6196,8 +6211,8 @@ msgstr "Chiết khấu thanh toán sớm của"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Chiết khấu thanh toán sớm: <b>%(amount)s</b> nếu thanh toán trước <b>%(date)"
-"s</b>"
+"Chiết khấu thanh toán sớm: <b>%(amount)s</b> nếu thanh toán trước "
+"<b>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -8006,7 +8021,8 @@ msgstr "Trường nội bộ để rút ngắn việc tạo expression_ids cho c
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
 msgid "Internal field to shorten expression_ids creation for the domain engine"
-msgstr "Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ miền"
+msgstr ""
+"Trường nội bộ để rút ngắn quá trình tạo expression_ids cho công cụ miền"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__external_formula
@@ -8661,8 +8677,8 @@ msgid ""
 "internal transfers)."
 msgstr ""
 "Bút toán %s không hợp lệ. Để tiếp tục, các hạng mục bút toán phải bao gồm "
-"một và chỉ một tài khoản phải thu/phải trả (trừ các khoản luân chuyển nội bộ)"
-"."
+"một và chỉ một tài khoản phải thu/phải trả (trừ các khoản luân chuyển nội "
+"bộ)."
 
 #. module: account
 #. odoo-python
@@ -13343,7 +13359,8 @@ msgstr ""
 msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
-msgstr "Xác định phương thức làm tròn số tiền hóa đơn đến độ chính xác làm tròn"
+msgstr ""
+"Xác định phương thức làm tròn số tiền hóa đơn đến độ chính xác làm tròn"
 
 #. module: account
 #. odoo-javascript
@@ -13996,8 +14013,8 @@ msgstr ""
 "month, prefix3, seq, suffix.\n"
 "Các nhóm prefix* là các dấu phân cách giữa năm, tháng và số thứ tự tăng dần "
 "thực tế (seq).\n"
-"VD: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"VD: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14073,8 +14090,8 @@ msgid ""
 "In doing so, you might want to resequence your entries in order to maintain "
 "a continuous date-based sequence."
 msgstr ""
-" %(date_field)s (%(date)s) không khớp với số thứ tự của %(model)s (%"
-"(sequence)s) liên quan\n"
+" %(date_field)s (%(date)s) không khớp với số thứ tự của %(model)s "
+"(%(sequence)s) liên quan\n"
 "Bạn sẽ cần xóa %(sequence_field)s của %(model)sđể tiếp tục.\n"
 "Khi làm như vậy, bạn có thể cần sắp xếp lại các bút toán để duy trì số thứ "
 "tự liên tục dựa trên ngày tháng."
@@ -14569,8 +14586,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"Ngoại tệ được thiết lập trong sổ nhật ký '%(journal)s' và tài khoản '%"
-"(account)s' phải giống nhau."
+"Ngoại tệ được thiết lập trong sổ nhật ký '%(journal)s' và tài khoản "
+"'%(account)s' phải giống nhau."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
@@ -14862,8 +14879,8 @@ msgid ""
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Mẫu đối chiếu sẽ chỉ được áp dụng khi nhãn:\n"
-"        * Chứa: Nhãn phải chứa chuỗi này (không phân biệt chữ hoa chữ thường)"
-".\n"
+"        * Chứa: Nhãn phải chứa chuỗi này (không phân biệt chữ hoa chữ "
+"thường).\n"
 "        * Không chứa: Ngược lại của \"Chứa\".\n"
 "        * Khớp Regex: Tự xác định biểu thức chính quy của bạn."
 
@@ -15301,8 +15318,8 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Tài khoản này được cấu hình trong (các) sổ nhật ký %(journal_names)s (id %"
-"(journal_ids)s) là tài khoản ghi nợ hoặc ghi có thanh toán. Điều này có "
+"Tài khoản này được cấu hình trong (các) sổ nhật ký %(journal_names)s (id "
+"%(journal_ids)s) là tài khoản ghi nợ hoặc ghi có thanh toán. Điều này có "
 "nghĩa là loại tài khoản này phải có thể đối chiếu được."
 
 #. module: account
@@ -15779,8 +15796,8 @@ msgstr "Tổng đã ký"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Tổng số tiền phải trả (bao gồm đơn bán hàng và chứng từ này): %(total_credit)"
-"s"
+"Tổng số tiền phải trả (bao gồm đơn bán hàng và chứng từ này): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -17508,7 +17525,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "Bạn không thể đặt lại bút toán thuế cơ sở dòng tiền về trạng thái nháp."
+msgstr ""
+"Bạn không thể đặt lại bút toán thuế cơ sở dòng tiền về trạng thái nháp."
 
 #. module: account
 #. odoo-python
@@ -18186,8 +18204,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) từ %s đã được chuyển đến <strong>"
-"{account_target_name}</strong> bằng {link}"
+"{amount} ({debit_credit}) từ %s đã được chuyển đến "
+"<strong>{account_target_name}</strong> bằng {link}"
 
 #. module: account
 #. odoo-python

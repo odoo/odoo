@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
 "PO-Revision-Date: 2026-08-03 21:05+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -2072,7 +2072,8 @@ msgstr "字段允许以天或小时查看分配持续时间，具体取决于typ
 msgid ""
 "Field allowing to see the leave request duration in days or hours depending "
 "on the leave_type_request_unit"
-msgstr "允许以天或小时查看请假持续时间的字段，具体取决于leave_type_request_unit"
+msgstr ""
+"允许以天或小时查看请假持续时间的字段，具体取决于leave_type_request_unit"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -2372,6 +2373,14 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr "如果启用字段设置为false，则允许您隐藏时间类型而不删除它。"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -3553,8 +3562,8 @@ msgstr ""
 "\n"
 "                “立即”，在当前工资期的确切日期将员工切换至新的应计等级。\n"
 "\n"
-"               “在此应计期限之后”，保持员工的应计等级不变，直至当前工资期结束"
-"。\n"
+"               “在此应计期限之后”，保持员工的应计等级不变，直至当前工资期结"
+"束。\n"
 "                完成后，新等级将在下一工资期开始后生效。"
 
 #. module: hr_holidays
@@ -3717,7 +3726,8 @@ msgstr "持续时间必须大于0。"
 msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
-msgstr "缺少此请求的员工，部门，公司或员工类别。请确保您的用户登录信息已链接到员工。"
+msgstr ""
+"缺少此请求的员工，部门，公司或员工类别。请确保您的用户登录信息已链接到员工。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4235,8 +4245,8 @@ msgid ""
 "to create allocation/time off request. Total based on all the time off types "
 "without overriding limit."
 msgstr ""
-"分配给该员工的带薪休假总数，更改此值以创建分配/休假请求。总基于所有的休假类型"
-"，没有覆盖限制。"
+"分配给该员工的带薪休假总数，更改此值以创建分配/休假请求。总基于所有的休假类"
+"型，没有覆盖限制。"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training

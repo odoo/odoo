@@ -25,13 +25,14 @@
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Naser mars, 2025
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:36+0000\n"
-"PO-Revision-Date: 2026-08-06 00:15+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
+"PO-Revision-Date: 2026-08-25 15:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
 "point_of_sale/fa/>\n"
 "Language: fa\n"
@@ -39,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -52,6 +53,10 @@ msgid ""
 "method to ensure that even the smallest quantity in the original unit does "
 "not round down to zero in the target unit."
 msgstr ""
+"\n"
+"علت مشکل این است که مقدار پس از گرد کردن در تبدیل به صفر می‌رسد. برای رفع این "
+"مشکل، ضریب‌های تبدیل یا روش گرد کردن را تنظیم کنید تا اطمینان حاصل شود که حتی "
+"کوچک‌ترین مقدار در واحد اصلی در واحد هدف به صفر گرد نشود."
 
 #. module: point_of_sale
 #. odoo-python
@@ -150,7 +155,7 @@ msgstr "%s محصول(ها) برای \"%s\" یافت شد."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s بدون مالیات"
 
 #. module: point_of_sale
 #. odoo-python
@@ -256,8 +261,8 @@ msgid ""
 "                                <i class=\"fa fa-info-circle me-1\" "
 "title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<span class=\"o_form_label\">بارکدها</span> <i class=\"fa fa-info-circle me-"
-"1\" title=\"این تنظیمات برای تمام نقطه‌های فروش مشترک است.\" pos-data-"
+"<span class=\"o_form_label\">بارکدها</span> <i class=\"fa fa-info-circle "
+"me-1\" title=\"این تنظیمات برای تمام نقطه‌های فروش مشترک است.\" pos-data-"
 "toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
@@ -841,7 +846,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "هنگام بارگذاری پایانه فروش خطایی رخ داد:\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1112,8 +1117,8 @@ msgid ""
 "products."
 msgstr ""
 "فروش خود را با انواع برنامه ها افزایش دهید: کوپن، تبلیغات، کارت هدیه، "
-"وفاداری. شرایط خاصی را می توان تنظیم کرد (محصولات، مشتریان، حداقل مقدار خرید، "
-"دوره). جوایز می توانند تخفیف (% یا مقدار) یا محصولات رایگان باشند."
+"وفاداری. شرایط خاصی را می توان تنظیم کرد (محصولات، مشتریان، حداقل مقدار "
+"خرید، دوره). جوایز می توانند تخفیف (% یا مقدار) یا محصولات رایگان باشند."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1799,6 +1804,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero "
 "quantity due to rounding:"
 msgstr ""
+"خطای تبدیل: تبدیل واحدهای اندازه‌گیری زیر، به دلیل گرد کردن، به مقدار صفر "
+"منجر می‌شوند:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -5193,6 +5200,7 @@ msgid "Pos Order Count"
 msgstr "تعداد سفارش Pos"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "سطر سفارش Pos"
@@ -5927,7 +5935,7 @@ msgstr "درخواست فرستاده شد"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "نشست‌های نجات"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6432,7 +6440,8 @@ msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session"
 msgstr ""
-"حداکثر اختلاف مجاز بین پول مورد انتظار و شمارش شده را در پایان جلسه تعیین کنید"
+"حداکثر اختلاف مجاز بین پول مورد انتظار و شمارش شده را در پایان جلسه تعیین "
+"کنید"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
@@ -6461,7 +6470,7 @@ msgstr "تعیین قیمت های متعدد برای هر محصول، تخف�
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "تنظیم تخفیف جدید"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6884,7 +6893,7 @@ msgstr "شناسه مالیاتی"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 #, python-format
 msgid "Tax ID: %(vatId)s"
-msgstr ""
+msgstr "شناسه مالیاتی: %(vatId)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7307,8 +7316,8 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
-"جلسه توسط کاربر دیگری قبلاً بسته شده است. تمام فروش‌های تکمیل شده در این بین در "
-"یک جلسه نجات ذخیره شده‌اند که می‌توان آنها را در هر زمانی بررسی کرد و از "
+"جلسه توسط کاربر دیگری قبلاً بسته شده است. تمام فروش‌های تکمیل شده در این بین "
+"در یک جلسه نجات ذخیره شده‌اند که می‌توان آنها را در هر زمانی بررسی کرد و از "
 "داشبورد نقطه فروش به حسابداری ارسال کرد."
 
 #. module: point_of_sale
@@ -7367,8 +7376,8 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the "
 "related payment method."
 msgstr ""
-"معاملات توسط Vantiv پردازش می شود. اعتبار Vantiv خود را روی روش پرداخت مربوطه "
-"تنظیم کنید."
+"معاملات توسط Vantiv پردازش می شود. اعتبار Vantiv خود را روی روش پرداخت "
+"مربوطه تنظیم کنید."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_combo__base_price
@@ -7402,8 +7411,8 @@ msgid ""
 "following orders to validate the session:\n"
 "%s"
 msgstr ""
-"هنوز سفارشاتی در حالت پیش نویس در جلسه وجود دارد. برای اعتبار بخشیدن به جلسه"
-"، سفارشات زیر را پرداخت یا لغو کنید:\n"
+"هنوز سفارشاتی در حالت پیش نویس در جلسه وجود دارد. برای اعتبار بخشیدن به "
+"جلسه، سفارشات زیر را پرداخت یا لغو کنید:\n"
 "%s"
 
 #. module: point_of_sale
@@ -7513,7 +7522,8 @@ msgstr ""
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
-msgstr "این فیلد برای ارسال شناسه گروه مدیر pos به مشتری پایانه فروش وجود دارد."
+msgstr ""
+"این فیلد برای ارسال شناسه گروه مدیر pos به مشتری پایانه فروش وجود دارد."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -7544,7 +7554,8 @@ msgstr ""
 #, python-format
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
-msgstr "این روزنامه با یک روش پرداخت مرتبط است. نمی توانید نوع آن را تغییر دهید"
+msgstr ""
+"این روزنامه با یک روش پرداخت مرتبط است. نمی توانید نوع آن را تغییر دهید"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7726,6 +7737,11 @@ msgid ""
 "a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and "
 "mayo go flying everywhere!"
 msgstr ""
+"برای حذف محصول، اطمینان حاصل کنید که همه نشست‌های پایانه فروش بسته شده‌اند.\n"
+"\n"
+"حذف یک محصول موجود در یک جلسه مانند تلاش برای گرفتن همبرگر از دست مشتری در "
+"حال گاز زدن است؛ هرج و مرج به وجود می‌آید و سس کچاپ و مایونز به همه جا پخش "
+"می‌شود!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8311,6 +8327,7 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr ""
+"نمی‌توانید روش گرد کردنی که در پیکربندی پایانه فروش استفاده می‌شود را حذف کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8353,6 +8370,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"شما مجوز باز کردن نشست پایانه فروش را ندارید. با کاربر دیگری نشست جدید باز "
+"کنید."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8383,8 +8402,8 @@ msgid ""
 "You have selected orderlines from multiple invoiced orders. To proceed "
 "refund, please select orderlines from the same invoiced order."
 msgstr ""
-"شما اقلام سفارشی از چندین سفارش فاکتور شده انتخاب کرده‌اید. برای ادامه استرداد"
-"، لطفاً اقلام سفارشی را از همان سفارش فاکتور شده انتخاب کنید."
+"شما اقلام سفارشی از چندین سفارش فاکتور شده انتخاب کرده‌اید. برای ادامه "
+"استرداد، لطفاً اقلام سفارشی را از همان سفارش فاکتور شده انتخاب کنید."
 
 #. module: point_of_sale
 #. odoo-javascript

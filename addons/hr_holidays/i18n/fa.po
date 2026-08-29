@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
 "PO-Revision-Date: 2026-08-18 14:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
@@ -1934,8 +1934,9 @@ msgid ""
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
 msgstr ""
-"به دلیل تغییر در تعطیلات جهانی، این مرخصی دیگر میزان تخصیص در دسترس مورد نیاز "
-"را ندارد و به وضعیت \"رد شده\" تنظیم شده است. لطفاً این مرخصی را بررسی کنید."
+"به دلیل تغییر در تعطیلات جهانی، این مرخصی دیگر میزان تخصیص در دسترس مورد "
+"نیاز را ندارد و به وضعیت \"رد شده\" تنظیم شده است. لطفاً این مرخصی را بررسی "
+"کنید."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2388,8 +2389,8 @@ msgid ""
 "If checked, the accrual period will be calculated according to the work "
 "days, not calendar days."
 msgstr ""
-"اگر علامت زده شود، دوره انباشت بر اساس روزهای کاری محاسبه خواهد شد، نه روزهای "
-"تقویمی."
+"اگر علامت زده شود، دوره انباشت بر اساس روزهای کاری محاسبه خواهد شد، نه "
+"روزهای تقویمی."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allows_negative
@@ -2418,6 +2419,14 @@ msgid ""
 msgstr ""
 "اگر فیلد فعال روی FALSE تنظیم شود، به شما این امکان را می دهد که زمان را "
 "بدون حذف آن پنهان کنید."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -2574,7 +2583,8 @@ msgstr "بیا آن را تأیید کنیم"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Let's try to create a Sick Time Off, select it in the list"
-msgstr "بیایید تلاش کنیم یک مرخصی بیماری ایجاد کنیم و آن را در لیست انتخاب کنید"
+msgstr ""
+"بیایید تلاش کنیم یک مرخصی بیماری ایجاد کنیم و آن را در لیست انتخاب کنید"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -2851,8 +2861,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"درخواست تخصیص جدید ایجاد شده توسط %(user)s: %(count)s  روز از %"
-"(allocation_type)s"
+"درخواست تخصیص جدید ایجاد شده توسط %(user)s: %(count)s  روز از "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -3904,8 +3914,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid "This area is automatically filled by the user who validate the time off"
-msgstr ""
-"این منطقه به طور خودکار توسط کاربری که  مرخصی را معتبر می‌کند، پر می‌شود"
+msgstr "این منطقه به طور خودکار توسط کاربری که  مرخصی را معتبر می‌کند، پر می‌شود"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -3920,14 +3929,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr ""
-"این منطقه به طور خودکار توسط کاربری که  تخصیص را معتبر می‌کند، پر می‌شود"
+msgstr "این منطقه به طور خودکار توسط کاربری که  تخصیص را معتبر می‌کند، پر می‌شود"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
 msgid "This field defines the unit of time after which the accrual starts."
-msgstr ""
-"این فیلد واحد زمانی را تعریف می‌کند که بعد از آن حق استفاده شروع می‌شود."
+msgstr "این فیلد واحد زمانی را تعریف می‌کند که بعد از آن حق استفاده شروع می‌شود."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
@@ -4357,7 +4364,8 @@ msgstr "دو بار در سال"
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
 msgstr ""
-"دو تعطیلات عمومی نمی‌توانند در ساعات کاری یکسان با یکدیگر هم‌پوشانی داشته باشند."
+"دو تعطیلات عمومی نمی‌توانند در ساعات کاری یکسان با یکدیگر هم‌پوشانی داشته "
+"باشند."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4703,8 +4711,8 @@ msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by "
 "the employee."
 msgstr ""
-"شما نمی‌توانید مدت زمان را کمتر از مدت مرخصی‌هایی که قبلاً توسط کارمند گرفته شده "
-"است کاهش دهید."
+"شما نمی‌توانید مدت زمان را کمتر از مدت مرخصی‌هایی که قبلاً توسط کارمند گرفته "
+"شده است کاهش دهید."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4778,8 +4786,8 @@ msgid ""
 msgstr ""
 "شما قبلاً مرخصی را رزرو کرده‌اید که با این دوره همپوشانی دارد:\n"
 "%s\n"
-"تلاش برای دوبار رزرو کردن مرخصی شما به طور جادویی تعطیلات شما را دو برابر بهتر "
-"نمی‌کند!"
+"تلاش برای دوبار رزرو کردن مرخصی شما به طور جادویی تعطیلات شما را دو برابر "
+"بهتر نمی‌کند!"
 
 #. module: hr_holidays
 #. odoo-python

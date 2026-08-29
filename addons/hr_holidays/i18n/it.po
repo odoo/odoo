@@ -8,13 +8,14 @@
 # Wil Odoo, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-08-06 14:44+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
+"PO-Revision-Date: 2026-08-25 15:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays/it/>\n"
 "Language: it\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -92,8 +93,8 @@ msgstr "%(holiday_name)s è stato rifiutato."
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
-"%(leave_name)s è stato annullato con la seguente giustificazione: <br/> %"
-"(reason)s."
+"%(leave_name)s è stato annullato con la seguente giustificazione: <br/> "
+"%(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2427,6 +2428,17 @@ msgstr ""
 "di ferie senza rimuoverla."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+"Se questo campo è selezionato, ogni richiesta di permesso di questo tipo "
+"avrà una registrazione corrispondente nell’applicazione del calendario. Se "
+"rimane deselezionato, non verrà creata alcuna registrazione."
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -2862,8 +2874,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Nuova richiesta di assegnazione creata da %(user)s: %(count)s giorni di %"
-"(allocation_type)s"
+"Nuova richiesta di assegnazione creata da %(user)s: %(count)s giorni di "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -2934,7 +2946,8 @@ msgstr "Nessun limite"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No rule has been set up for this accrual plan."
-msgstr "Non è stata configurata nessuna regola per questo piano di maturazione."
+msgstr ""
+"Non è stata configurata nessuna regola per questo piano di maturazione."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no
@@ -3956,7 +3969,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr "Sezione compilata automaticamente dall'utente che valida l'assegnazione"
+msgstr ""
+"Sezione compilata automaticamente dall'utente che valida l'assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -4688,7 +4702,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
-msgstr "Non è possibile eliminare un giorno di ferie assegnato a più dipendenti"
+msgstr ""
+"Non è possibile eliminare un giorno di ferie assegnato a più dipendenti"
 
 #. module: hr_holidays
 #. odoo-python

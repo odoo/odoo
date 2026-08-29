@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-08 06:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-08-21 17:40+0000\n"
+"PO-Revision-Date: 2026-08-25 15:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol_selfbilling/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -121,6 +121,11 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol_selfbilling
+#: model:ir.model,name:account_peppol_selfbilling.model_account_edi_proxy_client_user
+msgid "Account EDI proxy user"
+msgstr "Користувач проксі облікового запису EDI"
+
+#. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_move_send
 msgid "Account Move Send"
 msgstr "Надіслати проводку"
@@ -217,8 +222,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Самостійне виставлення сторно (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} Самостійне виставлення сторно (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -226,5 +231,5 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-"{{ object.company_id.name }} Самостійне виставлення рахунків (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} Самостійне виставлення рахунків (Ref "
+"{{ object.name or 'n/a' }})"

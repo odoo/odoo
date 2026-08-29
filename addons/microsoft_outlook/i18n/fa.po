@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* microsoft_outlook
+# * microsoft_outlook
 #
 # Translators:
 # Hamid Darabi, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-08 05:44+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-25 15:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
 "microsoft_outlook/fa/>\n"
 "Language: fa\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -37,6 +37,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        حساب اوت‌لوک خود را متصل کنید"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -46,6 +48,10 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        توکن اوت‌لوک معتبر است\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -55,13 +61,17 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        توکن اوت‌لوک معتبر است\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "هنگام دریافت توکن دسترسی خطایی رخ داد. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -73,7 +83,7 @@ msgstr "با استفاده از <b>پذیرش اعتبار</b>"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "URI احراز هویت"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -90,6 +100,10 @@ msgid ""
 "this server. To extend its use, you should set a \"mail.default.from\" "
 "system parameter."
 msgstr ""
+"حساب اوت‌لوک خود را به فرآیند تأیید اعتبار OAuth متصل کنید.\n"
+"به طور پیش‌فرض، تنها یک کاربر با آدرس ایمیل منطبق می‌تواند از این سرور استفاده "
+"کند. برای گسترش موارد استفاده، باید یک پارامتر سیستمی \"mail.default.from\" "
+"تنظیم کنید."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -99,6 +113,8 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"حساب شخصی اوت‌لوک خود را با استفاده از OAuth متصل کنید.\n"
+"برای پذیرش مجوزها به صفحه ورود به اوت‌لوک هدایت می‌شوید."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
@@ -113,7 +129,7 @@ msgstr "شناسه"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "شناسه (ID) برنامه اوت‌لوک شما"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -144,28 +160,28 @@ msgstr "سرور ایمیل"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Mixin مایکروسافت اوت‌لوک"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "فقط مدیر سیستم می‌تواند سرور ایمیل اوت‌لوک را متصل کند."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "توکن دسترسی اوت‌لوک"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "ثبت زمانی (Timestamp) انقضای توکن دسترسی اوت‌لوک"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
@@ -181,28 +197,28 @@ msgstr "رمز کلاینت اوت‌لوک"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "اعتبارسنجی OAuth اوت‌لوک"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "توکن رفرش اوت‌لوک"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "لطفاً اطلاعات اوت‌لوک خود را پیکربندی کنید."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "لطفاً قبل از استفاده با حساب اوت‌لوک متصل شوید."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -213,6 +229,9 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"لطفاً فیلد «نام کاربری» را مطابق با نام کاربری اوت‌لوک یا آفیس ۳۶۵ (آدرس "
+"ایمیل) تکمیل کنید. این نام کاربری باید همان حسابی باشد که برای توکن احراز "
+"هویت باز (OAuth) اوت‌لوک استفاده شده است."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -243,7 +262,7 @@ msgstr "محرمانه"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "رمز برنامه اوت‌لوک شما"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -263,7 +282,7 @@ msgstr ""
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "آدرس URL ایجاد کد احراز هویت از اوت‌لوک"
 
 #. module: microsoft_outlook
 #. odoo-python

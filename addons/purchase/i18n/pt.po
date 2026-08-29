@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-06 09:08+0000\n"
 "Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
@@ -337,8 +337,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Solicitação de cotação </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Solicitação de cotação </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Pedido de compra </span>"
 
@@ -2118,6 +2118,7 @@ msgstr "Total de pedidos de compra"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2926,8 +2927,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"O produto é embalado por %(pack_size).2f%(pack_name)s. É necessário comprar %"
-"(quantity).2f%(unit)s."
+"O produto é embalado por %(pack_size).2f%(pack_name)s. É necessário comprar "
+"%(quantity).2f%(unit)s."
 
 #. module: purchase
 #. odoo-python
@@ -3361,8 +3362,8 @@ msgid ""
 msgstr ""
 "A sua cotação contém produtos da empresa %(product_company)s Considerando "
 "que a sua cotação pertence à empresa %(quote_company)s,\n"
-"mude a empresa da sua cotação ou remova os produtos de outras empresas (%"
-"(bad_products)s)."
+"mude a empresa da sua cotação ou remova os produtos de outras empresas "
+"(%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

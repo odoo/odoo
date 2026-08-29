@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-08 08:03+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/"
@@ -157,8 +157,8 @@ msgstr ""
 "        </t>\n"
 "        este așteptată pentru \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">nedefinit</span>.\n"
@@ -223,8 +223,9 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            cu referința: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 $</span>\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"$</span>\n"
 "        de la <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -280,8 +281,8 @@ msgstr ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Iată în atașament o cerere de ofertă <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Iată în atașament o cerere de ofertă <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            cu referința: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -396,8 +397,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Cerere de ofertă </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Cerere de ofertă </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Comandă de achiziție </span>"
 
@@ -413,8 +414,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">"
-"(confirmat de furnizor)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(confirmat de furnizor)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -422,8 +423,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">"
-"(confirmat de furnizor)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(confirmat de furnizor)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -1460,7 +1461,8 @@ msgstr "Importare Modele pentru Produse"
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr "Pentru a șterge o comandă de achiziție, mai întâi trebuie să o anulați."
+msgstr ""
+"Pentru a șterge o comandă de achiziție, mai întâi trebuie să o anulați."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
@@ -2183,6 +2185,7 @@ msgstr "Nr. Comenzi de achiziție"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 23:36+0000\n"
 "Last-Translator: Ondřej Klein <ondrej.klein@origamis.cz>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/purchase/"
@@ -335,10 +335,10 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Žádost o cenovou nabídku</span>\n"
-"<span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">"
-"Nákupní objednávka</span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Žádost o cenovou nabídku</span>\n"
+"<span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')"
+"\">Nákupní objednávka</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -352,8 +352,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">"
-"(potvrzeno dodavatelem)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(potvrzeno dodavatelem)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -361,8 +361,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">"
-"(potvrzeno prodejcem)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(potvrzeno prodejcem)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -2113,6 +2113,7 @@ msgstr "Počet nákupních objednávek"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2664,7 +2665,8 @@ msgstr "Sdílet"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
+msgstr ""
+"Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -3344,8 +3346,8 @@ msgid ""
 msgstr ""
 "Vaše nabídka obsahuje produkty od společnosti %(product_company)s, zatímco "
 "vaše nabídka patří společnosti %(quote_company)s.\n"
-"Změňte společnost své nabídky nebo odeberte produkty od jiných společností (%"
-"(bad_products)s)."
+"Změňte společnost své nabídky nebo odeberte produkty od jiných společností "
+"(%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

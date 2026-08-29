@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-08-18 04:09+0000\n"
-"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
+"PO-Revision-Date: 2026-08-29 10:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-17/"
 "account/id/>\n"
 "Language: id\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #. odoo-python
@@ -464,19 +464,20 @@ msgstr ""
 "            nota kredit\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (dengan referensi: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (dengan referensi: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        sejumlah <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        sejumlah <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        dari <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Jangan sungkan untuk menghubungi kami bila Anda memiliki pertanyaan "
 "apapun.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
-"Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -574,15 +575,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Yth <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br>"
-"<br>\n"
+"        Yth <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br><br>\n"
 "        Terima kasih atas pembayaran Anda.\n"
-"        Berikut adalah resi pembayaran Anda <span style=\"font-"
-"weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-"
-"2021-05-0002</span>  sejumlah\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> dari <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        Berikut adalah resi pembayaran Anda <span style=\"font-weight:bold;"
+"\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
+"span>  sejumlah\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> dari <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Jangan sungkan untuk menghubungi kami bila Anda memiliki pertanyaan "
 "apapun.\n"
@@ -768,8 +769,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1601,6 +1602,11 @@ msgid "Account Mapping"
 msgstr "Pemetaan Akun"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "Baris Pergerakan Akun"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Akun Pergerakan Terbalik"
@@ -1652,6 +1658,11 @@ msgstr "Account Piutang (PoS)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Rekonsiliasi Akun"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -4067,9 +4078,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
-"Daftar dari field yang dipisahkan koma dari account.move.line (item Journal)"
-". When set, baris ini akan membuat sub-baris yang dikelompokkan berdasarkan "
-"key tersebut"
+"Daftar dari field yang dipisahkan koma dari account.move.line (item "
+"Journal). When set, baris ini akan membuat sub-baris yang dikelompokkan "
+"berdasarkan key tersebut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -8236,7 +8247,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "Distribusi Faktur dan nota kredit harus memiliki nomor baris yang sama."
+msgstr ""
+"Distribusi Faktur dan nota kredit harus memiliki nomor baris yang sama."
 
 #. module: account
 #. odoo-python
@@ -12103,7 +12115,8 @@ msgstr "Laporan"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
 msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-msgstr "Menyatakan nilai tidak nol untuk jumlah koin terkecil (misalnya, 0.05)."
+msgstr ""
+"Menyatakan nilai tidak nol untuk jumlah koin terkecil (misalnya, 0.05)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -12607,7 +12620,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
-msgstr "Cari di Referensi Statement untuk menemukan referensi Faktur/Pembayaran"
+msgstr ""
+"Cari di Referensi Statement untuk menemukan referensi Faktur/Pembayaran"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -13977,8 +13991,8 @@ msgstr ""
 "year, prefix2, month, prefix3, seq, suffix.\n"
 "Kelompok prefix* adalah separator di antara tahun, bulan dan urutan sequence "
 "nomor yang meningkat (seq).\n"
-"misal: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"misal: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14054,8 +14068,8 @@ msgid ""
 "In doing so, you might want to resequence your entries in order to maintain "
 "a continuous date-based sequence."
 msgstr ""
-"%(date_field)s (%(date)s) tidak cocok dengan nomor sequence yang terkait %"
-"(model)s (%(sequence)s)\n"
+"%(date_field)s (%(date)s) tidak cocok dengan nomor sequence yang terkait "
+"%(model)s (%(sequence)s)\n"
 "Anda harus menghapus %(sequence_field)s milik %(model)s untuk melanjutkan.\n"
 "Dengan begitu, Anda mungkin harus melakukan resequence untuk entri Anda "
 "untuk menjaga sequence berdasarkan data yang kontinu."
@@ -14551,8 +14565,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"Mata uang asing yang ditetapkan pada jurnal '%(journal)s' dan akun '%"
-"(account)s' harus sama."
+"Mata uang asing yang ditetapkan pada jurnal '%(journal)s' dan akun "
+"'%(account)s' harus sama."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
@@ -14641,7 +14655,8 @@ msgstr "Item jurnal tidak di-link ke akun keuangan yang tepat"
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid "The last day of the month will be used if the chosen day doesn't exist."
-msgstr "The last day of the month will be used if the chosen day doesn't exist."
+msgstr ""
+"The last day of the month will be used if the chosen day doesn't exist."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
@@ -14937,14 +14952,16 @@ msgstr "Jumlah sisa pada artikel jurnal dinyatakan dalam mata uang perusahaan."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr "Running balance (%s) tidak cocok dengan ending balance yang ditentukan."
+msgstr ""
+"Running balance (%s) tidak cocok dengan ending balance yang ditentukan."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "The sections defined on a report cannot have sections themselves."
-msgstr "Bagian didefinisikan pada laporan tidak dapat merupakan bagian sendiri."
+msgstr ""
+"Bagian didefinisikan pada laporan tidak dapat merupakan bagian sendiri."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -15040,8 +15057,8 @@ msgid ""
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 "Sequence akan restart pada 1 di awal setiap bulan.\n"
-"Tahun yang dideteksi di sini adalah '%(year)s' dan bulannya adalah '%(month)"
-"s'.\n"
+"Tahun yang dideteksi di sini adalah '%(year)s' dan bulannya adalah "
+"'%(month)s'.\n"
 "Angka incrementing dalam kasus ini adalah '%(formatted_seq)s'."
 
 #. module: account
@@ -15763,15 +15780,16 @@ msgstr "Total Signed"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Total jumlah yang belum dibayar (termasuk sale order dan dokumen ini): %"
-"(total_credit)s"
+"Total jumlah yang belum dibayar (termasuk sale order dan dokumen ini): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due (including sales orders): %(total_credit)s"
-msgstr "Total jumlah yang belum dibayar (termasuk sale order): %(total_credit)s"
+msgstr ""
+"Total jumlah yang belum dibayar (termasuk sale order): %(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -16382,8 +16400,8 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
-"Validate the statement line automatically (reconciliation based on your rule)"
-"."
+"Validate the statement line automatically (reconciliation based on your "
+"rule)."
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -18190,8 +18208,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) dari %s telah ditransfer ke <strong>"
-"{account_target_name}</strong> dengan {link}"
+"{amount} ({debit_credit}) dari %s telah ditransfer ke "
+"<strong>{account_target_name}</strong> dengan {link}"
 
 #. module: account
 #. odoo-python

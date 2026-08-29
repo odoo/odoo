@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-08-07 14:36+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
+"PO-Revision-Date: 2026-08-26 07:32+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays/de/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -91,8 +91,8 @@ msgstr "%(holiday_name)s wurde abgelehnt."
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
-"%(leave_name)s wurde mit folgender Rechtfertigung storniert: <br/> %(reason)"
-"s."
+"%(leave_name)s wurde mit folgender Rechtfertigung storniert: <br/> "
+"%(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1929,9 +1929,9 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"Aufgrund einer Änderung der globalen Abwesenheiten wurde(n) %s zusätzliche"
-"(r) Tag(e) von Ihrem Urlaubsanspruch abgezogen. Bitte überprüfen Sie diesen "
-"Urlaub, wenn Sie ihn ändern möchten."
+"Aufgrund einer Änderung der globalen Abwesenheiten wurde(n) %s "
+"zusätzliche(r) Tag(e) von Ihrem Urlaubsanspruch abgezogen. Bitte überprüfen "
+"Sie diesen Urlaub, wenn Sie ihn ändern möchten."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2431,12 +2431,23 @@ msgstr ""
 "ausblenden, ohne sie zu entfernen."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+"Wenn dieses Feld angekreuzt ist, wird für jeden Urlaubsantrag dieses Typs "
+"ein entsprechender Eintrag im Kalender erstellt. Ist dieses Feld nicht "
+"angekreuzt, erfolgt kein Eintrag."
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
-"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus „Zeitraum"
-"“ verwenden"
+"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus "
+"„Zeitraum“ verwenden"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__immediately
@@ -2867,8 +2878,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Neuer Antrag auf Urlaubsanspruch erstellt von %(user)s: %(count)s Tage von %"
-"(allocation_type)s"
+"Neuer Antrag auf Urlaubsanspruch erstellt von %(user)s: %(count)s Tage von "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -3111,7 +3122,8 @@ msgstr "Nur"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "Nur ein Abwesenheitsmanager kann einen abgelehnten Urlaub zurücksetzen."
+msgstr ""
+"Nur ein Abwesenheitsmanager kann einen abgelehnten Urlaub zurücksetzen."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4727,7 +4739,8 @@ msgstr "Sie können keine Abwesenheit löschen, die sich im Status %s befindet"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in the past"
-msgstr "Eine in der Vergangenheit liegende Abwesenheit können Sie nicht löschen"
+msgstr ""
+"Eine in der Vergangenheit liegende Abwesenheit können Sie nicht löschen"
 
 #. module: hr_holidays
 #. odoo-python

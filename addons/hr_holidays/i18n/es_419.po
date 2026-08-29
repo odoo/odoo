@@ -10,13 +10,14 @@
 # Wil Odoo, 2025
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-08-08 06:21+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
+"PO-Revision-Date: 2026-08-25 17:49+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-17/hr_holidays/es_419/>\n"
 "Language: es_419\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -94,8 +95,8 @@ msgstr "Se rechazó %(holiday_name)s."
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
 msgstr ""
-"Se rechazaron %(leave_name)s con la siguiente justificación: <br/> %(reason)"
-"s."
+"Se rechazaron %(leave_name)s con la siguiente justificación: <br/> "
+"%(reason)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -133,8 +134,8 @@ msgid ""
 "%(name)s does not have a valid allocation for the leave type %(leave_type)s "
 "to cover that request."
 msgstr ""
-"%(name)s no tiene una asignación válida para el tipo de permiso %(leave_type)"
-"s que cubra esa solicitud."
+"%(name)s no tiene una asignación válida para el tipo de permiso "
+"%(leave_type)s que cubra esa solicitud."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1220,7 +1221,7 @@ msgstr "Solicitudes aprobadas"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
 msgid "Approved by Time Off Officer"
-msgstr "Aprobación del encargado de permisos"
+msgstr "Aprobación del responsable de permisos"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1408,7 +1409,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Del encargado de permisos"
+msgstr "Del responsable de permisos"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
@@ -1565,9 +1566,9 @@ msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
 msgstr ""
-"Elija a los encargados de tiempo personal que recibirán notificación para "
-"aprobar asignaciones o solicitudes de tiempo personal. Si no hay personas "
-"asignadas, no se enviará una notificación."
+"Elige a los responsables de permisos que recibirán un aviso para aprobar "
+"asignaciones o solicitudes; si no hay personas asignadas, nadie recibirá un "
+"aviso"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1949,8 +1950,8 @@ msgstr ""
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
-"Debido a un cambio en los tiempos personales globales, le regresamos %s día"
-"(s)."
+"Debido a un cambio en los tiempos personales globales, le regresamos %s "
+"día(s)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
@@ -2426,6 +2427,17 @@ msgstr ""
 "tiempo libre sin eliminarlo."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+"Si seleccionas este campo, todas las solicitudes de permisos de este tipo "
+"tendrán una entrada correspondiente en la aplicación Calendario. No habrá "
+"ninguna entrada si este campo está desmarcado."
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -2859,8 +2871,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Nueva solicitud de asignación creada por %(user)s: %(count)s días de %"
-"(allocation_type)s"
+"Nueva solicitud de asignación creada por %(user)s: %(count)s días de "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -2963,7 +2975,7 @@ msgstr "No permitido"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr "Encargado de permisos notificado"
+msgstr "Responsable de permisos a notificar"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -3128,8 +3140,8 @@ msgstr ""
 #, python-format
 msgid "Only a Time Off Officer or Manager can approve/refuse its own requests."
 msgstr ""
-"Solo un gerente de tiempo personal puede aprobar o rechazar sus propias "
-"solicitudes."
+"Solo un gerente o un responsable de permisos puede aprobar o rechazar sus "
+"propias solicitudes."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3517,12 +3529,12 @@ msgid ""
 "        - Approved by Time Off Officer: The employee's request need to be "
 "manually approved by the Time Off Officer."
 msgstr ""
-"Seleccione el nivel de aprobación necesario en caso de solicitudes de "
-"empleado\n"
-"        - No se requiere validación: la solicitud del empleado se aprueba de "
-"forma automática.\n"
-"        - Aprobado por el encargado de tiempo personal: el encargado de "
-"tiempo personal debe aprobar la solicitud del empleado de forma manual."
+"Selecciona el nivel de aprobación necesario para las solicitudes de los "
+"empleados\n"
+"        - No requiere validación: La solicitud del empleado queda aprobada "
+"de forma automática.\n"
+"        - Aprobado por el responsable de permisos: La persona responsable de "
+"los permisos debe aprobar la solicitud del empleado de forma manual."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4105,10 +4117,10 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. "
 "recuperation days)."
 msgstr ""
-"Los encargados de tiempo personal asignan días de tiempo personal a los "
+"Los responsables de los permisos asignan días de tiempo personal a los "
 "empleados (por ejemplo, tiempo personal pagado).<br>\n"
-"                Los empleados solicitan asignaciones a los encargados de "
-"tiempo personal (por ejemplo, días de recuperación)."
+"                Los empleados solicitan asignaciones a los responsables de "
+"permisos (por ejemplo, días de recuperación)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4808,8 +4820,7 @@ msgstr ""
 msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
-msgstr ""
-"Debe ser un encargado o gerente de tiempo personal para aprobar este permiso"
+msgstr "Debes ser responsable de permisos o gerente para aprobar este permiso"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero

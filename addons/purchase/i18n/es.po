@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-08-21 12:11+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
+"PO-Revision-Date: 2026-08-27 15:09+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/purchase/"
 "es/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -150,8 +150,8 @@ msgstr ""
 "        </t>\n"
 "        se espera para el \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">sin definir</span>.\n"
@@ -212,14 +212,15 @@ msgstr ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Aquí se adjunta el pedido de compra <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Aquí se adjunta el pedido de compra <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        por valor de <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">10,00 €</span>\n"
+"        por valor de <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
+"€</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
@@ -279,8 +280,8 @@ msgstr ""
 "        Aquí se adjunta una solicitud de presupuesto <span style=\"font-"
 "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <br><br>\n"
@@ -395,8 +396,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Solicitud de presupuesto </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Solicitud de presupuesto </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Pedido de compra </span>"
 
@@ -412,8 +413,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">"
-"(confirmado por el proveedor)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(confirmado por el proveedor)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -421,8 +422,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">"
-"(confirmado por el proveedor)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(confirmado por el proveedor)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -636,7 +637,7 @@ msgstr "Actividades"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad de Excepción"
+msgstr "Indicador de excepción de actividad"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -1903,7 +1904,7 @@ msgstr "Pedido"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Date"
-msgstr "Fecha de pedido"
+msgstr "Fecha del pedido"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -2183,6 +2184,7 @@ msgstr "Número de pedidos de compra"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2924,8 +2926,8 @@ msgid ""
 "control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"La solicitud de presupuesto es el primer paso del flujo de compras. Una vez "
-"\n"
+"La solicitud de presupuesto es el primer paso del flujo de compras. Una "
+"vez \n"
 "que la solicitud se convierta en un pedido de compra, usted será capaz de "
 "controlar la entrega\n"
 "de los productos y la factura de proveedor."
@@ -2998,8 +3000,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"Este producto se empaqueta en %(pack_name)s, en múltiplos de %(pack_size)"
-".2f. Debería comprar %(quantity).2f %(unit)s."
+"Este producto se empaqueta en %(pack_name)s, en múltiplos de "
+"%(pack_size).2f. Debería comprar %(quantity).2f %(unit)s."
 
 #. module: purchase
 #. odoo-python

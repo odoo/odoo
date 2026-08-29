@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-04 00:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-17/"
@@ -478,18 +478,19 @@ msgstr ""
 "            credit note\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
-"Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -579,11 +580,12 @@ msgstr ""
 "            invoice\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            This invoice is already paid.\n"
@@ -605,15 +607,15 @@ msgstr ""
 "object.timesheet_count\">\n"
 "            <br><br>\n"
 "            PS: you can review your timesheets <a t-att-href=\"'my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">from the "
-"portal.</a>\n"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal."
+"</a>\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
-"Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -646,15 +648,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br>"
-"<br>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br><br>\n"
 "        Thank you for your payment.\n"
 "        Here is your payment receipt <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "amounting\n"
-"        to <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        to <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <br><br>\n"
@@ -817,8 +819,8 @@ msgid ""
 "or invoice_payment_term_id\"> or </span>"
 msgstr ""
 "<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
-"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\">"
-"Eller</span>"
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"
+"\">Eller</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -835,8 +837,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1664,6 +1666,11 @@ msgid "Account Mapping"
 msgstr "Konto Kartlegging"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Kontooverføringsreversering"
@@ -1715,6 +1722,11 @@ msgstr "Mottakskonto (PoS)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Kontoavstemming"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1823,7 +1835,8 @@ msgstr "Kontogrupper"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr "Kontoholders navn, hvis det er forskjellig fra navnet på kontoholderen."
+msgstr ""
+"Kontoholders navn, hvis det er forskjellig fra navnet på kontoholderen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2303,7 +2316,8 @@ msgstr "Justere postering"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr "Justeringsoppføring {link} {percent}%% av {amount} anerkjent fra {date}"
+msgstr ""
+"Justeringsoppføring {link} {percent}%% av {amount} anerkjent fra {date}"
 
 #. module: account
 #. odoo-python
@@ -6915,7 +6929,8 @@ msgstr "For prosent, skriv inn et tall mellom 0-100"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "For this entry to be automatically posted, it required a bill date."
-msgstr "For at denne posten skal bli automatisk bokført, kreves en fakturadato."
+msgstr ""
+"For at denne posten skal bli automatisk bokført, kreves en fakturadato."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -14004,8 +14019,8 @@ msgstr ""
 "prefiks1, år, prefiks2, måned, prefiks3, seq, suffiks.\n"
 "Prefiksgruppene* er skilletegnene mellom år, måned og det faktiske økende "
 "sekvensnummeret (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14901,7 +14916,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
 msgid ""
 "The reconciliation model will only be available from the selected journals."
-msgstr "Avstemmingsmodellen vil kun være tilgjengelig fra de valgte journalene."
+msgstr ""
+"Avstemmingsmodellen vil kun være tilgjengelig fra de valgte journalene."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15300,9 +15316,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Denne kontoen er konfigurert i %(journal_names)s journal(er) (ids %"
-"(journal_ids)s ) som betalingsdebet- eller kreditkonto. Dette betyr at denne "
-"kontotypen skal være avstembar."
+"Denne kontoen er konfigurert i %(journal_names)s journal(er) (ids "
+"%(journal_ids)s ) som betalingsdebet- eller kreditkonto. Dette betyr at "
+"denne kontotypen skal være avstembar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -15781,8 +15797,8 @@ msgstr "Totalt signerte"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Totalt skyldig beløp (inkludert salgsordrer og dette dokumentet): %"
-"(total_credit)s"
+"Totalt skyldig beløp (inkludert salgsordrer og dette dokumentet): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -16369,7 +16385,8 @@ msgstr "Verktøyfelt for å uttrykke beløpsvaluta"
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr "Verktøyfelt for å uttrykke om journalposten er underlagt stornoregnskap"
+msgstr ""
+"Verktøyfelt for å uttrykke om journalposten er underlagt stornoregnskap"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -17132,7 +17149,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
-msgstr "Du kan ikke legge til/endre oppføringer før og inkludert låsedatoen %s."
+msgstr ""
+"Du kan ikke legge til/endre oppføringer før og inkludert låsedatoen %s."
 
 #. module: account
 #. odoo-python
@@ -17500,7 +17518,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr "Du kan ikke tilbakestille til utkast til en vekslingsdifferansejournal."
+msgstr ""
+"Du kan ikke tilbakestille til utkast til en vekslingsdifferansejournal."
 
 #. module: account
 #. odoo-python
@@ -18172,8 +18191,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) fra %s ble overført til <strong>"
-"{account_target_name}</strong> av {link}"
+"{amount} ({debit_credit}) fra %s ble overført til "
+"<strong>{account_target_name}</strong> av {link}"
 
 #. module: account
 #. odoo-python

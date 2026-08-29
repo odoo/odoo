@@ -46,7 +46,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-08 07:01+0000\n"
 "Last-Translator: Yael Terner <yael@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-17/account/"
@@ -607,8 +607,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\">"
-"סטורנו</span>"
+"                                    <span class=\"d-none d-md-"
+"inline\">סטורנו</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -728,8 +728,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1537,6 +1537,11 @@ msgid "Account Mapping"
 msgstr "מיפוי חשבונות"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "היפוך העברת חשבון"
@@ -1588,6 +1593,11 @@ msgstr "חשבון לקוחות (קופה)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "התאמת חשבון"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -6616,8 +6626,8 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"סוגי תנועה משמשות להתאמת מסים וחשבונות עבור לקוחות מסוימים או הזמנות/"
-"חשבוניות מכירה. ערך ברירת המחדל מגיע מהלקוח."
+"סוגי תנועה משמשות להתאמת מסים וחשבונות עבור לקוחות מסוימים או "
+"הזמנות/חשבוניות מכירה. ערך ברירת המחדל מגיע מהלקוח."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -8446,8 +8456,8 @@ msgid ""
 "include one and only one receivable/payable account (with an exception of "
 "internal transfers)."
 msgstr ""
-"פקודת יומן %s אינה חוקית. על מנת להמשיך, על תנועות היומן לכלול חשבון חייב/"
-"תשלום אחד ויחיד (למעט העברות פנימיות)."
+"פקודת יומן %s אינה חוקית. על מנת להמשיך, על תנועות היומן לכלול חשבון "
+"חייב/תשלום אחד ויחיד (למעט העברות פנימיות)."
 
 #. module: account
 #. odoo-python
@@ -8468,8 +8478,8 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, the journal items must "
 "share the same partner."
 msgstr ""
-"פקודת יומן %s אינה חוקית. כדי להמשיך, תנועות היומן חייבים לכלול את אותו לקוח/"
-"ספק."
+"פקודת יומן %s אינה חוקית. כדי להמשיך, תנועות היומן חייבים לכלול את אותו "
+"לקוח/ספק."
 
 #. module: account
 #. odoo-javascript
@@ -10128,8 +10138,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"ברגע שהכל מוגדר, אתה יכול להמשיך. תוכל לערוך זאת מאוחר יותר בתפריט <b>"
-"הלקוחות</b>."
+"ברגע שהכל מוגדר, אתה יכול להמשיך. תוכל לערוך זאת מאוחר יותר בתפריט "
+"<b>הלקוחות</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14085,8 +14095,8 @@ msgid ""
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
 msgstr ""
 "הסכום הכולל הנוכחי הוא%s , אך הסכום הכולל הצפוי הוא %s. כדי לרשום את "
-"החשבונית/הקבלה, תוכל להתאים את השורות שלה או את הסכום הכולל הצפוי (כולל מע״מ)"
-"."
+"החשבונית/הקבלה, תוכל להתאים את השורות שלה או את הסכום הכולל הצפוי (כולל "
+"מע״מ)."
 
 #. module: account
 #. odoo-python
@@ -14226,8 +14236,8 @@ msgid ""
 "chain for subsequent parts."
 msgstr ""
 "שרשרת ה-Hash תקינה: לא ניתן לשנות את\n"
-"                                            הנתונים מבלי לשבור את שרשרת ה-"
-"Hash של החלקים הבאים."
+"                                            הנתונים מבלי לשבור את שרשרת "
+"ה-Hash של החלקים הבאים."
 
 #. module: account
 #. odoo-python
@@ -14707,7 +14717,8 @@ msgstr ""
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr "יתרת הפתיחה אינה תואמת ליתרת הסיום של הדיווח הקודם, או שחסר דיווח קודם."
+msgstr ""
+"יתרת הפתיחה אינה תואמת ליתרת הסיום של הדיווח הקודם, או שחסר דיווח קודם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14905,7 +14916,8 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "חשבון זה ישמש כחשבון תשלומים במקום חשבון ברירת המחדל עבור השותף הנוכחי."
+msgstr ""
+"חשבון זה ישמש כחשבון תשלומים במקום חשבון ברירת המחדל עבור השותף הנוכחי."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -17033,7 +17045,8 @@ msgstr ""
 msgid ""
 "You cannot use this account (%s) in this journal, check the section 'Control-"
 "Access' under tab 'Advanced Settings' on the related journal."
-msgstr "לא ניתן להשתמש בחשבון זה (%s) ביומן זה, ראה טאב 'הגדרות מתקדמות' ביומן."
+msgstr ""
+"לא ניתן להשתמש בחשבון זה (%s) ביומן זה, ראה טאב 'הגדרות מתקדמות' ביומן."
 
 #. module: account
 #. odoo-python

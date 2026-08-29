@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 17:56+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-17/"
@@ -1549,10 +1549,10 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
-"Het wijzigen van dit werkschema heeft tot gevolg dat de betrokken werknemer"
-"(s) niet genoeg verlofdagen toegewezen krijgen om de reeds opgenomen "
-"verlofdagen in de toekomst op te vangen. Controleer de verlofdagen van deze "
-"werknemer en pas de toewijzing dienovereenkomstig aan."
+"Het wijzigen van dit werkschema heeft tot gevolg dat de betrokken "
+"werknemer(s) niet genoeg verlofdagen toegewezen krijgen om de reeds "
+"opgenomen verlofdagen in de toekomst op te vangen. Controleer de verlofdagen "
+"van deze werknemer en pas de toewijzing dienovereenkomstig aan."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -1922,8 +1922,8 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"Als gevolg van een wijziging in de globale verlofdagen, zijn er %s extra dag"
-"(en) uit je toewijzing gehaald. Controleer dit verlof als je het wilt "
+"Als gevolg van een wijziging in de globale verlofdagen, zijn er %s extra "
+"dag(en) uit je toewijzing gehaald. Controleer dit verlof als je het wilt "
 "wijzigen."
 
 #. module: hr_holidays
@@ -2423,6 +2423,14 @@ msgstr ""
 "te verwijderen."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -2857,8 +2865,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Nieuw toewijzingsverzoek aangemaakt door %(user)s: %(count)s dagen  van %"
-"(allocation_type)s"
+"Nieuw toewijzingsverzoek aangemaakt door %(user)s: %(count)s dagen  van "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -3772,7 +3780,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color
 msgid ""
 "The color selected here will be used in every screen with the time off type."
-msgstr "De geselecteerde kleur wordt gebruikt in elk scherm met dit verloftype."
+msgstr ""
+"De geselecteerde kleur wordt gebruikt in elk scherm met dit verloftype."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_check_dates
@@ -4091,8 +4100,8 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. "
 "recuperation days)."
 msgstr ""
-"Verlofbeheerders wijzen vrije dagen toe aan werknemers (bijv. Betaald verlof)"
-".<br>\n"
+"Verlofbeheerders wijzen vrije dagen toe aan werknemers (bijv. Betaald "
+"verlof).<br>\n"
 "Werknemers vragen toewijzingen aan verlofbeheerders (bijv. vakantiedagen)."
 
 #. module: hr_holidays
@@ -4252,7 +4261,8 @@ msgstr "Verlofaanvraag moet bevestigd worden om ze goed te keuren."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
-msgstr "Verlofaanvraag moet bevestigd of goedgekeurd worden om het te weigeren."
+msgstr ""
+"Verlofaanvraag moet bevestigd of goedgekeurd worden om het te weigeren."
 
 #. module: hr_holidays
 #. odoo-python

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-21 12:11+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
@@ -148,8 +148,9 @@ msgstr ""
 "        </t>\n"
 "        は\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>の予定です。\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>の予定で"
+"す。\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">定義されていません</span>。\n"
@@ -221,8 +222,9 @@ msgstr ""
 "        <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            入荷は<span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>を予定しています。\n"
+"            入荷は<span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>を予定してい"
+"ます。\n"
 "            <br><br>\n"
 "            このオーダの受領をご確認頂きますようお願いいたします。\n"
 "        </t>\n"
@@ -585,8 +587,8 @@ msgid ""
 "Ability to select a package type in purchase orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"購買オーダで梱包の種類を選択でき、梱包あたりの個数の倍数の数量を強制する機能"
-"。"
+"購買オーダで梱包の種類を選択でき、梱包あたりの個数の倍数の数量を強制する機"
+"能。"
 
 #. module: purchase
 #. odoo-python
@@ -913,8 +915,8 @@ msgid ""
 "Calls for tenders are when you want to generate requests for quotations with "
 "several vendors for a given set of products to compare offers."
 msgstr ""
-"入札募集とは、特定のプロダクト一式について複数の仕入先に見積依頼を出し、"
-"オファーを比較検討することです。"
+"入札募集とは、特定のプロダクト一式について複数の仕入先に見積依頼を出し、オ"
+"ファーを比較検討することです。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1414,8 +1416,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"有効にすると、仕入先請求書の3者間照合が有効になります。請求書を支払うには、"
-"アイテムを受け取る必要があります。"
+"有効にすると、仕入先請求書の3者間照合が有効になります。請求書を支払うには、ア"
+"イテムを受け取る必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1542,7 +1544,8 @@ msgstr "最初の見積依頼を作成しましょう。"
 msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and "
 "invoice control."
-msgstr "購入アプリを試して、購入から受付、請求書管理までの流れを管理してみましょう。"
+msgstr ""
+"購入アプリを試して、購入から受付、請求書管理までの流れを管理してみましょう。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -1607,8 +1610,8 @@ msgid ""
 "to cope with unexpected vendor delays."
 msgstr ""
 "仕入先のリードタイムの 許容誤差。システムがプロダクトを調達するための発注書を"
-"生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前に"
-"スケジュールされます。"
+"生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前にスケ"
+"ジュールされます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1851,14 +1854,16 @@ msgstr "入荷数量に基づく"
 msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
-msgstr "ベンダーから価格を入手したら、適切な価格で注文書を完成させることができます。"
+msgstr ""
+"ベンダーから価格を入手したら、適切な価格で注文書を完成させることができます。"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
-msgstr "仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダになります。"
+msgstr ""
+"仕入先にプロダクトをオーダして見積依頼を確定すると、購買オーダになります。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -2152,6 +2157,7 @@ msgstr "注文書数"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2535,9 +2541,9 @@ msgid ""
 "                Once an agreement has been found with the supplier, they "
 "will be confirmed and turned into purchase orders."
 msgstr ""
-"見積依頼は、購入を検討しているさまざまな製品の価格見積を依頼するために"
-"サプライヤに送られるドキュメントです。サプライヤと合意が取れると、見積依頼は"
-"確認され、発注書に変換されます。"
+"見積依頼は、購入を検討しているさまざまな製品の価格見積を依頼するためにサプラ"
+"イヤに送られるドキュメントです。サプライヤと合意が取れると、見積依頼は確認さ"
+"れ、発注書に変換されます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2615,9 +2621,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"警告オプションを選択するとユーザにメッセージを通知します。メッセージを"
-"ブロックを選択するとメッセージとともに例外が発生しその流れがブロックされます"
-"。メッセージは次の項目で記述する必要があります。"
+"警告オプションを選択するとユーザにメッセージを通知します。メッセージをブロッ"
+"クを選択するとメッセージとともに例外が発生しその流れがブロックされます。メッ"
+"セージは次の項目で記述する必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2879,8 +2885,8 @@ msgid ""
 "control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"見積依頼は、購買フローの最初のステップです。購買オーダに変換されると、"
-"プロダクトの入荷と仕入先の請求書を管理できるようになります。"
+"見積依頼は、購買フローの最初のステップです。購買オーダに変換されると、プロダ"
+"クトの入荷と仕入先の請求書を管理できるようになります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2947,8 +2953,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"このプロダクトは%(pack_size).2f %(pack_name)sによって梱包されています。 %"
-"(quantity).2f %(unit)sを購買する必要があります。"
+"このプロダクトは%(pack_size).2f %(pack_name)sによって梱包されています。 "
+"%(quantity).2f %(unit)sを購買する必要があります。"
 
 #. module: purchase
 #. odoo-python
@@ -3328,7 +3334,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
+msgstr ""
+"ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
 
 #. module: purchase
 #. odoo-python
@@ -3371,8 +3378,8 @@ msgid ""
 msgstr ""
 "見積書には会社%(product_company)sのプロダクトが含まれていますが、見積書は会"
 "社%(quote_company)sに属しています。\n"
-"見積書の 会社を変更するか、他の会社からプロダクトを削除してください(%"
-"(bad_products)s)。"
+"見積書の 会社を変更するか、他の会社からプロダクトを削除してください"
+"(%(bad_products)s)。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-04 09:38+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -149,8 +149,8 @@ msgstr ""
 "        </t>\n"
 "        的預計交貨日期為： \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>。\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>。\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">(未設定)</span>。\n"
@@ -214,11 +214,12 @@ msgstr ""
 "        附上採購訂單 <span style=\"font-weight:bold;\" t-out=\"object.name "
 "or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            （參考編號： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"）\n"
+"            （參考編號： <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>）\n"
 "        </t>\n"
-"        ，金額為 <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>。\n"
+"        ，金額為 <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>。\n"
 "        採購訂單由 <t t-out=\"object.company_id.name or ''\">YourCompany</t> "
 "作出。\n"
 "        <br><br>\n"
@@ -279,8 +280,8 @@ msgstr ""
 "        附上報價請求 <span style=\"font-weight:bold;\" t-out=\"object.name "
 "or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            （參考編號： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"）\n"
+"            （參考編號： <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>）\n"
 "        </t>\n"
 "        。報價請求由 <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t> 作出。\n"
@@ -302,8 +303,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
 "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"完成\" title=\"完"
-"成\"/><span class=\"d-none d-md-inline\">完成</span></i>"
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"完成\" title=\"完成"
+"\"/><span class=\"d-none d-md-inline\">完成</span></i>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -820,7 +821,8 @@ msgstr "自動提醒您的供應商交貨日期"
 msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
-msgstr "在預計收貨日期前多少天，自動向供應商發送確認電郵，要求對方確認確切送貨日期。"
+msgstr ""
+"在預計收貨日期前多少天，自動向供應商發送確認電郵，要求對方確認確切送貨日期。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -2135,6 +2137,7 @@ msgstr "採購訂單計數"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2875,7 +2878,8 @@ msgstr "目前您的帳戶沒有詢價單."
 msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
-msgstr "沒有須支付明細. 如果產品有基於收貨數量的帳單控制策略，請確認已接收數量."
+msgstr ""
+"沒有須支付明細. 如果產品有基於收貨數量的帳單控制策略，請確認已接收數量."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -2917,8 +2921,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"此產品由 %(pack_size).2f %(pack_name)s 包裝.您應該購買 %(quantity).2f %(unit)"
-"s."
+"此產品由 %(pack_size).2f %(pack_name)s 包裝.您應該購買 %(quantity).2f "
+"%(unit)s."
 
 #. module: purchase
 #. odoo-python
@@ -3335,8 +3339,8 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"你的報價單包含來自公司 %(product_company)s 的產品，而你的報價單屬於公司 %"
-"(quote_company)s。 請變更報價單公司或從其他公司移除產品 (%(bad_products)s)."
+"你的報價單包含來自公司 %(product_company)s 的產品，而你的報價單屬於公司 "
+"%(quote_company)s。 請變更報價單公司或從其他公司移除產品 (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -3353,4 +3357,5 @@ msgstr "天前"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} 採購訂單 (參照 {{ object.name or 'n/a' }})"
+msgstr ""
+"{{ object.company_id.name }} 採購訂單 (參照 {{ object.name or 'n/a' }})"

@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-08-07 22:27+0000\n"
+"PO-Revision-Date: 2026-08-25 15:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
 "mass_mailing_sms/fa/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mass_mailing_sms
 #. odoo-javascript
@@ -57,7 +57,7 @@ msgstr ""
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
-msgstr ""
+msgstr "آمار 24 ساعته %(mailing_type)s \"%(mailing_name)s\""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
@@ -67,6 +67,10 @@ msgid ""
 "                        <i class=\"fa fa-phone\"/> Contacts\n"
 "                    </span>"
 msgstr ""
+"<br/>\n"
+"                    <span class=\"text-muted\">\n"
+"                        <i class=\"fa fa-phone\"/> مخاطب\n"
+"                    </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -81,6 +85,8 @@ msgid ""
 "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages could not be delivered.</span>"
 msgstr ""
+"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">پیامک "
+"قابل تحویل نبود.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -88,6 +94,8 @@ msgid ""
 "<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\">This "
 "SMS marketing is scheduled for </span>"
 msgstr ""
+"<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\"> "
+"زمان‌بندی این فعالیت بازاریابی پیامکی: </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -95,6 +103,8 @@ msgid ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages are being processed.</span>"
 msgstr ""
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">پیامک "
+"متنی در حال پردازش هستند.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -102,6 +112,8 @@ msgid ""
 "<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
 "Text Messages are in queue and will be sent soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">پیامک "
+"متنی در صف است و به زودی ارسال خواهد شد.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -109,11 +121,13 @@ msgid ""
 "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages have been sent.</span>"
 msgstr ""
+"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">پیامک ارسال شد.</"
+"span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<span widget=\"statinfo\">Open Recipient</span>"
-msgstr ""
+msgstr "<span widget=\"statinfo\">ورود به مخاطب گیرنده</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
@@ -128,6 +142,8 @@ msgid ""
 "Click here to buy credits.\n"
 "                        </strong>"
 msgstr ""
+"<strong>به نظر می‌رسد اعتبار IAP شما کافی نیست. برای خرید اعتبار اینجا کلیک "
+"کنید.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -137,40 +153,44 @@ msgid ""
 "Click here to set up your account.\n"
 "                        </strong>"
 msgstr ""
+"<strong>\n"
+"                                 به نظر می‌رسد حساب پیامک شما ثبت نشده است. "
+"برای تنظیم حساب کاربری خود، اینجا را کلیک کنید.\n"
+"                        </strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This SMS could not be delivered.</strong>"
-msgstr ""
+msgstr "<strong>امکان تحویل این پیامک وجود ندارد.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This SMS could not be sent.</strong>"
-msgstr ""
+msgstr "<strong>این پیامک ارسال نشد.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This number appears to be invalid.</strong>"
-msgstr ""
+msgstr "<strong>به نظر می‌رسد که این شماره معتبر نیست.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "A/B Test"
-msgstr ""
+msgstr "تست A/B"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_mailings_sms_count
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_mailings_sms_count
 msgid "A/B Test Mailings SMS #"
-msgstr ""
+msgstr "تست A/B ارسال پیامک #"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "A/B Test: %s"
-msgstr ""
+msgstr "تست A/B: %s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
@@ -192,26 +212,26 @@ msgstr "تعداد پیوست ها"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_authentication
 msgid "Authentication Error\""
-msgstr ""
+msgstr "خطای احراز هویت\""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Average of Bounced"
-msgstr ""
+msgstr "میانگین برگشتی"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Average of Clicked"
-msgstr ""
+msgstr "میانگین کلیک شده"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "BOUNCED (%i)"
-msgstr ""
+msgstr "برگشتی (%i)"
 
 #. module: mass_mailing_sms
 #: model:utm.tag,name:mass_mailing_sms.mailing_tag_0
@@ -250,14 +270,14 @@ msgstr "تلفن لیست سیاه شده، تلفن است"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Bounced (%)"
-msgstr ""
+msgstr "برگشتی (%)"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "CLICKED (%i)"
-msgstr ""
+msgstr "کلیک شده (%i)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__utm_campaign_id
@@ -274,13 +294,13 @@ msgstr "کمپین‌ها"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Carriage-return-separated list of phone numbers"
-msgstr ""
+msgstr "لیست شماره تلفن‌هایی که با اینتر از هم جدا شده‌اند"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Clicked (%)"
-msgstr ""
+msgstr "کلیک شده (%)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_code
@@ -291,7 +311,7 @@ msgstr "کد"
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
 msgid ""
 "Come back once some SMS Mailings are sent to check out aggregated results."
-msgstr ""
+msgstr "پس از ارسال پیامک برای بررسی نتایج جمع‌آوری شده به اینجا برگردید."
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
@@ -311,17 +331,17 @@ msgstr "کشور-ثبت‌نام خاص لازم است"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid "Create a Mailing List"
-msgstr ""
+msgstr "یک لیست ایمیل ایجاد کنید"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid "Create a SMS Marketing Mailing"
-msgstr ""
+msgstr "یک ارسال گروهی برای بازاریابی با پیامک ایجاد کنید"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
 msgid "Create a mailing contact"
-msgstr ""
+msgstr "یک مخاطب برای ارسال ایجاد کنید"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_uid
@@ -365,7 +385,7 @@ msgstr "بازاریابی ایمیل"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Exclude Blacklisted Phone"
-msgstr ""
+msgstr "حذف شماره تلفن از لیست سیاه"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_expired
@@ -402,6 +422,9 @@ msgid ""
 "For an Email, Subject your Recipients will see in their inbox.\n"
 "                    For an SMS Text Message, internal Title of the Message."
 msgstr ""
+"در ایمیل، موضوعی است که گیرندگان انتخاب شده در صندوق پیام‌هایشان مشاهده "
+"خواهند کرد. در مورد \n"
+"                        پیامک متنی، عنوان داخلی پیام است."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_subject
@@ -409,11 +432,14 @@ msgid ""
 "For an email, the subject your recipients will see in their inbox.\n"
 "For an SMS, the internal title of the message."
 msgstr ""
+"در مورد ایمیل، موضوعی است که گیرندگان در صندوق پیام‌های خود مشاهده خواهند "
+"کرد.\n"
+"                        در مورد پیامک متنی، عنوان داخلی پیام است."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_to
 msgid "From / To identic"
-msgstr ""
+msgstr "مبدأ / مقصد یکسان است"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
@@ -423,7 +449,7 @@ msgstr "آیا دارای پیام است"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__clicks_ratio
 msgid "Highest Click Rate"
-msgstr ""
+msgstr "بالاترین نرخ کلیک"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
@@ -456,17 +482,18 @@ msgstr ""
 msgid ""
 "Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
 msgstr ""
+"به جای صف‌بندی، فوراً پیامک ارسال کنید. ریسک ارسال بر عهده خودتان خواهد بود."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_allow_unsubscribe
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
-msgstr ""
+msgstr "شامل لینک انصراف"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_callback
 msgid "Incorrect callback URL"
-msgstr ""
+msgstr "URL بازگشتی نادرست است"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
@@ -498,12 +525,12 @@ msgstr "اعتبار ناکافی"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
 msgid "Insufficient IAP credits"
-msgstr ""
+msgstr "اعتبار IAP کافی نیست"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Insufficient credits"
-msgstr ""
+msgstr "اعتبار کافی نیست"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_invalid_destination
@@ -552,7 +579,7 @@ msgstr "ارسال ایمیل"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact
 msgid "Mailing Contact"
-msgstr ""
+msgstr "مخاطب ایمیل"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_list
@@ -563,7 +590,7 @@ msgstr "لیست ایمیل"
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mailing_contact_menu_sms
 msgid "Mailing List Contacts"
-msgstr ""
+msgstr "مخاطبان لیست ارسال"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_list_action_sms
@@ -575,17 +602,17 @@ msgstr "لیست‌های پستی"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_trace
 msgid "Mailing Statistics"
-msgstr ""
+msgstr "آمار ارسال"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_tracker__mailing_trace_id
 msgid "Mailing Trace"
-msgstr ""
+msgstr "رهگیری پیام"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "نوع ارسال"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
@@ -593,6 +620,8 @@ msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "contact directory."
 msgstr ""
+"مخاطبان ارسال به شما امکان می‌دهد تا مخاطبان بازاریابی را از دایرکتوری "
+"مخاطبانتان جدا کنید."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__manual
@@ -613,7 +642,7 @@ msgstr "ایمیل دسته‌جمعی"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_ids
 msgid "Mass SMS"
-msgstr ""
+msgstr "پیامک انبوه"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error
@@ -628,7 +657,7 @@ msgstr "پیام ها"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_missing
 msgid "Missing From Number"
-msgstr ""
+msgstr "شماره فرستنده وجود ندارد"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
@@ -643,7 +672,7 @@ msgstr "موبایل"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
 msgid "My SMS Marketing"
-msgstr ""
+msgstr "بازاریابی با پیامک"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
@@ -688,7 +717,7 @@ msgstr "تعداد اقدامات"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_count
 msgid "Number of Mass SMS"
-msgstr ""
+msgstr "تعداد پیامک‌های گروهی"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error_counter
@@ -708,12 +737,12 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Number(s)"
-msgstr ""
+msgstr "شماره(ها)"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "Open Recipient"
-msgstr ""
+msgstr "ورود به مخاطب گیرنده"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_optout
@@ -750,7 +779,7 @@ msgstr ""
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "RECEIVED (%i)"
-msgstr ""
+msgstr "دریافت شده (%i)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__rating_ids
@@ -773,7 +802,7 @@ msgstr "رد شده"
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Report for %(expected)i %(mailing_type)s Sent"
-msgstr ""
+msgstr "گزارش برای %(expected)i %(mailing_type)s ارسال شده"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_reporting
@@ -792,17 +821,17 @@ msgstr "پیامک"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__body_plaintext
 msgid "SMS Body"
-msgstr ""
+msgstr "محتوای پیامک"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__contact_count_sms
 msgid "SMS Contacts"
-msgstr ""
+msgstr "مخاطبان پیامک"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "SMS Content"
-msgstr ""
+msgstr "محتوای پیامک"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_sms_error
@@ -830,13 +859,13 @@ msgstr "بازاریابی پیامکی"
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
 msgid "SMS Marketing Analysis"
-msgstr ""
+msgstr "تحلیل بازاریابی با پیامک"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "SMS Subscription"
-msgstr ""
+msgstr "اشتراک پیامکی"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_template_id
@@ -853,12 +882,12 @@ msgstr "پیام متنی"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS Trace"
-msgstr ""
+msgstr "ردیابی پیامک"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "SMS Traces"
-msgstr ""
+msgstr "ردیابی پیامک"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_tracker_ids
@@ -869,14 +898,14 @@ msgstr "ردیاب‌های پیامک"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_sms_winner_selection
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_sms_winner_selection
 msgid "SMS Winner Selection"
-msgstr ""
+msgstr "انتخاب برنده پیامک"
 
 #. module: mass_mailing_sms
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
 msgid "STOP SMS: %(unsubscribe_url)s"
-msgstr ""
+msgstr "توقف پیامک: %(unsubscribe_url)s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -891,7 +920,7 @@ msgstr "ارسال"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid "Send Directly"
-msgstr ""
+msgstr "ارسال مستقیم"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -912,17 +941,17 @@ msgstr "جادوگر ارسال پیامک"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send Test"
-msgstr ""
+msgstr "ارسال تست"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send a Sample SMS"
-msgstr ""
+msgstr "ارسال پیامک نمونه"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send a sample SMS for testing purpose to the numbers below."
-msgstr ""
+msgstr "یک پیامک نمونه برای تست به شماره‌های زیر ارسال کنید."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_server
@@ -945,12 +974,12 @@ msgstr "وضعیت"
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
 #, python-format
 msgid "Test Mailing"
-msgstr ""
+msgstr "ارسال تستی"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
 msgid "Test SMS Mailing"
-msgstr ""
+msgstr "تست ارسال پیامک"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -964,7 +993,7 @@ msgstr ""
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "Test SMS successfully sent to %s"
-msgstr ""
+msgstr "پیامک تستی با موفقیت به %s ارسال شد"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -974,6 +1003,8 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the SMS Marketing."
 msgstr ""
+"رابط ماژول رهگیری اورچین (UTM) \"%s\" را نمی‌توانید حذف کنید، چرا که در بعضی "
+"از گردش‌کارهای اصلی مانند بازاریابی با پیامک در حال استفاده است."
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -985,7 +1016,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "There was an error when trying to unsubscribe"
-msgstr ""
+msgstr "هنگام تلاش برای لغو اشتراک، خطایی رخ داد"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
@@ -1042,12 +1073,12 @@ msgstr "حساب ثبت‌نشده"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
 msgid "Unregistered IAP account"
-msgstr ""
+msgstr "حساب IAP ثبت نشده"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Unregistered account"
-msgstr ""
+msgstr "حساب ثبت نشده"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -1059,7 +1090,7 @@ msgstr ""
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Unsupported %s for mass SMS"
-msgstr ""
+msgstr "%s برای پیامک گروهی پشتیبانی نشده"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_res_users
@@ -1069,7 +1100,7 @@ msgstr "کاربر"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Valid SMS Recipients"
-msgstr ""
+msgstr "گیرندگان پیامک معتبر"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__website_message_ids
@@ -1084,13 +1115,15 @@ msgstr "تاریخچه ارتباط با وبسایت"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "Winner Selection"
-msgstr ""
+msgstr "نحوه انتخاب برنده"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid ""
 "Write an appealing SMS Text Message, define recipients and track its results."
 msgstr ""
+"یک پیامک متنی SMS جذاب بنویسید، گیرندگان را تعریف نمایید و نتایج آن را دنبال "
+"کنید."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
@@ -1105,14 +1138,14 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "e.g. Black Friday SMS coupon"
-msgstr ""
+msgstr "مثال: کوپن تخفیف جمعه سیاه"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully blacklisted"
-msgstr ""
+msgstr "در لیست سیاه قرار گرفت"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully removed from"
-msgstr ""
+msgstr "با موفقیت از این لیست حذف شد:"

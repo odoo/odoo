@@ -48,9 +48,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-08-03 15:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
+"PO-Revision-Date: 2026-08-29 10:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/account/"
 "hr/>\n"
 "Language: hr\n"
@@ -59,7 +59,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #. odoo-python
@@ -581,8 +581,8 @@ msgstr "<em>Nacrt računa</em>"
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" "
-"title=\"Datum\"/>"
+"<i class=\"fa fa-clock-o\" aria-label=\"Datum\" role=\"img\" title=\"Datum\"/"
+">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -703,8 +703,8 @@ msgid ""
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
 "\n"
-"<span invisible=\"allow_out_payment\" class=\"text-muted\">Nepouzdano</span>"
-"\n"
+"<span invisible=\"allow_out_payment\" class=\"text-muted\">Nepouzdano</"
+"span>\n"
 "\n"
 "<span invisible=\"not allow_out_payment\" class=\"text-success\">Pouzdano</"
 "span>\n"
@@ -744,8 +744,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1308,7 +1308,8 @@ msgstr "Redak ne može imati i podretke i groupby vrijednost (redak '%s')."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
-msgstr "Stavka ovve temeljnice koristi zastarjeli konto, knjiženje nije moguće."
+msgstr ""
+"Stavka ovve temeljnice koristi zastarjeli konto, knjiženje nije moguće."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1547,6 +1548,11 @@ msgid "Account Mapping"
 msgstr "Mapiranje konta"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
+msgid "Account Move Line"
+msgstr "Stavka temeljnice"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "Povrat knjiženja"
@@ -1598,6 +1604,11 @@ msgstr "Konto potraživanja (PoS)"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
 msgstr "Uparivanje računa"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
+msgid "Account Reconcile Model Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1706,7 +1717,8 @@ msgstr "Grupe konta"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr "Ime vlasnika računa, u slučaju da je različito od imena vlasnika računa"
+msgstr ""
+"Ime vlasnika računa, u slučaju da je različito od imena vlasnika računa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1924,8 +1936,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Obračunski unos kreiran %(date)s: %(accrual_entry)s. I njegov obrnuti unos: %"
-"(reverse_entry)s."
+"Obračunski unos kreiran %(date)s: %(accrual_entry)s. I njegov obrnuti unos: "
+"%(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2187,7 +2199,8 @@ msgstr "Ispravak knjiženja"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr "Prilagođavanje unosa {link} {postotak}%% od {amount} priznato od {date}"
+msgstr ""
+"Prilagođavanje unosa {link} {postotak}%% od {amount} priznato od {date}"
 
 #. module: account
 #. odoo-python
@@ -3996,7 +4009,8 @@ msgstr "Početak prefiksa šifre"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
-msgstr "Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
+msgstr ""
+"Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8992,8 +9006,8 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"Zadnji put kada je saldo ovog partnera zatvaran. Postavlja se kada se zatvori"
-"  saldo partnera ili kada kliknete na gum \"Gotovo\"."
+"Zadnji put kada je saldo ovog partnera zatvaran. Postavlja se kada se "
+"zatvori  saldo partnera ili kada kliknete na gum \"Gotovo\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9696,7 +9710,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
+msgstr ""
+"Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -10870,7 +10885,8 @@ msgstr "Partneri"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr "Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
+msgstr ""
+"Partneri koji se koriste u hashiranim knjiženjima ne mogu biti spojeni."
 
 #. module: account
 #. odoo-python
@@ -15496,8 +15512,8 @@ msgstr "Potpisani ukupni iznos"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Ukupni dospjeli iznos (uključujući prodajne naloge i ovaj dokument): %"
-"(total_credit)s"
+"Ukupni dospjeli iznos (uključujući prodajne naloge i ovaj dokument): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -16107,7 +16123,8 @@ msgstr "Validiraj bankovni račun"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr "Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
+msgstr ""
+"Automatski potvrdi stavku izvoda (uparivanje na temelju vašeg pravila)."
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -16430,7 +16447,8 @@ msgstr "Treba li ovaj dnevnik prikazati na nadzornoj ploči ili ne."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
-msgstr "Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
+msgstr ""
+"Koristit će se za nazivanje dnevnika povezanog s ovim bankovnim računom"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -16546,7 +16564,8 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr "Razdoblje/konto možete promijeniti samo za proknjižene stavke dnevnika."
+msgstr ""
+"Razdoblje/konto možete promijeniti samo za proknjižene stavke dnevnika."
 
 #. module: account
 #. odoo-python
@@ -16886,7 +16905,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr "Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
+msgstr ""
+"Ne možete obrisati porezni redak jer bi to utjecalo na porezno izvješće"
 
 #. module: account
 #. odoo-python
@@ -17564,8 +17584,8 @@ msgid ""
 "calling the vendor.<br/>"
 msgstr ""
 "je usluga prijenosa novca, a ne banka.\n"
-"                            Provjerite pouzdanost računa pozivom "
-"dobavljača.<br/>"
+"                            Provjerite pouzdanost računa pozivom dobavljača."
+"<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

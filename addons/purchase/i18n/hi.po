@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 17:28+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/purchase/"
@@ -29,8 +29,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('ड्राफ़्ट', 'भेजा गया') और 'कोटेशन के लिए "
-"अनुरोध - %s' % (object.name) या\n"
+"                (object.state in ('ड्राफ़्ट', 'भेजा गया') और 'कोटेशन के लिए अनुरोध "
+"- %s' % (object.name) या\n"
 "                'परचेज़ ऑर्डर - %s' % (object.name))"
 
 #. module: purchase
@@ -290,8 +290,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"कोटेशन के लिए अनुरोध </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">कोटेशन के लिए अनुरोध </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">परचेज़ ऑर्डर</span>"
 
@@ -622,8 +622,8 @@ msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
 msgstr ""
-"परचेज़ ऑर्डर की हर लाइन के लिए प्लानिंग की तारीख और ऑर्डर करने की तारीख के बीच की अवधि"
-"।"
+"परचेज़ ऑर्डर की हर लाइन के लिए प्लानिंग की तारीख और ऑर्डर करने की तारीख के बीच की "
+"अवधि।"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
@@ -1704,8 +1704,7 @@ msgstr "ऐक्शन की संख्या"
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
-msgstr ""
-"तय डिलीवरी तारीख से कितने दिन पहले वेंडर को याद दिलाने वाला ईमेल भेजा जाए"
+msgstr "तय डिलीवरी तारीख से कितने दिन पहले वेंडर को याद दिलाने वाला ईमेल भेजा जाए"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -2054,6 +2053,7 @@ msgstr "परचेज़ ऑर्डर काउंट"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2145,8 +2145,7 @@ msgstr "परचेज़ के लिए रिमाइंडर"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
-msgstr ""
-"विशेषताओं (जैसे आकार, रंग, वगैरह) का उपयोग करके प्रॉडक्ट के अलग-अलग वैरिएंट खरीदें"
+msgstr "विशेषताओं (जैसे आकार, रंग, वगैरह) का उपयोग करके प्रॉडक्ट के अलग-अलग वैरिएंट खरीदें"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
@@ -2417,8 +2416,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr ""
-"एक न्यूनतम राशि से ऊपर के ऑर्डर को मंजूरी देने के लिए मैनेजरों से अनुरोध करें"
+msgstr "एक न्यूनतम राशि से ऊपर के ऑर्डर को मंजूरी देने के लिए मैनेजरों से अनुरोध करें"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -3232,8 +3230,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr ""
-"आप किसी वेंडर को उसके नाम, TIN, ईमेल या इंटरनल रेफरेंस से ढूंढ सकते हैं।"
+msgstr "आप किसी वेंडर को उसके नाम, TIN, ईमेल या इंटरनल रेफरेंस से ढूंढ सकते हैं।"
 
 #. module: purchase
 #. odoo-python
@@ -3276,8 +3273,8 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"आपके कोटेशन में कंपनी %(product_company)s के प्रॉडक्ट शामिल हैं, जबकि आपका कोटेशन कंपनी %"
-"(quote_company)s का है. \n"
+"आपके कोटेशन में कंपनी %(product_company)s के प्रॉडक्ट शामिल हैं, जबकि आपका कोटेशन कंपनी "
+"%(quote_company)s का है. \n"
 " कृपया अपने कोटेशन की कंपनी बदलें या अन्य कंपनियों के प्रॉडक्ट (%(bad_products)s) को हटा "
 "दें।"
 

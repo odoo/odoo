@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-04 02:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-17/"
@@ -166,8 +166,8 @@ msgstr ""
 "        </t>\n"
 "        Ootame hiljemalt \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">määramata</span>.\n"
@@ -233,10 +233,11 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            Viide: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        kogusummas <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        ettevõttelt<t t-out=\"object.company_id.name or ''\">YourCompany</t>"
-". \n"
+"        kogusummas <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
+"        ettevõttelt<t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
 "            The receipt is expected for <span style=\"font-weight:bold;\" t-"
@@ -297,8 +298,8 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            viide: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        ettevõttelt<t t-out=\"object.company_id.name or ''\">YourCompany</t>"
-".\n"
+"        ettevõttelt<t t-out=\"object.company_id.name or ''\">YourCompany</"
+"t>.\n"
 "        <br><br>\n"
 "        Küsimuste korral vastame meeleldi.\n"
 "        <br><br>\n"
@@ -410,8 +411,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"Hinnapäring </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Hinnapäring </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Ostutellimus </span>"
 
@@ -427,8 +428,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">"
-"(tarnija poolt kinnitatud)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reception_confirmed\">(tarnija poolt kinnitatud)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -436,8 +437,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">"
-"(tarnija poolt kinnitatud)</span>"
+"<span class=\"text-muted\" invisible=\"not "
+"mail_reminder_confirmed\">(tarnija poolt kinnitatud)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -830,7 +831,8 @@ msgstr "Automaatne täitmine eelmise ostutellimuse alusel."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr "Lukustage automaatselt kinnitatud tellimused, et nende muutmist vältida"
+msgstr ""
+"Lukustage automaatselt kinnitatud tellimused, et nende muutmist vältida"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2185,6 +2187,7 @@ msgstr "Ostutellimuste arv"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2992,8 +2995,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"See toode sisaldab %(pack_size).2f %(pack_name)s. Soovitatav ostukogus on %"
-"(quantity).2f %(unit)s."
+"See toode sisaldab %(pack_size).2f %(pack_name)s. Soovitatav ostukogus on "
+"%(quantity).2f %(unit)s."
 
 #. module: purchase
 #. odoo-python

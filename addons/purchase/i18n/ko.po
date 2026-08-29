@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 23:16+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/purchase/"
@@ -55,7 +55,8 @@ msgstr "%(amount)s 납부 마감일 %(date)s"
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
-msgstr "%(product)s 시작일 %(original_receipt_date)s 종료일 %(new_receipt_date)s"
+msgstr ""
+"%(product)s 시작일 %(original_receipt_date)s 종료일 %(new_receipt_date)s"
 
 #. module: purchase
 #. odoo-python
@@ -150,8 +151,8 @@ msgstr ""
 "        </t>\n"
 "        예정일은 다음과 같습니다. \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">미확정</span>.\n"
@@ -217,14 +218,14 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            참조 번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        금액 <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        금액 <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        발행인 <t t-out=\"object.company_id.name or ''\">YourCompany</t> \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            예상 입고 일자는 다음과 같습니다 <span style=\"font-"
-"weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</"
-"span>.\n"
+"            예상 입고 일자는 다음과 같습니다 <span style=\"font-weight:bold;"
+"\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            해당 주문에 대한 입고 확인을 부탁드리겠습니다.\n"
 "        </t>\n"
@@ -300,8 +301,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
 "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"완료\" "
-"title=\"완료\"/><span class=\"d-none d-md-inline\"> 완료</span>"
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"완료\" title=\"완료"
+"\"/><span class=\"d-none d-md-inline\"> 완료</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -334,9 +335,9 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"청구서 대기 "
-"중\" title=\"청구서 대기 중\"/><span class=\"d-none d-md-inline\"> 청구서 "
-"대기 중</span>"
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"청구서 대기 중"
+"\" title=\"청구서 대기 중\"/><span class=\"d-none d-md-inline\"> 청구서 대기 "
+"중</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -344,8 +345,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"취소됨\" "
-"title=\"취소됨\"/><span class=\"d-none d-md-inline\"> 취소됨</span>"
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"취소됨\" title=\"취"
+"소됨\"/><span class=\"d-none d-md-inline\"> 취소됨</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -393,8 +394,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"견적서 요청 </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">견"
+"적서 요청 </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">발주서 </span>"
 
@@ -410,8 +411,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reception_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">"
-"(공급업체 확인 완료)</span>"
+"<span class=\"text-muted\" invisible=\"not mail_reception_confirmed\">(공급업"
+"체 확인 완료)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -419,8 +420,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"not "
 "mail_reminder_confirmed\">(confirmed by vendor)</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">"
-"(공급업체 확인 완료)</span>"
+"<span class=\"text-muted\" invisible=\"not mail_reminder_confirmed\">(공급업"
+"체 확인 완료)</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -715,7 +716,8 @@ msgstr "모든 경고상태의 견적요청서"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
-msgstr "공급업체에게 입고일을 주지시키기 위한 이메일을 자동 전송하도록 허용합니다."
+msgstr ""
+"공급업체에게 입고일을 주지시키기 위한 이메일을 자동 전송하도록 허용합니다."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -808,7 +810,8 @@ msgstr "이전 발주서를 이용해서 자동 완성."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr "확정된 주문을 자동으로 잠금 처리하여 내용이 변경되지 않도록 방지합니다."
+msgstr ""
+"확정된 주문을 자동으로 잠금 처리하여 내용이 변경되지 않도록 방지합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -823,8 +826,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
-"정확한 날짜를 확정하도록 예상 입고일 전 공급업체에 자동으로 이메일을 "
-"보냅니다."
+"정확한 날짜를 확정하도록 예상 입고일 전 공급업체에 자동으로 이메일을 보냅니"
+"다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -916,8 +919,8 @@ msgid ""
 "Calls for tenders are when you want to generate requests for quotations with "
 "several vendors for a given set of products to compare offers."
 msgstr ""
-"입찰 요청은 해당 품목별 견적 비교를 위해 여러 거래처로부터 견적 요청하려는 "
-"경우 생성합니다."
+"입찰 요청은 해당 품목별 견적 비교를 위해 여러 거래처로부터 견적 요청하려는 경"
+"우 생성합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1066,8 +1069,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"측정 단위 간의 변환은 동일한 카테고리에 속한 경우에만 가능합니다. 변환은 "
-"비율에 따라 이루어집니다."
+"측정 단위 간의 변환은 동일한 카테고리에 속한 경우에만 가능합니다. 변환은 비율"
+"에 따라 이루어집니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
@@ -1182,8 +1185,8 @@ msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
 msgstr ""
-"업체의 예상 배송일입니다. 예상 배송일은 공급업체 가격표 리드타임과 현재 "
-"날짜를 기준으로 계산됩니다."
+"업체의 예상 배송일입니다. 예상 배송일은 공급업체 가격표 리드타임과 현재 날짜"
+"를 기준으로 계산됩니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -1191,8 +1194,8 @@ msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
 msgstr ""
-"업체에서 약속한 납기일입니다. 관련 품목의 입고 예정일을 결정하는 데 "
-"사용합니다."
+"업체에서 약속한 납기일입니다. 관련 품목의 입고 예정일을 결정하는 데 사용합니"
+"다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1426,8 +1429,8 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
-"이 기능을 선택하면, 그리드 항목을 통해 제품의 세부선택 사항이 발주서에 "
-"추가됩니다."
+"이 기능을 선택하면, 그리드 항목을 통해 제품의 세부선택 사항이 발주서에 추가됩"
+"니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_packaging__purchase
@@ -1466,8 +1469,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 "
-"용어입니다."
+"Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 용어"
+"입니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1609,9 +1612,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier "
 "to cope with unexpected vendor delays."
 msgstr ""
-"공급업체 리드타임에 대한 여유 기간입니다. 시스템이 품목 재구매를 위한 "
-"발주서를 생성할 때, 예상치 못한 공급업체 지연에 대처하기 위해 그 며칠 전에 "
-"예약됩니다."
+"공급업체 리드타임에 대한 여유 기간입니다. 시스템이 품목 재구매를 위한 발주서"
+"를 생성할 때, 예상치 못한 공급업체 지연에 대처하기 위해 그 며칠 전에 예약됩니"
+"다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1620,9 +1623,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier "
 "to cope with unexpected vendor delays."
 msgstr ""
-"공급업체 리드타임에 대한 여유 기간입니다. 시스템이 품목 재구매를 위한 "
-"발주서를 생성할 때, 예상치 못한 공급업체 지연에 대처하기 위해 그 며칠 전에 "
-"예약됩니다."
+"공급업체 리드타임에 대한 여유 기간입니다. 시스템이 품목 재구매를 위한 발주서"
+"를 생성할 때, 예상치 못한 공급업체 지연에 대처하기 위해 그 며칠 전에 예약됩니"
+"다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1854,7 +1857,8 @@ msgstr "입고 수량 기준"
 msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
-msgstr "공급업체에서 단가를 받으면, 맞는 가격이 포함된 발주서를 완료할 수 있습니다."
+msgstr ""
+"공급업체에서 단가를 받으면, 맞는 가격이 포함된 발주서를 완료할 수 있습니다."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1862,8 +1866,8 @@ msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
 msgstr ""
-"공급업체에 품목을 발주하려면, 구매요청서를 승인하는 즉시 바로 발주서로 "
-"변환됩니다."
+"공급업체에 품목을 발주하려면, 구매요청서를 승인하는 즉시 바로 발주서로 변환됩"
+"니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -2157,6 +2161,7 @@ msgstr "발주서 수"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2299,8 +2304,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
-"공급 업체에서 고객에게 직접 전달하려는 경우 주소를 입력하십시오. 그렇지 "
-"않으면 자신의 회사에 전달하기 위해 비워 두십시오."
+"공급 업체에서 고객에게 직접 전달하려는 경우 주소를 입력하십시오. 그렇지 않으"
+"면 자신의 회사에 전달하기 위해 비워 두십시오."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
@@ -2540,8 +2545,8 @@ msgid ""
 "                Once an agreement has been found with the supplier, they "
 "will be confirmed and turned into purchase orders."
 msgstr ""
-"견적요청서는 매입하려는 다양한 품목의 가격 정보를 요청하기 위해 공급업체로 "
-"발송되는 문서입니다.\n"
+"견적요청서는 매입하려는 다양한 품목의 가격 정보를 요청하기 위해 공급업체로 발"
+"송되는 문서입니다.\n"
 "업체와의 계약이 확인된 후에는 구매발주서로 변환됩니다."
 
 #. module: purchase
@@ -2620,9 +2625,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"차단 "
-"메시지\"을 선택하면, 예외가 발생하고 메시지 흐름이 차단됩니다. 메시지는 다음 "
-"필드에 작성되어야 합니다."
+"\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"차단 메시지"
+"\"을 선택하면, 예외가 발생하고 메시지 흐름이 차단됩니다. 메시지는 다음 필드"
+"에 작성되어야 합니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2846,7 +2851,8 @@ msgstr "UX용 기술 필드"
 msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
-msgstr "재정 국가 및 재정 포지션에 따라 세금을 필터링할 수 있는 기술 필드입니다."
+msgstr ""
+"재정 국가 및 재정 포지션에 따라 세금을 필터링할 수 있는 기술 필드입니다."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2914,8 +2920,8 @@ msgid ""
 "                You can track your negotiation performance, the delivery "
 "performance of your vendors, etc"
 msgstr ""
-"이와 같은 분석을 통하여 회사의 구매 내역 및 실적을 쉽게 확인하여 분석할 수 "
-"있습니다. \n"
+"이와 같은 분석을 통하여 회사의 구매 내역 및 실적을 쉽게 확인하여 분석할 수 있"
+"습니다. \n"
 "               귀하의 거래 실적이나 거래처 납품 실적 등을 추적할 수 있습니다."
 
 #. module: purchase
@@ -2949,8 +2955,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
 "purchase %(quantity).2f %(unit)s."
 msgstr ""
-"이 품목은 %(pack_size).2f%(pack_name)s (으)로 포장됩니다. %(quantity).2f%"
-"(unit)s 을(를) 구매해야 합니다."
+"이 품목은 %(pack_size).2f%(pack_name)s (으)로 포장됩니다. "
+"%(quantity).2f%(unit)s 을(를) 구매해야 합니다."
 
 #. module: purchase
 #. odoo-python
@@ -3067,7 +3073,8 @@ msgstr "레코드에 있는 예외 활동의 유형입니다."
 msgid ""
 "Unable to cancel this purchase order. You must first cancel the related "
 "vendor bills."
-msgstr "이 발주서를 취소할 수 없습니다. 먼저 관련 공급업체 청구서를 취소해야 합니다."
+msgstr ""
+"이 발주서를 취소할 수 없습니다. 먼저 관련 공급업체 청구서를 취소해야 합니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -3214,8 +3221,8 @@ msgid ""
 "                    document in Odoo."
 msgstr ""
 "공급업체 청구서는 구매주문건 또는 영수증을 기준으로 미리 생성될 수 있습니다. "
-"이를 통해 Odoo의 초안 문서에 따라 공급업체로부터 받은 청구서를 관리할 수 "
-"있습니다."
+"이를 통해 Odoo의 초안 문서에 따라 공급업체로부터 받은 청구서를 관리할 수 있습"
+"니다."
 
 #. module: purchase
 #. odoo-python
@@ -3306,11 +3313,11 @@ msgid ""
 "dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"발주서를 생성할 때, 공급업체가 정시에 물품을 배송한 비율을 나타내는<i>정시 "
-"납기율</i>을 확인해 보세요. 이 비율이 너무 낮다면, <i>자동 알림</i>을 "
-"활성화할 수 있습니다. 입고 예정일 전에 Odoo가 공급업체에 이메일을 보내어 "
-"배송 날짜를 확정하고 혹시 지연될 경우 바로 알려 드립니다. 공급업체 관련 "
-"수치를 확인하려면 OTD 비율 항목을 클릭하세요."
+"발주서를 생성할 때, 공급업체가 정시에 물품을 배송한 비율을 나타내는<i>정시 납"
+"기율</i>을 확인해 보세요. 이 비율이 너무 낮다면, <i>자동 알림</i>을 활성화할 "
+"수 있습니다. 입고 예정일 전에 Odoo가 공급업체에 이메일을 보내어 배송 날짜를 "
+"확정하고 혹시 지연될 경우 바로 알려 드립니다. 공급업체 관련 수치를 확인하려"
+"면 OTD 비율 항목을 클릭하세요."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3320,10 +3327,10 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
-"발주서를 이메일로 보낼때 Odoo는 공급업체에 주문 수신여부를 요청합니다. "
-"공급업체가 이메일의 버튼을 클릭하여 주문을 승인하면 발주서에 관련 정보가 "
-"추가됩니다. 필터 기능을 사용하면 공급업체가 승인하지 않은 주문을 손쉽게 "
-"추적할 수 있습니다."
+"발주서를 이메일로 보낼때 Odoo는 공급업체에 주문 수신여부를 요청합니다. 공급업"
+"체가 이메일의 버튼을 클릭하여 주문을 승인하면 발주서에 관련 정보가 추가됩니"
+"다. 필터 기능을 사용하면 공급업체가 승인하지 않은 주문을 손쉽게 추적할 수 있"
+"습니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
@@ -3341,8 +3348,8 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
-"발주서 내역의 유형을 변경할 수 없습니다. 대신 현재 내역을 삭제하고 적절한 "
-"유형의 새 내역을 만들어야 합니다."
+"발주서 내역의 유형을 변경할 수 없습니다. 대신 현재 내역을 삭제하고 적절한 유"
+"형의 새 내역을 만들어야 합니다."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3372,10 +3379,10 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"귀하의 견적서에 %(product_company)s 회사의 품목이 포함되어 있으나 견적서는 %"
-"(quote_company)s 회사에 대한 견적입니다.\n"
-"견적서 업체명을 변경하거나 다른 업체의 품목을 삭제해주시기 바랍니다 (%"
-"(bad_products)s)."
+"귀하의 견적서에 %(product_company)s 회사의 품목이 포함되어 있으나 견적서는 "
+"%(quote_company)s 회사에 대한 견적입니다.\n"
+"견적서 업체명을 변경하거나 다른 업체의 품목을 삭제해주시기 바랍니다 "
+"(%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

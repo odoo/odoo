@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-08-14 17:37+0000\n"
 "PO-Revision-Date: 2026-08-03 02:40+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
@@ -2401,6 +2401,14 @@ msgstr ""
 "časa, ne da bi ga odstranili."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -2833,8 +2841,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Nova zahteva za dodelitev, ki jo je ustvaril %(user)s: %(count)s Dnevi %"
-"(allocation_type)s"
+"Nova zahteva za dodelitev, ki jo je ustvaril %(user)s: %(count)s Dnevi "
+"%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4025,8 +4033,8 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. "
 "recuperation days)."
 msgstr ""
-"Uradniki za prosti čas dodelijo zaposlenim proste dni (npr. plačan dopust)"
-".<br>\n"
+"Uradniki za prosti čas dodelijo zaposlenim proste dni (npr. plačan dopust)."
+"<br>\n"
 "                Zaposleni zahtevajo dodelitev prostih dni referentom (npr. "
 "dnevi za okrevanje)."
 
@@ -4660,7 +4668,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 #, python-format
 msgid "You cannot have a cap on accrued time without setting a maximum amount."
-msgstr "Ne morete omejiti nakopičenega časa, ne da bi določili najvišji znesek."
+msgstr ""
+"Ne morete omejiti nakopičenega časa, ne da bi določili najvišji znesek."
 
 #. module: hr_holidays
 #. odoo-python
