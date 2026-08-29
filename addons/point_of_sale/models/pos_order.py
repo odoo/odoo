@@ -1279,6 +1279,8 @@ class PosOrder(models.Model):
         return invoice
 
     def _reconcile_invoice_payments(self, invoice, payment_moves):
+        invoice = invoice.sudo()
+        payment_moves = payment_moves.sudo()
         receivable_account = self.env["res.partner"]._find_accounting_partner(invoice.partner_id).with_company(self.company_id).property_account_receivable_id
         if not receivable_account.reconcile:
             return
