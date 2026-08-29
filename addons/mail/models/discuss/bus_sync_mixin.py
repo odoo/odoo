@@ -3,7 +3,7 @@
 import copy
 
 from odoo import models
-from odoo.addons.web.models.models import lazymapping
+from odoo.tools.misc import LazyDict
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -25,7 +25,7 @@ class BusSyncMixin(models.AbstractModel):
 
     def write(self, vals):
         stores = Store.Stores()
-        manager_by_bus_target = lazymapping(
+        manager_by_bus_target = LazyDict(
             lambda bus_target: Store.FieldListManager(stores, self, bus_target),
         )
         self._sync_field_names(manager_by_bus_target)

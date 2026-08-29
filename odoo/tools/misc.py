@@ -995,6 +995,18 @@ class StackMap[K, T](MutableMapping[K, T]):
         return self._maps.pop()
 
 
+class LazyDict[K, T](dict[K, T]):
+    """A kind of `defaultdict` where the function accepts the key."""
+    def __init__(self, func: Callable[[K], T]):
+        super().__init__()
+        self._func = func
+
+    def __missing__(self, k: K) -> T:
+        v = self._func(k)
+        self[k] = v
+        return v
+
+
 class OrderedSet[T](MutableSet[T]):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
