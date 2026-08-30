@@ -68,7 +68,7 @@ class ResPartner(models.Model):
         """ Can't edit `name` if there is (non draft) issued SO. """
         return super()._can_edit_name() and not self._has_order(
             [
-                ('partner_invoice_id', '=', self.id),
+                '|', ('partner_invoice_id', '=', self.id),
                 ('partner_id', '=', self.id),
             ]
         )
