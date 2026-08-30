@@ -872,6 +872,7 @@
                         type="action"
                         string="New Group Time Off"
                         display="always"
+                        invisible="context.get('default_employee_id', False)"
                         groups="hr_holidays.group_hr_holidays_responsible"
                         class="btn btn-secondary" />
                     <button

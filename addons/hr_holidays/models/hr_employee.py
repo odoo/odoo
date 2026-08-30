@@ -551,15 +551,24 @@ class HrEmployee(models.Model):
             "name": _("Time Off Dashboard"),
             "type": "ir.actions.act_window",
             "res_model": "hr.leave",
+            "view_mode": "calendar,list,form",
             "views": [
                 [
                     self.env.ref("hr_holidays.hr_leave_employee_view_dashboard").id,
                     "calendar",
-                ]
+                ],
+                [False, "list"],
+                [False, "form"],
             ],
             "domain": [("employee_id", "in", self.ids)],
             "context": {
                 "employee_id": self.ids,
+                "search_default_filter_date_from": 1,
+                "search_default_group_date_from": 1,
+                # `employee_id` above is a list and only `onchange` reads it, so
+                # without this the New button falls back to the field default and
+                # prepares the request for whoever is looking at the form.
+                "default_employee_id": self.id,
             },
         }
 
