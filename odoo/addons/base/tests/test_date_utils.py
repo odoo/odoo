@@ -2,8 +2,9 @@
 from datetime import date, datetime, time, timedelta, timezone
 from functools import partial
 
+import babel
 import pytz
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, weekdays
 from freezegun import freeze_time
 
 from odoo.tests import BaseCase, TransactionCase
@@ -19,6 +20,7 @@ from odoo.tools.date_utils import (
     start_of,
     subtract,
     to_timezone,
+    weeknumber,
 )
 
 
@@ -238,6 +240,24 @@ class TestDateUtils(TransactionCase):
         self.assertEqual(parse('today'), date(2024, 1, 5))
         with freeze_time('2024-01-04 23:05:00'):
             self.assertEqual(parse('today'), date(2024, 1, 5))
+
+    def test_monday_override_on_sunday_locale(self):
+        locale = babel.Locale.parse('en_US')
+        self.assertEqual(locale.first_week_day, 6)
+        self.assertEqual(weeknumber(locale, date(2026, 8, 30)), (2026, 36))
+        self.assertEqual(weeknumber(locale, date(2026, 8, 30), 0), (2026, 35))
+
+    def test_override_keeps_week_together(self):
+        for code in ('en_US', 'en_GB', 'ar_SA', 'ja_JP'):
+            locale = babel.Locale.parse(code)
+            for first_week_day in range(7):
+                start = date(2026, 1, 1) + relativedelta(weekday=weekdays[first_week_day](-1))
+                with self.subTest(locale=code, first_week_day=first_week_day):
+                    weeknumbers = [
+                        weeknumber(locale, start + timedelta(days=day), first_week_day)
+                        for day in range(7)
+                    ]
+                    self.assertEqual(len(set(weeknumbers)), 1, weeknumbers)
 
 
 class TestDateRangeFunction(BaseCase):
