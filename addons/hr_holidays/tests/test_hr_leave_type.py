@@ -1,6 +1,7 @@
 from freezegun import freeze_time
 
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tests import Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -118,3 +119,22 @@ class TestHrLeaveType(TestHrHolidaysCommon):
         )
 
         self.assertFalse(leave_types, "Got valid leaves outside vaild period")
+
+    def test_calendar_meeting_is_configurable_from_the_form(self):
+        """ "Display Time Off in Calendar" must be reachable where it is set.
+
+        The flag decides whether every leave of a type also lands in everyone's
+        calendar. Leaving it out of the type form makes it a database-only
+        setting, which is not a setting.
+        """
+        leave_type = self.env["hr.leave.type"].create(
+            {"name": "Unpaid", "requires_allocation": False}
+        )
+        with Form(leave_type) as leave_type_form:
+            self.assertIn(
+                "create_calendar_meeting",
+                leave_type_form._view["fields"],
+                "the type form should let an administrator turn the calendar entry off",
+            )
+            leave_type_form.create_calendar_meeting = False
+        self.assertFalse(leave_type.create_calendar_meeting)
