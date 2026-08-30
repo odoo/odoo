@@ -34,6 +34,10 @@ class HrLeaveAccrualLevel(models.Model):
         required=True,
         ondelete="cascade",
     )
+    is_based_on_worked_time = fields.Boolean(
+        related="accrual_plan_id.is_based_on_worked_time",
+        export_string_translation=False,
+    )
     accrued_gain_time = fields.Selection(
         related="accrual_plan_id.accrued_gain_time",
         export_string_translation=False,
@@ -118,6 +122,10 @@ class HrLeaveAccrualLevel(models.Model):
     maximum_leave_yearly = fields.Float(
         export_string_translation=False,
         digits=(16, 2),
+    )
+    yearly_gain = fields.Float(
+        compute="_compute_yearly_gain",
+        export_string_translation=False,
     )
     can_be_carryover = fields.Boolean(
         related="accrual_plan_id.can_be_carryover",
@@ -299,6 +307,35 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             if not level.cap_accrued_time:
                 level.maximum_leave = 0
+
+    @api.depends("frequency", "added_value", "is_based_on_worked_time")
+    def _compute_yearly_gain(self):
+        company_calendar = self.env.company.resource_calendar_id
+        hours_per_week = company_calendar.hours_per_week
+        days_per_week = company_calendar._get_days_per_week()
+        for level in self:
+            if level.frequency == "hourly":
+                gain = level.added_value * 52 * hours_per_week
+            elif level.frequency == "daily":
+                # Accruing on worked time only credits the days actually worked;
+                # otherwise every day of the year counts.
+                if level.is_based_on_worked_time:
+                    gain = level.added_value * 52 * days_per_week
+                else:
+                    gain = level.added_value * 365
+            elif level.frequency == "weekly":
+                gain = level.added_value * 52
+            elif level.frequency == "bimonthly":
+                gain = level.added_value * 24
+            elif level.frequency == "monthly":
+                gain = level.added_value * 12
+            elif level.frequency == "biyearly":
+                gain = level.added_value * 2
+            elif level.frequency == "yearly":
+                gain = level.added_value
+            else:
+                gain = 0
+            level.yearly_gain = gain
 
     @api.depends("can_be_carryover")
     def _compute_action_with_unused_accruals(self):

@@ -7,6 +7,7 @@ from . import test_hr_holidays_tour
 from . import test_hr_leave_type
 from . import test_accrual_allocations
 from . import test_accrual_level_export
+from . import test_accrual_yearly_gain
 from . import test_change_department
 from . import test_leave_requests
 from . import test_out_of_office

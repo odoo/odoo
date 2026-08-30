@@ -124,6 +124,33 @@
                                         class="o_field_accrual" />
                                 </span>
                             </span>
+                            <span name="yearly_gain" class="text-muted">
+                                <label
+                                    for="yearly_gain"
+                                    string="Gain for the year :"
+                                    invisible="is_based_on_worked_time"
+                                    class="fw-bold" />
+                                <label
+                                    for="yearly_gain"
+                                    string="Maximum gain for the year :"
+                                    invisible="not is_based_on_worked_time"
+                                    class="fw-bold" />
+                            </span>
+                            <span class="text-muted">
+                                <field
+                                    name="yearly_gain"
+                                    nolabel="1"
+                                    widget="float_without_trailing_zeros"
+                                    class="me-1 o_field_accrual" />
+                                <field
+                                    name="added_value_type"
+                                    nolabel="1"
+                                    readonly="1"
+                                    class="o_field_accrual" />
+                                <span
+                                    invisible="not cap_accrued_time_yearly and not cap_accrued_time"
+                                    class="ms-3">(Caps can affect that gain)</span>
+                            </span>
                             <label
                                 for="milestone_date"
                                 string="This milestone will be reached :"
