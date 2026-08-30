@@ -125,20 +125,28 @@ export class ResizePlugin extends Plugin {
 
         // Determine resize position: first, middle, or last element.
         const position = target1 ? (target2 ? "middle" : "last") : "first";
-        let [item, neighbor] = [target1 || target2, target2];
+        let [item, neighbor, itemMinSize, neighborMinSize] = [
+            target1 || target2,
+            target2,
+            activeHover.resizingParameter.minSize,
+            activeHover.resizingParameter.minSize,
+        ];
         // Handle colgroup-based tables: map <td> cells to corresponding <col>
         // elements so resizing is applied at column level instead of per cell.
-        [item, neighbor] = this.processThrough(
+        [item, neighbor, itemMinSize, neighborMinSize] = this.processThrough(
             "resize_target_processors",
             item,
             neighbor,
-            position
-        ) || [item, neighbor];
+            position,
+            activeHover.resizingParameter.minSize
+        ) || [item, neighbor, itemMinSize, neighborMinSize];
 
         return {
             item,
             neighbor,
             position,
+            itemMinSize,
+            neighborMinSize,
         };
     }
 
@@ -156,14 +164,25 @@ export class ResizePlugin extends Plugin {
 
         ev.preventDefault();
         const { direction, resizingParameter } = this.activeHover;
-        const { item, neighbor, position } = this.getResizeTargets(this.activeHover);
+        const { item, neighbor, position, itemMinSize, neighborMinSize } = this.getResizeTargets(
+            this.activeHover
+        );
 
         this.isResizingElement = true;
         const handleResize = (ev) => {
             if ((item && !item.isConnected) || (neighbor && !neighbor.isConnected)) {
                 return endResizeOperation(ev);
             }
-            this.handleResize(ev, direction, resizingParameter, item, neighbor, position);
+            this.handleResize(
+                ev,
+                direction,
+                resizingParameter,
+                item,
+                neighbor,
+                position,
+                itemMinSize,
+                neighborMinSize
+            );
         };
         const endResizeOperation = (ev) => {
             ev.preventDefault();
@@ -269,9 +288,20 @@ export class ResizePlugin extends Plugin {
      * @param {HTMLElement} item - The primary element being resized
      * @param {HTMLElement} neighbor - The adjacent element affected by the resize
      * @param {'first'|'middle'|'last'} position - Relative position of the resize interaction
+     * @param {number} itemMinSize - The minimum size for the primary element being resized
+     * @param {number} neighborMinSize - The minimum size for the adjacent element affected by the resize
      * @returns {void}
      */
-    handleResize(ev, direction, resizingParameter, item, neighbor, position) {
+    handleResize(
+        ev,
+        direction,
+        resizingParameter,
+        item,
+        neighbor,
+        position,
+        itemMinSize,
+        neighborMinSize
+    ) {
         ev.preventDefault();
         // Find the container element that holds the resizable items
         const resizeContainer = closestElement(item, resizingParameter.parentContainerSelector);
@@ -295,10 +325,13 @@ export class ResizePlugin extends Plugin {
 
         // RTL adjustment: swap elements for consistent resize logic.
         if (direction === "col" && isRTL && position === "middle") {
-            [item, neighbor] = [neighbor, item];
+            [item, neighbor, itemMinSize, neighborMinSize] = [
+                neighbor,
+                item,
+                neighborMinSize,
+                itemMinSize,
+            ];
         }
-
-        const minSize = resizingParameter.minSize;
 
         // Maximum width allowed for the resize container inside its nearest
         // resizable ancestor. If there is no ancestor, there is no width limit.
@@ -332,8 +365,8 @@ export class ResizePlugin extends Plugin {
 
                 const newMargin = currentMargin - sizeDelta;
                 const currentSize = itemRect[sizeProp];
-                const newSize = currentSize + sizeDelta;
-                if (newMargin >= 0 && newSize > minSize) {
+                const newSize = Math.max(currentSize + sizeDelta, itemMinSize);
+                if (newMargin >= 0) {
                     const resizeContainerRect = resizeContainer.getBoundingClientRect();
                     // Update container margin and element size.
                     resizeContainer.style.cssText += ` ${marginProp
@@ -359,14 +392,13 @@ export class ResizePlugin extends Plugin {
                 ];
 
                 const currentSize = itemRect[sizeProp];
-                const newSize = ev[clientPositionProp] - itemRect[positionProp];
+                const newSize = Math.max(
+                    ev[clientPositionProp] - itemRect[positionProp],
+                    itemMinSize
+                );
                 const sizeDelta = newSize - currentSize;
                 const currentNeighborSize = neighborRect[sizeProp];
                 const newNeighborSize = currentNeighborSize - sizeDelta;
-
-                if (newSize <= minSize) {
-                    break;
-                }
 
                 if (direction === "row") {
                     // Row resize: only item is affected, neighbor untouched.
@@ -375,7 +407,7 @@ export class ResizePlugin extends Plugin {
                 }
 
                 // Column resize.
-                if (newNeighborSize >= minSize) {
+                if (newNeighborSize >= neighborMinSize) {
                     // Normal case: both item and neighbor are within bounds.
                     item.style[sizeProp] = newSize + "px";
                     neighbor.style[sizeProp] = newNeighborSize + "px";
@@ -396,14 +428,14 @@ export class ResizePlugin extends Plugin {
                     const resizeContainerRect = resizeContainer.getBoundingClientRect();
 
                     // Extra width needed so neighbor can stay at minSize.
-                    const neighborDeficit = minSize - newNeighborSize;
+                    const neighborDeficit = neighborMinSize - newNeighborSize;
                     const newContainerWidth = resizeContainerRect[sizeProp] + neighborDeficit;
 
                     if (newContainerWidth <= maxContainerWidth) {
                         // Container has room to grow: expand it, grow item, clamp neighbor.
                         resizeContainer.style[sizeProp] = newContainerWidth + "px";
                         item.style[sizeProp] = newSize + "px";
-                        neighbor.style[sizeProp] = minSize + "px";
+                        neighbor.style[sizeProp] = neighborMinSize + "px";
                     }
                 }
                 break;
@@ -418,9 +450,9 @@ export class ResizePlugin extends Plugin {
                     sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
                 }
                 const currentSize = itemRect[sizeProp];
-                const newSize = currentSize + sizeDelta;
+                const newSize = Math.max(currentSize + sizeDelta, itemMinSize);
 
-                if ((newSize >= 0 || direction === "row") && newSize > minSize) {
+                if (newSize >= 0 || direction === "row") {
                     const resizeContainerRect = resizeContainer.getBoundingClientRect();
                     if (sizeProp === "width") {
                         if (resizeContainerRect[sizeProp] + sizeDelta > maxContainerWidth) {
