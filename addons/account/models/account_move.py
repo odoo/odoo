@@ -20,7 +20,6 @@ from odoo import api, fields, models, _, SUPERUSER_ID, modules
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.fields import Command, Domain
-from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import clean_context
 from odoo.tools import (
     date_utils,
@@ -7722,7 +7721,7 @@ class AccountMove(models.Model):
     def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=True):
         if filter_xml:
             attachments = attachments.filtered(
-                lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or b'').endswith('/xml'))
+                lambda att: not (att.mimetype == 'text/plain' and att.raw.mimetype.endswith('/xml'))
             )
         super()._message_set_main_attachment_id(attachments, force=force, filter_xml=filter_xml)
 
