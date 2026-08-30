@@ -130,6 +130,11 @@ class HrLeaveAccrualLevel(models.Model):
         compute="_compute_action_with_unused_accruals",
         default="lost",
         store=True,
+        # The compute only forces "lost" when carry-over is off; the rest of the
+        # time this is the user's choice in the form.  Without readonly=False the
+        # ORM reports it readonly and the import-compatible export drops it, so a
+        # reimported plan loses what happens to unused time.
+        readonly=False,
         required=True,
         help="When the Carry-Over Time is reached, according to Plan's setting, select what you want "
         "to happen with the unused time off: Lost (time will be reset to zero), Carried over (accrued time carried over to "
