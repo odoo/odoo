@@ -3252,3 +3252,56 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         )
 
         self.assertEqual(leave.number_of_hours, 13.0)
+
+    def test_allocation_error_names_the_employee_and_the_type(self):
+        """A batch that trips the allocation check must say whose and which.
+
+        `_check_validity` groups by (type, date) and walks several employees, so
+        a message with no names leaves the approver guessing which of them is
+        short and of what.
+        """
+        leave_type = (
+            self.env["hr.leave.type"]
+            .with_user(self.user_hrmanager_id)
+            .create(
+                {
+                    "name": "Short Allocation Type",
+                    "requires_allocation": True,
+                    "leave_validation_type": "no_validation",
+                    "request_unit": "day",
+                }
+            )
+        )
+        covered, short = self.employee_emp, self.employee_hruser
+        for employee, days in ((covered, 5), (short, 1)):
+            allocation = (
+                self.env["hr.leave.allocation"]
+                .with_user(self.user_hrmanager_id)
+                .create(
+                    {
+                        "name": "Allocation",
+                        "employee_id": employee.id,
+                        "holiday_status_id": leave_type.id,
+                        "number_of_days": days,
+                        "date_from": "2022-01-01",
+                    }
+                )
+            )
+            allocation.action_approve()
+
+        with self.assertRaises(ValidationError) as error:
+            self.env["hr.leave"].with_user(self.user_hrmanager_id).create(
+                [
+                    {
+                        "name": "Three days",
+                        "employee_id": employee.id,
+                        "holiday_status_id": leave_type.id,
+                        "request_date_from": date(2022, 3, 7),
+                        "request_date_to": date(2022, 3, 9),
+                    }
+                    for employee in (covered, short)
+                ]
+            )
+        message = error.exception.args[0]
+        self.assertIn(short.name, message)
+        self.assertIn(leave_type.name, message)

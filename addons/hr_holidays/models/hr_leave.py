@@ -1166,7 +1166,11 @@ Versions:
                         < -max_excess
                     ):
                         raise ValidationError(
-                            _("There is no valid allocation to cover that request.")
+                            _(
+                                "%(employee)s has no valid allocation of %(leave_type)s to cover that request.",
+                                employee=employee.name,
+                                leave_type=leave_type.name,
+                            )
                         )
                 continue
 
@@ -1190,7 +1194,11 @@ Versions:
                     previous_emp_data
                 ):
                     raise ValidationError(
-                        _("There is no valid allocation to cover that request.")
+                        _(
+                            "%(employee)s has no valid allocation of %(leave_type)s to cover that request.",
+                            employee=employee.name,
+                            leave_type=leave_type.name,
+                        )
                     )
         is_leave_user = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
         if not is_leave_user and any(leave.has_mandatory_day for leave in self):
