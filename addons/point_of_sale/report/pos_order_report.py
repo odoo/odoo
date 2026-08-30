@@ -40,11 +40,11 @@ class PosOrderReport(models.Model):
     margin = fields.Float(string='Margin', readonly=True)
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', readonly=True)
 
-    def _select(self):
+    def _with(self):
         return """
             -- The purpose of this CTE is to map each "pos_order_line" to the "payment_method_id" corresponding to its "pos_order"
             -- considering we always show the first "payment_method_id"
-            WITH payment_method_by_order_line AS (
+            payment_method_by_order_line AS (
                 SELECT
                     pol.id AS pos_order_line_id,
                     (array_agg(pm.payment_method_id ORDER BY pm.id ASC))[1] AS payment_method_id
@@ -62,6 +62,10 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_category pc ON (pcpt.pos_category_id = pc.id)
                 GROUP BY pt.id
             )
+            """
+
+    def _select(self):
+        return """
             SELECT
                 l.id AS id,
                 1 AS nbr_lines, -- number of lines in order line is always 1
@@ -117,8 +121,9 @@ class PosOrderReport(models.Model):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
+                WITH %s
                 %s
                 %s
             )
-        """ % (self._table, self._select(), self._from())
+        """ % (self._table, self._with(), self._select(), self._from())
         )
