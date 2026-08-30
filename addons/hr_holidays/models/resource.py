@@ -151,6 +151,15 @@ class ResourceScheduleException(models.Model):
             ]
         )
 
+    def load_public_holidays(self):
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Load Public Holidays"),
+            "res_model": "load.public.holiday.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }
+
     @api.depends("holiday_id.employee_id.company_id")
     def _compute_company_id(self):
         super()._compute_company_id()
