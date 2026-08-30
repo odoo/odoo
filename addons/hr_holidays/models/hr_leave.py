@@ -1145,9 +1145,13 @@ Versions:
             return
         for holiday in self:
             if holiday.state in ["validate1", "validate"]:
-                raise ValidationError(
-                    _("This modification is not allowed in the current state.")
+                message = _(
+                    "Approved time off cannot be modified (%(employee)s: %(date_from)s to %(date_to)s).",
+                    employee=holiday.employee_id.name,
+                    date_from=format_date(self.env, holiday.date_from),
+                    date_to=format_date(self.env, holiday.date_to),
                 )
+                raise ValidationError(message)
 
     def _raise_missing_allocation(self):
         raise ValidationError(

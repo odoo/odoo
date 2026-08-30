@@ -3350,3 +3350,62 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_type.support_document = False
         leave.invalidate_recordset(["leave_type_support_document_message"])
         self.assertFalse(leave.leave_type_support_document_message)
+
+    def test_reimporting_time_off_reports_instead_of_crashing(self):
+        """Round-tripping time off through a spreadsheet must fail legibly.
+
+        Two things went wrong on the way back in: a row whose Time Type column
+        came back empty crashed with a KeyError instead of a message, and a row
+        matching an already-approved leave was refused by an error that named
+        neither the person nor the dates.
+        """
+        leave_type = (
+            self.env["hr.leave.type"]
+            .with_user(self.user_hrmanager_id)
+            .create(
+                {
+                    "name": "Reimportable",
+                    "requires_allocation": False,
+                    "leave_validation_type": "hr",
+                }
+            )
+        )
+        # A row that lost its Time Type used to crash the create with
+        # "KeyError: None" before the model ever got to fill the field in.
+        typeless = (
+            self.env["hr.leave"]
+            .with_user(self.user_hrmanager_id)
+            .create(
+                {
+                    "name": "No type",
+                    "employee_id": self.employee_emp_id,
+                    "request_date_from": date(2022, 4, 4),
+                    "request_date_to": date(2022, 4, 4),
+                }
+            )
+        )
+        self.assertTrue(typeless.holiday_status_id)
+
+        leave = (
+            self.env["hr.leave"]
+            .with_user(self.user_hrmanager_id)
+            .create(
+                {
+                    "name": "Already approved",
+                    "employee_id": self.employee_emp_id,
+                    "holiday_status_id": leave_type.id,
+                    "request_date_from": date(2022, 3, 7),
+                    "request_date_to": date(2022, 3, 7),
+                }
+            )
+        )
+        leave.action_approve()
+        self.assertEqual(leave.state, "validate")
+
+        with self.assertRaises(ValidationError) as error:
+            leave.with_user(self.user_hrmanager_id).write(
+                {"request_date_to": date(2022, 3, 8)}
+            )
+        message = error.exception.args[0]
+        self.assertIn(self.employee_emp.name, message)
+        self.assertIn("2022", message, "the message should place the leave in time")
