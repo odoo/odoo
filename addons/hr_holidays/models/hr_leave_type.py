@@ -261,7 +261,7 @@ class HrLeaveType(models.Model):
             date_to = fields.Date.context_today(self, default_date_to_dt)
 
         else:
-            current_year = fields.Date.today().year
+            current_year = fields.Date.context_today(self).year
             date_from = date(current_year, 1, 1)
             date_to = date(current_year, 12, 31)
 

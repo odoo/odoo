@@ -925,7 +925,7 @@ class HrLeaveAllocation(models.Model):
             self.already_accrued = True
 
     def _process_accrual_plans(self, date_to=False, force_period=False, log=True):
-        date_to = date_to or fields.Date.today()
+        date_to = date_to or fields.Date.context_today(self)
         _debug.pipeline(
             "accrual_run",
             allocations=self,
@@ -1105,10 +1105,10 @@ class HrLeaveAllocation(models.Model):
             )
 
     def _add_lastcalls(self):
+        today = fields.Date.context_today(self)
         for allocation in self:
             if allocation.allocation_type != "accrual":
                 continue
-            today = fields.Date.today()
             (current_level, current_level_idx) = (
                 allocation._get_current_accrual_plan_level_id(today)
             )

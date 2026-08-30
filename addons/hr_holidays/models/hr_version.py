@@ -153,7 +153,7 @@ class HrVersion(models.Model):
                     fields.Date.to_date(
                         vals.get("contract_date_start")
                         or vals.get("date_version")
-                        or fields.Date.today()
+                        or fields.Date.context_today(self)
                     ),
                 ),
                 ("resource_calendar_id", "!=", vals.get("resource_calendar_id")),

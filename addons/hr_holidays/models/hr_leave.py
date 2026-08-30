@@ -79,10 +79,11 @@ class HrLeave(models.Model):
                     selected_leave_type.request_unit == "hour"
                 )
 
+        today = Date.context_today(self)
         if "request_date_from" in fields and "request_date_from" not in defaults:
-            defaults["request_date_from"] = Date.today()
+            defaults["request_date_from"] = today
         if "request_date_to" in fields and "request_date_to" not in defaults:
-            defaults["request_date_to"] = Date.today()
+            defaults["request_date_to"] = today
 
         return defaults
 
@@ -1388,7 +1389,7 @@ Versions:
         }:
             if any(
                 hol.date_from
-                and hol.date_from.date() < fields.Date.today()
+                and hol.date_from.date() < fields.Date.context_today(self)
                 and hol.employee_id.leave_manager_id != self.env.user
                 and hol.state != "confirm"
                 for hol in self
@@ -1444,7 +1445,7 @@ Versions:
             "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
         )
         state_description_values = self._state_labels()
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
 
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user"):
             for hol in self:
@@ -1939,7 +1940,9 @@ Versions:
 
         user_employees = self.env.user.employee_ids
         is_own_leave = self.employee_id in user_employees
-        is_in_past = self.date_from and self.date_from.date() < fields.Date.today()
+        is_in_past = (
+            self.date_from and self.date_from.date() < fields.Date.context_today(self)
+        )
 
         is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
         is_time_off_manager = self.employee_id.leave_manager_id == self.env.user
@@ -2076,7 +2079,7 @@ is approved, validated or refused."
         )
 
     def _get_approval_activity_deadline(self, activity_type):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         if not self.date_from:
             return today
         return max((self.date_from - activity_type._get_delay_delta()).date(), today)

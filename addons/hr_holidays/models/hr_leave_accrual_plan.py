@@ -96,7 +96,7 @@ class HrLeaveAccrualPlan(models.Model):
     carryover_month = fields.Selection(
         selection=MONTH_SELECTION,
         export_string_translation=False,
-        default=lambda self: str((fields.Date.today()).month),
+        default=lambda self: str(fields.Date.context_today(self).month),
     )
     added_value_type = fields.Selection(
         selection=[("day", "Days"), ("hour", "Hours")],
