@@ -53,6 +53,9 @@ export class ResizePlugin extends Plugin {
                 height: resizableSelectors.map((sel) => `${sel}:not([style*="height"])`).join(", "),
             };
         }
+        this.resizeBoundarySelector = this.resizingParameters
+            .map((resizingParameter) => resizingParameter._containerScopedSelector)
+            .join(", ");
     }
 
     /**
@@ -297,6 +300,21 @@ export class ResizePlugin extends Plugin {
 
         const minSize = resizingParameter.minSize;
 
+        // Maximum width allowed for the resize container inside its nearest
+        // resizable ancestor. If there is no ancestor, there is no width limit.
+        const boundingEl = closestElement(resizeContainer, this.resizeBoundarySelector);
+        let maxContainerWidth = Infinity;
+        if (boundingEl) {
+            const boundingStyle = getComputedStyle(boundingEl);
+            const containerStyle = getComputedStyle(resizeContainer);
+            maxContainerWidth =
+                boundingEl.clientWidth -
+                parseFloat(boundingStyle.paddingLeft) -
+                parseFloat(boundingStyle.paddingRight) -
+                parseFloat(containerStyle.marginLeft) -
+                parseFloat(containerStyle.marginRight);
+        }
+
         switch (position) {
             case "first": {
                 // Resizing the first element (may affect container margins).
@@ -324,6 +342,9 @@ export class ResizePlugin extends Plugin {
                     // Adjust container width for column resizing to maintain
                     // total size.
                     if (sizeProp === "width") {
+                        if (resizeContainerRect[sizeProp] + sizeDelta > maxContainerWidth) {
+                            break;
+                        }
                         resizeContainer.style[sizeProp] =
                             resizeContainerRect[sizeProp] + sizeDelta + "px";
                     }
@@ -360,18 +381,19 @@ export class ResizePlugin extends Plugin {
                     neighbor.style[sizeProp] = newNeighborSize + "px";
                 } else {
                     // Neighbor would go below minSize: clamp it and try to grow container.
-                    const editableStyle = getComputedStyle(this.editable);
-                    const containerStyle = getComputedStyle(resizeContainer);
+                    if (!boundingEl) {
+                        const editableStyle = getComputedStyle(this.editable);
+                        const containerStyle = getComputedStyle(resizeContainer);
+                        // Available space = editable inner width minus container's own margins
+                        // (which may have been set by the "first" case).
+                        maxContainerWidth =
+                            this.editable.clientWidth -
+                            parseFloat(editableStyle.paddingLeft) -
+                            parseFloat(editableStyle.paddingRight) -
+                            parseFloat(containerStyle.marginLeft) -
+                            parseFloat(containerStyle.marginRight);
+                    }
                     const resizeContainerRect = resizeContainer.getBoundingClientRect();
-
-                    // Available space = editable inner width minus container's own margins
-                    // (which may have been set by the "first" case).
-                    const maxContainerWidth =
-                        this.editable.clientWidth -
-                        parseFloat(editableStyle.paddingLeft) -
-                        parseFloat(editableStyle.paddingRight) -
-                        parseFloat(containerStyle.marginLeft) -
-                        parseFloat(containerStyle.marginRight);
 
                     // Extra width needed so neighbor can stay at minSize.
                     const neighborDeficit = minSize - newNeighborSize;
@@ -401,6 +423,9 @@ export class ResizePlugin extends Plugin {
                 if ((newSize >= 0 || direction === "row") && newSize > minSize) {
                     const resizeContainerRect = resizeContainer.getBoundingClientRect();
                     if (sizeProp === "width") {
+                        if (resizeContainerRect[sizeProp] + sizeDelta > maxContainerWidth) {
+                            break;
+                        }
                         // Adjust container width to adapt element size change.
                         resizeContainer.style[sizeProp] =
                             resizeContainerRect[sizeProp] + sizeDelta + "px";
@@ -422,7 +447,10 @@ export class ResizePlugin extends Plugin {
      * @param {string} [options.proxyElementSelector] - Selector for proxy elements to remove entirely
      * @returns {void}
      */
-    resetSize(container, { widthElementsSelector, heightElementsSelector, proxyElementSelector } = {}) {
+    resetSize(
+        container,
+        { widthElementsSelector, heightElementsSelector, proxyElementSelector } = {}
+    ) {
         container.removeAttribute("style");
         if (proxyElementSelector) {
             container.querySelector(proxyElementSelector)?.remove();
