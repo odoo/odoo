@@ -180,6 +180,7 @@ export class TablePlugin extends Plugin {
         normalize_processors: this.normalizeTable.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         resize_target_processors: this.processTableResizeTargets.bind(this),
+        resize_width_reset_processors: this.processTableWidthReset.bind(this),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
         on_history_commit_undone_handlers: () => {
             delete this.tableGridMap;
@@ -318,6 +319,37 @@ export class TablePlugin extends Plugin {
             getNestedTableMinSize(columnIndex),
             adjacentColumnIndex >= 0 ? getNestedTableMinSize(adjacentColumnIndex) : defaultMinSize,
         ];
+    }
+
+    processTableWidthReset(targetElement, elementsToAdjust, { layoutContainer } = {}) {
+        const table = layoutContainer || closestElement(targetElement, "table");
+        const colgroup = getTableColgroup(table);
+        if (!colgroup) {
+            return;
+        }
+        const colElements = [...colgroup.children];
+        const tableGrid = this.buildTableGrid(table);
+        const affectedCols = [targetElement, ...elementsToAdjust];
+        const affectedColIndices = affectedCols.map((col) => colElements.indexOf(col));
+        const visited = new Set();
+        for (const rowGrid of tableGrid) {
+            for (const colIndex of affectedColIndices) {
+                const cell = rowGrid[colIndex];
+                if (!cell || visited.has(cell)) {
+                    continue;
+                }
+                visited.add(cell);
+                const nestedTables = cell.querySelectorAll("table");
+                for (const nestedTable of nestedTables) {
+                    if (nestedTable.style.width) {
+                        this.shared.resetSize(nestedTable, {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        });
+                    }
+                }
+            }
+        }
     }
 
     handlePasteTableIntoExistingTable(selection, clipboardRoot) {
