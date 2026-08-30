@@ -192,7 +192,6 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     is_cash_method = True
                     p['final_count'] = p['total'] + session.opening_balance
                     p['money_counted'] = cash_counted
-                    p['money_difference'] = p['money_counted'] - p['final_count']
 
                     slist = []
                     if session.opening_balance:
@@ -200,14 +199,19 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
                     in_count = 0
                     out_count = 0
+                    cash_moves_total = 0
                     for m in related_moves:
                         name = m.payment_ref or (f"Cash in {in_count + 1}" if m.amount > 0 else f"Cash out {out_count + 1}")
-                        slist.append({'name': name, 'amount': m.amount})
+                        slist.append({'name': name, 'amount': m.amount, 'is_reconciled': m.is_reconciled})
                         if m.amount > 0:
                             in_count += 1
                         else:
                             out_count += 1
+                        if not m.is_reconciled:
+                            cash_moves_total += m.amount
 
+                    p['final_count'] += cash_moves_total
+                    p['money_difference'] = p['money_counted'] - p['final_count']
                     p['cash_moves'] = slist
                     p['count'] = True
                     continue
@@ -246,7 +250,6 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 cash_name = _('Cash %(session_name)s', session_name=session.name)
                 previous_session = PosSession.search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
                 final_count = previous_session.closing_balance
-                cash_difference = session.closing_balance - final_count
                 cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)], order='date asc')
                 cash_in_out_list = []
 
@@ -256,15 +259,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                         'amount': previous_session.closing_balance,
                     })
 
-                # If there is a cash difference, we remove the last cash move which is the cash difference
-                if session.currency_id.round(cash_difference) != 0:
-                    cash_moves = cash_moves[:-1]
-
+                cash_moves_total = 0
                 for cash_move in cash_moves:
                     cash_in_out_list.append({
                         'name': cash_move.payment_ref,
-                        'amount': cash_move.amount
+                        'amount': cash_move.amount,
+                        'is_reconciled': cash_move.is_reconciled,
                     })
+                    if not cash_move.is_reconciled:
+                        cash_moves_total += cash_move.amount
+                final_count += cash_moves_total
+                cash_difference = session.closing_balance - final_count
                 payments.insert(0, {
                     'name': cash_name,
                     'total': 0,

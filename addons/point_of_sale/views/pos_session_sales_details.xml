@@ -38,9 +38,9 @@
                         <h2>Sales Details</h2>
                         <div class="oe_structure"></div>
                         <t t-if="config_names">
-                            <strong>Config names</strong>
+                            <strong>Config names:</strong>
                             <t t-foreach="config_names" t-as="name">
-                                <span t-out="name">Sample Config Name</span>,
+                                <span t-out="name">Sample Config Name</span><t t-if="not name_last">, </t>
                             </t>
                         </t>
                     </t>
@@ -283,6 +283,7 @@
                         <table class="table table-sm table-borderless w-50 ms-auto" >
                             <tbody>
                             <tr t-foreach='payments' t-as='payment'>
+                                <t t-if="payment['total']">
                                 <td class="ps-2 fw-bold" ><span t-out="payment['name']">Payment Name Demo</span></td>
                                 <td class="text-end">
                                     <span t-if="currency['position']">
@@ -292,6 +293,7 @@
                                         <span t-out='currency["symbol"]'>$</span><span t-out="payment['total']" t-options="{'widget': 'float', 'precision': currency['precision']}">123.45</span>
                                     </span>
                                 </td>
+                                </t>
                             </tr>
                             </tbody>
                         </table>
@@ -414,19 +416,20 @@
                     </div>
                     <br/>
                     <div class="oe_structure"></div>
+                    <h6 class="bg-secondary p-1 fw-bold">Payment Summary</h6>
                     <table class="table table-sm table-borderless" >
                         <thead><tr>
-                            <th class="text-start">Name</th>
+                            <th class="text-start fw-bold">Name</th>
                             <th/>
-                            <th class="text-end">Expected</th>
-                            <th t-if="(state == 'closed' or state == 'multiple') and payments" class="text-end">Counted</th>
-                            <th t-if="(state == 'closed' or state == 'multiple') and payments" class="text-end">Difference</th>
+                            <th class="text-end fw-bold">Expected</th>
+                            <th t-if="(state == 'closed' or state == 'multiple') and payments" class="text-end fw-bold">Counted</th>
+                            <th t-if="(state == 'closed' or state == 'multiple') and payments" class="text-end fw-bold">Difference</th>
                         </tr></thead>
                         <tbody>
                             <t t-foreach="payments" t-as="method">
                                 <t t-if="method['count']">
                                     <tr>
-                                        <td><strong><span t-out="method['name']">Cash</span></strong></td>
+                                        <td><span t-out="method['name']">Cash</span></td>
                                         <td/>
                                         <td class="text-end">
                                             <span t-if="currency['position']">
@@ -453,7 +456,7 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr t-if="(state == 'closed' or state == 'multiple') and payments" t-foreach="method['cash_moves']" t-as="move">
+                                    <tr t-if="(state == 'closed' or state == 'multiple') and payments" t-foreach="method['cash_moves']" t-as="move" class="fst-italic">
                                         <td/>
                                         <td><span t-out="move['name']">Cash Move 1</span></td>
                                         <td class="text-end">
