@@ -30,6 +30,26 @@
         <field name="support_tokenization">False</field>
     </record>
 
+    <record id="payment_method_pix" model="payment.method">
+        <field name="name">Pix</field>
+        <field name="code">pix</field>
+        <field name="provider_id" ref="payment.payment_provider_mercado_pago"/>
+        <field name="image" type="bytes" file="payment/static/img/pix.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.br'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.BRL'),
+                     ])]"
+        />
+    </record>
+
     <!-- === PAYMENT METHOD BRANDS === -->
 
     <record id="payment_method_amex" model="payment.method">
