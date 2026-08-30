@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import re
 
-import odoo.tools.translate as translate
+from odoo.tools.translate import TranslationImporter
 
 
 """
@@ -42,12 +42,7 @@ RE_CONTEXTUALIZED_TRANSLATION = re.compile(
 )
 
 
-original_CSVFileReader__iter__ = translate.CSVFileReader.__iter__
-original_PoFileReader__iter__ = translate.PoFileReader.__iter__
-original_XMLDataFileReader__iter__ = translate.XMLDataFileReader.__iter__
-
-
-def contextualize_entry(entry: str):
+def contextualize_entry(entry: dict):
     translation = entry.get('value', "")
     if translation and RE_CONTEXTUALIZED_TRANSLATION.match(translation):
         return entry
@@ -77,25 +72,13 @@ def encode_word(word: int):
     return CT_MAP[(word >> 12) & 0xF] + CT_MAP[(word >> 8) & 0xF] + CT_MAP[(word >> 4) & 0xF] + CT_MAP[word & 0xF]
 
 
-def CSVFileReader__iter__(self):
-    for entry in original_CSVFileReader__iter__(self):
-        yield contextualize_entry(entry)
+_original_importer_load = TranslationImporter._load
 
 
-def PoFileReader__iter__(self):
-    for entry in original_PoFileReader__iter__(self):
-        yield contextualize_entry(entry)
+def _contextualizing_load(self, reader, lang, xmlids=None):
+    if 'test_translation_mode' in self.env.registry._init_modules:
+        reader = (contextualize_entry(row) for row in reader)
+    return _original_importer_load(self, reader, lang, xmlids)
 
 
-def XMLDataFileReader__iter__(self):
-    for entry in original_XMLDataFileReader__iter__(self):
-        yield contextualize_entry(entry)
-
-
-translate.CSVFileReader.__iter__ = CSVFileReader__iter__
-translate.PoFileReader.__iter__ = PoFileReader__iter__
-translate.XMLDataFileReader.__iter__ = XMLDataFileReader__iter__
-
-# Reset cached translations
-translate.code_translations.python_translations.clear()
-translate.code_translations.web_translations.clear()
+TranslationImporter._load = _contextualizing_load
