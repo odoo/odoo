@@ -91,9 +91,11 @@ class ResourceScheduleException(models.Model):
         previous_durations = leaves.mapped("number_of_days")
         previous_states = leaves.mapped("state")
         self.env.add_to_compute(self.env["hr.leave"]._fields["number_of_days"], leaves)
-        self.env.add_to_compute(
-            self.env["hr.leave"]._fields["duration_display"], leaves
-        )
+        # add_to_compute only schedules that one field: it does not walk the
+        # dependency graph, so anything computed *from* number_of_days keeps its
+        # cached value.  Saying it moved is what refreshes duration_display and
+        # any future reader of the duration.
+        leaves.modified(["number_of_days"])
         leaves.sudo().write(
             {
                 "state": "confirm",

@@ -245,10 +245,12 @@ class HrLeave(models.Model):
         string="All day",
         compute="_compute_last_several_days",
     )
+    # Deliberately not stored: the compute builds a translated string, so a
+    # stored value would freeze whichever language last recomputed it -- and the
+    # trigger is not always the employee's own (see models/resource.py).
     duration_display = fields.Char(
         string="Requested",
         compute="_compute_duration_display",
-        store=True,
     )
     meeting_id = fields.Many2one(
         comodel_name="calendar.event",
