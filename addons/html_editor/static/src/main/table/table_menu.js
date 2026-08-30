@@ -1,5 +1,10 @@
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
-import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
+import {
+    getIframeAdjustedBoundingRect,
+    getTableColgroup,
+    isEmpty,
+    isTableCell,
+} from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Component, onMounted, onWillUnmount, useProps, signal, t, useListener } from "@odoo/owl";
@@ -107,7 +112,7 @@ export class TableMenu extends Component {
     get hasCustomColumnWidth() {
         const table = closestElement(this.anchorCell, "table");
         const index = this.tableGrid[0].indexOf(this.anchorCell);
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         if (!colgroup) {
             return false;
         }
@@ -283,7 +288,7 @@ export class TableMenu extends Component {
                     action: (target) => {
                         const cell = closestElement(target, isTableCell);
                         const table = closestElement(cell, "table");
-                        const colgroup = table.querySelector("colgroup");
+                        const colgroup = getTableColgroup(table);
                         if (!colgroup) {
                             return;
                         }

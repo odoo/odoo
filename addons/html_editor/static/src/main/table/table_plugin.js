@@ -10,6 +10,7 @@ import {
     nextLeaf,
     previousLeaf,
     isTableCell,
+    getTableColgroup,
 } from "@html_editor/utils/dom_info";
 import {
     ancestors,
@@ -273,7 +274,7 @@ export class TablePlugin extends Plugin {
         const columnIndex =
             position === "middle" ? row.findLastIndex((c) => c === item) : row.indexOf(item);
         const adjacentColumnIndex = row.indexOf(neighbor);
-        let colgroup = table.querySelector("colgroup");
+        let colgroup = getTableColgroup(table);
         if (!colgroup) {
             colgroup = this.document.createElement("colgroup");
             for (const cell of tableGrid[0]) {
@@ -504,7 +505,7 @@ export class TablePlugin extends Plugin {
 
             // Temporarily set widths so proportions are respected.
             let totalWidth = 0;
-            const colgroup = table.querySelector("colgroup");
+            const colgroup = getTableColgroup(table);
             if (tableWidth && colgroup) {
                 for (const col of colgroup.children) {
                     const width = parseFloat(col.style.width);
@@ -658,7 +659,7 @@ export class TablePlugin extends Plugin {
      */
     removeColumn(cell) {
         const table = closestElement(cell, "table");
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         const tableGrid = this.buildTableGrid(table);
         const rowIndex = getRowIndex(cell);
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
@@ -764,7 +765,7 @@ export class TablePlugin extends Plugin {
                 index += moveStep;
             }
         });
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         if (colgroup) {
             const cols = colgroup.children;
             insertBefore
