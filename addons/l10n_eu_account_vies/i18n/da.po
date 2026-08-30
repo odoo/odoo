@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_eu_account_vies
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.5a1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-28 18:19+0000\n"
+"PO-Revision-Date: 2026-08-28 18:19+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_eu_account_vies
+#: model:ir.module.module,description:base.module_l10n_eu_account_vies
+msgid ""
+"\n"
+"VAT validation for Partner's VAT numbers.\n"
+"=========================================\n"
+"\n"
+"After installing this module, values entered in the VAT field of Partners will\n"
+"be validated using VIES for all supported countries. The country is inferred from the\n"
+"2-letter country code that prefixes the VAT number, e.g. ``BE0477472701``\n"
+"will be validated using the Belgian rules.\n"
+"\n"
+"    * When the \"VAT VIES Check\" option is enabled (in the configuration of the user's\n"
+"      Company), VAT numbers will be submitted to the online EU VIES database,\n"
+"      which will truly verify that the number is valid and currently\n"
+"      allocated to a EU company. This is a little bit slower than the simple\n"
+"      off-line check, requires an Internet connection, and may not be available\n"
+"      all the time. If the service is not available or does not support the\n"
+"      requested country (e.g. for non-EU countries), a simple check will be performed\n"
+"      instead.\n"
+"\n"
+"Supported countries currently include EU countries, and a few non-EU countries\n"
+"such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
+"only the country code will be validated.\n"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model,name:l10n_eu_account_vies.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model,name:l10n_eu_account_vies.model_res_country
+msgid "Country"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model,website_form_label:l10n_eu_account_vies.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__display_name
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model.fields,help:l10n_eu_account_vies.field_res_partner__vies_valid
+#: model:ir.model.fields,help:l10n_eu_account_vies.field_res_users__vies_valid
+msgid "European VAT numbers are automatically checked on the VIES database."
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__has_foreign_fiscal_position
+msgid "Has Foreign Fiscal Position"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__id
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__vies_valid
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_users__vies_valid
+msgid "Intra-Community Valid"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#. odoo-python
+#: code:addons/l10n_eu_account_vies/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__perform_vies_validation
+#: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_users__perform_vies_validation
+msgid "Perform Vies Validation"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#. odoo-python
+#: code:addons/l10n_eu_account_vies/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#. odoo-python
+#: code:addons/l10n_eu_account_vies/models/res_partner.py:0
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#. odoo-python
+#: code:addons/l10n_eu_account_vies/models/res_partner.py:0
+msgid "The VIES check is pending. The status will be updated soon."
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.module.module,shortdesc:base.module_l10n_eu_account_vies
+msgid "VAT VIES Validation"
+msgstr ""
+
+#. module: l10n_eu_account_vies
+#: model:ir.actions.server,name:l10n_eu_account_vies.vies_iap_check_update_ir_actions_server
+msgid "VIES: Sync updates from IAP VIES"
+msgstr ""
