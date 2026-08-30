@@ -121,3 +121,28 @@ test(`test basic rendering`, async () => {
     ).toHaveCount(1);
     expect(`.fc-day.hr_mandatory_day_5[data-date="2025-03-17"]`).toHaveCount(1);
 });
+
+// The "All Time Off" action reuses the same calendar view as the personal one.
+// On that screen the officer is looking at everybody's requests, so their own
+// balance panel is noise sitting on top of the work.
+async function openTimeOffCalendar(context) {
+    await mountWebClient();
+    await getService("action").doAction({
+        id: 1,
+        res_model: "hr.leave",
+        type: "ir.actions.act_window",
+        views: [[false, "calendar"]],
+        context,
+        domain: [],
+    });
+}
+
+test(`the management calendar does not show the approver's own balance`, async () => {
+    await openTimeOffCalendar({ employee_id: [200], is_management_related: true });
+    expect(".o_timeoff_dashboard").toHaveCount(0);
+});
+
+test(`the personal calendar still shows the balance`, async () => {
+    await openTimeOffCalendar({ employee_id: [200] });
+    expect(".o_timeoff_dashboard").toHaveCount(1);
+});

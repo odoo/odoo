@@ -26,6 +26,11 @@ export class TimeOffCalendarRenderer extends CalendarRenderer {
 
 export class TimeOffDashboardCalendarRenderer extends TimeOffCalendarRenderer {
     get showDashboard() {
-        return !this.env.isSmall;
+        // The same calendar view serves the employee's own time off and the
+        // officer's "All Time Off". Only the first is about the reader, so only
+        // the first should carry their personal balance.
+        const isManagementRelated =
+            this.props?.model?.meta?.context?.is_management_related ?? false;
+        return !this.env.isSmall && !isManagementRelated;
     }
 }
