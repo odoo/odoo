@@ -36,7 +36,8 @@ If you install this module, and select Custom chart a basic chart will be propos
 but you will need set manually account defaults for taxes.
 
 The proposed chart follows SENIAT practice, with VAT rates of 0%, 8%, 16%
-and 31%.
+and 31%. Account codes use a 9-digit VEN-NIF hierarchy
+(class / group / ledger / subaccount / auxiliary).
 """,
     'depends': [
         'account',

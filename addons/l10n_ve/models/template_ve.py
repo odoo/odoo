@@ -9,11 +9,12 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ve')
     def _get_ve_template_data(self):
         return {
-            'code_digits': '7',
-            'property_account_receivable_id': 'account_account_1106001',
-            'property_account_payable_id': 'account_account_2101002',
-            'property_account_expense_categ_id': 'account_account_5101001',
-            'property_account_income_categ_id': 'account_account_4101001',
+            'code_digits': '9',
+            'property_account_receivable_id': 'account_account_101060101',
+            'property_account_payable_id': 'account_account_201010201',
+            'property_account_expense_categ_id': 'account_account_501010101',
+            'property_account_income_categ_id': 'account_account_401010101',
+            'property_stock_valuation_account_id': 'account_account_101050101',
         }
 
     @template('ve', 'res.company')
@@ -21,12 +22,16 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ve',
-                'cash_account_code_prefix': '1101',
-                'bank_account_code_prefix': '1102',
-                'transfer_account_code_prefix': '1129003',
-                'account_default_pos_receivable_account_id': 'account_account_1106001',
-                'income_currency_exchange_account_id': 'account_account_4102004',
-                'expense_currency_exchange_account_id': 'account_account_5102014',
+                'cash_account_code_prefix': '10101',
+                'bank_account_code_prefix': '10102',
+                'transfer_account_code_prefix': '10109',
+                'account_default_pos_receivable_account_id': 'account_account_101060101',
+                'account_journal_suspense_account_id': 'account_account_199990101',
+                'account_journal_payment_debit_account_id': 'account_account_199020101',
+                'account_journal_payment_credit_account_id': 'account_account_199010101',
+                'default_cash_difference_income_account_id': 'account_account_402010301',
+                'income_currency_exchange_account_id': 'account_account_402010401',
+                'expense_currency_exchange_account_id': 'account_account_603010101',
                 'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': 'tax1sale',
                 'account_purchase_tax_id': 'tax1purchase',
