@@ -365,10 +365,17 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
 
             Business Rules: BT-110 & BT-111
         """
+        tax_total_vals = vals['vals']['tax_total_vals']
+
+        # If a TaxTotal without subtotals already exists (e.g. added upstream), don't duplicate it
+        if any(not tax_total.get('tax_subtotal_vals') for tax_total in tax_total_vals):
+            return tax_total_vals
+    
         curr_amount = abs(vals['taxes_vals']['tax_amount_currency'])
         if invoice.currency_id != invoice.company_currency_id:
             curr_amount = abs(vals['taxes_vals']['tax_amount'])
-        return vals['vals']['tax_total_vals'] + [{
+    
+        return tax_total_vals + [{
             'currency': invoice.company_currency_id,
             'currency_dp': invoice.company_currency_id.decimal_places,
             'tax_amount': curr_amount,
