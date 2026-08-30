@@ -345,6 +345,9 @@ class HrLeave(models.Model):
     leave_type_increases_duration = fields.Char(
         compute="_compute_leave_type_increases_duration"
     )
+    leave_type_support_document_message = fields.Char(
+        compute="_compute_leave_type_support_document_message"
+    )
 
     dashboard_warning_message = fields.Char(
         compute="_compute_dashboard_warning_message"
@@ -766,6 +769,20 @@ Versions:
                 )
             else:
                 leave.leave_type_increases_duration = ""
+
+    @api.depends("leave_type_support_document", "state")
+    def _compute_leave_type_support_document_message(self):
+        for leave in self:
+            if leave.leave_type_support_document and leave.state not in (
+                "validate",
+                "refuse",
+                "cancel",
+            ):
+                leave.leave_type_support_document_message = self.env._(
+                    "A supporting document is expected for this type of time off."
+                )
+            else:
+                leave.leave_type_support_document_message = ""
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         result = {}

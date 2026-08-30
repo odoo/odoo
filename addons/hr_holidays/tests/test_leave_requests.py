@@ -3305,3 +3305,48 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         message = error.exception.args[0]
         self.assertIn(short.name, message)
         self.assertIn(leave_type.name, message)
+
+    def test_supporting_document_notice_on_the_request(self):
+        """A type that expects a justification must say so while it is requested.
+
+        The employee finds out today only when the request comes back refused.
+        """
+        leave_type = (
+            self.env["hr.leave.type"]
+            .with_user(self.user_hrmanager_id)
+            .create(
+                {
+                    "name": "Sick Leave",
+                    "requires_allocation": False,
+                    "leave_validation_type": "hr",
+                    "support_document": True,
+                }
+            )
+        )
+        leave = (
+            self.env["hr.leave"]
+            .with_user(self.user_hrmanager_id)
+            .create(
+                {
+                    "name": "Sick",
+                    "employee_id": self.employee_emp_id,
+                    "holiday_status_id": leave_type.id,
+                    "request_date_from": date(2022, 3, 7),
+                    "request_date_to": date(2022, 3, 7),
+                }
+            )
+        )
+        self.assertTrue(
+            leave.leave_type_support_document_message,
+            "a type expecting a document should tell the employee while requesting",
+        )
+
+        leave.action_approve()
+        self.assertFalse(
+            leave.leave_type_support_document_message,
+            "once approved there is nothing left to ask the employee for",
+        )
+
+        leave_type.support_document = False
+        leave.invalidate_recordset(["leave_type_support_document_message"])
+        self.assertFalse(leave.leave_type_support_document_message)
