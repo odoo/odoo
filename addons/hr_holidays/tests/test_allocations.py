@@ -886,3 +886,71 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_5_days.state, "validate")
         allocation_3_days.action_refuse()
         self.assertEqual(allocation_3_days.state, "refuse")
+
+    def test_shortening_an_allocation_cannot_strand_taken_leaves(self):
+        """Moving `date_to` back must be checked like reducing the days is.
+
+        `write` only looked at the duration and the state, so an end date
+        pulled in front of leaves already approved went through in silence and
+        left them uncovered.
+        """
+        today = date.today()
+        start_of_week = today - timedelta(days=today.weekday())
+        leave_employee = self.env["hr.employee"].create(
+            {"name": "Test Employee", "user_id": self.env.uid}
+        )
+        allocation = self.env["hr.leave.allocation"].create(
+            {
+                "name": "5 days Allocation",
+                "holiday_status_id": self.leave_type_paid.id,
+                "number_of_days": 5,
+                "employee_id": leave_employee.id,
+                "date_from": start_of_week,
+                "date_to": start_of_week + timedelta(days=30),
+            }
+        )
+        allocation.action_approve()
+        leave = self.env["hr.leave"].create(
+            {
+                "name": "Leave Request",
+                "holiday_status_id": self.leave_type_paid.id,
+                "request_date_from": start_of_week + timedelta(days=14),
+                "request_date_to": start_of_week + timedelta(days=17),
+                "employee_id": leave_employee.id,
+            }
+        )
+        leave.action_approve()
+
+        with self.assertRaises(ValidationError):
+            allocation.date_to = start_of_week + timedelta(days=7)
+
+    def test_allocation_end_date_stays_editable_once_validated(self):
+        """The end date of a running allocation must be reachable.
+
+        Extending or trimming the validity of an accrual allocation used to
+        mean cancelling it and building a new one.
+        """
+        accrual_plan = self.env["hr.leave.accrual.plan"].create(
+            {"name": "Accrual Plan", "time_off_type_id": self.leave_type_paid.id}
+        )
+        allocation = self.env["hr.leave.allocation"].create(
+            {
+                "name": "Accrued days",
+                "holiday_status_id": self.leave_type_paid.id,
+                "allocation_type": "accrual",
+                "accrual_plan_id": accrual_plan.id,
+                "number_of_days": 0,
+                "employee_id": self.employee.id,
+                "date_from": date(2022, 1, 1),
+            }
+        )
+        allocation.action_approve()
+        self.assertEqual(allocation.state, "validate")
+
+        with Form(allocation) as allocation_form:
+            self.assertFalse(
+                allocation_form._get_modifier("date_to", "readonly"),
+                "a validated accrual allocation should still let its end date move",
+            )
+            allocation_form.date_to = date(2023, 6, 30)
+        self.assertEqual(allocation.date_to, date(2023, 6, 30))

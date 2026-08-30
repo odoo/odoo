@@ -1182,8 +1182,12 @@ class HrLeaveAllocation(models.Model):
                 allocation.action_approve()
         return allocations
 
-    _DURATION_FIELDS = frozenset(
-        {"number_of_days_display", "number_of_hours_display", "state"}
+    # Anything in here can leave already-taken leaves uncovered, so a write
+    # touching one of them goes through the excess check below. `date_to`
+    # included: pulling the end date in front of an approved leave strands it
+    # just as surely as cutting the duration does.
+    _COVERAGE_FIELDS = frozenset(
+        {"number_of_days_display", "number_of_hours_display", "state", "date_to"}
     )
 
     def write(self, vals):
@@ -1194,16 +1198,16 @@ class HrLeaveAllocation(models.Model):
         if employee_id:
             self.add_follower(employee_id)
 
-        changes_available_duration = not self._DURATION_FIELDS.isdisjoint(values)
+        changes_coverage = not self._COVERAGE_FIELDS.isdisjoint(values)
         excess_before = (
-            self._excess_days_by_allocation() if changes_available_duration else {}
+            self._excess_days_by_allocation() if changes_coverage else {}
         )
         result = super().write(values)
         if "name" in values:
             self._mark_custom_names()
         if "allocation_type" in values:
             self._add_lastcalls()
-        if changes_available_duration:
+        if changes_coverage:
             self._check_duration_still_covers_leaves_taken(excess_before)
         return result
 
