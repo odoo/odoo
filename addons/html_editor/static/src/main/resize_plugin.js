@@ -653,6 +653,10 @@ export class ResizePlugin extends Plugin {
                 adjustableElementWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
             }px`;
         });
+        this.processThrough("resize_width_reset_processors", targetElement, elementsToAdjust, {
+            layoutContainer,
+            hasProxyElements,
+        });
         this.normalizeWidth(layoutContainer, elementsContainer, hasProxyElements);
     }
 
