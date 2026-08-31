@@ -11,7 +11,10 @@ import {
     COMPUTED_SYM,
     OR_SYM,
     STORE_SYM,
+    fields,
     isCommandList,
+    isComputedDefinition,
+    isFieldDefinition,
     isMany,
     isOne,
     isRecord,
@@ -207,6 +210,40 @@ export class Record {
             const recordProxy = new Model(ids);
             const record = recordProxy._raw;
             recordProxy.setup();
+            if (!Model._.fieldsPrepared) {
+                // the first record of the model declares its fields: a class field
+                // initializer lands on the record itself, without going through the
+                // proxy that registers the ones setup() assigns
+                for (const [name, val] of Object.entries(record)) {
+                    if (technicalKeysOnRecords.has(name) || Model._.fields.get(name)) {
+                        continue;
+                    }
+                    if (isComputedDefinition(val)) {
+                        Model._.fieldsComputable.add(name);
+                        continue;
+                    }
+                    record._.prepareField(name, isFieldDefinition(val) ? val : fields.Attr(val));
+                }
+                Model._.fieldsPrepared = true;
+            }
+            if (!Model.singleton) {
+                for (const name in ids) {
+                    if (
+                        ids[name] &&
+                        !isRecord(ids[name]) &&
+                        !isCommandList(ids[name]) &&
+                        isRelation(Model, name)
+                    ) {
+                        // the fields are known from this record's setup() only, so an id
+                        // that is a relation is resolved here, not before the record exists
+                        ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
+                            ids[name]
+                        );
+                    }
+                }
+                // the localId of the constructor was made from the raw ids
+                record._.localId = Model.localId(ids);
+            }
             Object.assign(recordProxy, { ...ids });
             Model.records.set(record.localId, recordProxy);
             if (record.Model.getName() === "Store") {
