@@ -1,5 +1,13 @@
 import { expect, test } from "@odoo/hoot";
-import { dblclick, pointerDown, queryAll, queryAllTexts, queryFirst, select } from "@odoo/hoot-dom";
+import {
+    dblclick,
+    pointerDown,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryFirst,
+    select,
+} from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
@@ -209,6 +217,7 @@ test("Export dialog UI test", async () => {
     expect(`.modal .o_export_field`).toHaveCount(1);
 });
 
+test.tags("desktop");
 test("Export dialog: interacting with export templates", async () => {
     onRpc("/web/export/formats", () => [
         { tag: "csv", label: "CSV" },
@@ -246,10 +255,15 @@ test("Export dialog: interacting with export templates", async () => {
                     message: "rpc contains the right domain filter to fetch templates",
                 });
                 return [{ id: 1, name: "Activities template" }];
+            case "write":
+                expect(args[0]).toEqual([1]);
+                expect(args[1].name).toBe("Activities template (renamed)", {
+                    message: "the renamed template name is correctly sent",
+                });
+                return true;
             case "create":
-                expect(model).toBe("ir.exports");
                 expect(args[0][0].name).toBe("Export template", {
-                    message: "the template name is correctly sent",
+                    message: "the new template name is correctly sent",
                 });
                 return [2];
         }
@@ -268,57 +282,106 @@ test("Export dialog: interacting with export templates", async () => {
     expect(".o_export_tree_item:nth-child(2) .o_add_field").toHaveCount(0, {
         message: "fields already selected cannot be added anymore",
     });
+    expect(".o_create_exported_list").toHaveCount(1, {
+        message: "the 'save as template' icon is visible when no template is selected",
+    });
 
     // load a template which contains the activity_ids field
     await select("1", { target: ".o_exported_lists_select" });
     await animationFrame();
     expect(`.o_fields_list .o_export_field`).toHaveCount(1);
     expect(`.o_fields_list .o_export_field`).toHaveText("Activities");
+    expect(".o_edit_exported_list").toHaveCount(1);
+    expect(".o_delete_exported_list").toHaveCount(1);
+
+    // modifying the export list while a template is selected (out of edition mode)
+    // detaches from it: the current (unsaved) selection is kept, but no template
+    // is linked to it anymore
     await contains(".o_export_tree_item:nth-child(2) .o_add_field").click();
-    expect(`.o_exported_lists_select`).toHaveCount(1);
-    expect(`.o_save_list_btn`).toHaveCount(0);
-    expect(`.o_cancel_list_btn [data-icon="undo"]`).toHaveCount(1);
-    expect(`.o_fields_list .o_export_field`).toHaveCount(2);
-    await contains(".o_cancel_list_btn").click();
+    expect(`.o_exported_lists_select`).toHaveValue("", {
+        message: "the template is no longer selected",
+    });
+    expect(".o_create_exported_list").toHaveCount(1);
+    expect(".o_edit_exported_list").toHaveCount(0);
+    expect(`.o_fields_list .o_export_field`).toHaveCount(2, {
+        message: "the field added before detaching is kept in the working export list",
+    });
+
+    // re-selecting the template reloads its saved (unmodified) content
+    await select("1", { target: ".o_exported_lists_select" });
+    await animationFrame();
     expect(`.o_fields_list .o_export_field`).toHaveCount(1, {
-        message: "the template has been reset and the added field is no longer in the list",
+        message: "the template was never modified, its saved content has a single field",
     });
-    await contains(".o_export_tree_item:nth-child(2) .o_add_field").click();
-    await select("new_template", { target: ".o_exported_lists_select" });
-    await animationFrame();
-    expect(`.o_exported_lists_select`).toHaveCount(0);
-    expect(`input.o_save_list_name`).toHaveCount(1, {
-        message: "an input is present to edit the current template name",
+    expect(".o_edit_exported_list").toHaveCount(1);
+
+    // explicitly editing the template: rename it and change its fields. Changes
+    // made in edition mode do not detach from the template being edited
+    await contains(".o_edit_exported_list").click();
+    expect(`.o_save_list_name`).toHaveValue("Activities template");
+    expect(`.o_save_list_btn`).toBeEnabled({
+        message: "apply button is enabled as long as the name is not empty",
     });
-    await contains(".o_save_list_btn").click();
-    expect(".o_notification").toHaveText("Please enter save field list name");
-    await contains(".o_cancel_list_btn").click();
-    expect(`.o_exported_lists_select`).toHaveCount(1);
+    await contains(".o_save_list_name").edit("Activities template (renamed)", { confirm: false });
     await contains(".o_export_tree_item:nth-child(3) .o_add_field").click();
-    expect(`.o_fields_list .o_export_field`).toHaveCount(3);
-    await select("new_template", { target: ".o_exported_lists_select" });
+    expect(`.o_fields_list .o_export_field`).toHaveCount(2, {
+        message: "changing fields while editing the template does not discard the edition",
+    });
+    await contains(".o_save_list_name").focus();
+    await press("enter");
     await animationFrame();
-    await contains(".o_save_list_name").edit("Export template");
+    expect(`.o_exported_lists_select`).toHaveValue("1", {
+        message: "the (updated) template is still selected after applying the changes",
+    });
+    expect(`.o_exported_lists_select option[value="1"]`).toHaveText(
+        "Activities template (renamed)",
+        { message: "the template name has been updated in the list" }
+    );
+
+    // deselecting a template shows the 'save as template' icon again, and does not
+    // change the currently displayed export list
+    await select("", { target: ".o_exported_lists_select" });
+    await animationFrame();
+    expect(".o_create_exported_list").toHaveCount(1);
+    expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Activities", "Bar"], {
+        message: "unselecting an export template has not changed the export list",
+    });
+
+    // building a new template on top of the current (unlinked) selection does not
+    // alter the existing "Activities template (renamed)"
+    await contains(".o_export_tree_item:nth-child(2) .o_add_field").click();
+    await contains(".o_create_exported_list").click();
+    expect(`.o_save_list_name`).toHaveValue("");
+    expect(`.o_save_list_btn`).not.toBeEnabled({
+        message: "apply button is disabled while the template name is empty",
+    });
+    await contains(".o_save_list_name").edit("Export template", { confirm: false });
+    expect(`.o_save_list_btn`).toBeEnabled();
     await contains(".o_save_list_btn").click();
-    expect(".o_exported_lists_select").toHaveValue("2", {
+    await animationFrame();
+    expect(`.o_exported_lists_select`).toHaveValue("2", {
         message: "the new template is now selected",
     });
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual([
         "Activities",
-        "Foo",
         "Bar",
+        "Foo",
     ]);
-    await select("", { target: ".o_exported_lists_select" });
-    await animationFrame();
-    expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(
-        ["Activities", "Foo", "Bar"],
-        {
-            message: "unselecting an export template has not changed the export list",
-        }
+
+    // resequencing the fields of the selected template also counts as a change:
+    // it detaches from the template just like adding/removing a field would
+    await contains(".o_fields_list .o_export_field:first-child").dragAndDrop(
+        queryFirst(".o_fields_list .o_export_field:nth-child(2)")
     );
-    expect(".o_delete_exported_list").toHaveCount(0, {
-        message: "trash icon is not visible when no template has been selected",
+    expect(".o_create_exported_list").toHaveCount(1, {
+        message: "resequencing fields detaches from the selected template",
     });
+    expect(".o_edit_exported_list").toHaveCount(0);
+    expect(`.o_fields_list .o_export_field`).toHaveCount(3, {
+        message: "resequencing only reorders the fields, it does not add/remove any",
+    });
+
+    // deleting the selected template
     await select("2", { target: ".o_exported_lists_select" });
     await animationFrame();
     await contains(".o_delete_exported_list").click();
@@ -326,7 +389,7 @@ test("Export dialog: interacting with export templates", async () => {
         "Do you really want to delete this export template?"
     );
     await contains(".o-overlay-item:nth-child(2) .btn-primary").click();
-    expect(".o_exported_lists_select").toHaveValue("", {
+    expect(".o_create_exported_list").toHaveCount(1, {
         message: "the template list has been reset",
     });
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(["Foo"]);
@@ -1510,17 +1573,40 @@ test("Export dialog: export templates remember the selected languages", async ()
     await animationFrame();
     expect(".o_export_languages .o_tag").toHaveText("French / Français");
 
-    // removing a language edits the template and canceling restores it
+    // removing a language detaches from the selected template; re-selecting it
+    // reloads its saved (unmodified) languages
     await contains(".o_export_languages .o_tag .o_delete").click();
     expect(".o_export_languages .o_tag").toHaveCount(0);
-    expect(`.o_cancel_list_btn [data-icon="undo"]`).toHaveCount(1);
-    await contains(".o_cancel_list_btn").click();
+    expect(".o_exported_lists_select").toHaveValue("", {
+        message: "the template is no longer selected",
+    });
+    await select("1", { target: ".o_exported_lists_select" });
+    await animationFrame();
     expect(".o_export_languages .o_tag").toHaveText("French / Français");
 
     // saving a new template persists the selected languages
-    await select("new_template", { target: ".o_exported_lists_select" });
+    await select("", { target: ".o_exported_lists_select" });
     await animationFrame();
-    await contains(".o_save_list_name").edit("Translated template copy");
+    await contains(".o_create_exported_list").click();
+    await contains(".o_save_list_name").edit("Translated template copy", { confirm: false });
     await contains(".o_save_list_btn").click();
     expect.verifySteps(["create template"]);
+});
+
+test.tags("desktop");
+test("Export dialog: clicking on 'save as template' focuses the template name input", async () => {
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", () => fetchedFields.root);
+    onRpc("/web/export/namelist", () => ({ fields: [], export_languages: [] }));
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    await contains(".o_create_exported_list").click();
+    await animationFrame();
+    expect(".o_save_list_name").toBeFocused();
 });

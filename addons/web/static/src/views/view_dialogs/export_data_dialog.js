@@ -1,5 +1,6 @@
 import {
     Component,
+    computed,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -21,7 +22,7 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useDebounced } from "@web/core/utils/timing";
@@ -98,7 +99,14 @@ class ExportDataItem extends Component {
 
 export class ExportDataDialog extends Component {
     static template = "web.ExportDataDialog";
-    static components = { AutoComplete, BadgeTag, CheckBox, Dialog, ExportDataItem, TagsList };
+    static components = {
+        AutoComplete,
+        BadgeTag,
+        CheckBox,
+        Dialog,
+        ExportDataItem,
+        TagsList,
+    };
     props = useProps({
         close: t.function(),
         context: t.object().optional(),
@@ -109,8 +117,12 @@ export class ExportDataDialog extends Component {
     });
 
     draggableRef = signal.ref();
-    exportListRef = signal.ref();
     searchRef = signal.ref();
+    templateNameRef = signal.ref();
+
+    applyChangesTitle = computed(() =>
+        this.state.templateName ? this.applyChangesText : this.noChangesText
+    );
 
     debugMode = usePlugin(DebugModePlugin);
 
@@ -119,6 +131,7 @@ export class ExportDataDialog extends Component {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.uiService = useService("ui");
+        useAutofocus({ ref: this.templateNameRef });
 
         this.knownFields = {};
         this.expandedFields = {};
@@ -134,12 +147,14 @@ export class ExportDataDialog extends Component {
             search: [],
             selectedFormat: 0,
             templateId: null,
+            templateName: "",
             isSmall: this.uiService.isSmall,
             disabled: false,
         });
 
-        this.newTemplateText = _t("New template");
         this.removeFieldText = _t("Remove field");
+        this.applyChangesText = _t("Apply changes");
+        this.noChangesText = _t("No changes to apply");
 
         this.debouncedOnResize = useDebounced(this.updateSize.bind(this), 300);
 
@@ -250,7 +265,7 @@ export class ExportDataDialog extends Component {
                 this.state.exportLanguages = this.state.exportLanguages.filter(
                     (lang) => lang.code !== code
                 );
-                this.enterTemplateEdition();
+                this.resetTemplateSelection();
             },
         }));
     }
@@ -313,9 +328,15 @@ export class ExportDataDialog extends Component {
         }
     }
 
-    enterTemplateEdition() {
+    /**
+     * Changing the export list or the selected languages while a template is
+     * loaded but not being edited detaches from that template: the current
+     * selection is kept as a plain (unsaved) working set, allowing the user
+     * to build a new template on top of an existing one without altering it.
+     */
+    resetTemplateSelection() {
         if (this.state.templateId && !this.state.isEditingTemplate) {
-            this.state.isEditingTemplate = true;
+            this.state.templateId = null;
         }
     }
 
@@ -324,9 +345,8 @@ export class ExportDataDialog extends Component {
     }
 
     async loadExportList(value) {
-        this.state.templateId = value === "new_template" ? value : Number(value);
-        this.state.isEditingTemplate = value === "new_template";
-        if (!value || value === "new_template") {
+        this.state.templateId = value ? Number(value) : null;
+        if (!value) {
             return;
         }
         const { fields, export_languages } = await rpc("/web/export/namelist", {
@@ -374,50 +394,92 @@ export class ExportDataDialog extends Component {
 
     onDraggingEnd(item, target) {
         this.state.exportList.splice(target, 0, this.state.exportList.splice(item, 1)[0]);
+        this.resetTemplateSelection();
     }
 
     onAddItemExportList(fieldId) {
         this.state.exportList.push(this.knownFields[fieldId]);
-        this.enterTemplateEdition();
+        this.resetTemplateSelection();
     }
 
     onRemoveItemExportList(fieldId) {
         const item = this.state.exportList.findIndex(({ id }) => id === fieldId);
         this.state.exportList.splice(item, 1);
-        this.enterTemplateEdition();
+        this.resetTemplateSelection();
     }
 
     async onChangeExportList(ev) {
         this.loadExportList(ev.target.value);
     }
 
+    onCreateExportTemplate() {
+        this.state.templateId = "new_template";
+        this.state.templateName = "";
+        this.state.isEditingTemplate = true;
+    }
+
+    onEditExportTemplate() {
+        const template = this.templates.find(({ id }) => id === this.state.templateId);
+        this.state.templateName = template ? template.name : "";
+        this.state.isEditingTemplate = true;
+    }
+
+    onTemplateNameKeydown(ev) {
+        if (ev.key === "Enter") {
+            ev.preventDefault();
+            if (this.state.templateName) {
+                this.onSaveExportTemplate();
+            }
+        } else if (ev.key === "Escape") {
+            ev.preventDefault();
+            this.onCancelExportTemplate();
+        }
+    }
+
     async onSaveExportTemplate() {
-        const name = this.exportListRef().value;
+        const name = this.state.templateName;
         if (!name) {
-            return this.notification.add(_t("Please enter save field list name"), {
-                type: "danger",
-            });
+            return;
         }
         const exportLanguageIds = this.canExportTranslations
             ? this.state.exportLanguages.map(({ id }) => id)
             : [];
-        const [id] = await this.orm.create(
-            "ir.exports",
-            [
+        const exportFieldsCommands = this.state.exportList.map((field, index) =>
+            x2ManyCommands.create(false, { name: field.id, sequence: (index + 1) * 10 })
+        );
+        if (this.state.templateId === "new_template") {
+            const [id] = await this.orm.create(
+                "ir.exports",
+                [
+                    {
+                        name,
+                        export_fields: exportFieldsCommands,
+                        export_language_ids: [x2ManyCommands.set(exportLanguageIds)],
+                        resource: this.props.root.resModel,
+                    },
+                ],
+                { context: this.props.context }
+            );
+            this.templates.push({ id, name });
+            this.state.templateId = id;
+        } else {
+            const id = this.state.templateId;
+            await this.orm.write(
+                "ir.exports",
+                [id],
                 {
                     name,
-                    export_fields: this.state.exportList.map((field) =>
-                        x2ManyCommands.create(false, { name: field.id })
-                    ),
+                    export_fields: [x2ManyCommands.clear(), ...exportFieldsCommands],
                     export_language_ids: [x2ManyCommands.set(exportLanguageIds)],
-                    resource: this.props.root.resModel,
                 },
-            ],
-            { context: this.props.context }
-        );
+                { context: this.props.context }
+            );
+            const template = this.templates.find((i) => i.id === id);
+            if (template) {
+                template.name = name;
+            }
+        }
         this.state.isEditingTemplate = false;
-        this.state.templateId = id;
-        this.templates.push({ id, name });
     }
 
     onCancelExportTemplate() {
@@ -486,7 +548,7 @@ export class ExportDataDialog extends Component {
 
     onAddLanguage(language) {
         this.state.exportLanguages.push(language);
-        this.enterTemplateEdition();
+        this.resetTemplateSelection();
     }
 
     onSearch(ev) {

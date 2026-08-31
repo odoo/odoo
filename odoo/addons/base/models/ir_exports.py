@@ -160,7 +160,8 @@ class IrExports(models.Model):
 class IrExportsLine(models.Model):
     _name = 'ir.exports.line'
     _description = 'Exports Line'
-    _order = 'id'
+    _order = 'sequence, id'
 
+    sequence = fields.Integer(default=10)
     name = fields.Char(string='Field Name')
     export_id = fields.Many2one('ir.exports', string='Export', index=True, ondelete='cascade')
