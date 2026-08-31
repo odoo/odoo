@@ -1,5 +1,5 @@
 import { findInSelection } from "@html_editor/utils/selection";
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import { press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
@@ -400,4 +400,37 @@ test("should not navigate table cells when powerbox is open", async () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `,
     );
+});
+
+describe("availability", () => {
+    test("table is available from a span inside the editable", async () => {
+        const { editor } = await setupEditor("<p><span>ab[]</span></p>");
+        await insertText(editor, "/table");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Table");
+    });
+    test("table is not available from a span that is the editable root", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><p><span contenteditable="true">ab[]</span></p></div>',
+        );
+        await insertText(editor, "/table");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Table");
+    });
+    test("table is not available from a p that is the editable root", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><p contenteditable="true">ab[]</p></div>',
+        );
+        await insertText(editor, "/table");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Table");
+    });
+    test("table is available from a div that is the editable root", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><div contenteditable="true">ab[]</div></div>',
+        );
+        await insertText(editor, "/table");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Table");
+    });
 });

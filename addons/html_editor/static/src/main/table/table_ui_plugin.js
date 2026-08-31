@@ -1,6 +1,7 @@
 /** @odoo-module native */
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -21,7 +22,12 @@ export class TableUIPlugin extends Plugin {
                 description: _t("Insert a table"),
                 icon: "fa-table",
                 run: this.openPickerOrInsertTable.bind(this),
-                isAvailable: isHtmlContentSupported,
+                // A table inside a block that only takes inline content ends
+                // up nested in a <p> or a <span>, which is invalid HTML.
+                isAvailable: (selection) =>
+                    isHtmlContentSupported(selection) &&
+                    closestElement(selection.anchorNode, allowsParagraphRelatedElements)
+                        ?.isContentEditable,
             },
         ],
         powerbox_items: [
