@@ -215,7 +215,12 @@ class RequestHandler(CommonRequestHandler):
     def send_header(self, keyword, value):
         # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
         # since it is incompatible with websocket.
-        if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+        headers = self.__dict__.get('headers')
+        if (headers
+            and headers.get('Upgrade') == 'websocket'
+            and keyword == 'Connection'
+            and value == 'close'
+        ):
             # Do not keep processing requests.
             self.close_connection = True
             return
@@ -227,7 +232,8 @@ class RequestHandler(CommonRequestHandler):
         # data. In the case of WebSocket connections, data should not be discarded. Replace the
         # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
         # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
-        if self.headers.get('Upgrade') == 'websocket':
+        headers = self.__dict__.get('headers')
+        if headers and headers.get('Upgrade') == 'websocket':
             self.rfile = BytesIO()
             self.wfile = BytesIO()
 
