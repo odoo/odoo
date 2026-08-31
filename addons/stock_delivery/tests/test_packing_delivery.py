@@ -484,10 +484,10 @@ class TestPackingDelivery(TestPackingCommon):
         res_big_box = delivery.move_ids.move_line_ids.action_put_in_pack(package_type_id=bbox_type.id)
         res_pallet = delivery.move_ids.move_line_ids.action_put_in_pack(package_type_id=pallet_type.id)
 
-        self.assertEqual(res_boxA.with_context(picking_id=delivery.id).weight, 5)      # 1 + 2 * 2 = 5kg
-        self.assertEqual(res_boxB.with_context(picking_id=delivery.id).weight, 11)     # 1 + 2 * 5 = 11kg
-        self.assertEqual(res_big_box.with_context(picking_id=delivery.id).weight, 20)  # 4 + 5 + 11 = 20kg
-        self.assertEqual(res_pallet.with_context(picking_id=delivery.id).weight, 30)   # 10 + 20 = 30kg
+        self.assertEqual(res_boxA.with_context(picking_ids=[delivery.id]).weight, 5)      # 1 + 2 * 2 = 5kg
+        self.assertEqual(res_boxB.with_context(picking_ids=[delivery.id]).weight, 11)     # 1 + 2 * 5 = 11kg
+        self.assertEqual(res_big_box.with_context(picking_ids=[delivery.id]).weight, 20)  # 4 + 5 + 11 = 20kg
+        self.assertEqual(res_pallet.with_context(picking_ids=[delivery.id]).weight, 30)   # 10 + 20 = 30kg
 
     def test_delivery_shipping_weight_with_package_before_validation(self):
         """Check that package and picking shipping weights are correctly computed
