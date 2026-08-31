@@ -1,5 +1,4 @@
 import { Activity } from "@mail/core/common/activity_model";
-import { fields } from "@mail/model/export";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 
@@ -11,11 +10,9 @@ import { patch } from "@web/core/utils/patch";
 patch(Activity.prototype, {
     setup() {
         super.setup(...arguments);
-        this.isNoteEmpty = fields.Attr(true, {
-            compute() {
-                return !this.note || isEmptyBlock(createElementWithContent("div", this.note));
-            },
-        });
+        this.isNoteEmpty = this.computed(
+            () => !this.note || isEmptyBlock(createElementWithContent("div", this.note))
+        );
     },
     get dateDeadlineFormatted() {
         return formatDate(this.date_deadline);

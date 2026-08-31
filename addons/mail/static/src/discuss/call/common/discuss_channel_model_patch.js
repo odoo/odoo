@@ -71,74 +71,70 @@ const DiscussChannelPatch = {
                         : CALL_PROMOTE_FULLSCREEN.INACTIVE;
             },
         });
-        this.videoCount = fields.Attr(0, {
-            compute() {
-                return this.rtc_session_ids.filter((s) => s.hasVideo).length;
-            },
-        });
+        this.videoCount = this.computed(
+            () => this.rtc_session_ids.filter((s) => s.hasVideo).length
+        );
         this.focusStack = fields.Many("discuss.channel.rtc.session");
         this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
         /** @type {import("@mail/discuss/call/common/call").CardData[]} */
-        this.visibleCards = fields.Attr([], {
-            compute() {
-                const raisingHandCards = [];
-                const sessionCards = [];
-                const invitationCards = [];
-                for (const session of this.rtc_session_ids) {
-                    const target = session.raisingHand ? raisingHandCards : sessionCards;
-                    const cameraStream = session.is_camera_on
-                        ? session.videoStreams.get("camera")
-                        : undefined;
+        this.visibleCards = this.computed(() => {
+            const raisingHandCards = [];
+            const sessionCards = [];
+            const invitationCards = [];
+            for (const session of this.rtc_session_ids) {
+                const target = session.raisingHand ? raisingHandCards : sessionCards;
+                const cameraStream = session.is_camera_on
+                    ? session.videoStreams.get("camera")
+                    : undefined;
+                target.push({
+                    key: "session_main_" + session.id,
+                    session,
+                    type: "camera",
+                    videoStream: cameraStream,
+                });
+                const screenStream = session.is_screen_sharing_on
+                    ? session.videoStreams.get("screen")
+                    : undefined;
+                if (screenStream) {
                     target.push({
-                        key: "session_main_" + session.id,
+                        key: "session_secondary_" + session.id,
                         session,
-                        type: "camera",
-                        videoStream: cameraStream,
+                        type: "screen",
+                        videoStream: screenStream,
                     });
-                    const screenStream = session.is_screen_sharing_on
-                        ? session.videoStreams.get("screen")
-                        : undefined;
-                    if (screenStream) {
-                        target.push({
-                            key: "session_secondary_" + session.id,
-                            session,
-                            type: "screen",
-                            videoStream: screenStream,
-                        });
-                    }
                 }
-                for (const member of this.invited_member_ids) {
-                    invitationCards.push({ key: "member_" + member.id, member });
+            }
+            for (const member of this.invited_member_ids) {
+                invitationCards.push({ key: "member_" + member.id, member });
+            }
+            raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
+            sessionCards.sort((c1, c2) => {
+                const member1 = c1.session.channel_member_id;
+                const member2 = c2.session.channel_member_id;
+                const name1 = member1?.persona?.displayName;
+                const name2 = member2?.persona?.displayName;
+                const nameDiff = localeCompare(name1, name2);
+                if (nameDiff !== 0) {
+                    return nameDiff;
                 }
-                raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
-                sessionCards.sort((c1, c2) => {
-                    const member1 = c1.session.channel_member_id;
-                    const member2 = c2.session.channel_member_id;
-                    const name1 = member1?.persona?.displayName;
-                    const name2 = member2?.persona?.displayName;
-                    const nameDiff = localeCompare(name1, name2);
-                    if (nameDiff !== 0) {
-                        return nameDiff;
-                    }
-                    if (member1?.id && !member2?.id) {
-                        return -1;
-                    }
-                    if (!member1?.id && member2?.id) {
-                        return 1;
-                    }
-                    const memberDiff = member1?.id - member2?.id;
-                    if (memberDiff !== 0) {
-                        return memberDiff;
-                    }
-                    return c1.session.id - c2.session.id;
-                });
-                invitationCards.sort((c1, c2) => {
-                    const name1 = c1.member.persona?.displayName;
-                    const name2 = c2.member.persona?.displayName;
-                    return localeCompare(name1, name2) || c1.member.id - c2.member.id;
-                });
-                return raisingHandCards.concat(sessionCards, invitationCards);
-            },
+                if (member1?.id && !member2?.id) {
+                    return -1;
+                }
+                if (!member1?.id && member2?.id) {
+                    return 1;
+                }
+                const memberDiff = member1?.id - member2?.id;
+                if (memberDiff !== 0) {
+                    return memberDiff;
+                }
+                return c1.session.id - c2.session.id;
+            });
+            invitationCards.sort((c1, c2) => {
+                const name1 = c1.member.persona?.displayName;
+                const name2 = c2.member.persona?.displayName;
+                return localeCompare(name1, name2) || c1.member.id - c2.member.id;
+            });
+            return raisingHandCards.concat(sessionCards, invitationCards);
         });
         this.useCameraByDefault = fields.Attr(null, {
             /** @this {import("models").Thread} */

@@ -1,5 +1,4 @@
 import { ScheduledMessage } from "@mail/chatter/common/scheduled_message_model";
-import { fields } from "@mail/model/export";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
@@ -9,13 +8,11 @@ import { patch } from "@web/core/utils/patch";
 const ScheduledMessagePatch = {
     setup() {
         super.setup();
-        this.textContent = fields.Attr(false, {
-            compute() {
-                if (!this.body) {
-                    return "";
-                }
-                return htmlToTextContentInline(this.body);
-            },
+        this.textContent = this.computed(() => {
+            if (!this.body) {
+                return "";
+            }
+            return htmlToTextContentInline(this.body);
         });
     },
 

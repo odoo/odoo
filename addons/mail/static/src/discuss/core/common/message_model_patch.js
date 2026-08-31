@@ -12,35 +12,24 @@ const messagePatch = {
                 return this.thread?.channel;
             },
         });
-        this.hasEveryoneSeen = fields.Attr(false, {
-            /** @this {import("models").Message} */
-            compute() {
-                return this.channel_id?.membersThatCanSeen.every((m) => m.hasSeen(this));
-            },
-        });
-        this.hasNewMessageSeparator = fields.Attr(false, {
-            compute() {
-                // compute for caching the value and not re-rendering all
-                // messages when new_message_separator changes
-                return this.channel_id?.self_member_id?.new_message_separator === this.id;
-            },
-        });
-        this.hasSomeoneSeen = fields.Attr(false, {
-            /** @this {import("models").Message} */
-            compute() {
-                return this.channel_id?.membersThatCanSeen
-                    .filter((member) => member.persona.notEq(this.author))
-                    .some((m) => m.hasSeen(this));
-            },
-        });
-        this.isMessagePreviousToLastSelfMessageSeenByEveryone = fields.Attr(false, {
-            /** @this {import("models").Message} */
-            compute() {
-                if (!this.channel_id?.lastSelfMessageSeenByEveryone) {
-                    return false;
-                }
-                return this.id < this.channel_id.lastSelfMessageSeenByEveryone.id;
-            },
+        this.hasEveryoneSeen = this.computed(() =>
+            this.channel_id?.membersThatCanSeen.every((m) => m.hasSeen(this))
+        );
+        // computed for caching the value and not re-rendering all
+        // messages when new_message_separator changes
+        this.hasNewMessageSeparator = this.computed(
+            () => this.channel_id?.self_member_id?.new_message_separator === this.id
+        );
+        this.hasSomeoneSeen = this.computed(() =>
+            this.channel_id?.membersThatCanSeen
+                .filter((member) => member.persona.notEq(this.author))
+                .some((m) => m.hasSeen(this))
+        );
+        this.isMessagePreviousToLastSelfMessageSeenByEveryone = this.computed(() => {
+            if (!this.channel_id?.lastSelfMessageSeenByEveryone) {
+                return false;
+            }
+            return this.id < this.channel_id.lastSelfMessageSeenByEveryone.id;
         });
         this.linkedSubChannel = fields.One("discuss.channel", { inverse: "from_message_id" });
         this.threadAsFirstUnread = fields.One("mail.thread", { inverse: "firstUnreadMessage" });
