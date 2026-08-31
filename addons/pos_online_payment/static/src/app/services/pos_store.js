@@ -54,10 +54,23 @@ patch(PosStore.prototype, {
                 CONSOLE_COLOR
             );
         }
+
+        const isPaid = "paid_order" in opData;
+        const resolvers = order.payment_ids
+            .map((line) => line.onlinePaymentResolver)
+            .filter(Boolean);
+        if (isPaid || (opData.online_payments && opData.online_payments.length > 0)) {
+            const placeholders = order.payment_ids.filter(
+                (p) => !p.isSynced && p.payment_method_id.type === "online"
+            );
+            for (const p of placeholders) {
+                p.delete();
+            }
+        }
+
         if ("paid_order" in opData) {
             opData.isPaid = true;
-            // only one line will have the `online_payment_resolver` method
-            order.payment_ids.forEach((line) => line.onlinePaymentResolver?.(true));
+            resolvers.forEach((resolve) => resolve(true));
             return opData;
         } else {
             opData.isPaid = false;
@@ -118,8 +131,7 @@ patch(PosStore.prototype, {
             }
         }
         if (newDoneOnlinePayment || opData["modified_payment_lines"]) {
-            // only one line will have the `online_payment_resolver` method
-            order.payment_ids.forEach((line) => line.onlinePaymentResolver?.());
+            resolvers.forEach((resolve) => resolve());
         }
 
         return opData;
