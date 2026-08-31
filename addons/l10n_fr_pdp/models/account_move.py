@@ -172,6 +172,16 @@ class AccountMove(models.Model):
                 and move.partner_id.with_company(move.company_id).l10n_fr_is_pdp
             )
 
+    @api.depends('pdp_can_send_response')
+    def _compute_peppol_can_send_response(self):
+        # EXTENDS account_peppol_response to avoid sending the same response through 2 channels
+        super()._compute_peppol_can_send_response()
+        for move in self:
+            move.peppol_can_send_response = (
+                move.peppol_can_send_response
+                and not move.pdp_can_send_response
+            )
+
     @api.depends('company_id')
     def _compute_pdp_uses_pdp(self):
         for move in self:
