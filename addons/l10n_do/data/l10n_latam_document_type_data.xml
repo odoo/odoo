@@ -44,5 +44,27 @@
             <field name="active" eval="True"/>
             <field name="doc_code_prefix">E34</field>
         </record>
+
+        <record model="l10n_latam.document.type" id="ecf_41">
+            <field name="sequence">10</field>
+            <field name="code">41</field>
+            <field name="name">Electronic Purchase Voucher</field>
+            <field name="name@es_419">Comprobante Electrónico de Compras</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E41</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_43">
+            <field name="sequence">10</field>
+            <field name="code">43</field>
+            <field name="name">Electronic Voucher for Minor Expenses</field>
+            <field name="name@es_419">Comprobante Electrónico para Gastos Menores</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E43</field>
+        </record>
     </data>
 </odoo>
