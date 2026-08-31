@@ -3,13 +3,14 @@
 import json
 from importlib import metadata
 from io import StringIO
+from http import HTTPStatus
 from socket import gethostbyname
 from unittest.mock import patch
 
 import odoo
 from odoo.http import content_disposition, root
 from odoo.tests import tagged
-from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user
+from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user, mute_logger
 from odoo.tools import config, file_path, parse_version
 
 from .test_common import TestHttpBase
@@ -153,6 +154,13 @@ class TestHttpMisc(TestHttpBase):
         ):
             self.url_open('/test_http/concurrency_error').raise_for_status()
         self.assertIn("A dummy concurrency error occurred", log_catcher.output[0])
+
+    def test_misc9_request_uri_too_long(self):
+        # Depending on the Werkzeug version, the request can be rejected before
+        # headers are parsed or reach Odoo's routing.
+        with mute_logger('werkzeug'):
+            response = self.url_open('/' + 'a' * 95536)
+        self.assertIn(response.status_code, (HTTPStatus.NOT_FOUND, HTTPStatus.REQUEST_URI_TOO_LONG))
 
 
 @tagged('post_install', '-at_install')
