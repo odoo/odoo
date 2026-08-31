@@ -864,12 +864,26 @@ class TransactionCase(BaseCase):
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
-        # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
+        # speedup CryptContext. Many password-type logins are done during tests, avoid spending time hashing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
-            return CryptContext(
+            cryptCtx = CryptContext(
                 ['pbkdf2_sha512', 'plaintext'],
                 pbkdf2_sha512__rounds=1,
             )
+            # The modified hash configuration causes rotation of the in-database password hash values.
+            # Rotating password hashes mid-test causes session_id rotation leading into indeterministic 'user not logged in' errors.
+            # Never returning a replacement hash prevents this problem.
+            original_verify_and_update = cryptCtx.verify_and_update
+
+            def mock_verify_and_update(*args, **kwargs):
+                valid, replacement_hash = original_verify_and_update(*args, **kwargs)
+                if replacement_hash:
+                    _logger.info("Surpressing hash update in CryptContext override")
+                return valid, None
+
+            cryptCtx.verify_and_update = mock_verify_and_update
+            return cryptCtx
+
         cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.Users._crypt_context', _crypt_context)
         cls.startClassPatcher(cls._crypt_context_patcher)
 
