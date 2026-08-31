@@ -212,10 +212,20 @@ export const websiteEditService = {
                         const I = this.constructor;
                         let isMatch = this.el.matches(I.selector);
                         if (I.selectorHas) {
-                            isMatch &&= !!this.el.querySelector(I.selectorHas);
+                            if (!Array.isArray(I.selectorHas)) {
+                                I.selectorHas = [I.selectorHas];
+                            }
+                            isMatch &&= I.selectorHas.every(
+                                (sel) => !!this.el.querySelector(`:scope ${sel}`)
+                            );
                         }
                         if (I.selectorNotHas) {
-                            isMatch &&= !this.el.querySelector(I.selectorNotHas);
+                            if (!Array.isArray(I.selectorNotHas)) {
+                                I.selectorNotHas = [I.selectorNotHas];
+                            }
+                            isMatch &&= !I.selectorNotHas.some((sel) =>
+                                this.el.querySelector(`:scope ${sel}`)
+                            );
                         }
                         if (!isMatch) {
                             return true;

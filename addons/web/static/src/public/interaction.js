@@ -31,12 +31,15 @@ export class Interaction {
      * through the `selector` attribute by only considering those which contain
      * at least an element which matches this `selectorHas` selector.
      *
+     * It can also be defined as an array of selectors, in which case all
+     * selectors must match (AND logic).
+     *
      * Note that this is the equivalent of setting up a `selector` using the
      * `:has` pseudo-selector but that pseudo-selector is known to not be fully
      * supported in all browsers. To prevent useless crashes, using this
      * `selectorHas` attribute should be preferred.
      *
-     * @type {string}
+     * @type {string|string[]}
      */
     static selectorHas = "";
 
@@ -44,10 +47,13 @@ export class Interaction {
      * Similar to `selectorHas` but equivalent to the `:not(:has(...)))`
      * pseudo-selectors combination.
      *
+     * It can also be defined as an array of selectors, in which case none of
+     * the selectors must match (AND logic).
+     *
      * Note that both `selectorHas` and `selectorNotHas` can be used
      * simultaneously.
      *
-     * @type {string}
+     * @type {string|string[]}
      */
     static selectorNotHas = "";
 

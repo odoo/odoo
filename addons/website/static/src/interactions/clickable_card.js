@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 export class ClickableCard extends Interaction {
     static selector = ".s_card";
-    static selectorHas = ":scope > a.stretched-link";
+    static selectorHas = "> a.stretched-link";
     dynamicSelectors = {
         ...this.dynamicSelectors,
         // Only define the dynamicSelector when there is at least one hoverable
