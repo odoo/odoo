@@ -75,21 +75,16 @@ class WebsiteRewrite(models.Model):
 
     sequence = fields.Integer()
 
-    @api.depends('url_from', 'redirect_type')
+    @api.depends('url_from', 'redirect_type', 'website_id')
     def _compute_is_url_from_exist(self):
         for rewrite in self:
-            exists = False
-            if rewrite.url_from and rewrite.redirect_type in ['301', '302']:
-                url = rewrite.url_from.rstrip('/')
-                exists = self.env['website.page'].search_count([('url', '=', rewrite.url_from)], limit=1) > 0
-                if not exists:
-                    try:
-                        self.env['ir.http']._match(url)
-                        exists = True
-                    except werkzeug.exceptions.NotFound:
-                        exists = False
-
-            rewrite.is_url_from_exist = exists
+            # The redirection is served as a fallback when the visitors end up
+            # in a 404 or a 403 (e.g. missing or unpublished record).
+            rewrite.is_url_from_exist = (
+                rewrite.redirect_type in ['301', '302']
+                and bool(rewrite.url_from)
+                and rewrite.website_id._is_page_served(rewrite.url_from.split('?')[0].rstrip('/') or '/', published=True)
+            )
 
     @api.onchange('route_id')
     def _onchange_route_id(self):

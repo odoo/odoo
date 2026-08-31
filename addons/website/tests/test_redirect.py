@@ -66,3 +66,49 @@ class TestWebsiteRedirect(TransactionCase):
             pages = request.env.ref('base.default_website')._enumerate_pages()
             urls = [url['loc'] for url in pages]
             self.assertNotIn('/test', urls)
+
+    def test_url_from_exist_warning(self):
+        page = self.env['website.page'].create({
+            'type': 'qweb',
+            'url': '/test_redirect_warning',
+            'is_published': True,
+        })
+
+        with MockRequest(self.env, website=self.env.ref('base.default_website')) as mock_request:
+            # the warning is computed by an onchange, i.e. during a POST rpc
+            mock_request.httprequest.environ['REQUEST_METHOD'] = 'POST'
+
+            def is_url_from_exist(url_from, website=None):
+                return mock_request.env['website.rewrite'].new({
+                    'redirect_type': '301',
+                    'url_from': url_from,
+                    'url_to': '/website/info',
+                    'website_id': website.id if website else False,
+                }).is_url_from_exist
+
+            self.assertTrue(is_url_from_exist(page.url))
+            self.assertTrue(is_url_from_exist(page.url.upper()), "pages are matched case-insensitively")
+            self.assertTrue(is_url_from_exist(f'{page.url}/'), "the trailing slash does not change the page")
+            page.is_published = False
+            self.assertFalse(is_url_from_exist(page.url), "unpublished page: the redirection is served")
+
+            self.assertFalse(is_url_from_exist('/website/unknown_route'))
+            self.assertTrue(is_url_from_exist('/website/info'))
+            self.assertTrue(is_url_from_exist('/website/info?a=1'), "the query string does not change the page")
+            self.assertTrue(is_url_from_exist('/my/address'), "GET-only route, matched during the POST onchange")
+            self.assertTrue(is_url_from_exist('/odoo'), "not a website route")
+
+            # the routes are the ones of the rewrite's website
+            other_website = self.env['website'].create({'name': 'Other Website'})
+            self.env['website.rewrite'].create({
+                'redirect_type': '404',
+                'url_from': '/website/info',
+                'website_id': other_website.id,
+            })
+            self.assertFalse(is_url_from_exist('/website/info', other_website))
+            self.assertTrue(is_url_from_exist('/website/info', self.env.ref('base.default_website')))
+
+            # a page of another website does not shadow a bound rewrite
+            page.write({'is_published': True, 'website_id': self.env.ref('base.default_website').id})
+            self.assertFalse(is_url_from_exist(page.url, other_website))
+            self.assertTrue(is_url_from_exist(page.url, self.env.ref('base.default_website')))
