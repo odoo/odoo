@@ -48,9 +48,14 @@ class TestEventSecurity(TestEventFullCommon):
                 'name': 'TestStage',
             })
 
-        # Event Registration
+        # Event Registration: read ok if partner_id is current user
+        registration_1, registration_2 = self.env['event.registration'].with_user(self.admin_user).create([
+            {'event_id': self.test_event.id, 'name': 'Test Registration 1', 'partner_id': self.env.user.partner_id.id},
+            {'event_id': self.test_event.id, 'name': 'Test Registration 2'},
+        ]).with_user(self.env.user)
+        registration_1.read(['name'])
         with self.assertRaises(AccessError):
-            self.env['event.registration'].search([])
+            registration_2.read(['name'])
 
     @users('user_eventregistrationdesk')
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_access')
@@ -143,6 +148,43 @@ class TestEventSecurity(TestEventFullCommon):
             event_config = self.env['res.config.settings'].with_user(self.user_eventmanager).create({
             })
             event_config.execute()
+
+    @users('portal_test')
+    def test_event_registration_begin_date_access(self):
+        """ Check that a user without read access on 'event.event' and 'event.slot' can still find
+        its own registrations when searching on the computed 'event_begin_date' field
+        (computed from 'event_id.date_begin' or 'event_slot_id.start_datetime').
+
+        '_search_event_begin_date' uses the 'any!' operator to bypass the need for read access on
+        'event.event'/'event.slot' models when performing the search.
+        Relevant when a user filters its registrations from portal.
+        """
+        slot = self.env['event.slot'].with_user(self.admin_user).create({
+            'event_id': self.test_event.id,
+            'date': self.test_event.date_begin + timedelta(days=1),
+            'end_hour': 12,
+            'start_hour': 9,
+        })
+        registrations = self.env['event.registration'].with_user(self.admin_user).create([
+            {'event_id': self.test_event.id, 'name': 'Test Registration', 'partner_id': self.env.user.partner_id.id},
+            {'event_id': self.test_event.id, 'name': 'Test Slot Registration', 'partner_id': self.env.user.partner_id.id, 'event_slot_id': slot.id},
+        ]).with_user(self.env.user)
+
+        search_domain = [('id', 'in', registrations.ids), ('event_begin_date', '<=', self.test_event.date_end)]
+        # User have read access on 'event.event' and 'event.slot'.
+        registrations.event_id.read(['date_begin'])
+        registrations.event_slot_id.read(['start_datetime'])
+        # User can find its registrations when searching on 'event_begin_date'.
+        self.assertEqual(self.env['event.registration'].search(search_domain), registrations)
+
+        # Unpublishing the event removes the user's read access on the event and slot.
+        self.test_event.with_user(self.admin_user).write({'is_published': False})
+        with self.assertRaises(AccessError):
+            registrations.event_id.read(['date_begin'])
+        with self.assertRaises(AccessError):
+            registrations.event_slot_id.read(['start_datetime'])
+        # User can still find its registrations when searching on 'event_begin_date' even without the read accesses.
+        self.assertEqual(self.env['event.registration'].search(search_domain), registrations)
 
     def test_event_question_access(self):
         """ Check that some user groups have access to questions and answers only if they are linked to at

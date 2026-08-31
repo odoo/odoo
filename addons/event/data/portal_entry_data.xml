@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_events_client" model="portal.entry">
+        <field name="name">Events</field>
+        <field name="description">Access all your event tickets</field>
+        <field name="url">/my/events</field>
+        <field name="image" type="bytes" file="event/static/src/img/event_ticket.svg"/>
+        <field name="placeholder_count">event_registration_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="80"/>
+    </record>
+</odoo>

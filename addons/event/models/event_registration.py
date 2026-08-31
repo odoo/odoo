@@ -184,9 +184,11 @@ class EventRegistration(models.Model):
 
     @api.model
     def _search_event_begin_date(self, operator, value):
+        # 'any!' bypasses the need for 'read' access on 'event.event' and 'event.slot' when searching on 'event_begin_date' (i.e. portal).
+        # The security rule on 'event.registration' itself still applies, so no extra data is exposed.
         return Domain.OR([
-            ["&", ("event_slot_id", "!=", False), ("event_slot_id.start_datetime", operator, value)],
-            ["&", ("event_slot_id", "=", False), ("event_id.date_begin", operator, value)],
+            Domain('event_slot_id', '!=', False) & Domain('event_slot_id', 'any!', Domain('start_datetime', operator, value)),
+            Domain('event_slot_id', '=', False) & Domain('event_id', 'any!', Domain('date_begin', operator, value)),
         ])
 
     @api.depends("event_id", "event_slot_id")
