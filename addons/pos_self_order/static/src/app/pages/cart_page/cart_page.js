@@ -102,7 +102,7 @@ export class CartPage extends Component {
             return null;
         }
 
-        if (hasPayment) {
+        if (hasPayment && this.selfOrder.currentOrder.priceIncl > 0) {
             return { label: _t("Pay") };
         } else if (order.unsentLines.length) {
             return { label: _t("Order") };

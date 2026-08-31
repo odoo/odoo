@@ -658,3 +658,7 @@ export async function confirmCart(products, total) {
     }
     await Promise.all(cartItemAsserts);
 }
+
+export async function checkPaymentPage() {
+    await waitFor(".payment-page");
+}

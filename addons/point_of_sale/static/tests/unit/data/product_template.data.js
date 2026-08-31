@@ -593,7 +593,7 @@ export class ProductTemplate extends models.ServerModel {
             attribute_line_ids: [],
             active: true,
             image_128: false,
-            product_variant_ids: [18],
+            product_variant_ids: [20],
             public_description: false,
             pos_optional_product_ids: [],
             sequence: 1,
