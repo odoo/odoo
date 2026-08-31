@@ -1,3 +1,13 @@
-.o_calendar_renderer .o_calendar_widget .o_calendar_disabled:not(.fc-more-popover) {
-    background-color: $gray-300;
+.o_calendar_renderer {
+    .o_calendar_widget .o_calendar_disabled:not(.fc-more-popover) {
+        --o-calendar-disabled-bg: #{$gray-300};
+    }
+
+    .o_calendar_widget .fc-timeGridDay-view,
+    .o_calendar_widget .fc-timeGridWeek-view {
+        .fc-timegrid-divider.fc-cell-shaded:after {
+            --fc-timegrid-divider-size: 25px;
+            --fc-timegrid-divider-background: linear-gradient(0deg, #{rgba($white, 0)}, #{rgba($white, .25)});
+        }
+    }
 }
