@@ -104,7 +104,10 @@ class ResPartner(models.Model):
                 "any",
                 [("commercial_partner_id", "in", commercial_partners.ids)],
             ),
-            ("order_line", "any", [("untaxed_amount_to_invoice", ">", 0)]),
+            ("order_line", "any", [
+                "|", ("untaxed_amount_to_invoice", ">", 0),
+                     ("invoice_status", "=", "no"),
+            ]),
             ("state", "=", "sale"),
             ("invoicing_closed", "=", False),
         ])
