@@ -657,6 +657,82 @@ class ProductProduct(models.Model):
             )
         return super().view_header_get(view_id, view_type)
 
+    @api.model
+    def search_panel_select_multi_range(self, field_name, **kwargs):
+        """Evaluate the attribute filter against the values actually shown.
+
+        ``product.template.attribute.value`` materializes one record per
+        template, so a single logical attribute value (its stored
+        ``product_attribute_value_id``) is denormalized into many records that
+        the catalog search panel collapses into a single selectable item (see
+        ``ProductCatalogSearchPanel.buildSection``). The generic implementation
+        limits (and counts) the raw records, so a handful of distinct values
+        backed by many templates would wrongly hit "Too many items to display."
+
+        Grouping by that stored key lets us apply the limit to the distinct
+        values that are rendered, compute one counter per value instead of one
+        per record, and never load the comodel beyond ``limit`` groups.
+        """
+        if (
+            field_name != 'product_template_attribute_value_ids'
+            or kwargs.get('group_by')
+            or kwargs.get('expand')
+        ):
+            return super().search_panel_select_multi_range(field_name, **kwargs)
+
+        model_domain = kwargs.get('search_domain', [])
+        extra_domain = expression.AND([
+            kwargs.get('category_domain', []),
+            kwargs.get('filter_domain', []),
+        ])
+        comodel_domain = kwargs.get('comodel_domain', [])
+        limit = kwargs.get('limit')
+        enable_counters = kwargs.get('enable_counters')
+
+        # Restrict to the attribute values actually used by the products in
+        # scope (the panel is not in "expand" mode here).
+        image_ids = list(self._search_panel_domain_image(field_name, model_domain))
+        comodel_domain = expression.AND([
+            comodel_domain,
+            [('id', 'in', image_ids)],
+        ])
+
+        Comodel = self.env['product.template.attribute.value']
+        # One group per logical value; fetching one extra group tells us the
+        # panel would exceed the limit without loading the remaining records.
+        groups = Comodel._read_group(
+            comodel_domain,
+            groupby=['product_attribute_value_id'],
+            aggregates=['id:recordset'],
+            limit=limit and limit + 1,
+        )
+        if limit and len(groups) > limit:
+            return {'error_msg': str(self.env._("Too many items to display."))}
+
+        field_range = []
+        for __, ptavs in groups:
+            count = 0
+            if enable_counters:
+                # A product carries at most one PTAV per group, so counting
+                # products matching any of them equals summing the per-record
+                # counts the frontend used to add up.
+                count = self.search_count(expression.AND([
+                    model_domain,
+                    extra_domain,
+                    [(field_name, 'in', ptavs.ids)],
+                ]))
+            display_name = ptavs[:1].display_name
+            # Keep one entry per record so the search model still tracks each
+            # value id; the frontend collapses them back by display name and
+            # toggles the whole group at once.
+            for ptav in ptavs:
+                field_range.append({
+                    'id': ptav.id,
+                    'display_name': display_name,
+                    '__count': count,
+                })
+        return {'values': field_range}
+
     #=== ACTION METHODS ===#
 
     def action_open_label_layout(self):
