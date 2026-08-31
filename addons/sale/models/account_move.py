@@ -176,10 +176,10 @@ class AccountMove(models.Model):
         # stemming from sales orders will be substracted from the credit_to_invoice.
         # This will reduce the total credit of the partner.
         # The computation should reflect the change of credit_to_invoice from 'res.partner'.
-        # (see _compute_credit_to_invoice and _compute_amount_to_invoice from 'sale.order' )
+        # (see _compute_credit_to_invoice from 'res.partner' and _get_credit_to_invoice from 'sale.order')
         exclude_amount = super()._get_partner_credit_warning_exclude_amount()
         for order in self.line_ids.sale_line_ids.order_id:
-            order_amount = min(self._get_sale_order_invoiced_amount(order), order.amount_to_invoice)
+            order_amount = min(self._get_sale_order_invoiced_amount(order), order._get_credit_to_invoice())
             order_amount_company = order.currency_id._convert(
                 max(order_amount, 0),
                 self.company_id.currency_id,
