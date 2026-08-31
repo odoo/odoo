@@ -19,9 +19,7 @@
 
         --o-statusbar-radius: #{$btn-border-radius-lg};
         --o-statusbar-border: #{map-get($-btn-secondary-design, background)};
-        --o-statusbar-background-active: #{map-get($-btn-secondary-design, active-background)};
         --o-statusbar-border-active: #{map-get($-btn-secondary-design, background)};
-        --o-statusbar-background-hover: #{map-get($-btn-secondary-design, hover-background)};
 
         --o-statusbar-border-width: #{$btn-border-width};
         --o-statusbar-padding: #{map-get($spacers, 1)};
@@ -53,8 +51,23 @@
                 content: normal;
             }
 
-            &:hover, &:focus {
-                background-color: var(--o-statusbar-background-hover);
+            &:hover {
+                background-color: var(--o-statusbar-background-hover, #{map-get($-btn-secondary-design, hover-background)});
+            }
+
+            // Bootstrap's `.btn:first-child:active` and `.btn.show` are less
+            // specific than the `:hover` rule above, so the pressed and opened
+            // states need their own declaration to win the cascade.
+            &:active,
+            &.show {
+                background-color: var(--o-statusbar-background-pressed, #{map-get($-btn-secondary-design, active-background)});
+            }
+
+            // The current step is painted from its own class rather than from
+            // the `disabled` attribute. Declared last so it outranks the states above.
+            &.o_arrow_button_current {
+                background-color: var(--o-statusbar-background-current, #{map-get($-btn-secondary-design, active-background)});
+                border-color: var(--o-statusbar-background-current, #{map-get($-btn-secondary-design, active-border)});
             }
 
             &:disabled {
@@ -62,15 +75,8 @@
                 cursor: default;
 
                 &:not(.o_arrow_button_current) {
-                    &, &:hover, &:focus {
-                        color: $text-muted;
-                    }
+                    color: $text-muted;
                 }
-            }
-
-            &:not(.o_arrow_button_current) {
-                --#{$prefix}btn-disabled-bg: transparent;
-                --#{$prefix}btn-disabled-border-color: transparent;
             }
         }
     }
