@@ -2,9 +2,30 @@
 <templates>
     <t t-name="partner_autocomplete.PartnerAutoComplete" t-inherit="web.AutoComplete" t-inherit-mode="primary">
         <xpath expr="//ul" position="inside">
+            <t t-if="this.sources &amp;&amp; this.sources.at(-1)?.options.length !== 0 &amp;&amp; !this.shouldIncludeBranches">
+                <li
+                    class="o-autocomplete--dropdown-item ui-menu-item d-block partner_autocomplete_dropdown_char"
+                    t-on-pointerdown="() => this.ignoreBlur = true"
+                    t-on-mouseleave="() => this.onOptionMouseLeave()"
+                    t-on-click="(ev) => this.searchIncludeBranches(ev)"
+                >
+                    <a
+                        t-attf-id="{{this.props.id or 'autocomplete'}}_{{this.source_index}}_{{this.option_index}}"
+                        role="option"
+                        href="#"
+                        class="dropdown-item ui-menu-item-wrapper text-truncate text-info"
+                        t-att-class="{ 'ui-state-active': this.isActiveSourceOption([this.source_index, this.option_index]) }"
+                        t-att-aria-selected="this.isActiveSourceOption([this.source_index, this.option_index]) ? 'true' : 'false'"
+                    >
+                        <div style="display: flex; justify-content: space-between; align-items: center; height: 24px;">
+                            └ Include Branches 🏢
+                        </div>
+                    </a>
+                </li>
+            </t>
             <t t-if="this.sources &amp;&amp; this.sources.at(-1)?.options.length !== 0 &amp;&amp; !this.shouldSearchWorldwide">  <!-- 1 because IAP sources (potential partners) are loaded after DB sources (existing partners)-->
                 <li
-                    class="o-autocomplete--dropdown-item ui-menu-item d-block"
+                    class="o-autocomplete--dropdown-item ui-menu-item d-block partner_autocomplete_dropdown_char"
                     t-on-pointerdown="() => this.ignoreBlur = true"
                     t-on-mouseleave="() => this.onOptionMouseLeave()"
                     t-on-click="(ev) => this.searchWorldwide(ev)"
@@ -17,7 +38,9 @@
                         t-att-class="{ 'ui-state-active': this.isActiveSourceOption([this.source_index, this.option_index]) }"
                         t-att-aria-selected="this.isActiveSourceOption([this.source_index, this.option_index]) ? 'true' : 'false'"
                     >
-                        Search Worldwide 🌎
+                        <div style="display: flex; justify-content: space-between; align-items: center; height: 24px;">
+                            Search Worldwide 🌎
+                        </div>
                     </a>
                 </li>
             </t>
