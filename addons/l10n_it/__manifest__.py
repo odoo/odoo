@@ -1,7 +1,7 @@
 {
     'name': 'Italy - Accounting',
     'countries': ['it'],
-    'version': '0.11',
+    'version': '0.12',
     'depends': [
         'account',
         'account_edi_ubl_cii',
