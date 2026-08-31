@@ -31,6 +31,12 @@ APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
 
+def _serialize_manifest(terp):
+    """ Return the manifest content of ``terp`` as a plain JSON-safe dict. """
+    data = {key: value for key, value in dict(terp).items() if key not in ('addons_path', 'static_path')}
+    return json.loads(json.dumps(data, default=list))
+
+
 class IrModuleModule(models.Model):
     _inherit = "ir.module.module"
 
@@ -54,6 +60,26 @@ class IrModuleModule(models.Model):
     def _get_modules_to_load_domain(self):
         # imported modules are not expected to be loaded as regular modules
         return super()._get_modules_to_load_domain() + [('imported', '=', False)]
+
+    def _import_module_post_process(self):
+        """ Hook for bridge modules needing to run additional processing
+            once imported modules have been fully set up. """
+        return True
+
+    def _get_module_manifest(self, name):
+        if (info := self.get_module_info(name)):
+            return info
+        attachment = self.env['ir.attachment'].sudo().search([
+            ('url', '=', f'/{name}/__manifest__.json'),
+            ('res_model', '=', 'ir.module.module'),
+            ('type', '=', 'binary'),
+        ], limit=1)
+        if not attachment.raw:
+            return {}
+        try:
+            return json.loads(attachment.raw.content)
+        except ValueError:
+            return {}
 
     @api.model
     def _load_module_terms(self, modules, langs, overwrite=False):
@@ -154,6 +180,32 @@ class IrModuleModule(models.Model):
             assert terp.get('installable', True), "Module not installable"
             mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
+
+        manifest_url = f'/{module}/__manifest__.json'
+        manifest_attachment_vals = {
+            'name': manifest_url,
+            'url': manifest_url,
+            'res_model': 'ir.module.module',
+            'res_id': mod.id,
+            'type': 'binary',
+            'raw': json.dumps(_serialize_manifest(terp)).encode(),
+            'mimetype': 'application/json',
+        }
+        manifest_attachment = self.env['ir.attachment'].sudo().search([
+            ('url', '=', manifest_url),
+            ('res_model', '=', 'ir.module.module'),
+            ('type', '=', 'binary'),
+        ], limit=1)
+        if manifest_attachment:
+            manifest_attachment.write(manifest_attachment_vals)
+        else:
+            attachment = self.env['ir.attachment'].create(manifest_attachment_vals)
+            self.env['ir.model.data'].create({
+                'name': f"attachment_manifest_{module}".replace('.', '_').replace(' ', '_'),
+                'model': 'ir.attachment',
+                'module': module,
+                'res_id': attachment.id,
+            })
 
         exclude_list = set()
         base_dir = pathlib.Path(path)
@@ -270,7 +322,6 @@ class IrModuleModule(models.Model):
                     raise UserError(_(
                         "The assets path in the manifest of imported module '%(module_name)s' "
                         "cannot contain glob wildcards (e.g., *, **).", module_name=module))
-                path = path if path.startswith('/') else '/' + path # Ensures a '/' at the start
                 assets_vals.append({
                     'name': f'{module}.{bundle}.{path}',
                     'directive': directive,
@@ -302,6 +353,19 @@ class IrModuleModule(models.Model):
             'res_id': asset.id,
         } for asset in created_assets])
 
+        module_assets = IrAsset.browse(self.env['ir.model.data'].search([
+            ('model', '=', 'ir.asset'),
+            ('module', '=', module),
+        ]).mapped('res_id'))
+        for asset in module_assets:
+            vals = {
+                f: '/' + asset[f]
+                for f in ('path', 'target')
+                if asset[f] and not asset[f].startswith('/')
+            }
+            if vals:
+                asset.write(vals)
+
         self.env['ir.module.module']._load_module_terms(
             [module],
             [lang for lang, _name in self.env['res.lang'].get_installed()],
@@ -317,6 +381,8 @@ class IrModuleModule(models.Model):
             article_record.write({'body': body})
 
         mod._update_from_terp(terp)
+        mod._import_module_post_process()
+
         self.env.cr.flush()
         _logger.info("Successfully imported module '%s'", module)
 
