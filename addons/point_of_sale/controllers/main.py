@@ -180,6 +180,14 @@ class PosController(PortalAccount):
                     res_prefixed[key] = val
             return res, res_prefixed
 
+        def _validate_connected_user_data(partner):
+            missing_fields, error_message = set(), []
+            for field in self._get_mandatory_billing_address_fields(partner.country_id):
+                if not partner[field]:
+                    missing_fields.add(field)
+                    error_message.append(_('The %s must be filled in your details.', request.env['ir.model.fields']._get('res.partner', field).field_description))
+            return missing_fields, error_message
+
         # If the route is called directly, return a 404
         if not access_token:
             return request.not_found()
@@ -208,7 +216,8 @@ class PosController(PortalAccount):
 
         # Validate the form by ensuring required fields are filled and the VAT is correct.
         form_values = {'extra_field_values': {}}
-        partner = (user_is_connected and request.env.user.partner_id) or pos_order.partner_id
+        has_order_partner = bool(pos_order.partner_id)
+        partner = (user_is_connected and (pos_order.partner_id or request.env.user.partner_id)) or pos_order.partner_id
         if kwargs and request.httprequest.method == 'POST':
             form_values.update(kwargs)
             # Extract the additional fields values from the kwargs now as they can't be there when validating the 'regular' partner form.
@@ -226,7 +235,7 @@ class PosController(PortalAccount):
             )
             form_values.update({
                 'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
-                'messages': form_values.get('messages', []) + error_messages
+                'error_message': form_values.get('messages', []) + error_messages
             })
             if not form_values.get('invalid_fields'):
                 return self._get_invoice(partner, invoice_values, pos_order, additional_invoice_fields, kwargs)
@@ -237,7 +246,19 @@ class PosController(PortalAccount):
             ))
 
         elif user_is_connected:
-            return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
+            partner_to_check = pos_order.partner_id or request.env.user.partner_id
+            missing_fields, error_messages = set(), []
+            if self._user_can_edit_partner(partner_to_check, request.env.user.partner_id):
+                missing_fields, error_messages = _validate_connected_user_data(partner_to_check)
+            if not missing_fields:
+                return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
+            else:
+                form_values.update({
+                    'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
+                    'error_message': form_values.get('messages', []) + error_messages
+                })
+        elif pos_order.partner_id:
+            return self._get_invoice(pos_order.partner_id, {}, pos_order, additional_invoice_fields, kwargs)
 
         # Prefill the customer extra values if there is any and an user is connected
         if partner:
@@ -263,6 +284,7 @@ class PosController(PortalAccount):
         return request.render("point_of_sale.ticket_validation_screen", {
             **address_form_vals,
             'partner': partner,
+            'has_order_partner': has_order_partner,
             'address_url': f'/my/account?redirect=/pos/ticket/validate?access_token={access_token}',
             'user_is_connected': user_is_connected,
             'format_amount': format_amount,
@@ -295,3 +317,10 @@ class PosController(PortalAccount):
         # Allowing default values for moves is important for some localizations that would need specific fields to be set on the invoice, such as Mexico.
         pos_order.with_context(with_context).action_pos_order_invoice()
         return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
+
+    def _user_can_edit_partner(self, partner_to_edit, partner_edited_by):
+        children_partner_ids = request.env['res.partner']._search([
+            ('id', 'child_of', partner_edited_by.commercial_partner_id.id),
+            ('type', 'in', ('invoice', 'delivery', 'other')),
+        ])
+        return partner_to_edit == partner_edited_by or partner_to_edit.id in children_partner_ids
