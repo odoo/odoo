@@ -86,6 +86,7 @@ export class ConfirmationPage extends Component {
     canPrintReceipt() {
         return (
             !this.isPrinting &&
+            this.confirmedOrder &&
             this.confirmedOrder.uiState.receiptReady &&
             (!this.confirmedOrder.nb_print || this.confirmedOrder.nb_print < 1)
         );

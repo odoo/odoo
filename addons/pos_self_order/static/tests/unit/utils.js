@@ -133,6 +133,7 @@ export function initMockRpc() {
     onRpc("/pos-self-order/validate-partner", mockValidatePartner);
     onRpc("/pos-self-order/change-printer-status", () => ({}));
     onRpc("/pos-self-order/get-user-data", mockGetUserData);
+    onRpc("/pos_self_order/kiosk/increment_nb_print/", () => ({}));
 }
 
 export const setupPoSEnvForSelfOrder = async () => {
