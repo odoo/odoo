@@ -62,6 +62,9 @@ class PosConfig(models.Model):
             config_vals['manager_employee_ids'] += [(4, emp.id) for emp in allowed_employees]
             sudo_vals = {
                 field_name: config_vals.pop(field_name)
+                for field_name in sudo_fields
+                if not config.env.su
+                if isinstance(config_vals.get(field_name), list)
                 if all(isinstance(cmd, (list, tuple)) for cmd in config_vals[field_name])
             }
             res &= super().write(config_vals)

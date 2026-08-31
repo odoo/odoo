@@ -20,7 +20,7 @@ test("employeeIsAdmin", async () => {
 });
 test("_getConnectedCashier", async () => {
     const store = await setupPosEnv();
-    expect(store._getConnectedCashier().id).toBe(2);
+    expect(store.accessRight._getConnectedCashier().id).toBe(2);
 });
 test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();

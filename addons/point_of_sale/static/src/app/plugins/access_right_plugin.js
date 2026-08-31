@@ -2,18 +2,17 @@ import { Plugin, usePlugin, signal } from "@odoo/owl";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 
 export class PosAccessRightPlugin extends Plugin {
     notification = usePlugin(NotificationPlugin);
     dialog = usePlugin(DialogPlugin);
     router = usePlugin(PosRouterPlugin);
+    data = usePlugin(PosDataPlugin);
     hasLoggedIn = signal(false);
 
     setup() {
         this.cashier = null;
-    }
-    init({ data }) {
-        this.data = data;
     }
 
     setCashier(user) {
@@ -28,6 +27,21 @@ export class PosAccessRightPlugin extends Plugin {
     resetCashier() {
         this.cashier = false;
         sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
+    }
+
+    _getConnectedCashier() {
+        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        if (cashier_id && this.data.models["res.users"].get(cashier_id)) {
+            return this.data.models["res.users"].get(cashier_id);
+        }
+        return false;
+    }
+
+    checkPreviousLoggedCashier() {
+        const savedCashier = this._getConnectedCashier();
+        if (savedCashier) {
+            this.setCashier(savedCashier);
+        }
     }
 
     get config() {

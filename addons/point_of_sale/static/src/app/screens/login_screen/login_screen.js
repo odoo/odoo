@@ -29,7 +29,7 @@ export class LoginScreen extends Component {
         const selectedScreen =
             this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
                 ? this.pos.previousScreen
-                : this.pos.defaultPage;
+                : this.pos.router.defaultPage;
         const order = this.pos.getOrder();
         if (!order && selectedScreen.page === "ProductScreen") {
             this.pos.addNewOrder();

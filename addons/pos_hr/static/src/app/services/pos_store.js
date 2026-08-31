@@ -27,22 +27,10 @@ patch(PosStore.prototype, {
         const cashier = this.accessRight.loggedCashier;
         return cashier._role === "manager";
     },
-    checkPreviousLoggedCashier() {
-        if (this.config.module_pos_hr) {
-            const savedCashier = this._getConnectedCashier();
-            if (savedCashier) {
-                this.accessRight.setCashier(savedCashier);
-            } else {
-                this.accessRight.resetCashier();
-            }
-        } else {
-            super.checkPreviousLoggedCashier(...arguments);
-        }
-    },
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
-            const saved_cashier = this._getConnectedCashier();
+            const saved_cashier = this.accessRight._getConnectedCashier();
             this.accessRight.hasLoggedIn.set(saved_cashier ? true : false);
         }
     },
@@ -93,17 +81,6 @@ patch(PosStore.prototype, {
             message,
         ]);
     },
-    _getConnectedCashier() {
-        if (!this.config.module_pos_hr) {
-            return super._getConnectedCashier(...arguments);
-        }
-        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
-        if (cashier_id && this.models["hr.employee"].get(cashier_id)) {
-            return this.models["hr.employee"].get(cashier_id);
-        }
-        return false;
-    },
-
     /**
      * @override
      */

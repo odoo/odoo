@@ -134,6 +134,28 @@ patch(PosAccessRightPlugin.prototype, {
         }
         return super.cashierUserId;
     },
+    _getConnectedCashier() {
+        if (!this.config.module_pos_hr) {
+            return super._getConnectedCashier(...arguments);
+        }
+        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
+        if (cashier_id && this.data.models["hr.employee"].get(cashier_id)) {
+            return this.data.models["hr.employee"].get(cashier_id);
+        }
+        return false;
+    },
+    checkPreviousLoggedCashier() {
+        if (this.config.module_pos_hr) {
+            const savedCashier = this._getConnectedCashier();
+            if (savedCashier) {
+                this.setCashier(savedCashier);
+            } else {
+                this.resetCashier();
+            }
+        } else {
+            super.checkPreviousLoggedCashier(...arguments);
+        }
+    },
     hasEmployeeRole(roles = []) {
         if (!this.config.module_pos_hr) {
             return true;

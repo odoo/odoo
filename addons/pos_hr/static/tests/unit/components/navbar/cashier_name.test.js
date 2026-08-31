@@ -18,8 +18,7 @@ test("selectCashier", async () => {
     store.models["hr.employee"].forEach(
         (employee) => ![2, 3].includes(employee.id) && employee.delete()
     );
-    const comp = await mountWithCleanup(CashierName, {});
-    const result = await comp.selectCashier();
+    const result = await store.accessRight.selectCashier();
     expect(result.name).toBe("Employee1");
     expect(result.id).toBe(3);
     store.accessRight.setCashier(result);

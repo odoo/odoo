@@ -28,7 +28,7 @@ patch(PosStore.prototype, {
 
         return screen.page === "LoginScreen"
             ? { page: "LoginScreen", params: {} }
-            : this.defaultPage;
+            : this.router.defaultPage;
     },
     get openOrder() {
         if (this.config.module_pos_restaurant) {
@@ -410,7 +410,7 @@ patch(PosStore.prototype, {
         return this.getOrder()?.table_id;
     },
     showDefault() {
-        const page = this.defaultPage;
+        const page = this.router.defaultPage;
         this.navigate(page.page, page.params);
     },
     async handleUrlParams(event) {

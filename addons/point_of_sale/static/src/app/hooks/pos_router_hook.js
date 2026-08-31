@@ -15,7 +15,7 @@ export function useRouterParamsChecker(pageName) {
     if (params.orderUuid && Object.keys(params).includes("orderFinalized")) {
         const order = pos.models["pos.order"].getBy("uuid", router.currentScreenParams().orderUuid);
         if (!order || order.finalized !== params.orderFinalized) {
-            const defaultPage = pos.defaultPage;
+            const defaultPage = router.defaultPage;
             pos.navigate(defaultPage.page, defaultPage.params);
         }
     }
