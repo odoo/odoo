@@ -1879,19 +1879,40 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             rendering_values["signup_url"] = signup_url._replace(
                 query=urlencode(
-                    dict(parse_qs(signup_url.query), redirect="/shop/unarchive_user_addresses"),
+                    dict(parse_qs(signup_url.query), redirect="/shop/confirmation/link_order"),
                     doseq=True,
                 )
             ).geturl()
 
         return rendering_values
 
-    @route("/shop/unarchive_user_addresses", type="http", auth="user", sitemap=False)
-    def shop_unarchive_user_addresses(self):
+    @route("/shop/confirmation/link_order", type="http", auth="user", sitemap=False)
+    def shop_confirmation_link_order(self):
+        # Reactivate any address archived on a previous checkout for this account.
         self.env["res.partner"].sudo().search([
             ("active", "=", False),
             ("parent_id", "=", self.env.user.partner_id.id),
         ]).active = True
+
+        if sale_order_id := request.session.get("sale_last_order_id"):
+            order_sudo = self.env["sale.order"].sudo().browse(sale_order_id)
+            partner = self.env.user.partner_id
+            billing_partner = order_sudo.partner_invoice_id
+            shipping_partner = order_sudo.partner_shipping_id
+            if order_sudo.partner_id != partner:
+                # use the address enter during the checkout
+                if billing_partner.commercial_partner_id != partner.commercial_partner_id:
+                    billing_partner.write({
+                        "parent_id": partner.id,
+                        "type": "other" if billing_partner == shipping_partner else "invoice",
+                    })
+                if (
+                    shipping_partner != billing_partner
+                    and shipping_partner.commercial_partner_id != partner.commercial_partner_id
+                ):
+                    shipping_partner.write({"parent_id": partner.id, "type": "delivery"})
+
+                order_sudo._update_address(partner.id, {"partner_id"})
 
         return request.redirect("/my")
 
