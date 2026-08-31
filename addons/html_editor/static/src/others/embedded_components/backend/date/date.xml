@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.EmbeddedDate" t-inherit="html_editor.ReadonlyEmbeddedDate" t-inherit-mode="primary">
+        <xpath expr="//span" position="attributes">
+            <attribute name="t-on-click">onClick</attribute>
+            <attribute name="t-ref">date</attribute>
+            <attribute name="t-att-class">isEditable ? 'cursor-pointer' : ''</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,8 +1,10 @@
 /** @odoo-module native */
 import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
+import { dateEmbedding } from "@html_editor/others/embedded_components/backend/date/date";
 import { fileEmbedding } from "@html_editor/others/embedded_components/backend/file/file";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { videoEmbedding } from "@html_editor/others/embedded_components/backend/video/video";
+import { readonlyDateEmbedding } from "@html_editor/others/embedded_components/core/date/readonly_date";
 import { readonlyFileEmbedding } from "@html_editor/others/embedded_components/core/file/readonly_file";
 import {
     readonlyTableOfContentEmbedding,
@@ -15,6 +17,7 @@ import { readonlySyntaxHighlightingEmbedding } from "./core/syntax_highlighting/
 
 export const MAIN_EMBEDDINGS = [
     fileEmbedding,
+    dateEmbedding,
     tableOfContentEmbedding,
     toggleBlockEmbedding,
     videoEmbedding,
@@ -24,6 +27,7 @@ export const MAIN_EMBEDDINGS = [
 
 export const READONLY_MAIN_EMBEDDINGS = [
     readonlyFileEmbedding,
+    readonlyDateEmbedding,
     readonlyTableOfContentEmbedding,
     toggleBlockEmbedding,
     readonlyVideoEmbedding,

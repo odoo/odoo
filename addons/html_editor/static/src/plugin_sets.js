@@ -2,6 +2,7 @@
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
+import { DatePlugin } from "./others/embedded_components/plugins/date_plugin/date_plugin.js";
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_video_plugin";
 
@@ -164,6 +165,7 @@ export const COLLABORATION_PLUGINS = [
 
 export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
+    DatePlugin,
     TableOfContentPlugin,
     ToggleBlockPlugin,
     EmbeddedVideoPlugin,
