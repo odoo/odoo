@@ -397,7 +397,6 @@
                         <field name="skill_type_id" widget="badges_many2one" string="Category"/>
                         <field name="skill_id" widget="badges_many2one"
                             context="{'default_skill_type_id': skill_type_id}"
-                            domain="[('skill_type_id', '=', skill_type_id)]"
                             invisible="not skill_type_id"/>
                         <field name="skill_level_id"
                             readonly="not skill_id" widget="badges_many2one"
@@ -509,9 +508,14 @@
                             <field name="name" placeholder="e.g. Languages" required="True"/>
                             <field name="active" invisible="1"/>
                         </h1>
-                        <group name="name">
-                            <field name="color" widget="color_picker"/>
-                            <field name="is_certification" widget="boolean_toggle"/>
+                        <group>
+                            <group name="name">
+                                <field name="color" widget="color_picker"/>
+                                <field name="is_certification" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="company_id" placeholder="Visible to all" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            </group>
                         </group>
                     </div>
                     <group string="Skills">
@@ -590,7 +594,7 @@
         <field name="name">Certifications</field>
         <field name="res_model">hr.employee.skill</field>
         <field name="path">certifications</field>
-        <field name="domain">[('is_certification', '=', True), ('company_id', 'in', allowed_company_ids)]</field>
+        <field name="domain">[('is_certification', '=', True), ('company_id', 'in', allowed_company_ids), '|', ('skill_type_id.company_id', '=', False), ('skill_type_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'show_employee': True}</field>
         <field name="view_mode">list,form</field>
         <field name="view_ids" eval="[(5, 0, 0),

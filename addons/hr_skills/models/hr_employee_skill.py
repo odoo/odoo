@@ -9,6 +9,9 @@ class HrEmployeeSkill(models.Model):
     _description = "Skill level for employee"
     _rec_name = "skill_id"
 
+    skill_id = fields.Many2one(domain="[('skill_type_id', '=', skill_type_id), '|', ('skill_type_id.company_id', '=', False), ('skill_type_id.company_id', '=', company_id)]")
+    skill_level_id = fields.Many2one(domain="[('skill_type_id', '=', skill_type_id), '|', ('skill_type_id.company_id', '=', False), ('skill_type_id.company_id', '=', company_id)]")
+    skill_type_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     employee_id = fields.Many2one('hr.employee', required=True, index=True, ondelete='cascade')
     company_id = fields.Many2one(related='employee_id.company_id')
 
@@ -20,6 +23,9 @@ class HrEmployeeSkill(models.Model):
         result_dict = defaultdict(lambda: self.env['hr.employee.skill'])
         today = fields.Date.context_today(self)
         for (employee, skill), emp_skills in emp_skill_grouped.items():
+            if skill.skill_type_id.company_id and skill.skill_type_id.company_id != employee.company_id:
+                continue
+
             filtered_emp_skill = emp_skills.filtered(
                 lambda employee_skill: not employee_skill.valid_to or employee_skill.valid_to >= today,
             )
