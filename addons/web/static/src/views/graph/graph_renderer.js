@@ -29,8 +29,8 @@ const formatters = registry.category("formatters");
 const colorScheme = cookie.get("color_scheme");
 const GRAPH_LEGEND_COLOR = getCustomColor(colorScheme, "#111827", "#ffffff");
 const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "rgba(0,0,0,.1)", "rgba(255,255,255,.15");
-const GRAPH_LABEL_COLOR = getCustomColor(colorScheme, "#111827", "#E4E4E4");
-const NO_DATA_COLOR = getCustomColor(colorScheme, DEFAULT_BG, "#3C3E4B");
+const GRAPH_LABEL_COLOR = getCustomColor(colorScheme, "#111827", "#E4E4E5");
+const NO_DATA_COLOR = getCustomColor(colorScheme, DEFAULT_BG, "#3A3B41");
 
 /**
  * Custom Plugin for Line chart:

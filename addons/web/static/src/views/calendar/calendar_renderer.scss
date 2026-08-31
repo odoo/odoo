@@ -146,6 +146,7 @@
         // ========================================================
         --fc-page-bg-color: #{$o-view-background-color};
         --fc-border-color: var(--o-cw-border-color);
+        --fc-non-business-color: #{rgba($o-gray-300, .5)};
 
         .fc-body > tr > .fc-widget-content {
             border-top: 0;
@@ -189,7 +190,7 @@
         }
 
         .o_calendar_disabled:not(.fc-more-popover) {
-            background-color: rgba($gray-200, .5);
+            background-color: var(--o-calendar-disabled-bg, rgba($gray-200, .5));
         }
 
         .fc-daygrid-day-bottom {
@@ -319,8 +320,8 @@
 
                 @include media-only(screen) {
                     &:after {
-                        @include o-position-absolute($border-width, 0, -15px, 0);
-                        background: linear-gradient(0deg, rgba($o-shadow-color, 0), rgba($o-shadow-color, 0.16));
+                        @include o-position-absolute($border-width, 0, calc(-1 * var(--fc-timegrid-divider-size, 15px)), 0);
+                        background: var(--fc-timegrid-divider-background,linear-gradient(0deg, rgba($o-shadow-color, 0), rgba($o-shadow-color, 0.16)));
                         pointer-events: none;
                         content: "";
                     }

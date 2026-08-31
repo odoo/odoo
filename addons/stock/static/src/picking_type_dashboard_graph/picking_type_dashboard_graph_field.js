@@ -28,7 +28,7 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
             } else if (pt.type === "future") {
                 backgroundColor.push(colorFuture);
             } else {
-                backgroundColor.push(getCustomColor(cookie.get("color_scheme"), "#ebebeb", "#3C3E4B"));
+                backgroundColor.push(getCustomColor(cookie.get("color_scheme"), "#ebebeb", "#3A3B41"));
             }
         });
         return {

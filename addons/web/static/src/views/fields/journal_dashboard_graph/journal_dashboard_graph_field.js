@@ -7,7 +7,7 @@ import { Component, t, useProps } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 
 const colorScheme = cookie.get("color_scheme");
-const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "#d8dadd", "#3C3E4B");
+const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "#d8dadd", "#3A3B41");
 const GRAPH_LABEL_COLOR = getCustomColor(colorScheme, "#111827", "#E4E4E4");
 export class JournalDashboardGraphField extends Component {
     static template = "web.JournalDashboardGraphField";
@@ -127,7 +127,7 @@ export class JournalDashboardGraphField extends Component {
             } else if (pt.type === "future") {
                 backgroundColor.push(color19);
             } else {
-                backgroundColor.push(getCustomColor(colorScheme, "#ebebeb", "#3C3E4B"));
+                backgroundColor.push(getCustomColor(colorScheme, "#ebebeb", "#3A3B41"));
             }
         });
         return {
