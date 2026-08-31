@@ -11,7 +11,6 @@ export function render(component, deep = false) {
 }
 
 export const onWillRender = owl.onWillRender;
-export const useComponent = owl.useComponent;
 export const useLayoutEffect = owl.useLayoutEffect;
 export const useEnv = owl.useEnv;
 export const useSubEnv = owl.useSubEnv;
