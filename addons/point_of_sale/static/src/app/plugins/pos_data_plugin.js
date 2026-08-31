@@ -390,13 +390,8 @@ export class PosDataPlugin extends Plugin {
 
         for (const posModel of registry.category("pos_available_models").getAll()) {
             const pythonModel = posModel.pythonModel;
-            const extraFields = posModel.extraFields || {};
-
             modelClasses[pythonModel] = posModel;
-            relations[pythonModel] = {
-                ...relations[pythonModel],
-                ...extraFields,
-            };
+            relations[pythonModel] ??= {};
         }
 
         const { models, baseData } = createRelatedModels(relations, modelClasses, this.opts);
