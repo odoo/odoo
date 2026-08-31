@@ -41,6 +41,10 @@ export class NotificationMessage extends Component {
         return this.props.message;
     }
 
+    get showDate() {
+        return true;
+    }
+
     get callInformation() {
         const history = this.message.call_history_ids[0];
         if (history?.duration_hour === undefined || !history?.end_dt) {
