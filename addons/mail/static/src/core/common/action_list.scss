@@ -57,50 +57,8 @@
             }
         }
 
-        &.o-tag-JOIN_LEAVE_CALL i {
-            color: white !important;
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item,
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
-            i {
-                opacity: 100%;
-                background: var(--btn-bg);
-                aspect-ratio: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 100%;
-                padding: 0.4em;
-                box-sizing: content-box;
-            }
-
-            &:hover,
-            &:focus-visible {
-                i {
-                    background: var(--btn-hover-bg);
-                    color: var(--btn-hover-color);
-                }
-            }
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
-            font-size: 0.7em !important;
-            &:is([data-icon="phone"], [data-icon="videocam"])::before {
-                transform: translateY(1px);
-            }
-        }
-
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
-            font-size: 0.9em !important;
-
-            &[data-icon="phone"]::before {
-                transform: translateY(.5px);
-            }
-        }
-
         @each $status, $color in (danger: $danger, success: $success, primary: $primary) {
-            &.o-dropdown-item.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
+            &.o-dropdown-item.btn-#{$status}:not(.o-mail-ActionCallButton) {
                 &.focus {
                     background-color: rgba($color, 0.75);
                     color: white;
@@ -119,7 +77,7 @@
                 }
             }
 
-            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
+            &.o-inline.btn-#{$status}:not(.o-mail-ActionCallButton) {
                 &.o-hasBtnBg {
                     --btn-active-bg: var(--btn-bg);
                 }

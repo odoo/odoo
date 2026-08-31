@@ -62,11 +62,7 @@ class Action extends Component {
         if (this.env.inComposer || this.env.inMessage) {
             return true;
         }
-        return (
-            this.action.tags.includes("JOIN_LEAVE_CALL") &&
-            this.action.icon &&
-            !this.action.inlineName
-        );
+        return Boolean(this.action.buttonComponent) && !this.action.inlineName;
     }
 
     onSelected(action, ev) {

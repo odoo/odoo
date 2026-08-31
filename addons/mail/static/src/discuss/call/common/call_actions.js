@@ -2,6 +2,7 @@ import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/ac
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ActionCallButton } from "@mail/discuss/call/common/action_call_button";
 import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
@@ -280,6 +281,7 @@ registerCallAction("change-layout", {
 });
 /** @type {CallActionDefinition} */
 export const acceptWithCamera = {
+    buttonComponent: ActionCallButton,
     condition: ({ channel }) =>
         channel?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
         typeof channel?.useCameraByDefault !== "boolean",
@@ -289,7 +291,7 @@ export const acceptWithCamera = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    tags: [ACTION_TAGS.SUCCESS],
 };
 registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
@@ -298,6 +300,7 @@ registerCallAction("join-back", {
             "text-nowrap pe-2 rounded-pill": true,
             "mx-1": !owner.env.inCallInvitation,
         }),
+    buttonComponent: ActionCallButton,
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -308,10 +311,11 @@ registerCallAction("join-back", {
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    tags: [ACTION_TAGS.SUCCESS],
 });
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
+    buttonComponent: ActionCallButton,
     condition: ({ channel }) =>
         !channel?.isSelfInCall &&
         !channel?.self_member_id?.rtc_inviting_session_id &&
@@ -329,10 +333,11 @@ registerCallAction("join-with-camera", {
     },
     sequence: 120,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    tags: [ACTION_TAGS.SUCCESS],
 });
 /** @type {CallActionDefinition} */
 export const joinAction = {
+    buttonComponent: ActionCallButton,
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -341,7 +346,7 @@ export const joinAction = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    tags: [ACTION_TAGS.SUCCESS],
 };
 registerCallAction("join", joinAction);
 /** @type {CallActionDefinition} */
@@ -351,6 +356,7 @@ export const rejectAction = {
             "pe-2 rounded-pill": typeof channel?.useCameraByDefault === "boolean",
             "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
         }),
+    buttonComponent: ActionCallButton,
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",
@@ -367,10 +373,11 @@ export const rejectAction = {
     },
     sequence: 140,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
+    tags: [ACTION_TAGS.DANGER],
 };
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
+    buttonComponent: ActionCallButton,
     condition: ({ channel }) =>
         channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -379,7 +386,7 @@ registerCallAction("disconnect", {
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
+    tags: [ACTION_TAGS.DANGER],
 });
 
 export class CallAction extends Action {

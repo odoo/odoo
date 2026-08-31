@@ -95,6 +95,11 @@ export class ActionBase extends Component {
         };
     }
 
+    /** Class naming this component's root element, meant to be overridden by subclasses. */
+    get btnRootClass() {
+        return "";
+    }
+
     get classObj() {
         return {
             ...this.positionClass,
@@ -102,6 +107,7 @@ export class ActionBase extends Component {
             ...this.meetingFullscreenPaddingClass,
             ...this.darkThemeClass,
             ...this.actionSpecificClass,
+            [this.btnRootClass]: Boolean(this.btnRootClass),
         };
     }
 

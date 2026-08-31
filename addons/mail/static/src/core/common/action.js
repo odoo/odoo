@@ -13,7 +13,6 @@ export const ACTION_TAGS = Object.freeze({
     WARNING_BADGE: "WARNING_BADGE",
     CALL_ACTION_TRACKED: "CALL_ACTION_TRACKED",
     CALL_LAYOUT: "CALL_LAYOUT",
-    JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
 });
 
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -60,6 +59,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [badgeText]
  * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
  * @property {string|(params: ActionParams_T) => string} [btnClass]
+ * @property {Component} [buttonComponent]
  * @property {Component} [component]
  * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
  * @property {(params: ActionParams_T) => Component<Props, Env>} [componentProps]
@@ -308,6 +308,18 @@ export class Action {
                 ? this.definition.btnClass.call(this, this.params)
                 : this.definition.btnClass)
         );
+    }
+
+    /** @param {Action} action @returns {Component|undefined} */
+    _buttonComponent(action) {}
+    /**
+     * When provided, this component is used instead of ActionButton to render this action as a
+     * plain (non-dropdown) button. Unlike @see component, it does not bypass the surrounding
+     * ActionList context: it still receives the same props as ActionButton would (attrs, group
+     * position, hasBtnBg, etc). Must extend ActionButton.
+     */
+    get buttonComponent() {
+        return this._buttonComponent(this.params) ?? this.definition.buttonComponent;
     }
 
     /** @param {Action} action @returns {Component|undefined} */
