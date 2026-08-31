@@ -1359,6 +1359,36 @@ class TestSaleProject(TestSaleProjectCommon):
             "The project of `so1` should be set to the project that was generated at SO confirmation."
         )
 
+    def test_so_confirmation_batch_task_template(self):
+        """
+        Sales order lines from different sales orders should generate 1 task
+        by task template for every sale order when they are confirmed in batch.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test product with task template',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'task_template_id': self.task_template.id,
+            'service_policy': 'ordered_prepaid',
+        })
+        so_1, so_2 = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [Command.create({'product_id': product.id, 'product_uom_qty': 1})],
+            },
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': product.id, 'product_uom_qty': 1}),
+                    Command.create({'product_id': product.id, 'product_uom_qty': 1}),
+                ],
+            },
+        ])
+        (so_1 | so_2).action_confirm()
+        self.assertEqual(len(so_1.tasks_ids), 1)
+        self.assertEqual(len(so_2.tasks_ids), 1, "Only 1 task should be created if multiple SOLs share the same task template")
+
     def test_group_expand_sales_order(self):
         """
         1. Create a sale order "Test Order" and a linked project task "Test Task."
