@@ -14,7 +14,14 @@ class TestApplicantSkills(TransactionCase):
         super().setUpClass()
         cls.today = fields.Date.context_today(cls.env.user)
 
-        cls.t_job = cls.env["hr.job"].create({"name": "Test Job"})
+        cls.company_a, cls.company_b = cls.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        cls.t_job = cls.env["hr.job"].create({
+            "name": "Test Job",
+            "company_id": cls.company_a.id,
+        })
         cls.t_skill_type, cls.t_cert_type = cls.env["hr.skill.type"].create(
             [{"name": "Skills for tests"}, {"name": "Certification for tests", "is_certification": True}],
         )
@@ -636,3 +643,31 @@ class TestApplicantSkills(TransactionCase):
         )
         applicant_with_context._compute_display_name()
         self.assertEqual(applicant_with_context.display_name, "Test Applicant \t --100%--")
+
+    def test_company_specific_skill_type_hidden_on_company_change(self):
+        """ The skills of a type dedicated to another company are hidden on the applicant and the job, without
+            any error, and shown again once back in the same company. """
+        self.t_skill_type.company_id = self.company_a
+        job_skill = self.env["hr.job.skill"].create({
+            "job_id": self.t_job.id,
+            "skill_id": self.t_skill_1.id,
+            "skill_level_id": self.t_skill_level_2.id,
+            "skill_type_id": self.t_skill_type.id,
+        })
+        self.t_applicant.company_id = self.company_a
+        applicant_skills = self.t_applicant.current_applicant_skill_ids.filtered(lambda s: s.skill_type_id == self.t_skill_type)
+        self.assertTrue(applicant_skills)
+        self.assertEqual(self.t_job.current_job_skill_ids, job_skill)
+
+        self.t_applicant.company_id = self.company_b
+        self.t_job.company_id = self.company_b
+        self.assertFalse(self.t_applicant.current_applicant_skill_ids & applicant_skills)
+        self.assertFalse(self.t_applicant.skill_ids & self.t_skill_type.skill_ids)
+        self.assertFalse(self.t_job.current_job_skill_ids)
+        self.assertFalse(self.t_job.skill_ids)
+        self.assertEqual(applicant_skills.exists(), applicant_skills, "The hidden skills are kept")
+        self.assertTrue(job_skill.exists(), "The hidden skills are kept")
+
+        self.t_skill_type.company_id = self.company_b
+        self.assertEqual(self.t_applicant.current_applicant_skill_ids & applicant_skills, applicant_skills)
+        self.assertEqual(self.t_job.current_job_skill_ids, job_skill)

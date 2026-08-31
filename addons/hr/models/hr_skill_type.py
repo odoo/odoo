@@ -17,6 +17,8 @@ class HrSkillType(models.Model):
     active = fields.Boolean('Active', default=True)
     sequence = fields.Integer("Sequence")
     name = fields.Char(required=True, translate=True)
+    company_id = fields.Many2one('res.company', string="Company",
+        help="Leave empty to share this skill type with all the companies.")
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
     skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels", copy=True)
     color = fields.Integer('Color', default=_get_default_color)
