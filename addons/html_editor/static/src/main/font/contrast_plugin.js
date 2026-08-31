@@ -14,7 +14,7 @@ export class ContrastPlugin extends Plugin {
 
     setup() {
         const htmlStyle = getHtmlStyle(document);
-        this.defaultBg = getCSSVariableValue("o-control-panel-background-color", htmlStyle);
+        this.defaultBg = getCSSVariableValue("o-html-editor-background-contrast", htmlStyle);
 
         this.applyContrast();
     }
