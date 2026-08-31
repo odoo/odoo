@@ -100,7 +100,6 @@
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
-            'project/static/src/interactions/*',
         ],
         'web.assets_unit_tests': [
             'project/static/tests/mock_server/**/*',
