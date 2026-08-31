@@ -7,6 +7,9 @@
         <field name="product_id" ref="website_sale_collect.product_pick_up_in_store"/>
         <field name="website_id" ref="base.default_website"/>
         <field name="prod_environment" eval="True"/>
+        <field name="enable_delivery_estimate">user_choice</field>
+        <field name="delivery_estimate_lead_days" eval="1"/>
+        <field name="delivery_estimate_end_days" eval="20"/>
     </record>
 
 </odoo>
