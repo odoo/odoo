@@ -20,6 +20,9 @@ class HrEmployeeSkill(models.Model):
         result_dict = defaultdict(lambda: self.env['hr.employee.skill'])
         today = fields.Date.context_today(self)
         for (employee, skill), emp_skills in emp_skill_grouped.items():
+            if skill.skill_type_id.company_id and skill.skill_type_id.company_id != employee.company_id:
+                continue
+
             filtered_emp_skill = emp_skills.filtered(
                 lambda employee_skill: not employee_skill.valid_to or employee_skill.valid_to >= today,
             )
