@@ -18,47 +18,60 @@
                         <field
                             name="enable_delivery_estimate"
                             invisible="delivery_type not in ['fixed', 'base_on_rule']"
+                            widget="radio" options="{'horizontal': True}"
                         />
+                        <!-- Empty label to place the rows in the fields column of the group -->
+                        <label
+                            string=""
+                            for="delivery_estimate_lead_days"
+                            invisible="enable_delivery_estimate == 'none'"
+                        />
+                        <div
+                            name="estimated_delivery_fields"
+                            invisible="enable_delivery_estimate == 'none'"
+                        >
+                            <div name="estimated_delivery_days_row">
+                                <label
+                                    string="From"
+                                    for="delivery_estimate_lead_days"
+                                    invisible="enable_delivery_estimate != 'user_choice'"
+                                    class="me-2"
+                                />
+                                <field
+                                    name="delivery_estimate_lead_days"
+                                    class="oe_inline o_input_4ch text-center"
+                                />
+                                <label
+                                    string="to"
+                                    for="delivery_estimate_end_days"
+                                    invisible="enable_delivery_estimate != 'user_choice'"
+                                    class="mx-2"
+                                />
+                                <field
+                                    name="delivery_estimate_end_days"
+                                    invisible="enable_delivery_estimate != 'user_choice'"
+                                    class="oe_inline o_input_4ch text-center"
+                                />
+                                working days
+                            </div>
+                            <div name="delivery_calendar_row">
+                                <label string="Based on" for="delivery_calendar_id" class="me-2"/>
+                                <field
+                                    string="Based on"
+                                    name="delivery_calendar_id"
+                                    required="enable_delivery_estimate != 'none'"
+                                    class="oe_inline"
+                                />
+                            </div>
+                        </div>
                     </group>
-                    <div
-                        name="estimated_delivery_fields"
-                        invisible="not enable_delivery_estimate"
-                        class="ms-4"
-                    >
-                        <div>
-                            <label for="delivery_estimate_lead_days" string="In" class="me-2"/>
-                            <field
-                                name="delivery_estimate_lead_days"
-                                style="text-align: center; width:2% !important;"
-                            />
-                            working days
-                        </div>
-                        <div>
-                            <label
-                                for="delivery_estimate_range_days"
-                                string="Allow selection up to"
-                                class="me-2"
-                            />
-                            <field
-                                name="delivery_estimate_range_days"
-                                style="text-align: center; width:2% !important;"
-                            />
-                            working days
-                        </div>
-                        <div>
-                            <label for="delivery_calendar_id" string="Based on" class="me-2"/>
-                            <field
-                                name="delivery_calendar_id"
-                                string="Based on"
-                                required="enable_delivery_estimate"
-                                style="width:25% !important;"
-                            />
-                        </div>
-                    </div>
                 </page>
             </page>
             <field name="carrier_description" position="before">
-                <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
+                <field
+                    name="website_description"
+                    placeholder="Description displayed on the eCommerce and on online quotations."
+                />
             </field>
             <button name="toggle_prod_environment" position="before">
                 <button name="website_publish_button" type="object" class="oe_stat_button" icon="public">
