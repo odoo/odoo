@@ -409,3 +409,11 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(manufacturing_order.purchase_order_count, 0)
         self.assertEqual(len(purchase), 1)
         self.assertEqual(purchase.mrp_production_count, 0)
+
+    def test_replenish_form_without_dropship_route(self):
+        """Test that the replenish form can be opened after deleting the dropship route."""
+        route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+        self.assertTrue(route)
+        route.unlink()
+        wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.comp1.product_tmpl_id.id))
+        self.assertNotEqual(wizard.route_id, route, "Route Should be different than deleted one")
