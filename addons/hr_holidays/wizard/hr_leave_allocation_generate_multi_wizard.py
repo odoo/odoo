@@ -101,6 +101,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             allocations = self.env['hr.leave.allocation'].with_context(
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True,
+                allocation_skip_auto_approve=True,
             ).create(vals_list)
             accrual_allocations = allocations.filtered('accrual_plan_id')
             if not self.duration:

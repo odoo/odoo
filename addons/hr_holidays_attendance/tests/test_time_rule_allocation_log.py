@@ -408,7 +408,6 @@ class TestTimeRuleAllocationLog(TransactionCase):
             'number_of_days': days,
             'date_to': False,
         })
-        alloc.action_approve()
         return alloc
 
     def test_deficit_output_log_keyed_to_output_record(self):

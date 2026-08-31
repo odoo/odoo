@@ -42,7 +42,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }
-            ]).action_approve()
+            ])
 
             self.env['hr.leave.allocation'].create([
                 {
@@ -53,7 +53,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 },
-            ]).action_approve()
+            ])
 
             leave_vals = {
                 'name': 'Sick Time Off',

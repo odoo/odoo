@@ -50,7 +50,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
             })
-            allocation.action_approve()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
             allocation._update_accrual()
@@ -137,7 +136,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
             })
-            allocation.action_approve()
 
         self.env['hr.attendance'].create({
             'employee_id': self.employee_emp.id,
@@ -180,7 +178,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
             })
-            allocation.action_approve()
 
         self.env['hr.attendance'].create({
             'employee_id': self.employee_emp.id,
