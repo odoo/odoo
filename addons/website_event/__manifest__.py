@@ -31,6 +31,7 @@
         'views/event_tag_category_views.xml',
         'views/event_tag_views.xml',
         'views/event_type_views.xml',
+        'views/portal_templates.xml',
         'views/website_event_menu_views.xml',
         'views/website_visitor_views.xml',
         'views/event_menus.xml',

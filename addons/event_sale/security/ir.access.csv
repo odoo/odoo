@@ -4,3 +4,5 @@ access_registration_editor_line,access.registration.editor.line,registration.edi
 access_event_event_configurator,access.event.event.configurator,event.event.configurator,sales_team.group_sale_salesman,cru,
 access_event_sale_report_manager,access.event.sale.report.manager,event.sale.report,event.group_event_manager,r,
 event_sale_report_comp_rule,Event Sales Report multi-company,event.sale.report,,crud,"[('company_id', 'in', company_ids + [False])]"
+event_sale_registration_portal_rule,Event/Registration Portal: own registrations via sale order,event.registration,base.group_portal,r,"[('sale_order_id.partner_id', 'in', [user.partner_id.id])]"
+event_sale_registration_user_portal_rule,Event/Registration User Portal: own registrations via sale order,event.registration,base.group_user,r,"[('sale_order_id.partner_id', 'in', [user.partner_id.id])]"

@@ -13,6 +13,8 @@ ir_rule_event_event_ticket_company,Event/Ticket: multi-company,event.event.ticke
 access_event_registration_registration,event.registration.registration,event.registration,event.group_event_registration_desk,cru,
 access_event_registration_manager,event.registration.manager,event.registration,event.group_event_manager,crud,
 event_registration_company_rule,Event/Registration: multi-company,event.registration,,crud,"[('company_id', 'in', company_ids + [False])]"
+event_registration_portal_rule,Event/Registration Portal: own registrations,event.registration,base.group_portal,r,"[('partner_id', 'in', [user.partner_id.id])]"
+event_registration_user_portal_rule,Event/Registration User Portal: own registrations,event.registration,base.group_user,r,"[('partner_id', 'in', [user.partner_id.id])]"
 access_event_mail_registration,event.mail.registration,event.mail,event.group_event_registration_desk,r,
 access_event_mail_user,event.mail.user,event.mail,event.group_event_user,crud,
 access_event_mail_registration_registration,event.mail.registration.registration,event.mail.registration,event.group_event_registration_desk,r,

@@ -14,7 +14,7 @@ from odoo.addons.sms.tests.common import SMSCase
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 
 
-class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
+class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor, HttpCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
