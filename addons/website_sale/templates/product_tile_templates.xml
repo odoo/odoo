@@ -54,10 +54,9 @@
                 <!-- Price(s) -->
                 <t t-if="product_price" t-out="product_price"/>
                 <t t-else="">
-                    <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
                         <t t-set="hide_price" t-value="(
-                            not template_price_vals['price_reduce']
+                            not shop_price_vals['price_reduce']
                             and website.prevent_sale
                             and website._prevent_product_sale(product, True)
                         )"/>
@@ -65,13 +64,13 @@
                             <span
                                 class="mb-0 fw-bold"
                                 aria-label="Sale price"
-                                t-out="template_price_vals['price_reduce']"
+                                t-out="shop_price_vals['price_reduce']"
                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                             />
                             <t
                                 t-if="(
-                                    'base_price' in template_price_vals
-                                    and template_price_vals['base_price'] &gt; template_price_vals['price_reduce']
+                                    'base_price' in shop_price_vals
+                                    and shop_price_vals['base_price'] &gt; shop_price_vals['price_reduce']
                                 )"
                                 name="product_base_price"
                             >
@@ -81,15 +80,15 @@
                                     style="white-space: nowrap;"
                                 >
                                     <small
-                                        t-out="template_price_vals['base_price']"
+                                        t-out="shop_price_vals['base_price']"
                                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                     />
                                 </del>
                             </t>
                             <t
-                                t-if="template_price_vals.get('base_unit_price')"
+                                t-if="shop_price_vals.get('base_unit_price')"
                                 t-call="website_sale.base_unit_price"
-                                base_unit_price="template_price_vals['base_unit_price']"
+                                base_unit_price="shop_price_vals['base_unit_price']"
                             />
                         </t>
                     </div>
@@ -245,13 +244,15 @@
                     t-att-data-product-id="product_variant.id"
                     t-att-data-product-template-id="product.id"
                     t-att-data-product-type="product.type"
+                    t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
+                    t-att-data-needs-configuration="website.shop_display_variants and product_variant and product_variant._requires_configuration()"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                 >
                     <i class="oi oi-fw o_not-animable" data-icon="shopping_cart" role="presentation"/>
                     <span class="o_label small ms-1">Add to Cart</span>
                 </button>
             </t>
-            <t t-elif="website._prevent_product_sale(product, not template_price_vals['price_reduce'])">
+            <t t-elif="website._prevent_product_sale(product, not shop_price_vals['price_reduce'])">
                 <a
                     title="Contact us"
                     aria-label="Contact us"

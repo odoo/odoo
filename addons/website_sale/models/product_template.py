@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import random
 from collections import defaultdict
 from urllib.parse import urlencode, urlparse
-
-from psycopg2 import sql
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -21,8 +18,6 @@ from odoo.addons.website_sale.const import SHOP_PATH
 
 # A delimiter that users aren't likely to search for in product codes.
 RARE_DELIMITER = "\u241e"
-
-_logger = logging.getLogger(__name__)
 
 
 def get_translated_field_gist_index(registry, column_name):
@@ -44,25 +39,10 @@ class ProductTemplate(models.Model):
         "website.published.multi.mixin",
         "website.searchable.mixin",
         "website.structured_data.mixin",
+        "website.sequence.mixin",
     ]
     _mail_post_access = "read"
     _check_company_auto = True
-
-    # === DEFAULT METHODS ===#
-
-    @api.model
-    def _default_website_sequence(self):
-        """We want new product to be the last (highest seq).
-        Every product should ideally have an unique sequence.
-        Default sequence (10000) should only be used for DB first product.
-        As we don't resequence the whole tree (as `sequence` does), this field
-        might have negative value.
-        """
-        self.env.cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
-        max_sequence = self.env.cr.fetchone()[0]
-        if max_sequence is None:
-            return 10000
-        return max_sequence + 5
 
     # === FIELDS ===#
 
@@ -136,13 +116,14 @@ class ProductTemplate(models.Model):
     website_size_y = fields.Integer(string="Size Y", default=1)
     website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
     minimum_quantity = fields.Integer(string="Minimum Quantity")
-    website_sequence = fields.Integer(
-        string="Website Sequence",
-        help="Determine the display order in the Website E-commerce",
-        default=_default_website_sequence,
-        init_storage="_init_column_website_sequence",
-        copy=False,
+
+    website_list_price = fields.Float(
+        string="Shop Price",
+        compute="_compute_website_list_price",
+        store=True,
         index=True,
+        help="Sales price of the variant shown first on the shop tile "
+        "(the first by website sequence), used to sort and filter by price.",
     )
     public_categ_ids = fields.Many2many(
         string="Website Product Category",
@@ -305,6 +286,23 @@ class ProductTemplate(models.Model):
             template.variants_default_code = RARE_DELIMITER.join(
                 template.product_variant_ids.filtered("default_code").mapped("default_code")
             )
+
+    @api.depends(
+        "list_price", "product_variant_ids.lst_price", "product_variant_ids.website_sequence"
+    )
+    def _compute_website_list_price(self):
+        """Store the sales price of the variant shown first on the shop tile.
+
+        The representative variant is the first by website sequence, its
+        ``lst_price`` feeds the ``website_list_price`` used to sort and filter
+        the shop by price (falls back to the template's ``list_price`` when the
+        template has no variant).
+        """
+        for template in self:
+            variant = template.product_variant_ids.sorted(key=lambda v: (v.website_sequence, v.id))[
+                :1
+            ]
+            template.website_list_price = variant.lst_price if variant else template.list_price
 
     # === CRUD METHODS ===#
 
@@ -615,6 +613,19 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants().sorted(_sort_key_variant)
 
+    def _get_first_shop_variant_mapping(self):
+        """Return a ``{template: first shop variant}`` mapping.
+
+        The first shop variant is the first by website sequence, the variant
+        shown on the shop tile. Empty recordset if the template has no variant.
+        """
+        Product = self.env["product.product"]
+        variants = Product.search_fetch(
+            [("product_tmpl_id", "in", self.ids)], order="website_sequence asc, id asc"
+        )
+        grouped_variants = variants.grouped(lambda v: v.product_tmpl_id.id)
+        return {template: grouped_variants.get(template.id, Product)[:1] for template in self}
+
     def _get_previewed_attribute_values(self, product_query_params=None):
         """Compute previewed product attribute values for each product in the recordset.
 
@@ -662,12 +673,21 @@ class ProductTemplate(models.Model):
                     }
         return res
 
-    def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
-        if not self:
+    def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website, products=None):
+        """Return shop price values keyed by record id.
+
+        By default prices the templates in ``self``. Pass ``products`` (a
+        ``product.product`` recordset) to price specific variants instead, as
+        done in split-variants mode. The per-record computation is identical for
+        both models, so the template/variant are resolved from each record.
+        """
+        records = products if products is not None else self
+        if not records:
             return {}
 
+        is_variant = records._name == "product.product"
         currency = website.currency_id
-        pricelist_prices = pricelist_sudo._compute_price_rule(self, 1.0)
+        pricelist_prices = pricelist_sudo._compute_price_rule(records, 1.0)
         comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
             "website_sale.group_product_price_comparison"
         )
@@ -676,17 +696,19 @@ class ProductTemplate(models.Model):
         )
 
         res = {}
-        for template in self:
-            pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
+        for product_or_template in records:
+            template = product_or_template.product_tmpl_id if is_variant else product_or_template
 
-            product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
+            pricelist_price, pricelist_rule_id = pricelist_prices[product_or_template.id]
+
+            product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
             taxes = fiscal_position_sudo.map_tax(product_taxes)
 
             base_price = None
-            template_price_vals = {
+            price_vals = {
                 "raw_pricelist_price": pricelist_price,
                 "pricelist_rule_id": pricelist_rule_id,
-                "price_reduce": template._apply_taxes_to_price(
+                "price_reduce": product_or_template._apply_taxes_to_price(
                     pricelist_price,
                     currency,
                     product_taxes=product_taxes,
@@ -695,15 +717,18 @@ class ProductTemplate(models.Model):
                 ),
             }
             pricelist_item_sudo = (
-                template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
+                self.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
             )
             if pricelist_item_sudo._show_discount_on_shop():
                 pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
-                    product=template, quantity=1.0, uom=template._get_main_uom(), currency=currency
+                    product=product_or_template,
+                    quantity=1.0,
+                    uom=template._get_main_uom(),
+                    currency=currency,
                 )
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
-                    template_price_vals["base_price"] = template._apply_taxes_to_price(
+                    price_vals["base_price"] = product_or_template._apply_taxes_to_price(
                         base_price,
                         currency,
                         product_taxes=product_taxes,
@@ -711,19 +736,24 @@ class ProductTemplate(models.Model):
                         website=website,
                     )
 
-            if not base_price and comparison_prices_enabled and template.compare_list_price:
-                template_price_vals["base_price"] = template.currency_id._convert(
-                    template.compare_list_price, currency, self.env.company, round=False
+            if (
+                not base_price
+                and comparison_prices_enabled
+                and product_or_template.compare_list_price
+            ):
+                price_vals["base_price"] = product_or_template.currency_id._convert(
+                    product_or_template.compare_list_price, currency, self.env.company, round=False
                 )
 
             if uom_price_enabled:
-                template_price_vals["base_unit_price"] = (
-                    template.product_variant_id._get_base_unit_price(
-                        template_price_vals["price_reduce"]
-                    )
+                variant = (
+                    product_or_template if is_variant else product_or_template.product_variant_id
+                )
+                price_vals["base_unit_price"] = variant._get_base_unit_price(
+                    price_vals["price_reduce"]
                 )
 
-            res[template.id] = template_price_vals
+            res[product_or_template.id] = price_vals
 
         return res
 
@@ -1174,72 +1204,6 @@ class ProductTemplate(models.Model):
             return "image_512"
         return "image_1024"
 
-    def _init_column_website_sequence(self):
-        # to avoid generating a single default website_sequence when installing the module,
-        # we need to set the default row by row for this column
-        _logger.debug(
-            "Table '%s': setting default value of new column %s to unique values for each row",
-            self._table,
-            "website_sequence",
-        )
-        self.env.cr.execute(
-            SQL("SELECT id FROM %s WHERE website_sequence IS NULL", SQL.identifier(self._table))
-        )
-        prod_tmpl_ids = self.env.cr.dictfetchall()
-        max_seq = self._default_website_sequence()
-        query = sql.SQL("""
-            UPDATE {}
-            SET website_sequence = p.web_seq
-            FROM (VALUES %s) AS p(p_id, web_seq)
-            WHERE id = p.p_id
-        """).format(sql.Identifier(self._table))
-        values_args = [
-            (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
-        ]
-        self.env.cr.execute_values(query, values_args)
-
-    def set_sequence_top(self):
-        min_sequence = self.sudo().search([], order="website_sequence ASC", limit=1)
-        self.website_sequence = min_sequence.website_sequence - 5
-
-    def set_sequence_bottom(self):
-        max_sequence = self.sudo().search([], order="website_sequence DESC", limit=1)
-        self.website_sequence = max_sequence.website_sequence + 5
-
-    def set_sequence_up(self):
-        previous_product_tmpl = self.sudo().search(
-            [
-                ("website_sequence", "<", self.website_sequence),
-                ("website_published", "=", self.website_published),
-            ],
-            order="website_sequence DESC",
-            limit=1,
-        )
-        if previous_product_tmpl:
-            previous_product_tmpl.website_sequence, self.website_sequence = (
-                self.website_sequence,
-                previous_product_tmpl.website_sequence,
-            )
-        else:
-            self.set_sequence_top()
-
-    def set_sequence_down(self):
-        next_prodcut_tmpl = self.search(
-            [
-                ("website_sequence", ">", self.website_sequence),
-                ("website_published", "=", self.website_published),
-            ],
-            order="website_sequence ASC",
-            limit=1,
-        )
-        if next_prodcut_tmpl:
-            next_prodcut_tmpl.website_sequence, self.website_sequence = (
-                self.website_sequence,
-                next_prodcut_tmpl.website_sequence,
-            )
-        else:
-            return self.set_sequence_bottom()
-
     def _default_website_meta(self):
         res = super()._default_website_meta()
         res["default_opengraph"]["og:description"] = self.description_sale
@@ -1326,10 +1290,11 @@ class ProductTemplate(models.Model):
                     Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
                 ])
             )
+        price_field = website._get_price_field_name()
         if min_price:
-            domains.append([("list_price", ">=", min_price)])
+            domains.append([(price_field, ">=", min_price)])
         if max_price:
-            domains.append([("list_price", "<=", max_price)])
+            domains.append([(price_field, "<=", max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
         search_fields = [
@@ -1383,6 +1348,8 @@ class ProductTemplate(models.Model):
         }
 
     def _search_fetch(self, search_detail, search, offset, limit, order):
+        if order:
+            order = order.replace("list_price", "website_list_price")
         results, count = super()._search_fetch(search_detail, search, offset, limit, order)
         return results.with_context(search_term=search), count
 

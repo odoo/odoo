@@ -144,6 +144,11 @@ class Website(models.Model):
         inverse_name="website_id",
     )
 
+    shop_display_variants = fields.Boolean(
+        string="Split Variants",
+        help="Display each product variant as a separate card on the shop page.",
+    )
+
     product_page_container = fields.Selection(
         selection=[("unset", "Unset"), ("regular", "Regular"), ("fluid", "Full-width")],
         default="unset",
@@ -350,6 +355,16 @@ class Website(models.Model):
         return self._fields["shop_default_sort"]._description_selection(self.env)
 
     # === BUSINESS METHODS ===#
+
+    def _get_price_field_name(self, as_column=False):
+        """Return the price field to sort/filter the shop by.
+
+        Domain path by default, raw column when ``as_column``.
+        """
+        self.ensure_one()
+        if not self.shop_display_variants:
+            return "website_list_price"
+        return "lst_price" if as_column else "product_variant_ids.lst_price"
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super().get_cta_data(website_purpose, website_type)

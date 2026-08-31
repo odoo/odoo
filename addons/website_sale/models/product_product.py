@@ -10,8 +10,10 @@ from odoo.http import request
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _inherit = ["product.product", "website.structured_data.mixin"]
+    _inherit = ["product.product", "website.structured_data.mixin", "website.sequence.mixin"]
     _mail_post_access = "read"
+
+    # === FIELDS ===#
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
     website_id = fields.Many2one(related="product_tmpl_id.website_id", readonly=False)
@@ -27,6 +29,9 @@ class ProductProduct(models.Model):
         help="The full URL to access the document through the website.",
         compute="_compute_product_website_url",
     )
+
+    website_size_x = fields.Integer(string="Size X", default=1)
+    website_size_y = fields.Integer(string="Size Y", default=1)
 
     # === COMPUTE METHODS ===#
 
@@ -86,6 +91,18 @@ class ProductProduct(models.Model):
     def _website_show_quick_add(self):
         self.ensure_one()
         return self.product_tmpl_id._website_show_quick_add(self)
+
+    def _requires_configuration(self):
+        """Whether quick-adding this variant still needs the configurator.
+
+        A variant selection captures every variant-creating attribute, so the
+        only inputs left to collect are custom values and no_variant attributes.
+        """
+        self.ensure_one()
+        return (
+            bool(self.product_template_attribute_value_ids.filtered("is_custom"))
+            or self.product_tmpl_id._has_no_variant_attributes()
+        )
 
     def _is_add_to_cart_allowed(self) -> bool:
         """Determine whether the current user is permitted to buy the product."""

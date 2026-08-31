@@ -19,8 +19,8 @@
         </field>
     </record>
 
-    <record id="product_product_website_tree_view" model="ir.ui.view">
-        <field name="name">product.product.website.list</field>
+    <record id="product_product_tree_view" model="ir.ui.view">
+        <field name="name">product.product.list</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
@@ -31,6 +31,35 @@
                     optional="hide"
                 />
             </field>
+        </field>
+    </record>
+
+    <!-- Standalone list so the website_sequence handle & ordering stay scoped via list_view_ref, instead of leaking onto every product.product list  -->
+    <record id="product_product_website_tree_view" model="ir.ui.view">
+        <field name="name">product.product.website.list</field>
+        <field name="mode">primary</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="website_sale.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="default_order">
+                    website_sequence, default_code, name, id
+                </attribute>
+            </list>
+            <field name="default_code" position="before">
+                <field name="website_sequence" widget="handle"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Variants are only reachable via this smart-button action (no menuitem), so the website_sequence list is opted in here -->
+    <record id="product.product_variant_action" model="ir.actions.act_window">
+        <field name="context">{
+            'create': False,
+            'search_default_product_tmpl_id': active_id,
+            'display_attribute_name': False,
+            'list_view_ref': 'website_sale.product_product_website_tree_view',
+        }
         </field>
     </record>
 
