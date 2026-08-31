@@ -97,6 +97,7 @@ class ResPartner(models.Model):
         if not company.account_use_credit_limit:
             return
 
+<<<<<<< 79f34d35c4806ebea77c06eafc1f1203e3d48aaf
         sale_orders = self.env["sale.order"].search([
             ("company_id", "=", company.id),
             (
@@ -107,6 +108,26 @@ class ResPartner(models.Model):
             ("order_line", "any", [("untaxed_amount_to_invoice", ">", 0)]),
             ("state", "=", "sale"),
             ("invoicing_closed", "=", False),
+||||||| fd06c4df5889e23cfb701c12d743b5652141a111
+        sale_orders = self.env['sale.order'].search([
+            ('company_id', '=', company.id),
+            ('partner_invoice_id', 'any', [
+                ('commercial_partner_id', 'in', commercial_partners.ids),
+            ]),
+            ('order_line', 'any', [('untaxed_amount_to_invoice', '>', 0)]),
+            ('state', '=', 'sale'),
+=======
+        sale_orders = self.env['sale.order'].search([
+            ('company_id', '=', company.id),
+            ('partner_invoice_id', 'any', [
+                ('commercial_partner_id', 'in', commercial_partners.ids),
+            ]),
+            ('order_line', 'any', [
+                '|', ('untaxed_amount_to_invoice', '>', 0),
+                     ('invoice_status', '=', 'no'),
+            ]),
+            ('state', '=', 'sale'),
+>>>>>>> ce27324f8c4442e7108716d79b9207a50ce9f121
         ])
         for (partner, currency), orders in sale_orders.grouped(
             lambda so: (so.partner_invoice_id, so.currency_id)
