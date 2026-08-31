@@ -114,7 +114,439 @@ def cron_database_list():
     return config['db_name'] or list_dbs(force=True)
 
 
+<<<<<<< 4d0f8601090192f172e06c49c14039fb10155c03
 # ----------------------------------------------------------
+||||||| c1ec73be8e16b57c8cf7e4d0c3a915dd9fd6c78b
+#----------------------------------------------------------
+# Werkzeug WSGI servers patched
+#----------------------------------------------------------
+class LoggingBaseWSGIServerMixIn(object):
+    def handle_error(self, request, client_address):
+        t, e, _ = sys.exc_info()
+        if t == socket.error and e.errno == errno.EPIPE:
+            # broken pipe, ignore error
+            return
+        _logger.exception('Exception happened during processing of request from %s', client_address)
+
+class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGIServer):
+    """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
+    use this class, sets the socket and calls the process_request() manually
+    """
+    def __init__(self, app):
+        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app, handler=CommonRequestHandler)
+        # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
+        if self.socket:
+            self.socket.close()
+
+    def server_activate(self):
+        # dont listen as we use PreforkServer#socket
+        pass
+
+class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self._sent_date_header = None
+        self._sent_server_header = None
+        super().__init__(*args, **kwargs)
+
+    def log_request(self, code="-", size="-"):
+        try:
+            path = uri_to_iri(self.path)
+            fragment = thread_local.rpc_model_method
+            if fragment:
+                path += '#' + fragment
+            msg = f"{self.command} {path} {self.request_version}"
+        except AttributeError:
+            # path isn't set if the requestline was bad
+            msg = self.requestline
+
+        code = str(code)
+
+        if code[0] == "1":  # 1xx - Informational
+            msg = werkzeug.serving._ansi_style(msg, "bold")
+        elif code == "200":  # 2xx - Success
+            pass
+        elif code == "304":  # 304 - Resource Not Modified
+            msg = werkzeug.serving._ansi_style(msg, "cyan")
+        elif code[0] == "3":  # 3xx - Redirection
+            msg = werkzeug.serving._ansi_style(msg, "green")
+        elif code == "404":  # 404 - Resource Not Found
+            msg = werkzeug.serving._ansi_style(msg, "yellow")
+        elif code[0] == "4":  # 4xx - Client Error
+            msg = werkzeug.serving._ansi_style(msg, "bold", "red")
+        else:  # 5xx, or any other response
+            msg = werkzeug.serving._ansi_style(msg, "bold", "magenta")
+
+        self.log("info", '"%s" %s %s', msg, code, size)
+
+    def send_header(self, keyword, value):
+        if keyword.casefold() == 'date':
+            if self._sent_date_header is None:
+                self._sent_date_header = value
+            elif self._sent_date_header == value:
+                return  # don't send the same header twice
+            else:
+                sent_datetime = parsedate_to_datetime(self._sent_date_header)
+                new_datetime = parsedate_to_datetime(value)
+                if sent_datetime == new_datetime:
+                    return  # don't send the same date twice (differ in format)
+                if abs((sent_datetime - new_datetime).total_seconds()) <= 1:
+                    return  # don't send the same date twice (jitter of 1 second)
+                _logger.warning(
+                    "sending two different Date response headers: %r vs %r",
+                    self._sent_date_header, value)
+
+        if keyword.casefold() == 'server':
+            if self._sent_server_header is None:
+                self._sent_server_header = value
+            elif self._sent_server_header == value:
+                return  # don't send the same header twice
+            else:
+                _logger.warning(
+                    "sending two different Server response headers: %r vs %r",
+                    self._sent_server_header, value)
+
+        return super().send_header(keyword, value)
+
+
+class RequestHandler(CommonRequestHandler):
+    def setup(self):
+        # timeout to avoid chrome headless preconnect during tests
+        if config['test_enable']:
+            self.timeout = 5
+        # flag the current thread as handling a http request
+        super(RequestHandler, self).setup()
+        me = threading.current_thread()
+        me.name = 'odoo.service.http.request.%s' % (me.ident,)
+
+    def make_environ(self):
+        environ = super().make_environ()
+        # Add the TCP socket to environ in order for the websocket
+        # connections to use it.
+        environ['socket'] = self.connection
+        if self.headers.get('Upgrade') == 'websocket':
+            # Since the upgrade header is introduced in version 1.1, Firefox
+            # won't accept a websocket connection if the version is set to
+            # 1.0.
+            self.protocol_version = "HTTP/1.1"
+        return environ
+
+    def send_header(self, keyword, value):
+        # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
+        # since it is incompatible with websocket.
+        if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+            # Do not keep processing requests.
+            self.close_connection = True
+            return
+        super().send_header(keyword, value)
+
+    def end_headers(self, *a, **kw):
+        super().end_headers(*a, **kw)
+        # At this point, Werkzeug assumes the connection is closed and will discard any incoming
+        # data. In the case of WebSocket connections, data should not be discarded. Replace the
+        # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
+        # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
+        if self.headers.get('Upgrade') == 'websocket':
+            self.rfile = BytesIO()
+            self.wfile = BytesIO()
+
+    def log_error(self, format, *args):
+        if format == "Request timed out: %r" and config['test_enable']:
+            _logger.info(format, *args)
+        else:
+            super().log_error(format, *args)
+
+class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
+    """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
+    given by the environment, this is used by autoreload to keep the listen
+    socket open when a reload happens.
+    """
+    def __init__(self, host, port, app):
+        # The ODOO_MAX_HTTP_THREADS environment variable allows to limit the amount of concurrent
+        # socket connections accepted by a threaded server, implicitly limiting the amount of
+        # concurrent threads running for http requests handling.
+        self.max_http_threads = os.environ.get("ODOO_MAX_HTTP_THREADS")
+        if self.max_http_threads:
+            try:
+                self.max_http_threads = int(self.max_http_threads)
+            except ValueError:
+                # If the value can't be parsed to an integer then it's computed in an automated way to
+                # half the size of db_maxconn because while most requests won't borrow cursors concurrently
+                # there are some exceptions where some controllers might allocate two or more cursors.
+                self.max_http_threads = max((config['db_maxconn'] - config['max_cron_threads']) // 2, 1)
+            self.http_threads_sem = threading.Semaphore(self.max_http_threads)
+        super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
+                                                           handler=RequestHandler)
+
+        # See https://github.com/pallets/werkzeug/pull/770
+        # This allow the request threads to not be set as daemon
+        # so the server waits for them when shutting down gracefully.
+        self.daemon_threads = False
+
+    def server_bind(self):
+        SD_LISTEN_FDS_START = 3
+        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+            self.reload_socket = True
+            self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            _logger.info('HTTP service (werkzeug) running through socket activation')
+        else:
+            self.reload_socket = False
+            super(ThreadedWSGIServerReloadable, self).server_bind()
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
+
+    def server_activate(self):
+        if not self.reload_socket:
+            super(ThreadedWSGIServerReloadable, self).server_activate()
+
+    def process_request(self, request, client_address):
+        """
+        Start a new thread to process the request.
+        Override the default method of class socketserver.ThreadingMixIn
+        to be able to get the thread object which is instantiated
+        and set its start time as an attribute
+        """
+        t = threading.Thread(target = self.process_request_thread,
+                             args = (request, client_address))
+        t.daemon = self.daemon_threads
+        t.type = 'http'
+        t.start_time = time.time()
+        t.start()
+
+    def _handle_request_noblock(self):
+        if self.max_http_threads and not self.http_threads_sem.acquire(timeout=0.1):
+            # If the semaphore is full we will return immediately to the upstream (most probably
+            # socketserver.BaseServer's serve_forever loop  which will retry immediately as the
+            # selector will find a pending connection to accept on the socket. There is a 100 ms
+            # penalty in such case in order to avoid cpu bound loop while waiting for the semaphore.
+            return
+        # upstream _handle_request_noblock will handle errors and call shutdown_request in any cases
+        super(ThreadedWSGIServerReloadable, self)._handle_request_noblock()
+
+    def shutdown_request(self, request):
+        if self.max_http_threads:
+            # upstream is supposed to call this function no matter what happens during processing
+            self.http_threads_sem.release()
+        super().shutdown_request(request)
+
+#----------------------------------------------------------
+=======
+#----------------------------------------------------------
+# Werkzeug WSGI servers patched
+#----------------------------------------------------------
+class LoggingBaseWSGIServerMixIn(object):
+    def handle_error(self, request, client_address):
+        t, e, _ = sys.exc_info()
+        if t == socket.error and e.errno == errno.EPIPE:
+            # broken pipe, ignore error
+            return
+        _logger.exception('Exception happened during processing of request from %s', client_address)
+
+class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGIServer):
+    """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
+    use this class, sets the socket and calls the process_request() manually
+    """
+    def __init__(self, app):
+        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app, handler=CommonRequestHandler)
+        # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
+        if self.socket:
+            self.socket.close()
+
+    def server_activate(self):
+        # dont listen as we use PreforkServer#socket
+        pass
+
+class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self._sent_date_header = None
+        self._sent_server_header = None
+        super().__init__(*args, **kwargs)
+
+    def log_request(self, code="-", size="-"):
+        try:
+            path = uri_to_iri(self.path)
+            fragment = thread_local.rpc_model_method
+            if fragment:
+                path += '#' + fragment
+            msg = f"{self.command} {path} {self.request_version}"
+        except AttributeError:
+            # path isn't set if the requestline was bad
+            msg = self.requestline
+
+        code = str(code)
+
+        if code[0] == "1":  # 1xx - Informational
+            msg = werkzeug.serving._ansi_style(msg, "bold")
+        elif code == "200":  # 2xx - Success
+            pass
+        elif code == "304":  # 304 - Resource Not Modified
+            msg = werkzeug.serving._ansi_style(msg, "cyan")
+        elif code[0] == "3":  # 3xx - Redirection
+            msg = werkzeug.serving._ansi_style(msg, "green")
+        elif code == "404":  # 404 - Resource Not Found
+            msg = werkzeug.serving._ansi_style(msg, "yellow")
+        elif code[0] == "4":  # 4xx - Client Error
+            msg = werkzeug.serving._ansi_style(msg, "bold", "red")
+        else:  # 5xx, or any other response
+            msg = werkzeug.serving._ansi_style(msg, "bold", "magenta")
+
+        self.log("info", '"%s" %s %s', msg, code, size)
+
+    def send_header(self, keyword, value):
+        if keyword.casefold() == 'date':
+            if self._sent_date_header is None:
+                self._sent_date_header = value
+            elif self._sent_date_header == value:
+                return  # don't send the same header twice
+            else:
+                sent_datetime = parsedate_to_datetime(self._sent_date_header)
+                new_datetime = parsedate_to_datetime(value)
+                if sent_datetime == new_datetime:
+                    return  # don't send the same date twice (differ in format)
+                if abs((sent_datetime - new_datetime).total_seconds()) <= 1:
+                    return  # don't send the same date twice (jitter of 1 second)
+                _logger.warning(
+                    "sending two different Date response headers: %r vs %r",
+                    self._sent_date_header, value)
+
+        if keyword.casefold() == 'server':
+            if self._sent_server_header is None:
+                self._sent_server_header = value
+            elif self._sent_server_header == value:
+                return  # don't send the same header twice
+            else:
+                _logger.warning(
+                    "sending two different Server response headers: %r vs %r",
+                    self._sent_server_header, value)
+
+        return super().send_header(keyword, value)
+
+
+class RequestHandler(CommonRequestHandler):
+    def setup(self):
+        # timeout to avoid chrome headless preconnect during tests
+        if config['test_enable']:
+            self.timeout = 5
+        # flag the current thread as handling a http request
+        super(RequestHandler, self).setup()
+        me = threading.current_thread()
+        me.name = 'odoo.service.http.request.%s' % (me.ident,)
+
+    def make_environ(self):
+        environ = super().make_environ()
+        # Add the TCP socket to environ in order for the websocket
+        # connections to use it.
+        environ['socket'] = self.connection
+        if self.headers.get('Upgrade') == 'websocket':
+            # Since the upgrade header is introduced in version 1.1, Firefox
+            # won't accept a websocket connection if the version is set to
+            # 1.0.
+            self.protocol_version = "HTTP/1.1"
+        return environ
+
+    def send_header(self, keyword, value):
+        # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
+        # since it is incompatible with websocket.
+        headers = self.__dict__.get('headers')
+        if (headers
+            and headers.get('Upgrade') == 'websocket'
+            and keyword == 'Connection'
+            and value == 'close'
+        ):
+            # Do not keep processing requests.
+            self.close_connection = True
+            return
+        super().send_header(keyword, value)
+
+    def end_headers(self, *a, **kw):
+        super().end_headers(*a, **kw)
+        # At this point, Werkzeug assumes the connection is closed and will discard any incoming
+        # data. In the case of WebSocket connections, data should not be discarded. Replace the
+        # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
+        # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
+        headers = self.__dict__.get('headers')
+        if headers and headers.get('Upgrade') == 'websocket':
+            self.rfile = BytesIO()
+            self.wfile = BytesIO()
+
+    def log_error(self, format, *args):
+        if format == "Request timed out: %r" and config['test_enable']:
+            _logger.info(format, *args)
+        else:
+            super().log_error(format, *args)
+
+class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
+    """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
+    given by the environment, this is used by autoreload to keep the listen
+    socket open when a reload happens.
+    """
+    def __init__(self, host, port, app):
+        # The ODOO_MAX_HTTP_THREADS environment variable allows to limit the amount of concurrent
+        # socket connections accepted by a threaded server, implicitly limiting the amount of
+        # concurrent threads running for http requests handling.
+        self.max_http_threads = os.environ.get("ODOO_MAX_HTTP_THREADS")
+        if self.max_http_threads:
+            try:
+                self.max_http_threads = int(self.max_http_threads)
+            except ValueError:
+                # If the value can't be parsed to an integer then it's computed in an automated way to
+                # half the size of db_maxconn because while most requests won't borrow cursors concurrently
+                # there are some exceptions where some controllers might allocate two or more cursors.
+                self.max_http_threads = max((config['db_maxconn'] - config['max_cron_threads']) // 2, 1)
+            self.http_threads_sem = threading.Semaphore(self.max_http_threads)
+        super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
+                                                           handler=RequestHandler)
+
+        # See https://github.com/pallets/werkzeug/pull/770
+        # This allow the request threads to not be set as daemon
+        # so the server waits for them when shutting down gracefully.
+        self.daemon_threads = False
+
+    def server_bind(self):
+        SD_LISTEN_FDS_START = 3
+        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+            self.reload_socket = True
+            self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            _logger.info('HTTP service (werkzeug) running through socket activation')
+        else:
+            self.reload_socket = False
+            super(ThreadedWSGIServerReloadable, self).server_bind()
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
+
+    def server_activate(self):
+        if not self.reload_socket:
+            super(ThreadedWSGIServerReloadable, self).server_activate()
+
+    def process_request(self, request, client_address):
+        """
+        Start a new thread to process the request.
+        Override the default method of class socketserver.ThreadingMixIn
+        to be able to get the thread object which is instantiated
+        and set its start time as an attribute
+        """
+        t = threading.Thread(target = self.process_request_thread,
+                             args = (request, client_address))
+        t.daemon = self.daemon_threads
+        t.type = 'http'
+        t.start_time = time.time()
+        t.start()
+
+    def _handle_request_noblock(self):
+        if self.max_http_threads and not self.http_threads_sem.acquire(timeout=0.1):
+            # If the semaphore is full we will return immediately to the upstream (most probably
+            # socketserver.BaseServer's serve_forever loop  which will retry immediately as the
+            # selector will find a pending connection to accept on the socket. There is a 100 ms
+            # penalty in such case in order to avoid cpu bound loop while waiting for the semaphore.
+            return
+        # upstream _handle_request_noblock will handle errors and call shutdown_request in any cases
+        super(ThreadedWSGIServerReloadable, self)._handle_request_noblock()
+
+    def shutdown_request(self, request):
+        if self.max_http_threads:
+            # upstream is supposed to call this function no matter what happens during processing
+            self.http_threads_sem.release()
+        super().shutdown_request(request)
+
+#----------------------------------------------------------
+>>>>>>> 0dc4fc0e609346e8c5923a18f6c111cb7bb30d93
 # FileSystem Watcher for autoreload and cache invalidation
 # ----------------------------------------------------------
 
