@@ -314,7 +314,10 @@ class IrHttp(models.AbstractModel):
                 continue
 
             # Replace uid and lang placeholder by the current request.env.uid and request.env.lang
-            args[key] = val.with_env(request.env)
+            # while preserving the context of the record.
+            args[key] = val.with_env(
+                request.env(context=dict(val.env.context, **request.env.context))
+            )
 
             try:
                 # explicitly crash now, instead of crashing later
