@@ -9,6 +9,9 @@
             </button>
             <t t-set-slot="content">
                 <div class="overflow-auto flex-grow-1">
+                    <DropdownItem onSelected="() => this.onSelect()" class="'text-truncate ' + (!this.selectedTeamId ? 'selected' : '')">
+                        <t t-out="this.allTeamsLabel"/>
+                    </DropdownItem>
                     <t t-foreach="this.teams" t-as="team" t-key="team_index">
                         <DropdownItem onSelected="() => this.onSelect(team.id)" class="'text-truncate ' + (this.selectedTeamId === team.id ? 'selected' : '')">
                             <t t-out="team.name"/>

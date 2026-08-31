@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="crm.Breadcrumbs">
-        <t t-if="this.showTeamSwitcher">
+        <t t-if="this.hasTeamSwitcher">
             <TeamSwitcher/>
             <t t-call="web.Breadcrumb.Actions"/>
             <t t-call-slot="breadcrumb-status-indicator"/>

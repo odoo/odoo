@@ -2,7 +2,6 @@ import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { SearchModel } from "@web/search/search_model";
-import { session } from "@web/session";
 
 import { computed, proxy } from "@odoo/owl";
 
@@ -16,13 +15,24 @@ export class CrmSearchModel extends SearchModel {
     setup() {
         super.setup(...arguments);
         this.state = proxy({
-            switcherTeams: [],
-            switcherTeamId: undefined,
+            switcherAvailable: false, // Whether or not there's enough teams in DB to display the switcher.
+            switcherTeams: [], // Teams to display in the switcher.
+            switcherTeamId: null, // Selected team id ("undefined" = "All Sales Teams")
         });
     }
 
+    /**
+     * Whether or not the switcher is actually displayed.
+     */
     get isTeamSwitcherEnabled() {
-        return session.sales_team_membership_multi && this._actionContext.show_team_switcher;
+        return this.showTeamSwitcher && this.state.switcherAvailable;
+    }
+
+    /**
+     * Whether or not the view would like to display the team switcher.
+     */
+    get showTeamSwitcher() {
+        return !!this._actionContext.show_team_switcher;
     }
 
     /**
@@ -44,6 +54,7 @@ export class CrmSearchModel extends SearchModel {
     exportState() {
         const state = super.exportState();
         state.teamSwitcherState = {
+            available: this.state.switcherAvailable,
             teams: this.state.switcherTeams,
             teamId: this.state.switcherTeamId,
         };
@@ -57,6 +68,7 @@ export class CrmSearchModel extends SearchModel {
     _importState(state) {
         super._importState(...arguments);
         if (state.teamSwitcherState) {
+            this.state.switcherAvailable = state.teamSwitcherState.available;
             this.state.switcherTeams = state.teamSwitcherState.teams;
             this.state.switcherTeamId = state.teamSwitcherState.teamId;
         }
@@ -98,42 +110,47 @@ export class CrmSearchModel extends SearchModel {
 
     /**
      * Initialize the team switcher by:
-     * - retrieving the list of crm teams to display
-     * - restoring the previously selected team
+     * - checking whether the view would like the switcher (showTeamSwitcher)
+     * - checking whether there are enough teams to actually show it (switcherAvailable)
+     * - retrieving the list of crm teams to display (switcherTeams)
+     * - restoring the previously selected team (switcherTeamId)
      *
      * The initialization is skipped if the team switcher state is present
      * in the config state as it'll be restored with "_importState".
      */
     async _initSwitcher(config) {
-        if (!this.isTeamSwitcherEnabled || config.state?.teamSwitcherState) {
+        if (!this.showTeamSwitcher || config.state?.teamSwitcherState) {
             return;
         }
-        // Retrieve teams to display in team switcher
-        this.state.switcherTeams = await this.orm
+        // Retrieve team switcher data
+        const { available, teams } = await this.orm
             .cache({
                 type: "disk",
                 update: "always",
                 callback: (result, hasChanged) => {
                     if (hasChanged) {
-                        this.state.switcherTeams = result;
+                        this.state.switcherAvailable = result.available;
+                        this.state.switcherTeams = result.teams;
                         this._initSwitcherSelection(true);
                     }
                 },
             })
-            .call("crm.team", "get_team_switcher_teams_data");
+            .call("crm.team", "get_team_switcher_data");
+        this.state.switcherAvailable = available;
+        this.state.switcherTeams = teams;
         this._initSwitcherSelection();
     }
 
     /**
      * Init the switcher selected team by retrieving it from
-     * the local storage or fallback on first team.
+     * the local storage or fallback on "All Sales Teams".
      */
     _initSwitcherSelection(loaded=false) {
         let teamId = JSON.parse(browser.localStorage.getItem("crm.switcher_team_id"));
         const isValid = this.state.switcherTeams.find((t) => t.id === teamId);
         if (!isValid) {
-            // Fallback on first team
-            teamId = this.state.switcherTeams[0]?.id;
+            // Fallback on "All Sales Teams"
+            teamId = undefined;
         }
         if (teamId === this.state.switcherTeamId) {
             // Already current one, nothing to do
@@ -148,16 +165,25 @@ export class CrmSearchModel extends SearchModel {
      * Set the team as "default_team_id" in the action context.
      * Useful to get the team as default when creating "crm.lead" records via the "New" button
      * as the form is opened using the original action context, not the current search context.
+     * Also updating the globalContext (= action context one-time copy when the search model is loaded)
+     * to prevent stale data.
      */
     _updateActionContext(teamId) {
-        if (this._actionContext) {
-            this._actionContext.default_team_id = teamId;
+        for (const context of [this._actionContext, this.globalContext]) {
+            if (!context) {
+                continue;
+            }
+            if (teamId) {
+                context.default_team_id = teamId;
+            } else {
+                delete context.default_team_id;
+            }
         }
     }
 
     /**
      * Update the team switcher selected team.
-     * @param {Number} teamId Id of the new selected team.
+     * @param {Number} teamId Id of the new selected team, "undefined" fallbacks on "All Sales Team".
      * @param {Boolean} notify Whether or not to notify to recompute the search context and domain.
      */
     _updateSwitcherSelection(teamId, notify=true) {

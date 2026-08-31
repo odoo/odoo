@@ -791,15 +791,24 @@ class CrmTeam(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def get_team_switcher_teams_data(self):
-        """ Retrieve the teams and their data for the team switcher.
-        Only considering the teams using opportunities.
-        Limited to own teams if the user doesn't have "All Leads" access.
+    def get_team_switcher_data(self):
+        """ Retrieves the data for the team switcher.
+        The switcher only considers teams using opportunities.
+
+        :returns: A dictionary with:
+        - "available": Whether or not the team switcher is available for display.
+                       There needs to be at least 2 teams using opportunities in DB,
+                       regardless of the current user's own access.
+        - "teams": A list of dictionaries containing the data of the teams to be displayed in the switcher.
+                   Limited to own teams if the current user doesn't have "User: All Documents" access.
+                   Can be empty even when "available" is True, in this case only "All Sales Teams" will be visible.
         """
-        domain = Domain("use_opportunities", "=", True)
+        teams = self.env["crm.team"].search([("use_opportunities", "=", True)], order="sequence, id")
+        if len(teams) <= 1:
+            # Deactivating the team switcher if there's not enough teams in db.
+            return {"available": False, "teams": []}
         if not self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
-            domain &= Domain("id", "in", self.env.user.crm_team_ids.ids)
-        teams = self.env["crm.team"].search(domain, order="sequence, id")
+            teams = teams.filtered(lambda team: team.id in self.env.user.crm_team_ids.ids)
 
         team_stages_mapping = self.env["crm.stage"]._read_group(
             self.env["crm.stage"]._get_visible_stages_domain(teams.ids),
@@ -808,18 +817,21 @@ class CrmTeam(models.Model):
         )
         stage_ids_by_team = {team.id: stages.ids for team, stages in team_stages_mapping}
         shared_stage_ids = stage_ids_by_team.get(False, [])
-        return [
-            {
-                'id': team.id,
-                'name': team.name,
-                # Domain applied when this team will be selected in the team switcher.
-                # Showing all "crm.lead" records assigned to the team + the unassigned ones which
-                # happens to be part of the team visible stages.
-                'switcher_domain': list(
-                    Domain("team_id", "=", team.id) | (
-                        Domain("team_id", "=", False) &
-                        Domain("stage_id", "in", stage_ids_by_team.get(team.id, []) + shared_stage_ids)
-                    )
-                ),
-            } for team in teams
-        ]
+        return {
+            "available": True,
+            "teams": [
+                {
+                    'id': team.id,
+                    'name': team.name,
+                    # Domain applied when this team will be selected in the team switcher.
+                    # Showing all "crm.lead" records assigned to the team + the unassigned ones which
+                    # happens to be part of the team visible stages.
+                    'switcher_domain': list(
+                        Domain("team_id", "=", team.id) | (
+                            Domain("team_id", "=", False) &
+                            Domain("stage_id", "in", stage_ids_by_team.get(team.id, []) + shared_stage_ids)
+                        )
+                    ),
+                } for team in teams
+            ],
+        }

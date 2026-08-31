@@ -9,7 +9,6 @@ from . import crm_stage
 from . import crm_team
 from . import crm_team_member
 from . import ir_config_parameter
-from . import ir_http
 from . import res_config_settings
 from . import res_partner
 from . import digest
