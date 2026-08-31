@@ -126,14 +126,22 @@
             </div>
             <!-- Date -->
             <div t-if="opt_posts_loop_show_date">
-                <t t-set="show_write_date" t-value="is_post_page and blog_post.write_date and (blog_post.published_date or blog_post.publish_on) and blog_post.write_date.date() != (blog_post.published_date or blog_post.publish_on).date()"/>
                 <span t-if="opt_posts_loop_show_author and show_separator" t-attf-class="text-muted #{_separator_classes}">&#8226;</span>
-                <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{show_write_date and 'small'}" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
-                <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{show_write_date and 'small'}" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
-                <span t-if="show_write_date" class="small text-muted">
-                    (Updated
-                    <span t-field="blog_post.write_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>)
-                </span>
+                <t t-if="not is_post_page">
+                    <span t-if="blog_post.publish_on" class="text-muted" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                    <span t-elif="blog_post.published_date" class="text-muted" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+                </t>
+                <t t-else="">
+                    <t t-set="show_write_date" t-value="blog_post.website_published and blog_post.write_date and blog_post.write_date.date() != blog_post.published_date.date()"/>
+                    <span t-if="blog_post.publish_on" class="text-muted">
+                        Planned for <span t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+                    </span>
+                    <span t-elif="blog_post.published_date" t-attf-class="text-muted #{show_write_date and 'small'}" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+
+                    <span t-if="show_write_date" class="small text-muted">
+                        (Updated <t t-out="blog_post.write_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>)
+                    </span>
+                </t>
             </div>
         </div>
     </div>

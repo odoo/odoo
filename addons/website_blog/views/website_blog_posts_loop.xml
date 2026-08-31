@@ -135,27 +135,23 @@ according to the enabled options.
                         <!-- Year/month header -->
                         <t t-if="opt_blog_simple_list_view">
                             <t t-if="not blog_post.website_published" t-set="post_year" t-value="'Unpublished'"/>
-                            <t t-elif="blog_post.published_date" t-set="post_year" t-value="blog_post.published_date.strftime('%Y')"/>
-                            <t t-elif="blog_post.publish_on" t-set="post_year" t-value="blog_post.publish_on.strftime('%Y')"/>
+                            <t t-else="" t-set="post_year" t-value="blog_post.published_date.strftime('%Y')"/>
                             <t t-if="post_year != current_year">
                                 <div class="col-12 pb-4">
-                                    <span t-if="blog_post.published_date" class="badge bg-light" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
-                                    <span t-elif="blog_post.publish_on" class="badge bg-light" t-out="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
-                                    <span t-else="" class="badge bg-light">Unpublished</span>
+                                    <span t-if="not blog_post.website_published" class="badge bg-light">Unpublished</span>
+                                    <span t-else="" class="badge bg-light" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
                                 </div>
                                 <t t-set="current_year" t-value="post_year"/>
                             </t>
                         </t>
                         <t t-elif="opt_blog_compact_list_view">
                             <t t-if="not blog_post.website_published" t-set="post_month" t-value="'Unpublished'"/>
-                            <t t-elif="blog_post.published_date" t-set="post_month" t-value="blog_post.published_date.strftime('%Y-%m')"/>
-                            <t t-elif="blog_post.publish_on" t-set="post_month" t-value="blog_post.publish_on.strftime('%Y-%m')"/>
+                            <t t-else="" t-set="post_month" t-value="blog_post.published_date.strftime('%Y-%m')"/>
                             <t t-if="post_month != current_month">
                                 <div class="o_wblog_compact_list_month_header o_sticky_reactive position-static position-md-sticky sticky-md-top col-12 bg-body py-3">
                                     <h4 class="mb-0">
-                                        <t t-if="blog_post.published_date" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
-                                        <t t-elif="blog_post.publish_on" t-out="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
-                                        <t t-else="" t-out="'Unpublished'"/>
+                                        <t t-if="not blog_post.website_published" t-out="'Unpublished'"/>
+                                        <t t-else="" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
                                     </h4>
                                 </div>
                                 <t t-set="current_month" t-value="post_month"/>
@@ -279,12 +275,12 @@ according to the enabled options.
                     <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2 order-last order-lg-first"/>
                     <!-- Date -->
                     <t t-if="opt_blog_simple_list_view">
-                        <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
-                        <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
+                        <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                        <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
                     </t>
                     <t t-elif="opt_blog_compact_list_view">
-                        <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
-                        <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
+                        <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                        <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
                     </t>
                     
                     <div t-attf-class="#{opt_blog_compact_list_view and 'd-flex flex-grow-1 flex-wrap justify-content-between align-items-start gap-1'}">
