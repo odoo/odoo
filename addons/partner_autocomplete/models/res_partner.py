@@ -83,23 +83,24 @@ class ResPartner(models.Model):
         return iap_data
 
     @api.model
-    def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15):
+    def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15, include_branch=False):
         match fieldName:
             case "name":
-                return self.autocomplete_by_name(query, query_country_id)
+                return self.autocomplete_by_name(query, query_country_id, include_branch=include_branch)
             case "duns":
                 return self.autocomplete_by_duns(query, query_country_id)
             case _:
-                return self.autocomplete_by_vat(query, query_country_id)
+                return self.autocomplete_by_vat(query, query_country_id, include_branch=include_branch)
 
     @api.model
-    def autocomplete_by_name(self, query, query_country_id, timeout=15):
+    def autocomplete_by_name(self, query, query_country_id, timeout=15, include_branch=False):
         if query_country_id is False:  # If it's 0, we purposely do not want to filter on the country
             query_country_id = self.env.company.country_id.id
         query_country_code = self.env['res.country'].browse(query_country_id).code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_name', {
             'query': query,
             'query_country_code': query_country_code,
+            'include_branch': include_branch,
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -110,12 +111,13 @@ class ResPartner(models.Model):
             return []
 
     @api.model
-    def autocomplete_by_vat(self, vat, query_country_id, timeout=15):
+    def autocomplete_by_vat(self, vat, query_country_id, timeout=15, include_branch=False):
         query_country_id = query_country_id or self.env.company.country_id.id
         query_country_code = self.env['res.country'].browse(query_country_id).code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
+            'include_branch': include_branch,
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
