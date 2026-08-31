@@ -289,7 +289,11 @@ def dump_db(db_name, stream, backup_format='zip'):
                 with db.cursor() as cr:
                     json.dump(dump_db_manifest(cr), fh, indent=4)
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
-            subprocess.run(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, check=True)
+            try:
+                subprocess.run(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=True)
+            except subprocess.CalledProcessError as e:
+                _logger.error("pg_dump failed: %s", e.stderr.decode(errors='replace').strip())
+                raise
             if stream:
                 odoo.tools.osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
             else:
@@ -354,9 +358,10 @@ def restore_db(db, dump_file, copy=False, neutralize_database=False):
             [find_pg_tool(pg_cmd), '--dbname=' + db, *pg_args],
             env=exec_pg_environ(),
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT,
+            stderr=subprocess.PIPE,
         )
         if r.returncode != 0:
+            _logger.error("%s failed: %s", pg_cmd, r.stderr.decode(errors='replace').strip())
             raise Exception("Couldn't restore database")
 
         registry = odoo.modules.registry.Registry.new(db)
