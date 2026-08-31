@@ -2313,7 +2313,7 @@ export async function drag(target, options) {
 
             const finalizeEvents = setupEvents("drag & drop: drop", options);
 
-            await _pointerUp(options);
+            await _pointerUp(options, { canBeLongTap: true });
 
             dragEvents.push(...finalizeEvents());
 

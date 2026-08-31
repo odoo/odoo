@@ -532,6 +532,26 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("click on touch: a held drag suppresses the click on drop", async () => {
+        mockTouch(true);
+
+        await mountForTest(/* xml */ `<button type="button">Click me</button>`);
+
+        await hover("button");
+        monitorEvents("button");
+
+        const { drop } = await drag("button");
+        await advanceTime(600);
+        await drop();
+
+        expect.verifySteps([
+            "pointerdown:0(1)@button",
+            "focus@button",
+            "focusin@button",
+            "pointerup:0@button",
+        ]);
+    });
+
     test("click: iframe", async () => {
         await mountForTest(/* xml */ `
             <button>Click me</button>
