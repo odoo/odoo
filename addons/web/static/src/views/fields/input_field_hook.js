@@ -79,14 +79,18 @@ export function useInputField(params) {
             }
 
             if (!isInvalid) {
+                const el = getEl();
+                if (!el) {
+                    return;
+                }
                 if (val !== props.record.data[fieldName]) {
-                    lastSetValue = getEl().value;
+                    lastSetValue = el.value;
                     pendingUpdate = true;
                     await props.record.update({ [fieldName]: val }, { save: shouldSave() });
                     pendingUpdate = false;
                     props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
-                    getEl().value = params.getValue();
+                    el.value = params.getValue();
                 }
             }
         }
