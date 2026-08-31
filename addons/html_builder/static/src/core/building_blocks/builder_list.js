@@ -2,7 +2,18 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, computed, onPatched, useProps, proxy, signal, t, xml } from "@odoo/owl";
+import { useKeyboardReorder } from "@html_builder/utils/keyboard_reorder";
+import {
+    Component,
+    computed,
+    onMounted,
+    onPatched,
+    proxy,
+    signal,
+    t,
+    useProps,
+    xml,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -17,10 +28,11 @@ import { localeCompare } from "@web/core/l10n/utils";
  *  container's ref signal.
  */
 export function useAutoFocusNewItem(ref) {
+    const getRowEls = () => ref()?.querySelectorAll(".o_row_draggable") || [];
     let nbRow = 0;
     function autofocus() {
         const prevSize = nbRow;
-        const rowEls = ref()?.querySelectorAll(".o_row_draggable") || [];
+        const rowEls = getRowEls();
         nbRow = rowEls.length;
         if (nbRow <= prevSize) {
             return;
@@ -34,6 +46,10 @@ export function useAutoFocusNewItem(ref) {
             }
         }
     }
+    // The rows already there at mount are not new ones.
+    onMounted(() => {
+        nbRow = getRowEls().length;
+    });
     onPatched(autofocus);
 }
 
@@ -124,6 +140,14 @@ export class BuilderList extends Component {
 
     setupSortable() {
         if (this.props.sortable) {
+            this.keyboardReorder = useKeyboardReorder({
+                getList: () => this.cappedItems.map((item) => item._id),
+                insertAfter: (itemId, previousId) => this.reorderItem(itemId, previousId),
+                getHandle: () =>
+                    this.tableRef()
+                        ?.querySelectorAll(".o_row_draggable")
+                        [this.pendingFocusIndex]?.querySelector(".o_handle_cell button"),
+            });
             useSortable({
                 enable: () => this.props.sortable,
                 ref: this.tableRef,
@@ -239,6 +263,7 @@ export class BuilderList extends Component {
         const nextItems = items.slice(items.indexOf(previousItem) + 1, items.length);
 
         const newItems = [...previousItems, itemToReorder, ...nextItems];
+        this.pendingFocusIndex = newItems.indexOf(itemToReorder);
         this.commit(newItems);
     }
 
