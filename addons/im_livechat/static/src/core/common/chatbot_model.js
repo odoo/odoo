@@ -20,6 +20,8 @@ export class Chatbot extends Record {
     id;
     isTyping = false;
     isProcessingAnswer = false;
+    /** @type {number|undefined} */
+    nextStepTimeout;
     script = fields.One("chatbot.script");
     currentStep = fields.One("ChatbotStep");
     steps = fields.Many("ChatbotStep");
