@@ -7,6 +7,11 @@
 ///
 
 :root {
+    // Background the editor adjusts the contrast of the content against.
+    // Defaults to the background the editable is usually drawn on, and can be
+    // overridden by any context rendering the editor on another one.
+    --o-html-editor-background-contrast: #{$o-view-background-color};
+
     @each $color, $value in $grays {
         @include print-variable($color, $value);
     }
