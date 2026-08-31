@@ -222,6 +222,9 @@ export class FilterContentPlugin extends Plugin {
         const isBlock = this.isBlock(referenceNode);
         if (
             !ALLOWED_IF_INVISIBLE_ELEMENT.has(referenceNode.nodeName) &&
+            !referenceNode.matches?.(
+                `:scope:has(${[...ALLOWED_IF_INVISIBLE_ELEMENT].join(",")})`
+            ) &&
             rect &&
             rect[isBlock ? "height" : "width"] === 0 &&
             (referenceNode.nodeType !== Node.ELEMENT_NODE || !this.hasVisibleBorder(referenceNode))
