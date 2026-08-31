@@ -135,7 +135,8 @@ class HrVersion(models.Model):
         index='btree_not_null',
         readonly=False,
         check_company=True,
-        tracking=1)
+        tracking=1,
+        required=True)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location',
                                        domain="[('address_id', '=', address_id)]", index=True, tracking=1)
 
