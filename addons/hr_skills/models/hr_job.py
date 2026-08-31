@@ -64,4 +64,7 @@ class HrJob(models.Model):
         if "current_job_skill_ids" in vals or "job_skill_ids" in vals:
             vals_job_skill = vals.pop("current_job_skill_ids", []) + vals.get("job_skill_ids", [])
             vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(vals_job_skill, self)
+        if company_id := vals.get('company_id'):
+            for job in self:
+                job.job_skill_ids._validation_company_id_change(company_id)
         return super().write(vals)

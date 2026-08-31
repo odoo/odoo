@@ -14,9 +14,16 @@ class HrSkillType(models.Model):
     def _get_default_color(self):
         return randint(1, 11)
 
+    def _get_skill_models(self):
+        return [
+            'hr.employee.skill',
+            'hr.job.skill',
+        ]
+
     active = fields.Boolean('Active', default=True)
     sequence = fields.Integer("Sequence")
     name = fields.Char(required=True, translate=True)
+    company_id = fields.Many2one('res.company', string="Company", copy=True)
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
     skill_level_ids = fields.One2many('hr.skill.level', 'skill_type_id', string="Levels", copy=True)
     color = fields.Integer('Color', default=_get_default_color)
@@ -70,3 +77,22 @@ class HrSkillType(models.Model):
             }
             for skill_type, vals in zip(self, vals_list)
         ]
+
+    def _validation_company_id_change(self, company_id):
+        skill_models = self._get_skill_models()
+        for model in skill_models:
+            for skill_type in self:
+                blocking_skills = self.env[model].search_count([
+                    ('skill_type_id', '=', skill_type.id),
+                    ('company_id', '!=', False),
+                    ('company_id', '!=', company_id),
+                ])
+                if blocking_skills:
+                    company_name = self.env['res.company'].browse(company_id).name
+                    raise ValidationError(self.env._("Some skills of this type are linked to records from other companies than %s.\n \nInstead, duplicate this skill type into the company.", company_name))
+        return True
+
+    def write(self, vals):
+        if company_id := vals.get('company_id'):
+            self._validation_company_id_change(company_id)
+        return super().write(vals)

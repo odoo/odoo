@@ -203,6 +203,9 @@ class HrApplicant(models.Model):
                     for applicant in other_applicants:
                         mapped_skills = source_applicant._map_applicant_skill_ids_to_other_applicant_skill_ids(applicant, original_vals)
                         applicant.with_context(skills_synced=True).write({"applicant_skill_ids": mapped_skills})
+        if company_id := vals.get('company_id'):
+            for applicant in self:
+                applicant.applicant_skill_ids._validation_company_id_change(company_id)
         return super().write(vals)
 
     def _compute_display_name(self):
