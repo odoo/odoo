@@ -98,6 +98,7 @@ class MailActivitySchedule(models.TransientModel):
     # logging a call (voip.call, discuss.call.history) in the chatter of a document
     activity_type_id_domain = fields.Char(
         compute='_compute_activity_type_id_domain', export_string_translation=False)
+    call_history_id = fields.Many2one('discuss.call.history', export_string_translation=False)
     contact_id = fields.Many2one(
         'res.partner', compute='_compute_contact_id',
         readonly=False, store=False)
@@ -336,8 +337,10 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_contact_id(self):
         self.contact_id = self.env.context.get('log_contact_id')
 
+    @api.depends('call_history_id.end_dt')
     def _compute_is_call_ongoing(self):
-        self.is_call_ongoing = False
+        for scheduler in self:
+            scheduler.is_call_ongoing = bool(scheduler.call_history_id) and not scheduler.call_history_id.end_dt
 
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)
@@ -458,7 +461,7 @@ class MailActivitySchedule(models.TransientModel):
     def _action_schedule_activities(self):
         if not self.res_model:
             return self._action_schedule_activities_personal()
-        return self._get_applied_on_records().activity_schedule(
+        activities = self._get_applied_on_records().activity_schedule(
             activity_type_id=self.activity_type_id.id,
             automated=False,
             summary=self.summary,
@@ -468,6 +471,12 @@ class MailActivitySchedule(models.TransientModel):
             date_deadline=self.date_deadline,
             activity_user_id_fname=self.activity_user_id_fname
         )
+        # sudo: discuss.call.history: no one may write a call history, yet whoever attended
+        # the call may log it on a document of theirs.
+        call_history = self.call_history_id.sudo()
+        if call_history and not call_history.activity_id:
+            call_history.activity_id = activities[:1]
+        return activities
 
     def _action_schedule_activities_personal(self):
         if not self.activity_user_id:

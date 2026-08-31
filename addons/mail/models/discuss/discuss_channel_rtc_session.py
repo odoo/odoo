@@ -89,11 +89,12 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
             )
-        # sudo - dicuss.rtc.call.history: setting the end date of the call
-        # after it ends is allowed.
+        # sudo - dicuss.rtc.call.history: setting the end date of the call after it ends,
+        # and logging it on the activity that planned it, is allowed.
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
         for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
+            history._link_to_activity()
             stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
         return super().unlink()
 

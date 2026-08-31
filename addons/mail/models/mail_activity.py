@@ -133,6 +133,7 @@ class MailActivity(models.Model):
         ('done', 'Done')], 'State',
         compute='_compute_state')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
+    call_history_ids = fields.One2many('discuss.call.history', 'activity_id')
     # access
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
     active = fields.Boolean(default=True)
@@ -989,4 +990,4 @@ class MailActivity(models.Model):
 
     def _get_activity_done_message_extra_values(self, activity):
         """To ease passing new values to the mail.message_activity_done chatter template."""
-        return {}
+        return {'call_history': activity.call_history_ids[:1]}

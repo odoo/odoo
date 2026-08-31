@@ -2,6 +2,7 @@
 
 from . import test_access_rights
 from . import test_attendees
+from . import test_call_history_auto_log
 from . import test_calendar
 from . import test_calendar_activity
 from . import test_calendar_controller

@@ -10,8 +10,9 @@ import {
 import { test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { getOrigin } from "@web/core/utils/urls";
 import { clickEvent } from "@web/../tests/views/calendar/calendar_test_helpers";
-import { preloadBundle } from "@web/../tests/web_test_helpers";
+import { Command, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -83,4 +84,37 @@ test("Can delete activity linked to an event", async () => {
     await click(".o-overlay-container .o_cw_popover_delete");
     await click(".o_dialog .modal-footer button.btn.btn-danger");
     await contains(`.o_event[data-event-id="${calendaMeetingId}"]`, { count: 0 });
+});
+
+test("Join Meeting opens the Discuss channel of the meeting", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Milan Kundera" });
+    const activityTypeId = pyEnv["mail.activity.type"].create({
+        icon: "calendar_today",
+        name: "Meeting",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+        name: "Small Meeting",
+    });
+    const meetingId = pyEnv["calendar.event"].create({
+        name: "meeting1",
+        start: serializeDateTime(DateTime.now().plus({ days: 1 })),
+        videocall_channel_id: channelId,
+        videocall_location: `${getOrigin()}/calendar/join_videocall/testtoken`,
+    });
+    pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
+        can_write: true,
+        calendar_event_id: meetingId,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+
+    await click(".o-mail-Activity-joinMeeting");
+
+    await contains(".o-mail-ChatWindow-header:text('Small Meeting')");
 });

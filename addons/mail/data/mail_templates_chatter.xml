@@ -13,7 +13,8 @@
 <div>
     <p class="o_mail_activity_title mb-1">
         <span t-attf-class="oi oi-fw oi-filled" t-att-data-icon="activity.activity_type_id.icon"/>
-        <span t-if="activity.summary" t-field="activity.summary"/>
+        <span t-if="activity.summary and not call_history" t-field="activity.summary"/>
+        <t t-if="call_history" t-call="mail.message_activity_done_call"/>
         <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
     </p>
     <div t-if="activity.note and not is_html_empty(activity.note)" class="o_mail_activity_note pb-2">
@@ -28,9 +29,20 @@
 </div>
         </template>
 
+        <template id="message_activity_done_call">
+            <a href="#" t-att-data-oe-model="call_history._name" t-att-data-oe-id="call_history.id"
+                class="o_label_info text-primary fw-bold">
+                <t t-out="call_history.activity_done_label" />
+            </a>
+            <t name="call_artifacts_label" t-if="call_history.has_recording">
+                <i class="oi ms-1 text-muted" data-icon="movie" aria-hidden="true" />
+                <span class="visually-hidden">Recording available</span>
+            </t>
+        </template>
+
         <template id="message_activity_assigned">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
-    <!-- All activities must be assigned to the same user (activities.user_id). -->
+                <!-- All activities must be assigned to the same user (activities.user_id). -->
     Dear <span t-field="activities.user_id.name"/>,
     <br/><br/>
     <p>
