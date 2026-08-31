@@ -75,19 +75,35 @@ class WebsiteRewrite(models.Model):
 
     sequence = fields.Integer()
 
-    @api.depends('url_from', 'redirect_type')
+    @api.depends('url_from', 'redirect_type', 'website_id')
     def _compute_is_url_from_exist(self):
         for rewrite in self:
             exists = False
             if rewrite.url_from and rewrite.redirect_type in ['301', '302']:
                 url = rewrite.url_from.rstrip('/')
-                exists = self.env['website.page'].search_count([('url', '=', rewrite.url_from)], limit=1) > 0
+                page_domain = [('url', '=ilike', rewrite.url_from), ('is_published', '=', True)]
+                if rewrite.website_id:
+                    page_domain.append(('website_id', 'in', [False, rewrite.website_id.id]))
+                exists = self.env['website.page'].search_count(page_domain, limit=1) > 0
                 if not exists:
                     try:
-                        self.env['ir.http']._match(url)
-                        exists = True
+                        rule, args = self.env['ir.http']._match(url)
                     except werkzeug.exceptions.NotFound:
-                        exists = False
+                        pass
+                    except werkzeug.exceptions.MethodNotAllowed:
+                        exists = True
+                    else:
+                        # Matching a route is not enough: when a frontend
+                        # endpoint ends up in a 404 or a 403 (e.g. missing or
+                        # unpublished record), the redirection is served as a
+                        # fallback anyway, see `ir_http._handle_error`.
+                        public_user = rewrite.website_id.user_id or self.env.ref('base.public_user')
+                        exists = not rule.endpoint.routing.get('website') or all(
+                            record.exists() == record
+                            and record.with_user(public_user).has_access('read')
+                            for record in args.values()
+                            if isinstance(record, models.BaseModel)
+                        )
 
             rewrite.is_url_from_exist = exists
 
