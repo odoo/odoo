@@ -21,12 +21,15 @@ export class StockKanbanRenderer extends KanbanRenderer {
                 records.push(...g.list.records);
             });
         }
+        // kanban_dashboard_graph might not be in the view's arch,
+        // in which case should be ignored here.
+        const recordsWithGraph = records.filter((r) => r.data.kanban_dashboard_graph);
         // Data type "sample" is assigned in Python to empty graph data
-        let allEmpty = records.every(r => {
+        let allEmpty = recordsWithGraph.length && recordsWithGraph.every(r => {
             return r.data.kanban_dashboard_graph.includes('"type": "sample"');
         });
         if (allEmpty) {
-            records.forEach(r => {
+            recordsWithGraph.forEach(r => {
                 let parsedDashboardData = JSON.parse(r.data.kanban_dashboard_graph);
                 parsedDashboardData[0].values.forEach(d => {
                     d.value = Math.floor(Math.random() * 9 + 1);
