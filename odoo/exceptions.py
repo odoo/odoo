@@ -48,31 +48,11 @@ class AccessDenied(UserError):
         When you try to log with a wrong password.
     """
     http_status = 403  # Forbidden
+    conceal_debug_traceback = True
 
     def __init__(self, message="Access Denied"):
         super().__init__(message)
-        self.suppress_traceback()  # must be called in `except`s too
 
-    def suppress_traceback(self):
-        """
-        Remove the traceback, cause and context of the exception, hiding
-        where the exception occurred but keeping the exception message.
-
-        This method must be called in all situations where we are about
-        to print this exception to the users.
-
-        It is OK to leave the traceback (thus to *not* call this method)
-        if the exception is only logged in the logs, as they are only
-        accessible by the system administrators.
-        """
-        self.with_traceback(None)
-        self.traceback = ('', '', '')
-
-        # During handling of the above exception, another exception occurred
-        self.__context__ = None
-
-        # The above exception was the direct cause of the following exception
-        self.__cause__ = None
 
 class AccessError(UserError):
     """Access rights error.

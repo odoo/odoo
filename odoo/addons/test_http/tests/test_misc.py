@@ -7,6 +7,7 @@ from io import StringIO
 from socket import gethostbyname
 from unittest.mock import patch
 
+from odoo.http.dispatcher import conceal_debug_traceback, serialize_exception
 from odoo.http.requestlib import Request
 from odoo.http.router import root
 from odoo.http.stream import content_disposition
@@ -343,3 +344,52 @@ class TestFragmentToQueryString(TestHttpBase):
             capture.output,
             "It seems all the controller testing fragment_to_query_string weren't run.",
         )
+
+
+@tagged('-at_install', 'post_install')
+class TestConcealDebugTraceback(TestHttpBase):
+    def test_conceal_debug_traceback(self):
+        for exception, is_suppressed in [
+            ('ValueError', True),  # listed in conceal_debug_traceback()
+            ('AccessDenied', True),  # always concealed
+            ('UserError', False),  # not listed
+        ]:
+            with self.assertLogs('odoo.http') as log_capture:
+                res = self.url_open(f'/test_http/suppress-traceback/{exception}')
+                self.assertNotEqual(res.status_code, 200)
+
+                # The traceback can be suppressed in the response debug
+                if is_suppressed:
+                    self.assertNotIn("Traceback", res.json()['debug'])
+                else:
+                    self.assertIn("Traceback", res.json()['debug'])
+
+            # The traceback is always logged
+            self.assertEqual(log_capture.output, [
+                Like(f'...Traceback...\n{exception}: error message'),
+                Like('...GET /test_http/suppress-traceback...'),
+            ])
+
+        s = conceal_debug_traceback(ZeroDivisionError)
+        try:
+            with s:
+                1 / 0
+        except ZeroDivisionError as exc:
+            self.assertEqual(
+                serialize_exception(exc)['debug'],
+                "ZeroDivisionError: division by zero\n",
+                "The traceback must be concealed from the debug")
+
+        try:
+            with s:
+                [][0]  # ruff: ignore[potential-index-error]
+        except IndexError as exc:
+            self.assertEqual(
+                serialize_exception(exc)['debug'],
+                Like("""\
+Traceback (most recent call last):
+  File ".../odoo/addons/test_http/tests/test_misc.py", line ..., in test_conceal_debug_traceback
+    [][0]  # ruff: ignore[potential-index-error]
+...IndexError: list index out of range
+"""),
+                "The traceback must be visible in the debug")

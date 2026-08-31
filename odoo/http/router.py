@@ -32,7 +32,7 @@ except ImportError:
 
 import odoo.modules.db
 from odoo.api import Environment
-from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import (
     Manifest,
     initialize_sys_path,
@@ -42,17 +42,22 @@ from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
 from . import request, request_var
-from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
-from .response import Response
-from .retrying import retrying
-from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .stream import STATIC_CACHE, Stream
+from .dispatcher import (
+    HttpDispatcher,
+    JsonRPCDispatcher,
+    _dispatchers,
+    conceal_debug_traceback,
+)
 from .requestlib import (
     HTTPRequest,
     Request,
     is_cors_preflight,
 )
+from .response import Response
+from .retrying import retrying
+from .routing_map import ROUTING_KEYS, _generate_routing_rules
 from .session import SessionExpiredException, get_default_session, logout, session_store
+from .stream import STATIC_CACHE, Stream
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -308,9 +313,8 @@ class Application:
 
                 # Ensure there is always a WSGI handler attached to the exception.
                 if not hasattr(exc, 'error_response'):
-                    if isinstance(exc, AccessDenied):
-                        exc.suppress_traceback()
-                    exc.error_response = request.dispatcher.handle_error(exc)
+                    exc.error_response = request.dispatcher.handle_error(
+                        conceal_debug_traceback.without_traceback_if_concealed(exc))
 
                 return exc.error_response(environ, start_response)
 
@@ -560,9 +564,8 @@ def _update_served_exception(request: Request, exc: Exception) -> Exception:
     ):
         return exc  # bubble up to werkzeug.debug.DebuggedApplication
     if not hasattr(exc, 'error_response'):
-        if isinstance(exc, AccessDenied):
-            exc.suppress_traceback()
-        exc.error_response = request.registry['ir.http']._handle_error(exc)
+        exc.error_response = request.registry['ir.http']._handle_error(
+            conceal_debug_traceback.without_traceback_if_concealed(exc))
     return exc
 
 
