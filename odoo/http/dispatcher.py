@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import copy
 import logging
 import time
 import traceback
 import typing
 import weakref
 from abc import ABC, abstractmethod
+from contextlib import ContextDecorator
 from http import HTTPStatus
 from wsgiref.handlers import format_date_time
 
@@ -74,6 +76,8 @@ for more details.
 
 
 def serialize_exception(exception: Exception, *, message: str | None = None, arguments=None) -> dict[str, typing.Any]:
+    exception = conceal_debug_traceback.without_traceback_if_concealed(exception)
+
     name = type(exception).__name__
     module = type(exception).__module__
 
@@ -85,6 +89,51 @@ def serialize_exception(exception: Exception, *, message: str | None = None, arg
         'context': getattr(exception, 'context', {}),
         'debug': ''.join(traceback.format_exception(exception)),
     }
+
+
+class conceal_debug_traceback(ContextDecorator):
+    """
+    Conceal the traceback for the selected exceptions (or all exceptions
+    if none is specified) from the HTTP debug, while still logging it in
+    the server logs.
+
+    This utility works both as a decorator and as a context manager:
+
+    .. code-block:
+
+        @route('/private/controller', auth='public')
+        @conceal_debug_traceback()
+        def private_controller(self):
+            ...
+
+        def private_util():
+            with conceal_debug_traceback(ValueError):
+                ...
+
+    :param exceptions: The exception classes to conceal. All exceptions
+        by default missing.
+    """
+    def __init__(self, *exceptions):
+        wrong_exc = next((exc for exc in exceptions if not issubclass(exc, Exception)), None)
+        if wrong_exc:
+            raise TypeError(f"{wrong_exc} is not an exception class.")
+
+        self.exceptions = exceptions or (Exception,)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is not None and issubclass(exc_type, self.exceptions):
+            # This attribute is consumed by handle_error (in router.py)
+            # and by serialize_exception.
+            exc_value.conceal_debug_traceback = True
+
+    @classmethod
+    def without_traceback_if_concealed(cls, exception) -> BaseException:
+        if getattr(exception, 'conceal_debug_traceback', False):
+            return copy.copy(exception).with_traceback(None)
+        return exception
 
 
 _dispatchers: dict[str, type[Dispatcher]] = {}
