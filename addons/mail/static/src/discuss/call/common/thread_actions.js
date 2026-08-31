@@ -1,6 +1,7 @@
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { ActionCallButton } from "@mail/discuss/call/common/action_call_button";
+import { ActionCallDropdown } from "@mail/discuss/call/common/action_call_dropdown";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
 import { _t } from "@web/core/l10n/translation";
@@ -48,6 +49,7 @@ registerThreadAction("call-settings", {
 });
 registerThreadAction("disconnect", {
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel, owner, store }) =>
         store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),

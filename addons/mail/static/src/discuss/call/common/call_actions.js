@@ -3,6 +3,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ActionCallButton } from "@mail/discuss/call/common/action_call_button";
+import { ActionCallDropdown } from "@mail/discuss/call/common/action_call_dropdown";
 import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
@@ -378,6 +379,7 @@ export const rejectAction = {
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
