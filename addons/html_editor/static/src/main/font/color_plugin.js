@@ -83,9 +83,23 @@ export class ColorPlugin extends Plugin {
         remove_all_formats_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 
-        has_format_predicates: [
-            (node) => hasColor(closestElement(node), "color"),
-            (node) => hasColor(closestElement(node), "backgroundColor"),
+        can_remove_format_predicates: [
+            (targetedNodes) => {
+                if (
+                    targetedNodes.some((node) => hasColor(closestElement(node), "color"))
+                ) {
+                    return true;
+                }
+            },
+            (targetedNodes) => {
+                if (
+                    targetedNodes.some((node) =>
+                        hasColor(closestElement(node), "backgroundColor"),
+                    )
+                ) {
+                    return true;
+                }
+            },
         ],
         format_class_predicates: (className) =>
             TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),

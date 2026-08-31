@@ -67,9 +67,27 @@ export class AlignPlugin extends Plugin {
         ),
         post_undo_handlers: this.updateAlignmentParams.bind(this),
         post_redo_handlers: this.updateAlignmentParams.bind(this),
-        remove_all_formats_handlers: this.setAlignment.bind(this),
+        remove_all_formats_handlers: this.removeTextAlignment.bind(this),
 
-        has_format_predicates: (node) => closestBlock(node)?.style.textAlign,
+        // Alignment belongs to the whole block, so it is only removable when
+        // every aligned block in the selection is selected end to end.
+        can_remove_format_predicates: (targetedNodes) => {
+            const alignedBlocks = [
+                ...new Set(
+                    targetedNodes
+                        .map(closestBlock)
+                        .filter((block) => block?.style.textAlign),
+                ),
+            ];
+            if (
+                alignedBlocks.length &&
+                alignedBlocks.every((block) =>
+                    this.dependencies.selection.areNodeContentsFullySelected(block),
+                )
+            ) {
+                return true;
+            }
+        },
     };
 
     setup() {
@@ -132,5 +150,16 @@ export class AlignPlugin extends Plugin {
 
     updateAlignmentParams() {
         this.alignment.displayName = this.alignmentMode;
+    }
+
+    removeTextAlignment() {
+        const blocksToAlign = this.getBlocksToAlign();
+        if (
+            blocksToAlign.every((block) =>
+                this.dependencies.selection.areNodeContentsFullySelected(block),
+            )
+        ) {
+            this.setAlignment();
+        }
     }
 }

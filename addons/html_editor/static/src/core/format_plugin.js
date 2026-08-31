@@ -61,7 +61,7 @@ function isFormatted(formatPlugin, format) {
  * }) => void | boolean)[]} format_selection_handlers
  * @typedef {(() => void)[]} remove_all_formats_handlers
  * @typedef {((className: string) => boolean)[]} format_class_predicates
- * @typedef {((node: Node) => boolean)[]} has_format_predicates
+ * @typedef {((nodes: Node[]) => boolean | undefined)[]} can_remove_format_predicates
  */
 
 export class FormatPlugin extends Plugin {
@@ -125,7 +125,7 @@ export class FormatPlugin extends Plugin {
             {
                 id: "removeFormat",
                 description: (sel, nodes) =>
-                    nodes && this.hasAnyFormat(nodes)
+                    nodes && this.canRemoveFormat(nodes)
                         ? _t("Remove Format")
                         : _t("Selection has no format"),
                 icon: "fa-eraser",
@@ -173,7 +173,7 @@ export class FormatPlugin extends Plugin {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
-                isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
+                isDisabled: (sel, nodes) => !this.canRemoveFormat(nodes),
             }),
         ],
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
@@ -291,7 +291,7 @@ export class FormatPlugin extends Plugin {
         );
     }
 
-    hasAnyFormat(targetedNodes) {
+    canRemoveFormat(targetedNodes) {
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
@@ -306,10 +306,8 @@ export class FormatPlugin extends Plugin {
                 return true;
             }
         }
-        return targetedNodes.some((node) =>
-            this.getResource("has_format_predicates").some((predicate) =>
-                predicate(node),
-            ),
+        return (
+            this.checkPredicates("can_remove_format_predicates", targetedNodes) ?? false
         );
     }
 
