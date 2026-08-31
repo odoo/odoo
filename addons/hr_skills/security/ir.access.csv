@@ -4,12 +4,12 @@ hr_resume_rule_employee,Resume: employee: read all,hr.resume.line,base.group_use
 hr_skills_rule_employee_update,Resume: employee: create/write/unlink own,hr.resume.line,base.group_user,cud,"[('employee_id.user_id','=',user.id)]"
 access_hr_resume_line_type,hr.resume.line.type,hr.resume.line.type,hr.group_hr_user,crud,
 access_hr_resume_line_type_employee,hr.resume.line.type.employee,hr.resume.line.type,base.group_user,r,
-access_hr_skill_type,hr.skill.type,hr.skill.type,hr.group_hr_user,crud,
-access_hr_skill_type_employee,hr.skill.type.employee,hr.skill.type,base.group_user,r,
-access_hr_skill_level,hr.skill.level,hr.skill.level,hr.group_hr_user,crud,
-access_hr_skill_level_employee,hr.skill.level.employee,hr.skill.level,base.group_user,r,
-access_hr_skill,hr.skill,hr.skill,hr.group_hr_user,crud,
-access_hr_skill_employee,hr.skill.employee,hr.skill,base.group_user,cr,
+access_hr_skill_type,hr.skill.type,hr.skill.type,hr.group_hr_user,crud,"[('company_id', 'in', company_ids + [False])]"
+access_hr_skill_type_employee,hr.skill.type.employee,hr.skill.type,base.group_user,r,"[('company_id', 'in', company_ids + [False])]"
+access_hr_skill_level,hr.skill.level,hr.skill.level,hr.group_hr_user,crud,"[('skill_type_id.company_id', 'in', company_ids + [False])]"
+access_hr_skill_level_employee,hr.skill.level.employee,hr.skill.level,base.group_user,r,"[('skill_type_id.company_id', 'in', company_ids + [False])]"
+access_hr_skill,hr.skill,hr.skill,hr.group_hr_user,crud,"[('skill_type_id.company_id', 'in', company_ids + [False])]"
+access_hr_skill_employee,hr.skill.employee,hr.skill,base.group_user,cr,"[('skill_type_id.company_id', 'in', company_ids + [False])]"
 hr_skill_rule_hr_user,Employee skill: HR user: read all,hr.employee.skill,hr.group_hr_user,crud,
 hr_skill_rule_employee,Employee skill: employee: read all,hr.employee.skill,base.group_user,r,
 hr_skill_rule_employee_update,Employee skill: employee: create/write/unlink own,hr.employee.skill,base.group_user,cud,"[('employee_id.user_id','=',user.id)]"

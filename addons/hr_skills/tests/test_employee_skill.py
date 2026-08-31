@@ -32,8 +32,15 @@ class TestEmployeeSkills(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.skipTest(cls, "To be reintroduced post 18.4 freeze")
-        cls.employee = cls.env['hr.employee'].create([
-            {'name': 'Test Employee'},
+        cls.company_a, cls.company_b = cls.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        cls.employee = cls.env['hr.employee'].with_company(cls.company_a).create([
+            {
+                'name': 'Test Employee',
+                'company_id': cls.company_a.id,
+            },
         ])
         cls.certification, cls.language = cls._create_skill_types([
             {
@@ -554,3 +561,21 @@ class TestEmployeeSkills(TransactionCase):
         employee_form.current_employee_skill_ids.remove(index=index)
         employee_form.save()
         self.assertEqual(len(self.employee.employee_skill_ids), 6, "the certification is removed because an other expired certification has the same validity range")
+
+    def test_change_employee_company_id_with_company_specific_skill(self):
+        self.language.write({
+            'company_id': self.company_a.id,
+        })
+        with self.assertRaises(ValidationError):
+            self.employee.write({
+                'company_id': self.company_b.id,
+            })
+
+    def test_change_skill_type_company_id_with_company_specific_skill(self):
+        self.language.write({
+            'company_id': self.company_a.id,
+        })
+        with self.assertRaises(ValidationError):
+            self.language.write({
+                'company_id': self.company_b.id,
+            })
