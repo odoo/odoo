@@ -1,4 +1,3 @@
-import { onWillRender } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -53,13 +52,11 @@ export class OfflineSearchBar extends Component {
             this.emptySearch = this.allSearches.find((search) => !search.facets.length) || null;
             this.state.searches = this.allSearches;
         });
+    }
 
-        onWillRender(() => {
-            const currentSearch = this.env.searchModel.getCurrentSearch();
-            this.currentSearch =
-                this.allSearches.find((search) => search.key === currentSearch.key) ||
-                currentSearch;
-        });
+    get currentSearch() {
+        const currentSearch = this.env.searchModel.getCurrentSearch();
+        return this.allSearches.find((search) => search.key === currentSearch.key) || currentSearch;
     }
 
     get isSearchMenuDisabled() {
