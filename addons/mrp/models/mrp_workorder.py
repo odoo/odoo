@@ -678,8 +678,6 @@ class MrpWorkorder(models.Model):
         return total
 
     def button_start(self, raise_on_invalid_state=False):
-        if any(wo.working_state == 'blocked' for wo in self):
-            raise UserError(_('Please unblock the work center to start the work order.'))
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
@@ -972,8 +970,6 @@ class MrpWorkorder(models.Model):
 
     def action_mark_as_done(self):
         for wo in self:
-            if wo.working_state == 'blocked':
-                raise UserError(_('Please unblock the work center to validate the work order'))
             res = wo.button_finish()
             if res is not True:
                 return res
