@@ -2,7 +2,7 @@
 <templates>
     <t t-name="spreadsheet_dashboard.DashboardSearchBar">
         <div class="o_sp_dashboard_search d-flex flex-wrap flex-lg-nowrap gap-1 gap-lg-2 w-100 w-lg-auto" t-if="!this.searchModel.state.isLoading">
-            <div class="d-flex flex-grow-1 input-group w-auto" t-if="this.visibilityState.showSearchBar" >
+            <div class="o_cp_searchview d-flex flex-grow-1 input-group w-auto rounded-pill" t-if="this.visibilityState.showSearchBar" >
                 <SearchBarDropdown
                     state="this.inputDropdownState"
                     manual="true"
@@ -17,7 +17,7 @@
                 >
 
                     <div
-                        class="o_searchview form-control d-flex align-items-center py-1 border-end-0 gap-1"
+                        class="o_searchview form-control d-flex align-items-center py-1 border-end-0 gap-1 rounded-start-pill bg-view ps-3 pe-0"
                         t-on-click="this.onInputContainerClick">
                         <button class="btn border-0 p-0" t-on-click="this.onSearchClick">
                             <i class="oi me-2" data-icon="search"></i>
@@ -55,7 +55,7 @@
                     popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
                 >
                     <button
-                        class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown"
+                        class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown ps-0 pe-3 rounded-end-pill bg-view border-start-0"
                         t-on-click="this.toggleFilterValueDropdown" />
                     <t t-set-slot="content">
                         <DashboardSearchBarMenu
