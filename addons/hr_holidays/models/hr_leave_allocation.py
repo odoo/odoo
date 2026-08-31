@@ -870,7 +870,7 @@ class HrLeaveAllocation(models.Model):
             allocation.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self.env.context.get('import_file'):
                 allocation.activity_update()
-            if allocation.validation_type == 'no_validation' and allocation.state == 'confirm':
+            if (allocation.validation_type == 'no_validation' or allocation.is_officer) and allocation.state == 'confirm' and not self.env.context.get('allocation_skip_auto_approve'):
                 allocation.action_approve()
         return allocations
 
