@@ -15,6 +15,7 @@ import { createElementFromContent, getInnerHtml, getOuterHtml } from "@mail/util
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -40,23 +41,19 @@ export class Message extends Record {
     /** Shared by every compute reading the body: clone it before modifying it. */
     bodyEl = this.computed(() => (this.body ? createElementFromContent(this.body) : null));
     call_history_ids = fields.Many("discuss.call.history");
-    richBody = fields.Html("", {
-        compute() {
-            emojiLoader.load();
-            if (!this.bodyEl) {
-                return "";
-            }
-            return getInnerHtml(decorateEmojis(this.bodyEl.cloneNode(true)));
-        },
+    richBody = this.computed(() => {
+        emojiLoader.load();
+        if (!this.bodyEl) {
+            return "";
+        }
+        return getInnerHtml(decorateEmojis(this.bodyEl.cloneNode(true)));
     });
-    richTranslationValue = fields.Html("", {
-        compute() {
-            emojiLoader.load();
-            if (!this.translationValue) {
-                return "";
-            }
-            return getInnerHtml(decorateEmojis(createElementFromContent(this.translationValue)));
-        },
+    richTranslationValue = this.computed(() => {
+        emojiLoader.load();
+        if (!this.translationValue) {
+            return "";
+        }
+        return getInnerHtml(decorateEmojis(createElementFromContent(this.translationValue)));
     });
     composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r?.delete() });
     composerAsReplyToMessage = fields.One("Composer", { inverse: "replyToMessage" });
@@ -73,10 +70,9 @@ export class Message extends Record {
             this.bodyEl?.querySelector(".o-mail-Message-edited")
         )
     );
-    editedDate = fields.Datetime({
-        compute() {
-            return this.bodyEl?.querySelector(".o-mail-Message-edited")?.dataset.oDatetime;
-        },
+    editedDate = this.computed(() => {
+        const editedDate = this.bodyEl?.querySelector(".o-mail-Message-edited")?.dataset.oDatetime;
+        return editedDate ? deserializeDateTime(editedDate) : undefined;
     });
     /** attachments not already clearly visible in the body, unlike inlined images */
     extra_body_attachment_ids = fields.Many("ir.attachment", {
@@ -430,56 +426,53 @@ export class Message extends Record {
         return false;
     }
 
-    inlineBody = fields.Html("", {
-        /** @this {import("models").Message} */
-        compute() {
-            if (this.poll) {
-                let text = this.poll.poll_question;
-                if (this.ended_poll_ids.length) {
-                    text = this.poll.pollClosedText;
-                }
-                return markup`<i class="oi oi oi-fw o-me-0_5" data-icon="oi_view-cohort"></i>${text}`;
+    inlineBody = this.computed(() => {
+        if (this.poll) {
+            let text = this.poll.poll_question;
+            if (this.ended_poll_ids.length) {
+                text = this.poll.pollClosedText;
             }
-            if (this.notificationType === "thread_deletion") {
-                const nameEl = createElementFromContent(htmlToTextContentInline(this.body));
-                return _t('%(user)s deleted the thread "%(thread_name)s"', {
-                    user: this.authorName,
-                    thread_name: getInnerHtml(decorateEmojis(nameEl)),
-                });
-            }
-            if (this.notificationType === "channel_rename") {
-                const name = htmlToTextContentInline(this.body);
-                const params = { user: this.authorName, name: markup`<b>${name}</b>` };
-                return this.thread?.channel?.parent_channel_id
-                    ? _t("%(user)s changed the thread name to %(name)s", params)
-                    : _t("%(user)s changed the channel name to %(name)s", params);
-            }
-            if (this.notificationType === "thread_creation") {
-                const threadChannel = this.channelAsThreadCreationNotification;
-                const threadLink = generateMentionElement({
-                    className: "o_channel_redirect",
-                    id: Number(threadChannel?.id),
-                    model: "discuss.channel",
-                    text: threadChannel?.displayName ?? _t("New Thread"),
-                });
-                return getOuterHtml(
-                    renderToElement("mail.Message.threadCreationNotification", {
-                        threadCreationPrefix: _t("%(user)s started a thread: ", {
-                            user: this.authorName,
-                        }),
-                        threadLink: getOuterHtml(threadLink),
-                    })
-                );
-            }
-            if (this.isEmpty) {
-                return _t("This message has been removed");
-            }
-            if (!this.bodyEl) {
-                return "";
-            }
-            const bodyEl = this.bodyEl.cloneNode(true);
-            return htmlTrim(getInnerHtml(decorateEmojis(inlineElement(bodyEl))));
-        },
+            return markup`<i class="oi oi oi-fw o-me-0_5" data-icon="oi_view-cohort"></i>${text}`;
+        }
+        if (this.notificationType === "thread_deletion") {
+            const nameEl = createElementFromContent(htmlToTextContentInline(this.body));
+            return _t('%(user)s deleted the thread "%(thread_name)s"', {
+                user: this.authorName,
+                thread_name: getInnerHtml(decorateEmojis(nameEl)),
+            });
+        }
+        if (this.notificationType === "channel_rename") {
+            const name = htmlToTextContentInline(this.body);
+            const params = { user: this.authorName, name: markup`<b>${name}</b>` };
+            return this.thread?.channel?.parent_channel_id
+                ? _t("%(user)s changed the thread name to %(name)s", params)
+                : _t("%(user)s changed the channel name to %(name)s", params);
+        }
+        if (this.notificationType === "thread_creation") {
+            const threadChannel = this.channelAsThreadCreationNotification;
+            const threadLink = generateMentionElement({
+                className: "o_channel_redirect",
+                id: Number(threadChannel?.id),
+                model: "discuss.channel",
+                text: threadChannel?.displayName ?? _t("New Thread"),
+            });
+            return getOuterHtml(
+                renderToElement("mail.Message.threadCreationNotification", {
+                    threadCreationPrefix: _t("%(user)s started a thread: ", {
+                        user: this.authorName,
+                    }),
+                    threadLink: getOuterHtml(threadLink),
+                })
+            );
+        }
+        if (this.isEmpty) {
+            return _t("This message has been removed");
+        }
+        if (!this.bodyEl) {
+            return "";
+        }
+        const bodyEl = this.bodyEl.cloneNode(true);
+        return htmlTrim(getInnerHtml(decorateEmojis(inlineElement(bodyEl))));
     });
 
     get notificationIcon() {
@@ -519,33 +512,30 @@ export class Message extends Record {
         return this.isBodyEmpty && this.hasAttachments;
     }
 
-    bodyPreview = fields.Html("", {
-        /** @this {import("models").Message} */
-        compute() {
-            let messageBody = "";
-            if (!this.hasOnlyAttachments) {
-                return this.inlineBody || this.subtype_id?.description;
-            }
-            const attachments = this.attachment_ids;
-            switch (attachments.length) {
-                case 1:
-                    messageBody = attachments[0].previewName;
-                    break;
-                case 2:
-                    messageBody = _t("%(file1)s and %(file2)s", {
-                        file1: attachments[0].previewName,
-                        file2: attachments[1].previewName,
-                        count: attachments.length - 1,
-                    });
-                    break;
-                default:
-                    messageBody = _t("%(file1)s and %(count)s other attachments", {
-                        file1: attachments[0].previewName,
-                        count: attachments.length - 1,
-                    });
-            }
-            return markup`<i class="oi me-1" data-icon="${this.previewIcon}"></i>${messageBody}`;
-        },
+    bodyPreview = this.computed(() => {
+        let messageBody = "";
+        if (!this.hasOnlyAttachments) {
+            return this.inlineBody || this.subtype_id?.description;
+        }
+        const attachments = this.attachment_ids;
+        switch (attachments.length) {
+            case 1:
+                messageBody = attachments[0].previewName;
+                break;
+            case 2:
+                messageBody = _t("%(file1)s and %(file2)s", {
+                    file1: attachments[0].previewName,
+                    file2: attachments[1].previewName,
+                    count: attachments.length - 1,
+                });
+                break;
+            default:
+                messageBody = _t("%(file1)s and %(count)s other attachments", {
+                    file1: attachments[0].previewName,
+                    count: attachments.length - 1,
+                });
+        }
+        return markup`<i class="oi me-1" data-icon="${this.previewIcon}"></i>${messageBody}`;
     });
 
     previewText = fields.Html("", {

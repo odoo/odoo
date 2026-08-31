@@ -62,8 +62,9 @@ export class ResPartner extends Record {
     /** @type {string} */
     tz;
     /** @type {luxon.DateTime} */
-    offline_since = fields.Datetime(undefined, {
-        compute: () => DateTime.max(this.user_ids.map((u) => u.offline_since)),
+    offline_since = this.computed(() => {
+        const dts = this.user_ids.map((u) => u.offline_since).filter((dt) => dt);
+        return dts.length ? DateTime.max(...dts) : undefined;
     });
     user_ids = fields.Many("res.users", { inverse: "partner_id" });
     write_date = fields.Datetime();

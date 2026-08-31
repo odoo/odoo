@@ -297,14 +297,11 @@ export class DiscussChannel extends Record {
     last_interest_dt = fields.Datetime();
     meeting_start_dt = fields.Datetime();
     meeting_stop_dt = fields.Datetime();
-    lastInterestDt = fields.Datetime({
-        /** @this {import("models").Thread} */
-        compute() {
-            return compareDatetime(this.self_member_id?.last_interest_dt, this.last_interest_dt) > 0
-                ? this.self_member_id?.last_interest_dt
-                : this.last_interest_dt;
-        },
-    });
+    lastInterestDt = this.computed(() =>
+        compareDatetime(this.self_member_id?.last_interest_dt, this.last_interest_dt) > 0
+            ? this.self_member_id?.last_interest_dt
+            : this.last_interest_dt
+    );
     markedAsUnread = false;
     onlineMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */

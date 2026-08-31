@@ -1,5 +1,4 @@
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/model/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -8,14 +7,11 @@ const messagePatch = {
     setup() {
         super.setup(...arguments);
         this.disableChatbotAnswers = false;
-        this.isWelcomeMessage = fields.Attr(false, {
-            compute() {
-                return (
-                    this.thread?.channel?.hasWelcomeMessage &&
-                    this.eq(this.thread.channel.livechatWelcomeMessage)
-                );
-            },
-        });
+        this.isWelcomeMessage = this.computed(
+            () =>
+                this.thread?.channel?.hasWelcomeMessage &&
+                this.eq(this.thread.channel.livechatWelcomeMessage)
+        );
     },
 
     get notificationHidden() {
