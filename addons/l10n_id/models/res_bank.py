@@ -28,8 +28,8 @@ def _l10n_id_make_qris_request(endpoint, params):
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
-    l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system")
-    l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system")
+    l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system", help="The authentication token connecting merchant systems to process Indonesian QR payments.")
+    l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system", help="QRIS Merchant ID is the National Merchant ID obtained after successful QRIS registration.")
 
     @api.model
     def _get_available_qr_methods(self):
