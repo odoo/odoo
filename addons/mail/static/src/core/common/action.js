@@ -66,8 +66,6 @@ export const ACTION_TAGS = Object.freeze({
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
  * @property {boolean|(params: ActionParams_T) => boolean} [dropdownTrigger]
- * @property {Component|(params: ActionParams_T) => Component} [dropdownComponent]
- * @property {Object|(params: ActionParams_T) => Object} [dropdownComponentProps]
  * @property {string|(params: ActionParams_T) => string} [dropdownMenuClass]
  * @property {string|(params: ActionParams_T) => string} [dropdownPosition]
  * @property {DropdownState|(params: ActionParams_T) => DropdownState} [dropdownState]
@@ -84,6 +82,8 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [name]
  * @property {string|(params: ActionParams_T) => string} [nameClass]
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
+ * @property {Component|(params: ActionParams_T) => Component} [popoverComponent]
+ * @property {Object|(params: ActionParams_T) => Object} [popoverComponentProps]
  * @property {number|(params: ActionParams_T) => number} [sequence]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceGroup]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceQuick]
@@ -390,31 +390,6 @@ export class Action {
         );
     }
 
-    /** @param {Action} action @returns {Component|undefined} */
-    _dropdownComponent(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines an optional component to use for the content slot */
-    get dropdownComponent() {
-        return (
-            this._dropdownComponent(this.params) ??
-            (typeof this.definition.dropdownComponent === "function" &&
-            Object.getPrototypeOf(this.definition.dropdownComponent) !== Component
-                ? this.definition.dropdownComponent.call(this, this.params)
-                : this.definition.dropdownComponent)
-        );
-    }
-
-    /** @param {Action} action @returns {Object|undefined} */
-    _dropdownComponentProps(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines optional props to pass to component of the content slot of dropdown. */
-    get dropdownComponentProps() {
-        return (
-            this._dropdownComponentProps(this.params) ??
-            (typeof this.definition.dropdownComponentProps === "function"
-                ? this.definition.dropdownComponentProps.call(this, this.params)
-                : this.definition.dropdownComponentProps)
-        );
-    }
-
     /** @param {Action} action @returns {string|undefined} */
     _dropdownMenuClass(action) {}
     /** When action is a dropdown @see dropdownTrigger, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
@@ -614,6 +589,31 @@ export class Action {
         return (
             this._onSelected(this.params, ev) ??
             this.definition.onSelected?.call(this, this.params, ev)
+        );
+    }
+
+    /** @param {Action} action @returns {Component|undefined} */
+    _popoverComponent(action) {}
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional component to use for the content slot */
+    get popoverComponent() {
+        return (
+            this._popoverComponent(this.params) ??
+            (typeof this.definition.popoverComponent === "function" &&
+            Object.getPrototypeOf(this.definition.popoverComponent) !== Component
+                ? this.definition.popoverComponent.call(this, this.params)
+                : this.definition.popoverComponent)
+        );
+    }
+
+    /** @param {Action} action @returns {Object|undefined} */
+    _popoverComponentProps(action) {}
+    /** When action is a dropdown @see dropdownTrigger, this determines optional props to pass to component of the content slot of dropdown. */
+    get popoverComponentProps() {
+        return (
+            this._popoverComponentProps(this.params) ??
+            (typeof this.definition.popoverComponentProps === "function"
+                ? this.definition.popoverComponentProps.call(this, this.params)
+                : this.definition.popoverComponentProps)
         );
     }
 
