@@ -5,9 +5,7 @@ from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from odoo.tools import cloc
-from odoo.tests import tagged
-
-from odoo.addons.test_tools.tests import test_cloc
+from odoo.tests import tagged, TransactionCase
 
 VALID_XML = """
 <templates id="template" xml:space="preserve">
@@ -35,9 +33,93 @@ VALID_XML_2 = """<?xml version="1.0" encoding="UTF-8"?>
 </odoo>
 """
 
+JS_TEST = r'''
+/*
+comment
+*/
+
+function() {
+    return 1+2; // comment
+}
+
+function() {
+    hello = 4; /*
+        comment
+    */
+    console.log(hello);
+    regex = /\/*h/;
+    legit_code_counted = 1;
+    regex2 = /.*/;
+}
+'''
+
+SCSS_TEST = '''
+/*
+  Comment
+*/
+
+// Standalone list views
+.o_content > .o_list_view > .table-responsive > .table {
+    // List views always have the table-sm class, maybe we should remove
+    // it (and consider it does not exist) and change the default table paddings
+    @include o-list-view-full-width-padding($base-x: $table-cell-padding-x-sm, $base-y: $table-cell-padding-y-sm, $ratio: 2);
+    &:not(.o_list_table_grouped) {
+        @include media-breakpoint-up(xl) {
+            @include o-list-view-full-width-padding($base-x: $table-cell-padding-x-sm, $base-y: $table-cell-padding-y-sm, $ratio: 2.5);
+        }
+    }
+
+    .o_optional_columns_dropdown_toggle {
+        padding: 8px 10px;
+    }
+}
+
+#content, #footer, #supplement {
+   text-overflow: '/*';
+   left: 510px;
+   width: 200px;
+   text-overflow: '*/';
+}
+'''
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestClocFields(test_cloc.TestClocCustomization):
+class TestClocFields(TransactionCase):
+    def create_xml_id(self, module, name, rec):
+        self.env['ir.model.data'].create({
+            'name': name,
+            'model': rec._name,
+            'res_id': rec.id,
+            'module': module,
+        })
+
+    def create_field(self, name):
+        field = self.env['ir.model.fields'].with_context(studio=True).create({
+            'name': name,
+            'field_description': name,
+            'model': 'res.partner',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'ttype': 'integer',
+            'store': False,
+            'compute': "for rec in self: rec['x_invoice_count'] = 10",
+        })
+        # Simulate the effect of https://github.com/odoo/odoo/commit/9afce4805fc8bac45fdba817488aa867fddff69b
+        # Updating a module create xml_id of the module even for manual field if it's the original module
+        # of the model
+        self.create_xml_id('base', name, field)
+        return field
+
+    def create_server_action(self, name):
+        return self.env['ir.actions.server'].create({
+            'name': name,
+            'code': """
+    for rec in records:
+        rec['name'] = test
+                """,
+            'state': 'code',
+            'type': 'ir.actions.server',
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
 
     def create_studio_module(self):
         # Studio module does not exist at this stage, so we simulate it
@@ -52,6 +134,71 @@ class TestClocFields(test_cloc.TestClocCustomization):
                 'summary': 'Studio Customization',
             })
 
+    def test_ignore_auto_generated_computed_field(self):
+        """
+            Check that we count custom fields with no module or studio not auto generated
+            Having an xml_id but no existing module is consider as not belonging to a module
+        """
+        f1 = self.create_field('x_invoice_count')
+        self.create_xml_id('studio_customization', 'invoice_count', f1)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Studio auto generated count field should not be counted in cloc')
+        f2 = self.create_field('x_studio_custom_field')
+        self.create_xml_id('studio_customization', 'studio_custom', f2)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Count other studio computed field')
+        self.create_field('x_custom_field')
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'Count fields without xml_id')
+        f4 = self.create_field('x_custom_field_export')
+        self.create_xml_id('__export__', 'studio_custom', f4)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 3, 'Count fields with xml_id but without module')
+
+    def test_several_xml_id(self):
+        sa = self.create_server_action("Test double xml_id")
+        self.create_xml_id("__export__", "first", sa)
+        self.create_xml_id("base", "second", sa)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'Count Should count SA with a non standard xml_id')
+        self.create_xml_id("__import__", "third", sa)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 2, 'SA with several xml_id should be counted only once')
+
+    def test_cloc_exclude_xml_id(self):
+        sa = self.create_server_action("Test double xml_id")
+        self.create_xml_id("__cloc_exclude__", "sa_first", sa)
+        self.create_xml_id("__upgrade__", "sa_second", sa)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Should not count SA with cloc_exclude xml_id')
+
+        f1 = self.create_field('x_invoice_count')
+        self.create_xml_id("__cloc_exclude__", "field_first", f1)
+        self.create_xml_id("__upgrade__", "field_second", f1)
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Should not count Field with cloc_exclude xml_id')
+
+    def test_field_no_xml_id(self):
+        self.env['ir.model.fields'].create({
+            'name': "x_no_xml_id",
+            'field_description': "no_xml_id",
+            'model': 'res.partner',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'ttype': 'integer',
+            'store': False,
+            'compute': "for rec in self: rec['x_invoice_count'] = 10",
+        })
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Should count field with no xml_id at all')
 
     def test_fields_from_import_module(self):
         """
@@ -161,8 +308,8 @@ class TestClocFields(test_cloc.TestClocCustomization):
         stream = BytesIO()
         with ZipFile(stream, 'w') as archive:
             archive.writestr('test_imported_module/__manifest__.py', manifest_content)
-            archive.writestr('test_imported_module/static/src/js/test.js', test_cloc.JS_TEST)
-            archive.writestr('test_imported_module/static/src/js/test.scss', test_cloc.SCSS_TEST)
+            archive.writestr('test_imported_module/static/src/js/test.js', JS_TEST)
+            archive.writestr('test_imported_module/static/src/js/test.scss', SCSS_TEST)
             archive.writestr('test_imported_module/static/src/js/test.xml', VALID_XML)
 
         # Import test module
@@ -211,8 +358,8 @@ class TestClocFields(test_cloc.TestClocCustomization):
         stream = BytesIO()
         with ZipFile(stream, 'w') as archive:
             archive.writestr('test_imported_module/__manifest__.py', manifest_content)
-            archive.writestr('test_imported_module/static/src/js/test.js', test_cloc.JS_TEST)
-            archive.writestr('test_imported_module/static/src/js/test.scss', test_cloc.SCSS_TEST)
+            archive.writestr('test_imported_module/static/src/js/test.js', JS_TEST)
+            archive.writestr('test_imported_module/static/src/js/test.scss', SCSS_TEST)
             archive.writestr('test_imported_module/static/src/js/test.xml', VALID_XML)
 
         id_names = [
@@ -255,8 +402,8 @@ class TestClocFields(test_cloc.TestClocCustomization):
         stream = BytesIO()
         with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as archive:
             archive.writestr('test_imported_module/__manifest__.py', manifest_content)
-            archive.writestr('test_imported_module/static/src/js/test.js', test_cloc.JS_TEST)
-            archive.writestr('test_imported_module/static/src/js/test.scss', test_cloc.SCSS_TEST)
+            archive.writestr('test_imported_module/static/src/js/test.js', JS_TEST)
+            archive.writestr('test_imported_module/static/src/js/test.scss', SCSS_TEST)
             archive.writestr('test_imported_module/static/src/js/test.xml', VALID_XML)
             archive.writestr('test_imported_module/data/test.xml', VALID_XML_2)
         # Import test module
