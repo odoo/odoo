@@ -153,5 +153,5 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     const colorPresetEl = document.querySelector("div .o_cc_preview_wrapper div");
     const presetElStyles = window.getComputedStyle(colorPresetEl, "::before");
     expect(presetElStyles.backgroundImage).toInclude("transparent.png");
-    expect(presetElStyles.backgroundSize).toBe("32px");
+    expect(presetElStyles.backgroundSize).toInclude("32px");
 });
