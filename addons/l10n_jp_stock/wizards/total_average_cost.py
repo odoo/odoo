@@ -42,11 +42,30 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             products = self.env['product.product'].search(
                 [('categ_id', 'child_of', self.category_id.id)],
             ).filtered(lambda p: p.cost_method == 'standard')
+        if lot_valuated := products.filtered('lot_valuated'):
+            raise UserError(
+                self.env._(
+                    'The total average cost cannot be applied to products valued lot by lot: %s',
+                    ', '.join(lot_valuated.mapped('display_name')),
+                ),
+            )
         updated_count = 0
+        revalued = self.env['product.product']
         unchanged_count = 0
         tz = ZoneInfo(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         period_start = datetime.combine(self.date_from, time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         period_end = datetime.combine(self.date_to, time.max, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+        # sudo: the closing entries a product manager may not read decide whether
+        # this period can still be evaluated
+        if period_start <= (last_closing := self.env.company.sudo()._get_last_closing_date()):
+            raise UserError(
+                self.env._(
+                    'The stock valuation is already closed up to %(closing)s, so the cost of a period '
+                    'starting on %(date_from)s can no longer be evaluated.',
+                    closing=fields.Datetime.context_timestamp(self, last_closing).date(),
+                    date_from=self.date_from,
+                ),
+            )
         moves = self.env['stock.move'].sudo().search_fetch([
                 ('product_id', 'in', products.ids),
                 ('company_id', '=', self.env.company.id),
@@ -71,10 +90,11 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         production_values = self._get_production_move_values(moves.filtered(
             lambda m: m.location_id.usage == 'production' and m.location_dest_id.usage == 'internal',
         ))
-        opening_values = products._get_last_product_value(period_start)
+        before_period = period_start - timedelta(seconds=1)
+        opening_values = products._get_last_product_value(before_period)
         for product in products:
             init_qty = product.sudo().with_context(
-                to_date=period_start - timedelta(seconds=1),
+                to_date=before_period,
                 allowed_company_ids=self.env.company.ids,
             ).qty_available
             purchases_qty = purchases_val = returns_qty = returns_val = 0.0
@@ -85,12 +105,13 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 dest_usage = move.location_dest_id.usage
                 if move.is_dropship:
                     # a drop-ship is a purchase and a sale for JGAAP even though it never enters stock
-                    if not move.origin_returned_move_id:
+                    returned_move = move.origin_returned_move_id
+                    if dest_usage != 'supplier':
                         purchases_qty += qty
-                        purchases_val += qty * self._get_purchase_unit_price(move)
-                    elif self._move_date_local(move.origin_returned_move_id) < self.date_from:
-                        purchases_qty += qty
-                        purchases_val += qty * self._get_purchase_unit_price(move.origin_returned_move_id)
+                        purchases_val += self._get_acquisition_value(move, qty)
+                    elif returned_move and self._move_date_local(returned_move) >= self.date_from:
+                        returns_qty += qty
+                        returns_val += qty * self._get_purchase_unit_price(returned_move)
                 elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
                     if origin_usage == 'transit' and any(
                         m.company_id == move.company_id and m.location_id.usage == 'internal'
@@ -98,7 +119,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     ):
                         continue
                     purchases_qty += qty
-                    purchases_val += qty * self._get_purchase_unit_price(move)
+                    purchases_val += self._get_acquisition_value(move, qty)
                 elif (origin_usage == 'internal' and dest_usage == 'supplier'):
                     returned_move = move.origin_returned_move_id
                     if (not returned_move or self._move_date_local(returned_move) >= self.date_from):
@@ -129,7 +150,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 )
                 if new_cost != (old_price := product.standard_price):
                     product.with_context(disable_auto_revaluation=True).standard_price = new_cost
-                    product._change_standard_price({product: old_price}, valuation_date=period_end)
+                    product._change_standard_price({product: old_price}, valuation_date=period_start)
                     product_value = self.env['product.value'].sudo().search(
                         [('product_id', '=', product.id), ('move_id', '=', False)],
                         order='id desc', limit=1,
@@ -142,8 +163,13 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                             purchases=purchases_qty, reductions=returns_qty, cost=new_cost,
                         )
                     updated_count += 1
+                    revalued |= product
                 else:
                     unchanged_count += 1
+        if revalued:
+            # the issues of the period must leave at the average it produced, so the
+            # closing entry is built on it (施行令28条1項1号ハ)
+            revalued.sudo()._correct_inventory_valuation(period_start)
         if updated_count:
             message = self.env._('Updated the standard price of %s products.', updated_count)
             notification_type = 'success'
@@ -182,6 +208,19 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             move.id: move.quantity_product_uom * self._get_purchase_unit_price(move)
             for move in moves
         }
+
+    def _get_acquisition_value(self, move, qty):
+        """Return what the acquisition cost, from the bill wherever one is posted.
+
+        法人税法施行令 32条1項1号 makes the 購入代価 the acquisition cost, and a posted
+        bill evidences it where the order only promised it, so anything still unbilled
+        falls back to the order the way core resolves the two.
+        """
+        billed = move._get_value_from_account_move(qty)
+        value = billed['value']
+        if (unbilled := qty - billed['quantity']) > 0:
+            value += self._get_purchase_unit_price(move) * move._get_cost_ratio(unbilled)
+        return value
 
     def _move_date_local(self, move):
         return fields.Datetime.context_timestamp(self, move.date).date()
