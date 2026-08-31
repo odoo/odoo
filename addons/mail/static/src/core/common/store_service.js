@@ -55,10 +55,14 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
+    /** @type {boolean|undefined} */
+    isOdooWhiteTheme;
     odoobot = fields.One("res.partner");
     useMobileView = this.computed(() => this.store.env.services.ui.isSmall || isMobileOS());
     /** @type {number|undefined} id of the mail.action_discuss action */
     action_discuss_id;
+    /** @type {number|undefined} */
+    emailActivityTypeId;
     /** @type {number} */
     internalUserGroupId;
     mt_comment = fields.One("mail.message.subtype");

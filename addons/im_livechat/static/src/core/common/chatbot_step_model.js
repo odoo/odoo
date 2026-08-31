@@ -31,6 +31,8 @@ export class ChatbotStep extends Record {
      */
     id;
     completed = false;
+    /** @type {boolean|undefined} */
+    operatorFound;
 
     /**
      * ChatbotStep isn't a real server model, so `__store_version__` can't order its writes:
