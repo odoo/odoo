@@ -125,7 +125,20 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)
         if group_order_template:
             self.env.ref('base.group_user').write({"implied_ids": [(4, group_order_template.id)]})
+        
+        # The tour 'totp_admin_disables' goes through the securitycheck mechanism to disable TOTP. This mechanism 
+        # verifies login credentials and that procedure verifies if the password hash conforms the
+        # hashing configuration. Updating the hash is followed up by rotated session and the rotated session-id
+        # causes indeterministic tour failures.
+        #
+        # Hash update is performed during credential verification because;
+        # - Password hash configuration is overridden in test environments to reduce time spent. The hash rounds are reduced.
+        # - The login mechanism at the start of tours is overriden to reduce time spent. All operations are short-circuited.
+        #
+        # Update the admin-user password hash now to prevent it happening during tour execution.
+        self.env.ref('base.user_admin').password = 'admin'
         self.start_tour('/odoo', 'totp_admin_disables', login='admin')
+
         self.start_tour('/', 'totp_login_disabled', login=None)
 
     @mute_logger('odoo.http')
