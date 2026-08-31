@@ -41,105 +41,105 @@
                         <field name="analytic_account_active" invisible="1"/>
                     </t>
                     <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets or has_template_ancestor or has_project_template or (not id and context.get('hide_timesheet_ids'))" groups="hr_timesheet.group_hr_timesheet_user">
-                    <field name="timesheet_ids" mode="list,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': '', 'form_view_ref': 'hr_timesheet.timesheet_view_form_user'}">
-                        <list editable="bottom" string="Timesheet Activities" decoration-muted="readonly_timesheet == True">
-                            <field name="readonly_timesheet" column_invisible="True"/>
-                            <field name="date" readonly="readonly_timesheet"/>
-                            <field name="user_id" column_invisible="True"/>
-                            <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}"
-                                required="1"
-                                readonly="readonly_timesheet"/>
-                            <field name="name" required="0" readonly="readonly_timesheet"/>
-                            <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"
-                                readonly="readonly_timesheet"/>
-                            <field name="project_id" column_invisible="True"/>
-                            <field name="task_id" column_invisible="True"/>
-                            <field name="company_id" column_invisible="True"/>
-                        </list>
-                        <kanban class="o_kanban_mobile">
-                            <templates>
-                                <t t-name="card">
-                                    <div class="row">
-                                        <div class="col-6 d-flex">
-                                            <field name="employee_id" class="me-1" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
-                                            <field name="employee_id" class="ps-1 fw-bold"/>
+                        <field name="timesheet_ids" mode="list,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': '', 'form_view_ref': 'hr_timesheet.timesheet_view_form_user'}">
+                            <list editable="top" string="Timesheet Activities" decoration-muted="readonly_timesheet == True">
+                                <field name="readonly_timesheet" column_invisible="True"/>
+                                <field name="date" readonly="readonly_timesheet"/>
+                                <field name="user_id" column_invisible="True"/>
+                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}"
+                                    required="1"
+                                    readonly="readonly_timesheet"/>
+                                <field name="name" required="0" readonly="readonly_timesheet"/>
+                                <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"
+                                    readonly="readonly_timesheet"/>
+                                <field name="project_id" column_invisible="True"/>
+                                <field name="task_id" column_invisible="True"/>
+                                <field name="company_id" column_invisible="True"/>
+                            </list>
+                            <kanban class="o_kanban_mobile">
+                                <templates>
+                                    <t t-name="card">
+                                        <div class="row">
+                                            <div class="col-6 d-flex">
+                                                <field name="employee_id" class="me-1" widget="many2one_avatar_employee" context="{'active_test': True}" readonly="readonly_timesheet"/>
+                                                <field name="employee_id" class="ps-1 fw-bold"/>
+                                            </div>
+                                            <field name="date" class="col-6 text-end fw-bold"/>
                                         </div>
-                                        <field name="date" class="col-6 text-end fw-bold"/>
+                                        <div class="row">
+                                            <field name="name" class="col-6 text-muted" required="0" readonly="readonly_timesheet"/>
+                                            <field name="unit_amount" widget="float_time" class="col-6 text-end"/>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Timesheet Activities">
+                                <sheet>
+                                    <group>
+                                        <field name="readonly_timesheet" invisible="1"/>
+                                        <field name="date" readonly="readonly_timesheet"/>
+                                        <field name="user_id" invisible="1" readonly="readonly_timesheet"/>
+                                        <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" required="1" readonly="readonly_timesheet"/>
+                                        <field name="name" required="0" readonly="readonly_timesheet"/>
+                                        <field name="unit_amount" string="Time Spent" widget="float_time" decoration-danger="unit_amount &gt; 24"
+                                            readonly="readonly_timesheet"/>
+                                        <field name="project_id" invisible="1"/>
+                                        <field name="task_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                        <group invisible="not analytic_account_active">
+                            <group class="oe_subtotal_footer d-flex justify-content-end mb-0 border-top-0" name="project_hours">
+                                <div class="container">
+                                    <!-- Time Spent -->
+                                    <div class="row align-items-center mb-2">
+                                        <div class="col-8">
+                                            <label class="fw-bold" for="effective_hours">Time Spent</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <field name="effective_hours" widget="timesheet_uom" nolabel="1" />
+                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <field name="name" class="col-6 text-muted" required="0" readonly="readonly_timesheet"/>
-                                        <field name="unit_amount" widget="float_time" class="col-6 text-end"/>
+    
+                                    <!-- Time Spent on Sub-tasks -->
+                                    <div class="row align-items-center mb-2" invisible="subtask_effective_hours == 0.0">
+                                        <div class="col-8">
+                                            <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label text-start">
+                                            Time Spent on Sub-tasks:
+                                            </button>
+                                        </div>
+                                        <div class="col-4">
+                                            <field name="subtask_effective_hours" widget="timesheet_uom" class="mt-2" nolabel="1" />
+                                        </div>
                                     </div>
-                                </t>
-                            </templates>
-                        </kanban>
-                        <form  string="Timesheet Activities">
-                            <sheet>
-                                 <group>
-                                    <field name="readonly_timesheet" invisible="1"/>
-                                    <field name="date" readonly="readonly_timesheet"/>
-                                    <field name="user_id" invisible="1" readonly="readonly_timesheet"/>
-                                    <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" required="1" readonly="readonly_timesheet"/>
-                                    <field name="name" required="0" readonly="readonly_timesheet"/>
-                                    <field name="unit_amount" string="Time Spent" widget="float_time" decoration-danger="unit_amount &gt; 24"
-                                        readonly="readonly_timesheet"/>
-                                    <field name="project_id" invisible="1"/>
-                                    <field name="task_id" invisible="1"/>
-                                    <field name="company_id" invisible="1"/>
-                                </group>
-                            </sheet>
-                        </form>
-                    </field>
-                    <group invisible="not analytic_account_active">
-                        <group class="oe_subtotal_footer d-flex justify-content-end mb-0 border-top-0" name="project_hours">
-                            <div class="container">
-                                <!-- Time Spent -->
-                                <div class="row align-items-center mb-2">
-                                    <div class="col-8">
-                                        <label class="fw-bold" for="effective_hours">Time Spent</label>
+    
+                                    <!-- Total Hours Spent -->
+                                    <div class="row align-items-center mb-2" invisible="subtask_effective_hours == 0.0">
+                                        <div class="col-8">
+                                            <label class="fw-bold" for="total_hours_spent" invisible="not encode_uom_in_days">Total Hours Spent</label>
+                                            <label class="fw-bold" for="total_hours_spent" invisible="encode_uom_in_days">Total Days Spent</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1" />
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                        <field name="effective_hours" widget="timesheet_uom" nolabel="1" />
+    
+                                    <!-- Remaining Hours -->
+                                    <div class="row align-items-center mb-2" invisible="allocated_hours == 0.0">
+                                        <div class="col-8">
+                                            <label class="fw-bold" for="remaining_hours" invisible="remaining_hours &lt; 0">Remaining Hours</label>
+                                            <label class="fw-bold text-danger" for="remaining_hours" invisible="remaining_hours &gt;= 0">Overrun Hours</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1" decoration-danger="remaining_hours &lt; 0" />
+                                        </div>
                                     </div>
                                 </div>
-
-                                <!-- Time Spent on Sub-tasks -->
-                                <div class="row align-items-center mb-2" invisible="subtask_effective_hours == 0.0">
-                                    <div class="col-8">
-                                        <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label text-start">
-                                        Time Spent on Sub-tasks:
-                                        </button>
-                                    </div>
-                                    <div class="col-4">
-                                        <field name="subtask_effective_hours" widget="timesheet_uom" class="mt-2" nolabel="1" />
-                                    </div>
-                                </div>
-
-                                <!-- Total Hours Spent -->
-                                <div class="row align-items-center mb-2" invisible="subtask_effective_hours == 0.0">
-                                    <div class="col-8">
-                                        <label class="fw-bold" for="total_hours_spent" invisible="not encode_uom_in_days">Total Hours Spent</label>
-                                        <label class="fw-bold" for="total_hours_spent" invisible="encode_uom_in_days">Total Days Spent</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1" />
-                                    </div>
-                                </div>
-
-                                <!-- Remaining Hours -->
-                                <div class="row align-items-center mb-2" invisible="allocated_hours == 0.0">
-                                    <div class="col-8">
-                                        <label class="fw-bold" for="remaining_hours" invisible="remaining_hours &lt; 0">Remaining Hours</label>
-                                        <label class="fw-bold text-danger" for="remaining_hours" invisible="remaining_hours &gt;= 0">Overrun Hours</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1" decoration-danger="remaining_hours &lt; 0" />
-                                    </div>
-                                </div>
-                            </div>
+                            </group>
                         </group>
-                    </group>
-                </page>
+                    </page>
                 </xpath>
                 <xpath expr="//field[@name='depend_on_ids']/list//field[@name='company_id']" position="after">
                     <field name="progress" column_invisible="True" groups="hr_timesheet.group_hr_timesheet_user"/>
