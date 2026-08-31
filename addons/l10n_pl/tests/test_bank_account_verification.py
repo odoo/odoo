@@ -509,3 +509,10 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         self._check_form_fields(self.pl_supplier_move, incomplete_partners=self.pl_supplier)
         verification = self.env['l10n_pl.bank.account.verification'].search([])
         self.assertEqual(len(verification), verification_start_count + 1)
+
+    @patch('odoo.addons.l10n_pl.models.bank_account_verification.BankAccountVerification._make_request', _make_request_patched)
+    def test_multiple_check_with_one_no_vat(self):
+        supplier, _bank_account, move = self._create_partner_bank_and_move(vat=False)  # no vat
+        supplier2, _bank_account, move2 = self._create_partner_bank_and_move(vat='PL2222222222')  # no bank account
+        moves = move + move2 + self.pl_supplier_move
+        self._check_form_fields(moves, incomplete_partners=supplier + supplier2)
