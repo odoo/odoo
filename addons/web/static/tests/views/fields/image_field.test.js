@@ -9,7 +9,7 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockUserAgent, runAllTimers, mockDate } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -131,7 +131,7 @@ test("ImageField is correctly rendered", async () => {
     expect(".o_field_image .o_clear_file_button").toHaveCount(1, {
         message: "the image can be deleted",
     });
-    expect("input.o_input_file").toHaveAttribute("accept", "image/*,dummy/allowAndroidCamera", {
+    expect("input.o_input_file").toHaveAttribute("accept", "image/*", {
         message:
             'the default value for the attribute "accept" on the "image" widget must be "image/*"',
     });
@@ -479,8 +479,44 @@ test("ImageField: option accepted_file_extensions", async () => {
         `,
     });
     // The view must be in edit mode
-    expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg,dummy/allowAndroidCamera", {
+    expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg", {
         message: "the input should have the correct ``accept`` attribute",
+    });
+});
+
+test("ImageField: no camera hint mimetype in the mobile app", async () => {
+    // the app builds its own file chooser out of the accept attribute
+    mockUserAgent("OdooMobile (Linux; Android 1000)");
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" options="{'accepted_file_extensions': '.png'}" />
+            </form>
+        `,
+    });
+    expect("input.o_input_file").toHaveAttribute("accept", ".png", {
+        message: "the input should only have the accepted file extensions of the field",
+    });
+});
+
+test("ImageField: camera hint mimetype on Chromium for Android", async () => {
+    // a mimetype which is not an image is needed to get the camera back, see the ImageField
+    mockUserAgent("android");
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" />
+            </form>
+        `,
+    });
+    expect("input.o_input_file").toHaveAttribute("accept", "image/*,dummy/allowAndroidCamera", {
+        message: "the input should have the camera hint mimetype on top of the accepted extensions",
     });
 });
 
