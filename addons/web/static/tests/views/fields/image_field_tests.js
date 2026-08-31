@@ -8,7 +8,9 @@ import {
     clickSave,
     editInput,
     patchDate,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { pagerNext } from "@web/../tests/search/helpers";
 
@@ -171,7 +173,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
-            "image/*,dummy/allowAndroidCamera",
+            "image/*",
             'the default value for the attribute "accept" on the "image" widget must be "image/*"'
         );
     });
@@ -434,8 +436,58 @@ QUnit.module("Fields", (hooks) => {
         // The view must be in edit mode
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
-            ".png,.jpeg,dummy/allowAndroidCamera",
+            ".png,.jpeg",
             "the input should have the correct ``accept`` attribute"
+        );
+    });
+
+    QUnit.test("ImageField: no camera hint mimetype in the mobile app", async function (assert) {
+        // the app builds its own file chooser out of the accept attribute
+        patchWithCleanup(browser, {
+            navigator: {
+                ...browser.navigator,
+                userAgent: "OdooMobile/1.0 (Linux; Android 13)",
+            },
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="document" widget="image" options="{'accepted_file_extensions': '.png'}" />
+                </form>`,
+        });
+        assert.strictEqual(
+            target.querySelector("input.o_input_file").getAttribute("accept"),
+            ".png",
+            "the input should only have the accepted file extensions of the field"
+        );
+    });
+
+    QUnit.test("ImageField: camera hint mimetype on Chromium for Android", async function (assert) {
+        // a mimetype which is not an image is needed to get the camera back, see the ImageField
+        patchWithCleanup(browser, {
+            navigator: {
+                ...browser.navigator,
+                userAgent: "Chrome/0.0.0 (Linux; Android 13; Odoo TestSuite)",
+            },
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="document" widget="image" />
+                </form>`,
+        });
+        assert.strictEqual(
+            target.querySelector("input.o_input_file").getAttribute("accept"),
+            "image/*,dummy/allowAndroidCamera",
+            "the input should have the camera hint mimetype on top of the accepted extensions"
         );
     });
 
