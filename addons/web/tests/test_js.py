@@ -40,7 +40,7 @@ class HootCommon(odoo.tests.HttpCase):
         self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><html><head><meta charset="utf-8"/><link/><script id="web.layout.odooscript"/><meta/><t t-out="head"/></head><body><t t-out="0"/></body></html></t>'})
         for asset in self._get_bundle_assets(bundle):
             filename = asset['filename']
-            if not filename.endswith('.test.js'):
+            if not filename or not filename.endswith('.test.js'):
                 continue
             with suppress(FileNotFoundError):
                 with file_open(filename, 'rb', filter_ext=('.js',)) as fp:
@@ -58,7 +58,7 @@ class HootCommon(odoo.tests.HttpCase):
         return {
             RE_ASSET_ADDON.match(asset['url'])[1]
             for asset in self._get_bundle_assets(bundle)
-            if asset['filename'].endswith('.test.js')
+            if asset['filename'] and asset['filename'].endswith('.test.js')
         }
 
     def _get_bundle_assets(self, bundle):
