@@ -6,6 +6,8 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
 export class MrpWorkorderKanbanHeader extends KanbanHeader {
+    static template = "mrp.MrpWorkorderKanbanHeader";
+
     setup() {
         super.setup();
         this.dialog = useService("dialog");
