@@ -696,3 +696,11 @@ class AccountMove(models.Model):
                 # Ensure RE flow exist for current move period.
                 self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
         return super().button_draft()
+
+    def _get_import_file_type(self, file_data):
+        """ Identify UBL files. """
+        # EXTENDS 'account'
+        if (tree := file_data['xml_tree']) is not None:
+            if tree.findtext('{*}CustomizationID') == 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr':
+                return 'account.edi.xml.ubl_21_fr'
+        return super()._get_import_file_type(file_data)
