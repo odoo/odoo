@@ -159,6 +159,9 @@ export const normalizeFunctionsInObject = (obj) =>
 
 export async function setupAndMountPosApp(config = {}, opts = { openRegister: true }) {
     const store = await setupPosEnv();
+    if (config.use_pricelist === false) {
+        config.pricelist_id = false;
+    }
     Object.assign(store.config, {
         preparation_printer_ids: [],
         receipt_printer_ids: [],
