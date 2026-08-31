@@ -849,7 +849,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         with freeze_time('2025-01-23'):
             allocation = self._create_form_test_accrual_allocation(work_entry_type, '2025-01-01', self.employee_emp,
                 accrual_plan=accrual_plan, date_to='2025-06-30')
-            allocation.action_approve()
 
         assertions = [
             # First accrual happens on 2025-01-01
@@ -883,7 +882,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         with freeze_time('2025-02-01'):
             allocation = self._create_form_test_accrual_allocation(work_entry_type, '2025-02-01', self.employee_emp,
                 accrual_plan=accrual_plan, date_to='2025-06-30')
-            allocation.action_approve()
 
         assertions = [
             # First accrual happens on 2025-02-01

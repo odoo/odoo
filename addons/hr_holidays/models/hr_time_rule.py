@@ -73,16 +73,12 @@ class HrTimeRule(models.Model):
         """
         return self
 
-    def _apply_allocation_credits(self, excess_alloc, deficit_alloc, *, approve_ctx=None):
+    def _apply_allocation_credits(self, excess_alloc, deficit_alloc):
         """Translate excess/deficit hours into allocation credits and write the log.
 
         Time-rule allocations are always open-ended (date_to=False) so they don't
         collide with accrual or fixed-period allocations.
-
-        approve_ctx -- extra context passed to action_approve on new allocations
-                       (e.g. {'leave_skip_state_check': True})
         """
-        approve_ctx = approve_ctx or {}
         search_domain = [('state', '=', 'validate'), ('date_to', '=', False)]
 
         excess_by_key = defaultdict(float)
@@ -119,8 +115,7 @@ class HrTimeRule(models.Model):
                 })
                 alloc_create_keys.append((employee, alloc_type))
         if alloc_create_vals:
-            new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
-            new_allocs.with_context(**approve_ctx).action_approve()
+            new_allocs = self.env['hr.leave.allocation'].sudo().create(alloc_create_vals)
             for key, alloc in zip(alloc_create_keys, new_allocs):
                 alloc_by_key[key] = alloc
 
@@ -232,10 +227,7 @@ class HrTimeRule(models.Model):
     def _apply_leave_output(self, excess, deficit, active_iv=None):
         deficit = self._filter_deficit_exceeding_allocation(deficit)
         new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
-        self._apply_allocation_credits(
-            excess_alloc, deficit_alloc,
-            approve_ctx={'leave_skip_state_check': True},
-        )
+        self._apply_allocation_credits(excess_alloc, deficit_alloc)
         if all_source_ids:
             Leave = self.env['hr.leave'].sudo()
             sources = Leave.with_context(active_test=False).browse(list(all_source_ids))

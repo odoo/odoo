@@ -177,10 +177,12 @@ class TestHrHolidaysCommon(common.TransactionCase):
             leave.action_approve()
         return leave
 
-    def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None, number_of_days=None):
+    def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None, number_of_days=None, skip_auto_approve=False):
         allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True)
         if creator_user:
             allocation = allocation.with_user(creator_user)
+        if skip_auto_approve:
+            allocation = allocation.with_context(allocation_skip_auto_approve=True)
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
             form.name = 'Test accrual allocation'
             form.accrual_plan_id = accrual_plan

@@ -87,7 +87,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': self.departure_date + timedelta(days=-10),
             'date_to': self.departure_date,
-        }]).action_approve()
+        }])
         self._check_action_departure()
 
     def test_departure_allocation_after_departure_date(self):
@@ -99,7 +99,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': self.departure_date + timedelta(days=1),
             'date_to': self.departure_date + timedelta(days=10),
-        }]).action_approve()
+        }])
         self._check_action_departure()
 
     def test_departure_allocation_with_departure_date(self):
@@ -112,7 +112,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'date_from': self.departure_date + timedelta(days=-10),
             'date_to': self.departure_date + timedelta(days=10),
         }])
-        allocation.action_approve()
         self._check_action_departure()
 
         allocation_msg = '<p>Validity End date has been updated because the employee will leave the company on %(departure_date)s.</p>' % {

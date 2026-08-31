@@ -186,7 +186,7 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
     @freeze_time("2024-01-08")
     def test_reschedule_beyond_allocation_is_rejected(self):
         # Increasing the duration past the available allocation must be refused.
-        allocation = (
+        (
             self.env["hr.leave.allocation"]
             .with_user(self.user_hruser_id)
             .create(
@@ -200,7 +200,6 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
                 }
             )
         )
-        allocation.action_approve()
 
         leave = self._create_leave(
             self.type_allocated, "2024-02-05", "2024-02-06", user=self.user_employee_id
