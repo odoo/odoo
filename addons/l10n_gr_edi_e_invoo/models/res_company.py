@@ -17,18 +17,12 @@ class ResCompany(models.Model):
         ]
         proxy_user_sudo = self.env['account_edi_proxy_client.user'].sudo()
         if proxy_user := proxy_user_sudo.search(domain, limit=1):
-            return proxy_user, False
+            return proxy_user
 
         self._with_locked_records(self)
         # Another worker may have created and committed the proxy user between
         # the first search and acquiring the lock so we need to check again.
         if proxy_user := proxy_user_sudo.search(domain, limit=1):
-            return proxy_user, False
+            return proxy_user
 
-        proxy_user = proxy_user_sudo._register_proxy_user(self, L10N_GR_EDI_PROXY_TYPE, edi_mode)
-        return proxy_user, True
-
-    def _l10n_gr_edi_get_proxy_user(self):
-        self.ensure_one()
-        proxy_user, _registration_created = self._l10n_gr_edi_get_or_create_proxy_user()
-        return proxy_user
+        return proxy_user_sudo._register_proxy_user(self, L10N_GR_EDI_PROXY_TYPE, edi_mode)

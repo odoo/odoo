@@ -262,14 +262,12 @@ class AccountMove(models.Model):
 
         if verification_url:
             values['barcode_src'] = image_data_uri(
-                base64.b64encode(
-                    self.env['ir.actions.report'].barcode(
-                        barcode_type='QR',
-                        value=verification_url,
-                        width=180,
-                        height=180,
-                        quiet=0,
-                    )
+                self.env['ir.actions.report'].barcode(
+                    barcode_type='QR',
+                    value=verification_url,
+                    width=180,
+                    height=180,
+                    quiet=0,
                 )
             )
 
@@ -279,7 +277,7 @@ class AccountMove(models.Model):
         # EXTENDS 'l10n_gr_edi'
         """Send customer invoices individually through the IAP proxy."""
         for company, invoices in self.grouped('company_id').items():
-            proxy_user = company._l10n_gr_edi_get_proxy_user()
+            proxy_user = company._l10n_gr_edi_get_or_create_proxy_user()
 
             for invoice in invoices:
                 submission = invoice._l10n_gr_edi_prepare_invoice_submission()
@@ -287,6 +285,11 @@ class AccountMove(models.Model):
                     continue
 
                 document, request_values = submission
+                if self._can_commit():
+                    # Commit to persist the local state before contacting iap
+                    self.env.cr.commit()
+                    self.env['res.company']._with_locked_records(invoice)
+
                 try:
                     result = proxy_user._l10n_gr_edi_proxy_request('send_invoice', request_values)
                 except AccountEdiProxyError as error:
@@ -308,6 +311,9 @@ class AccountMove(models.Model):
                         document.message = unknown_result_message
                 else:
                     invoice._l10n_gr_edi_handle_invoice_proxy_result(document, result)
+
+                if self._can_commit():
+                    self.env.cr.commit()
 
     def l10n_gr_edi_try_send_invoices(self):
         # EXTENDS 'l10n_gr_edi'

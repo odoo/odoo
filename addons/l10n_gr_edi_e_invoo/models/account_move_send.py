@@ -20,7 +20,7 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         parent_token = document._l10n_gr_edi_get_provider_parent_token()
-        proxy_user = invoice.company_id._l10n_gr_edi_get_proxy_user()
+        proxy_user = invoice.company_id._l10n_gr_edi_get_or_create_proxy_user()
 
         pdf_values = invoice_data.get('pdf_attachment_values')
         pdf_content = pdf_values and pdf_values.get('raw')
@@ -33,19 +33,6 @@ class AccountMoveSend(models.AbstractModel):
             "The invoice was issued, but the electronic invoicing process could not be completed. "
             "Please retry Send & Print later."
         )
-
-        if not self.env['res.company']._with_locked_records(document, allow_raising=False):
-            invoice_data['error'] = {
-                'error_title': self.env._("Electronic invoicing is already in progress for this invoice."),
-                'errors': [error_message],
-                'retry': True,
-            }
-            return
-
-        # Another worker may have completed the upload before we acquired the lock
-        document.invalidate_recordset(['provider_pdf_state', 'provider_pdf_error'])
-        if document.provider_pdf_state == 'sent':
-            return
 
         upload_succeeded = False
         if pdf_content and parent_token:
