@@ -23,12 +23,16 @@ export class TeamSwitcher extends Component {
         });
     }
 
+    get allTeamsLabel() {
+        return _t("All Sales Teams");
+    }
+
     get currentLabel() {
-        return _t("Pipeline - %s", this.teams.find((t) => t.id === this.selectedTeamId)?.name);
+        return this.teams.find((t) => t.id === this.selectedTeamId)?.name || this.allTeamsLabel;
     }
 
     get hasDropdown() {
-        return this.teams.length > 1;
+        return this.teams.length > 0;
     }
 
     get selectedTeamId() {
@@ -48,7 +52,7 @@ export class TeamSwitcher extends Component {
      * - crm.lead records are filtered to that team + team-less records
      * - only that team's stages are shown + the stages of team-less records
      * - the team becomes the default when creating a new crm.lead or crm.stage
-     * @param {Number} teamId id of the new selected team
+     * @param {Number} teamId Id of the new selected team, "undefined" fallbacks on "All Sales Team".
      */
     onSelect(teamId) {
         if (this.selectedTeamId === teamId) {

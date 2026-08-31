@@ -7,12 +7,10 @@ import {
     getService,
     models,
     mountWithCleanup,
-    patchWithCleanup,
     switchView,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expect, test } from "@odoo/hoot";
-import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 
 class Users extends models.Model {
@@ -39,28 +37,31 @@ class Team extends models.Model {
         { id: 2, name: "Hyrule", member_ids: [3, 4] },
     ];
 
-    get_team_switcher_teams_data() {
+    get_team_switcher_data() {
         const teams = this._filter([["use_opportunities", "=", true]]);
         const stages = this.env["crm.stage"];
         const sharedStageIds = stages
             .filter((stage) => !stage.team_ids.length)
             .map((stage) => stage.id);
-        return teams.map((team) => {
-            const teamStageIds = stages
-                .filter((stage) => stage.team_ids.includes(team.id))
-                .map((stage) => stage.id);
-            return {
-                id: team.id,
-                name: team.name,
-                switcher_domain: [
-                    "|",
-                        ["team_id", "=", team.id],
-                        "&",
-                            ["team_id", "=", false],
-                            ["stage_id", "in", [...teamStageIds, ...sharedStageIds]],
-                ],
-            };
-        });
+        return {
+            available: teams.length > 1,
+            teams: teams.map((team) => {
+                const teamStageIds = stages
+                    .filter((stage) => stage.team_ids.includes(team.id))
+                    .map((stage) => stage.id);
+                return {
+                    id: team.id,
+                    name: team.name,
+                    switcher_domain: [
+                        "|",
+                            ["team_id", "=", team.id],
+                            "&",
+                                ["team_id", "=", false],
+                                ["stage_id", "in", [...teamStageIds, ...sharedStageIds]],
+                    ],
+                };
+            }),
+        };
     }
 }
 
@@ -190,13 +191,17 @@ defineActions([
 
 test.tags("desktop");
 test("crm team switcher rendering", async () => {
-    patchWithCleanup(session, { sales_team_membership_multi: true });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    // Team switcher should default on first team
-    expect(".o_cp_team_switcher:contains('Mushroom Kingdom')").toHaveCount(1);
+    // Team switcher should default on "All Sales Teams", all records and stages should be visible
+    expect(".o_cp_team_switcher:contains('All Sales Teams')").toHaveCount(1);
+    expect(".o_kanban_record").toHaveCount(8);
+    expect(".o_kanban_group").toHaveCount(4);
     // Changing the selected team should update the displayed stages and records
     // Mushroom Kingdom: 4 records (1 unassigned + 3 assigned), 3 stages (Start, Middle, Won)
+    await contains(".o_cp_team_switcher").click();
+    await contains(".o_popover .dropdown-item:text('Mushroom Kingdom')").click();
+    expect(".o_cp_team_switcher:contains('Mushroom Kingdom')").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(4);
     expect(".o_kanban_group").toHaveCount(3);
     // Hyrule: 4 records (1 unassigned + 4 assigned), 4 stages (Start, Middle, Won, Hyrule Stage)

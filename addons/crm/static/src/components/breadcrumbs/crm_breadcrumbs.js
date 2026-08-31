@@ -8,10 +8,7 @@ export class CrmBreadcrumbs extends Breadcrumbs {
         TeamSwitcher,
     };
 
-    get showTeamSwitcher() {
-        return (
-            this.env.searchModel.isTeamSwitcherEnabled &&
-            this.env.searchModel.state.switcherTeams.length > 0
-        );
+    get hasTeamSwitcher() {
+        return this.env.searchModel.isTeamSwitcherEnabled;
     }
 }

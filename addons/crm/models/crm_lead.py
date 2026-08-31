@@ -1386,15 +1386,15 @@ class CrmLead(models.Model):
             and (message_empty or self.env.context.get('crm_lead_prioritize_team_help'))
             and self.env['crm.team'].search_count([], limit=1)
         ):
-            sub_title = _("As you are a member of no Sales Team, you are showed the Pipeline of the "
-                          "<b>first team by default.</b>")
+            sub_title = _("As you are a member of no Sales Team, you are showed the Pipeline of "
+                          "<b>all teams by default.</b>")
             if self.env.user.has_group('sales_team.group_sale_manager'):
                 suffix = _(
-                    'To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>',
+                    'To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a Team.</a>',
                     self.env.ref('sales_team.crm_team_action_config').id
                 )
             else:
-                suffix = _("To work with the CRM, you should join a team.")
+                suffix = _("To work with the CRM, you should be added to a Team.")
             return new_help_message + f"<p>{sub_title} {suffix}</p>"
 
         if not message_empty:
