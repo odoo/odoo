@@ -30,6 +30,7 @@ class ResPartnerBank(models.Model):
 
     l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system")
     l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system")
+    l10n_id_company_qr_code = fields.Boolean(string="Company QR Code (QRIS)", related='company_id.qr_code')
 
     @api.model
     def _get_available_qr_methods(self):
