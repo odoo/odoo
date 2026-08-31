@@ -1,6 +1,6 @@
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
-import { describe, expect, test, microTick, mockDate } from "@odoo/hoot";
+import { describe, expect, test, microTick, freezeTime } from "@odoo/hoot";
 import { queryAll, queryOne, tick } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
@@ -79,7 +79,7 @@ test("countdown is started when there is an element .s_countdown", async () => {
  * We compare the canvases twice to prevent the issue.
  */
 test("[time] countdown display is updated correctly when time pass", async () => {
-    mockDate("2026-01-01 12:00:00", 0);
+    freezeTime();
     await startInteractions(getTemplate());
 
     // Countdown renders at the setup of the interaction, and then at the start
@@ -94,51 +94,26 @@ test("[time] countdown display is updated correctly when time pass", async () =>
     const canvasHoursCtx = canvasHours.getContext("2d");
     const canvasSecondsCtx = canvasSeconds.getContext("2d");
 
+    const getHours = () =>
+        canvasHoursCtx.getImageData(0, 0, canvasHours.width, canvasHours.height).data;
+    const getSeconds = () =>
+        canvasSecondsCtx.getImageData(0, 0, canvasSeconds.width, canvasSeconds.height).data;
+
     // time T
-    const data1Hours = canvasHoursCtx.getImageData(
-        0,
-        0,
-        canvasHours.width,
-        canvasHours.height
-    ).data;
-    const data1Seconds = canvasSecondsCtx.getImageData(
-        0,
-        0,
-        canvasSeconds.width,
-        canvasSeconds.height
-    ).data;
+    const data1Hours = getHours();
+    const data1Seconds = getSeconds();
 
     // time T + 1s
     await advanceTime(1000);
     await microTick();
-    const data2Hours = canvasHoursCtx.getImageData(
-        0,
-        0,
-        canvasHours.width,
-        canvasHours.height
-    ).data;
-    const data2Seconds = canvasSecondsCtx.getImageData(
-        0,
-        0,
-        canvasSeconds.width,
-        canvasSeconds.height
-    ).data;
+    const data2Hours = getHours();
+    const data2Seconds = getSeconds();
 
     // time T + 2s
     await advanceTime(1000);
     await microTick();
-    const data3Hours = canvasHoursCtx.getImageData(
-        0,
-        0,
-        canvasHours.width,
-        canvasHours.height
-    ).data;
-    const data3Seconds = canvasSecondsCtx.getImageData(
-        0,
-        0,
-        canvasSeconds.width,
-        canvasSeconds.height
-    ).data;
+    const data3Hours = getHours();
+    const data3Seconds = getSeconds();
 
     // Check that the data are not empty & the same size
 
