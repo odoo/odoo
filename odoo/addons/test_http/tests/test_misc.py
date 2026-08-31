@@ -3,13 +3,14 @@
 import json
 from importlib import metadata
 from io import StringIO
+from http import HTTPStatus
 from socket import gethostbyname
 from unittest.mock import patch
 
 import odoo
 from odoo.http import root, content_disposition
 from odoo.tests import tagged
-from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase
+from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase, mute_logger
 from odoo.tools import config, file_path, parse_version
 from odoo.addons.test_http.controllers import CT_JSON
 
@@ -145,6 +146,13 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc7_robotstxt(self):
         self.nodb_url_open('/robots.txt').raise_for_status()
+
+    def test_misc8_request_uri_too_long(self):
+        # Depending on the Werkzeug version, the request can be rejected before
+        # headers are parsed or reach Odoo's routing.
+        with mute_logger('werkzeug'):
+            response = self.url_open('/' + 'a' * 95536)
+        self.assertIn(response.status_code, (HTTPStatus.NOT_FOUND, HTTPStatus.REQUEST_URI_TOO_LONG))
 
 @tagged('post_install', '-at_install')
 class TestHttpCors(TestHttpBase):
