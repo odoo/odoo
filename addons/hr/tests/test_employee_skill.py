@@ -31,8 +31,15 @@ class TestEmployeeSkills(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.employee = cls.env['hr.employee'].create([
-            {'name': 'Test Employee'},
+        cls.company_a, cls.company_b = cls.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        cls.employee = cls.env['hr.employee'].with_company(cls.company_a).create([
+            {
+                'name': 'Test Employee',
+                'company_id': cls.company_a.id,
+            },
         ])
         cls.certification, cls.language = cls._create_skill_types([
             {
@@ -572,3 +579,20 @@ class TestEmployeeSkills(TransactionCase):
             "English should be updated to B1 and Arabic should be removed",
         )
 
+    def test_change_employee_company_id_with_company_specific_skill(self):
+        self.language.write({
+            'company_id': self.company_a.id,
+        })
+        with self.assertRaises(ValidationError):
+            self.employee.write({
+                'company_id': self.company_b.id,
+            })
+
+    def test_change_skill_type_company_id_with_company_specific_skill(self):
+        self.language.write({
+            'company_id': self.company_a.id,
+        })
+        with self.assertRaises(ValidationError):
+            self.language.write({
+                'company_id': self.company_b.id,
+            })

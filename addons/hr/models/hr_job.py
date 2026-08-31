@@ -123,4 +123,7 @@ class HrJob(models.Model):
             handle_history_divergence(self, 'description', vals)
         if skill_commands := self._pop_job_skill_commands(vals):
             vals["job_skill_ids"] = self.env["hr.job.skill"]._get_transformed_commands(skill_commands, self)
+        if company_id := vals.get('company_id'):
+            for job in self:
+                job.job_skill_ids._validation_company_id_change(company_id)
         return super().write(vals)

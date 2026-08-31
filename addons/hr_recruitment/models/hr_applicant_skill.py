@@ -16,9 +16,13 @@ class HrApplicantSkill(models.Model):
         index=True,
         ondelete="cascade",
     )
+    company_id = fields.Many2one(related='applicant_id.company_id')
 
     def _linked_field_name(self):
         return "applicant_id"
+
+    def _get_company_id_change_error_message(self):
+        return self.env._("Some of the applicant's skills and certifications are company specific.")
 
     def _get_current_skills_by_applicant(self):
         applicant_skill_grouped = self.grouped(lambda a_s: (a_s.applicant_id, a_s.skill_id))
