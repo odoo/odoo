@@ -214,6 +214,18 @@
             </field>
         </record>
 
+        <record id="action_production_order_unbuild" model="ir.actions.server">
+            <field name="name">Unbuild</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if record and record.state == 'done':
+                action = record.button_unbuild()
+            </field>
+        </record>
+
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
@@ -236,7 +248,6 @@
                             confirm="Are you sure you want to cancel this manufacturing order?&#10;This action cannot be undone."
                             confirm-title="Cancel Manufacturing Order"
                             confirm-label="Cancel this Order"/>
-                    <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>
