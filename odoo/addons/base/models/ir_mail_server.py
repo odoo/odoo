@@ -540,6 +540,7 @@ class IrMail_Server(models.Model):
         # need to change the FROM headers or not when we will prepare the mail message
         connection.from_filter = from_filter
         connection.smtp_from = smtp_from
+        connection.mail_server_name = mail_server.display_name if mail_server else smtp_server
 
         return connection
 
@@ -858,7 +859,7 @@ class IrMail_Server(models.Model):
         except Exception as e:
             msg = _(
                 "Mail delivery failed via SMTP server '%(server)s'.\n%(exception_name)s: %(message)s",
-                server=smtp_server,
+                server=getattr(smtp, 'mail_server_name', smtp_server),
                 exception_name=e.__class__.__name__,
                 message=e,
             )
