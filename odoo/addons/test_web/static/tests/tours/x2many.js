@@ -379,11 +379,11 @@
 
     {
         content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
-        trigger: 'button[data-menu-xmlid="test_orm.menu_main"], li.o_extra_menu_items a i[data-icon="add"]',
+        trigger: 'button[data-menu-xmlid="test_base.menu_main"], li.o_extra_menu_items a i[data-icon="add"]',
         run: "click",
     }, {
         content: "switch to the second form view to test one2many with editable list (open submenu)",
-        trigger: '.dropdown-item[data-menu-xmlid="test_orm.menu_discussions_2"]',
+        trigger: '.dropdown-item[data-menu-xmlid="test_base.menu_discussions_2"]',
         run: "click",
     },
     {
@@ -513,11 +513,11 @@
     },
     {
         content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
-        trigger: 'button[data-menu-xmlid="test_orm.menu_main"], li.o_extra_menu_items a i[data-icon="add"]',
+        trigger: 'button[data-menu-xmlid="test_base.menu_main"], li.o_extra_menu_items a i[data-icon="add"]',
         run: "click",
     }, {
         content: "switch to the thied form view to test onchange changing one2many (open submenu)",
-        trigger: '.dropdown-item[data-menu-xmlid="test_orm.menu_discussions_3"]',
+        trigger: '.dropdown-item[data-menu-xmlid="test_base.menu_discussions_3"]',
         run: "click",
     }, {
         content: "wait web client",
