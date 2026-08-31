@@ -58,7 +58,7 @@
         }
 
         @each $status, $color in (danger: $danger, success: $success, primary: $primary) {
-            &.o-dropdown-item.btn-#{$status}:not(.o-mail-ActionCallButton) {
+            &.o-dropdown-item.btn-#{$status}:not(.o-mail-ActionCallDropdown) {
                 &.focus {
                     background-color: rgba($color, 0.75);
                     color: white;

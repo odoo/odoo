@@ -58,12 +58,21 @@
         odooControlPanelSwitchStyle: this.props.odooControlPanelSwitchStyle,
         onSelected: (ev) => this.onSelected(this.action, ev),
     }"/>
+    <t t-set="actionDropdownProps" t-value="{
+        action: this.action,
+        attrs: attrs,
+        isInlineCircleButton: isInlineCircleButton,
+        inMeetingViewCallButtonsFullscreen: inMeetingViewCallButtonsFullscreen,
+        fw: this.props.fw,
+        isFirstInGroup: this.props.isFirstInGroup,
+        isLastInGroup: this.props.isLastInGroup,
+        hasBtnBg: this.props.hasBtnBg,
+        odooControlPanelSwitchStyle: this.props.odooControlPanelSwitchStyle,
+        onSelected: (ev) => this.onSelected(this.action, ev),
+    }"/>
     <t t-if="this.action.component and this.action.componentCondition" t-component="this.action.component" t-props="this.action.componentProps"/>
-    <ActionDropdown t-elif="this.props.dropdown" action="this.action" attrs="attrs"
-        isInlineCircleButton="isInlineCircleButton" inMeetingViewCallButtonsFullscreen="inMeetingViewCallButtonsFullscreen"
-        fw="this.props.fw" isFirstInGroup="this.props.isFirstInGroup" isLastInGroup="this.props.isLastInGroup"
-        hasBtnBg="this.props.hasBtnBg" odooControlPanelSwitchStyle="this.props.odooControlPanelSwitchStyle"
-        onSelected="(ev) => this.onSelected(this.action, ev)"/>
+    <t t-elif="this.props.dropdown and this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="actionDropdownProps"/>
+    <ActionDropdown t-elif="this.props.dropdown" t-props="actionDropdownProps"/>
     <t t-elif="this.action.buttonComponent" t-component="this.action.buttonComponent" t-props="actionButtonProps"/>
     <ActionButton t-else="" t-props="actionButtonProps"/>
 </t>

@@ -66,6 +66,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
  * @property {boolean|(params: ActionParams_T) => boolean} [dropdownTrigger]
+ * @property {Component} [dropdownComponent]
  * @property {string|(params: ActionParams_T) => string} [dropdownMenuClass]
  * @property {string|(params: ActionParams_T) => string} [dropdownPosition]
  * @property {DropdownState|(params: ActionParams_T) => DropdownState} [dropdownState]
@@ -388,6 +389,16 @@ export class Action {
                 ? this.definition.dropdownTrigger.call(this, this.params)
                 : this.definition.dropdownTrigger)
         );
+    }
+
+    /** @param {Action} action @returns {Component|undefined} */
+    _dropdownComponent(action) {}
+    /**
+     * When provided, this component is used instead of ActionDropdown to render this action as a
+     * dropdown-item (@see props.dropdown of ActionList/Action). Must extend ActionDropdown.
+     */
+    get dropdownComponent() {
+        return this._dropdownComponent(this.params) ?? this.definition.dropdownComponent;
     }
 
     /** @param {Action} action @returns {string|undefined} */

@@ -4,7 +4,7 @@
 <t t-name="mail.ActionDropdown">
     <t t-set="isInlineCircleButton" t-value="this.props.isInlineCircleButton"/>
     <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inMeetingViewCallButtonsFullscreen"/>
-    <DropdownItem class="'o-mail-ActionList-button btn btn-group-item position-relative ' + this.btnClass + ' d-flex align-items-center dropdown-item_active_noarrow ' + (this.ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.props.onSelected(ev)" attrs="this.props.attrs">
+    <DropdownItem class="'o-mail-ActionList-button btn btn-group-item position-relative ' + this.btnClass + (this.btnRootClass ? ' ' + this.btnRootClass : '') + ' d-flex align-items-center dropdown-item_active_noarrow ' + (this.ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.props.onSelected(ev)" attrs="this.props.attrs">
         <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
             templateParams="this.action.icon.params"/>
         <i t-elif="this.action.icon" class="oi o-fs-small" t-att-class="{ 'oi-fw': this.props.fw, 'oi-lg': inMeetingViewCallButtonsFullscreen, 'py-1': inMeetingViewCallButtonsFullscreen and !isInlineCircleButton }" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
