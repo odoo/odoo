@@ -218,7 +218,8 @@ test("[text composer] Posting message should transform relevant data to emoji.",
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "test :P :laughing:");
+    // Type a trailing space to close the emoji suggestion, which Enter would pick.
+    await insertText(".o-mail-Composer-input", "test :P :laughing: ");
     await press("Enter");
     await contains(".o-mail-Message-body:text('test 😛 😆')");
 });
