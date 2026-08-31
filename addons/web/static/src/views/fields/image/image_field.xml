@@ -3,13 +3,23 @@
 
     <t t-name="web.ImageField">
         <div class="d-inline-block position-relative opacity-trigger-hover">
+<<<<<<< 5096955c06305941c5963447434193f84409231d
             <div t-if="!props.readonly and fieldType !== 'many2one'" class="o_image_uploader_container" t-att-class="containerClass" aria-atomic="true" t-att-style="sizeStyle">
                 <!--
                     dummy/allowAndroidCamera is an invalid mimetype used to force android to sugest "Camera" option
                     Otherwise, in recent Android (>13) it will open the gallery directly which is not what we want.
                 -->
+||||||| 89650a5f44b5835028dba57a9ff6fa30515bc5ec
+            <div t-if="!props.readonly and fieldType !== 'many2one'" class="o_image_uploader_container" t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+                <!--
+                    dummy/allowAndroidCamera is an invalid mimetype used to force android to sugest "Camera" option
+                    Otherwise, in recent Android (>13) it will open the gallery directly which is not what we want.
+                -->
+=======
+            <div t-if="!props.readonly and fieldType !== 'many2one'" class="o_image_uploader_container" t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+>>>>>>> 81f10fbf7eb1b55ccd89bba7c7a44a71409d3434
                 <FileUploader
-                    acceptedFileExtensions="`${props.acceptedFileExtensions ? props.acceptedFileExtensions + ',' : ''}dummy/allowAndroidCamera`"
+                    acceptedFileExtensions="this.acceptedFileExtensions"
                     t-key="props.record.resId"
                     onUploaded.bind="onFileUploaded"
                 >
