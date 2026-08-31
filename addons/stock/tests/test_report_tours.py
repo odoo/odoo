@@ -13,9 +13,24 @@ class TestStockReportTour(HttpCase):
         """ Open the route diagram report."""
         # Do not make the test rely on demo data
         self.env['product.template'].search([('type', '!=', 'service')]).action_archive()
-        self.env['product.template'].create({
+        # Create variant products for variant/warehouse routes selection
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_variant').id)]})
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'PA',
+            'create_variant': 'always'
+        })
+        self.env['product.attribute.value'].create([{
+            'name': 'PAV' + str(i),
+            'attribute_id': product_attribute.id
+        } for i in range(2)])
+        product = self.env['product.template'].create({
             'name': 'Test Storable Product',
             'is_storable': True,
+        })
+        self.env['product.template.attribute.line'].create({
+            'attribute_id': product_attribute.id,
+            'product_tmpl_id': product.id,
+            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
         })
         url = self._get_report_url()
 
