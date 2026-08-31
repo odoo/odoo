@@ -1,3 +1,13 @@
 .o-mail-DiscussNotificationSettings button.o-selected {
     background-color: var(--mail-DiscussNotificationSettings-btnSelectedBg, $gray-200);
 }
+
+.o-mail-DiscussNotificationSettings-option {
+    input {
+        pointer-events: none;
+    }
+
+    &:focus-visible input {
+        outline: 1px solid $gray-500;
+    }
+}
