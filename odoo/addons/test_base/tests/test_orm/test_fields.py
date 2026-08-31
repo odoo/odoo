@@ -17,7 +17,7 @@ from odoo.tools.image import binary_to_image, image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.files import SVG_RAW, ZIP_RAW
-from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
+from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')
@@ -25,17 +25,17 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def setUp(self):
         # for tests methods that create custom models/fields
         super().setUp()
-        self.env.ref('test_orm.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
+        self.env.ref('test_base.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
-        # self.env.ref('test_orm.discussion_0').participants -> 1 user
-        # self.env.ref('test_orm.discussion_0').invalidate()
-        # self.env.ref('test_orm.discussion_0').with_context(active_test=False).participants -> 2 users
-        self.env.ref('test_orm.message_0_1').write({'author': self.user_demo.id})
+        # self.env.ref('test_base.discussion_0').participants -> 1 user
+        # self.env.ref('test_base.discussion_0').invalidate()
+        # self.env.ref('test_base.discussion_0').with_context(active_test=False).participants -> 2 users
+        self.env.ref('test_base.message_0_1').write({'author': self.user_demo.id})
 
     def test_00_basics(self):
         """ test accessing new fields """
         # find a discussion
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
 
         # read field as a record attribute or as a record item
         self.assertIsInstance(discussion.name, str)
@@ -49,7 +49,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_01_basic_get_assertion(self):
         """ test item getter """
         # field access works on single record
-        record = self.env.ref('test_orm.message_0_0')
+        record = self.env.ref('test_base.message_0_0')
         self.assertEqual(len(record), 1)
         ok = record.body  # noqa: F841
 
@@ -62,7 +62,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_01_basic_set_assertion(self):
         """ test item setter """
         # field assignment works on single record
-        record = self.env.ref('test_orm.message_0_0')
+        record = self.env.ref('test_base.message_0_0')
         self.assertEqual(len(record), 1)
         record.body = 'OK'
 
@@ -137,7 +137,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.flush_all()
         self.env['ir.model.fields'].create({
             'name': 'x_bool_false_computed',
-            'model_id': self.env.ref('test_orm.model_test_orm_message').id,
+            'model_id': self.env.ref('test_base.model_test_orm_message').id,
             'field_description': 'A boolean computed to false',
             'compute': "for r in self: r['x_bool_false_computed'] = False",
             'store': False,
@@ -151,7 +151,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env["ir.model.fields"].create(
             {
                 "name": "x_computed_custom_valid_depends",
-                "model_id": self.env.ref("test_orm.model_test_orm_foo").id,
+                "model_id": self.env.ref("test_base.model_test_orm_foo").id,
                 "state": "manual",
                 "field_description": "A compute with a valid depends",
                 "compute": "for r in self: r['x_computed_custom_valid_depends'] = False",
@@ -163,7 +163,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env["ir.model.fields"].create(
             {
                 "name": "x_computed_custom_valid_transitive_depends",
-                "model_id": self.env.ref("test_orm.model_test_orm_foo").id,
+                "model_id": self.env.ref("test_base.model_test_orm_foo").id,
                 "state": "manual",
                 "field_description": "A compute with a valid transitive depends",
                 "compute": "for r in self: r['x_computed_custom_valid_transitive_depends'] = False",
@@ -175,7 +175,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env["ir.model.fields"].create(
             {
                 "name": "x_computed_custom_invalid_depends",
-                "model_id": self.env.ref("test_orm.model_test_orm_foo").id,
+                "model_id": self.env.ref("test_base.model_test_orm_foo").id,
                 "state": "manual",
                 "field_description": "A compute with an invalid depends",
                 "compute": "for r in self: r['x_computed_custom_invalid_depends'] = False",
@@ -187,7 +187,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env["ir.model.fields"].create(
             {
                 "name": "x_computed_custom_invalid_transitive_depends",
-                "model_id": self.env.ref("test_orm.model_test_orm_foo").id,
+                "model_id": self.env.ref("test_base.model_test_orm_foo").id,
                 "state": "manual",
                 "field_description": "A compute with an invalid transitive depends",
                 "compute": "for r in self: r['x_computed_custom_invalid_transitive_depends'] = False",
@@ -342,7 +342,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 self.assertEqual(msg.name, "[%s] %s" % (disc.name, msg.author.name))
 
         # find the demo discussion, and check messages
-        discussion1 = self.env.ref('test_orm.discussion_0')
+        discussion1 = self.env.ref('test_base.discussion_0')
         self.assertTrue(discussion1.messages)
         check_stored(discussion1)
 
@@ -576,7 +576,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_12_cascade(self):
         """ test computed field depending on computed field """
-        message = self.env.ref('test_orm.message_0_0')
+        message = self.env.ref('test_base.message_0_0')
         self.env.invalidate_all()
         double_size = message.double_size
         self.assertEqual(double_size, message.size)
@@ -800,7 +800,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_14_search(self):
         """ test search on computed fields """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
 
         # determine message sizes
         sizes = {message.size for message in discussion.messages}
@@ -819,7 +819,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_15_constraint(self):
         """ test new-style Python constraints """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         self.env.flush_all()
 
         # remove oneself from discussion participants: we can no longer create
@@ -898,7 +898,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.flush_all()
 
         # alter access rights: regular users cannot read 'records'
-        access = self.env.ref('test_orm.access_test_orm_compute_unassigned')
+        access = self.env.ref('test_base.access_test_orm_compute_unassigned')
         access.for_read = False
         self.env.flush_all()
 
@@ -1037,7 +1037,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_21_float_digits(self):
         """ test field description """
-        precision = self.env.ref('test_orm.decimal_orm_number')
+        precision = self.env.ref('test_base.decimal_orm_number')
         description = self.env['test_orm.mixed'].fields_get()['float_precision']
         self.assertEqual(description['digits'], (16, precision.digits))
 
@@ -1251,7 +1251,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_23_relation(self):
         """ test relation fields """
         demo = self.user_demo
-        message = self.env.ref('test_orm.message_0_0')
+        message = self.env.ref('test_base.message_0_0')
 
         # check environment of record and related records
         self.assertEqual(message.env, self.env)
@@ -1295,7 +1295,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_25_related(self):
         """ test related fields. """
-        message = self.env.ref('test_orm.message_0_0')
+        message = self.env.ref('test_base.message_0_0')
         discussion = message.discussion
 
         # by default related fields are not stored
@@ -1637,7 +1637,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # modify ir.access to prevent access on record
         self.assertTrue(user0._is_internal())
-        access = self.env.ref('test_orm.access_test_orm_company')
+        access = self.env.ref('test_base.access_test_orm_company')
         access.domain = f"[('id', '!=', {record.id})]"
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
@@ -2021,7 +2021,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
 
         for message in discussion.messages:
             display_name = message.display_name
@@ -2055,7 +2055,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         Discussion = self.env['test_orm.discussion']
 
         # modify ir.access to force reading field 'name'
-        access = self.env.ref('test_orm.access_discussion')
+        access = self.env.ref('test_base.access_discussion')
         access.domain = "[('name', '!=', 'Super Secret discussion')]"
 
         records = Discussion.with_user(self.user_demo).create([
@@ -2141,7 +2141,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_40_new_defaults(self):
         """ Test new records with defaults. """
         user = self.env.user
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
 
         # create a new message; fields have their default value if not given
         new_msg = self.env['test_orm.message'].new({'body': "XXX"})
@@ -2336,7 +2336,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertNotEqual(x1, x2)
 
         # new discussion based on existing discussion
-        disc = self.env.ref('test_orm.discussion_0')
+        disc = self.env.ref('test_base.discussion_0')
         new_disc = disc.new(origin=disc)
         self.assertFalse(new_disc.id)
         self.assertEqual(new_disc._origin, disc)
@@ -2457,7 +2457,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
-        access = self.env.ref('test_orm.access_discussion')
+        access = self.env.ref('test_base.access_discussion')
         access.for_read = False
 
         # create an environment for demo user
@@ -2465,7 +2465,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(env.user.login, "demo")
 
         # create a new message as demo user
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         message = env['test_orm.message'].new({'discussion': discussion})
         self.assertEqual(message.discussion, discussion)
 
@@ -2482,7 +2482,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_42_new_related(self):
         """ test the behavior of related fields traversing new records. """
         # make discussions unreadable for demo user
-        access = self.env.ref('test_orm.access_discussion')
+        access = self.env.ref('test_base.access_discussion')
         access.for_read = False
 
         # create an environment for demo user
@@ -2521,7 +2521,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         """ test search through a path of computed fields"""
         messages = self.env['test_orm.message'].search(
             [('author_partner.name', '=', 'Marc Demo')])
-        self.assertEqual(messages, self.env.ref('test_orm.message_0_1'))
+        self.assertEqual(messages, self.env.ref('test_base.message_0_1'))
 
     def test_51_search_many2one_ordered(self):
         """ test search on many2one ordered by id """
@@ -2606,7 +2606,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_60_one2many_domain(self):
         """ test the cache consistency of a one2many field with a domain """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         message = discussion.messages[0]
         self.assertNotIn(message, discussion.important_messages)
 
@@ -2653,7 +2653,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         )
 
     def test_70_x2many_write(self):
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
 
         Message = self.env['test_orm.message']
         # There must be 3 messages, 0 important
@@ -2679,7 +2679,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_70_relational_inverse(self):
         """ Check the consistency of relational fields with inverse(s). """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         demo_discussion = discussion.with_user(self.user_demo)
 
         # check that the demo user sees the same messages
@@ -2757,11 +2757,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(discussion2.categories.ids, category21.ids)
 
     def test_80_copy(self):
-        discussion = self.env.ref('test_orm.discussion_0')
-        message = self.env.ref('test_orm.message_0_0')
-        message1 = self.env.ref('test_orm.message_0_1')
+        discussion = self.env.ref('test_base.discussion_0')
+        message = self.env.ref('test_base.message_0_0')
+        message1 = self.env.ref('test_base.message_0_1')
 
-        email = self.env.ref('test_orm.emailmessage_0_0')
+        email = self.env.ref('test_base.emailmessage_0_0')
         self.assertEqual(email.message, message)
 
         self.env['res.lang']._activate_lang('fr_FR')
@@ -5064,7 +5064,7 @@ class TestUnlinkConstraints(TransactionCase):
             self.undeletable_bar.unlink()
 
     def test_unlink_uninstall(self):
-        self.patch(self.registry, 'uninstalling_modules', {'test_orm'})
+        self.patch(self.registry, 'uninstalling_modules', {'test_base'})
 
         self.assertTrue(self.deletable_foo.unlink())
         self.assertTrue(self.deletable_bar.unlink())

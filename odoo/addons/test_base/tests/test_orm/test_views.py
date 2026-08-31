@@ -43,7 +43,7 @@ class TestViewGroups(ViewCase):
             'email': 'a@user.com',
             'group_ids': [(4, self.env.ref('base.group_user').id)],
         })
-        view = self.env.ref('test_orm.view_model_all_access').with_user(user)
+        view = self.env.ref('test_base.view_model_all_access').with_user(user)
         arch = self.env['test_orm.model.all_access']._get_view_cache(view_id=view.id)['arch']
         form = etree.fromstring(arch)
 
@@ -52,7 +52,7 @@ class TestViewGroups(ViewCase):
         self.assertFalse(nodes[0].get('groups'), "The missing field 'ef' should not have groups (groups equal to the model groups)")
 
     def test_tree(self):
-        view = self.env.ref('test_orm.view_model_some_access_tree')
+        view = self.env.ref('test_base.view_model_some_access_tree')
         arch = self.env['test_orm.model.some_access'].get_views([(view.id, 'list')])['views']['list']['arch']
         tree = etree.fromstring(arch)
 

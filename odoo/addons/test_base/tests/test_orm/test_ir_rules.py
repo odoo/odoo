@@ -20,7 +20,7 @@ class TestRules(TransactionCase):
         # (or zero) val
         cls.env['ir.access'].create({
             'name': 'Forbid negatives',
-            'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'model_id': cls.env.ref('test_base.model_test_access_right_some_obj').id,
             'operation': 'crud',
             'domain': "[('val', '>', 0)]",
         })
@@ -28,7 +28,7 @@ class TestRules(TransactionCase):
         # categories, the search is part of the test
         cls.env['ir.access'].create({
             'name': 'See all categories',
-            'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'model_id': cls.env.ref('test_base.model_test_access_right_some_obj').id,
             'operation': 'crud',
             'domain': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
         })
@@ -64,7 +64,7 @@ class TestRules(TransactionCase):
         forbidden = self.forbidden.with_env(env)
 
         # we forbid access to the public group, to which the public user belongs
-        access = self.env.ref('test_orm.access_test_access_right_some_obj_public')
+        access = self.env.ref('test_base.access_test_access_right_some_obj_public')
         access.domain = "[(0, '=', 1)]"
 
         # everything should blow up
@@ -202,7 +202,7 @@ class TestRules(TransactionCase):
 
         access = self.env['ir.access'].create({
             'name': 'Test record access',
-            'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'model_id': self.env.ref('test_base.model_test_access_right_some_obj').id,
             'operation': 'crud',
         })
         invalid_domains = [

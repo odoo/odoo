@@ -12,24 +12,24 @@ class TestReflection(common.TransactionCase):
 
     def assertModelXID(self, record):
         """ Check the XML id of the given 'ir.model' record. """
-        xid = model_xmlid('test_orm', record.model)
+        xid = model_xmlid('test_base', record.model)
         self.assertEqual(record, self.env.ref(xid))
 
     def assertFieldXID(self, record):
         """ Check the XML id of the given 'ir.model.fields' record. """
-        xid = field_xmlid('test_orm', record.model, record.name)
+        xid = field_xmlid('test_base', record.model, record.name)
         self.assertEqual(record, self.env.ref(xid))
 
     def assertSelectionXID(self, record):
         """ Check the XML id of the given 'ir.model.fields.selection' record. """
-        xid = selection_xmlid('test_orm', record.field_id.model, record.field_id.name, record.value)
+        xid = selection_xmlid('test_base', record.field_id.model, record.field_id.name, record.value)
         self.assertEqual(record, self.env.ref(xid))
 
     def test_models_fields(self):
         """ check that all models and fields are reflected as expected. """
         model_names = ['domain.bool', *(
             cls._name
-            for cls in MetaModel._module_to_models__['test_orm']
+            for cls in MetaModel._module_to_models__['test_base']
             if cls._name.startswith('test_orm')
         )]
 

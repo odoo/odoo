@@ -238,7 +238,7 @@ class TestSearch(TransactionCase):
         self.assertNotIn('active', model_country._fields)  # just in case someone adds the active field in the model
         self.env['ir.model.fields'].create({
             'name': 'x_active',
-            'model_id': self.env.ref('test_orm.model_test_orm_country').id,
+            'model_id': self.env.ref('test_base.model_test_orm_country').id,
             'ttype': 'boolean',
         })
         self.assertEqual('x_active', model_country._active_name)

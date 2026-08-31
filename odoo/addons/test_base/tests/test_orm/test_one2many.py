@@ -1,7 +1,7 @@
 from odoo import Command
 from odoo.exceptions import MissingError
 
-from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
+from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
 
 
 class One2manyCase(TransactionExpressionCase):
@@ -209,7 +209,7 @@ class One2manyCase(TransactionExpressionCase):
 
     def test_recompute(self):
         """ test recomputation of fields that indirecly depend on one2many """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         self.assertTrue(discussion.messages)
 
         # detach message from discussion

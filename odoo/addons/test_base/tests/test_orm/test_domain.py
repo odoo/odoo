@@ -8,7 +8,7 @@ from odoo.models import Query
 from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import OrderedSet, SQL
 
-from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
+from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
 
 
 class TestDomain(TransactionExpressionCase):
@@ -26,13 +26,13 @@ class TestDomain(TransactionExpressionCase):
         # Existing rows/tuples will be undefined/empty
         self.env['ir.model.fields'].create({
             'name': 'x_bool_new_undefined',
-            'model_id': self.env.ref('test_orm.model_domain_bool').id,
+            'model_id': self.env.ref('test_base.model_domain_bool').id,
             'field_description': 'A new boolean column',
             'ttype': 'boolean',
         })
 
-        self.env.ref('test_orm.bool_3').write({'x_bool_new_undefined': True})
-        self.env.ref('test_orm.bool_4').write({'x_bool_new_undefined': False})
+        self.env.ref('test_base.bool_3').write({'x_bool_new_undefined': True})
+        self.env.ref('test_base.bool_4').write({'x_bool_new_undefined': False})
 
         model = self.env['domain.bool']
         all_bool = model.search([])

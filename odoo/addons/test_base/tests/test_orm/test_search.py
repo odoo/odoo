@@ -5,7 +5,7 @@ from odoo.tests import TransactionCase, tagged, warmup
 from odoo.tools import BinaryBytes, SQL, mute_logger
 
 from .common import TestOrmPartnerCommon
-from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
+from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')
@@ -90,7 +90,7 @@ class TestSearch(TestOrmPartnerCommon, TransactionCase):
         model = self.env['test_orm.related_bar']
         self.env['ir.model.fields'].create({
             'name': 'x_active',
-            'model_id': self.env.ref('test_orm.model_test_orm_related_bar').id,
+            'model_id': self.env.ref('test_base.model_test_orm_related_bar').id,
             'ttype': 'boolean',
         })
         self.assertEqual('active', model._active_name)

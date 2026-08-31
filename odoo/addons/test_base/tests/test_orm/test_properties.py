@@ -4,7 +4,7 @@ import unittest
 from collections import abc
 from unittest.mock import patch
 
-from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
+from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
@@ -1580,14 +1580,14 @@ class PropertiesCase(TestPropertiesMixin):
         values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmMultiTag._access_domain', _mocked_access_domain):
+        with patch('odoo.addons.test_base.models.test_orm.TestOrmMultiTag._access_domain', _mocked_access_domain):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
         # a user read a properties with a many2one to a record
         # but doesn't have access to its parent
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmDiscussion._access_domain', _mocked_access_domain):
+        with patch('odoo.addons.test_base.models.test_orm.TestOrmDiscussion._access_domain', _mocked_access_domain):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
@@ -1633,7 +1633,7 @@ class PropertiesCase(TestPropertiesMixin):
             raise AccessError(msg)
 
         self.env.invalidate_all()
-        with patch('odoo.addons.test_orm.models.test_orm.TestOrmDiscussion.check_access', _mocked_check_access):
+        with patch('odoo.addons.test_base.models.test_orm.TestOrmDiscussion.check_access', _mocked_check_access):
             message = self.env['test_orm.message'].create({
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,

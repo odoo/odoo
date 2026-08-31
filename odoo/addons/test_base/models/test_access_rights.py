@@ -10,10 +10,10 @@ class Test_Access_RightSome_Obj(models.Model):
     parent_id = fields.Many2one('test_access_right.some_obj')
     company_id = fields.Many2one('res.company')
     forbidden = fields.Integer(
-        groups='test_orm.test_group,base.group_portal',
+        groups='test_base.test_group,base.group_portal',
         default=5,
     )
-    forbidden2 = fields.Integer(groups='test_orm.test_group')
+    forbidden2 = fields.Integer(groups='test_base.test_group')
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
     active = fields.Boolean(default=True)
     child_ids = fields.One2many('test_access_right.child', 'parent_id')
