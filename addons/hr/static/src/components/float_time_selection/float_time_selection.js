@@ -21,7 +21,7 @@ function hoursMinutesToFloat(hours, minutes) {
 }
 
 export class FloatTimeSelectionField extends FloatTimeField {
-    static template = "hr_holidays.FloatTimeSelectionField";
+    static template = "hr.FloatTimeSelectionField";
     props = useProps({
         ...floatTimeFieldProps,
     });
