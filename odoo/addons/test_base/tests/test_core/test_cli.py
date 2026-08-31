@@ -21,7 +21,7 @@ class TestCommand(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.odoo_bin = Path(__file__).parents[4].resolve() / 'odoo-bin'
+        cls.odoo_bin = Path(__file__).parents[5].resolve() / 'odoo-bin'
         addons_path = config.format('addons_path', config['addons_path'])
         cls.run_args = (sys.executable, cls.odoo_bin, f'--addons-path={addons_path}')
 
@@ -121,7 +121,7 @@ class TestCommand(BaseCase):
         shell = self.popen_command(
             'shell',
             '--shell-interface=python',
-            '--shell-file', file_path('test_core/tests/shell_file.txt'),
+            '--shell-file', file_path('test_base/tests/test_core/shell_file.txt'),
             stdin=main,
             close_fds=True,
         )
