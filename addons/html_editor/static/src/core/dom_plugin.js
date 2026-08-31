@@ -309,6 +309,7 @@ export class DomPlugin extends Plugin {
         );
         const sel = this.dependencies.selection.getEditableSelection();
         const refBlock = closestBlock(sel.anchorNode);
+        const preserveInlineContext = closestElement(sel.anchorNode) !== refBlock;
         const editableContext = closestElement(sel.focusNode, "[contenteditable=true]");
         const isEditableBlock = isBlock(editableContext);
         const isInEmpty = !isTextNode(sel.focusNode) && isEmpty(sel.focusNode);
@@ -432,7 +433,39 @@ export class DomPlugin extends Plugin {
         let insertedContent = [];
         const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
         for (const [index, item] of nodes.entries()) {
-            let insertedNodes = [];
+            const insertedNodes = [];
+            // Restore lost split before the item in case of unwrapping.
+            const previousItem = index > 0 && nodes[index - 1];
+            if (isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
+                const [targetNode, targetOffset] = leftPos(refNode);
+                const split = this.dependencies.split.splitBlockNode({
+                    targetNode,
+                    targetOffset,
+                });
+                switch (split.type) {
+                    case SPLIT_OPERATION_TYPES.LINE: {
+                        const trailingBr = split.lineBreaks.at(-1);
+                        if (split.lineBreaks.length > 1 && isFakeLineBreak(trailingBr)) {
+                            // The fake line break that was created will be
+                            // rendered unnecessary with the insertion.
+                            trailingBr.remove();
+                            split.lineBreaks.pop();
+                        }
+                        insertedNodes.push(...split.lineBreaks);
+                        break;
+                    }
+                    case SPLIT_OPERATION_TYPES.BLOCK: {
+                        const reference = preserveInlineContext
+                            ? firstLeaf(split.after)
+                            : split.after.firstChild;
+                        if (reference !== marker) {
+                            reference.before(marker);
+                        }
+                        refNode = marker;
+                        break;
+                    }
+                }
+            }
             for (const node of isFragment(item) ? childNodes(item) : [item]) {
                 const next = this.findNextInsertionReferenceNode(node, firstLeaf(refNode), marker);
                 if (next) {
@@ -453,51 +486,6 @@ export class DomPlugin extends Plugin {
                         refNode.remove();
                         node.after(marker);
                         refNode = marker;
-                    }
-                }
-            }
-            // Restore lost split before the item in case of unwrapping.
-            const previousItem = index > 0 && nodes[index - 1];
-            if (
-                (isFragment(previousItem) && !isBlock(item)) ||
-                (isFragment(item.nodeType) && !isBlock(previousItem))
-            ) {
-                const node = insertedNodes[0];
-                const lastNode = insertedNodes.at(-1);
-                if (!lastNode.nextSibling) {
-                    lastNode.after(marker);
-                }
-                refNode = lastNode.nextSibling;
-                const [targetNode, targetOffset] = leftPos(node);
-                const split = this.dependencies.split.splitBlockNode({
-                    targetNode,
-                    targetOffset,
-                });
-                switch (split.type) {
-                    case SPLIT_OPERATION_TYPES.LINE: {
-                        insertedNodes.unshift(...split.lineBreaks);
-                        break;
-                    }
-                    case SPLIT_OPERATION_TYPES.BLOCK: {
-                        if (node.isConnected) {
-                            if (this.isAtBlockEdge(node, "end")) {
-                                insertedNodes = [split.after];
-                            }
-                        } else {
-                            insertedNodes = [];
-                            const [anchorNode, anchorOffset] = rightPos(split.before);
-                            split.after.remove();
-                            refNode = findInsertionReferenceNode(
-                                { anchorNode, anchorOffset },
-                                marker
-                            );
-                        }
-                        break;
-                    }
-                    default: {
-                        if (this.isAtBlockEdge(node, "end")) {
-                            insertedNodes = [closestBlock(node)];
-                        }
                     }
                 }
             }
