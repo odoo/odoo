@@ -396,13 +396,12 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             productTemplateId=str(self.mac.id),
         )
 
-    def test_newest_products_filter(self):
-        """Check the newest products filter.
+    def test_newest_arrivals_filter(self):
+        """Check the newest arrivals filter.
 
         When showing variants, the filter should return 16 variants with repeating templates.
         When hiding variants, the filter should return 16 templates, all unique.
 
-                website_id=self.ref('base.default_website'),
         This filter is unique in that it's defined in `data/data.xml`, and hence can't be called
         via the `_get_products` method.
         """
@@ -411,7 +410,9 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             "sale_ok": False
         })
 
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_newest_products").with_context(website_id=self.ref('base.default_website'))
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_newest_arrivals").with_context(
+            website_id=self.ref("base.default_website")
+        )
         with self.mock_request():
             with_variants = dyn_filter._prepare_values(search_domain=[])
             self.assertEqual(
@@ -433,14 +434,19 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 "When displaying newest product templates, 16 unique templates should be shown",
             )
 
-        products = self.computer_case.product_variant_ids[:16]
-        now = datetime.now()
-        for i, product in enumerate(products):
+        newest_templates = self.env["product.template"].create([
+            {"name": f"Newest arrival {i}", "company_id": False, "website_published": True}
+            for i in range(16)
+        ])
+        now = datetime.now() + timedelta(days=1)
+        for i, template in enumerate(newest_templates):
             self.env.cr.execute(
-                "UPDATE product_product SET create_date = %s WHERE id = %s",
-                (fields.Datetime.to_string(now + timedelta(seconds=i)), product.id),
+                "UPDATE product_template SET publish_date = %s WHERE id = %s",
+                (fields.Datetime.to_string(now - timedelta(seconds=i)), template.id),
             )
-        self.assert_snippet_filters_route_public_access(dyn_filter, products.sorted(reverse=True))
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter, newest_templates.product_variant_id
+        )
 
     def test_shop_attribute_filters_remain_when_changing_page(self):
         self.env["product.attribute"].search([]).write({"visibility": "hidden"})
@@ -474,10 +480,10 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         )
         self.assertEqual(len(result), 0)
 
-    def test_newest_products_filter_unpublished_access(self):
+    def test_newest_arrivals_filter_unpublished_access(self):
         """Ensure unpublished products cannot be fetched using a mono-record snippet
         configuration."""
-        product_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
+        product_filter = self.env.ref("website_sale.dynamic_filter_newest_arrivals")
         # Unpublish products. The product dynamic snippet should be empty.
         products = self.env["product.product"].search([])
         products.write({"website_published": False})
@@ -503,7 +509,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
 
     def test_dynamic_filter_with_sample_products(self):
         """Test that the dynamic product snippet uses sample products."""
-        product_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
+        product_filter = self.env.ref('website_sale.dynamic_filter_newest_arrivals')
         self.env.ref('website_sale.new_ribbon').assign = 'new'
 
         # Unpublish products. The dynamic snippet should use sample products.

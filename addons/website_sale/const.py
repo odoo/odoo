@@ -311,7 +311,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
 
 SNIPPET_DEFAULTS = {
     "website_sale.s_dynamic_snippet_products": {
-        "filter_xmlid": "website_sale.dynamic_filter_newest_products",
+        "filter_xmlid": "website_sale.dynamic_filter_newest_arrivals",
         "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
         "data_attributes": {
             "snippet": "s_dynamic_snippet_products",
