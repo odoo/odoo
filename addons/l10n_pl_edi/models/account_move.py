@@ -803,7 +803,12 @@ class AccountMove(models.Model):
                         'raw': response['xml_content'],
                         'res_id': bill.id,
                         'res_model': bill._name,
+                        'res_field': 'l10n_pl_edi_attachment_file',
                     })
+                    bill.invalidate_recordset(fnames=[
+                        'l10n_pl_edi_attachment_id',
+                        'l10n_pl_edi_attachment_file',
+                    ])
                     bill.sudo().with_context(no_new_invoice=True).message_post(
                         body=self.env._("The fetched KSeF XML has been attached."),
                         attachment_ids=attachment.ids,
