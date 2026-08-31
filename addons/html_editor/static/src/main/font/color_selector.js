@@ -19,6 +19,8 @@ export class ColorSelector extends Component {
         ...toolbarButtonProps,
         mode: { type: String },
         type: { type: String },
+        customIconClass: { type: String, optional: true },
+        getDefaultColor: { type: Function, optional: true },
         getSelectedColors: Function,
         applyColor: Function,
         applyColorPreview: Function,
@@ -107,6 +109,8 @@ export class ColorSelector extends Component {
         if (isColorGradient(this.state.selectedColor)) {
             return `border-bottom: 2px solid transparent; border-image: ${this.state.selectedColor}; border-image-slice: 1`;
         }
-        return `border-bottom: 2px solid ${this.state.selectedColor}`;
+        return `border-bottom: 2px solid ${
+            this.state.selectedColor || this.props.getDefaultColor?.()
+        }`;
     }
 }

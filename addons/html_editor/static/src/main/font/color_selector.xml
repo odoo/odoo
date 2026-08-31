@@ -5,6 +5,9 @@
         <t t-if="props.type === 'foreground'">
             <i class="fa-solid fa-font py-1" t-att-style="this.getSelectedColorStyle()"/>
         </t>
+        <t t-elif="props.type === 'custom'">
+            <i class="fa-solid py-1" t-attf-class="{{props.customIconClass}}" t-att-style="this.getSelectedColorStyle()"/>
+        </t>
         <t t-else="">
             <i class="fa-solid fa-paint-brush py-1" t-att-style="this.getSelectedColorStyle()"/>
         </t>

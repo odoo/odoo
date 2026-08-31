@@ -1,0 +1,29 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.TableBorderWidthSelector">
+        <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false" menuRef="menuRef">
+            <button class="btn btn-light" t-att-title="props.title" name="table_border_width">
+                <t t-call="html_editor.TableBorderWidthSvg"/>
+            </button>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true" data-vertical="true">
+                    <t t-foreach="items" t-as="item" t-key="item.value">
+                        <button
+                            class="btn btn-light"
+                            t-att-class="{ active: item.value === state.displayName }"
+                            t-on-pointerdown.prevent="() => {}"
+                            t-on-click="() => this.onSelected(item)"
+                        >
+                            <div class="o-border-preview" t-attf-style="border-width: {{item.value}}; margin-top: {{item.margin}}; border-style: solid; width: 50px;"/>
+                        </button>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="html_editor.TableBorderWidthSvg">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--btn-color)">
+            <path d="M120-160v-40h720v40H120Zm0-120v-80h720v80H120Zm0-160v-120h720v120H120Zm0-200v-160h720v160H120Z"/>
+        </svg>
+    </t>
+</templates>

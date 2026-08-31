@@ -65,6 +65,7 @@ import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin.
 import { SeparatorPlugin } from "./main/separator_plugin.js";
 import { StarPlugin } from "./main/star_plugin.js";
 import { TableAlignPlugin } from "./main/table/table_align_plugin.js";
+import { TableBorderPlugin } from "./main/table/table_border_plugin.js";
 import { TablePlugin } from "./main/table/table_plugin.js";
 import { TableResizePlugin } from "./main/table/table_resize_plugin.js";
 import { TableUIPlugin } from "./main/table/table_ui_plugin.js";
@@ -123,6 +124,7 @@ export const MAIN_PLUGINS = [
     StarPlugin,
     TablePlugin,
     TableAlignPlugin,
+    TableBorderPlugin,
     TableUIPlugin,
     TabulationPlugin,
     ToolbarPlugin,

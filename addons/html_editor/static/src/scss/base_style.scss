@@ -9,6 +9,18 @@ li.oe-nested {
     }
 }
 
+// Once a border is set on individual cells, the row-level border would draw on
+// top of it, so it is handed over to the cells.
+.o_table.o-table-cellbordered tr {
+    border-style: none;
+    border-width: 0;
+
+    td {
+        border-style: inset;
+        border-width: 1px;
+    }
+}
+
 .table-bordered {
     > :not(caption) > * {
         border-width: 1px 0;
