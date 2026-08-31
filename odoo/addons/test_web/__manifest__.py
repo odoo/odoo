@@ -5,7 +5,7 @@
     'category': 'Hidden/Tests',
     'version': '0.1',
 
-    'depends': ['web', 'test_orm', 'test_tools'],
+    'depends': ['web', 'test_base'],
 
     'data': ['ir.access.csv'],
 

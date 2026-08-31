@@ -17,7 +17,7 @@ class TestSecurityFiles(LintCase):
         error_count = 0
         re_public = re.compile(r'[^_]group_public\b')
         for file_path in self.iter_module_files("**/ir.access.csv"):
-            if '/test_orm/' in file_path:
+            if '/test_base/' in file_path:
                 # skip for access_test_orm_model_some_access
                 continue
             with tools.file_open(file_path, "r") as f:

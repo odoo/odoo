@@ -61,7 +61,7 @@ class TestTestHoles(LintCase):
 
             for f in p.rglob('test_*.py'):
                 # special case of a test file which can't be tested normally
-                if f.match("odoo/addons/test_orm/tests/test_uninstall.py"):
+                if f.match("odoo/addons/test_base/tests/test_orm/test_uninstall.py"):
                     continue
                 checker.names[os.fspath(f.relative_to(p))] -= 1
 
