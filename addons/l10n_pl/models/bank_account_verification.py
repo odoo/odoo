@@ -241,11 +241,11 @@ class BankAccountVerification(models.Model):
         to_create = []
         for vals in create_vals:
             # verif exists but failed so modify it to keep latest value
-            if verif := partner_bank_vat2failed_verification.get((vals['partner_bank_account_number'], vals['partner_vat'])):
+            if verif := partner_bank_vat2failed_verification.get((vals.get('partner_bank_account_number', False), vals.get('partner_vat', False))):
                 verif.sudo().write(vals)
 
             # verification exists
-            elif partner_bank_vat2verification.get((vals['partner_bank_account_number'], vals['partner_vat'])):
+            elif partner_bank_vat2verification.get((vals.get('partner_bank_account_number', False), vals.get('partner_vat', False))):
                 continue
 
             # verification doesn't exist
