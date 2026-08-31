@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 import { setupEditor, testEditor } from "../_helpers/editor.js";
 import { getContent } from "../_helpers/selection.js";
+import { expectElementCount } from "../_helpers/ui_expectations.js";
 import { expandToolbar } from "../_helpers/toolbar.js";
 import { redo, setFontFamily, undo } from "../_helpers/user_actions.js";
 import { execCommand } from "../_helpers/userCommands.js";
@@ -132,6 +133,28 @@ test("should contain the 5 available font + default", async () => {
                 "Tahoma (sans-serif)",
                 "Trebuchet MS (sans-serif)",
                 "Courier New (monospace)",
+            ][i],
+        );
+    }
+});
+
+test("each font-family option is shown in its own typeface", async () => {
+    await setupEditor("<p>ab[cde]fg</p>");
+    await expandToolbar();
+    await click(".btn[name='font_family']");
+    await expectElementCount(".o_font_family_selector_menu", 1);
+    const items = document.querySelectorAll(
+        ".o_font_family_selector_menu .o-dropdown-item",
+    );
+    for (let i = 0; i < items.length; i++) {
+        expect(items[i].style.fontFamily).toBe(
+            [
+                "", // Default system font: no font-family to preview.
+                "Arial, sans-serif",
+                "Verdana, sans-serif",
+                "Tahoma, sans-serif",
+                '"Trebuchet MS", sans-serif',
+                '"Courier New", monospace',
             ][i],
         );
     }
