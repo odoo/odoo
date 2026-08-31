@@ -96,6 +96,21 @@ class IrConfig_Parameter(models.Model):
             ''
         )
 
+    def unset(self, key: str, type_: Type_ = 'str') -> Any:
+        """
+        Unset the given parameter and return its old value.
+        """
+        old_value, id_ = self._get(key, type_)
+        if id_:
+            self.browse(id_).unlink()
+        if old_value is not None:
+            return old_value
+        return (
+            False if type_ == 'bool' else
+            0 if type_ in ('int', 'float') else
+            ''
+        )
+
     @api.model
     def get_bool[T](self, key: str, default: T = False) -> bool | T:
         self.browse().check_access('read')
