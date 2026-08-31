@@ -592,7 +592,10 @@ list of filtered posts (by date or tag).
             <div class="d-flex flex-column flex-basis-75">
                 <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
                 <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp mb-2 small text-muted" placeholder="Subtitle"/>
-                <small t-field="next_post.published_date" class="text-muted" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
+                <small t-if="next_post.publish_on" class="text-muted">
+                    Planned for <t t-out="next_post.publish_on" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
+                </small>
+                <small t-else="" class="text-muted" t-out="next_post.published_date" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
             </div>
         </a>
     </div>
