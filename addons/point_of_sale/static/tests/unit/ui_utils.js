@@ -75,6 +75,7 @@ export async function addOrderlineFromProductScreen(productName, { quantity = 1,
     if (quantity.toString() !== "1") {
         await clickNumpadButtons(quantity);
     }
+    await advanceTime(150);
 }
 
 export async function clickNumpadButtons(...keys) {
