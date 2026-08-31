@@ -615,7 +615,7 @@ class Contains {
                 `Timeout of ${(this.timeoutCount * TICK_TIMEOUT) / 1000} seconds`,
                 { crashOnFail: this.timeoutCount >= TIMEOUT / TICK_TIMEOUT }
             );
-            if (!res) {
+            if (!res && !this.done) {
                 this.setTickTimeout();
             }
         }, TICK_TIMEOUT);
