@@ -59,7 +59,7 @@ class HrApplicant(models.Model):
                 applicant.missing_skill_ids = False
                 applicant.is_degree_score_matching = False
                 continue
-            job_skills = job.job_skill_ids
+            job_skills = job.job_skill_ids.filtered(lambda skill: not skill.skill_type_id.company_id or skill.skill_type_id.company_id == applicant.company_id)
             job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
             matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
                 lambda a: a.skill_id in job_skill_map,

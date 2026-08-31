@@ -33,15 +33,19 @@ class HrEmployee(models.Model):
     @api.depends('employee_skill_ids.skill_id')
     def _compute_skill_ids(self):
         for employee in self:
-            employee.skill_ids = employee.employee_skill_ids.skill_id
+            employee.skill_ids = employee.employee_skill_ids.skill_id.filtered(
+                lambda skill: not skill.skill_type_id.company_id or skill.skill_type_id.company_id == employee.company_id,
+            )
 
     @api.depends('employee_skill_ids')
     def _compute_certification_ids(self):
         for employee in self:
-            employee.certification_ids = employee.employee_skill_ids.filtered('is_certification')
+            employee.certification_ids = employee.employee_skill_ids.filtered(
+                lambda skill: skill.is_certification and (not skill.skill_type_id.company_id or skill.skill_type_id.company_id == employee.company_id),
+            )
 
     def _compute_display_certification_page(self):
-        self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1))
+        self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True), '|', ('company_id', '=', False), ('company_id.id', '=', self.company_id.id)], limit=1))
 
     @api.model_create_multi
     def create(self, vals_list):

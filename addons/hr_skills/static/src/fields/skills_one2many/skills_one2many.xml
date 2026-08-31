@@ -18,7 +18,7 @@
                 <t t-if="!this.anySkills">
                     <div name="no_skills" class="skills_helper">
                         <p class="mt-2">
-                            There are no skills defined in the library.
+                            There are no skills defined for your company in the library.
                         </p>
                         <button t-on-click="this.skillTypesAction"
                             class="btn btn-secondary align-self-center"
@@ -32,7 +32,7 @@
                         <p class="mt-2">You can add skills from our library to the employee profile.<br/>
                             If skills are missing, they can be created by an HR officer.
                         </p>
-                        <button t-on-click="this.props.onAdd"
+                        <button t-on-click="() => this.props.onAdd({ context: { default_skill_type_id: this.defaultSkillType.id }})"
                             class="btn btn-secondary align-self-center"
                             t-if="this.isEditable">
                             Pick a skill from the list
