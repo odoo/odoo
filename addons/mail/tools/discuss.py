@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import os
 from collections import defaultdict
 from datetime import date, datetime
@@ -263,21 +264,25 @@ class Store:
 
     def _get_records_data_list(self, records, fields):
         abstract_fields = [field for field in fields if isinstance(field, (dict, Store.Attr))]
-        records_data_list = [
-            [data_dict]
-            for data_dict in records._read_format(
-                [f for f in fields if f not in abstract_fields], load=False,
-            )
-        ]
+        standard_fields = [f for f in fields if f not in abstract_fields]
+        records_data_list = [[] for record in records]
+        try:
+            for data, record_data_list in zip(
+                records._read_format(standard_fields, load=False),
+                records_data_list,
+            ):
+                record_data_list.append(data)
+        except MissingError:
+            for record, record_data_list in zip(records, records_data_list):
+                with contextlib.suppress(MissingError):
+                    record_data_list.append(record._read_format(standard_fields, load=False)[0])
         for record, record_data_list in zip(records, records_data_list):
             for field in abstract_fields:
-                if isinstance(field, dict):
-                    record_data_list.append(field)
-                elif not field.predicate or field.predicate(record):
-                    try:
+                with contextlib.suppress(MissingError):
+                    if isinstance(field, dict):
+                        record_data_list.append(field)
+                    elif not field.predicate or field.predicate(record):
                         record_data_list.append({field.field_name: field._get_value(record)})
-                    except MissingError:
-                        break
         return records_data_list
 
     def _get_record_index(self, model_name, values):

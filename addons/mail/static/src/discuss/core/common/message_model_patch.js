@@ -55,6 +55,9 @@ const messagePatch = {
             (m) => m.hasSeen(this) && m.persona.notEq(this.author)
         );
     },
+    _canReplyTo(thread) {
+        return this.thread?.model === "discuss.channel" || super._canReplyTo(...arguments);
+    },
     /**
      * @override
      */
