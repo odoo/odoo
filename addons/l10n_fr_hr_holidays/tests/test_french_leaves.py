@@ -501,7 +501,7 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'number_of_days': 5,
             'date_from': '2026-09-01',
-        }).action_approve()
+        })
 
         leave = self.env['hr.leave'].with_company(self.company).create({
             'name': 'Paid Time Off',

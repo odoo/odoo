@@ -860,6 +860,8 @@ class HrLeaveAllocation(models.Model):
                 values.update({'department_id': self.env['hr.employee'].sudo().browse(employee_id).department_id.id})
         allocations = super(HrLeaveAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         allocations._add_lastcalls()
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        skip_auto_approve = self.env.context.get('allocation_skip_auto_approve', False)
         for allocation in allocations:
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
@@ -870,7 +872,7 @@ class HrLeaveAllocation(models.Model):
             allocation.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self.env.context.get('import_file'):
                 allocation.activity_update()
-            if allocation.validation_type == 'no_validation' and allocation.state == 'confirm':
+            if allocation.state == 'confirm' and (allocation.validation_type == 'no_validation' or (is_officer and not skip_auto_approve)):
                 allocation.action_approve()
         return allocations
 

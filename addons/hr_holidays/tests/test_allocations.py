@@ -227,7 +227,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'date_from': date(2024, 1, 1),
         })
-        allocation.action_approve()
 
         leave_request = self.env['hr.leave'].create({
             'name': 'Leave Request',
@@ -250,7 +249,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee_responsible.id,
             'date_from': date(2024, 1, 15),
         })
-        allocation_with_pending_leave.action_approve()
         pending_leave = self._create_leave(
             self.work_entry_type_paid, self.employee_responsible, date(2024, 1, 15), date(2024, 1, 19),
             validate=False, user=self.user_responsible,
@@ -269,10 +267,9 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 1, 30),
         })
-        allocation_one.action_approve()
 
         # Creating the second overlapping allocation
-        allocation_two = self.env['hr.leave.allocation'].create({
+        self.env['hr.leave.allocation'].create({
             'name': 'Second Half Allocation',
             'work_entry_type_id': self.work_entry_type_paid.id,
             'number_of_days': 5,
@@ -280,7 +277,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 20),
             'date_to': date(2024, 2, 20),
         })
-        allocation_two.action_approve()
 
         # Creating a leave request consuming days from both allocations
         leave_request = self.env['hr.leave'].create({
@@ -311,7 +307,7 @@ class TestAllocations(TestHrHolidaysCommon):
         })
 
         work_entry_type = self.env.ref('hr_work_entry.generic_work_entry_type_compensatory')
-        allocation = self.env['hr.leave.allocation'].create({
+        self.env['hr.leave.allocation'].create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
@@ -319,9 +315,8 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 4, 30)
         })
-        allocation.action_approve()
 
-        second_allocation = self.env['hr.leave.allocation'].create({
+        self.env['hr.leave.allocation'].create({
             'name': 'Alloc2',
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
@@ -329,7 +324,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 5, 1),
             'date_to': date(2024, 12, 31)
         })
-        second_allocation.action_approve()
 
         # _compute_leaves depends on the context that is getting cleared
         self.env['hr.work.entry.type'].invalidate_model(['max_leaves', 'leaves_taken', 'virtual_remaining_leaves'])
@@ -394,7 +388,7 @@ class TestAllocations(TestHrHolidaysCommon):
         """
         work_entry_type = self.env.ref('hr_work_entry.generic_work_entry_type_compensatory')
 
-        invalid_allocation = self.env['hr.leave.allocation'].sudo().create({
+        self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
@@ -402,9 +396,8 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 1),
             'date_to': date(2024, 4, 30)
         })
-        invalid_allocation.action_approve()
 
-        first_valid_allocation = self.env['hr.leave.allocation'].sudo().create({
+        self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
@@ -412,9 +405,8 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2024, 1, 1),
             'date_to': False
         })
-        first_valid_allocation.action_approve()
 
-        second_valid_allocation = self.env['hr.leave.allocation'].sudo().create({
+        self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
             'work_entry_type_id': work_entry_type.id,
@@ -422,7 +414,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_from': date(2025, 1, 1),
             'date_to': date.today()
         })
-        second_valid_allocation.action_approve()
 
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee.id,
@@ -467,7 +458,6 @@ class TestAllocations(TestHrHolidaysCommon):
         })
 
         self.assertEqual(allocation.type_request_unit, 'hour')
-        allocation.action_approve()
 
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee.id,
@@ -487,7 +477,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'number_of_days': 3.0 / 8.0,  # the employee's day is 8 hours
         })
         self.assertEqual(allocation_insufficient_hours.type_request_unit, 'hour')
-        allocation_insufficient_hours.action_approve()
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].create({
             'employee_id': self.employee.id,
@@ -559,7 +548,7 @@ class TestAllocations(TestHrHolidaysCommon):
         })
 
         def _create_allocation(days):
-            return self.env['hr.leave.allocation'].create({
+            return self.env['hr.leave.allocation'].with_context(allocation_skip_auto_approve=True).create({
                 'name': f'{days} days Allocation',
                 'work_entry_type_id': self.work_entry_type_paid.id,
                 'number_of_days': days,
@@ -635,16 +624,15 @@ class TestAllocations(TestHrHolidaysCommon):
             'allows_negative': True,
             'max_allowed_negative': 5,
         })
-        allocation_1 = self.env['hr.leave.allocation'].create({
+        self.env['hr.leave.allocation'].create({
             'name': 'Negative Allocation 1',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
             'number_of_days': -3,
             'date_from': date(2024, 1, 1),
         })
-        allocation_1.action_approve()
         with self.assertRaises(ValidationError):
-            allocation_2 = self.env['hr.leave.allocation'].create({
+            self.env['hr.leave.allocation'].create({
                 'name': 'Negative Allocation 2',
                 'employee_id': self.employee.id,
                 'work_entry_type_id': self.work_entry_type.id,
@@ -652,7 +640,6 @@ class TestAllocations(TestHrHolidaysCommon):
                 'date_from': date(2024, 6, 1),
                 'date_to': date(2024, 6, 30),
             })
-            allocation_2.action_approve()
 
     @users('admin')
     def test_action_generate_group_allocations(self):
@@ -701,7 +688,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_to': date_to,
             'accrual_plan_id': accrual_plan and accrual_plan.id,
         })
-        allocation.action_approve()
         return allocation
 
     def _create_leave(self, work_entry_type, employee, date_from, date_to, validate=True, user=False):

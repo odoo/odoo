@@ -282,7 +282,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': date(2024, 12, 1),
             'date_to': date(2024, 12, 30),
-        }).action_approve()
+        })
 
         partially_covered_leave = self.env['hr.leave'].create({
             'name': 'Holiday 1 week',
@@ -291,7 +291,6 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_from': datetime(2024, 12, 3, 7, 0),
             'request_date_to': datetime(2024, 12, 5, 18, 0),
         })
-        partially_covered_leave.action_approve()
 
         global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
             'name': 'Public holiday',
@@ -444,7 +443,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'date_from': date(2026, 1, 1),
                 'date_to': date(2026, 12, 31),
             }
-        ]).action_approve()
+        ])
 
         leave = self.env['hr.leave'].create({
             'name': 'Holiday 1 week',
