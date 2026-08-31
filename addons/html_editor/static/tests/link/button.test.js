@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
 import {
     click,
     edit,
@@ -467,5 +467,52 @@ describe("firefox", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="#">linX[]</a>est</p>',
         );
+    });
+});
+
+describe("link-creating tools in label and button", () => {
+    test("Link is offered in an ordinary paragraph", async () => {
+        const { editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Link");
+    });
+    test("Link is not offered inside a label", async () => {
+        const { editor } = await setupEditor("<p><label>ab[]</label></p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Link");
+    });
+    test("Link is not offered inside a button", async () => {
+        const { editor } = await setupEditor("<p><button>ab[]</button></p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Link");
+    });
+    test("Upload a file is not offered inside a label", async () => {
+        const { editor } = await setupEditor("<p><label>ab[]</label></p>");
+        await insertText(editor, "/upload");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Upload a file");
+    });
+    test("Upload a file is not offered inside a button", async () => {
+        const { editor } = await setupEditor("<p><button>ab[]</button></p>");
+        await insertText(editor, "/upload");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Upload a file");
+    });
+    test("Media is not offered inside a label", async () => {
+        const { editor } = await setupEditor("<p><label>ab[]</label></p>");
+        await insertText(editor, "/media");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Media");
+    });
+    // Deliberate asymmetry: a button may legitimately hold an image, so only
+    // the link-creating tools are withdrawn there.
+    test("Media is still offered inside a button", async () => {
+        const { editor } = await setupEditor("<p><button>ab[]</button></p>");
+        await insertText(editor, "/media");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Media");
     });
 });

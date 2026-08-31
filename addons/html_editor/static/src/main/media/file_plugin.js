@@ -1,5 +1,4 @@
 /** @odoo-module native */
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import {
     DocumentSelector,
     renderStaticFileBox,
@@ -11,6 +10,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/translation";
 
 import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin.js";
+import { isLinkSupported } from "../link/link_plugin.js";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -27,8 +27,7 @@ export class FilePlugin extends Plugin {
             icon: "fa-upload",
             run: this.uploadAndInsertFiles.bind(this),
             isAvailable: (selection) =>
-                this.isUploadCommandAvailable(selection) &&
-                isHtmlContentSupported(selection),
+                this.isUploadCommandAvailable(selection) && isLinkSupported(selection),
         },
         powerbox_items: {
             categoryId: "media",

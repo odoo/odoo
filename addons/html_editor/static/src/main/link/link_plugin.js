@@ -53,6 +53,24 @@ function isLinkActive(selection) {
 }
 
 /**
+ * A click on a `label` belongs to its input and a click on a `button` to its
+ * action; a link nested in either one swallows that click instead. So the
+ * editor stops offering to create one there.
+ *
+ * @param {Node} node
+ */
+function allowedToCreateLink(node) {
+    return !closestElement(node, "label, button");
+}
+
+/**
+ * @param {EditorSelection} selection
+ */
+export function isLinkSupported(selection) {
+    return isHtmlContentSupported(selection) && allowedToCreateLink(selection.anchorNode);
+}
+
+/**
  * @param { HTMLAnchorElement } link
  * @param {number} offset
  * @returns {"start"|"end"|false}
@@ -189,7 +207,7 @@ export class LinkPlugin extends Plugin {
                         ? this.getResource("link_popovers").some((p) =>
                               p.isAvailable(linkEl),
                           )
-                        : isHtmlContentSupported(selection);
+                        : isLinkSupported(selection);
                 },
             },
             {

@@ -40,6 +40,17 @@ import { MediaDialog, TABS } from "./media_dialog/media_dialog.js";
  * }[]} media_dialog_extra_tabs
  */
 
+/**
+ * Unlike the link tools, media stays available inside a `button`: a button may
+ * legitimately hold an image. Only `label` is withdrawn, where the media dialog
+ * would offer to wrap the insert in a link.
+ *
+ * @param {EditorSelection} selection
+ */
+function isMediaSupported(selection) {
+    return isHtmlContentSupported(selection) && !closestElement(selection.anchorNode, "label");
+}
+
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
@@ -69,7 +80,7 @@ export class MediaPlugin extends Plugin {
                     this.openMediaDialog({
                         activeTab: this.getActiveDialogTab(context.searchTerm),
                     }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: isMediaSupported,
             },
         ],
         toolbar_groups: withSequence(31, {
