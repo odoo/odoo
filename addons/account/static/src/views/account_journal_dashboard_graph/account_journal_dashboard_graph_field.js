@@ -7,7 +7,7 @@ import {
 } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
 
 const colorScheme = cookie.get("color_scheme");
-const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "#d8dadd", "#3C3E4B");
+const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "#d8dadd", "#3A3B41");
 const GRAPH_LABEL_COLOR = getCustomColor(colorScheme, "#6c757d", "#ADB5BD");
 
 export class AccountJournalDashboardGraphField extends JournalDashboardGraphField {
