@@ -71,7 +71,7 @@ class LangDataDict(Mapping):
         return key in self.__data
 
 
-class ResLang(models.CachedModel):
+class ResLang(models.ValueModel):
     _name = 'res.lang'
     _description = "Language"
     _order = "active desc,name"
@@ -81,6 +81,7 @@ class ResLang(models.CachedModel):
         'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format',
         'time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url',
     )
+    _code_field = 'code'
 
     _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
@@ -306,6 +307,7 @@ class ResLang(models.CachedModel):
     # ------------------------------------------------------------
 
     @api.model
+    # TODO @deprecated("Since 20.0, use get_all()")
     def _get_active_langs(self):
         """ Return active languages. """
         return self.get_all()
@@ -328,18 +330,15 @@ class ResLang(models.CachedModel):
         return self._get_active_by(field_name)[field_value]
 
     @api.model
+    # TODO @deprecated("Since 20.0, use get()")
     def _lang_get(self, code: str):
         """ Return the language using this code if it is active """
-        data = self._cached_data()
-        # trick: since 'code' is unique, this returns at most one record
-        return self.browse([
-            id_ for id_, value in zip(data['id'], data['code']) if value == code
-        ])
+        return self.get(code)
 
     @api.model
     def _get_code(self, code: str) -> str | Literal[False]:
         """ Return the given language code if active, else return ``False`` """
-        return self.sudo()._lang_get(code).code
+        return self.sudo().get(code).code
 
     @api.model
     @api.readonly
@@ -347,7 +346,7 @@ class ResLang(models.CachedModel):
         """ Return installed languages' (code, name) pairs sorted by name. """
         return [
             (lang.code, lang.name)
-            for lang in self.sudo()._get_active_langs().sorted('name')
+            for lang in self.sudo().get_all().sorted('name')
         ]
 
     @api.ormcache('field', cache='stable')
@@ -357,12 +356,12 @@ class ResLang(models.CachedModel):
         Its items are ordered by languages' names
         Try to reuse the used ``field``: 'id', 'code', 'url_code'
         """
-        # TODO use directly _get_active_langs().grouped()
+        # TODO use directly get_all().grouped()
         fnames = ('id', *self._cached_data_fields)
         if field not in fnames:
             raise UserError(_('Field "%s" is not cached', field))
         if field == 'code':
-            langs = self.sudo()._get_active_langs()
+            langs = self.sudo().get_all()
             return LangDataDict({
                 lang.code: LangData({f: lang[f] for f in fnames})
                 for lang in langs
@@ -458,7 +457,7 @@ class ResLang(models.CachedModel):
 
         formatted = percent % value
 
-        if self not in self._get_active_langs():
+        if self not in self.get_all():
             raise UserError(_("The language %s is not installed.", self.name))
         decimal_point = self.decimal_point
         # floats and decimal ints need special action!

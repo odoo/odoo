@@ -371,7 +371,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             # invalidate clean fields because them may contain fallback value
             clean_records = records.filtered(lambda rec: rec.id not in dirty_ids)
             clean_records.invalidate_recordset([self.name])
-            if not records.env['res.lang']._lang_get('en_US') and 'en_US' not in cache_value_dict:
+            if not records.env['res.lang'].get('en_US') and 'en_US' not in cache_value_dict:
                 # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
                 cache_value_dict['en_US'] = cache_value_dict[base_lang]
             for lang_, value_ in cache_value_dict.items():

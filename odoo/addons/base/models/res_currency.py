@@ -48,15 +48,16 @@ def _num2words_currency_amount(number, lang, currency_code, subunit, fallback_la
     return words, label
 
 
-class ResCurrency(models.CachedModel):
+class ResCurrency(models.ValueModel):
     _name = 'res.currency'
     _description = "Currency"
     _explanation = "Represents a monetary unit. Odoo uses this to handle multi-currency transactions, exchange rates, and financial reporting."
     _rec_names_search = ('name', 'full_name')
     _order = 'active desc, name'
+    _code_field = 'name'
     # invalidate cache for get_all_currencies
     _cached_data_domain = [('active', '=', True)]
-    _cached_data_fields = ('name', 'symbol', 'position', 'decimal_places', 'active')
+    _cached_data_fields = ('name', 'symbol', 'position', 'decimal_places', 'active', 'full_name')
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")

@@ -173,7 +173,7 @@ class TestDateUtils(TransactionCase):
 
     @freeze_time('2024-01-05 13:05:00')
     def test_parse_date_relative_utc(self):
-        self.env["res.lang"]._lang_get(self.env.user.lang).week_start = "1"
+        self.env["res.lang"].get(self.env.user.lang).week_start = "1"
         env = self.env(context={'tz': 'UTC'})
         parse = partial(parse_date, env=env)
 
@@ -213,14 +213,14 @@ class TestDateUtils(TransactionCase):
         self.assertEqual(parse('-week_start'), datetime(2024, 1, 1, 13, 5))
 
         # week_start = 6 (Saturday)
-        self.env["res.lang"]._lang_get(self.env.user.lang).week_start = "6"
+        self.env["res.lang"].get(self.env.user.lang).week_start = "6"
         self.assertEqual(parse('=week_start'), datetime(2023, 12, 30))
         self.assertEqual(parse('+week_start'), datetime(2024, 1, 6, 13, 5))
         self.assertEqual(parse('-week_start'), datetime(2023, 12, 30, 13, 5))
         self.assertEqual(parse('=sunday'), datetime(2023, 12, 31))
 
         # week_start = 5 (Friday)
-        self.env["res.lang"]._lang_get(self.env.user.lang).week_start = "5"
+        self.env["res.lang"].get(self.env.user.lang).week_start = "5"
         self.assertEqual(parse('=week_start'), datetime(2024, 1, 5))
         self.assertEqual(parse('+week_start'), datetime(2024, 1, 5, 13, 5))
         self.assertEqual(parse('-week_start'), datetime(2024, 1, 5, 13, 5))

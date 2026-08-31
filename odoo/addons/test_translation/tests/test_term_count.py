@@ -134,7 +134,7 @@ class TestImport(common.TransactionCase):
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
 
-        tlh_lang = self.env['res.lang']._lang_get('tlh')
+        tlh_lang = self.env['res.lang'].get('tlh')
         self.assertTrue(tlh_lang, "The imported language was not creates")
 
         record = self.env.ref('test_translation.test_translation_model1_record1')
@@ -198,7 +198,7 @@ class TestImport(common.TransactionCase):
         with mute_logger('odoo.addons.base.models.res_lang'):
             import_tlh.import_lang()
 
-        dot_lang = self.env['res.lang']._lang_get('dot')
+        dot_lang = self.env['res.lang'].get('dot')
         self.assertTrue(dot_lang, "The imported language was not creates")
 
         # code translation cannot be changed or imported, it only depends on the po file in the module directory
