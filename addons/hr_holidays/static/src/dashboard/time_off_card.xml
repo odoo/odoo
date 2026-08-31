@@ -4,8 +4,8 @@
         <t t-set="data" t-value="this.props.data"/>
         <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
         <t t-set="parsed_duration" t-value="this.formatDuration(duration)"/>
-        <div class="d-inline-flex flex-row align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2 gap-2 cursor-pointer o_timeoff_card_inner"
-             t-attf-class="bg-color-{{this.getColor()}}-light"
+        <div class="d-inline-flex flex-row align-items-center justify-content-center rounded px-4 py-2 gap-2 cursor-pointer o_timeoff_card_inner"
+             t-attf-class="{{this.getColor()}} bg-gradient-{{this.isDarkTheme ? 'sm' : 'lg'}}"
             role="button"
             t-on-click.stop="(ev) => this.onClickInfo(ev)">
             <span class="o_timeoff_duration font-monospace">

@@ -27,6 +27,17 @@
     .o_timeoff_validity {
         font-size: 14px;
     }
+
+    .no-bg-color {
+        // The goal is to achieve the same background as in the calendar renderer, 
+        // which uses a mix for the background color and has 30% opacity.
+        // (with a darker shade for the bright version, otherwise it wouldn't be visible)
+        $base_color: mix($o-white, nth($o-colors-complete, 1), 25%);
+        $calendar_bg: $o-view-background-color;
+        $base_color_with_fake_opacity: mix($base_color, $calendar_bg, 30%);
+
+        background-color: #{$base_color_with_fake_opacity};
+    }
 }
 
 .o_time_off_card_popover_warning {
