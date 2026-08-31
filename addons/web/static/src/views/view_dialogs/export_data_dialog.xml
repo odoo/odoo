@@ -73,32 +73,35 @@
                 </div>
                 <div class="o_exported_lists">
                     <div class="input-group">
-                        <t t-if="this.state.templateId === 'new_template'">
-                            <label class="pt-2 mb-0 fw-bold">Save as: </label>
-                            <input t-ref="this.exportListRef" class="form-control ms-4 o_save_list_name" t-att-placeholder="this.newTemplateText" />
+                        <t t-if="this.state.isEditingTemplate">
+                            <input t-ref="this.templateNameRef" class="form-control o_save_list_name" placeholder="Set the template name..." t-att-value="this.state.templateName" t-on-input="(ev) => this.state.templateName = ev.target.value" t-on-keydown.stop="this.onTemplateNameKeydown" />
+                            <button type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="this.onSaveExportTemplate" t-att-disabled="!this.state.templateName" t-att-title="this.applyChangesTitle()">
+                                <i class="oi" data-icon="check"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="this.onCancelExportTemplate" title="Discard changes">
+                                <i class="oi" data-icon="close" />
+                            </button>
                         </t>
                         <t t-else="">
-                            <label class="pt-2 mb-0 fw-bold">Template: </label>
-                            <select class="form-select ms-4 o_exported_lists_select" t-on-change="this.onChangeExportList">
-                                <option />
+                            <select class="form-select o_exported_lists_select" t-on-change="this.onChangeExportList">
+                                <option class="text-muted" value="">Select a template...</option>
                                 <t t-foreach="this.templates" t-as="template" t-key="template.id">
                                     <option t-att-value="template.id" t-out="template.name or 'undefined'" t-att-selected="this.state.templateId === template.id" />
                                 </t>
-                                <option class="fst-italic" value="new_template">New template </option>
                             </select>
-                        </t>
-                        <t t-if="this.state.isEditingTemplate">
-                            <button t-if="this.state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="this.onSaveExportTemplate">
-                                <i class="oi" data-icon="save"/>
-                            </button>
-                            <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="this.onCancelExportTemplate">
-                                <i class="oi" t-attf-data-icon="{{ this.state.templateId === 'new_template' ? 'close' : 'undo' }}" />
-                            </button>
-                        </t>
-                        <t t-else="">
-                            <button t-if="this.state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="this.onDeleteExportTemplate">
-                                <i class="oi oi-filled" data-icon="delete" />
-                            </button>
+                            <t t-if="this.state.templateId">
+                                <button type="button" class="btn btn-secondary ms-1 o_edit_exported_list" t-on-click.stop="this.onEditExportTemplate" title="Edit template name and/or fields">
+                                    <i class="oi" data-icon="edit" />
+                                </button>
+                                <button type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="this.onDeleteExportTemplate" title="Delete the template">
+                                    <i class="oi oi-filled" data-icon="delete" />
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <button type="button" class="btn btn-secondary ms-1 o_create_exported_list" t-on-click.stop="this.onCreateExportTemplate" title="Save as export template">
+                                    <i class="oi" data-icon="cloud_upload" />
+                                </button>
+                            </t>
                         </t>
                     </div>
                 </div>
