@@ -3,7 +3,7 @@
     'description': "Allows the users to create the UBL 1.2.1 e-Dispatch file",
     'countries': ['tr'],
     'version': "1.0",
-    'depends': ['l10n_tr_nilvera', 'stock'],
+    'depends': ['l10n_tr_nilvera', 'stock', 'stock_account'],
     'installable': True,
     'license': "LGPL-3",
     'category': 'Accounting/Localizations',
