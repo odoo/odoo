@@ -130,12 +130,15 @@ class AccountMove(models.Model):
             ('move_id', '=', self.id),
             ('state', '=', 'invoice_pending'),
         ], limit=1)
+        document_created = False
+        attachment_created = False
 
         if not document:
             document = self.env['l10n_gr_edi.document'].create({
                 'move_id': self.id,
                 'state': 'invoice_pending',
             })
+            document_created = True
 
         request_values = self._l10n_gr_edi_prepare_invoice_proxy_request(document.datetime)
         if document.attachment_id:
@@ -149,6 +152,12 @@ class AccountMove(models.Model):
                 'type': 'binary',
                 'mimetype': 'application/xml',
             })
+            attachment_created = True
+
+        if (document_created or attachment_created) and self._can_commit():
+            self.env.cr.commit()
+            # The commit released the invoice lock; reacquire it before contacting the provider.
+            self.env['res.company']._with_locked_records(self)
 
         return document, request_values
 
@@ -308,6 +317,9 @@ class AccountMove(models.Model):
                         document.message = unknown_result_message
                 else:
                     invoice._l10n_gr_edi_handle_invoice_proxy_result(document, result)
+
+                if self._can_commit():
+                    self.env.cr.commit()
 
     def l10n_gr_edi_try_send_invoices(self):
         # EXTENDS 'l10n_gr_edi'
