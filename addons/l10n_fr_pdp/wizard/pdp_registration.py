@@ -236,8 +236,8 @@ class PdpRegistration(models.TransientModel):
             raise ValidationError(self.env._("Invalid email address '%s'", self.contact_email))
         base_url = self.company_id._pdp_get_iap_url()
         if self.env['res.company'].search_count([
-            ('peppol_eas', '=', '0225'),
-            ('peppol_endpoint', '=like', f'{self.siren_number}%'),
+            ('routing_scheme', '=', '0225'),
+            ('routing_endpoint', '=like', f'{self.siren_number}%'),
             ('account_peppol_proxy_state', 'in', ('receiver', 'smp_registration')),
         ], limit=1):
             # Another company/branch on same db registered with the same siren (and so will do the same kyc)
