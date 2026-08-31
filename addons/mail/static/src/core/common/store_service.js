@@ -73,7 +73,7 @@ export class Store extends BaseStore {
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
-    chatHub = fields.One("ChatHub", { compute: () => ({}) });
+    chatHub = this.computed(() => this.ChatHub.insert({}));
     failures = fields.Many("Failure");
     sortedFailures = fields.Many("Failure", {
         compute() {
@@ -89,7 +89,7 @@ export class Store extends BaseStore {
         },
     });
     /** local settings of the current device (not stored server side) */
-    settings = fields.One("Settings", { compute: () => ({}) });
+    settings = this.computed(() => this.Settings.insert({}));
 
     /**
      * @param {import("luxon").DateTime<true>} [datetime]

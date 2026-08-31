@@ -9,14 +9,14 @@ export class DiscussApp extends Record {
     static singleton = true;
 
     INSPECTOR_WIDTH = 300;
-    sidebarState = fields.One("MessagingMenuUIState", {
-        compute() {
-            return {
+    sidebarState = this.computed(
+        () =>
+            this.store.MessagingMenuUIState.get("discuss.sidebar") ??
+            this.store.MessagingMenuUIState.insert({
                 id: "discuss.sidebar",
-                activeTab: this.store?.inPublicPage ? MENU_TABS.CHANNEL : MENU_TABS.CHAT,
-            };
-        },
-    });
+                activeTab: this.store.inPublicPage ? MENU_TABS.CHANNEL : MENU_TABS.CHAT,
+            })
+    );
     isActive = false;
     isMemberPanelOpenByDefault = fields.Attr(true, { localStorage: true });
     lastActiveId = fields.Attr(undefined, { localStorage: true });

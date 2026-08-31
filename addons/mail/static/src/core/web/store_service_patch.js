@@ -23,15 +23,17 @@ const StorePatch = {
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
         this.activities_to_assign_count = undefined;
-        this.messagingMenuSystrayState = fields.One("MessagingMenuUIState", {
-            compute: () => ({ id: "mail.systray", activeTab: MENU_TABS.CHATS }),
-        });
         /** @type {Object[]} */
         this.activity_groups = fields.Attr(undefined, {
             onUpdate() {
                 this.onUpdateActivityGroups();
             },
         });
+        this.messagingMenuSystrayState = this.computed(
+            () =>
+                this.MessagingMenuUIState.get("mail.systray") ??
+                this.MessagingMenuUIState.insert({ id: "mail.systray", activeTab: MENU_TABS.CHATS })
+        );
     },
     initialize() {
         super.initialize(...arguments);

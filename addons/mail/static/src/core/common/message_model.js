@@ -75,14 +75,12 @@ export class Message extends Record {
         return editedDate ? deserializeDateTime(editedDate) : undefined;
     });
     /** attachments not already clearly visible in the body, unlike inlined images */
-    extra_body_attachment_ids = fields.Many("ir.attachment", {
-        compute() {
-            const inlinedImageAttachmentIds = [
-                ...(this.bodyEl?.querySelectorAll("img[data-attachment-id]") ?? []),
-            ].map((img) => parseInt(img.dataset.attachmentId));
+    extra_body_attachment_ids = this.computed(() => {
+        const inlinedImageAttachmentIds = [
+            ...(this.bodyEl?.querySelectorAll("img[data-attachment-id]") ?? []),
+        ].map((img) => parseInt(img.dataset.attachmentId));
 
-            return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
-        },
+        return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
     });
     hasLink = this.computed(() => {
         if (this.isBodyEmpty) {
@@ -125,13 +123,9 @@ export class Message extends Record {
         },
     });
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
-    self_notification = fields.One("mail.notification", {
-        compute() {
-            return this.notification_ids.find((n) =>
-                n.res_partner_id?.eq(this.store.self_user?.partner_id)
-            );
-        },
-    });
+    self_notification = this.computed(() =>
+        this.notification_ids.find((n) => n.res_partner_id?.eq(this.store.self_user?.partner_id))
+    );
     partner_ids = fields.Many("res.partner");
     partner_cc_ids = fields.Many("res.partner");
     /** @type {string} */
@@ -213,11 +207,7 @@ export class Message extends Record {
     showTranslation = false;
     ended_poll_ids = fields.Many("mail.poll", { inverse: "end_message_id" });
     started_poll_ids = fields.Many("mail.poll", { inverse: "start_message_id" });
-    poll = fields.One("mail.poll", {
-        compute() {
-            return this.started_poll_ids[0] || this.ended_poll_ids[0];
-        },
-    });
+    poll = this.computed(() => this.started_poll_ids[0] || this.ended_poll_ids[0]);
 
     /**
      * True if the backend would technically allow edition

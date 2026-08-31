@@ -6,10 +6,8 @@ patch(ResUsers.prototype, {
     setup() {
         super.setup();
         this.all_employee_ids = fields.Many("hr.employee", { inverse: "user_id" });
-        this.employee_id = fields.One("hr.employee", {
-            compute() {
-                return this.store.getRelevantEmployee(this.all_employee_ids);
-            },
-        });
+        this.employee_id = this.computed(() =>
+            this.store.getRelevantEmployee(this.all_employee_ids)
+        );
     },
 });

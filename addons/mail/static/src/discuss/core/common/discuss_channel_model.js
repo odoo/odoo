@@ -201,18 +201,11 @@ export class DiscussChannel extends Record {
     get chatChannelTypes() {
         return ["chat", "group"];
     }
-    correspondent = fields.One("discuss.channel.member", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.computeCorrespondent();
-        },
-    });
-    correspondentCountry = fields.One("res.country", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.correspondent?.persona?.country_id ?? this.country_id;
-        },
-    });
+    /** @returns {import("models").ChannelMember} */
+    correspondent = this.computed(() => this.computeCorrespondent());
+    correspondentCountry = this.computed(
+        () => this.correspondent?.persona?.country_id ?? this.country_id
+    );
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
         if (["channel", "group"].includes(this.channel_type)) {
@@ -333,14 +326,7 @@ export class DiscussChannel extends Record {
         }
         return message;
     }
-    firstUnreadMessage = fields.One("mail.message", {
-        /** @this {import("models").DiscussChannel} */
-        compute() {
-            return this.getFirstNewerMessage({
-                from_message_id: this.self_member_id?.new_message_separator_ui,
-            });
-        },
-    });
+    firstUnreadMessage = this.computed(() => this.getFirstNewerMessage());
     hasOtherMembersTyping = this.computed(() => {
         if (this.self_member_id?.mute_until_dt) {
             return false;
@@ -418,28 +404,25 @@ export class DiscussChannel extends Record {
             }
         }, undefined);
     });
-    lastSelfMessageSeenByEveryone = fields.One("mail.message", {
-        /** @this {import("models").DiscussChannel} */
-        compute() {
-            if (!this.lastMessageSeenByAllId) {
-                return false;
+    lastSelfMessageSeenByEveryone = this.computed(() => {
+        if (!this.lastMessageSeenByAllId) {
+            return false;
+        }
+        let res;
+        // starts from most recent persistent messages to find early
+        for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
+            const message = this.persistentMessages[i];
+            if (
+                !message.isSelfAuthored ||
+                message.isNotification ||
+                message.id > this.lastMessageSeenByAllId
+            ) {
+                continue;
             }
-            let res;
-            // starts from most recent persistent messages to find early
-            for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
-                const message = this.persistentMessages[i];
-                if (
-                    !message.isSelfAuthored ||
-                    message.isNotification ||
-                    message.id > this.lastMessageSeenByAllId
-                ) {
-                    continue;
-                }
-                res = message;
-                break;
-            }
-            return res;
-        },
+            res = message;
+            break;
+        }
+        return res;
     });
     /**
      * To be overridden.
@@ -473,12 +456,9 @@ export class DiscussChannel extends Record {
     get isUnread() {
         return Boolean(this.self_member_id?.message_unread_counter_ui || this.markedAsUnread);
     }
-    otherTypingMembers = fields.Many("discuss.channel.member", {
-        /** @this {import("models").DiscussChannel} */
-        compute() {
-            return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
-        },
-    });
+    otherTypingMembers = this.computed(() =>
+        this.typingMembers.filter((member) => !member.persona?.eq(this.store.self))
+    );
     offlineMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").DiscussChannel} */
         compute() {
