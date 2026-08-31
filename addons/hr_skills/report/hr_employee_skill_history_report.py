@@ -63,7 +63,9 @@ class HrEmployeeSkillReport(models.BaseModel):
                 INNER JOIN hr_skill_level AS level
                 ON emp_skill.skill_level_id = level.id
             ) AS emp_skill_level
-            WHERE date_table.date >= emp_skill_level.valid_from AND date_table.employee_id = emp_skill_level.employee_id AND (emp_skill_level.valid_to IS NULL OR date_table.date <= emp_skill_level.valid_to)
+            JOIN hr_skill_type st ON st.id = emp_skill_level.skill_type_id
+            JOIN hr_employee   e  ON e.id  = emp_skill_level.employee_id
+            WHERE date_table.date >= emp_skill_level.valid_from AND date_table.employee_id = emp_skill_level.employee_id AND (emp_skill_level.valid_to IS NULL OR date_table.date <= emp_skill_level.valid_to) AND (st.company_id IS NULL OR st.company_id = e.company_id)
             ORDER BY date_table.date, emp_skill_level.employee_id, emp_skill_level.skill_id, emp_skill_level.valid_from DESC
         )
         """ % (self._table, ))
