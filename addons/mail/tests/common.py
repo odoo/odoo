@@ -1328,7 +1328,10 @@ class MailCase(MockEmail):
                 self.assertEqual(tracking.currency_id, currency)
                 self.assertEqual(tracking.old_value_float, old_value)
                 self.assertEqual(tracking.new_value_float, new_value)
-            if value_type not in suffix_mapping and value_type not in {'many2one', 'monetary'}:
+            elif value_type == 'html':
+                self.assertEqual(tracking.old_value_char, (old_value or ''))
+                self.assertEqual(tracking.new_value_char, (new_value or ''))
+            if value_type not in suffix_mapping and value_type not in {'many2one', 'monetary', 'html'}:
                 self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
 
 
