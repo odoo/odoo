@@ -1,6 +1,7 @@
 import "./html_editor_mock_server.js";
 
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { destroy, expect, getFixture } from "@odoo/hoot";
@@ -22,6 +23,12 @@ const defaultTestConfig = {
     debouncePowerbuttons: false,
     debounceHints: false,
 };
+
+// The contrast plugin rewrites every colour it finds the moment the editor
+// starts, which would move the goalposts under every colour assertion in this
+// suite. Tests that want it ask for it: `config: { Plugins: [...MAIN_PLUGINS] }`.
+export const PLUGINS_TO_EXCLUDE = ["contrast"];
+export const TEST_PLUGINS = MAIN_PLUGINS.filter((p) => !PLUGINS_TO_EXCLUDE.includes(p.id));
 
 export const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -106,6 +113,7 @@ class TestEditor extends Component {
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
     wysiwygProps.config = {
+        Plugins: TEST_PLUGINS,
         ...defaultTestConfig,
         ...(options.config || {}),
     };

@@ -34,6 +34,7 @@ import { EmojiPlugin } from "./main/emoji_plugin.js";
 import { FeffPlugin } from "./main/feff_plugin.js";
 import { ColorPlugin } from "./main/font/color_plugin.js";
 import { ColorUIPlugin } from "./main/font/color_ui_plugin.js";
+import { ContrastPlugin } from "./main/font/contrast_plugin.js";
 import { FontFamilyPlugin } from "./main/font/font_family_plugin.js";
 import { FontPlugin } from "./main/font/font_plugin.js";
 import { HintPlugin } from "./main/hint_plugin.js";
@@ -109,6 +110,7 @@ export const MAIN_PLUGINS = [
     ChatGPTTranslatePlugin,
     ColorPlugin,
     ColorUIPlugin,
+    ContrastPlugin,
     SeparatorPlugin,
     ColumnPlugin,
     EmojiPlugin,

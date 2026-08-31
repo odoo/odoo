@@ -55,6 +55,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} color_apply_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
  * @typedef {((color: string) => string)[]} get_background_color_processors
+ * @typedef {((element: HTMLElement) => HTMLElement)[]} before_color_element_processors
  * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_getters
  */
 
@@ -518,6 +519,9 @@ export class ColorPlugin extends Plugin {
      * @param {'color'|'backgroundColor'} mode
      */
     colorElement(element, color, mode) {
+        for (const processor of this.getResource("before_color_element_processors")) {
+            element = processor(element);
+        }
         const parts = backgroundImageCssToParts(element.style["background-image"]);
         const oldClassName = element.getAttribute("class") || "";
 
