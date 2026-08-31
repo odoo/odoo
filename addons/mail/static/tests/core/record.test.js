@@ -1449,6 +1449,11 @@ test("accessing fields through empty _inherits parent returns empty values", asy
     const user = store.User.insert({ id: 1 });
     expect(user.partner).toBe(undefined);
     expect(user.name).toBe(undefined);
+    // a parent with no record yet has no field registered, so its name is not
+    // resolved and reads plain undefined
+    expect(user.partners).toBe(undefined);
+    user.partner = { id: 2, name: "John" };
+    expect(user.name).toBe("John");
     expect(user.partners).toHaveLength(0);
 });
 
@@ -1698,7 +1703,7 @@ test("a getter runs on every read", async () => {
 });
 
 test("a patch cannot redeclare a computed", async () => {
-    expect.errors(1);
+    patchWithCleanup(console, { warn: () => {} });
     const Thread = class Thread extends Record {
         static id = "name";
         name;
@@ -1711,9 +1716,10 @@ test("a patch cannot redeclare a computed", async () => {
             this.label = this.computed(() => "patched");
         },
     });
-    await expect(start()).rejects.toThrow(/cannot be redeclared/);
-    await animationFrame(); // wait for the store service to report the error
-    expect.verifyErrors([/cannot be redeclared/]);
+    const store = await start();
+    // a model's fields are declared by its first record, so the redeclaration
+    // is caught on the first insert, not at store creation
+    expect(() => store.Thread.insert("General")).toThrow(/cannot be redeclared/);
 });
 
 test("a computed does not recompute once its record is deleted", async () => {

@@ -3,6 +3,7 @@
 
 import {
     IS_RECORD_SYM,
+    fields,
     isComputedDefinition,
     isFieldDefinition,
     isMany,
@@ -279,6 +280,12 @@ export class RecordInternal {
     prepareField(fieldName, definition) {
         const record = this.record;
         const Model = record.Model;
+        if (!Model._.fields.get(fieldName)) {
+            Model._.registerField(
+                fieldName,
+                isFieldDefinition(definition) ? definition : fields.Attr(definition)
+            );
+        }
         if (isRelation(Model, fieldName)) {
             const recordList = new RecordList();
             Object.assign(recordList._, {
@@ -333,8 +340,8 @@ export class RecordInternal {
     proxyDeleteProperty(name) {
         const record = this.record;
         const Model = record.Model;
-        if (Model._.parentFields.has(name)) {
-            const parentFieldName = Model._.parentFields.get(name);
+        const parentFieldName = Model._.resolveParentField(name);
+        if (parentFieldName) {
             const parentRecordProxy = record._proxy[parentFieldName];
             return Reflect.deleteProperty(parentRecordProxy, name);
         }
@@ -358,8 +365,8 @@ export class RecordInternal {
         }
         const Model = record.Model;
         const modelInternal = Model._;
-        if (modelInternal.parentFields.has(name)) {
-            const parentFieldName = modelInternal.parentFields.get(name);
+        const parentFieldName = modelInternal.resolveParentField(name);
+        if (parentFieldName) {
             const parentRecordProxy = recordProxy[parentFieldName];
             if (!parentRecordProxy) {
                 const Models = record._rawStore.Models;
@@ -466,18 +473,28 @@ export class RecordInternal {
         const record = this.record;
         const Model = record.Model;
         if (isComputedDefinition(val)) {
+            if (isComputedDefinition(record[name])) {
+                throw new Error(
+                    `${Model.getName()}.${name}: a computed cannot be redeclared, patch the method its compute calls`
+                );
+            }
             // the declaration sits on the record until its first read
+            Model._.fieldsComputable.add(name);
             return Reflect.set(record, name, val);
         }
-        if (isFieldDefinition(val) || (Model._.fields.get(name) && !this.fieldPrepared(name))) {
+        if (
+            isFieldDefinition(val) ||
+            (Model._.fields.get(name) && !this.fieldPrepared(name)) ||
+            (untrack(this.isConstructing) && !Model._.fields.get(name))
+        ) {
             // a declaration: an initializer lands the definition or the default,
             // and `setup` writes the default of a field no initializer declares
             this.prepareField(name, val);
             return true;
         }
         const store = record._rawStore;
-        if (Model._.parentFields.has(name)) {
-            const parentFieldName = Model._.parentFields.get(name);
+        const parentFieldName = Model._.resolveParentField(name);
+        if (parentFieldName) {
             const parentRecordProxy = record._proxy[parentFieldName];
             return Reflect.set(parentRecordProxy, name, val);
         }

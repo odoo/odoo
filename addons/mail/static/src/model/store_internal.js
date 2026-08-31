@@ -161,7 +161,7 @@ export class StoreInternal extends RecordInternal {
      */
     updateAttr(record, fieldName, value) {
         const Model = record.Model;
-        const parentFieldName = Model._.parentFields.get(fieldName);
+        const parentFieldName = Model._.resolveParentField(fieldName);
         if (parentFieldName) {
             // Route the write to the parent record, which stores an _inherits field.
             Reflect.set(record._proxy[parentFieldName], fieldName, value);
