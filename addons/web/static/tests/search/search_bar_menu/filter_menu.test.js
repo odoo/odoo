@@ -1531,3 +1531,42 @@ test("an active relative filter keeps its accordion state when reopening the men
     expect(dateOptions()).toHaveLength(0); // Should not open with deactivated filter
     expect(birthdayOptions()).toHaveLength(0);
 });
+
+test("menu items keep reflecting a restored search state", async () => {
+    // Switching view imports the exported state into a new search model, in
+    // which the menu must stay in sync. The filter only comes from that state.
+    const searchModel = JSON.stringify({
+        nextGroupId: 2,
+        nextGroupNumber: 2,
+        nextId: 2,
+        query: [],
+        searchItems: {
+            1: {
+                id: 1,
+                type: "filter",
+                name: "foo",
+                description: "Foo",
+                domain: `[('foo', '=', 'qsdf')]`,
+                groupId: 1,
+                groupNumber: 1,
+            },
+        },
+        sections: [],
+    });
+    await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `<search/>`,
+        globalState: { searchModel },
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    expect(getFacetTexts()).toEqual(["Foo"]);
+    expect(isItemSelected("Foo")).toBe(true);
+
+    await toggleMenuItem("Foo");
+    expect(getFacetTexts()).toEqual([]);
+    expect(isItemSelected("Foo")).toBe(false);
+});

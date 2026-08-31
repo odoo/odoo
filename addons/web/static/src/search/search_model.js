@@ -166,11 +166,17 @@ function execute(op, source, target) {
     target.nextId = nextId;
     target._appliedSearch = _appliedSearch;
 
+    // Filled in place: on import, the target is the search model, whose
+    // containers are reactive and must not be replaced by raw values.
     if (query) {
-        target.query = query;
+        target.query.length = 0;
+        target.query.push(...query);
     }
     if (searchItems) {
-        target.searchItems = searchItems;
+        for (const key in target.searchItems) {
+            delete target.searchItems[key];
+        }
+        Object.assign(target.searchItems, searchItems);
     }
 
     target.searchPanelInfo = searchPanelInfo;
@@ -728,7 +734,7 @@ export class SearchModel extends EventBus {
      * @returns {Object}
      */
     exportState() {
-        const state = {};
+        const state = { query: [], searchItems: {} };
         execute(mapToArray, this, state);
         return state;
     }
