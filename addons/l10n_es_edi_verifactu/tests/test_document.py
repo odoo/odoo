@@ -72,9 +72,10 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertRecordValues(invoice, [expected_record_values])
 
     def test_refund_without_refunded_error(self):
-        "Asserts no error is raised during the generation of the document."
+        "Asserts no error is raised during the generation of the document even though the original invoice has no Veri*Factu document."
         invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2024-12-30')
         credit_note = invoice._reverse_moves()
+        credit_note.l10n_es_edi_verifactu_refund_reason = 'R1'
         credit_note.action_post()
 
         wizard = self.env['account.move.send.wizard'].with_context(
@@ -83,19 +84,63 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         ).create({
             'sending_methods': ['manual'],
         })
-        with self._mock_last_document(None), self.assertRaisesRegex(RedirectWarning, r".*There is no Veri\*Factu document for the refunded record\..*"):
+
+        with self._mock_zeep_registration_operation_single_accept_no_wait():
             wizard.action_send_and_print()
 
-        with self._mock_last_document(None):
-            credit_note._l10n_es_edi_verifactu_create_documents()
+        document = credit_note.l10n_es_edi_verifactu_document_ids
+        self.assertFalse(document.errors)
+        self.assertTrue(document.json_attachment_id)
 
-        errors = ["There is no Veri*Factu document for the refunded record.", "The refund reason is not specified."]
-        expected_record_values = {
-            'l10n_es_edi_verifactu_state': False,
-            'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
-            'l10n_es_edi_verifactu_warning_level': 'danger',
-        }
-        self.assertRecordValues(credit_note, [expected_record_values])
+        payload = json.loads(bytes(document.json_attachment_id.raw))
+        self.assertNotIn('FacturasRectificadas', payload['RegistroAlta'])
+
+    def test_refund_with_refunded_document(self):
+        "When the refunded invoice has a Veri*Factu document, the refund references it via FacturasRectificadas."
+        invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2024-12-30')
+
+        # Send the original invoice so it gets a Veri*Factu submission document.
+        invoice_wizard = self.env['account.move.send.wizard'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'sending_methods': ['manual'],
+        })
+        with self._mock_zeep_registration_operation_single_accept_no_wait():
+            invoice_wizard.action_send_and_print()
+
+        self.assertEqual(invoice.l10n_es_edi_verifactu_state, 'accepted')
+
+        credit_note = invoice._reverse_moves()
+        credit_note.l10n_es_edi_verifactu_refund_reason = 'R1'
+        credit_note.action_post()
+
+        wizard = self.env['account.move.send.wizard'].with_context(
+            active_model='account.move',
+            active_ids=credit_note.ids,
+        ).create({
+            'sending_methods': ['manual'],
+        })
+        with self._mock_zeep_registration_operation_single_accept_no_wait():
+            wizard.action_send_and_print()
+
+        document = credit_note.l10n_es_edi_verifactu_document_ids
+        self.assertFalse(document.errors)
+        self.assertTrue(document.json_attachment_id)
+
+        payload = json.loads(bytes(document.json_attachment_id.raw))
+        registro = payload['RegistroAlta']
+        self.assertEqual(registro['TipoFactura'], 'R1')
+        self.assertEqual(registro['TipoRectificativa'], 'I')
+        self.assertIn('FacturasRectificadas', registro)
+        self.assertEqual(
+            registro['FacturasRectificadas'][0]['IDFacturaRectificada'],
+            {
+                'IDEmisorFactura': 'A39200019',
+                'NumSerieFactura': 'INV/2019/00026',
+                'FechaExpedicionFactura': '30-12-2024',
+            },
+        )
 
     def test_substitution_without_documents_errors(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2019-01-30')
