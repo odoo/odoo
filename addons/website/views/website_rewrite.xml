@@ -12,13 +12,13 @@
                     </header>
                     <sheet>
                         <div class="alert alert-warning" role="alert" invisible="not is_url_from_exist">
-                            This redirection will not have any effect since the URL '<field name="url_from" readonly="1"/>' is already in use.
+                            This redirection might not have any effect since the URL '<field name="url_from" readonly="1"/>' is already in use.
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="redirect_type"/>
-                                <field name="url_from" invisible="redirect_type == '308'" widget="url_warning_banner_visibility"/>
+                                <field name="url_from" invisible="redirect_type == '308'"/>
                                 <field name="route_id" string="URL from" options="{'no_create': True, 'no_open': True}" invisible="redirect_type != '308'"/>
                                 <field name="url_to" invisible="redirect_type == '404'"/>
                             </group>

@@ -2042,10 +2042,6 @@ class Website(models.CachedModel):
             Returns a boolean, whether the page is considered to exist for the
             current website. This is a heuristic and is not perfectly reliable.
         """
-        # The page exists if there is a 'website.page' record with this url
-        if len(self._get_website_pages(domain=[('url', '=', page), ('view_id', '!=', False)], limit=1)) > 0:
-            return True
-
         # The page is considered to exist if there is a 'website.rewrite' record
         # that does a redirect 301 or 302, for simplicity we do not check
         # further whether the redirection points to an existing url.
@@ -2055,13 +2051,44 @@ class Website(models.CachedModel):
         if len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0:
             return True
 
-        router = self.env['ir.http'].routing_map().bind('')
+        return page in self._get_served_urls({page})
+
+    def _get_served_urls(self, urls, only_published=False):
+        """
+            Returns the subset of ``urls`` that are served on the website by a
+            'website.page' record or by a route, for the current user. This is
+            a heuristic and is not perfectly reliable. The 'website.page'
+            records are fetched once for all the urls.
+
+            :param set[str] urls: the urls to check
+            :param bool only_published: whether to include only published
+                'website.page' records
+            :rtype: set[str]
+        """
+        self.ensure_one()
+        # The page exists if there is a 'website.page' record with this url
+        page_domain = Domain.OR(Domain('url', '=ilike', url) for url in urls)
+        if only_published:
+            page_domain &= Domain('is_published', '=', True)
+        pages = self.with_context(website_id=self.id)._get_website_pages(domain=page_domain)
+        served = {url for url in urls if pages.filtered_domain(Domain('url', '=ilike', url))}
+
+        # The routes may differ per website (e.g. 'website.rewrite' 404 or 308)
+        router = self.env['ir.http'].with_context(website_id=self.id).routing_map().bind('')
+        served.update(url for url in urls - served if self._is_url_routed(router, url))
+        return served
+
+    def _is_url_routed(self, router, url):
+        """
+            Returns a boolean, whether the url is served by a route of the given
+            router, for the current user.
+        """
         # If there is no rules matching this page, it does not exists
-        if not router.test(path_info=page, method='GET'):
+        if not router.test(path_info=url, method='GET'):
             return False
 
         try:
-            rule, args = router.match(page, method='GET', return_rule=True)
+            rule, args = router.match(url, method='GET', return_rule=True)
         except werkzeug.routing.RequestRedirect:
             # The page is considered to exist if it redirects (this happens if
             # there is a 'website.rewrite' 308), for simplicity we do not check
@@ -2075,6 +2102,8 @@ class Website(models.CachedModel):
                 if isinstance(args[arg], models.BaseModel):
                     # Models from `router.match` are missing users in their env
                     args[arg] = args[arg].with_user(self.env.uid)
+                    if not args[arg].with_context(website_id=self.id).has_access('read'):
+                        return False
                     # For record that may be related to a website, we skip them
                     # if they are for a different website than the current one
                     if hasattr(args[arg], 'website_id') and args[arg].website_id and args[arg].website_id != self:
