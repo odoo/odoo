@@ -1,3 +1,4 @@
+import { cookie } from "@web/core/browser/cookie";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { formatNumber } from "@hr_holidays/views/hooks";
@@ -115,6 +116,7 @@ export class TimeOffCard extends Component {
         });
         this.actionService = useService("action");
         this.lang = user.lang;
+        this.isDarkTheme = cookie.get("color_scheme") === "dark";
         this.formatNumber = formatNumber;
         const { data } = this.props;
         this.errorLeaves = Object.values(data.virtual_excess_data).map((data) => data.leave_id);
@@ -215,19 +217,15 @@ export class TimeOffCard extends Component {
         openLeaveWindow(this.actionService, resModel, name, domain, context);
     }
 
+    /**
+     * Background utility matching the color configured on the time off type
+     * (hr.work.entry.type.color). The color picker is 0-indexed over `$o-colors`
+     * while the `bg-color-x` classes are 1-indexed, hence the shift. "No color"
+     * falls back to a neutral grey.
+     */
     getColor() {
-        if (!this.props.index) {
-            return "4";
-        }
-        const colorMap = {
-            0: "4",
-            1: "5",
-            2: "6",
-            3: "7",
-            4: "8",
-            5: "9",
-        };
-        return colorMap[this.props.index % 6];
+        const { color } = this.props.data;
+        return color ? color + 1 : 4;
     }
 }
 
