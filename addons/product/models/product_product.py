@@ -38,7 +38,6 @@ class ProductProduct(models.Model):
         inverse='_inverse_product_lst_price',
         min_display_digits='Product Price',
         readonly=False,
-        store=True,
         help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -378,6 +377,7 @@ class ProductProduct(models.Model):
         for product in self:
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
 
+    @api.depends_context('company')
     @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
         for product in self:

@@ -89,6 +89,23 @@ class TestProductCombo(ProductCommon):
 
         self.assertEqual(combo.base_price, 90)
 
+    def test_combo_item_lst_price_company_dependent(self):
+        company_a = self._create_company(name="Company A")
+        company_b = self._create_company(name="Company B")
+        self.env.user.company_ids = [Command.link(company_a.id), Command.link(company_b.id)]
+
+        product = self._create_product(list_price=50.0)
+        product.with_company(company_b).list_price = 90.0
+
+        combo = self.env['product.combo'].create({
+            'name': "Test combo",
+            'combo_item_ids': [Command.create({'product_id': product.id})],
+        })
+        combo_item = combo.combo_item_ids
+
+        self.assertEqual(combo_item.lst_price, 50.0)
+        self.assertEqual(combo_item.with_company(company_b).lst_price, 90.0)
+
     def test_empty_combo_items_raises(self):
         with self.assertRaises(ValidationError):
             self.env['product.combo'].create({
