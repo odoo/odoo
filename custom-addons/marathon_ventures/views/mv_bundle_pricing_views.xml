@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_bundle_pricing_list" model="ir.ui.view">
+    <field name="name">mv.bundle_pricing.list</field>
+    <field name="model">mv.bundle_pricing</field>
+    <field name="arch" type="xml">
+      <list string="Bundle Pricing">
+        <field name="name"/>
+        <field name="active"/>
+        <field name="call_letters"/>
+        <field name="days" widget="many2many_tags"/>
+        <field name="edited_days"/>
+        <field name="end_time"/>
+        <field name="group"/>
+        <field name="market"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_bundle_pricing_form" model="ir.ui.view">
+    <field name="name">mv.bundle_pricing.form</field>
+    <field name="model">mv.bundle_pricing</field>
+    <field name="arch" type="xml">
+      <form string="Bundle Pricing">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="program"/>
+                <field name="rate_per_30"/>
+                <field name="station"/>
+                <field name="end_time"/>
+                <field name="group"/>
+                <field name="start_time"/>
+                <field name="tier"/>
+                <field name="call_letters"/>
+              </group>
+              <group>
+                <field name="edited_days"/>
+                <field name="market"/>
+                <field name="start_end_time"/>
+                <field name="active"/>
+                <field name="days" widget="mv_days_picker"/>
+                <field name="total"/>
+                <field name="units"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_bundle_pricing_search" model="ir.ui.view">
+    <field name="name">mv.bundle_pricing.search</field>
+    <field name="model">mv.bundle_pricing</field>
+    <field name="arch" type="xml">
+      <search string="Bundle Pricing">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_bundle_pricing" model="ir.actions.act_window">
+    <field name="name">Bundle Pricing</field>
+    <field name="res_model">mv.bundle_pricing</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_bundle_pricing" name="Bundle Pricing" parent="menu_mv_finance" action="action_mv_bundle_pricing"/>
+</odoo>

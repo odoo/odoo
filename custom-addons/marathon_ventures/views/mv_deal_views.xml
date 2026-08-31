@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_deal_list" model="ir.ui.view">
+    <field name="name">mv.deal.list</field>
+    <field name="model">mv.deal</field>
+    <field name="arch" type="xml">
+      <list string="Deal">
+        <field name="name"/>
+        <field name="access_code"/>
+        <field name="account_advertiser_brand"/>
+        <field name="account_advertiser_program"/>
+        <field name="account_advertiser"/>
+        <field name="account_brand_program"/>
+        <field name="account_brand"/>
+        <field name="actual_rating_year"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_deal_form" model="ir.ui.view">
+    <field name="name">mv.deal.form</field>
+    <field name="model">mv.deal</field>
+    <field name="arch" type="xml">
+      <form string="Deal">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="brands"/>
+                <field name="client_account"/>
+                <field name="contact" context="{'partner_display_contact_first': True}"/>
+                <field name="program"/>
+                <field name="sales_plan"/>
+                <field name="bundle_action"/>
+                <field name="client_dr_gm_hybrid"/>
+                <field name="demographics"/>
+                <field name="length"/>
+                <field name="min_sep"/>
+                <field name="quarter"/>
+                <field name="status"/>
+                <field name="tier"/>
+                <field name="x_class"/>
+                <field name="bundle_start_week"/>
+                <field name="log_exp_date"/>
+                <field name="ltc_date"/>
+                <field name="related_advertiser_log_exp_date"/>
+                <field name="week_pending"/>
+                <field name="access_code"/>
+                <field name="account_advertiser"/>
+                <field name="account_advertiser_brand"/>
+                <field name="account_advertiser_program"/>
+                <field name="account_brand"/>
+                <field name="account_brand_program"/>
+                <field name="advertiser"/>
+                <field name="advertiser_id"/>
+                <field name="agency_deal_number"/>
+                <field name="brand_id"/>
+                <field name="cable_synd_pp_del"/>
+                <field name="campaign"/>
+                <field name="client_code"/>
+                <field name="clientcode"/>
+                <field name="commercial_type"/>
+                <field name="conga_invoice_wapa"/>
+                <field name="contact_email"/>
+                <field name="contactaccount"/>
+                <field name="count_of_schedules"/>
+                <field name="count_of_weeks"/>
+                <field name="digital_id"/>
+              </group>
+              <group>
+                <field name="disfox_conga_invoice_url"/>
+                <field name="entity_name"/>
+                <field name="estimate"/>
+                <field name="ff_invoice_month"/>
+                <field name="ff_long_form_invoice_month"/>
+                <field name="hiatus_dates"/>
+                <field name="max_day"/>
+                <field name="merit_street_media_2025"/>
+                <field name="network_deal_number"/>
+                <field name="product_code"/>
+                <field name="program_account_advertiser_brand"/>
+                <field name="program_team_del_del"/>
+                <field name="ratings_quarter"/>
+                <field name="raycom_comments"/>
+                <field name="sf_conga_invoice_formula"/>
+                <field name="sf_conga_invoice_new_synd"/>
+                <field name="sf_conga_invoice_nosey"/>
+                <field name="sf_deal_id"/>
+                <field name="sum_of_total_dollars"/>
+                <field name="sum_of_units_available"/>
+                <field name="vendor_account"/>
+                <field name="wapa_cinco_unwired_pi_url"/>
+                <field name="wapa_cinco_unwired_url"/>
+                <field name="week_max"/>
+                <field name="week_min_field"/>
+                <field name="e_i_friendly"/>
+                <field name="pi"/>
+                <field name="priority"/>
+                <field name="revised"/>
+                <field name="test_pp"/>
+                <field name="actual_rating_year"/>
+                <field name="budget_30"/>
+                <field name="bundle_version"/>
+                <field name="deal_count"/>
+                <field name="max_sep"/>
+                <field name="rate"/>
+                <field name="ratings_year"/>
+                <field name="restricted_programming_dna"/>
+                <field name="vendor_commission"/>
+                <field name="year"/>
+              </group>
+            </page>
+            <!-- <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page> -->
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_deal_search" model="ir.ui.view">
+    <field name="name">mv.deal.search</field>
+    <field name="model">mv.deal</field>
+    <field name="arch" type="xml">
+      <search string="Deal">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_deal" model="ir.actions.act_window">
+    <field name="name">Deal</field>
+    <field name="res_model">mv.deal</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_deal" name="Deal" parent="menu_mv_sales_ops" action="action_mv_deal"/>
+</odoo>

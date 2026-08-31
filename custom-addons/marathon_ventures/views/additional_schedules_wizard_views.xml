@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_additional_schedules_wizard_form" model="ir.ui.view">
+    <field name="name">mv.schedule.additional.wizard.form</field>
+    <field name="model">mv.schedule.additional.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Additional Schedules">
+        <p class="oe_grey">
+          Creates N consecutive-week duplicates of the source Schedule, each
+          shifted forward by 7 days. The source Schedule (week 1) is left untouched.
+        </p>
+        <group>
+          <field name="schedule_id" readonly="1"/>
+          <field name="count"/>
+        </group>
+        <footer>
+          <button name="action_create_schedules" type="object" string="Create Schedules"
+                  class="btn-primary"/>
+          <button special="cancel" string="Cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_open_additional_schedules_wizard" model="ir.actions.act_window">
+    <field name="name">Additional Schedules</field>
+    <field name="res_model">mv.schedule.additional.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+</odoo>

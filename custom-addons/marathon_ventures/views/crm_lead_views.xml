@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_crm_lead_mv_form" model="ir.ui.view">
+    <field name="name">crm.lead.mv.form</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <group string="Marathon Ventures" name="marathon_ventures">
+          <group string="SF Metadata">
+            <field name="sf_external_id"/>
+            <field name="sf_legacy_data"/>
+          </group>
+          <group string="SF Custom Fields">
+            <field name="address"/>
+            <field name="annualrevenue"/>
+            <field name="campaignid"/>
+            <field name="donotcall"/>
+            <field name="fax"/>
+            <field name="genderidentity"/>
+            <field name="hasoptedoutofemail"/>
+            <field name="hasoptedoutoffax"/>
+            <field name="individualid"/>
+            <field name="industry"/>
+            <field name="jigsaw"/>
+            <field name="lasttransferdate"/>
+            <field name="leadsource"/>
+            <field name="numberofemployees"/>
+            <field name="pronouns"/>
+            <field name="rating"/>
+            <field name="sfga__correlationid"/>
+            <field name="sfga__correlation_data"/>
+            <field name="sfga__web_source"/>
+            <field name="sfssdupecatcher__override_dupecatcher"/>
+            <field name="status"/>
+            <field name="accountid"/>
+            <field name="amount"/>
+            <field name="x_sf_opportunity_campaignid"/>
+            <field name="closedate"/>
+            <field name="concurconnect__accruedunapprovedexpensetotal"/>
+            <field name="concurconnect__accruedunapprovedexpenses"/>
+            <field name="concurconnect__finalexpensetotal"/>
+            <field name="concurconnect__finalexpense"/>
+            <field name="contractid"/>
+            <field name="expectedrevenue"/>
+            <field name="iqscore"/>
+            <field name="isprivate"/>
+            <field name="x_sf_opportunity_leadsource"/>
+            <field name="nextstep"/>
+            <field name="pricebook2id"/>
+            <field name="x_sf_probability"/>
+            <field name="stagename"/>
+            <field name="totalopportunityquantity"/>
+            <field name="x_sf_type"/>
+          </group>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

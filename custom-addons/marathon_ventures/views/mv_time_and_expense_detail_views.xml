@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_time_and_expense_detail_list" model="ir.ui.view">
+    <field name="name">mv.time_and_expense_detail.list</field>
+    <field name="model">mv.time_and_expense_detail</field>
+    <field name="arch" type="xml">
+      <list string="Time And Expense Detail">
+        <field name="name"/>
+        <field name="amount"/>
+        <field name="attendee_1_agency_name"/>
+        <field name="attendee_1"/>
+        <field name="attendee_2_agency_name"/>
+        <field name="attendee_2"/>
+        <field name="attendee_3_agency_name"/>
+        <field name="attendee_3"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_time_and_expense_detail_form" model="ir.ui.view">
+    <field name="name">mv.time_and_expense_detail.form</field>
+    <field name="model">mv.time_and_expense_detail</field>
+    <field name="arch" type="xml">
+      <form string="Time And Expense Detail">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="amount"/>
+                <field name="exp_type"/>
+                <field name="time_and_expense"/>
+                <field name="attendee_1"/>
+                <field name="attendee_2"/>
+                <field name="attendee_3"/>
+                <field name="transaction_date_del"/>
+              </group>
+              <group>
+                <field name="attendee_1_agency_name"/>
+                <field name="attendee_2_agency_name"/>
+                <field name="attendee_3_agency_name"/>
+                <field name="attendee_comments"/>
+                <field name="comment"/>
+                <field name="vendor_description"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_time_and_expense_detail_search" model="ir.ui.view">
+    <field name="name">mv.time_and_expense_detail.search</field>
+    <field name="model">mv.time_and_expense_detail</field>
+    <field name="arch" type="xml">
+      <search string="Time And Expense Detail">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_time_and_expense_detail" model="ir.actions.act_window">
+    <field name="name">Time And Expense Detail</field>
+    <field name="res_model">mv.time_and_expense_detail</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_time_and_expense_detail" name="Time And Expense Detail" parent="menu_mv_finance" action="action_mv_time_and_expense_detail"/>
+</odoo>

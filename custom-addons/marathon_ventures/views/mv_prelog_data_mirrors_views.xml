@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_prelog_data_mirrors_list" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirrors.list</field>
+    <field name="model">mv.prelog_data_mirrors</field>
+    <field name="arch" type="xml">
+      <list string="Prelog Data Mirrors">
+        <field name="name"/>
+        <field name="advertiserproduct_c"/>
+        <field name="agency_c"/>
+        <field name="airdate_c"/>
+        <field name="attributes"/>
+        <field name="batch_id_c"/>
+        <field name="breakcode_c"/>
+        <field name="combinedattachments"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_data_mirrors_form" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirrors.form</field>
+    <field name="model">mv.prelog_data_mirrors</field>
+    <field name="arch" type="xml">
+      <form string="Prelog Data Mirrors">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="airdate_c"/>
+                <field name="createddate"/>
+                <field name="lastmodifieddate"/>
+                <field name="systemmodstamp"/>
+                <field name="week_c"/>
+                <field name="advertiserproduct_c"/>
+                <field name="agency_c"/>
+                <field name="attributes"/>
+                <field name="batch_id_c"/>
+                <field name="breakcode_c"/>
+                <field name="combinedattachments"/>
+                <field name="commercial_type_c"/>
+                <field name="createdbyid"/>
+                <field name="current_home_c"/>
+                <field name="deal_c"/>
+                <field name="errorreason_c"/>
+                <field name="field1_c"/>
+                <field name="lastmodifiedbyid"/>
+                <field name="lastreferenceddate"/>
+                <field name="lastvieweddate"/>
+                <field name="line_c"/>
+              </group>
+              <group>
+                <field name="materialdescription_c"/>
+                <field name="network_c"/>
+                <field name="networkdealnumber_c"/>
+                <field name="orderproductdescription_c"/>
+                <field name="ownerid"/>
+                <field name="prelogdata_c"/>
+                <field name="product_c"/>
+                <field name="reason_for_unmatched_c"/>
+                <field name="removal_reason_c"/>
+                <field name="schedule_c"/>
+                <field name="scheduleadid_c"/>
+                <field name="schedulelength_c"/>
+                <field name="scheduletime_c"/>
+                <field name="timeperiod_c"/>
+                <field name="x_id"/>
+                <field name="isdeleted"/>
+                <field name="problem_c"/>
+                <field name="processrequired_c"/>
+                <field name="rate_c"/>
+                <field name="version_c"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_data_mirrors_search" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirrors.search</field>
+    <field name="model">mv.prelog_data_mirrors</field>
+    <field name="arch" type="xml">
+      <search string="Prelog Data Mirrors">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_prelog_data_mirrors" model="ir.actions.act_window">
+    <field name="name">Prelog Data Mirrors</field>
+    <field name="res_model">mv.prelog_data_mirrors</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_prelog_data_mirrors" name="Prelog Data Mirrors" parent="menu_mv_finance" action="action_mv_prelog_data_mirrors"/>
+</odoo>

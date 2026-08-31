@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_current_quarter_overview_list" model="ir.ui.view">
+    <field name="name">mv.current_quarter_overview.list</field>
+    <field name="model">mv.current_quarter_overview</field>
+    <field name="arch" type="xml">
+      <list string="Current Quarter Overview">
+        <field name="name"/>
+        <field name="aur_median"/>
+        <field name="aur"/>
+        <field name="total_dollars"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_current_quarter_overview_form" model="ir.ui.view">
+    <field name="name">mv.current_quarter_overview.form</field>
+    <field name="model">mv.current_quarter_overview</field>
+    <field name="arch" type="xml">
+      <form string="Current Quarter Overview">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="aur"/>
+                <field name="aur_median"/>
+              </group>
+              <group>
+                <field name="total_dollars"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_current_quarter_overview_search" model="ir.ui.view">
+    <field name="name">mv.current_quarter_overview.search</field>
+    <field name="model">mv.current_quarter_overview</field>
+    <field name="arch" type="xml">
+      <search string="Current Quarter Overview">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_current_quarter_overview" model="ir.actions.act_window">
+    <field name="name">Current Quarter Overview</field>
+    <field name="res_model">mv.current_quarter_overview</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_current_quarter_overview" name="Current Quarter Overview" parent="menu_mv_finance" action="action_mv_current_quarter_overview"/>
+</odoo>

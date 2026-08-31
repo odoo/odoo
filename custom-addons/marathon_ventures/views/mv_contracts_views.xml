@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_contracts_list" model="ir.ui.view">
+    <field name="name">mv.contracts.list</field>
+    <field name="model">mv.contracts</field>
+    <field name="arch" type="xml">
+      <list string="Contracts">
+        <field name="name"/>
+        <field name="additional_comments"/>
+        <field name="amount"/>
+        <field name="automatic_renewal_no"/>
+        <field name="automatic_renewal_yes"/>
+        <field name="automatic_renewal"/>
+        <field name="billing_specifics"/>
+        <field name="channel_partner"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_contracts_form" model="ir.ui.view">
+    <field name="name">mv.contracts.form</field>
+    <field name="model">mv.contracts</field>
+    <field name="arch" type="xml">
+      <form string="Contracts">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="internal_contact"/>
+                <field name="automatic_renewal"/>
+                <field name="contract_objective"/>
+                <field name="entity_name"/>
+                <field name="in_disupte"/>
+                <field name="internal_channel"/>
+                <field name="status"/>
+                <field name="end_date"/>
+                <field name="notification_of_automatic_renewal_term"/>
+                <field name="start_date"/>
+                <field name="additional_comments"/>
+              </group>
+              <group>
+                <field name="automatic_renewal_no"/>
+                <field name="automatic_renewal_yes"/>
+                <field name="billing_specifics"/>
+                <field name="channel_partner"/>
+                <field name="commercial_terms"/>
+                <field name="early_termination_rights"/>
+                <field name="estimates_milestones"/>
+                <field name="notice_address"/>
+                <field name="renewal_termination_comments"/>
+                <field name="amount"/>
+                <field name="test_term_months"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_contracts_search" model="ir.ui.view">
+    <field name="name">mv.contracts.search</field>
+    <field name="model">mv.contracts</field>
+    <field name="arch" type="xml">
+      <search string="Contracts">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_contracts" model="ir.actions.act_window">
+    <field name="name">Contracts</field>
+    <field name="res_model">mv.contracts</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_contracts" name="Contracts" parent="menu_mv_finance" action="action_mv_contracts"/>
+</odoo>

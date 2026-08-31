@@ -1,0 +1,461 @@
+/* ============================================================================
+   Phase 9 - Deal form custom styling
+   ----------------------------------------------------------------------------
+   Scoped to the Deal form via the .mv-deal-redesign class (root <form>).
+   The redesigned essentials sections also carry .mv-essentials-grid on the
+   outer <group> so we can target them without depending on the `name=""`
+   attribute (which OWL strips from the DOM).
+   ============================================================================ */
+
+/* Card-like container around the sheet. */
+.mv-deal-redesign .o_form_sheet_bg {
+    background-color: #f6f7f9;
+    padding: 16px;
+}
+
+.mv-deal-redesign .o_form_sheet {
+    background-color: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(15, 17, 21, 0.04);
+    padding: 24px 28px;
+}
+
+/* "New Deal" banner. */
+.mv-deal-redesign .mv-deal-banner {
+    background: #f6f7f9;
+    border-bottom: 1px solid #e4e6eb;
+    margin: -24px -28px 18px -28px;
+    padding: 14px 24px;
+    border-radius: 8px 8px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1d22;
+}
+
+/* Section labels (CAMPAIGN INFORMATION / SPOT DETAILS). */
+.mv-deal-redesign .mv-section-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    margin: 22px 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eceef1;
+}
+
+/* ============================================================================
+   3-COLUMN GRID for essentials sections.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-column-gap: 32px !important;
+    grid-row-gap: 4px !important;
+}
+
+.mv-deal-redesign .mv-essentials-grid > .o_inner_group,
+.mv-deal-redesign .mv-essentials-grid > .o_group {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+}
+
+/* ============================================================================
+   VERTICAL LABEL/INPUT STACKING inside essentials inner-groups.
+
+   Odoo's stock inner-group renders each field as a 2-cell row:
+       | label cell | input cell |
+   We need each field to render as 2 stacked rows:
+       | label cell |
+       | input cell |
+
+   Force the inner-group to ONE column so every cell wraps onto its own row,
+   then make labels + inputs full width and left-aligned.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid .o_inner_group {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    row-gap: 12px !important;
+    column-gap: 0 !important;
+    padding: 0 !important;
+}
+
+/* Some Odoo versions wrap each field in .o_wrap_field — stack it too. */
+.mv-deal-redesign .mv-essentials-grid .o_wrap_field {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    width: 100% !important;
+    grid-column: 1 / -1 !important;
+}
+
+/* Labels: own line, full width, left-aligned, bold-ish. Targets every label
+   wrapper Odoo has ever used (.o_form_label / .o_wrap_label / .o_td_label). */
+.mv-deal-redesign .mv-essentials-grid label,
+.mv-deal-redesign .mv-essentials-grid .o_form_label,
+.mv-deal-redesign .mv-essentials-grid .o_wrap_label,
+.mv-deal-redesign .mv-essentials-grid .o_td_label {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 0 4px 0 !important;
+    grid-column: 1 / -1 !important;
+    color: #1a1d22 !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+}
+
+/* Input cell takes full width, drops below the label. */
+.mv-deal-redesign .mv-essentials-grid .o_cell,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+}
+
+/* Style the actual <input> / <select> elements to look like the mockup. */
+.mv-deal-redesign .mv-essentials-grid input:not(.form-check-input):not([type="checkbox"]),
+.mv-deal-redesign .mv-essentials-grid select,
+.mv-deal-redesign .mv-essentials-grid .o_input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget input:not(.form-check-input):not([type="checkbox"]),
+.mv-deal-redesign .mv-essentials-grid .o_field_widget select {
+    width: 100% !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    background-color: #ffffff !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+/* Many2one fields use a wrapper — make it full width too. */
+.mv-deal-redesign .mv-essentials-grid .o_field_many2one,
+.mv-deal-redesign .mv-essentials-grid .o_field_many2one_selection {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Highlighted "Minimum Separation" input. */
+.mv-deal-redesign .mv-essentials-grid .mv-highlight input,
+.mv-deal-redesign .mv-essentials-grid .mv-highlight select,
+.mv-deal-redesign .mv-essentials-grid .mv-highlight .o_input {
+    background-color: #e9f1ff !important;
+    border-color: #3b82f6 !important;
+    border-radius: 6px;
+}
+
+/* ============================================================================
+   ADDITIONAL DETAILS collapse bar
+   ============================================================================ */
+.mv-deal-redesign .mv-additional-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 20px 0 8px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mv-deal-redesign .mv-additional-bar:hover {
+    background-color: #eef0f3;
+}
+
+.mv-deal-redesign .mv-additional-bar .mv-additional-label {
+    font-weight: 600;
+    color: #1a1d22;
+    font-size: 13px;
+}
+
+.mv-deal-redesign .mv-additional-bar .mv-additional-hint {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.mv-deal-redesign .mv-additional-bar .mv-additional-caret::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 8px;
+    color: #6b7280;
+}
+
+/* ============================================================================
+   FOOTER (Cancel | Save Deal)
+   ----------------------------------------------------------------------------
+   Hidden by default. mv_deal_footer.js watches Odoo's built-in
+   .o_form_status_indicator_buttons visibility and mirrors it into the
+   .mv-form--dirty class on the form root, so the footer only appears
+   while the record has unsaved changes. On a freshly-saved (or freshly-
+   loaded) deal, the buttons stay out of the way; the first edit brings
+   them back.
+   ============================================================================ */
+.mv-deal-redesign .mv-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 18px 0 4px 0;
+    margin-top: 14px;
+    border-top: 1px solid #eceef1;
+}
+
+.mv-deal-redesign .mv-form-footer {
+    display: none;
+}
+
+.mv-deal-redesign .o_form_dirty .mv-form-footer {
+    display: flex;
+}
+
+.mv-deal-redesign .mv-form-footer .btn {
+    min-width: 110px;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   KEY DEAL FACTS RIBBON (post-save)
+   ============================================================================ */
+.mv-deal-redesign .mv-key-ribbon {
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    margin: 6px 0 18px 0;
+    padding: 10px 14px;
+
+    /* col=6 outer group -> Odoo builds a 6-column CSS grid. Force
+       equal column widths and clip anything that overflows so a
+       long field value (e.g. a brand name) can't bleed into the
+       next column. */
+    .o_group.o_inner_group,
+    > .o_inner_group {
+        min-width: 0;
+    }
+}
+
+.mv-deal-redesign .mv-key-ribbon > .o_group {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 10px 18px;
+}
+
+.mv-deal-redesign .mv-key-ribbon .o_form_label {
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.mv-deal-redesign .mv-key-ribbon .o_inner_group {
+    grid-template-columns: auto;
+    min-width: 0;             /* enables ellipsis inside */
+    overflow: hidden;         /* clip anything that spills sideways */
+}
+
+/* Ellipsize the field value if it doesn't fit its column. Keeps
+   Brand from bleeding into Advertiser and so on. */
+.mv-deal-redesign .mv-key-ribbon .o_field_widget,
+.mv-deal-redesign .mv-key-ribbon .o_form_uri,
+.mv-deal-redesign .mv-key-ribbon .o_field_char,
+.mv-deal-redesign .mv-key-ribbon .o_field_many2one {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mv-deal-redesign .mv-key-ribbon .o_field_widget > * {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Responsive: collapse to 1 column on narrow screens. */
+@media (max-width: 768px) {
+    .mv-deal-redesign .mv-essentials-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ============================================================================
+   CAMPAIGN TOTAL summary card (Schedule form)
+   ============================================================================ */
+.mv-deal-redesign .mv-campaign-total {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 18px 0 8px 0;
+}
+
+.mv-deal-redesign .mv-campaign-total-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+}
+
+.mv-deal-redesign .mv-campaign-total-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1d22;
+}
+
+.mv-deal-redesign .mv-campaign-total-value .o_field_widget {
+    display: inline-block;
+    width: auto !important;
+}
+
+.mv-deal-redesign .mv-campaign-total-formula {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* ============================================================================
+   Grid variants for sections that need different column counts (Schedule
+   form): 4-col (Timing, Pricing) and 2-col (Additional). All variants
+   inherit the same label-on-top / full-width-input rules via the shared
+   .mv-essentials-grid base class on the same element.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid-4 {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-column-gap: 24px !important;
+    grid-row-gap: 4px !important;
+}
+
+.mv-deal-redesign .mv-essentials-grid-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-column-gap: 32px !important;
+    grid-row-gap: 4px !important;
+}
+
+.mv-deal-redesign .mv-essentials-grid-4 > .o_inner_group,
+.mv-deal-redesign .mv-essentials-grid-4 > .o_group,
+.mv-deal-redesign .mv-essentials-grid-2 > .o_inner_group,
+.mv-deal-redesign .mv-essentials-grid-2 > .o_group {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+}
+
+/* Responsive: 4-col collapses to 2 then 1; 2-col collapses to 1. */
+@media (max-width: 1024px) {
+    .mv-deal-redesign .mv-essentials-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+@media (max-width: 640px) {
+    .mv-deal-redesign .mv-essentials-grid-4,
+    .mv-deal-redesign .mv-essentials-grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ============================================================================
+   Defensive interactivity guard - if any base-style or browser default
+   leaves an essentials-grid input non-editable, this forces it back on.
+   Excludes explicitly read-only fields (Odoo adds .o_readonly_modifier).
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid input:not(.o_readonly_modifier),
+.mv-deal-redesign .mv-essentials-grid select:not(.o_readonly_modifier),
+.mv-deal-redesign .mv-essentials-grid .o_input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget:not(.o_readonly_modifier) input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget:not(.o_readonly_modifier) select {
+    pointer-events: auto !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text !important;
+}
+
+/* Many2one / Selection field click target also gets pointer-events on */
+.mv-deal-redesign .mv-essentials-grid .o_field_widget:not(.o_readonly_modifier) {
+    pointer-events: auto !important;
+}
+
+/* ============================================================================
+   CRITICAL FIX - Odoo's Monetary widget renders a ghost overlay span with
+   class .o_input ABOVE the real input (it shows the "$" prefix). My earlier
+   rule that targeted .o_input was painting that span solid white, which
+   hid the real input. Restrict the styled-input rules to <input>/<select>
+   elements only and revert the overlay span back to transparent.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid span.o_input {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Make sure the real <input> in monetary fields is visible above any sibling
+   overlay span (z-index just in case stacking context interferes). */
+.mv-deal-redesign .mv-essentials-grid .o_field_monetary input,
+.mv-deal-redesign .mv-essentials-grid input.o_input {
+    position: relative;
+    z-index: 1;
+    background-color: transparent !important;
+}
+
+/* The wrapper that contains both the overlay span and the real input -
+   make sure it's a positioning context but not painted itself. */
+.mv-deal-redesign .mv-essentials-grid .o_field_monetary > div {
+    background-color: transparent !important;
+}
+
+.mv-deal-redesign .o_field_invalid input,
+.mv-deal-redesign .o_field_invalid select,
+.mv-deal-redesign .o_field_invalid textarea,
+.mv-deal-redesign .o_field_invalid .o_input,
+.mv-deal-redesign input.o_field_invalid,
+.mv-deal-redesign select.o_field_invalid,
+.mv-deal-redesign textarea.o_field_invalid,
+.mv-deal-redesign .mv-essentials-grid .o_field_invalid input,
+.mv-deal-redesign .mv-essentials-grid .o_field_invalid select,
+.mv-deal-redesign .mv-essentials-grid .o_field_invalid .o_input,
+.mv-deal-redesign .mv-essentials-grid input.o_field_invalid,
+.mv-deal-redesign .mv-essentials-grid select.o_field_invalid {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff5f5 !important;
+    color: #58151c !important;
+    box-shadow: 0 0 0 2px #dc3545 !important;
+}
+
+/* Field labels next to an invalid field: pop them red too. Uses
+   the :has() selector where available (Odoo 19's supported browsers
+   all support it). Graceful fallback: labels stay their normal
+   color - the input outline is enough on its own. */
+.mv-deal-redesign .o_wrap_field:has(.o_field_invalid) label,
+.mv-deal-redesign .o_wrap_field:has(.o_field_invalid) .o_form_label,
+.mv-deal-redesign .mv-essentials-grid .o_wrap_field:has(.o_field_invalid) .o_form_label {
+    color: #dc3545 !important;
+}
+
+/* Focus ring on the invalid field once auto-focus lands: slightly
+   darker + wider so the target of the auto-focus is obvious. */
+.mv-deal-redesign .o_field_invalid input:focus,
+.mv-deal-redesign .o_field_invalid select:focus,
+.mv-deal-redesign .o_field_invalid textarea:focus,
+.mv-deal-redesign input.o_field_invalid:focus,
+.mv-deal-redesign select.o_field_invalid:focus {
+    border-color: #b02a37 !important;
+    box-shadow: 0 0 0 3px #dc3545 !important;
+}

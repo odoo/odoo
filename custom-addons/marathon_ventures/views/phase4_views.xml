@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Phase 4 — Prelog Data Mirror: Remove / Restore actions -->
+  <record id="view_mv_prelog_data_mirror_form_phase4" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirror.form.phase4</field>
+    <field name="model">mv.prelog_data_mirror</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_data_mirror_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_remove_prelog" type="object" string="Remove Prelog"
+                  class="btn-danger"
+                  invisible="archived"
+                  confirm="Mark this Prelog row as removed?"/>
+          <button name="action_restore_prelog" type="object" string="Restore"
+                  class="btn-secondary"
+                  invisible="not archived"/>
+        </header>
+      </xpath>
+      <xpath expr="//sheet" position="inside">
+        <group string="Removal Audit">
+          <field name="archived" readonly="1"/>
+          <field name="archived_date" readonly="1"/>
+          <field name="archived_by_id" readonly="1"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Phase 4 — Spot Data Mirror: show credit-reason field; require for credit -->
+  <record id="view_mv_spot_data_mirror_form_phase4" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.form.phase4</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_spot_data_mirror_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <group string="Credit Adjustment">
+          <field name="error_reason"
+                 placeholder="Must start with 'Network ' when Status=Credited"
+                 required="status == 'credited'"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Phase 4 — Prelog Import Wizard -->
+  <record id="view_mv_prelog_import_wizard_form" model="ir.ui.view">
+    <field name="name">mv.prelog.import.wizard.form</field>
+    <field name="model">mv.prelog.import.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Import Prelog">
+        <group>
+          <field name="upload_file"
+                 filename="upload_filename"
+                 options="{'accepted_file_extensions': '.csv,.xls,.xlsx'}"/>
+          <field name="upload_filename" invisible="1"/>
+          <field name="import_week" invisible="1"/>
+          <field name="program_id" invisible="1"/>
+          <field name="program_choice" widget="mv_native_select"/>
+          <field name="prelog_version"/>
+        </group>
+        <footer>
+          <button name="action_import" type="object" string="Import" class="btn-primary"/>
+          <button special="cancel" string="Cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_open_prelog_import_wizard" model="ir.actions.act_window">
+    <field name="name">Import Prelog</field>
+    <field name="res_model">mv.prelog.import.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  <menuitem id="menu_mv_prelog_import"
+            name="Import Prelog"
+            parent="menu_mv_operations"
+            action="action_open_prelog_import_wizard"
+            sequence="5"/>
+
+  <record id="view_mv_prelog_import_confirm_wizard_form" model="ir.ui.view">
+    <field name="name">mv.prelog.import.confirm.wizard.form</field>
+    <field name="model">mv.prelog.import.confirm.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Confirm Replace">
+        <group>
+          <field name="confirmation_message" nolabel="1" readonly="1"/>
+        </group>
+        <footer>
+          <button name="action_confirm" type="object" string="Delete and Re-upload" class="btn-primary"/>
+          <button special="cancel" string="Cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Phase 4 — Postlog Import Wizard -->
+  <record id="view_mv_postlog_import_wizard_form" model="ir.ui.view">
+    <field name="name">mv.postlog.import.wizard.form</field>
+    <field name="model">mv.postlog.import.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Import Postlog">
+        <group>
+          <field name="upload_file"
+                 filename="upload_filename"
+                 options="{'accepted_file_extensions': '.csv,.xls,.xlsx'}"/>
+          <field name="upload_filename" invisible="1"/>
+          <field name="import_week" invisible="1"/>
+          <field name="program_id" invisible="1"/>
+          <field name="program_choice" widget="mv_native_select"/>
+        </group>
+        <footer>
+          <button name="action_import" type="object" string="Import" class="btn-primary"/>
+          <button special="cancel" string="Cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_open_postlog_import_wizard" model="ir.actions.act_window">
+    <field name="name">Import Postlog</field>
+    <field name="res_model">mv.postlog.import.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  <!-- Routed by Program Type: Cable -> Postlog Data, Bundle/PP -> phase28.
+       Sequence 8 keeps it with Postlog Workbench (9) and its jobs (10). -->
+  <menuitem id="menu_mv_postlog_import"
+            name="Import Postlog"
+            parent="menu_mv_operations"
+            action="action_open_postlog_upload_wizard"
+            sequence="8"/>
+
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_po_detail_list" model="ir.ui.view">
+    <field name="name">mv.po_detail.list</field>
+    <field name="model">mv.po_detail</field>
+    <field name="arch" type="xml">
+      <list string="Po Detail">
+        <field name="name"/>
+        <field name="cost"/>
+        <field name="description"/>
+        <field name="item_link"/>
+        <field name="purchase_order"/>
+        <field name="quantity"/>
+        <field name="vendor"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_po_detail_form" model="ir.ui.view">
+    <field name="name">mv.po_detail.form</field>
+    <field name="model">mv.po_detail</field>
+    <field name="arch" type="xml">
+      <form string="Po Detail">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="cost"/>
+                <field name="item_link"/>
+                <field name="purchase_order"/>
+              </group>
+              <group>
+                <field name="quantity"/>
+                <field name="vendor"/>
+                <field name="description"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_po_detail_search" model="ir.ui.view">
+    <field name="name">mv.po_detail.search</field>
+    <field name="model">mv.po_detail</field>
+    <field name="arch" type="xml">
+      <search string="Po Detail">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_po_detail" model="ir.actions.act_window">
+    <field name="name">Po Detail</field>
+    <field name="res_model">mv.po_detail</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_po_detail" name="Po Detail" parent="menu_mv_finance" action="action_mv_po_detail"/>
+</odoo>

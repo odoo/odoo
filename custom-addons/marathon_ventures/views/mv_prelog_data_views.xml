@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_prelog_data_list" model="ir.ui.view">
+    <field name="name">mv.prelog_data.list</field>
+    <field name="model">mv.prelog_data</field>
+    <field name="arch" type="xml">
+      <list string="Prelog Data">
+        <field name="name"/>
+        <field name="schedule"/>
+        <field name="network_deal_number"/>
+        <field name="actual_000_primary_demo"/>
+        <field name="advertiserproduct"/>
+        <field name="agency_match_error"/>
+        <field name="agency"/>
+        <field name="airdate"/>
+        <field name="air_time_hour"/>
+        <field name="batch_id"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_data_form" model="ir.ui.view">
+    <field name="name">mv.prelog_data.form</field>
+    <field name="model">mv.prelog_data</field>
+    <field name="arch" type="xml">
+      <form string="Prelog Data">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="schedule"/>
+                <field name="prelogdatamirror"/>
+                <field name="split"/>
+                <field name="working_log"/>
+                <field name="type"/>
+                <field name="airdate"/>
+                <field name="schedule_week"/>
+                <field name="week"/>
+                <field name="advertiserproduct"/>
+                <field name="agency"/>
+                <field name="batch_id"/>
+                <field name="breakcode"/>
+                <field name="broadcast_network"/>
+                <field name="commercial_type"/>
+                <field name="current_home"/>
+                <field name="day_of_week"/>
+                <field name="duration"/>
+                <field name="field1"/>
+                <field name="framed_duration"/>
+                <field name="hour_of_day"/>
+                <field name="isci"/>
+                <field name="materialdescription"/>
+                <field name="network"/>
+                <field name="network_deal_number"/>
+                <field name="orderproductdescription"/>
+                <field name="pod"/>
+                <field name="prelogdatamirrorreference"/>
+                <field name="product"/>
+                <field name="scheduleadid"/>
+              </group>
+              <group>
+                <field name="schedulelength"/>
+                <field name="scheduletime"/>
+                <field name="series"/>
+                <field name="timeperiod"/>
+                <field name="title"/>
+                <field name="unique_spot"/>
+                <field name="agency_match_error"/>
+                <field name="current_version"/>
+                <field name="current_version_rollup"/>
+                <field name="locked"/>
+                <field name="locked_working_log"/>
+                <field name="log_schedule_mismatch"/>
+                <field name="main_network"/>
+                <field name="removed"/>
+                <field name="snowflake_transferred"/>
+                <field name="actual_000_primary_demo"/>
+                <field name="air_time_hour"/>
+                <field name="estimated_000_primary_demo"/>
+                <field name="liability_000"/>
+                <field name="line"/>
+                <field name="max_per_day_count"/>
+                <field name="prelog_equiv_30"/>
+                <field name="rate"/>
+                <field name="segment"/>
+                <field name="total_000_primary_demo"/>
+                <field name="total_dollars_earned"/>
+                <field name="version"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_data_search" model="ir.ui.view">
+    <field name="name">mv.prelog_data.search</field>
+    <field name="model">mv.prelog_data</field>
+    <field name="arch" type="xml">
+      <search string="Prelog Data">
+        <field name="name"/>
+        <field name="import_program"/>
+        <field name="import_week_value"/>
+        <field name="version"/>
+        <field name="network_deal_number"/>
+        <field name="schedule"/>
+        <field name="sf_external_id"/>
+        <separator/>
+        <filter name="filter_no_schedule"
+                string="No Schedule ID"
+                domain="[('schedule', '=', False)]"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_prelog_data" model="ir.actions.act_window">
+    <field name="name">Prelog Data</field>
+    <field name="res_model">mv.prelog_data</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_prelog_data" name="Prelog Data" parent="menu_mv_operations" action="action_mv_prelog_data" sequence="12"/>
+</odoo>

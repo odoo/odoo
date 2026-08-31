@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <menuitem id="menu_mv_root" name="Marathon Ventures" sequence="80"/>
+
+  <menuitem id="menu_mv_master_data" name="Master Data"      parent="menu_mv_root" sequence="10"/>
+  <menuitem id="menu_mv_sales_ops"   name="Sales Operations" parent="menu_mv_root" sequence="20"/>
+  <menuitem id="menu_mv_operations"  name="Operations"       parent="menu_mv_root" sequence="30"/>
+  <menuitem id="menu_mv_finance"     name="Finance"          parent="menu_mv_root" sequence="40"/>
+
+  <menuitem id="menu_mv_root_sales"   name="Sales (legacy)"   parent="menu_mv_sales_ops" sequence="99" groups="base.group_no_one"/>
+  <menuitem id="menu_mv_root_traffic" name="Traffic (legacy)" parent="menu_mv_operations" sequence="99" groups="base.group_no_one"/>
+  <menuitem id="menu_mv_root_finance" name="Finance (legacy)" parent="menu_mv_finance" sequence="99" groups="base.group_no_one"/>
+  <menuitem id="menu_mv_root_admin"   name="Admin (legacy)"   parent="menu_mv_finance" sequence="99" groups="base.group_no_one"/>
+
+  <record id="action_mv_account" model="ir.actions.act_window">
+    <field name="name">Accounts</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('is_company','=',True)]</field>
+    <field name="context">{'default_is_company': True}</field>
+  </record>
+  <menuitem id="menu_mv_master_account" name="Accounts" parent="menu_mv_master_data" action="action_mv_account" sequence="10"/>
+
+  <record id="action_mv_contact" model="ir.actions.act_window">
+    <field name="name">Contacts</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('is_company','=',False)]</field>
+    <field name="context">{'default_is_company': False}</field>
+  </record>
+  <menuitem id="menu_mv_master_contact" name="Contacts" parent="menu_mv_master_data" action="action_mv_contact" sequence="20"/>
+</odoo>

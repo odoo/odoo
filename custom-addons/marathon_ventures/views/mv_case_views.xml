@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_case_list" model="ir.ui.view">
+    <field name="name">mv.case.list</field>
+    <field name="model">mv.case</field>
+    <field name="arch" type="xml">
+      <list string="Case">
+        <field name="name"/>
+        <field name="accountid"/>
+        <field name="assetid"/>
+        <field name="businesshoursid"/>
+        <field name="closeddate"/>
+        <field name="comments"/>
+        <field name="contactemail"/>
+        <field name="contactfax"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_case_form" model="ir.ui.view">
+    <field name="name">mv.case.form</field>
+    <field name="model">mv.case</field>
+    <field name="arch" type="xml">
+      <form string="Case">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="accountid"/>
+                <field name="assetid"/>
+                <field name="businesshoursid"/>
+                <field name="contactid"/>
+                <field name="ownerid"/>
+                <field name="parentid"/>
+                <field name="sourceid"/>
+                <field name="origin"/>
+                <field name="priority"/>
+                <field name="reason"/>
+                <field name="status"/>
+                <field name="type"/>
+                <field name="closeddate"/>
+                <field name="comments"/>
+                <field name="contactemail"/>
+              </group>
+              <group>
+                <field name="contactfax"/>
+                <field name="contactmobile"/>
+                <field name="contactphone"/>
+                <field name="contactphone2test"/>
+                <field name="description"/>
+                <field name="isclosedoncreate"/>
+                <field name="isescalated"/>
+                <field name="isselfserviceclosed"/>
+                <field name="isvisibleinselfservice"/>
+                <field name="language"/>
+                <field name="subject"/>
+                <field name="suppliedcompany"/>
+                <field name="suppliedemail"/>
+                <field name="suppliedname"/>
+                <field name="suppliedphone"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_case_search" model="ir.ui.view">
+    <field name="name">mv.case.search</field>
+    <field name="model">mv.case</field>
+    <field name="arch" type="xml">
+      <search string="Case">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_case" model="ir.actions.act_window">
+    <field name="name">Case</field>
+    <field name="res_model">mv.case</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_case" name="Case" parent="menu_mv_finance" action="action_mv_case"/>
+</odoo>

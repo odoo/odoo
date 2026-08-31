@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_market_list" model="ir.ui.view">
+    <field name="name">mv.market.list</field>
+    <field name="model">mv.market</field>
+    <field name="arch" type="xml">
+      <list string="Market">
+        <field name="name"/>
+        <field name="aa_dma_rank"/>
+        <field name="aa_hh"/>
+        <field name="aa_tv_homes"/>
+        <field name="ads"/>
+        <field name="asian_dma_rank"/>
+        <field name="asian_homes"/>
+        <field name="asian_tv_homes"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_market_form" model="ir.ui.view">
+    <field name="name">mv.market.form</field>
+    <field name="model">mv.market</field>
+    <field name="arch" type="xml">
+      <form string="Market">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="time_zone"/>
+                <field name="market_rank"/>
+                <field name="aa_dma_rank"/>
+                <field name="aa_hh"/>
+                <field name="aa_tv_homes"/>
+                <field name="ads"/>
+                <field name="asian_dma_rank"/>
+                <field name="asian_homes"/>
+                <field name="asian_tv_homes"/>
+              </group>
+              <group>
+                <field name="dma_rank"/>
+                <field name="hispanic_or_latinx_dma_rank"/>
+                <field name="hispanic_or_latinx_homes"/>
+                <field name="hispanic_or_latinx_tv_homes"/>
+                <field name="ota"/>
+                <field name="tv_homes"/>
+                <field name="us_hh"/>
+                <field name="wired_cable"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_market_search" model="ir.ui.view">
+    <field name="name">mv.market.search</field>
+    <field name="model">mv.market</field>
+    <field name="arch" type="xml">
+      <search string="Market">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_market" model="ir.actions.act_window">
+    <field name="name">Market</field>
+    <field name="res_model">mv.market</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_market" name="Market" parent="menu_mv_finance" action="action_mv_market"/>
+</odoo>

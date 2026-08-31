@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_spot_data_mirror_list" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.list</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="arch" type="xml">
+      <list string="Spot Data Mirror">
+        <field name="name"/>
+        <field name="air_date_time"/>
+        <field name="air_date_yyyy"/>
+        <field name="air_date"/>
+        <field name="air_time_hour"/>
+        <field name="air_time"/>
+        <field name="broadcast_network"/>
+        <field name="commercial_title"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_spot_data_mirror_form" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.form</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="arch" type="xml">
+      <form string="Spot Data Mirror">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="schedule"/>
+                <field name="spot_data"/>
+                <field name="length"/>
+                <field name="status"/>
+                <field name="air_date"/>
+                <field name="scheduleweek"/>
+                <field name="week"/>
+                <field name="air_date_time"/>
+                <field name="air_date_yyyy"/>
+                <field name="air_time"/>
+                <field name="broadcast_network"/>
+                <field name="commercial_title"/>
+                <field name="hour_of_day"/>
+                <field name="isci"/>
+                <field name="line_number"/>
+              </group>
+              <group>
+                <field name="log_schedule"/>
+                <field name="network"/>
+                <field name="network_deal_number"/>
+                <field name="product"/>
+                <field name="program_id"/>
+                <field name="raycom_invoice_number"/>
+                <field name="reason_for_unmatched"/>
+                <field name="schedule_start_end"/>
+                <field name="time_period"/>
+                <field name="x800"/>
+                <field name="pp"/>
+                <field name="air_time_hour"/>
+                <field name="spot_equiv_30"/>
+                <field name="spot_rate"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_spot_data_mirror_search" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.search</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="arch" type="xml">
+      <search string="Spot Data Mirror">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_spot_data_mirror" model="ir.actions.act_window">
+    <field name="name">Spot Data Mirror</field>
+    <field name="res_model">mv.spot_data_mirror</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_spot_data_mirror" name="Spot Data Mirror" parent="menu_mv_operations" action="action_mv_spot_data_mirror" sequence="12"/>
+</odoo>

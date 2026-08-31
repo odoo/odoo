@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Static ir.actions.client - acts as a registered action so the
+       form button can reference it by xmlid. The OWL component (tag
+       mv_report_builder) reads the report id from active_id passed
+       via context. -->
+  <record id="action_mv_report_builder_client" model="ir.actions.client">
+    <field name="name">Report Builder</field>
+    <field name="tag">mv_report_builder</field>
+    <field name="target">main</field>
+  </record>
+
+  <!-- Record rules: visibility -->
+  <record id="rule_mv_report_visibility" model="ir.rule">
+    <field name="name">mv.report: owner / public / shared</field>
+    <field name="model_id" ref="model_mv_report"/>
+    <field name="domain_force">['|','|',('owner_id','=',user.id),('is_public','=',True),('shared_user_ids','in',[user.id])]</field>
+    <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="False"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_unlink" eval="False"/>
+  </record>
+  <record id="rule_mv_report_owner_write" model="ir.rule">
+    <field name="name">mv.report: owner write</field>
+    <field name="model_id" ref="model_mv_report"/>
+    <field name="domain_force">[('owner_id','=',user.id)]</field>
+    <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    <field name="perm_read" eval="False"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+  </record>
+
+  <!-- List view -->
+  <record id="view_mv_report_list" model="ir.ui.view">
+    <field name="name">mv.report.list</field>
+    <field name="model">mv.report</field>
+    <field name="arch" type="xml">
+      <list string="Reports">
+        <field name="name"/>
+        <field name="model_id"/>
+        <field name="owner_id"/>
+        <field name="is_public"/>
+        <field name="last_run_date"/>
+        <!-- Route via the static client-action record (same path as
+             the form button) to avoid the call_button -> makeState
+             crash. -->
+        <button name="%(action_mv_report_builder_client)d" type="action"
+                context="{'report_id': id, 'active_id': id}"
+                string="Open Builder" class="btn-primary" icon="fa-pencil"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Form view - minimal; the OWL builder is the real UI. -->
+  <record id="view_mv_report_form" model="ir.ui.view">
+    <field name="name">mv.report.form</field>
+    <field name="model">mv.report</field>
+    <field name="arch" type="xml">
+      <form string="Report">
+        <header>
+          <!-- Route via the static ir.actions.client record (not via
+               Python action_open_builder return) so Odoo 19's action
+               manager treats it as a registered action with proper
+               URL state, rather than an ad-hoc dict from call_button. -->
+          <!-- Use `id` (a real field on mv.report) rather than
+               `active_id` - Odoo 19's view validator inspects context
+               expressions for field references and rejects active_id
+               because it doesn't exist on the model. -->
+          <button name="%(action_mv_report_builder_client)d"
+                  type="action"
+                  context="{'report_id': id, 'active_id': id}"
+                  string="Open Builder" class="btn-primary"/>
+          <button name="action_run" type="object"
+                  string="Run" class="btn-secondary" icon="fa-play"/>
+        </header>
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <group>
+            <group>
+              <!-- v4: Report Type replaces the raw model picker.
+                   model_id is now a related field derived from
+                   report_type_id.base_model_id, shown read-only. -->
+              <field name="report_type_id" options="{'no_create': True}"/>
+              <field name="model_id" readonly="1" string="Base Model"/>
+              <field name="owner_id" readonly="1"/>
+            </group>
+            <group>
+              <field name="is_public"/>
+              <field name="shared_user_ids" widget="many2many_tags"
+                     invisible="is_public"/>
+              <field name="last_run_date" readonly="1"/>
+            </group>
+          </group>
+          <field name="description" placeholder="What does this report show?"/>
+        </sheet>
+        <chatter/>
+      </form>
+    </field>
+  </record>
+
+  <!-- Search view -->
+  <record id="view_mv_report_search" model="ir.ui.view">
+    <field name="name">mv.report.search</field>
+    <field name="model">mv.report</field>
+    <field name="arch" type="xml">
+      <search string="Reports">
+        <field name="name"/>
+        <field name="model_id"/>
+        <field name="owner_id"/>
+        <separator/>
+        <filter name="my_reports" string="My Reports"
+                domain="[('owner_id','=',uid)]"/>
+        <filter name="public_reports" string="Public"
+                domain="[('is_public','=',True)]"/>
+        <filter name="shared_with_me" string="Shared with Me"
+                domain="[('shared_user_ids','in',uid)]"/>
+      </search>
+    </field>
+  </record>
+
+  <!-- Action -->
+  <record id="action_mv_report" model="ir.actions.act_window">
+    <field name="name">Reports</field>
+    <field name="res_model">mv.report</field>
+    <field name="view_mode">list,form</field>
+    <field name="search_view_id" ref="view_mv_report_search"/>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">Create your first saved report.</p>
+      <p>Pick a Report Type, drag fields into Columns / Filters /
+         Groups, then Run.</p>
+    </field>
+  </record>
+
+  <!-- Menu -->
+  <menuitem id="menu_mv_reports" name="Reports"
+            parent="marathon_ventures.menu_mv_root"
+            action="action_mv_report" sequence="100"/>
+
+</odoo>

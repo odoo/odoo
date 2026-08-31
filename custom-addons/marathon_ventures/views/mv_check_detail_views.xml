@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_check_detail_list" model="ir.ui.view">
+    <field name="name">mv.check_detail.list</field>
+    <field name="model">mv.check_detail</field>
+    <field name="arch" type="xml">
+      <list string="Check Detail">
+        <field name="name"/>
+        <field name="air_date"/>
+        <field name="air_time"/>
+        <field name="checkid"/>
+        <field name="check_amount"/>
+        <field name="check"/>
+        <field name="debit_check"/>
+        <field name="debit_date"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_check_detail_form" model="ir.ui.view">
+    <field name="name">mv.check_detail.form</field>
+    <field name="model">mv.check_detail</field>
+    <field name="arch" type="xml">
+      <form string="Check Detail">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="check"/>
+                <field name="schedule"/>
+                <field name="unmatched_reason"/>
+                <field name="air_date"/>
+                <field name="debit_date"/>
+                <field name="air_time"/>
+              </group>
+              <group>
+                <field name="checkid"/>
+                <field name="debit_check"/>
+                <field name="item_ad_id"/>
+                <field name="unmatched"/>
+                <field name="check_amount"/>
+                <field name="net_amount"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_check_detail_search" model="ir.ui.view">
+    <field name="name">mv.check_detail.search</field>
+    <field name="model">mv.check_detail</field>
+    <field name="arch" type="xml">
+      <search string="Check Detail">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_check_detail" model="ir.actions.act_window">
+    <field name="name">Check Detail</field>
+    <field name="res_model">mv.check_detail</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_check_detail" name="Check Detail" parent="menu_mv_finance" action="action_mv_check_detail"/>
+</odoo>

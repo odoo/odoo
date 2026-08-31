@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sf_credit_memo_old_list" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_old.list</field>
+    <field name="model">mv.sf_credit_memo_old</field>
+    <field name="arch" type="xml">
+      <list string="Sf Credit Memo Old">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="brand"/>
+        <field name="comments"/>
+        <field name="complete"/>
+        <field name="credit_amount"/>
+        <field name="credit_date"/>
+        <field name="intacct_si_number"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_memo_old_form" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_old.form</field>
+    <field name="model">mv.sf_credit_memo_old</field>
+    <field name="arch" type="xml">
+      <form string="Sf Credit Memo Old">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="schedule"/>
+                <field name="status"/>
+                <field name="type"/>
+                <field name="credit_date"/>
+                <field name="paid_date"/>
+                <field name="schedule_week"/>
+                <field name="account"/>
+              </group>
+              <group>
+                <field name="brand"/>
+                <field name="comments"/>
+                <field name="intacct_si_number"/>
+                <field name="program"/>
+                <field name="complete"/>
+                <field name="credit_amount"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_memo_old_search" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_old.search</field>
+    <field name="model">mv.sf_credit_memo_old</field>
+    <field name="arch" type="xml">
+      <search string="Sf Credit Memo Old">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sf_credit_memo_old" model="ir.actions.act_window">
+    <field name="name">Sf Credit Memo Old</field>
+    <field name="res_model">mv.sf_credit_memo_old</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sf_credit_memo_old" name="Sf Credit Memo Old" parent="menu_mv_finance" action="action_mv_sf_credit_memo_old"/>
+</odoo>

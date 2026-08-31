@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_video_file_list" model="ir.ui.view">
+    <field name="name">mv.video_file.list</field>
+    <field name="model">mv.video_file</field>
+    <field name="arch" type="xml">
+      <list string="Video File">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="advertiser"/>
+        <field name="brand"/>
+        <field name="file_name"/>
+        <field name="file_path"/>
+        <field name="isci_no_char"/>
+        <field name="isci"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_video_file_form" model="ir.ui.view">
+    <field name="name">mv.video_file.form</field>
+    <field name="model">mv.video_file</field>
+    <field name="arch" type="xml">
+      <form string="Video File">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="isci"/>
+                <field name="length"/>
+                <field name="account"/>
+                <field name="advertiser"/>
+                <field name="brand"/>
+              </group>
+              <group>
+                <field name="file_name"/>
+                <field name="file_path"/>
+                <field name="isci_no_char"/>
+                <field name="unique_ref_id"/>
+                <field name="x800_number"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_video_file_search" model="ir.ui.view">
+    <field name="name">mv.video_file.search</field>
+    <field name="model">mv.video_file</field>
+    <field name="arch" type="xml">
+      <search string="Video File">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_video_file" model="ir.actions.act_window">
+    <field name="name">Video File</field>
+    <field name="res_model">mv.video_file</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_video_file" name="Video File" parent="menu_mv_operations" action="action_mv_video_file" sequence="12"/>
+</odoo>

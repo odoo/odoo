@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_prelog_fuzzy_match_list" model="ir.ui.view">
+    <field name="name">mv.prelog_fuzzy_match.list</field>
+    <field name="model">mv.prelog_fuzzy_match</field>
+    <field name="arch" type="xml">
+      <list string="Prelog Fuzzy Match">
+        <field name="name"/>
+        <field name="best_fit"/>
+        <field name="errors"/>
+        <field name="matchlevel"/>
+        <field name="minutes"/>
+        <field name="prelogdatamirrorid"/>
+        <field name="scheduleid"/>
+        <field name="schedule_rate"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_fuzzy_match_form" model="ir.ui.view">
+    <field name="name">mv.prelog_fuzzy_match.form</field>
+    <field name="model">mv.prelog_fuzzy_match</field>
+    <field name="arch" type="xml">
+      <form string="Prelog Fuzzy Match">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="prelogdatamirrorid"/>
+                <field name="scheduleid"/>
+                <field name="best_fit"/>
+                <field name="errors"/>
+              </group>
+              <group>
+                <field name="time_period"/>
+                <field name="matchlevel"/>
+                <field name="minutes"/>
+                <field name="schedule_rate"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_fuzzy_match_search" model="ir.ui.view">
+    <field name="name">mv.prelog_fuzzy_match.search</field>
+    <field name="model">mv.prelog_fuzzy_match</field>
+    <field name="arch" type="xml">
+      <search string="Prelog Fuzzy Match">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_prelog_fuzzy_match" model="ir.actions.act_window">
+    <field name="name">Prelog Fuzzy Match (Legacy)</field>
+    <field name="res_model">mv.prelog_fuzzy_match</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="action_mv_prelog_fuzzy_match_page" model="ir.actions.client">
+    <field name="name">Prelog Workbench</field>
+    <field name="tag">mv_prelog_fuzzy_matching</field>
+    <field name="target">main</field>
+  </record>
+
+  <menuitem id="menu_mv_prelog_fuzzy_match"
+            name="Prelog Workbench"
+            parent="menu_mv_operations"
+            action="action_mv_prelog_fuzzy_match_page"
+            sequence="6"
+            groups="marathon_ventures.group_prelog_fuzzy_matching"/>
+</odoo>

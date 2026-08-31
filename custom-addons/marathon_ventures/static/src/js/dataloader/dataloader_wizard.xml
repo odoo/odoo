@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="marathon_ventures.MvDataloaderWizard">
+        <div class="mv-dl-wizard">
+
+            <!-- Loading overlay -->
+            <div t-if="state.loading" class="mv-dl-loading">
+                Loading Data Loader...
+            </div>
+
+            <!-- Everything below only after initial load -->
+            <t t-if="!state.loading">
+
+                <!-- ==== Header row: job name + step indicator ==== -->
+                <div class="mv-dl-header">
+                    <div class="mv-dl-header__title">
+                        <span class="mv-dl-header__job"><t t-esc="state.snap.name"/></span>
+                        <span class="mv-dl-header__state"
+                              t-att-class="'mv-dl-badge mv-dl-badge--' + state.snap.state">
+                            <t t-esc="state.snap.state"/>
+                        </span>
+                    </div>
+                    <div class="mv-dl-steps">
+                        <t t-foreach="visibleSteps()" t-as="s" t-key="s.n">
+                            <div t-att-class="'mv-dl-step ' + (s.n === state.step ? 'mv-dl-step--active' : (s.n &lt; state.step ? 'mv-dl-step--done' : ''))">
+                                <span class="mv-dl-step__num" t-esc="s.n"/>
+                                <span class="mv-dl-step__label" t-esc="s.label"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- ==== Top error banner ==== -->
+                <div t-if="state.error" class="mv-dl-error-banner">
+                    <span class="mv-dl-error-banner__icon">⚠</span>
+                    <span t-esc="state.error"/>
+                    <button class="mv-dl-error-banner__close"
+                            t-on-click="() => { state.error = ''; }">×</button>
+                </div>
+
+                <!-- ==== STEP 1 - Mode ==== -->
+                <div t-if="state.step === 1" class="mv-dl-panel">
+                    <h2 class="mv-dl-panel__title">What do you want to do?</h2>
+                    <p class="mv-dl-panel__hint">
+                        Pick the action for this job. You can change it later
+                        by resetting to draft.
+                    </p>
+                    <div class="mv-dl-mode-grid">
+                        <t t-foreach="MODES" t-as="mode" t-key="mode.value">
+                            <div t-att-class="'mv-dl-mode-card' + (state.snap.mode === mode.value ? ' mv-dl-mode-card--active' : '')"
+                                 t-on-click="() => this.onSelectMode(mode.value)">
+                                <div class="mv-dl-mode-card__icon">
+                                    <i t-att-class="'fa ' + mode.icon"/>
+                                </div>
+                                <div class="mv-dl-mode-card__label" t-esc="mode.label"/>
+                                <div class="mv-dl-mode-card__hint"  t-esc="mode.hint"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- ==== STEP 2 - Source ==== -->
+                <div t-if="state.step === 2" class="mv-dl-panel">
+                    <h2 class="mv-dl-panel__title">
+                        <t t-if="isImport()">Where's your data coming from?</t>
+                        <t t-else="">What are you exporting?</t>
+                    </h2>
+
+                    <!-- Model picker (both import + export) -->
+                    <div class="mv-dl-section">
+                        <label class="mv-dl-section__label">Target model</label>
+
+                        <!-- Clear "what's currently selected" indicator so
+                             the user never has to hunt for the highlight
+                             inside a scrolling list. -->
+                        <div t-if="state.snap.model_id" class="mv-dl-selected-model">
+                            <div class="mv-dl-selected-model__inner">
+                                <i class="fa fa-check-circle mv-dl-selected-model__icon"/>
+                                <div class="mv-dl-selected-model__body">
+                                    <div class="mv-dl-selected-model__name"
+                                         t-esc="state.snap.model_label or state.snap.model_name"/>
+                                    <code class="mv-dl-selected-model__tech"
+                                          t-esc="state.snap.model_name"/>
+                                </div>
+                                <button class="mv-dl-selected-model__clear"
+                                        title="Clear selection"
+                                        t-on-click.prevent.stop="onClearModel">×</button>
+                            </div>
+                        </div>
+
+                        <input type="text" class="mv-dl-input"
+                               placeholder="Search models by name or technical name..."
+                               t-att-value="state.filterModel"
+                               t-on-input="(ev) => state.filterModel = ev.target.value"/>
+                        <div class="mv-dl-model-list">
+                            <t t-foreach="filteredModels()" t-as="m" t-key="m.id">
+                                <div t-att-class="'mv-dl-model-row' + (state.snap.model_id == m.id ? ' mv-dl-model-row--active' : '')"
+                                     t-on-click.stop="() => this.onSelectModel(m)">
+                                    <span class="mv-dl-model-row__name" t-esc="m.name"/>
+                                    <code class="mv-dl-model-row__tech" t-esc="m.model"/>
+                                    <i t-if="state.snap.model_id == m.id" class="fa fa-check mv-dl-model-row__check"/>
+                                </div>
+                            </t>
+                            <div t-if="filteredModels().length === 0" class="mv-dl-empty">
+                                No models match your search.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==== Import branch ==== -->
+                    <t t-if="isImport()">
+                        <!-- File upload -->
+                        <div class="mv-dl-section">
+                            <label class="mv-dl-section__label">Source file (CSV or Excel)</label>
+                            <div t-att-class="'mv-dl-dropzone' + (state.dragOver ? ' mv-dl-dropzone--over' : '')"
+                                 t-on-dragover="onDragOver"
+                                 t-on-dragleave="onDragLeave"
+                                 t-on-drop="onDrop">
+                                <t t-if="!state.snap.has_file">
+                                    <div class="mv-dl-dropzone__hint">
+                                        <i class="fa fa-cloud-upload"/> Drag &amp; drop your CSV or Excel (.xlsx) file here
+                                    </div>
+                                    <div class="mv-dl-dropzone__or">or</div>
+                                    <label class="mv-dl-btn mv-dl-btn--secondary">
+                                        Browse
+                                        <input type="file" accept=".csv,text/csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden="1"
+                                               t-on-change="onFilePick"/>
+                                    </label>
+                                </t>
+                                <t t-else="">
+                                    <div class="mv-dl-file">
+                                        <i class="fa fa-file-text-o"/>
+                                        <span class="mv-dl-file__name" t-esc="state.snap.source_filename"/>
+                                        <a class="mv-dl-file__replace" href="#"
+                                           t-on-click.prevent="() => { state.snap.has_file = false; state.snap.source_filename = ''; }">
+                                            Replace
+                                        </a>
+                                    </div>
+                                </t>
+                                <div t-if="state.uploading" class="mv-dl-dropzone__uploading">
+                                    Uploading...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Parse options -->
+                        <div class="mv-dl-section mv-dl-row">
+                            <label class="mv-dl-check">
+                                <input type="checkbox"
+                                       t-att-checked="state.snap.header_row"
+                                       t-on-change="onHeaderRowToggle"/>
+                                First row is header
+                            </label>
+                            <label>
+                                Delimiter
+                                <select class="mv-dl-input mv-dl-input--sm"
+                                        t-on-change="onDelimiterChange">
+                                    <option value="," t-att-selected="state.snap.delimiter === ',' ? 'selected' : null">Comma (,)</option>
+                                    <option value=";" t-att-selected="state.snap.delimiter === ';' ? 'selected' : null">Semicolon (;)</option>
+                                    <option value="&#9;" t-att-selected="state.snap.delimiter === '\t' ? 'selected' : null">Tab</option>
+                                    <option value="|" t-att-selected="state.snap.delimiter === '|' ? 'selected' : null">Pipe (|)</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <!-- Match key (only for update / upsert / delete) -->
+                        <div t-if="['update','upsert','delete'].includes(state.snap.mode)"
+                             class="mv-dl-section">
+                            <label class="mv-dl-section__label">Match records by</label>
+                            <div class="mv-dl-row">
+                                <select class="mv-dl-input"
+                                        t-on-change="onMatchFieldChange">
+                                    <option value="">-- pick a field --</option>
+                                    <t t-foreach="state.targetFields" t-as="f" t-key="f.id">
+                                        <option t-att-value="f.id"
+                                                t-att-selected="state.snap.match_field_id === f.id ? 'selected' : null">
+                                            <t t-esc="f.label"/> (<t t-esc="f.name"/>)
+                                        </option>
+                                    </t>
+                                </select>
+                                <select class="mv-dl-input mv-dl-input--sm"
+                                        t-on-change="onMatchByChange">
+                                    <option value="value"       t-att-selected="state.snap.match_by === 'value' ? 'selected' : null">by value</option>
+                                    <option value="id"          t-att-selected="state.snap.match_by === 'id' ? 'selected' : null">by ID</option>
+                                    <option value="external_id" t-att-selected="state.snap.match_by === 'external_id' ? 'selected' : null">by External ID</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Batching -->
+                        <div class="mv-dl-section mv-dl-row">
+                            <label>
+                                On error
+                                <select class="mv-dl-input mv-dl-input--sm"
+                                        t-on-change="onOnErrorChange">
+                                    <option value="skip" t-att-selected="state.snap.on_error === 'skip' ? 'selected' : null">Skip row, continue</option>
+                                    <option value="stop" t-att-selected="state.snap.on_error === 'stop' ? 'selected' : null">Stop the job</option>
+                                </select>
+                            </label>
+                        </div>
+                    </t>
+
+                    <!-- ==== Export branch ==== -->
+                    <t t-if="!isImport()">
+                        <div class="mv-dl-section">
+                            <label class="mv-dl-section__label">Fields to export</label>
+                            <div class="mv-dl-field-picker">
+                                <t t-foreach="state.targetFields" t-as="f" t-key="f.id">
+                                    <label t-att-class="'mv-dl-chip' + (isExportFieldSelected(f.id) ? ' mv-dl-chip--on' : '')"
+                                           t-on-click="() => this.onToggleExportField(f.id)">
+                                        <t t-esc="f.label"/>
+                                        <small class="mv-dl-chip__tech" t-esc="f.name"/>
+                                    </label>
+                                </t>
+                            </div>
+                            <div t-if="state.snap.export_field_ids.length === 0" class="mv-dl-hint mv-dl-hint--warn">
+                                Pick at least one field. Leave blank to export just the record IDs.
+                            </div>
+                        </div>
+
+                        <div class="mv-dl-section">
+                            <label class="mv-dl-section__label">Filter (Odoo domain)</label>
+                            <input type="text" class="mv-dl-input mv-dl-input--mono"
+                                   t-att-value="state.snap.export_domain"
+                                   t-on-input="onExportDomainInput"
+                                   placeholder="[('active','=',True)]"/>
+                            <div class="mv-dl-hint">
+                                Standard Odoo domain expression. Use <code>[]</code> for all records.
+                            </div>
+                        </div>
+
+                        <div class="mv-dl-section mv-dl-row">
+                            <label>
+                                Delimiter
+                                <select class="mv-dl-input mv-dl-input--sm"
+                                        t-on-change="onDelimiterChange">
+                                    <option value="," t-att-selected="state.snap.delimiter === ',' ? 'selected' : null">Comma (,)</option>
+                                    <option value=";" t-att-selected="state.snap.delimiter === ';' ? 'selected' : null">Semicolon (;)</option>
+                                    <option value="&#9;" t-att-selected="state.snap.delimiter === '\t' ? 'selected' : null">Tab</option>
+                                    <option value="|" t-att-selected="state.snap.delimiter === '|' ? 'selected' : null">Pipe (|)</option>
+                                </select>
+                            </label>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- ==== STEP 3 - Map columns (import only) ==== -->
+                <div t-if="state.step === 3" class="mv-dl-panel">
+                    <h2 class="mv-dl-panel__title">Match CSV columns to fields</h2>
+                    <div class="mv-dl-mapping-summary">
+                        <span class="mv-dl-badge mv-dl-badge--ok">
+                            <t t-esc="countMapped()"/> mapped
+                        </span>
+                        <span class="mv-dl-badge mv-dl-badge--warn">
+                            <t t-esc="countUnmapped()"/> unmapped
+                        </span>
+                        <span class="mv-dl-badge mv-dl-badge--muted">
+                            <t t-esc="countSkipped()"/> skipped
+                        </span>
+                        <button class="mv-dl-btn mv-dl-btn--secondary"
+                                t-on-click="doAutomap">
+                            <i class="fa fa-magic"/> Re-run auto-map
+                        </button>
+                    </div>
+
+                    <table class="mv-dl-mapping-table">
+                        <thead>
+                            <tr>
+                                <th>CSV column</th>
+                                <th>Target field</th>
+                                <th>M2O lookup by</th>
+                                <th class="mv-dl-mapping-table__skip">Skip</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.snap.mapping" t-as="m" t-key="m.id">
+                                <tr t-att-class="m.skip ? 'mv-dl-map-row--skip' : (m.target_field_id ? '' : 'mv-dl-map-row--warn')">
+                                    <td>
+                                        <code t-esc="m.source_column"/>
+                                    </td>
+                                    <td>
+                                        <select class="mv-dl-input"
+                                                t-on-change="(ev) => this.onMappingFieldChange(m.id, ev)">
+                                            <option value="">-- skip --</option>
+                                            <t t-foreach="state.targetFields" t-as="f" t-key="f.id">
+                                                <option t-att-value="f.id"
+                                                        t-att-selected="m.target_field_id === f.id ? 'selected' : null">
+                                                    <t t-esc="f.label"/>
+                                                    <t t-if="f.ttype"> · <t t-esc="f.ttype"/></t>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="mv-dl-input mv-dl-input--sm"
+                                               t-if="['many2one','one2many','many2many'].includes(m.target_ttype)"
+                                               t-att-value="m.match_key_for_m2o"
+                                               t-on-input="(ev) => this.onMappingKeyInput(m.id, ev)"
+                                               placeholder="name"/>
+                                        <span t-else="" class="mv-dl-muted">—</span>
+                                    </td>
+                                    <td class="mv-dl-mapping-table__skip">
+                                        <input type="checkbox"
+                                               t-att-checked="m.skip"
+                                               t-on-change="(ev) => this.onMappingSkipToggle(m.id, ev)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ==== STEP 4 - Preview (import only) ==== -->
+                <div t-if="state.step === 4" class="mv-dl-panel">
+                    <h2 class="mv-dl-panel__title">Preview &amp; validate</h2>
+                    <div class="mv-dl-preview-summary">
+                        <span class="mv-dl-badge mv-dl-badge--ok">
+                            <t t-esc="previewOkCount()"/> valid rows
+                        </span>
+                        <span t-att-class="'mv-dl-badge mv-dl-badge--' + (previewErrCount() ? 'err' : 'muted')">
+                            <t t-esc="previewErrCount()"/> with errors
+                        </span>
+                    </div>
+
+                    <table class="mv-dl-preview-table">
+                        <thead>
+                            <tr>
+                                <th>Row</th>
+                                <th>Status</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.snap.lines" t-as="l" t-key="l.id">
+                                <tr t-att-class="l.status === 'error' ? 'mv-dl-preview-row--err' : 'mv-dl-preview-row--ok'">
+                                    <td class="mv-dl-preview-table__num" t-esc="l.row_number"/>
+                                    <td>
+                                        <span t-att-class="'mv-dl-badge mv-dl-badge--' + (l.status === 'error' ? 'err' : 'ok')"
+                                              t-esc="l.status"/>
+                                    </td>
+                                    <td t-esc="l.message"/>
+                                </tr>
+                            </t>
+                            <tr t-if="state.snap.lines.length === 0">
+                                <td colspan="3" class="mv-dl-empty">
+                                    No preview rows yet. Go back to the previous step to re-run.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div t-if="previewErrCount() > 0" class="mv-dl-hint mv-dl-hint--warn">
+                        <strong>Heads up:</strong> the preview found errors. You can still
+                        run the import - error rows will be logged and (if "Skip row" is on)
+                        the rest will still process.
+                    </div>
+                </div>
+
+                <!-- ==== STEP 5 - Run + results ==== -->
+                <div t-if="state.step === 5" class="mv-dl-panel">
+                    <h2 class="mv-dl-panel__title">
+                        <t t-if="state.snap.state === 'done'">Done!</t>
+                        <t t-elif="state.snap.state === 'failed'">Failed</t>
+                        <t t-elif="state.snap.state === 'running'">Running...</t>
+                        <t t-else="">Ready to <t t-esc="isImport() ? 'import' : 'export'"/></t>
+                    </h2>
+
+                    <!-- Pre-run summary -->
+                    <t t-if="['draft','mapped','previewed'].includes(state.snap.state)">
+                        <div class="mv-dl-run-card">
+                            <div class="mv-dl-run-card__row">
+                                <span>Model</span>
+                                <strong t-esc="state.snap.model_label || state.snap.model_name || '-'"/>
+                            </div>
+                            <div class="mv-dl-run-card__row" t-if="isImport()">
+                                <span>File</span>
+                                <strong t-esc="state.snap.source_filename or '-'"/>
+                            </div>
+                            <div class="mv-dl-run-card__row" t-if="isImport()">
+                                <span>Mode</span>
+                                <strong t-esc="state.snap.mode"/>
+                            </div>
+                            <div class="mv-dl-run-card__row" t-if="isImport() and state.snap.match_field_name">
+                                <span>Match on</span>
+                                <strong>
+                                    <t t-esc="state.snap.match_field_name"/> (<t t-esc="state.snap.match_by"/>)
+                                </strong>
+                            </div>
+                            <div class="mv-dl-run-card__row" t-if="!isImport()">
+                                <span>Fields</span>
+                                <strong t-esc="state.snap.export_field_ids.length + ' selected'"/>
+                            </div>
+                            <div class="mv-dl-run-card__row" t-if="!isImport()">
+                                <span>Filter</span>
+                                <code t-esc="state.snap.export_domain"/>
+                            </div>
+                        </div>
+                        <button class="mv-dl-btn mv-dl-btn--primary mv-dl-btn--lg"
+                                t-att-disabled="state.executing ? 'disabled' : null"
+                                t-on-click="doExecute">
+                            <t t-if="state.executing">Running...</t>
+                            <t t-else="">
+                                <i class="fa fa-play"/>
+                                <t t-if="isImport()"> Run import</t>
+                                <t t-else=""> Run export</t>
+                            </t>
+                        </button>
+                    </t>
+
+                    <!-- Running -->
+                    <t t-if="state.snap.state === 'running' or state.executing">
+                        <div class="mv-dl-progress">
+                            <div class="mv-dl-progress__spinner"/>
+                            <div class="mv-dl-progress__label">
+                                Processing... this can take a moment for large files.
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- Done / Failed -->
+                    <t t-if="['done','failed'].includes(state.snap.state)">
+                        <div class="mv-dl-results-grid">
+                            <div class="mv-dl-result mv-dl-result--total">
+                                <div class="mv-dl-result__n" t-esc="state.snap.total_rows"/>
+                                <div class="mv-dl-result__lbl">Rows</div>
+                            </div>
+                            <div class="mv-dl-result mv-dl-result--ok">
+                                <div class="mv-dl-result__n" t-esc="state.snap.success_count"/>
+                                <div class="mv-dl-result__lbl">Succeeded</div>
+                            </div>
+                            <div class="mv-dl-result mv-dl-result--err">
+                                <div class="mv-dl-result__n" t-esc="state.snap.error_count"/>
+                                <div class="mv-dl-result__lbl">Errors</div>
+                            </div>
+                            <div class="mv-dl-result mv-dl-result--skip">
+                                <div class="mv-dl-result__n" t-esc="state.snap.skip_count"/>
+                                <div class="mv-dl-result__lbl">Skipped</div>
+                            </div>
+                        </div>
+
+                        <div class="mv-dl-download-row">
+                            <a t-if="state.snap.has_error_report"
+                               class="mv-dl-btn mv-dl-btn--secondary"
+                               t-att-href="downloadUrl('error_report')">
+                                <i class="fa fa-download"/> Error report CSV
+                            </a>
+                            <a t-if="state.snap.has_export"
+                               class="mv-dl-btn mv-dl-btn--primary"
+                               t-att-href="downloadUrl('exported_file')">
+                                <i class="fa fa-download"/> Download <t t-esc="state.snap.exported_filename"/>
+                            </a>
+                        </div>
+
+                        <table t-if="isImport() and state.snap.lines.length > 0" class="mv-dl-preview-table">
+                            <thead>
+                                <tr>
+                                    <th>Row</th>
+                                    <th>Status</th>
+                                    <th>Record ID</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.snap.lines" t-as="l" t-key="l.id">
+                                    <tr t-att-class="l.status === 'error' ? 'mv-dl-preview-row--err' : 'mv-dl-preview-row--ok'">
+                                        <td t-esc="l.row_number"/>
+                                        <td>
+                                            <span t-att-class="'mv-dl-badge mv-dl-badge--' + (l.status === 'error' ? 'err' : 'ok')"
+                                                  t-esc="l.status"/>
+                                        </td>
+                                        <td t-esc="l.res_id or ''"/>
+                                        <td t-esc="l.message"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+
+                <!-- ==== Footer: Back / Cancel / Next ==== -->
+                <div class="mv-dl-footer">
+                    <button class="mv-dl-btn mv-dl-btn--ghost"
+                            t-att-disabled="state.step === 1 ? 'disabled' : null"
+                            t-on-click="onBack">
+                        <i class="fa fa-arrow-left"/> Back
+                    </button>
+                    <div class="mv-dl-footer__spacer"/>
+                    <button class="mv-dl-btn mv-dl-btn--ghost"
+                            t-if="state.snap.state !== 'draft'"
+                            t-on-click="onCancel">
+                        <i class="fa fa-undo"/> Reset to draft
+                    </button>
+                    <button class="mv-dl-btn mv-dl-btn--primary"
+                            t-if="state.step &lt; 5"
+                            t-att-disabled="canGoNext() ? null : 'disabled'"
+                            t-on-click="onNext">
+                        Next <i class="fa fa-arrow-right"/>
+                    </button>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

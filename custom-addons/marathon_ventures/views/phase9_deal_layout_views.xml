@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- PHASE 9 - Deal Creation form redesign + Locked Key Facts ribbon.
+       Companion to phase9_deal_system_views.xml (developer-only fields).
+       Custom styling lives in static/src/scss/phase9_deal_layout.scss. -->
+
+  <record id="view_mv_deal_form_phase9_layout" model="ir.ui.view">
+    <field name="name">mv.deal.form.phase9.layout</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form"/>
+    <field name="priority">200</field>
+    <field name="arch" type="xml">
+
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+
+      <!-- (A) "New Deal" banner / record name strip -->
+      <xpath expr="//div[hasclass('oe_title')]" position="replace">
+        <div class="mv-deal-banner">
+          <span invisible="id">New Deal</span>
+          <span invisible="not id">
+            <field name="name" readonly="1" nolabel="1" class="oe_inline"/>
+          </span>
+        </div>
+      </xpath>
+
+      <!-- (B) Locked Key Deal Facts ribbon (top, all tabs) -->
+      <xpath expr="//notebook" position="before">
+        <group name="key_deal_facts_ribbon"
+               class="mv-key-ribbon"
+               string="Key Deal Facts"
+               invisible="not id"
+               col="6">
+               <group col="1">
+                    <field name="program" readonly="1" force_save="1"/>
+                </group>
+              <group col="1">
+                <field name="brands" readonly="1" force_save="1"/>
+            </group>
+            <group col="1">
+                <field name="advertiser" readonly="1" force_save="1"/>
+            </group>
+            <group col="1">
+                <field name="contactaccount" string="Account" readonly="1" force_save="1"/>
+            </group>
+            <group col="1">
+                <field name="length" readonly="1" force_save="1"/>
+            </group>
+            <group col="1">
+                <field name="network_deal_number" string="Order Number" readonly="1" force_save="1"/>
+            </group>
+        </group>
+      </xpath>
+
+      <!-- (C) Replace Details page with the redesigned essentials layout -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details" name="page_details">
+
+          <div class="mv-section-label">CAMPAIGN INFORMATION</div>
+          <!-- Three sibling inner-groups give us a true 3-column grid in
+               Odoo 19 (col=6 / colspan=2 on fields is unreliable in OWL).
+               The .mv-essentials-grid class is the CSS hook for vertical
+               label/input stacking (phase9_deal_layout.scss). -->
+          <group col="3" name="grp_campaign_info" class="mv-essentials-grid">
+            <group>
+              <field name="program" required="1"
+                     placeholder="Select program..."/>
+              <field name="advertiser" string="Advertiser"
+                     required="1"
+                     placeholder="Select advertiser..."/>
+            </group>
+            <group>
+              <field name="brands" required="1"
+                     placeholder="Select brand..."/>
+              <field name="contact" string="Contact / Account" placeholder="Select contact..." required="1"
+                     context="{'partner_display_contact_first': True}"/>
+            </group>
+            <group>
+              <field name="campaign" placeholder="e.g., 2Q26 :30 spot"/>
+            </group>
+          </group>
+
+          <div class="mv-section-label">SPOT DETAILS</div>
+          <group col="3" name="grp_spot_details" class="mv-essentials-grid">
+            <group>
+              <field name="length" required="1"/>
+            </group>
+            <group>
+              <field name="commercial_type" string="Commercial Type" required="1"/>
+            </group>
+            <group>
+              <field name="min_sep" string="Minimum Separation"
+                     class="mv-highlight" required="1"/>
+            </group>
+          </group>
+
+          <div class="mv-section-label">Network DETAILS</div>
+          <group col="3" name="grp_nwtwork_details" class="mv-essentials-grid">
+            <group>
+              <field name="network_deal_number"/>
+            </group>
+            <group>
+              <field name="product_code" required="1"/>
+            </group>
+            <group>
+              <field name="access_code" required="1" />
+            </group>
+          </group>
+          <group col="3" name="grp_nwtwork_details" class="mv-essentials-grid">
+            <group>
+              <field name="client_code" required="1"/>
+            </group>
+            <group>
+              <field name="estimate" required="1"/>
+            </group>
+            <group>
+              <field name="pi"/>
+            </group>
+            <group>
+              <field name="create_uid" readonly="1"/>
+            </group>
+          </group>
+
+          <!-- Inline collapse bar for Additional details -->
+          <div class="mv-additional-bar" name="mv_additional_bar">
+            <span>
+              <button name="action_toggle_additional_details"
+                      type="object"
+                      class="btn btn-link p-0 mv-additional-caret"
+                      string=" "/>
+              <span class="mv-additional-label">
+                Additional details (notes, account exec, billing code, system flags)
+              </span>
+            </span>
+            <span class="mv-additional-hint">
+              <span invisible="show_additional_details">collapsed by default</span>
+              <span invisible="not show_additional_details">expanded</span>
+            </span>
+          </div>
+          <field name="show_additional_details" invisible="1"/>
+
+          <group col="6" name="grp_additional"
+                 invisible="not show_additional_details">
+            <group string="Workflow / Scheduling" colspan="3">
+              <field name="sales_plan"/>
+              <!-- <field name="bundle_action"/>
+              <field name="bundle_start_week"/>
+              <field name="bundle_version"/> -->
+              <field name="status"/>
+              <field name="quarter"/>
+              <field name="tier"/>
+              <field name="x_class"/>
+              <field name="log_exp_date"/>
+              <field name="ltc_date"/>
+              <field name="week_pending"/>
+              <field name="hiatus_dates"/>
+              <field name="demographics"/>
+              <field name="restricted_programming_dna" widget="many2many_tags"/>
+              <field name="agency_deal_number"/>
+              <field name="access_code"/>
+              <field name="estimate"/>
+              <field name="client_code"/>
+              <field name="digital_id"/>
+              <field name="product_code"/>
+              <field name="raycom_comments"/>
+            </group>
+
+            <group string="Pricing / Flags / Computed" colspan="3">
+              <field name="rate"/>
+              <field name="budget_30"/>
+              <field name="max_sep"/>
+              <field name="max_day"/>
+              <field name="year"/>
+              <field name="actual_rating_year" readonly="1"/>
+              <field name="ratings_year"       readonly="1"/>
+              <field name="ratings_quarter"    readonly="1"/>
+              <field name="e_i_friendly"/>
+              <field name="priority"/>
+              <field name="revised"/>
+              <field name="test_pp"/>
+              <field name="schedule_count"       readonly="1"/>
+              <field name="total_booked_units"   readonly="1"/>
+              <field name="total_booked_dollars" widget="monetary" readonly="1"/>
+              <field name="currency_id"          invisible="1"/>
+              <field name="commercial_type"      readonly="1"/>
+              <field name="contact_email"        readonly="1"/>
+              <field name="entity_name"          readonly="1"/>
+              <field name="deal_count"           readonly="1"/>
+            </group>
+          </group>
+
+          <!-- Footer: Cancel | Save Deal -->
+          <div class="mv-form-footer">
+            <a href="#"
+              role="button"
+              class="btn btn-secondary mv_cancel_deal">
+                Cancel
+            </a>
+            <button name="action_save_record" type="object"
+                    string="Save Deal" class="btn btn-primary"/>
+          </div>
+
+        </page>
+      </xpath>
+
+    </field>
+  </record>
+</odoo>

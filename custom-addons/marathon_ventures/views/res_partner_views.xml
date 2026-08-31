@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!--
+    Marathon Ventures Account (res.partner) form.
+
+    All Salesforce Account fields live inside a SINGLE new "Details"
+    tab added to the standard res.partner notebook. The tab contains
+    five sections (groups) that mirror the SF screenshot:
+      * Account Detail
+      * Finance Details
+      * Teams
+      * Nosey
+      * System Information
+    No section is exposed as its own tab. Existing base tabs are
+    untouched.
+  -->
+  <record id="view_res_partner_mv_form" model="ir.ui.view">
+    <field name="name">res.partner.mv.form</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+      <!-- Prepend the Details page as the FIRST tab in the notebook.
+           Odoo auto-opens the first page, so Details becomes the
+           default landing tab when a contact form is opened. -->
+      <xpath expr="//notebook/page[1]" position="before">
+        <page string="Details" name="mv_details" autofocus="autofocus" active="true">
+
+          <!-- ====================== Account Detail ====================== -->
+          <group string="Account Detail" name="mv_group_account_detail">
+            <group>
+              <field name="primary_contact"/>
+              <field name="parent_id"/>
+              <field name="account_type"/>
+              <field name="billing_contact"/>
+            </group>
+            <group>
+              <field name="agency_status"/>
+              <field name="region"/>
+              <field name="silver_team_accounts" widget="many2many_tags"/>
+            </group>
+          </group>
+
+          <!-- ====================== Email CCs ====================== -->
+          <!-- Only exposed on Contact (person) records - Accounts /
+               Companies never CC prelog / postlog emails, so hide
+               the whole group when is_company is True. -->
+          <group string="Notification CCs" name="mv_group_email_ccs"
+                 invisible="is_company">
+            <field name="prelog_cc" widget="mv_email_tags"/>
+            <field name="logs_cc" widget="mv_email_tags"/>
+          </group>
+
+          <!-- ====================== Finance Details ====================== -->
+          <group string="Finance Details" name="mv_group_finance_details">
+            <group>
+              <field name="hold_placed_on_agency_account"/>
+              <field name="weekly_billing"/>
+              <field name="monitoring"/>
+              <field name="cia"/>
+              <field name="cia_notes"/>
+              <field name="inactive"/>
+              <field name="intacct_vendor_id"/>
+              <field name="intacctid"/>
+              <field name="netsuite_vendor_id"/>
+              <field name="netsuite_customer_id"/>
+            </group>
+            <group>
+              <field name="marathon_commission_x"/>
+              <field name="network_commission"/>
+              <field name="credit_check"/>
+              <field name="intacct_credit_limit"/>
+              <field name="netsuite_balance"/>
+              <field name="agency_log"/>
+              <field name="log_w_expiration_date"/>
+              <field name="emt_agency_codes_required"/>
+              <field name="emt_code"/>
+            </group>
+          </group>
+
+          <!-- ====================== Teams ====================== -->
+          <group string="Teams" name="mv_group_teams">
+            <group>
+              <field name="x_class"/>
+              <field name="emerald_ae"/>
+              <field name="fire_ae_bounce" string="Fire AE"/>
+              <field name="green_ae"/>
+              <field name="onyx_ae"/>
+              <field name="jade_ae"/>
+              <field name="lime_ae"/>
+              <field name="last_sf_deal"/>
+              <field name="last_lf_deal"/>
+            </group>
+            <group>
+              <field name="yellow_ae"/>
+              <field name="silver_ae"/>
+              <field name="fire2" string="Wolf AE"/>
+              <field name="maple_ae"/>
+              <field name="oak_ae"/>
+              <field name="pine_ae"/>
+              <field name="panther_ae"/>
+              <field name="platinum_ae"/>
+              <field name="teal_ae"/>
+            </group>
+          </group>
+
+          <!-- ====================== Nosey ====================== -->
+          <group string="Nosey" name="mv_group_nosey">
+            <group>
+              <field name="nosey" string="Nosey Performing Rights Licenses"/>
+              <field name="performing_rights_license_payment_terms"/>
+            </group>
+            <group>
+              <field name="performing_rights_license_pymt_comments"/>
+              <field name="nosey_performing_rights_license_comments"/>
+            </group>
+          </group>
+
+          <!-- ====================== System Information ====================== -->
+          <group string="System Information" name="mv_group_system_information">
+            <group>
+              <field name="create_uid" readonly="1" string="Created By"/>
+              <field name="create_date" readonly="1" string="Created On"/>
+            </group>
+            <group>
+              <field name="write_uid" readonly="1" string="Last Modified By"/>
+              <field name="write_date" readonly="1" string="Last Modified On"/>
+            </group>
+          </group>
+
+          <!-- SF Metadata kept inside Details (dev-only visibility) -->
+          <group string="SF Metadata" name="mv_group_sf_metadata"
+                 groups="base.group_no_one">
+            <field name="sf_external_id"/>
+            <field name="sf_legacy_data"/>
+          </group>
+
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_spot_data_list" model="ir.ui.view">
+    <field name="name">mv.spot_data.list</field>
+    <field name="model">mv.spot_data</field>
+    <field name="arch" type="xml">
+      <list string="Spot Data">
+        <field name="name"/>
+        <field name="am_pm"/>
+        <field name="agency_commission"/>
+        <field name="air_date_time"/>
+        <field name="air_date_yyyy"/>
+        <field name="air_date"/>
+        <field name="air_time"/>
+        <field name="availability"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_spot_data_form" model="ir.ui.view">
+    <field name="name">mv.spot_data.form</field>
+    <field name="model">mv.spot_data</field>
+    <field name="arch" type="xml">
+      <form string="Spot Data">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="schedule"/>
+                <field name="prelog_data"/>
+                <field name="spotdatamirror"/>
+                <field name="station"/>
+                <field name="length"/>
+                <field name="status"/>
+                <field name="air_date"/>
+                <field name="spot_week"/>
+                <field name="air_date_time"/>
+                <field name="air_date_yyyy"/>
+                <field name="air_time"/>
+                <field name="am_pm"/>
+                <field name="brand"/>
+                <field name="broadcast_network"/>
+                <field name="commercial_title"/>
+                <field name="day_of_week"/>
+                <field name="daypart"/>
+                <field name="error_mirror"/>
+                <field name="hour"/>
+                <field name="hour_of_day"/>
+                <field name="isci"/>
+                <field name="line_number"/>
+                <field name="long_form"/>
+                <field name="main_broadcast_program"/>
+                <field name="network_deal_number"/>
+                <field name="pod"/>
+                <field name="product"/>
+                <field name="program"/>
+                <field name="program_id"/>
+                <field name="rate_check"/>
+              </group>
+              <group>
+                <field name="raycom_invoice_number"/>
+                <field name="raycom_order_account_brand"/>
+                <field name="raycom_order_number"/>
+                <field name="schedule_id"/>
+                <field name="sdm_created_by"/>
+                <field name="spotdatamirror_reference"/>
+                <field name="spotdataref"/>
+                <field name="station_market_affiliate"/>
+                <field name="time_period"/>
+                <field name="x800"/>
+                <field name="availability"/>
+                <field name="log_schedule_mismatch"/>
+                <field name="long_form_match"/>
+                <field name="snowflake_transferred"/>
+                <field name="spotdatarefequal"/>
+                <field name="agency_commission"/>
+                <field name="bundle"/>
+                <field name="bundle_avail_30"/>
+                <field name="bundle_spot_30"/>
+                <field name="bundle_spot_rate"/>
+                <field name="error"/>
+                <field name="impressions"/>
+                <field name="long_form_rate"/>
+                <field name="main_network"/>
+                <field name="net_total"/>
+                <field name="schedule_rate"/>
+                <field name="spot_30_rate"/>
+                <field name="spot_equiv_30"/>
+                <field name="spot_rate"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_spot_data_search" model="ir.ui.view">
+    <field name="name">mv.spot_data.search</field>
+    <field name="model">mv.spot_data</field>
+    <field name="arch" type="xml">
+      <search string="Spot Data">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_spot_data" model="ir.actions.act_window">
+    <field name="name">Spot Data</field>
+    <field name="res_model">mv.spot_data</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- The Spot Data menu opens the workbench, mirroring Prelog Workbench.
+       action_mv_spot_data (list/form) above is intentionally kept: it is the
+       form the workbench's Review button opens, it just no longer has its own
+       menu entry. -->
+  <record id="action_mv_postlog_workbench" model="ir.actions.client">
+    <field name="name">Postlog Workbench</field>
+    <field name="tag">mv_postlog_matching</field>
+    <field name="target">main</field>
+  </record>
+
+  <menuitem id="menu_mv_spot_data"
+            name="Postlog Workbench"
+            parent="menu_mv_operations"
+            action="action_mv_postlog_workbench"
+            sequence="9"
+            groups="marathon_ventures.group_postlog_matching"/>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_credit_application_list" model="ir.ui.view">
+    <field name="name">mv.credit_application.list</field>
+    <field name="model">mv.credit_application</field>
+    <field name="arch" type="xml">
+      <list string="Credit Application">
+        <field name="name"/>
+        <field name="aor_received"/>
+        <field name="account"/>
+        <field name="active"/>
+        <field name="advertiser_open_balance"/>
+        <field name="advertiser_website"/>
+        <field name="advertiser"/>
+        <field name="agency_log_comments"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_credit_application_form" model="ir.ui.view">
+    <field name="name">mv.credit_application.form</field>
+    <field name="model">mv.credit_application</field>
+    <field name="arch" type="xml">
+      <form string="Credit Application">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="advertiser_website"/>
+                <field name="agency_website"/>
+                <field name="account"/>
+                <field name="advertiser"/>
+                <field name="credit_application"/>
+                <field name="aor_received"/>
+                <field name="application_status"/>
+                <field name="application_type"/>
+                <field name="credit_limit_details"/>
+                <field name="cs_score"/>
+                <field name="db"/>
+                <field name="finance_recommended_terms"/>
+                <field name="sf_bookings_avg_type"/>
+                <field name="terms_granted"/>
+                <field name="application_submitted"/>
+                <field name="log_expiration_date"/>
+                <field name="agency_log_comments"/>
+                <field name="client_information"/>
+                <field name="comments"/>
+                <field name="cs_trade_lines"/>
+                <field name="finance_credit_term_support"/>
+                <field name="finance_review_comments"/>
+              </group>
+              <group>
+                <field name="google_search"/>
+                <field name="google_search_comments"/>
+                <field name="last_sale_date"/>
+                <field name="sf_bookings_notes"/>
+                <field name="sf_ref_id"/>
+                <field name="start_date"/>
+                <field name="active"/>
+                <field name="agency_log"/>
+                <field name="hold_placed_on_account_advertiser"/>
+                <field name="advertiser_open_balance"/>
+                <field name="avg_days_to_pay_6_months"/>
+                <field name="business_type"/>
+                <field name="credit_granted"/>
+                <field name="cs_risk"/>
+                <field name="current_credit_limit"/>
+                <field name="finance_recommended_credit"/>
+                <field name="last_year_gross_sales"/>
+                <field name="new_credit_limit"/>
+                <field name="old_credit_limit"/>
+                <field name="open_balance"/>
+                <field name="sf_bookings"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_credit_application_search" model="ir.ui.view">
+    <field name="name">mv.credit_application.search</field>
+    <field name="model">mv.credit_application</field>
+    <field name="arch" type="xml">
+      <search string="Credit Application">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_credit_application" model="ir.actions.act_window">
+    <field name="name">Credit Application</field>
+    <field name="res_model">mv.credit_application</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_credit_application" name="Credit Application" parent="menu_mv_finance" action="action_mv_credit_application"/>
+</odoo>

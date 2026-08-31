@@ -1,0 +1,145 @@
+.o_field_mv_related_tab {
+    width: 100%;
+}
+
+/* ============================================================
+   Related Tab (Phase 19) - Salesforce-style panel.
+   Scoped entirely under .mv-related; never leaks out.
+   ============================================================ */
+.mv-related {
+    padding: 12px 4px;
+
+    &__hint,
+    &__error {
+        padding: 16px;
+        color: #6c757d;
+        font-size: 13px;
+        text-align: center;
+    }
+    &__error { color: #842029; }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 16px;
+    }
+}
+
+.mv-related-section {
+    background: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 2px rgba(15,17,21,0.04);
+    transition: box-shadow 0.15s, transform 0.15s;
+
+    &:hover {
+        box-shadow: 0 2px 6px rgba(15,17,21,0.08);
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eceef1;
+        margin-bottom: 8px;
+    }
+    &__title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1d22;
+    }
+    &__count {
+        font-size: 13px;
+        color: #6c757d;
+        font-weight: 600;
+        &.is-empty { opacity: 0.6; }
+    }
+    &__view-all {
+        margin-left: auto;
+        padding: 2px 8px !important;
+        font-size: 12px !important;
+        font-weight: 600;
+        color: #0d6efd !important;
+        text-decoration: none !important;
+        &:hover { text-decoration: underline !important; }
+        i { margin-left: 2px; font-size: 11px; }
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    &__item {
+        padding: 4px 0;
+        font-size: 13px;
+        a {
+            color: #0d6efd;
+            text-decoration: none;
+            &:hover { text-decoration: underline; }
+        }
+    }
+    &__more {
+        margin-top: 6px;
+        color: #6c757d;
+        font-size: 12px;
+        font-style: italic;
+    }
+    &__empty {
+        padding: 8px 0;
+        color: #6c757d;
+        font-size: 13px;
+        font-style: italic;
+    }
+    &__denied {
+        padding: 8px 0;
+        color: #6c757d;
+        font-size: 13px;
+        i { margin-right: 4px; color: #dc3545; }
+    }
+
+    // Record-name link inside the first column of each table row.
+    &__record-name {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: 600;
+        &:hover { text-decoration: underline; }
+    }
+
+    // Salesforce-style compact table for related records.
+    // Row heights are tight, header is subtle uppercase, per-cell
+    // borders keep the column separation crisp on wide sections.
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12.5px;
+        margin-top: 4px;
+    }
+    &__th {
+        text-align: left;
+        padding: 6px 10px;
+        border-bottom: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        &--name { width: 40%; }
+    }
+    &__td {
+        padding: 6px 10px;
+        border-bottom: 1px solid #eceef1;
+        color: #1a1d22;
+        vertical-align: top;
+        word-break: break-word;
+        &--name { font-weight: 500; }
+    }
+    &__tr {
+        transition: background-color 0.1s;
+        &:hover td { background-color: #f9fafb; }
+    }
+
+}

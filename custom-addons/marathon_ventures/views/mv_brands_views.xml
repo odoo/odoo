@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_brands_list" model="ir.ui.view">
+    <field name="name">mv.brands.list</field>
+    <field name="model">mv.brands</field>
+    <field name="arch" type="xml">
+      <list string="Brands">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="advertiser"/>
+        <field name="alternate_brand_names"/>
+        <field name="approval_status"/>
+        <field name="approved_duplicate"/>
+        <field name="brand_number"/>
+        <field name="category"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_brands_form" model="ir.ui.view">
+    <field name="name">mv.brands.form</field>
+    <field name="model">mv.brands</field>
+    <field name="arch" type="xml">
+      <form string="Brands">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="advertiser"/>
+                <field name="account"/>
+                <field name="approval_status"/>
+                <field name="approved_duplicate"/>
+                <field name="category"/>
+                <field name="primary_demographic"/>
+              </group>
+              <group>
+                <field name="alternate_brand_names"/>
+                <field name="brand_number"/>
+                <field name="digital_id"/>
+                <field name="unique_brand_identifer"/>
+                <field name="e_i_friendly"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_brands_search" model="ir.ui.view">
+    <field name="name">mv.brands.search</field>
+    <field name="model">mv.brands</field>
+    <field name="arch" type="xml">
+      <search string="Brands">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_brands" model="ir.actions.act_window">
+    <field name="name">Brands</field>
+    <field name="res_model">mv.brands</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_brands" name="Brands" parent="menu_mv_master_data" action="action_mv_brands"/>
+</odoo>

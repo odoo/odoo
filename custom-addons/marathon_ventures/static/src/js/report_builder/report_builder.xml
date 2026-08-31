@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvReportBuilder">
+    <div class="mv-rb">
+
+      <!-- ============== HEADER ============== -->
+      <div class="mv-rb__header">
+        <div class="mv-rb__header-left">
+          <div class="mv-rb__crumb">REPORT</div>
+          <input class="mv-rb__name" t-att-value="state.report.name"
+                 t-on-input="(ev) => this.onNameInput(ev)"
+                 placeholder="Report name"/>
+          <input class="mv-rb__desc" t-att-value="state.report.description"
+                 t-on-input="(ev) => this.onDescInput(ev)"
+                 placeholder="Add a description…"/>
+        </div>
+        <div class="mv-rb__header-right">
+          <button class="btn btn-light btn-sm" t-on-click="onSaveAndRun">Save &amp; Run</button>
+          <button class="btn btn-light btn-sm" t-on-click="onSave"
+                  t-att-disabled="state.saving">
+            <t t-esc="state.saving ? 'Saving…' : 'Save'"/>
+          </button>
+          <button class="btn btn-light btn-sm" t-on-click="onClose">Close</button>
+          <button class="btn btn-primary btn-sm" t-on-click="onRun">Run</button>
+        </div>
+      </div>
+
+      <!-- ============== 4-PANEL BODY ============== -->
+      <div class="mv-rb__body" t-if="state.loaded">
+
+        <!-- Panel 1: Data Sources = Report Types -->
+        <aside class="mv-rb__panel mv-rb__sources">
+          <div class="mv-rb__panel-title">Report Types</div>
+          <input class="mv-rb__search" placeholder="Search report types…"
+                 t-att-value="state.reportTypeSearch"
+                 t-on-input="(ev) => state.reportTypeSearch = ev.target.value"/>
+          <div class="mv-rb__model-list">
+            <button t-foreach="filteredReportTypes" t-as="rt" t-key="rt.id"
+                    t-att-class="'mv-rb__model' + (rt.id === state.selectedReportTypeId ? ' mv-rb__model--active' : '')"
+                    t-on-click="() => this.selectReportType(rt.id)"
+                    t-att-title="rt.description || ''">
+              <span class="mv-rb__model-name" t-esc="rt.name"/>
+              <span class="mv-rb__model-count"
+                    t-esc="rt.node_count + (rt.node_count === 1 ? ' join' : ' joins')"/>
+            </button>
+            <div t-if="filteredReportTypes.length === 0" class="mv-rb__empty">
+              No report types yet. Ask an admin to create one under
+              Marathon Ventures → Report Types.
+            </div>
+          </div>
+        </aside>
+
+        <!-- Panel 2: Available Fields, grouped by NODE -->
+        <aside class="mv-rb__panel mv-rb__fields">
+          <div class="mv-rb__panel-title">
+            Fields
+            <span class="mv-rb__panel-sub"
+                  t-esc="state.report.report_type_name || ''"/>
+          </div>
+          <input class="mv-rb__search" placeholder="Search fields…"
+                 t-att-value="state.fieldSearch"
+                 t-on-input="(ev) => state.fieldSearch = ev.target.value"/>
+          <div class="mv-rb__field-list">
+            <div t-foreach="filteredFieldNodes" t-as="node"
+                 t-key="'nd-' + (node.node_id || 'base')"
+                 class="mv-rb__field-group">
+              <div class="mv-rb__field-group-header"
+                   t-att-title="node.path_prefix ? 'Path: ' + node.path_prefix : 'Base model'">
+                <span class="mv-rb__field-group-label" t-esc="node.label"/>
+                <span class="mv-rb__field-group-count"
+                      t-esc="node.fields.length + ' fields'"/>
+              </div>
+              <div t-foreach="node.fields" t-as="f" t-key="f.path"
+                   class="mv-rb__field"
+                   draggable="true"
+                   t-on-dragstart="(ev) => this.onFieldDragStart(f, ev)">
+                <span class="mv-rb__field-icon"
+                      t-esc="f.ttype === 'integer' or f.ttype === 'float' or f.ttype === 'monetary' ? '#' : (f.ttype === 'date' or f.ttype === 'datetime' ? '📅' : (f.ttype === 'boolean' ? '☐' : 'Aa'))"/>
+                <span class="mv-rb__field-label" t-esc="f.label"/>
+                <span class="mv-rb__field-type" t-esc="f.ttype"/>
+              </div>
+            </div>
+            <div t-if="filteredFieldNodes.length === 0" class="mv-rb__empty">
+              Pick a Report Type first.
+            </div>
+          </div>
+        </aside>
+
+        <!-- Panel 3: Builder Canvas -->
+        <main class="mv-rb__panel mv-rb__canvas">
+          <!-- Columns -->
+          <div class="mv-rb__zone"
+               t-on-dragover="(ev) => this.onDragOver(ev)"
+               t-on-drop="(ev) => this.onDropColumn(ev)">
+            <div class="mv-rb__zone-title">
+              Selected Columns
+              <span class="mv-rb__zone-hint">drag fields here · drag chips to reorder</span>
+            </div>
+            <div class="mv-rb__zone-list">
+              <div t-foreach="state.report.columns" t-as="c" t-key="'col-' + c_index"
+                   class="mv-rb__chip mv-rb__chip--col"
+                   t-on-dragover="(ev) => this.onColumnDragOverItem(c_index, ev)"
+                   t-on-dragleave="(ev) => this.onColumnDragLeaveItem(c_index, ev)"
+                   t-on-drop="(ev) => this.onColumnDropOnItem(c_index, ev)">
+                <span class="mv-rb__chip-handle" title="Drag to reorder"
+                      draggable="true"
+                      t-on-dragstart="(ev) => this.onColumnDragStart(c_index, ev)"
+                      t-on-dragend="(ev) => this._endDrag(ev)">⋮⋮</span>
+                <input class="mv-rb__chip-label" t-att-value="c.label"
+                       draggable="false"
+                       t-on-input="(ev) => this.onColumnLabelInput(c_index, ev)"/>
+                <span class="mv-rb__chip-path" t-if="c.path and c.path !== c.field_name"
+                      t-esc="c.path"/>
+                <select class="mv-rb__chip-agg"
+                        draggable="false"
+                        t-on-change="(ev) => this.onColumnAggSelect(c_index, ev)">
+                  <option value="none" t-att-selected="c.aggregation === 'none' ? 'selected' : null">—</option>
+                  <option value="sum" t-att-selected="c.aggregation === 'sum' ? 'selected' : null">Sum</option>
+                  <option value="avg" t-att-selected="c.aggregation === 'avg' ? 'selected' : null">Avg</option>
+                  <option value="count" t-att-selected="c.aggregation === 'count' ? 'selected' : null">Count</option>
+                  <option value="count_distinct" t-att-selected="c.aggregation === 'count_distinct' ? 'selected' : null">Distinct</option>
+                  <option value="min" t-att-selected="c.aggregation === 'min' ? 'selected' : null">Min</option>
+                  <option value="max" t-att-selected="c.aggregation === 'max' ? 'selected' : null">Max</option>
+                </select>
+                <button class="mv-rb__chip-x" draggable="false"
+                        t-on-click="() => this.removeColumn(c_index)">×</button>
+              </div>
+              <div t-if="state.report.columns.length === 0" class="mv-rb__zone-empty">
+                Drag fields from the left to add columns.
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="mv-rb__zone"
+               t-on-dragover="(ev) => this.onDragOver(ev)"
+               t-on-drop="(ev) => this.onDropFilter(ev)">
+            <div class="mv-rb__zone-title">Filters</div>
+            <div class="mv-rb__zone-list">
+              <div t-foreach="state.report.filters" t-as="f" t-key="'flt-' + f_index"
+                   class="mv-rb__filter">
+                <span class="mv-rb__filter-label" t-esc="f.label"/>
+                <select class="mv-rb__filter-op"
+                        t-on-change="(ev) => this.onFilterOpSelect(f_index, ev)">
+                  <option value="=" t-att-selected="f.operator === '=' ? 'selected' : null">Equals</option>
+                  <option value="!=" t-att-selected="f.operator === '!=' ? 'selected' : null">Not Equals</option>
+                  <option value="ilike" t-att-selected="f.operator === 'ilike' ? 'selected' : null">Contains</option>
+                  <option value="not ilike" t-att-selected="f.operator === 'not ilike' ? 'selected' : null">Does Not Contain</option>
+                  <option value="=like" t-att-selected="f.operator === '=like' ? 'selected' : null">Starts With</option>
+                  <option value="like%" t-att-selected="f.operator === 'like%' ? 'selected' : null">Ends With</option>
+                  <option value=">" t-att-selected="f.operator === '>' ? 'selected' : null">Greater Than</option>
+                  <option value="&lt;" t-att-selected="f.operator === '&lt;' ? 'selected' : null">Less Than</option>
+                  <option value=">=" t-att-selected="f.operator === '>=' ? 'selected' : null">≥</option>
+                  <option value="&lt;=" t-att-selected="f.operator === '&lt;=' ? 'selected' : null">≤</option>
+                  <option value="in" t-att-selected="f.operator === 'in' ? 'selected' : null">In</option>
+                  <option value="not in" t-att-selected="f.operator === 'not in' ? 'selected' : null">Not In</option>
+                </select>
+                <!-- Type-aware value input: pick the widget per
+                     ttype so the planner enters a valid value the
+                     first time (date picker for date fields, dropdown
+                     for boolean/selection, numeric input for
+                     numbers, etc.). All variants share the same
+                     onFilterValueInput handler, which just stores
+                     ev.target.value verbatim. -->
+                <t t-if="f.ttype === 'date'">
+                  <input class="mv-rb__filter-value" type="date"
+                         t-att-value="f.value"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <t t-elif="f.ttype === 'datetime'">
+                  <input class="mv-rb__filter-value" type="datetime-local"
+                         t-att-value="f.value"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <t t-elif="f.ttype === 'boolean'">
+                  <select class="mv-rb__filter-value"
+                          t-on-change="(ev) => this.onFilterValueInput(f_index, ev)">
+                    <option value="" t-att-selected="!f.value ? 'selected' : null">—</option>
+                    <option value="true"
+                            t-att-selected="(f.value === 'true' || f.value === '1') ? 'selected' : null">True</option>
+                    <option value="false"
+                            t-att-selected="(f.value === 'false' || f.value === '0') ? 'selected' : null">False</option>
+                  </select>
+                </t>
+                <t t-elif="f.ttype === 'selection' and f.selection">
+                  <select class="mv-rb__filter-value"
+                          t-on-change="(ev) => this.onFilterValueInput(f_index, ev)">
+                    <option value="" t-att-selected="!f.value ? 'selected' : null">—</option>
+                    <option t-foreach="f.selection" t-as="opt" t-key="opt.value"
+                            t-att-value="opt.value"
+                            t-att-selected="f.value === opt.value ? 'selected' : null">
+                      <t t-esc="opt.label"/>
+                    </option>
+                  </select>
+                </t>
+                <t t-elif="f.ttype === 'integer' or f.ttype === 'float' or f.ttype === 'monetary'">
+                  <input class="mv-rb__filter-value" type="number" step="any"
+                         t-att-value="f.value" placeholder="value…"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <t t-else="">
+                  <input class="mv-rb__filter-value" t-att-value="f.value"
+                         placeholder="value…"
+                         t-on-input="(ev) => this.onFilterValueInput(f_index, ev)"/>
+                </t>
+                <button class="mv-rb__chip-x"
+                        t-on-click="() => this.removeFilter(f_index)">×</button>
+              </div>
+              <div t-if="state.report.filters.length === 0" class="mv-rb__zone-empty">
+                Drop a field to add a filter.
+              </div>
+            </div>
+          </div>
+
+          <!-- Groups -->
+          <div class="mv-rb__zone"
+               t-on-dragover="(ev) => this.onDragOver(ev)"
+               t-on-drop="(ev) => this.onDropGroup(ev)">
+            <div class="mv-rb__zone-title">Group By</div>
+            <div class="mv-rb__zone-list">
+              <div t-foreach="state.report.groups" t-as="g" t-key="'grp-' + g_index"
+                   class="mv-rb__chip">
+                <span class="mv-rb__chip-label" t-esc="g.label"/>
+                <button class="mv-rb__chip-x"
+                        t-on-click="() => this.removeGroup(g_index)">×</button>
+              </div>
+              <div t-if="state.report.groups.length === 0" class="mv-rb__zone-empty">
+                Drop a field to group by.
+              </div>
+            </div>
+          </div>
+
+          <!-- Sort -->
+          <div class="mv-rb__zone"
+               t-on-dragover="(ev) => this.onDragOver(ev)"
+               t-on-drop="(ev) => this.onDropSort(ev)">
+            <div class="mv-rb__zone-title">Sort</div>
+            <div class="mv-rb__zone-list">
+              <div t-foreach="state.report.sorts" t-as="s" t-key="'srt-' + s_index"
+                   class="mv-rb__chip">
+                <span class="mv-rb__chip-label" t-esc="s.label"/>
+                <select class="mv-rb__chip-agg"
+                        t-on-change="(ev) => this.onSortDirSelect(s_index, ev)">
+                  <option value="asc" t-att-selected="s.direction === 'asc' ? 'selected' : null">Asc</option>
+                  <option value="desc" t-att-selected="s.direction === 'desc' ? 'selected' : null">Desc</option>
+                </select>
+                <button class="mv-rb__chip-x"
+                        t-on-click="() => this.removeSort(s_index)">×</button>
+              </div>
+              <div t-if="state.report.sorts.length === 0" class="mv-rb__zone-empty">
+                Drop a field to sort by.
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Panel 4: Live Preview -->
+        <aside class="mv-rb__panel mv-rb__preview">
+          <div class="mv-rb__panel-title">
+            Live Preview
+            <span class="mv-rb__panel-sub">
+              <t t-esc="state.preview.total"/> total ·
+              showing <t t-esc="state.preview.offset + 1"/>–<t t-esc="Math.min(state.preview.offset + state.preview.limit, state.preview.total)"/>
+            </span>
+          </div>
+          <div t-if="state.previewLoading" class="mv-rb__loading">Loading…</div>
+          <div class="mv-rb__preview-table-wrap">
+            <table class="mv-rb__preview-table" t-if="state.preview.columns.length">
+              <thead>
+                <tr>
+                  <th class="mv-rb__preview-idx">#</th>
+                  <th t-foreach="state.preview.columns" t-as="c" t-key="c.key">
+                    <t t-esc="c.label"/>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr t-foreach="state.preview.rows" t-as="row" t-key="row._id">
+                  <td class="mv-rb__preview-idx" t-esc="state.preview.offset + row_index + 1"/>
+                  <td t-foreach="state.preview.columns" t-as="c" t-key="c.key">
+                    <t t-esc="row[c.key]"/>
+                  </td>
+                </tr>
+                <tr t-if="state.preview.rows.length === 0">
+                  <td t-att-colspan="state.preview.columns.length + 1"
+                      class="mv-rb__preview-empty">
+                    No matching rows. Adjust filters or pick more columns.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div t-if="state.preview.columns.length === 0" class="mv-rb__preview-empty">
+              Add columns from the Fields panel to see a preview.
+            </div>
+          </div>
+          <div class="mv-rb__preview-pager">
+            <button class="btn btn-light btn-sm" t-on-click="previewPrev"
+                    t-att-disabled="state.preview.offset &lt;= 0">← Prev</button>
+            <button class="btn btn-light btn-sm" t-on-click="previewNext"
+                    t-att-disabled="state.preview.offset + state.preview.limit >= state.preview.total">Next →</button>
+          </div>
+        </aside>
+      </div>
+
+      <div t-if="!state.loaded" class="mv-rb__loading">Loading report builder…</div>
+    </div>
+  </t>
+
+</templates>

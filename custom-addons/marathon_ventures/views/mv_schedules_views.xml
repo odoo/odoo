@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_schedules_list" model="ir.ui.view">
+    <field name="name">mv.schedules.list</field>
+    <field name="model">mv.schedules</field>
+    <field name="arch" type="xml">
+      <list string="Schedules">
+        <field name="name"/>
+        <field name="adus_estimated"/>
+        <field name="adus_generated"/>
+        <field name="access_code"/>
+        <field name="account_advertiser_program"/>
+        <field name="account_advertiser"/>
+        <field name="account_brand_program"/>
+        <field name="actual_total_000_primary_demo"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_schedules_form" model="ir.ui.view">
+    <field name="name">mv.schedules.form</field>
+    <field name="model">mv.schedules</field>
+    <field name="arch" type="xml">
+      <form string="Schedules">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="deal_parent"/>
+                <field name="lf_brand"/>
+                <field name="product"/>
+                <field name="ratings"/>
+                <field name="related_schedule"/>
+                <field name="traffic"/>
+                <field name="video_file"/>
+                <field name="cap"/>
+                <field name="cia_status"/>
+                <field name="end_time"/>
+                <field name="long_form"/>
+                <field name="mgm_hd_daypart"/>
+                <field name="networks"/>
+                <field name="pp_revision_comment"/>
+                <field name="priority_rank"/>
+                <field name="program_specific"/>
+                <field name="special"/>
+                <field name="start_time"/>
+                <field name="status"/>
+                <field name="total_schedules"/>
+                <field name="weighted_priority"/>
+                <field name="broadcast_month"/>
+                <field name="cancel_date"/>
+                <field name="created_date_time"/>
+                <field name="day"/>
+                <field name="due_date"/>
+                <field name="intg_date"/>
+                <field name="last_modified_time"/>
+                <field name="lf_week"/>
+                <field name="week"/>
+                <field name="access_code"/>
+                <field name="account_advertiser"/>
+                <field name="account_advertiser_program"/>
+                <field name="account_brand_program"/>
+                <field name="additional_intacct_si_number"/>
+                <field name="additional_intacct_si_number_comments"/>
+                <field name="advertiser_brand_program"/>
+                <field name="bgcolor"/>
+                <field name="broadcast_spot_count"/>
+                <field name="broadcast_spot_total"/>
+                <field name="cable_synd_pp"/>
+                <field name="cia"/>
+                <field name="comments"/>
+                <field name="contactaccountcolor"/>
+                <field name="countmenot"/>
+                <field name="day_of_week"/>
+                <field name="daypart"/>
+                <field name="days_allowed_formula"/>
+                <field name="days_of_air"/>
+                <field name="daysallowedformula"/>
+                <field name="dealaccount"/>
+                <field name="dealadvertiser"/>
+                <field name="dealbrand"/>
+                <field name="dealclientcode"/>
+                <field name="dealcontact"/>
+                <field name="dealcontactid"/>
+                <field name="dealestimate"/>
+                <field name="dealname"/>
+                <field name="dealprogram"/>
+                <field name="dealprogramid"/>
+                <field name="demo_program"/>
+                <field name="discrepancy_report_url"/>
+                <field name="discrepancy_total_amount"/>
+                <field name="duplicate_check"/>
+                <field name="duplicate_check_1a"/>
+                <field name="duplicate_check_digital"/>
+                <field name="impressions_aired"/>
+                <field name="intacct_cm_number"/>
+                <field name="intacct_si_number"/>
+                <field name="intacct_si_number_date_fully_paid"/>
+                <field name="intacct_si_number_payment_status"/>
+                <field name="invoice_date"/>
+                <field name="isci2"/>
+                <field name="isci3"/>
+                <field name="isci_code"/>
+                <field name="lf_daypart"/>
+                <field name="lf_traffic"/>
+                <field name="lf_unique_key"/>
+                <field name="lforderlinenumber"/>
+                <field name="locked_units"/>
+                <field name="missing_traffic_current_url"/>
+                <field name="netsuite_invoice_number"/>
+                <field name="netsuite_invoice_url"/>
+                <field name="network_deal_number"/>
+                <field name="orderline_number_mpd"/>
+                <field name="orderlinempd"/>
+                <field name="orderlinenumber"/>
+                <field name="ordernumber"/>
+                <field name="pi"/>
+                <field name="pi_payout_test"/>
+                <field name="pod"/>
+                <field name="prelog_count"/>
+                <field name="prelog_count_version_1"/>
+                <field name="prelog_count_version_2"/>
+                <field name="prelog_count_version_3"/>
+                <field name="prelog_count_version_4"/>
+                <field name="prelog_count_version_5"/>
+                <field name="prelog_count_version_6"/>
+                <field name="quarter_change"/>
+                <field name="reconciled"/>
+                <field name="request_missing_traffic_url"/>
+                <field name="revision_comments"/>
+                <field name="spot_count"/>
+                <field name="spot_data_dollars_check"/>
+                <field name="spot_data_unit_check"/>
+                <field name="spot_total"/>
+                <field name="start_end_time"/>
+                <field name="sum_spot_equiv_30"/>
+                <field name="temp_working_log_check"/>
+                <field name="traffic_contact"/>
+                <field name="traffic_days_allowed"/>
+                <field name="working_log_count"/>
+                <field name="working_log_version"/>
+                <field name="x2calculated_time_period"/>
+                <field name="x800_number"/>
+                <field name="day_of_air_check"/>
+                <field name="discrepancy_bundle"/>
+              </group>
+              <group>
+                <field name="filler"/>
+                <field name="ghost_order"/>
+                <field name="incumbency"/>
+                <field name="new_filler"/>
+                <field name="pod_check"/>
+                <field name="preempted_and_sent_to_network"/>
+                <field name="priority"/>
+                <field name="rating_check"/>
+                <field name="ratings_recieved"/>
+                <field name="recommended"/>
+                <field name="send_as_new"/>
+                <field name="test"/>
+                <field name="uncalculated_check_details"/>
+                <field name="unit_sep_check"/>
+                <field name="working_log_double_check"/>
+                <field name="xml_sent"/>
+                <field name="actual_total_000_primary_demo"/>
+                <field name="adus_estimated"/>
+                <field name="adus_generated"/>
+                <field name="archived_prelog_booked_dollars"/>
+                <field name="archived_prelog_count"/>
+                <field name="booked_digital_total_dollars"/>
+                <field name="booked_dollars_live_demo"/>
+                <field name="booked_increvenue"/>
+                <field name="booking_timeline"/>
+                <field name="bpu_units"/>
+                <field name="buyline_number"/>
+                <field name="calc_equiv_30"/>
+                <field name="campaign_total"/>
+                <field name="capped_30_units"/>
+                <field name="capped_booked"/>
+                <field name="capped_dollars"/>
+                <field name="capped_units"/>
+                <field name="clearance"/>
+                <field name="cpm"/>
+                <field name="created_week_in_quarter"/>
+                <field name="days_allowed"/>
+                <field name="demo_30_rate"/>
+                <field name="demo_rate"/>
+                <field name="digital_total_dollars"/>
+                <field name="dollars_booked"/>
+                <field name="dollars_canceled"/>
+                <field name="dollars_cap"/>
+                <field name="equiv_30"/>
+                <field name="equiv_30_booked"/>
+                <field name="equiv_30_canceled"/>
+                <field name="error_reason"/>
+                <field name="estimated_total_000_primary_demo"/>
+                <field name="eur_filler_decile"/>
+                <field name="filler_rate"/>
+                <field name="filler_test"/>
+                <field name="guaranteed_000_primary_demo"/>
+                <field name="guaranteed_total_000_primary_demo"/>
+                <field name="half_units_round_up"/>
+                <field name="hh_000"/>
+                <field name="impressions"/>
+                <field name="impressions_000"/>
+                <field name="increvenue"/>
+                <field name="lf_rate_needed"/>
+                <field name="liability"/>
+                <field name="liability_000"/>
+                <field name="max_allowable_units_per_day"/>
+                <field name="max_per_day"/>
+                <field name="militarytime"/>
+                <field name="month"/>
+                <field name="net_total"/>
+                <field name="new_week_in_quarter"/>
+                <field name="original_rate"/>
+                <field name="original_units_preempted"/>
+                <field name="overran_units_dynamic"/>
+                <field name="overran_units_v1"/>
+                <field name="overran_units_v2"/>
+                <field name="overran_units_v3"/>
+                <field name="overran_units_v4"/>
+                <field name="overran_units_v5"/>
+                <field name="overran_units_v6"/>
+                <field name="performance"/>
+                <field name="performance_dollars"/>
+                <field name="pi_payout"/>
+                <field name="pp_revision"/>
+                <field name="prelog_count_dynamic"/>
+                <field name="primary_demographic_cpm"/>
+                <field name="priority_weight_multiplier"/>
+                <field name="quarter"/>
+                <field name="rate"/>
+                <field name="sum_of_check_payments"/>
+                <field name="total_000_primary_demo"/>
+                <field name="total_dollars"/>
+                <field name="total_dollars_earned"/>
+                <field name="total_dollars_live_demo"/>
+                <field name="total_historical_dollars"/>
+                <field name="total_time"/>
+                <field name="uneq_total_000_primary_demo"/>
+                <field name="unitlength"/>
+                <field name="units_aired"/>
+                <field name="units_available"/>
+                <field name="units_by_separation"/>
+                <field name="units_cap"/>
+                <field name="units_preempted"/>
+                <field name="units_remaining"/>
+                <field name="week_in_month"/>
+                <field name="week_in_quarter"/>
+                <field name="week_in_year"/>
+                <field name="week_number"/>
+                <field name="weighted_30_rate"/>
+                <field name="weighted_rate"/>
+                <field name="wo_30_units"/>
+                <field name="wo_booked"/>
+                <field name="wo_dollars"/>
+                <field name="wo_units"/>
+                <field name="x120s"/>
+                <field name="x15s"/>
+                <field name="x30_rate"/>
+                <field name="x30_rate_round"/>
+                <field name="x30s"/>
+                <field name="year"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_schedules_search" model="ir.ui.view">
+    <field name="name">mv.schedules.search</field>
+    <field name="model">mv.schedules</field>
+    <field name="arch" type="xml">
+      <search string="Schedules">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_schedules" model="ir.actions.act_window">
+    <field name="name">Schedules</field>
+    <field name="res_model">mv.schedules</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_schedules" name="Schedules" parent="menu_mv_sales_ops" action="action_mv_schedules"/>
+</odoo>

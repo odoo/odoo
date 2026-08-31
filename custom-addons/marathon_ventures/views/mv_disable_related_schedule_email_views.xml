@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_disable_related_schedule_email_list" model="ir.ui.view">
+    <field name="name">mv.disable_related_schedule_email.list</field>
+    <field name="model">mv.disable_related_schedule_email</field>
+    <field name="arch" type="xml">
+      <list string="Disable Related Schedule Email">
+        <field name="name"/>
+        <field name="disable_emails"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_disable_related_schedule_email_form" model="ir.ui.view">
+    <field name="name">mv.disable_related_schedule_email.form</field>
+    <field name="model">mv.disable_related_schedule_email</field>
+    <field name="arch" type="xml">
+      <form string="Disable Related Schedule Email">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="disable_emails"/>
+              </group>
+              <group>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_disable_related_schedule_email_search" model="ir.ui.view">
+    <field name="name">mv.disable_related_schedule_email.search</field>
+    <field name="model">mv.disable_related_schedule_email</field>
+    <field name="arch" type="xml">
+      <search string="Disable Related Schedule Email">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_disable_related_schedule_email" model="ir.actions.act_window">
+    <field name="name">Disable Related Schedule Email</field>
+    <field name="res_model">mv.disable_related_schedule_email</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_disable_related_schedule_email" name="Disable Related Schedule Email" parent="menu_mv_finance" action="action_mv_disable_related_schedule_email"/>
+</odoo>

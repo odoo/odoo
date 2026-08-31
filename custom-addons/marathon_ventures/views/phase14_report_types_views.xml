@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- ============================================================
+       mv.report.type - admin UI to define Report Types
+       ============================================================ -->
+
+  <record id="view_mv_report_type_list" model="ir.ui.view">
+    <field name="name">mv.report.type.list</field>
+    <field name="model">mv.report.type</field>
+    <field name="arch" type="xml">
+      <list string="Report Types">
+        <field name="name"/>
+        <field name="base_model_id"/>
+        <field name="node_count"/>
+        <field name="owner_id"/>
+        <field name="is_public"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_report_type_form" model="ir.ui.view">
+    <field name="name">mv.report.type.form</field>
+    <field name="model">mv.report.type</field>
+    <field name="arch" type="xml">
+      <form string="Report Type">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name" placeholder="e.g. Deals with Schedules"/></h1>
+          </div>
+          <group>
+            <group>
+              <field name="base_model_id"
+                     options="{'no_create': True}"/>
+              <field name="owner_id" readonly="1"/>
+            </group>
+            <group>
+              <field name="is_public"/>
+              <field name="active"/>
+              <field name="sequence"/>
+            </group>
+          </group>
+          <field name="description" placeholder="What is this Report Type for?"/>
+          <notebook>
+            <page string="Joined Models" name="joined_models">
+              <field name="node_ids" nolabel="1">
+                <list editable="bottom">
+                  <field name="sequence" widget="handle"/>
+                  <field name="field_id"
+                         domain="[('ttype', 'in', ('many2one', 'one2many', 'many2many')),
+                                  ('model_id', '=', parent.base_model_id)]"
+                         options="{'no_create': True}"/>
+                  <field name="relation_kind" readonly="1"/>
+                  <field name="target_model_id" readonly="1"/>
+                  <field name="alias" placeholder="Custom label (optional)"/>
+                  <field name="path_prefix" readonly="1"/>
+                </list>
+              </field>
+              <div class="text-muted" style="margin-top:6px;">
+                <em>Each row adds one joined model. The Relation Field
+                    must be a many2one / one2many / many2many field on
+                    the Base Model. The Report Builder will surface the
+                    joined model's own fields when this Report Type is
+                    selected.</em>
+              </div>
+            </page>
+          </notebook>
+        </sheet>
+        <chatter/>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_report_type_search" model="ir.ui.view">
+    <field name="name">mv.report.type.search</field>
+    <field name="model">mv.report.type</field>
+    <field name="arch" type="xml">
+      <search string="Report Types">
+        <field name="name"/>
+        <field name="base_model_id"/>
+        <separator/>
+        <filter name="mine" string="Mine"
+                domain="[('owner_id','=',uid)]"/>
+        <filter name="public" string="Public"
+                domain="[('is_public','=',True)]"/>
+        <filter name="archived" string="Archived"
+                domain="[('active','=',False)]"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_report_type" model="ir.actions.act_window">
+    <field name="name">Report Types</field>
+    <field name="res_model">mv.report.type</field>
+    <field name="view_mode">list,form</field>
+    <field name="search_view_id" ref="view_mv_report_type_search"/>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">Define a Report Type.</p>
+      <p>A Report Type packages a base model + a set of joined models
+         so users can build reports across multiple related tables.</p>
+    </field>
+  </record>
+
+  <menuitem id="menu_mv_report_types" name="Report Types"
+            parent="marathon_ventures.menu_mv_root"
+            action="action_mv_report_type" sequence="101"/>
+
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+
+    <!-- Bundle Paperwork email template — SF Workflow 12 (Conga Composer replacement) -->
+    <record id="mail_template_bundle_paperwork" model="mail.template">
+      <field name="name">MV Bundle — Paperwork</field>
+      <field name="model_id" ref="marathon_ventures.model_mv_deal"/>
+      <field name="subject">{{ (object.program and object.program.display_name) or 'Bundle' }} — {{ object.name }} — Paperwork</field>
+      <field name="email_to">{{ object.program and (object.program.bundle_paperwork_to or '') or '' }}</field>
+      <field name="email_cc">{{ object.program and (object.program.bundle_paperwork_cc or '') or '' }}</field>
+      <field name="body_html" type="html">
+        <div style="font-family: Arial, sans-serif;">
+          <p>Hello,</p>
+          <p>Please find attached the {{ object.program and object.program.display_name or 'bundle' }} paperwork for deal <strong>{{ object.name }}</strong>.</p>
+          <p>
+            Brand: {{ (object.brands and object.brands.display_name) or '' }}<br/>
+            Advertiser: {{ (object.brands and object.brands.advertiser and object.brands.advertiser.display_name) or '' }}<br/>
+            Length: {{ object.length and ('%s' % str(object.length).replace('v_','')) or '' }}<br/>
+            Total Booked Units: {{ object.total_booked_units or 0 }}<br/>
+            Total Booked Dollars: ${{ object.total_booked_dollars or 0 }}
+          </p>
+          <p>If you have any questions, please reach out.</p>
+          <p>Thanks,<br/>The Marathon Team</p>
+        </div>
+      </field>
+      <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- Traffic Instructions email — SF Workflow 12 step 8 -->
+    <record id="mail_template_traffic" model="mail.template">
+      <field name="name">MV Bundle — Traffic Instructions</field>
+      <field name="model_id" ref="marathon_ventures.model_mv_deal"/>
+      <field name="subject">{{ (object.program and object.program.display_name) or 'Bundle' }} — Traffic — {{ object.name }}</field>
+      <field name="email_to">{{ object.program and (object.program.traffic_email or '') or '' }}</field>
+      <field name="body_html" type="html">
+        <div style="font-family: Arial, sans-serif;">
+          <p>Hello,</p>
+          <p>Please see traffic instructions for the deal <strong>{{ object.name }}</strong>.</p>
+          <p>
+            Brand: {{ (object.brands and object.brands.display_name) or '' }}<br/>
+            Advertiser: {{ (object.brands and object.brands.advertiser and object.brands.advertiser.display_name) or '' }}<br/>
+            Length: {{ object.length and ('%s' % str(object.length).replace('v_','')) or '' }}<br/>
+          </p>
+          <p style="color: #999;">Note: rates are intentionally NOT included in traffic emails per Marathon SOP.</p>
+          <p>Thanks,<br/>The Marathon Team</p>
+        </div>
+      </field>
+      <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- Order Confirmation pass-through to PDF signer — SF Workflow 29 -->
+    <record id="mail_template_order_confirmation" model="mail.template">
+      <field name="name">MV — Order Confirmation</field>
+      <field name="model_id" ref="marathon_ventures.model_mv_deal"/>
+      <field name="subject">{{ object.name or 'Order' }}</field>
+      <field name="email_to">orders@mvms-pdfsigner2.appspotmail.com</field>
+      <field name="body_html" type="html">
+        <div style="font-family: Arial, sans-serif;">
+          <p>Order confirmation for <strong>{{ object.name }}</strong>.</p>
+          <p>To add an effective / LTC date, prepend <code>@#effective MM/DD</code> or <code>@#LTC MM/DD</code> at the very top of this body (no space after @#).</p>
+          <p>The signer service will return the signed PDF.</p>
+        </div>
+      </field>
+      <field name="auto_delete" eval="False"/>
+    </record>
+
+  </data>
+</odoo>

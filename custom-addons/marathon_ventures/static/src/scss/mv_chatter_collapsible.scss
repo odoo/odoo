@@ -1,0 +1,101 @@
+/* ============================================================================
+   MV - Chatter Width Toggle
+   ----------------------------------------------------------------------------
+   The chatter stays side-docked on the right (Odoo default layout). A small
+   round toggle button is injected into the chatter's header
+   (.o-mail-Chatter-top) by mv_chatter_collapsible.js. Clicking it shrinks
+   the chatter width to 100px (collapsed) or back to its full width
+   (expanded).
+
+   We DO NOT hide the chatter's children when collapsed - the content is
+   still there, it's just clipped by the narrower container + overflow.
+   That keeps Odoo's internal layout intact and makes the toggle feel
+   like a panel resize rather than a hide/show.
+   ============================================================================ */
+
+/* Smooth transition on width so the collapse animates. */
+.o_form_view .o-mail-Chatter {
+    transition: width 0.25s ease,
+                max-width 0.25s ease,
+                min-width 0.25s ease,
+                flex-basis 0.25s ease;
+}
+
+/* ----------------------------------------------------------------------------
+   NARROW STATE - 100px sliver
+   ---------------------------------------------------------------------------- */
+.o_form_view .o-mail-Chatter.mv-chatter--narrow,
+.o_form_view .o-mail-ChatterContainer.mv-chatter--narrow,
+.o_form_view aside.mv-chatter--narrow {
+    width: 100px !important;
+    max-width: 100px !important;
+    min-width: 100px !important;
+    flex: 0 0 100px !important;
+    overflow: hidden !important;
+
+    .o-mail-Chatter-topbar, .o-mail-Chatter-content {
+        visibility: hidden;
+    }
+}
+
+/* Make sure the header (.o-mail-Chatter-top) stays visible and that the
+   toggle button is reachable even when the panel is narrow. */
+.o_form_view .o-mail-Chatter .o-mail-Chatter-top {
+    overflow: visible !important;
+    min-height: 36px;
+}
+
+/* ----------------------------------------------------------------------------
+   TOGGLE BUTTON (lives inside .o-mail-Chatter-top)
+   ----------------------------------------------------------------------------
+   Small round button rendered inline in the chatter header. Caret shows
+   the action that the click will perform: ▶ while expanded ("collapse
+   to the right"), ◀ while narrow ("expand back open").
+   ---------------------------------------------------------------------------- */
+.o_form_view .o-mail-Chatter .mv-chatter-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 6px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #1a1d22;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    box-shadow: 0 1px 2px rgba(15, 17, 21, 0.08);
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    user-select: none;
+    flex: 0 0 auto;
+}
+
+.o_form_view .o-mail-Chatter .mv-chatter-toggle:hover {
+    background-color: #f3f4f6;
+    transform: scale(1.05);
+}
+
+.o_form_view .o-mail-Chatter .mv-chatter-toggle:active {
+    transform: scale(0.95);
+}
+
+.o_form_view .o-mail-Chatter .mv-chatter-toggle:focus {
+    outline: 2px solid #93c5fd;
+    outline-offset: 1px;
+}
+
+/* Caret: ▶ when expanded (click to collapse to 100px),
+          ◀ when narrow (click to expand back to full width). */
+.o_form_view .o-mail-Chatter .mv-chatter-toggle::before {
+    content: "\25B6";       /* ▶ */
+    font-size: 10px;
+    color: #4b5563;
+    line-height: 1;
+}
+
+.o_form_view .o-mail-ChatterContainer.mv-chatter--narrow .mv-chatter-toggle::before {
+    content: "\25C0";       /* ◀ */
+}

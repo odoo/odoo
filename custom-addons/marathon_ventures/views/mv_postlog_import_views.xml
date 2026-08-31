@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!--
+    Postlog Data (Postlog) import: wizard + job queue.
+
+    Mirrors the prelog equivalents:
+      * wizard form  <- views/phase4_views.xml  (view_mv_prelog_import_wizard_form)
+      * job views    <- views/mv_prelog_import_job_views.xml
+
+    No version field and no replace-confirmation dialog - a postlog is one
+    upload per week, and mv.postlog_import_job refuses a week that already has
+    Postlog Data rather than overwriting it.
+  -->
+
+  <record id="view_mv_postlog_upload_wizard_form" model="ir.ui.view">
+    <field name="name">mv.postlog.upload.wizard.form</field>
+    <field name="model">mv.postlog.upload.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Import Postlog">
+        <group>
+          <field name="upload_file"
+                 filename="upload_filename"
+                 options="{'accepted_file_extensions': '.csv,.xls,.xlsx'}"/>
+          <field name="upload_filename" invisible="1"/>
+          <field name="import_week" invisible="1"/>
+          <field name="program_id" invisible="1"/>
+          <field name="route" invisible="1"/>
+          <field name="can_import" invisible="1"/>
+          <field name="program_choice" widget="mv_native_select"/>
+          <field name="program_type" readonly="1" invisible="not program_id"/>
+        </group>
+        <!-- Where this Program's postlog is headed, from its Program Type. -->
+        <div class="alert alert-info" role="status"
+             invisible="not program_id or not can_import">
+          <field name="route_message" readonly="1" nolabel="1"/>
+        </div>
+        <div class="alert alert-warning" role="alert"
+             invisible="not program_id or can_import">
+          <field name="route_message" readonly="1" nolabel="1"/>
+        </div>
+        <footer>
+          <button name="action_import" type="object" string="Import"
+                  class="btn-primary" invisible="not can_import"/>
+          <button special="cancel" string="Cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_open_postlog_upload_wizard" model="ir.actions.act_window">
+    <field name="name">Import Postlog</field>
+    <field name="res_model">mv.postlog.upload.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  <!-- No menu here: the existing Operations > Import Postlog menu
+       (menu_mv_postlog_import, in phase4_views.xml) points at this wizard. -->
+
+  <!-- ============================ Job queue ============================ -->
+
+  <record id="view_mv_postlog_import_job_list" model="ir.ui.view">
+    <field name="name">mv.postlog.import.job.list</field>
+    <field name="model">mv.postlog_import_job</field>
+    <field name="arch" type="xml">
+      <list string="Postlog Import Jobs" create="false">
+        <field name="name"/>
+        <field name="program_id"/>
+        <field name="import_week"/>
+        <field name="upload_filename"/>
+        <field name="state"/>
+        <field name="total_row_count"/>
+        <field name="skipped_row_count"/>
+        <field name="matched_count"/>
+        <field name="unmatched_count"/>
+        <field name="error_count"/>
+        <field name="submitted_by_id"/>
+        <field name="create_date"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_postlog_import_job_form" model="ir.ui.view">
+    <field name="name">mv.postlog.import.job.form</field>
+    <field name="model">mv.postlog_import_job</field>
+    <field name="arch" type="xml">
+      <form string="Postlog Import Job" create="false">
+        <sheet>
+          <div class="oe_title">
+            <h1><field name="name" readonly="1"/></h1>
+          </div>
+          <group>
+            <group string="Upload">
+              <field name="program_id" readonly="1"/>
+              <field name="import_week" readonly="1"/>
+              <field name="upload_filename" readonly="1"/>
+              <field name="state" readonly="1"/>
+              <field name="submitted_by_id" readonly="1"/>
+            </group>
+            <group string="Result">
+              <field name="total_row_count" readonly="1"/>
+              <field name="skipped_row_count" readonly="1"/>
+              <field name="matched_count" readonly="1"/>
+              <field name="unmatched_count" readonly="1"/>
+              <field name="error_count" readonly="1"/>
+              <field name="combined_issue_count" readonly="1"/>
+            </group>
+            <group string="Amounts">
+              <field name="currency_id" invisible="1"/>
+              <field name="total_rate_amount" readonly="1"/>
+              <field name="matched_rate_amount" readonly="1"/>
+              <field name="unmatched_rate_amount" readonly="1"/>
+            </group>
+            <group string="Timing / Notification">
+              <field name="started_at" readonly="1"/>
+              <field name="finished_at" readonly="1"/>
+              <field name="notification_email" readonly="1"/>
+              <field name="notification_sent" readonly="1"/>
+            </group>
+          </group>
+          <group string="Summary">
+            <field name="summary_message" readonly="1" nolabel="1"/>
+          </group>
+          <group string="Failure" invisible="not failure_message">
+            <field name="failure_message" readonly="1" nolabel="1"/>
+          </group>
+          <group string="Notification Failure" invisible="not notification_failure">
+            <field name="notification_failure" readonly="1" nolabel="1"/>
+          </group>
+          <notebook>
+            <page string="Attachments">
+              <group>
+                <field name="success_attachment_id" readonly="1"/>
+                <field name="error_attachment_id" readonly="1"/>
+              </group>
+            </page>
+            <page string="Postlog Rows">
+              <field name="postlog_ids" readonly="1">
+                <list>
+                  <field name="name"/>
+                  <field name="air_date"/>
+                  <field name="air_time"/>
+                  <field name="network_deal_number"/>
+                  <field name="spot_rate"/>
+                  <field name="schedule"/>
+                  <field name="import_match_status"/>
+                </list>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_postlog_import_job_search" model="ir.ui.view">
+    <field name="name">mv.postlog.import.job.search</field>
+    <field name="model">mv.postlog_import_job</field>
+    <field name="arch" type="xml">
+      <search string="Postlog Import Jobs">
+        <field name="name"/>
+        <field name="state"/>
+        <field name="program_id"/>
+        <field name="import_week"/>
+        <field name="upload_filename"/>
+        <field name="submitted_by_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_postlog_import_job" model="ir.actions.act_window">
+    <field name="name">Postlog Import Jobs</field>
+    <field name="res_model">mv.postlog_import_job</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_postlog_import_job"
+            name="Postlog Import Jobs"
+            parent="menu_mv_operations"
+            action="action_mv_postlog_import_job"
+            sequence="10"/>
+</odoo>

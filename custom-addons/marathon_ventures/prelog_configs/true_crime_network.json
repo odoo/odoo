@@ -1,0 +1,42 @@
+{
+  "acceptedExtensions": [".csv", ".xls", ".xlsx"],
+  "sheetIndex": 0,
+  "headerRow": 1,
+  "deriveWeekFromAirdate": true,
+  "networkNames": ["TCN", "True Crime Network", "true crime network"],
+  "fieldMap": {
+    "network": ["Property"],
+    "broadcast_network": ["Property"],
+    "airdate": ["Air Date"],
+    "scheduletime": ["Sched Time", "Aired Time"],
+    "network_deal_number": ["Deal/Order #"],
+    "agency": ["Agency"],
+    "advertiserproduct": ["Advertiser/Product"],
+    "orderproductdescription": ["Order Product Description"],
+    "materialdescription": ["Material Description"],
+    "scheduleadid": ["Sched Ad-ID", "Aired Ad-ID"],
+    "isci": ["Sched Ad-ID", "Aired Ad-ID"],
+    "schedulelength": ["Sched Length"],
+    "timeperiod": ["Time Period"],
+    "title": ["Program"],
+    "rate": ["Rate"]
+  },
+  "requiredFields": ["airdate", "scheduletime", "network_deal_number"],
+  "transforms": {
+    "airdate": ["parse_date"],
+    "scheduletime": ["normalize_time"],
+    "rate": ["to_float"],
+    "schedulelength": ["to_int_string"],
+    "isci": ["trim"],
+    "network": ["trim"],
+    "broadcast_network": ["trim"],
+    "agency": ["trim"],
+    "advertiserproduct": ["trim"],
+    "materialdescription": ["trim"],
+    "orderproductdescription": ["trim"],
+    "scheduleadid": ["trim"],
+    "network_deal_number": ["trim"],
+    "timeperiod": ["trim"],
+    "title": ["trim"]
+  }
+}

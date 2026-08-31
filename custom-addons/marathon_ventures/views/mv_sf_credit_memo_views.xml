@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sf_credit_memo_list" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo.list</field>
+    <field name="model">mv.sf_credit_memo</field>
+    <field name="arch" type="xml">
+      <list string="Sf Credit Memo">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="advertiser"/>
+        <field name="at_fault"/>
+        <field name="brand"/>
+        <field name="comments"/>
+        <field name="complete"/>
+        <field name="deal"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_memo_form" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo.form</field>
+    <field name="model">mv.sf_credit_memo</field>
+    <field name="arch" type="xml">
+      <form string="Sf Credit Memo">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="deal"/>
+                <field name="error_caused_by"/>
+                <field name="at_fault"/>
+                <field name="double_check"/>
+                <field name="status"/>
+                <field name="type"/>
+                <field name="account"/>
+                <field name="advertiser"/>
+                <field name="brand"/>
+                <field name="comments"/>
+                <field name="finance_comments"/>
+              </group>
+              <group>
+                <field name="intacct_cm"/>
+                <field name="netsuite_cm"/>
+                <field name="program"/>
+                <field name="request_assistance_comments"/>
+                <field name="sf_credit_memo_total"/>
+                <field name="task_force_comments"/>
+                <field name="tms"/>
+                <field name="complete"/>
+                <field name="request_assistance"/>
+                <field name="error_reason"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_memo_search" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo.search</field>
+    <field name="model">mv.sf_credit_memo</field>
+    <field name="arch" type="xml">
+      <search string="Sf Credit Memo">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sf_credit_memo" model="ir.actions.act_window">
+    <field name="name">Sf Credit Memo</field>
+    <field name="res_model">mv.sf_credit_memo</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sf_credit_memo" name="Sf Credit Memo" parent="menu_mv_finance" action="action_mv_sf_credit_memo"/>
+</odoo>

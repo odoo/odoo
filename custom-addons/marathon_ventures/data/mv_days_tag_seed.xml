@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <!-- Seed the mv.days.tag model with Monday-Sunday.
+         mv.days.tag is the Many2many destination for Bundle Pricing's
+         Days field (SF: Days__c multi-select picklist). Without these
+         seed rows the picker on Bundle Pricing is empty, so users
+         only see "Create..." when trying to select a day.
+
+         Names and codes use FULL day names ("Monday", "Tuesday", ...)
+         to keep Bundle Pricing labels distinct from Schedule's
+         Days Allowed picker (which shows short "Mon", "Tue"). The
+         full names also align with the SF edited_days formula
+         (Days__c INCLUDES("Monday"), etc.). -->
+    <record id="days_tag_monday" model="mv.days.tag">
+      <field name="name">Monday</field>
+      <field name="code">Monday</field>
+    </record>
+    <record id="days_tag_tuesday" model="mv.days.tag">
+      <field name="name">Tuesday</field>
+      <field name="code">Tuesday</field>
+    </record>
+    <record id="days_tag_wednesday" model="mv.days.tag">
+      <field name="name">Wednesday</field>
+      <field name="code">Wednesday</field>
+    </record>
+    <record id="days_tag_thursday" model="mv.days.tag">
+      <field name="name">Thursday</field>
+      <field name="code">Thursday</field>
+    </record>
+    <record id="days_tag_friday" model="mv.days.tag">
+      <field name="name">Friday</field>
+      <field name="code">Friday</field>
+    </record>
+    <record id="days_tag_saturday" model="mv.days.tag">
+      <field name="name">Saturday</field>
+      <field name="code">Saturday</field>
+    </record>
+    <record id="days_tag_sunday" model="mv.days.tag">
+      <field name="name">Sunday</field>
+      <field name="code">Sunday</field>
+    </record>
+  </data>
+</odoo>

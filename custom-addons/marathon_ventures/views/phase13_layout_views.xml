@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- PHASE 13 - Re-skin each form's notebook pages into a 3-column
+       .mv-essentials-grid (label above field). Uses positional xpath
+       (//notebook/page[N]) since Odoo 19 forbids @string as a
+       selector. -->
+
+  <!-- mv.programs -->
+  <record id="view_mv_programs_form_phase13" model="ir.ui.view">
+    <field name="name">mv.programs.form.phase13</field>
+    <field name="model">mv.programs</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_programs_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="clientcode" />
+              <field name="account_exec_1" />
+              <field name="account_exec_2" />
+              <field name="assistant" />
+              <field name="assistant_backup" />
+              <field name="lead" />
+              <field name="lead_backup" />
+              <field name="logs_contact" />
+              <field name="post_log" />
+              <field name="vendor_account" />
+              <field name="cable_synd" />
+              <field name="clock_start_time" />
+              <field name="deal_entity" />
+              <field name="finance_invoice_template" />
+              <field name="invoice_month" />
+              <field name="network_owner" />
+              <field name="network_system" />
+              <field name="ratings_quarter" />
+              <field name="launch_week_del" />
+              <field name="prelog_date" />
+              <field name="prelog_date_time" />
+              <field name="rcreconciled_lf_week" />
+            </group>
+            <group>
+              <field name="rcreconciled_week" />
+              <field name="reconciled_week" />
+              <field name="version_time_stamp" />
+              <field name="week_pending" />
+              <field name="bundle_name" />
+              <field name="bundle_rate" />
+              <field name="conga_log_template" />
+              <field name="digital_id" />
+              <field name="logs_cc" />
+              <field name="merit_street_media_url_2025" />
+              <field name="pp_log_check_nw_history" />
+              <field name="pp_log_check_tw_history" />
+              <field name="program_number" />
+              <field name="station_call_letter" />
+              <field name="team" />
+              <field name="barter" />
+              <field name="detailed_invoices" />
+              <field name="inactive" />
+              <field name="invoice_run" />
+              <field name="rated" />
+              <field name="spot_data_sync" />
+              <field name="da_filler" />
+            </group>
+            <group>
+              <field name="ef_filler" />
+              <field name="filler_em" />
+              <field name="fr_filler" />
+              <field name="lf_filler" />
+              <field name="ln_filler" />
+              <field name="log_week" />
+              <field name="on_filler" />
+              <field name="pp_revision" />
+              <field name="pp_revision_cycle" />
+              <field name="pr_filler" />
+              <field name="prelog_version" />
+              <field name="program_count" />
+              <field name="ros_filler" />
+              <field name="syndication_filler" />
+              <field name="template" />
+              <field name="wc_filler" />
+              <field name="wknd_da_filler" />
+              <field name="wknd_on_filler" />
+              <field name="wknd_pr_filler" />
+              <field name="working_log_version" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.brands -->
+  <record id="view_mv_brands_form_phase13" model="ir.ui.view">
+    <field name="name">mv.brands.form.phase13</field>
+    <field name="model">mv.brands</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_brands_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="advertiser" />
+              <field name="account" />
+              <field name="approval_status" />
+              <field name="approved_duplicate" />
+            </group>
+            <group>
+              <field name="category" />
+              <field name="primary_demographic" />
+              <field name="alternate_brand_names" />
+              <field name="brand_number" />
+            </group>
+            <group>
+              <field name="digital_id" />
+              <field name="unique_brand_identifer" />
+              <field name="e_i_friendly" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.advertiser -->
+  <record id="view_mv_advertiser_form_phase13" model="ir.ui.view">
+    <field name="name">mv.advertiser.form.phase13</field>
+    <field name="model">mv.advertiser</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_advertiser_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="account" />
+              <field name="umbrella_account" />
+              <field name="umbrella_account_2" />
+              <field name="accuweather_adv_sep" />
+              <field name="bouncetv_adv_sep" />
+              <field name="commercial" />
+              <field name="courttv_adv_sep" />
+              <field name="defy_adv_sep" />
+              <field name="duplicate_approval" />
+              <field name="grittv_adv_sep" />
+              <field name="ion_mys_adv_sep" />
+              <field name="ion_tv_adv_sep" />
+            </group>
+            <group>
+              <field name="laff_adv_sep" />
+              <field name="merit_street_adv_sep" />
+              <field name="mlb_adv_sep" />
+              <field name="nhl_adv_sep" />
+              <field name="noseytv_adv_sep" />
+              <field name="quest_adv_sep" />
+              <field name="scripps_news_adv_sep" />
+              <field name="true_crime_adv_sep" />
+              <field name="twist_adv_sep" />
+              <field name="adv_log_with_expiration_date" />
+              <field name="log_exp_test" />
+              <field name="advertiser_number" />
+            </group>
+            <group>
+              <field name="comments" />
+              <field name="duplicate_name_check" />
+              <field name="advertiser_approved_to_book" />
+              <field name="advertiser_cia" />
+              <field name="hold_placed_on_advertiser_account" />
+              <field name="monitoring" />
+              <field name="new_advertiser" />
+              <field name="advertiser_count" />
+              <field name="advertiser_credit_limit" />
+              <field name="intacct_adv_balance" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.split -->
+  <record id="view_mv_split_form_phase13" model="ir.ui.view">
+    <field name="name">mv.split.form.phase13</field>
+    <field name="model">mv.split</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_split_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="traffic" />
+              <field name="video_file" />
+              <field name="length" />
+              <field name="double_check_date" />
+              <field name="end_date" />
+              <field name="start_date" />
+            </group>
+            <group>
+              <field name="isci" />
+              <field name="isci_no_char" />
+              <field name="spot_name" />
+              <field name="x800_number" />
+              <field name="active" />
+              <field name="double_check" />
+            </group>
+            <group>
+              <field name="days_allowed" widget="mv_days_picker"/>
+              <field name="end_time" />
+              <field name="rotation" widget="percentage" />
+              <field name="start_time" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.traffic -->
+  <record id="view_mv_traffic_form_phase13" model="ir.ui.view">
+    <field name="name">mv.traffic.form.phase13</field>
+    <field name="model">mv.traffic</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_traffic_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="agency" />
+              <field name="brands" />
+              <field name="deal" />
+              <field name="program" />
+              <field name="traffic_contact" />
+              <field name="length" />
+            </group>
+            <group>
+              <field name="access_code" />
+              <field name="advertiser" />
+              <field name="campaign" />
+              <field name="client_code" />
+              <field name="end_date" />
+              <field name="estimate" />
+            </group>
+            <group>
+              <field name="hiatused_dates" />
+              <field name="product_code" />
+              <field name="product_description" />
+              <field name="start_date" />
+              <field name="year" />
+              <field name="quarter" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.prelog_data -->
+  <record id="view_mv_prelog_data_form_phase13" model="ir.ui.view">
+    <field name="name">mv.prelog_data.form.phase13</field>
+    <field name="model">mv.prelog_data</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_data_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="schedule" />
+              <field name="prelogdatamirror" />
+              <field name="split" />
+              <field name="working_log" />
+              <field name="type" />
+              <field name="airdate" />
+              <field name="schedule_week" />
+              <field name="week" />
+              <field name="advertiserproduct" />
+              <field name="agency" />
+              <field name="batch_id" />
+              <field name="breakcode" />
+              <field name="broadcast_network" />
+              <field name="commercial_type" />
+              <field name="current_home" />
+              <field name="day_of_week" />
+              <field name="duration" />
+              <field name="field1" />
+              <field name="framed_duration" />
+            </group>
+            <group>
+              <field name="hour_of_day" />
+              <field name="isci" />
+              <field name="materialdescription" />
+              <field name="network" />
+              <field name="network_deal_number" />
+              <field name="orderproductdescription" />
+              <field name="pod" />
+              <field name="prelogdatamirrorreference" />
+              <field name="product" />
+              <field name="scheduleadid" />
+              <field name="schedulelength" />
+              <field name="scheduletime" />
+              <field name="series" />
+              <field name="timeperiod" />
+              <field name="title" />
+              <field name="unique_spot" />
+              <field name="agency_match_error" />
+              <field name="current_version" />
+              <field name="current_version_rollup" />
+              <field name="locked" />
+            </group>
+            <group>
+              <field name="locked_working_log" />
+              <field name="log_schedule_mismatch" />
+              <field name="main_network" />
+              <field name="removed" />
+              <field name="snowflake_transferred" />
+              <field name="actual_000_primary_demo" />
+              <field name="air_time_hour" />
+              <field name="estimated_000_primary_demo" />
+              <field name="liability_000" />
+              <field name="line" />
+              <field name="max_per_day_count" />
+              <field name="prelog_equiv_30" />
+              <field name="rate" />
+              <field name="segment" />
+              <field name="total_000_primary_demo" />
+              <field name="total_dollars_earned" />
+              <field name="version" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.spot_data -->
+  <record id="view_mv_spot_data_form_phase13" model="ir.ui.view">
+    <field name="name">mv.spot_data.form.phase13</field>
+    <field name="model">mv.spot_data</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_spot_data_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="schedule" />
+              <field name="prelog_data" />
+              <field name="spotdatamirror" />
+              <field name="station" />
+              <field name="length" />
+              <field name="status" />
+              <field name="air_date" />
+              <field name="spot_week" />
+              <field name="air_date_time" />
+              <field name="air_date_yyyy" />
+              <field name="air_time" />
+              <field name="am_pm" />
+              <field name="brand" />
+              <field name="broadcast_network" />
+              <field name="commercial_title" />
+              <field name="day_of_week" />
+              <field name="daypart" />
+              <field name="error_mirror" />
+              <field name="hour" />
+              <field name="hour_of_day" />
+            </group>
+            <group>
+              <field name="isci" />
+              <field name="line_number" />
+              <field name="long_form" />
+              <field name="main_broadcast_program" />
+              <field name="network_deal_number" />
+              <field name="pod" />
+              <field name="product" />
+              <field name="program" />
+              <field name="program_id" />
+              <field name="rate_check" />
+              <field name="raycom_invoice_number" />
+              <field name="raycom_order_account_brand" />
+              <field name="raycom_order_number" />
+              <field name="schedule_id" />
+              <field name="sdm_created_by" />
+              <field name="spotdatamirror_reference" />
+              <field name="spotdataref" />
+              <field name="station_market_affiliate" />
+              <field name="time_period" />
+              <field name="x800" />
+            </group>
+            <group>
+              <field name="availability" />
+              <field name="log_schedule_mismatch" />
+              <field name="long_form_match" />
+              <field name="snowflake_transferred" />
+              <field name="spotdatarefequal" />
+              <field name="agency_commission" />
+              <field name="bundle" />
+              <field name="bundle_avail_30" />
+              <field name="bundle_spot_30" />
+              <field name="bundle_spot_rate" />
+              <field name="error" />
+              <field name="impressions" />
+              <field name="long_form_rate" />
+              <field name="main_network" />
+              <field name="net_total" />
+              <field name="schedule_rate" />
+              <field name="spot_30_rate" />
+              <field name="spot_equiv_30" />
+              <field name="spot_rate" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- mv.spot_data_mirror -->
+  <record id="view_mv_spot_data_mirror_form_phase13" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.form.phase13</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_spot_data_mirror_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+      <!-- Page 1: Details -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="schedule" />
+              <field name="spot_data" />
+              <field name="length" />
+              <field name="status" />
+              <field name="air_date" />
+              <field name="scheduleweek" />
+              <field name="week" />
+              <field name="air_date_time" />
+              <field name="air_date_yyyy" />
+              <field name="air_time" />
+            </group>
+            <group>
+              <field name="broadcast_network" />
+              <field name="commercial_title" />
+              <field name="hour_of_day" />
+              <field name="isci" />
+              <field name="line_number" />
+              <field name="log_schedule" />
+              <field name="network" />
+              <field name="network_deal_number" />
+              <field name="product" />
+              <field name="program_id" />
+            </group>
+            <group>
+              <field name="raycom_invoice_number" />
+              <field name="reason_for_unmatched" />
+              <field name="schedule_start_end" />
+              <field name="time_period" />
+              <field name="x800" />
+              <field name="pp" />
+              <field name="air_time_hour" />
+              <field name="spot_equiv_30" />
+              <field name="spot_rate" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+      <!-- Page 2: SF Metadata -->
+      <xpath expr="//notebook/page[2]" position="replace">
+        <page string="SF Metadata">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="sf_external_id" />
+            </group>
+            <group>
+              <field name="sf_legacy_data" />
+            </group>
+            <group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>

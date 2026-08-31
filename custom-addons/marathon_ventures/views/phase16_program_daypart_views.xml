@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Program Daypart list/form used inline inside the Program's
+         Dayparts tab. -->
+    <record id="view_mv_program_daypart_list" model="ir.ui.view">
+        <field name="name">mv.program.daypart.list</field>
+        <field name="model">mv.program.daypart</field>
+        <field name="arch" type="xml">
+            <list string="Dayparts" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+                <field name="time_range" readonly="1"/>
+                <field name="days_allowed_ids" widget="many2many_tags"
+                       options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mv_program_daypart_form" model="ir.ui.view">
+        <field name="name">mv.program.daypart.form</field>
+        <field name="model">mv.program.daypart</field>
+        <field name="arch" type="xml">
+            <form string="Daypart">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="start_time"/>
+                        <field name="end_time"/>
+                        <field name="time_range" readonly="1"/>
+                        <field name="days_allowed_ids"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Append a "Dayparts" tab to the existing Program notebook. -->
+    <record id="view_mv_programs_form_dayparts" model="ir.ui.view">
+        <field name="name">mv.programs.form.dayparts</field>
+        <field name="model">mv.programs</field>
+        <field name="inherit_id" ref="marathon_ventures.view_mv_programs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Dayparts" name="dayparts">
+                    <field name="daypart_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="time_range" readonly="1"/>
+                            <field name="days_allowed_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

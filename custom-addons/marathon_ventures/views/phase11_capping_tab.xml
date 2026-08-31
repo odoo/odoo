@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 11 - Capping Report tab on the Deal form.
+       Mounts the mv_capping_grid OWL widget via the same field-widget
+       pattern as the Units Report tab. -->
+
+  <record id="view_mv_deal_form_phase11_capping" model="ir.ui.view">
+    <field name="name">mv.deal.form.phase11.capping</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form"/>
+    <field name="priority">260</field>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+        <page string="Capping Report" name="page_capping_report"
+              invisible="not id">
+          <field name="id" widget="mv_capping_grid" nolabel="1"/>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>

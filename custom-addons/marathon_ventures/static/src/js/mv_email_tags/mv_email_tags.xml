@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvEmailTags">
+    <div class="mv-email-tags"
+         t-att-class="{ 'mv-email-tags--readonly': readonly, 'mv-email-tags--error': state.error }"
+         t-on-click="(ev) => this.onWrapperClick(ev)">
+      <t t-foreach="emails" t-as="e" t-key="e_index">
+        <span class="mv-email-tag">
+          <span class="mv-email-tag__value" t-esc="e"/>
+          <button t-if="!readonly"
+                  type="button"
+                  class="mv-email-tag__x"
+                  t-att-title="'Remove ' + e"
+                  t-on-click.stop.prevent="() => this.onRemove(e_index)">
+            &#215;
+          </button>
+        </span>
+      </t>
+      <input t-if="!readonly"
+             t-ref="input"
+             type="email"
+             class="mv-email-tags__input"
+             t-att-placeholder="emails.length ? '' : 'Type an email address and press Enter...'"
+             t-att-value="state.draft"
+             t-on-input="(ev) => this.onInput(ev)"
+             t-on-keydown="(ev) => this.onKeydown(ev)"
+             t-on-blur="() => this.onBlur()"/>
+    </div>
+    <div t-if="state.error" class="mv-email-tags__err">
+      <i class="fa fa-exclamation-triangle me-1"/>
+      <t t-esc="state.error"/>
+    </div>
+  </t>
+
+</templates>

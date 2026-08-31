@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 1 — Deal form additions: header buttons, smart-button strip,
+       Schedules tab (One2many) and Double Check Report (grouped pivot). -->
+  <record id="view_mv_deal_form_phase1" model="ir.ui.view">
+    <field name="name">mv.deal.form.phase1</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form"/>
+    <field name="arch" type="xml">
+
+      <!-- Add header action buttons + a status bar -->
+      <xpath expr="//form" position="inside">
+        <!-- We need a header tag inserted; the auto-generated form has none.
+             Append a header right inside <form> with our buttons + statusbar. -->
+      </xpath>
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_new_schedule" type="object" string="New Schedule"
+                  class="btn-primary"/>
+          <button name="action_open_deal_revisions" type="object" string="Deal Revisions"
+                  class="btn-secondary"/>
+          <button name="action_send_filing_email" type="object" string="Send Filing Email"
+                  class="btn-secondary"/>
+          <field name="status" widget="statusbar"
+                 statusbar_visible="sold,canceled,budget,historical"/>
+        </header>
+      </xpath>
+
+      <!-- Smart-button strip at top of sheet -->
+      <xpath expr="//sheet" position="inside">
+        <div class="oe_button_box" name="button_box">
+          <button name="action_open_schedules" type="object"
+                  class="oe_stat_button" icon="fa-list">
+            <field name="schedule_count" widget="statinfo" string="Schedules"/>
+          </button>
+          <button class="oe_stat_button" icon="fa-money" disabled="1">
+            <field name="total_booked_dollars" widget="statinfo" string="$ Booked"/>
+          </button>
+          <button class="oe_stat_button" icon="fa-calculator" disabled="1">
+            <field name="total_booked_units" widget="statinfo" string="Units Booked"/>
+          </button>
+        </div>
+      </xpath>
+
+      <!-- Add Schedules + Double Check Report notebook tabs at the END of the existing notebook -->
+      <xpath expr="//notebook" position="inside">
+        <page string="Schedules" name="schedules_tab">
+          <field name="schedule_ids" nolabel="1">
+            <list editable="bottom"
+                  decoration-muted="status == 'canceled'"
+                  decoration-info="test == True">
+              <field name="week"/>
+              <field name="rate" widget="monetary"/>
+              <field name="units_available"/>
+              <field name="total_dollars" widget="monetary" readonly="1"/>
+              <field name="equiv_30" readonly="1"/>
+              <field name="cap"/>
+              <field name="max_per_day"/>
+              <field name="status"/>
+              <field name="test"/>
+              <field name="currency_id" column_invisible="1"/>
+            </list>
+          </field>
+        </page>
+      </xpath>
+
+    </field>
+  </record>
+
+  <!-- List view enhancements: add brand/program/status columns to the existing list -->
+  <record id="view_mv_deal_list_phase1" model="ir.ui.view">
+    <field name="name">mv.deal.list.phase1</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_list"/>
+    <field name="arch" type="xml">
+      <xpath expr="//list" position="inside">
+        <field name="program" optional="show"/>
+        <field name="brands" optional="show"/>
+        <field name="length" optional="show"/>
+        <field name="network_deal_number" optional="show"/>
+        <field name="total_booked_dollars" widget="monetary" optional="show"/>
+        <field name="status" optional="show"/>
+        <field name="currency_id" column_invisible="1"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Search view: add filters and group-by -->
+  <record id="view_mv_deal_search_phase1" model="ir.ui.view">
+    <field name="name">mv.deal.search.phase1</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_search"/>
+    <field name="arch" type="xml">
+      <xpath expr="//search" position="inside">
+        <field name="network_deal_number"/>
+        <field name="program"/>
+        <field name="brands"/>
+        <filter name="filter_sold" string="Sold" domain="[('status','=','sold')]"/>
+        <filter name="filter_canceled" string="Canceled" domain="[('status','=','canceled')]"/>
+        <separator/>
+          <filter name="group_program" string="Program" context="{'group_by':'program'}"/>
+          <filter name="group_brand" string="Brand" context="{'group_by':'brands'}"/>
+          <filter name="group_status" string="Status" context="{'group_by':'status'}"/>
+        
+      </xpath>
+    </field>
+  </record>
+</odoo>

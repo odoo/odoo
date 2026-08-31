@@ -1,0 +1,261 @@
+/* ============================================================================
+   Phase 14 v3 - Salesforce-style 4-panel Report Builder
+   ============================================================================ */
+.mv-rb {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f3f4f6;
+    font-size: 13px;
+    color: #1a1d22;
+}
+
+/* ----- HEADER ----- */
+.mv-rb__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #ffffff;
+    border-bottom: 1px solid #e4e6eb;
+    gap: 16px;
+    flex: 0 0 auto;
+}
+.mv-rb__header-left { flex: 1; min-width: 0; }
+.mv-rb__crumb {
+    font-size: 10px; color: #6b7280; text-transform: uppercase;
+    letter-spacing: 0.06em; font-weight: 700;
+}
+.mv-rb__name {
+    width: 100%; border: none; background: transparent;
+    font-size: 20px; font-weight: 600; padding: 2px 0;
+}
+.mv-rb__name:focus { outline: none; border-bottom: 2px solid #3b82f6; }
+.mv-rb__desc {
+    width: 100%; border: none; background: #f6f7f9; border-radius: 4px;
+    padding: 4px 8px; font-size: 12px; color: #4b5563; margin-top: 2px;
+}
+.mv-rb__desc:focus { outline: none; background: #ffffff; box-shadow: 0 0 0 2px #3b82f6 inset; }
+.mv-rb__header-right { display: flex; gap: 6px; flex: 0 0 auto; }
+
+/* ----- BODY ----- */
+.mv-rb__body {
+    display: grid;
+    grid-template-columns: 220px 240px 1fr 360px;
+    gap: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+.mv-rb__panel {
+    background: #ffffff;
+    border-right: 1px solid #e4e6eb;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.mv-rb__panel:last-child { border-right: none; }
+.mv-rb__panel-title {
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 13px;
+    background: #f6f7f9;
+    border-bottom: 1px solid #e4e6eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.mv-rb__panel-sub { font-size: 11px; color: #6b7280; font-weight: 400; }
+.mv-rb__search {
+    margin: 8px 12px; padding: 5px 8px;
+    border: 1px solid #d1d5db; border-radius: 4px;
+    font-size: 12px;
+}
+.mv-rb__search:focus { outline: none; border-color: #3b82f6; }
+
+/* ----- DATA SOURCES PANEL ----- */
+.mv-rb__model-list { flex: 1 1 auto; overflow-y: auto; padding: 4px 8px; }
+.mv-rb__model {
+    width: 100%; text-align: left; background: transparent;
+    border: 1px solid transparent; border-radius: 4px;
+    padding: 6px 8px; margin-bottom: 2px; font-size: 12px;
+    cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center;
+}
+.mv-rb__model:hover { background: #eef0f3; }
+.mv-rb__model--active { background: #dbeafe; border-color: #3b82f6; }
+.mv-rb__model-name { color: #1a1d22; font-weight: 500; }
+.mv-rb__model-count { font-size: 10px; color: #6b7280; }
+
+/* ----- FIELDS PANEL ----- */
+.mv-rb__field-list { flex: 1 1 auto; overflow-y: auto; padding: 4px 8px; }
+/* Group header (Base / joined node) - visually distinct from the
+   field rows so the user immediately sees which model a field
+   comes from. */
+.mv-rb__field-group { margin-bottom: 8px; }
+.mv-rb__field-group-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 4px 6px; margin: 6px 0 3px 0;
+    background: #f3f4f6; border-radius: 3px;
+    font-size: 10px; font-weight: 700; color: #1f2937;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    position: sticky; top: 0; z-index: 1;
+}
+.mv-rb__field-group-label { flex: 1; }
+.mv-rb__field-group-count { color: #9ca3af; font-weight: 500; font-size: 9px; }
+/* Chip path suffix (shown when a column's path is multi-hop, e.g.
+   advertiser_id.name) - lets the user see where a field came from
+   without needing to hover. */
+.mv-rb__chip-path {
+    font-size: 9px; color: #6b7280; font-style: italic;
+    background: rgba(0,0,0,0.03); padding: 0 4px; border-radius: 2px;
+    margin-right: 2px;
+}
+.mv-rb__field {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 6px; margin-bottom: 2px; border-radius: 4px;
+    cursor: grab; user-select: none; font-size: 12px;
+    border: 1px solid transparent;
+}
+.mv-rb__field:hover { background: #f6f7f9; border-color: #e4e6eb; }
+.mv-rb__field:active { cursor: grabbing; }
+.mv-rb__field-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    background: #e5e7eb; color: #6b7280;
+    border-radius: 3px; font-size: 11px; font-weight: 700;
+    flex: 0 0 auto;
+}
+.mv-rb__field-label { flex: 1; color: #1a1d22; }
+.mv-rb__field-type { font-size: 10px; color: #9ca3af; }
+.mv-rb__empty { color: #9ca3af; font-style: italic; padding: 10px; text-align: center; }
+
+/* ----- CANVAS (drop zones) ----- */
+.mv-rb__canvas {
+    background: #f6f7f9;
+    overflow-y: auto;
+    padding: 14px;
+    gap: 12px;
+}
+.mv-rb__zone {
+    background: #ffffff; border: 1px dashed #d1d5db; border-radius: 6px;
+    margin-bottom: 12px; padding: 10px 12px;
+    transition: border-color 0.15s;
+}
+.mv-rb__zone:hover { border-color: #93c5fd; }
+.mv-rb__zone-title {
+    font-weight: 700; font-size: 12px; color: #1a1d22;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: baseline;
+}
+.mv-rb__zone-hint { font-size: 10px; color: #9ca3af; font-weight: 400; text-transform: none; }
+.mv-rb__zone-list { display: flex; flex-direction: column; gap: 6px; }
+.mv-rb__zone-empty { color: #9ca3af; font-style: italic; padding: 6px 4px; font-size: 12px; }
+
+.mv-rb__chip {
+    display: flex; align-items: center; gap: 6px;
+    background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px;
+    padding: 4px 6px;
+    position: relative;
+    transition: opacity 0.15s, border-color 0.15s, transform 0.15s;
+}
+/* Drag handle - the ONLY draggable element on the chip. The chip
+   itself is the drop target. Making the handle the sole drag source
+   removes ambiguity: mousedown on the input/select/× button never
+   starts a chip drag (those controls keep their normal behavior),
+   while mousedown on the handle always does. */
+.mv-rb__chip-handle {
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 auto;
+    width: 18px; height: 22px;
+    margin-right: 2px;
+    color: #6b7280; font-size: 12px;
+    letter-spacing: -2px;
+    cursor: grab;
+    user-select: none;
+    border-radius: 3px;
+    transition: background-color 0.12s, color 0.12s;
+}
+.mv-rb__chip-handle:hover {
+    background: #bfdbfe;
+    color: #1d4ed8;
+}
+.mv-rb__chip-handle:active { cursor: grabbing; background: #93c5fd; }
+.mv-rb__chip--col { cursor: default; }
+/* The chip being dragged - dim it. */
+.mv-rb__chip--dragging {
+    opacity: 0.4;
+}
+/* The chip currently being hovered as a drop target - blue insertion
+   indicator on the top edge. */
+.mv-rb__chip--drop-target {
+    border-color: #3b82f6;
+    box-shadow: 0 -2px 0 0 #3b82f6 inset;
+}
+.mv-rb__chip-label {
+    flex: 1; border: none; background: transparent;
+    font-size: 12px; color: #1a1d22;
+}
+.mv-rb__chip-label:focus { outline: none; background: #ffffff; }
+.mv-rb__chip-agg {
+    border: 1px solid #d1d5db; border-radius: 3px;
+    padding: 1px 4px; font-size: 11px; background: #ffffff;
+}
+.mv-rb__chip-x {
+    background: transparent; border: none; cursor: pointer;
+    color: #6b7280; font-size: 14px; padding: 0 4px;
+}
+.mv-rb__chip-x:hover { color: #b91c1c; }
+
+/* Filter rows have a wider layout */
+.mv-rb__filter {
+    display: flex; align-items: center; gap: 6px;
+    background: #fef3c7; border: 1px solid #fcd34d; border-radius: 4px;
+    padding: 4px 6px;
+}
+.mv-rb__filter-label { flex: 0 0 120px; font-size: 12px; font-weight: 600; }
+.mv-rb__filter-op {
+    flex: 0 0 130px; border: 1px solid #d1d5db; border-radius: 3px;
+    padding: 2px 4px; font-size: 11px;
+}
+.mv-rb__filter-value {
+    flex: 1; border: 1px solid #d1d5db; border-radius: 3px;
+    padding: 2px 6px; font-size: 12px;
+}
+
+/* ----- PREVIEW PANEL ----- */
+.mv-rb__preview { background: #ffffff; }
+.mv-rb__preview-table-wrap {
+    flex: 1 1 auto; overflow: auto; padding: 8px 10px;
+}
+.mv-rb__preview-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+}
+.mv-rb__preview-table th {
+    background: #f6f7f9; padding: 5px 8px;
+    border-bottom: 1px solid #e4e6eb;
+    text-align: left; font-weight: 600;
+    position: sticky; top: 0;
+}
+.mv-rb__preview-table td {
+    padding: 5px 8px; border-bottom: 1px solid #f0f1f3;
+}
+.mv-rb__preview-idx { color: #9ca3af; width: 28px; text-align: right; }
+.mv-rb__preview-empty {
+    color: #9ca3af; font-style: italic; padding: 24px; text-align: center;
+}
+.mv-rb__preview-pager {
+    display: flex; gap: 6px; justify-content: center;
+    padding: 8px; border-top: 1px solid #e4e6eb;
+}
+.mv-rb__loading { text-align: center; color: #6b7280; padding: 16px; }
+
+/* Responsive: collapse to single column under 1100px */
+@media (max-width: 1100px) {
+    .mv-rb__body {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+    }
+    .mv-rb__panel { max-height: 300px; }
+    .mv-rb__canvas { max-height: none; }
+}

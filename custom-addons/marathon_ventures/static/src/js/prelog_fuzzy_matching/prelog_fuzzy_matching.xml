@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvPrelogFuzzyMatching">
+    <div class="mv-fuzzy">
+      <main class="mv-fuzzy__main" t-if="state.loaded">
+        <h1 class="mv-fuzzy__page-title">Prelog Workbench</h1>
+
+        <section class="mv-fuzzy__upload-context" t-if="state.latestUpload and state.filters.importJobId">
+          <i class="fa fa-user-circle"/>
+          <div>
+            <strong>Your latest completed upload</strong>
+            <span><t t-esc="state.latestUpload.program_name"/> · Week <t t-esc="state.latestUpload.week_start"/> · Version <t t-esc="state.latestUpload.version"/> · <t t-esc="state.latestUpload.row_count"/> rows</span>
+          </div>
+        </section>
+
+        <section class="mv-fuzzy__filter-card">
+          <div class="mv-fuzzy__filter-grid">
+            <label class="mv-fuzzy__field">
+              <span>Program / Network <small>Optional</small></span>
+              <select t-on-change="onProgramChange" t-att-disabled="state.querying or state.mutating">
+                <option value="">All Programs</option>
+                <option t-foreach="state.programs" t-as="program" t-key="program.id"
+                        t-att-value="program.id" t-att-selected="program.id === state.filters.programId">
+                  <t t-esc="program.name"/><t t-if="program.inactive"> (Inactive)</t>
+                </option>
+              </select>
+            </label>
+            <label class="mv-fuzzy__field">
+              <span>Week <small>Optional · Monday</small></span>
+              <input type="date" t-att-value="state.filters.weekStart"
+                     t-on-change="onWeekChange" t-att-disabled="state.querying or state.mutating"/>
+            </label>
+            <label class="mv-fuzzy__field">
+              <span>Version <small>Optional</small></span>
+              <select t-on-change="onVersionChange"
+                      t-att-disabled="state.querying or state.mutating">
+                <option value="">All Versions</option>
+                <option t-foreach="state.versions" t-as="version" t-key="version"
+                        t-att-value="version" t-att-selected="version === state.filters.version">
+                  Version <t t-esc="version"/>
+                </option>
+              </select>
+            </label>
+            <div class="mv-fuzzy__filter-actions">
+              <button class="btn btn-primary" t-on-click="onFilter" t-att-disabled="state.querying or state.mutating">
+                <i class="fa fa-filter me-1"/><t t-esc="state.querying ? 'Loading…' : 'View Prelogs'"/>
+              </button>
+              <button class="btn btn-outline-secondary" t-on-click="onExport"
+                      t-att-disabled="state.exporting or state.querying or state.mutating or !state.hasFiltered">
+                <i class="fa fa-download me-1"/><t t-esc="state.exporting ? 'Exporting…' : 'Export View'"/>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="mv-fuzzy__results" t-if="state.hasFiltered">
+          <nav class="mv-fuzzy__tabs" aria-label="Prelog status">
+            <button t-att-class="state.activeTab === 'all' ? 'active' : ''" t-on-click="() => this.setTab('all')">All <span t-esc="state.counts.all"/></button>
+            <button t-att-class="state.activeTab === 'matched' ? 'active' : ''" t-on-click="() => this.setTab('matched')">Matched <span t-esc="state.counts.matched"/></button>
+            <button t-att-class="state.activeTab === 'unmatched' ? 'active' : ''" t-on-click="() => this.setTab('unmatched')">Unmatched <span t-esc="state.counts.unmatched"/></button>
+            <button t-att-class="state.activeTab === 'suggestions' ? 'active' : ''" t-on-click="() => this.setTab('suggestions')">Fuzzy Suggestions <span t-esc="state.counts.suggestions"/></button>
+            <button t-att-class="state.activeTab === 'no_suggestion' ? 'active' : ''" t-on-click="() => this.setTab('no_suggestion')">No Suggestion <span t-esc="state.counts.no_suggestion"/></button>
+            <button t-att-class="state.activeTab === 'removed' ? 'active' : ''" t-on-click="() => this.setTab('removed')">Removed <span t-esc="state.counts.removed"/></button>
+          </nav>
+
+          <div class="mv-fuzzy__searchbar">
+            <label class="mv-fuzzy__search">
+              <i class="fa fa-search"/>
+              <input type="search" placeholder="Search prelog, adv/product, deal or schedule"
+                     t-att-value="state.searchTerm"
+                     t-on-input="(ev) => this.state.searchTerm = ev.target.value"
+                     t-on-keydown="onSearchKeydown"/>
+            </label>
+            <input class="mv-fuzzy__compact-input" type="date" title="Air date"
+                   t-att-value="state.airDate" t-on-change="(ev) => this.state.airDate = ev.target.value"/>
+            <select class="mv-fuzzy__compact-input" t-on-change="(ev) => this.state.issueFilter = ev.target.value">
+              <option value="">All issues</option><option value="time">Time issue</option>
+              <option value="length">Length issue</option><option value="ambiguous">Tied schedules</option>
+              <option value="missing_deal">Missing deal #</option>
+            </select>
+            <button class="btn btn-outline-primary btn-sm" t-on-click="onFilter" t-att-disabled="state.querying">Apply</button>
+          </div>
+
+          <div class="mv-fuzzy__results-toolbar">
+            <div>
+              <h2 t-esc="tabTitle()"/>
+              <p t-if="state.total">Showing <t t-esc="visibleRangeStart"/>–<t t-esc="visibleRangeEnd"/> of <t t-esc="state.total"/></p>
+              <p t-else="">No rows in this view.</p>
+            </div>
+            <div class="mv-fuzzy__bulk-actions">
+              <span t-if="selectedCount"><strong t-esc="selectedCount"/> selected</span>
+              <button class="btn btn-success btn-sm" t-on-click="attachSuggested"
+                      t-if="state.activeTab === 'all' or state.activeTab === 'unmatched' or state.activeTab === 'suggestions'"
+                      t-att-disabled="!selectedCount or state.mutating">Attach Suggested</button>
+              <button class="btn btn-outline-danger btn-sm" t-on-click="() => this.setRemoved(true)"
+                      t-if="state.activeTab !== 'removed'" t-att-disabled="!selectedCount or state.mutating">
+                <i class="fa fa-ban me-1"/>Remove
+              </button>
+              <button class="btn btn-outline-success btn-sm" t-on-click="() => this.setRemoved(false)"
+                      t-if="state.activeTab === 'removed'" t-att-disabled="!selectedCount or state.mutating">
+                <i class="fa fa-undo me-1"/>Unremove
+              </button>
+              <button class="btn btn-danger btn-sm" t-on-click="() => this.deleteSelected()"
+                      t-att-disabled="!selectedCount or state.mutating">
+                <i class="fa fa-trash me-1"/>Delete
+              </button>
+            </div>
+          </div>
+
+          <div class="mv-fuzzy__select-all" t-if="canSelectAllMatching">
+            All <strong t-esc="state.rows.length"/> rows on this page are selected.
+            <button type="button" t-on-click="selectEveryMatchingRow">
+              Select all <t t-esc="state.total"/> matching rows
+            </button>
+          </div>
+          <div class="mv-fuzzy__select-all" t-if="state.selectAllMatching and selectedCount">
+            All <strong t-esc="selectedCount"/> matching rows are selected.
+            <button type="button" t-on-click="clearSelection">Clear selection</button>
+          </div>
+
+          <div class="mv-fuzzy__loading" t-if="state.querying"><i class="fa fa-spinner fa-spin"/> Loading Prelog rows…</div>
+          <div class="mv-fuzzy__empty" t-if="!state.querying and !state.total">
+            <i class="fa fa-inbox"/><h3>No Prelogs here</h3><p>Try another status tab or adjust the filters.</p>
+          </div>
+
+          <div class="mv-fuzzy__table-wrap" t-if="!state.querying and state.rows.length">
+            <table class="mv-fuzzy__table mv-fuzzy__table--workbench">
+              <thead><tr>
+                <th class="mv-fuzzy__check"><input type="checkbox" t-att-checked="allPageSelected" t-on-change="toggleAll"/></th>
+                <th t-att-aria-sort="sortAria('status')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('status')"><span>Status</span><i t-att-class="sortIcon('status')"/></button></th>
+                <th t-att-aria-sort="sortAria('name')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('name')"><span>Prelog</span><i t-att-class="sortIcon('name')"/></button></th>
+                <th t-att-aria-sort="sortAria('network')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('network')"><span>Network</span><i t-att-class="sortIcon('network')"/></button></th>
+                <th t-att-aria-sort="sortAria('air_date')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('air_date')"><span>Air Date / Time</span><i t-att-class="sortIcon('air_date')"/></button></th>
+                <th t-att-aria-sort="sortAria('length')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('length')"><span>Length</span><i t-att-class="sortIcon('length')"/></button></th>
+                <th t-att-aria-sort="sortAria('rate')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('rate')"><span>Rate</span><i t-att-class="sortIcon('rate')"/></button></th>
+                <th t-att-aria-sort="sortAria('deal_number')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('deal_number')"><span>Network Deal #</span><i t-att-class="sortIcon('deal_number')"/></button></th>
+                <th t-att-aria-sort="sortAria('advertiser_product')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('advertiser_product')"><span>Adv / Product</span><i t-att-class="sortIcon('advertiser_product')"/></button></th>
+                <th t-att-aria-sort="sortAria('schedule')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('schedule')"><span>Schedule</span><i t-att-class="sortIcon('schedule')"/></button></th>
+                <th t-att-aria-sort="sortAria('reason')"><button type="button" class="mv-fuzzy__sort-button" t-on-click="() => this.onSort('reason')"><span>Reason</span><i t-att-class="sortIcon('reason')"/></button></th>
+                <th>Details</th>
+              </tr></thead>
+              <tbody>
+                <tr t-foreach="state.rows" t-as="row" t-key="row.id" t-att-class="isSelected(row) ? 'is-selected' : ''">
+                  <td class="mv-fuzzy__check"><input type="checkbox" t-att-checked="isSelected(row)" t-on-change="(ev) => this.toggleRow(row, ev)"/></td>
+                  <td><span t-att-class="statusBadge(row)" t-esc="row.status_label"/></td>
+                  <td><button class="mv-fuzzy__record-link" t-on-click="() => this.openDrawer(row)" t-esc="row.name"/></td>
+                  <td t-esc="row.network"/>
+                  <td><t t-esc="row.air_date"/> <span class="mv-fuzzy__muted"><t t-esc="row.day"/> · <t t-esc="row.air_time"/></span></td>
+                  <td t-att-class="row.length_mismatch ? 'mv-fuzzy__text-warning' : ''" t-esc="row.length"/>
+                  <td t-att-class="row.rate_mismatch ? 'mv-fuzzy__text-warning' : ''">$<t t-esc="formatRate(row.rate)"/></td>
+                  <td t-esc="row.deal_number"/>
+                  <td><span class="mv-fuzzy__advertiser-product" t-att-title="row.advertiser_product" t-esc="row.advertiser_product"/></td>
+                  <td>
+                    <a t-if="row.attached" class="mv-fuzzy__record-link" target="_blank" rel="noopener"
+                       t-att-href="scheduleOpenUrl(row.attached)" t-on-click.stop="() => {}" t-esc="row.attached.name"/>
+                    <a t-elif="row.suggested" class="mv-fuzzy__record-link" target="_blank" rel="noopener"
+                       t-att-href="scheduleOpenUrl(row.suggested)" t-on-click.stop="() => {}" t-esc="row.suggested.name"/>
+                    <span t-else="" class="mv-fuzzy__muted">No suggestion</span>
+                    <span class="mv-fuzzy__quality mv-fuzzy__quality--exact" t-if="row.status === 'suggestion' and row.match_quality === 'exact'">Exact</span>
+                    <span class="mv-fuzzy__quality mv-fuzzy__quality--fuzzy" t-if="row.status === 'suggestion' and row.match_quality === 'fuzzy'">Fuzzy</span>
+                  </td>
+                  <td><span class="mv-fuzzy__reason" t-att-title="row.reason" t-esc="row.reason or (row.status === 'matched' ? 'Schedule attached' : 'Ready to attach')"/></td>
+                  <td><button class="btn btn-outline-secondary btn-sm" t-on-click="() => this.openDrawer(row)"><i class="fa fa-eye"/> Review</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <nav class="mv-fuzzy__pager" t-if="state.total">
+            <button class="btn btn-outline-secondary btn-sm" t-on-click="previousPage" t-att-disabled="state.offset &lt;= 0 or state.querying"><i class="fa fa-chevron-left"/> Previous</button>
+            <span>Page <strong t-esc="state.page"/> of <strong t-esc="state.pages"/></span>
+            <button class="btn btn-outline-secondary btn-sm" t-on-click="nextPage" t-att-disabled="state.offset + state.pageSize &gt;= state.total or state.querying">Next <i class="fa fa-chevron-right"/></button>
+          </nav>
+        </section>
+
+        <section class="mv-fuzzy__welcome" t-if="!state.hasFiltered">
+          <i class="fa fa-table"/><h2>Choose a Prelog set to begin</h2><p>Your newest completed upload is selected automatically when available. All parameters remain editable.</p>
+        </section>
+      </main>
+
+      <div class="mv-fuzzy__drawer-backdrop" t-if="state.drawerRow" t-on-click="closeDrawer"/>
+      <aside class="mv-fuzzy__drawer" t-if="state.drawerRow">
+        <header>
+          <div><span t-att-class="statusBadge(state.drawerRow)" t-esc="state.drawerRow.status_label"/><h2 t-esc="state.drawerRow.name"/></div>
+          <button class="btn btn-light btn-sm" t-on-click="closeDrawer"><i class="fa fa-times"/></button>
+        </header>
+        <div class="mv-fuzzy__drawer-body">
+          <section><h3>Prelog Data</h3><dl class="mv-fuzzy__details">
+            <dt>Network</dt><dd t-esc="state.drawerRow.network"/><dt>Air date</dt><dd><t t-esc="state.drawerRow.air_date"/> · <t t-esc="state.drawerRow.air_time"/></dd>
+            <dt>Deal #</dt><dd t-esc="state.drawerRow.deal_number"/><dt>Adv / Product</dt><dd t-esc="state.drawerRow.advertiser_product"/>
+            <dt>Agency</dt><dd t-esc="state.drawerRow.agency or '—'"/><dt>Length / Rate</dt><dd><t t-esc="state.drawerRow.length"/> · $<t t-esc="formatRate(state.drawerRow.rate)"/></dd>
+          </dl></section>
+
+          <section t-if="state.drawerRow.attached or state.drawerRow.suggested">
+            <h3><t t-esc="state.drawerRow.attached ? 'Attached Schedule' : 'Suggested Schedule'"/>
+              <span class="mv-fuzzy__quality mv-fuzzy__quality--exact" t-if="state.drawerRow.status === 'suggestion' and state.drawerRow.match_quality === 'exact'">Exact</span>
+              <span class="mv-fuzzy__quality mv-fuzzy__quality--fuzzy" t-if="state.drawerRow.status === 'suggestion' and state.drawerRow.match_quality === 'fuzzy'">Fuzzy</span>
+            </h3>
+            <t t-set="schedule" t-value="state.drawerRow.attached or state.drawerRow.suggested"/>
+            <dl class="mv-fuzzy__details"><dt>Name</dt><dd><a class="mv-fuzzy__record-link" target="_blank" rel="noopener"
+              t-att-href="scheduleOpenUrl(schedule)" t-on-click.stop="() => {}" t-esc="schedule.name"/></dd>
+              <dt>Rotation</dt><dd t-esc="schedule.time_range or '—'"/><dt>Days</dt><dd t-esc="schedule.days_allowed or '—'"/>
+              <dt>Length / Rate</dt><dd><t t-esc="schedule.length"/> · $<t t-esc="formatRate(schedule.rate)"/></dd><dt>Deal #</dt><dd t-esc="schedule.deal_number"/>
+            </dl>
+            <p class="mv-fuzzy__explanation" t-if="state.drawerRow.explanation"><strong>Why this suggestion:</strong> <t t-esc="state.drawerRow.explanation"/></p>
+          </section>
+
+          <section><h3>Schedule actions</h3>
+            <button class="btn btn-success w-100 mb-2" t-if="state.drawerRow.status === 'suggestion' and state.drawerRow.suggestion_attachable"
+                    t-on-click="() => this.attachOneSuggestion(state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-link me-1"/>Attach Suggested Schedule</button>
+            <button class="btn btn-outline-warning w-100 mb-2" t-if="state.drawerRow.status === 'matched'"
+                    t-on-click="() => this.detachSchedule(state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-unlink me-1"/>Detach Schedule</button>
+            <label class="mv-fuzzy__field"><span><t t-esc="state.drawerRow.status === 'matched' ? 'Replace with schedule' : 'Manual schedule'"/></span>
+              <input type="text" placeholder="Schedule name or Odoo ID" t-att-value="state.manualSchedule" t-on-input="(ev) => this.state.manualSchedule = ev.target.value"/>
+            </label>
+            <button class="btn btn-outline-primary w-100 mt-2" t-on-click="() => this.attachManual(state.drawerRow)" t-att-disabled="state.mutating or !state.manualSchedule.trim()">
+              <t t-esc="state.drawerRow.status === 'matched' ? 'Replace Schedule' : 'Attach Manual Schedule'"/>
+            </button>
+          </section>
+
+          <section><h3>Record actions</h3>
+            <button class="btn btn-outline-secondary w-100 mb-2" t-on-click="() => this.openPrelog(state.drawerRow)"><i class="fa fa-external-link me-1"/>Open Full Prelog Record</button>
+            <button class="btn btn-outline-danger w-100" t-if="state.drawerRow.status !== 'removed'" t-on-click="() => this.setRemoved(true, state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-ban me-1"/>Remove Prelog Data</button>
+            <button class="btn btn-outline-success w-100" t-if="state.drawerRow.status === 'removed'" t-on-click="() => this.setRemoved(false, state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-undo me-1"/>Unremove Prelog Data</button>
+            <button class="btn btn-danger w-100 mt-2" t-on-click="() => this.deleteSelected(state.drawerRow)" t-att-disabled="state.mutating"><i class="fa fa-trash me-1"/>Permanently Delete Prelog Data</button>
+          </section>
+        </div>
+      </aside>
+
+      <div class="mv-fuzzy__loading mv-fuzzy__loading--page" t-if="!state.loaded"><i class="fa fa-spinner fa-spin"/> Loading Prelog Operations Workbench…</div>
+    </div>
+  </t>
+</templates>

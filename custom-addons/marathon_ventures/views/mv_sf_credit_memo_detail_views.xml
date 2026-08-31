@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sf_credit_memo_detail_list" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_detail.list</field>
+    <field name="model">mv.sf_credit_memo_detail</field>
+    <field name="arch" type="xml">
+      <list string="Sf Credit Memo Detail">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="brand"/>
+        <field name="comments"/>
+        <field name="credit_amount"/>
+        <field name="intacct_si_number"/>
+        <field name="netsuite_invoice_number"/>
+        <field name="program"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_memo_detail_form" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_detail.form</field>
+    <field name="model">mv.sf_credit_memo_detail</field>
+    <field name="arch" type="xml">
+      <form string="Sf Credit Memo Detail">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="credit_amount"/>
+                <field name="schedule"/>
+                <field name="sf_credit_memo_detail"/>
+                <field name="schedule_week"/>
+                <field name="account"/>
+                <field name="brand"/>
+              </group>
+              <group>
+                <field name="comments"/>
+                <field name="intacct_si_number"/>
+                <field name="netsuite_invoice_number"/>
+                <field name="program"/>
+                <field name="unit_length"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_memo_detail_search" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_detail.search</field>
+    <field name="model">mv.sf_credit_memo_detail</field>
+    <field name="arch" type="xml">
+      <search string="Sf Credit Memo Detail">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sf_credit_memo_detail" model="ir.actions.act_window">
+    <field name="name">Sf Credit Memo Detail</field>
+    <field name="res_model">mv.sf_credit_memo_detail</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sf_credit_memo_detail" name="Sf Credit Memo Detail" parent="menu_mv_finance" action="action_mv_sf_credit_memo_detail"/>
+</odoo>

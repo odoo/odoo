@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+  <!-- Phase 9 - Force Monday as first day of the week.
+       Odoo's date pickers read res.lang.week_start to decide which day
+       appears in the leftmost column. Updating base.lang_en (en_US, the
+       MV staff default) flips every date / week picker site-wide to
+       Mon-Sun ordering.
+
+       week_start values: '1' = Monday ... '7' = Sunday
+  -->
+  <record id="base.lang_en" model="res.lang">
+    <field name="week_start">1</field>
+  </record>
+</odoo>

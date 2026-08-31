@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_res_users_mv_form" model="ir.ui.view">
+    <field name="name">res.users.mv.form</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base.view_users_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <group string="Marathon Ventures" name="marathon_ventures">
+          <group string="SF Metadata">
+            <field name="sf_external_id"/>
+            <field name="sf_legacy_data"/>
+          </group>
+          <group string="SF Custom Fields">
+            <field name="aboutme"/>
+            <field name="address"/>
+            <field name="alias"/>
+            <field name="callcenterid"/>
+            <field name="communitynickname"/>
+            <field name="companyname"/>
+            <field name="contactid"/>
+            <field name="defaultgroupnotificationfrequency"/>
+            <field name="delegatedapproverid"/>
+            <field name="department"/>
+            <field name="digestfrequency"/>
+            <field name="division"/>
+            <field name="emailencodingkey"/>
+            <field name="employeenumber"/>
+            <field name="endday"/>
+            <field name="extension"/>
+            <field name="fax"/>
+            <field name="federationidentifier"/>
+            <field name="forecastenabled"/>
+            <field name="individualid"/>
+            <field name="intacct_company_id"/>
+            <field name="intacct_login_id"/>
+            <field name="intacct_user_key"/>
+            <field name="issystemcontrolled"/>
+            <field name="managerid"/>
+            <field name="mobilephone"/>
+            <field name="phone"/>
+            <field name="portalrole"/>
+            <field name="profileid"/>
+            <field name="receivesadmininfoemails"/>
+            <field name="receivesinfoemails"/>
+            <field name="senderemail"/>
+            <field name="sendername"/>
+            <field name="x_sf_signature"/>
+            <field name="startday"/>
+            <field name="stayintouchnote"/>
+            <field name="stayintouchsignature"/>
+            <field name="stayintouchsubject"/>
+            <field name="title"/>
+            <field name="userroleid"/>
+            <field name="workspaceid"/>
+            <field name="echosign_dev1__echosign_allow_delegated_sending"/>
+            <field name="echosign_dev1__echosign_email_verified"/>
+            <field name="ezfileloader__attachmentsecurityadmin"/>
+            <field name="zaapit__enable_zaapit_s_layout_editor"/>
+            <field name="zaapit__enable_zaapit_s_view_editor"/>
+          </group>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

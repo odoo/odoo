@@ -1,0 +1,15 @@
+/*  Hide "Manage Databases" and any database-selector link on the
+    login / DB manager pages. Loaded via web.assets_frontend and
+    web.assets_frontend_minimal so it's present on every anonymous-
+    facing page including the login screen. */
+
+a[href^="/web/database/manager"],
+a[href^="/web/database/selector"],
+a[href="/odoo/database/manager"],
+a[href="/web/database/list"],
+.list_db a,
+li.o_database_management a,
+.o_database_manager,
+.database_manage {
+    display: none !important;
+}

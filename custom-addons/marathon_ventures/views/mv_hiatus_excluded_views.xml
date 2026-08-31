@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_hiatus_excluded_list" model="ir.ui.view">
+    <field name="name">mv.hiatus_excluded.list</field>
+    <field name="model">mv.hiatus_excluded</field>
+    <field name="arch" type="xml">
+      <list string="Hiatus Excluded">
+        <field name="name"/>
+        <field name="account_brand"/>
+        <field name="batch_last_run"/>
+        <field name="christmas_eve_weekend"/>
+        <field name="christmas_eve"/>
+        <field name="christmas"/>
+        <field name="easter"/>
+        <field name="fourth_of_july_f_su_weekend"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_hiatus_excluded_form" model="ir.ui.view">
+    <field name="name">mv.hiatus_excluded.form</field>
+    <field name="model">mv.hiatus_excluded</field>
+    <field name="arch" type="xml">
+      <form string="Hiatus Excluded">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="batch_last_run"/>
+                <field name="account_brand"/>
+                <field name="christmas"/>
+                <field name="christmas_eve"/>
+                <field name="christmas_eve_weekend"/>
+                <field name="easter"/>
+                <field name="fourth_of_july_f_su_weekend"/>
+                <field name="fourth_of_july_friday"/>
+                <field name="fourth_of_july_m_tue_weekday"/>
+                <field name="fourth_of_july_monday_weekday"/>
+                <field name="fourth_of_july_thursday_weekday"/>
+                <field name="fourth_of_july_tuesday_weekday"/>
+                <field name="is_processing"/>
+                <field name="labor_day_monday"/>
+              </group>
+              <group>
+                <field name="labor_day_saturday"/>
+                <field name="labor_day_sunday"/>
+                <field name="labor_day_weekend"/>
+                <field name="memorial_day_friday"/>
+                <field name="memorial_day_monday"/>
+                <field name="memorial_day_saturday"/>
+                <field name="memorial_day_sunday"/>
+                <field name="memorial_day_weekend"/>
+                <field name="new_years"/>
+                <field name="new_years_eve"/>
+                <field name="new_years_eve_weekend"/>
+                <field name="super_bowl"/>
+                <field name="thanksgiving_friday"/>
+                <field name="thanksgiving_thursday"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_hiatus_excluded_search" model="ir.ui.view">
+    <field name="name">mv.hiatus_excluded.search</field>
+    <field name="model">mv.hiatus_excluded</field>
+    <field name="arch" type="xml">
+      <search string="Hiatus Excluded">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_hiatus_excluded" model="ir.actions.act_window">
+    <field name="name">Hiatus Excluded</field>
+    <field name="res_model">mv.hiatus_excluded</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_hiatus_excluded" name="Hiatus Excluded" parent="menu_mv_finance" action="action_mv_hiatus_excluded"/>
+</odoo>

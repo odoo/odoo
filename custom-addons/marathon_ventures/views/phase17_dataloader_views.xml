@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =====================================================
+         Job list
+         ===================================================== -->
+    <record id="view_mv_dataloader_job_list" model="ir.ui.view">
+        <field name="name">mv.dataloader.job.list</field>
+        <field name="model">mv.dataloader.job</field>
+        <field name="arch" type="xml">
+            <list string="Data Loader Jobs"
+                  decoration-success="state == 'done'"
+                  decoration-danger="state == 'failed'"
+                  decoration-info="state == 'running'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="mode"/>
+                <field name="model_id"/>
+                <field name="state"/>
+                <field name="total_rows"/>
+                <field name="success_count"/>
+                <field name="error_count"/>
+                <field name="skip_count"/>
+                <field name="duration_seconds"/>
+                <field name="user_id"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         Job form: mounts the OWL wizard component.
+         The wizard takes over the sheet entirely - all state
+         (mode, model, mapping, preview, results) is managed
+         through the mv_dataloader_wizard widget bound to `id`.
+         ===================================================== -->
+    <record id="view_mv_dataloader_job_form" model="ir.ui.view">
+        <field name="name">mv.dataloader.job.form</field>
+        <field name="model">mv.dataloader.job</field>
+        <field name="arch" type="xml">
+            <form string="Data Loader" create="true" edit="true" delete="true">
+                <sheet>
+                    <field name="id" widget="mv_dataloader_wizard" nolabel="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Line list (used by the job's action_view_lines button
+         + standalone browsing under the debug menu) -->
+    <record id="view_mv_dataloader_line_list" model="ir.ui.view">
+        <field name="name">mv.dataloader.line.list</field>
+        <field name="model">mv.dataloader.line</field>
+        <field name="arch" type="xml">
+            <list string="Data Loader Rows"
+                  decoration-success="status in ('created','updated','deleted')"
+                  decoration-danger="status == 'error'"
+                  decoration-muted="status == 'skipped'">
+                <field name="job_id"/>
+                <field name="row_number"/>
+                <field name="status"/>
+                <field name="res_id"/>
+                <field name="message"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mv_dataloader_line_form" model="ir.ui.view">
+        <field name="name">mv.dataloader.line.form</field>
+        <field name="model">mv.dataloader.line</field>
+        <field name="arch" type="xml">
+            <form string="Data Loader Row">
+                <sheet>
+                    <group>
+                        <field name="job_id"/>
+                        <field name="row_number"/>
+                        <field name="status"/>
+                        <field name="res_id"/>
+                        <field name="message"/>
+                    </group>
+                    <group string="Payload">
+                        <field name="payload" nolabel="1" widget="ace"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions + menus -->
+    <record id="action_mv_dataloader_job" model="ir.actions.act_window">
+        <field name="name">Data Loader Jobs</field>
+        <field name="res_model">mv.dataloader.job</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_mv_dataloader_root"
+              name="Data Loader"
+              parent="marathon_ventures.menu_mv_root"
+              sequence="90"/>
+
+    <menuitem id="menu_mv_dataloader_jobs"
+              name="Import / Export Jobs"
+              parent="menu_mv_dataloader_root"
+              action="action_mv_dataloader_job"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_raycom_monthly_line_item_list" model="ir.ui.view">
+    <field name="name">mv.raycom_monthly_line_item.list</field>
+    <field name="model">mv.raycom_monthly_line_item</field>
+    <field name="arch" type="xml">
+      <list string="Raycom Monthly Line Item">
+        <field name="name"/>
+        <field name="billingmonth"/>
+        <field name="invoice"/>
+        <field name="key"/>
+        <field name="ordernumber"/>
+        <field name="spot_data_failure_count"/>
+        <field name="spot_data_failure_message"/>
+        <field name="station"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_raycom_monthly_line_item_form" model="ir.ui.view">
+    <field name="name">mv.raycom_monthly_line_item.form</field>
+    <field name="model">mv.raycom_monthly_line_item</field>
+    <field name="arch" type="xml">
+      <form string="Raycom Monthly Line Item">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="billingmonth"/>
+                <field name="x58minutesago"/>
+                <field name="invoice"/>
+                <field name="key"/>
+              </group>
+              <group>
+                <field name="ordernumber"/>
+                <field name="spot_data_failure_message"/>
+                <field name="station"/>
+                <field name="spot_data_failure_count"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_raycom_monthly_line_item_search" model="ir.ui.view">
+    <field name="name">mv.raycom_monthly_line_item.search</field>
+    <field name="model">mv.raycom_monthly_line_item</field>
+    <field name="arch" type="xml">
+      <search string="Raycom Monthly Line Item">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_raycom_monthly_line_item" model="ir.actions.act_window">
+    <field name="name">Raycom Monthly Line Item</field>
+    <field name="res_model">mv.raycom_monthly_line_item</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_raycom_monthly_line_item" name="Raycom Monthly Line Item" parent="menu_mv_finance" action="action_mv_raycom_monthly_line_item"/>
+</odoo>

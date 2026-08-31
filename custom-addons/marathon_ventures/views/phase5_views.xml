@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 5 — Deal header: Bundle Paperwork / Traffic / Order Confirmation buttons -->
+  <record id="view_mv_deal_form_phase5" model="ir.ui.view">
+    <field name="name">mv.deal.form.phase5</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form_phase1"/>
+    <field name="arch" type="xml">
+      <xpath expr="//header/button[@name='action_send_filing_email']" position="after">
+        <button name="action_open_bundle_paperwork" type="object"
+                string="Bundle Paperwork" class="btn-secondary"/>
+        <button name="action_send_traffic" type="object"
+                string="Send Traffic" class="btn-secondary"/>
+        <button name="action_send_order_confirmation" type="object"
+                string="Send Order Confirmation" class="btn-secondary"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Phase 5 — Program form: bundle config fields -->
+  <record id="view_mv_programs_form_phase5" model="ir.ui.view">
+    <field name="name">mv.programs.form.phase5</field>
+    <field name="model">mv.programs</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_programs_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <group string="Bundle Configuration" name="bundle_config">
+          <field name="is_bundle"/>
+          <field name="file_code"/>
+          <field name="bundle_capacity_30" invisible="not is_bundle"/>
+          <field name="bundle_paperwork_to" invisible="not is_bundle"/>
+          <field name="bundle_paperwork_cc" invisible="not is_bundle"/>
+          <field name="traffic_email" invisible="not is_bundle"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

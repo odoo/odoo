@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <!-- Daily LOG/AOR/CIA expiration alert cron (SF Workflow 32). -->
+    <record id="cron_mv_log_expiration_alerts" model="ir.cron">
+      <field name="name">MV — LOG Expiration Alerts (daily)</field>
+      <field name="model_id" ref="model_mv_advertiser"/>
+      <field name="state">code</field>
+      <field name="code">model._cron_log_expiration_alerts()</field>
+      <field name="interval_number">1</field>
+      <field name="interval_type">days</field>
+      <field name="active" eval="True"/>
+    </record>
+    <record id="cron_mv_prelog_import_jobs" model="ir.cron">
+      <field name="name">MV — Prelog Import Jobs</field>
+      <field name="model_id" ref="model_mv_prelog_import_job"/>
+      <field name="state">code</field>
+      <field name="code">model._cron_process_prelog_import_jobs()</field>
+      <field name="interval_number">1</field>
+      <field name="interval_type">minutes</field>
+      <field name="active" eval="True"/>
+    </record>
+    <record id="cron_mv_postlog_import_jobs" model="ir.cron">
+      <field name="name">MV — Postlog Import Jobs</field>
+      <field name="model_id" ref="model_mv_postlog_import_job"/>
+      <field name="state">code</field>
+      <field name="code">model._cron_process_postlog_import_jobs()</field>
+      <field name="interval_number">1</field>
+      <field name="interval_type">minutes</field>
+      <field name="active" eval="True"/>
+    </record>
+  </data>
+</odoo>

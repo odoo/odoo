@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_request_list" model="ir.ui.view">
+    <field name="name">mv.request.list</field>
+    <field name="model">mv.request</field>
+    <field name="arch" type="xml">
+      <list string="Request">
+        <field name="name"/>
+        <field name="department"/>
+        <field name="description"/>
+        <field name="reason_for_decline"/>
+        <field name="status"/>
+        <field name="subject"/>
+        <field name="type"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_request_form" model="ir.ui.view">
+    <field name="name">mv.request.form</field>
+    <field name="model">mv.request</field>
+    <field name="arch" type="xml">
+      <form string="Request">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="department"/>
+                <field name="subject"/>
+                <field name="type"/>
+              </group>
+              <group>
+                <field name="status"/>
+                <field name="description"/>
+                <field name="reason_for_decline"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_request_search" model="ir.ui.view">
+    <field name="name">mv.request.search</field>
+    <field name="model">mv.request</field>
+    <field name="arch" type="xml">
+      <search string="Request">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_request" model="ir.actions.act_window">
+    <field name="name">Request</field>
+    <field name="res_model">mv.request</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_request" name="Request" parent="menu_mv_finance" action="action_mv_request"/>
+</odoo>

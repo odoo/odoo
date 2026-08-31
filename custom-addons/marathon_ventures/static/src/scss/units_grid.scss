@@ -1,0 +1,968 @@
+/* Units Grid OWL widget styling. Matches the "Units view - building
+   the schedule" mockup: clean rows, daypart pills, day toggles, status-
+   coloured cells, and a hatched pattern for out-of-range weeks. */
+
+.o_field_mv_units_grid {
+    width: 100%;
+}
+
+.mv-units-grid-wrap {
+    width: 100%;
+    padding: 12px 4px;
+    font-size: 13px;
+    color: #1a1d22;
+    overflow-x: scroll;
+}
+
+/* ---- Top header (Program / Brand / Advertiser / Account / Length / Order) */
+.mv-units-header {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    gap: 12px;
+}
+.mv-units-header__cell {
+    display: flex;
+    flex-direction: column;
+}
+.mv-units-header__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+}
+.mv-units-header__value {
+    font-weight: 600;
+    color: #1a1d22;
+}
+
+/* ---- Tab strip */
+.mv-units-tabs {
+    display: flex;
+    gap: 6px;
+    border-bottom: 1px solid #e4e6eb;
+    margin-bottom: 8px;
+}
+.mv-units-tab {
+    padding: 6px 14px;
+    cursor: pointer;
+    color: #6b7280;
+    font-weight: 600;
+}
+.mv-units-tab--active {
+    color: #1a1d22;
+    border-bottom: 2px solid #3b82f6;
+    background-color: #ffffff;
+}
+
+/* ---- Save bar */
+.mv-units-savebar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+    min-height: 30px;
+}
+.mv-units-savebar__pending {
+    color: #b45309;
+    font-weight: 600;
+}
+.mv-units-savebar__saved {
+    color: #047857;
+    font-weight: 600;
+}
+
+/* ---- Empty / loading states */
+.mv-units-loading,
+.mv-units-empty {
+    padding: 28px;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    background-color: #fafbfc;
+    border: 1px dashed #e4e6eb;
+    border-radius: 8px;
+}
+
+.mv-units-table-scroll,
+.mv-cap-table-scroll {
+    max-height: 65vh;
+    overflow: auto;
+    position: relative;
+
+    .mv-units-table {
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+    }
+}
+
+/* ---- The grid itself */
+.mv-units-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+}
+.mv-units-table thead th {
+    background-color: #f6f7f9;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 8px 6px;
+    border-bottom: 1px solid #e4e6eb;
+    text-align: center;
+}
+.mv-units-table .mv-daypart-col {
+    text-align: left;
+    width: 220px;
+    padding-left: 16px;
+}
+.mv-units-table .mv-week-col {
+    min-width: 60px;
+}
+.mv-units-table .mv-week-col__date {
+    font-size: 12px;
+    color: #1a1d22;
+    font-weight: 600;
+}
+.mv-units-table .mv-week-col__dow {
+    font-size: 10px;
+    color: #6b7280;
+    font-weight: 500;
+}
+.mv-units-table .mv-total-col {
+    text-align: right;
+    padding-right: 16px;
+    width: 140px;
+}
+
+.mv-units-table tbody tr {
+    border-bottom: 1px solid #f0f1f3;
+}
+
+/* Daypart cell on the left */
+.mv-daypart-cell {
+    padding: 12px 16px;
+    vertical-align: top;
+    width: 220px;
+}
+.mv-daypart-pill {
+    display: inline-block;
+    background: #e9f1ff;
+    color: #1d4ed8;
+    border: 1px solid #c7dafc;
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-weight: 600;
+    font-size: 12px;
+}
+.mv-daypart-range {
+    color: #6b7280;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+/* Inline Start/End time picklists under the daypart selector. Two
+   <select>s with a "-" separator, sized to match the daypart pill row. */
+.mv-daypart-times {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+.mv-daypart-time {
+    padding: 1px 4px;
+    font-size: 11px;
+    line-height: 1.4;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #1a1d22;
+    cursor: pointer;
+}
+.mv-daypart-time:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+.mv-daypart-times__sep {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+}
+.mv-day-toggles {
+    display: flex;
+    gap: 3px;
+    margin-top: 6px;
+}
+.mv-day-toggle {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background: #f3f4f6;
+    color: #9ca3af;
+    border: 1px solid #e4e6eb;
+    text-align: center;
+    line-height: 18px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.mv-day-toggle--on {
+    background: #e9f1ff;
+    color: #1d4ed8;
+    border-color: #c7dafc;
+}
+.mv-daypart-foot {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #6b7280;
+}
+
+/* Week cells */
+.mv-cell {
+    padding: 6px 4px;
+    text-align: center;
+    vertical-align: middle;
+    border-left: 1px solid #f0f1f3;
+    position: relative;
+}
+.mv-cell-input {
+    width: 100%;
+    max-width: 60px;
+    border: 1px solid #e4e6eb;
+    border-radius: 4px;
+    padding: 4px 6px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #ffffff;
+}
+.mv-cell-input:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: -1px;
+}
+
+/* Status colours */
+.mv-cell--green .mv-cell-input {
+    background-color: #ecfdf5;
+    border-color: #6ee7b7;
+    color: #065f46;
+}
+.mv-cell--amber .mv-cell-input {
+    background-color: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+}
+.mv-cell--gray .mv-cell-input {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+.mv-cell--dashed {
+    position: relative;
+    .mv-cell-input {
+        background-color: #ffffff;
+        border-style: dashed;
+        border-color: #d1d5db;
+        color: #9ca3af;
+    }
+}
+.mv-cell--hatched {
+    background-image: repeating-linear-gradient(
+        45deg, #f3f4f6 0px, #f3f4f6 4px,
+        #e4e6eb 4px, #e4e6eb 6px
+    );
+}
+
+/* Bulk LTC bar - shown above the table when at least one row is
+   selected via the checkbox column. Lets the planner cancel
+   post-LTC-week schedules across every selected row at once. */
+.mv-bulk-ltc-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 13px;
+    color: #1a1d22;
+}
+.mv-bulk-ltc-bar__count {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+.mv-bulk-ltc-bar__field {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.mv-bulk-ltc-bar__label {
+    font-size: 12px;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+/* Checkbox column for row selection. Narrow column at the very
+   start of the table, with the checkbox centred. */
+.mv-units-table .mv-row-check-col {
+    width: 32px;
+    text-align: center;
+    padding: 4px 6px;
+}
+.mv-units-table .mv-row-check-col input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* LTC preview row: shown after Section 2 Go / row-menu LTC, before
+   the planner clicks Save. Faded blue-ish background so they can
+   tell the row is an unsaved preview, not a real deal_line yet. */
+.mv-units-table tbody tr.mv-ltc-preview-row > td,
+.mv-units-table tbody tr[class*="ltc-preview"] > td {
+    background-color: #eff6ff;
+    font-style: italic;
+}
+.mv-units-table tbody tr.mv-ltc-preview-row .mv-daypart-cell::before,
+.mv-units-table tbody tr[class*="ltc-preview"] .mv-daypart-cell::before {
+    content: "PREVIEW";
+    display: inline-block;
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-bottom: 4px;
+    font-style: normal;
+}
+
+/* Open-schedule eye icon under a Units cell. Small, faded blue by
+   default; brightens on hover. Anchor target="_blank" so the click
+   opens the schedule in a new tab. */
+.mv-cell-eye {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2px;
+    font-size: 11px;
+    color: #6b7280;
+    text-decoration: none;
+    line-height: 1.1;
+    cursor: pointer;
+    position: absolute;
+}
+.mv-cell-eye:hover {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+.mv-cell-eye:focus { outline: none; }
+.mv-cell-eye .fa-eye {
+    font-size: 12px;
+}
+
+/* Cancelled-units annotation. The week cell stays editable (input is
+   left alone); only the small red `x: 0/<n>` label below the input
+   indicates that some units for this week were cancelled. */
+.mv-cell-cancelled-note {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    color: #b91c1c;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    user-select: none;
+    position: absolute;
+}
+
+/* Row-total cancelled subtitle (under the Spot Total). */
+.mv-row-total__cancelled {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #b91c1c;
+}
+
+/* Inline cancelled note next to "N spots total" in the grand-total row. */
+.mv-grand-cell__cancelled {
+    margin-left: 6px;
+    font-weight: 600;
+    color: #b91c1c;
+}
+
+/* Dirty (unsaved) indicator overrides the status colour */
+.mv-cell--dirty .mv-cell-input {
+    border-color: #f59e0b !important;
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+    box-shadow: 0 0 0 1px #fbbf24 inset;
+}
+
+/* Row total */
+.mv-row-total {
+    text-align: right;
+    padding: 8px 16px;
+    border-left: 1px solid #f0f1f3;
+}
+.mv-row-total__spots {
+    font-weight: 700;
+    color: #1a1d22;
+}
+.mv-row-total__money {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* Grand total row */
+.mv-grand-row {
+    background-color: #f6f7f9;
+    border-top: 1px solid #e4e6eb !important;
+}
+.mv-grand-cell {
+    padding: 10px 16px;
+    font-weight: 700;
+    color: #1a1d22;
+}
+.mv-grand-cell--money {
+    text-align: right;
+}
+
+/* ---- "Add Day Part" row ------------------------------------------- */
+.mv-units-table .mv-add-row {
+    background-color: #fafbfc;
+}
+.mv-add-cell {
+    padding: 12px 16px;
+    text-align: left;
+    border-top: 1px dashed #d1d5db;
+}
+.mv-add-daypart {
+    color: #1d4ed8;
+    font-weight: 600;
+    padding: 4px 10px;
+    border: 1px dashed #93c5fd;
+    border-radius: 6px;
+    background: #ffffff;
+}
+.mv-add-daypart:hover {
+    background: #eff6ff;
+    text-decoration: none;
+}
+.mv-add-hint {
+    margin-left: 14px;
+    color: #6b7280;
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* ---- Editable daypart selector ----------------------------------- */
+.mv-daypart-select {
+    background: #e9f1ff;
+    color: #1d4ed8;
+    border: 1px solid #c7dafc;
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+}
+.mv-daypart-select:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 1px;
+}
+
+/* ---- Editable rate / run dates in the daypart cell --------------- */
+.mv-daypart-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    margin-top: 8px;
+}
+.mv-foot-label {
+    font-size: 10px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+}
+.mv-foot-input {
+    border: 1px solid #e4e6eb;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+.mv-foot-input--rate {
+    width: 80px;
+}
+.mv-foot-input--maxday {
+    width: 64px;
+}
+.mv-foot-input--date {
+    width: 130px;
+}
+.mv-foot-sep {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+/* ---- Day toggles clickable --------------------------------------- */
+.mv-day-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+.mv-day-toggle:hover {
+    border-color: #93c5fd;
+}
+
+/* ---- Row delete button ------------------------------------------- */
+.mv-row-actions-col {
+    width: 32px;
+}
+.mv-row-actions {
+    text-align: center;
+    vertical-align: middle;
+}
+.mv-row-delete {
+    color: #9ca3af;
+    font-size: 18px;
+    padding: 0 8px;
+    line-height: 1;
+}
+.mv-row-delete:hover {
+    color: #dc2626;
+    text-decoration: none;
+}
+
+/* ---- Discard button next to Save --------------------------------- */
+.mv-units-discard {
+    color: #6b7280;
+}
+
+.o_field_mv_capping_grid {
+    width: 100%;
+    overflow: scroll;
+}
+
+/* ============================================================================
+   Phase 11 - Capping Grid styling (extends the Units Grid look).
+   Each cell shows "effective/booked" + cap% on two lines.
+   ============================================================================ */
+.mv-cap-grid-wrap {
+    padding: 12px 4px;
+    font-size: 13px;
+    color: #1a1d22;
+    width: 100%;
+}
+
+/* Bulk action bar above the table when rows are selected */
+.mv-cap-bulkbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eff6ff;
+    border: 1px solid #93c5fd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-bottom: 8px;
+}
+.mv-cap-bulkbar__count {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+.mv-cap-bulkbar__actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* The select-all + per-row checkbox column */
+.mv-cap-check-col {
+    width: 36px;
+    text-align: center;
+    padding: 6px;
+}
+.mv-cap-table .mv-cap-row--selected {
+    background-color: #f0f7ff;
+}
+
+/* Cells: numbers on top, percent below */
+.mv-cap-cell {
+    padding: 6px 4px;
+    text-align: center;
+    vertical-align: middle;
+    border-left: 1px solid #f0f1f3;
+    min-width: 70px;
+}
+.mv-cap-cell__nums {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1d22;
+    line-height: 1.1;
+}
+.mv-cap-cell__nums--muted {
+    color: #9ca3af;
+}
+.mv-cap-cell__pct {
+    width: 56px;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 1px 4px;
+    background: transparent;
+}
+.mv-cap-cell__pct:focus {
+    background: #ffffff;
+    border-color: #3b82f6;
+    outline: none;
+}
+.mv-cap-cell__pct--ghost {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/* New cap dropdown (replaces .mv-cap-cell__pct number input). */
+.mv-cap-cell__select {
+    width: 76px;
+    margin-top: 2px;
+    padding: 1px 4px;
+    font-size: 11px;
+    line-height: 1.4;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #1a1d22;
+    cursor: pointer;
+}
+.mv-cap-cell__select:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+.mv-cap-cell--green .mv-cap-cell__select  { color: #065f46; border-color: #6ee7b7; }
+.mv-cap-cell--amber .mv-cap-cell__select  { color: #92400e; border-color: #fcd34d; }
+.mv-cap-cell--gray  .mv-cap-cell__select  { color: #6b7280; border-color: #d1d5db; }
+
+/* Status colours */
+.mv-cap-cell--green {
+    background-color: #ecfdf5;
+}
+.mv-cap-cell--green .mv-cap-cell__nums,
+.mv-cap-cell--green .mv-cap-cell__pct { color: #065f46; }
+
+.mv-cap-cell--amber {
+    background-color: #fef3c7;
+}
+.mv-cap-cell--amber .mv-cap-cell__nums,
+.mv-cap-cell--amber .mv-cap-cell__pct { color: #92400e; }
+
+.mv-cap-cell--gray {
+    background-color: #f3f4f6;
+}
+.mv-cap-cell--gray .mv-cap-cell__nums,
+.mv-cap-cell--gray .mv-cap-cell__pct { color: #6b7280; }
+
+.mv-cap-cell--dashed {
+    background-color: #ffffff;
+    border-style: dashed;
+    border-color: #d1d5db;
+}
+
+.mv-cap-cell--hatched {
+    background-image: repeating-linear-gradient(
+        45deg, #f3f4f6 0px, #f3f4f6 4px,
+        #e4e6eb 4px, #e4e6eb 6px
+    );
+}
+
+/* Dirty (unsaved) - blue dot in the corner */
+.mv-cap-cell--dirty {
+    position: relative;
+}
+.mv-cap-cell--dirty::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+}
+
+/* Row total - effective/booked split */
+.mv-cap-row-total {
+    text-align: right;
+    padding: 8px 16px;
+    border-left: 1px solid #f0f1f3;
+    min-width: 110px;
+}
+.mv-cap-row-total__spots {
+    font-weight: 700;
+    color: #1a1d22;
+}
+.mv-cap-row-total__money {
+    color: #6b7280;
+    font-size: 12px;
+}
+.mv-cap-row-total__booked {
+    color: #9ca3af;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* ============================================================================
+   Row context menu (⋯) + delete confirmation dialog
+   ============================================================================ */
+.mv-row-menu-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.mv-row-menu-btn {
+    color: #6b7280;
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+.mv-row-menu-btn:hover {
+    background-color: #f3f4f6;
+    color: #1a1d22;
+    text-decoration: none;
+}
+
+.mv-row-menu-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 100;
+    min-width: 140px;
+    background: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(15, 17, 21, 0.12);
+    padding: 4px;
+}
+
+.mv-row-menu-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #1a1d22;
+    cursor: pointer;
+}
+.mv-row-menu-item:hover {
+    background-color: #f3f4f6;
+}
+.mv-row-menu-item--danger {
+    color: #dc2626;
+}
+.mv-row-menu-item--danger:hover {
+    background-color: #fef2f2;
+    color: #b91c1c;
+}
+
+/* Delete-confirm overlay + centered dialog */
+.mv-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 17, 21, 0.45);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mv-confirm-dialog {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(15, 17, 21, 0.25);
+    width: 100%;
+    max-width: 420px;
+    padding: 20px 24px;
+}
+.mv-confirm-dialog__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1d22;
+    margin-bottom: 10px;
+}
+.mv-confirm-dialog__body {
+    font-size: 13px;
+    color: #4b5563;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+.mv-confirm-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.mv-confirm-dialog__footer .btn {
+    min-width: 90px;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   Phase 12 - Deal-level Start Date strip (drives the week columns)
+   ============================================================================ */
+.mv-deal-startdate-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background-color: #eff6ff;
+    border: 1px solid #c7dafc;
+    border-radius: 6px;
+}
+.mv-deal-startdate-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin: 0;
+}
+.mv-deal-startdate-input {
+    border: 1px solid #93c5fd;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    background: #ffffff;
+}
+.mv-deal-startdate-hint {
+    color: #6b7280;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* ============================================================================
+   Dashed row separators - one line between every body row in the Units
+   Report (excluding the Add Day Part row and the grand-total row, which
+   keep their own treatments).
+   ============================================================================ */
+.mv-units-table tbody tr:not(.mv-add-row):not(.mv-grand-row) {
+    border-bottom: none;  /* avoid double-line with the td-level border */
+}
+.mv-units-table tbody tr:not(.mv-add-row):not(.mv-grand-row) > td {
+    border-bottom: 1px dashed #cbd5e1 !important;
+}
+
+/* ============================================================================
+   Bulk allocation row - sits below each data row, two-section form
+   ============================================================================ */
+.mv-units-table .mv-bulk-row {
+    background-color: #fafbfc;
+}
+.mv-bulk-row__cell {
+    padding: 8px 14px;
+    border-top: 1px dashed #e4e6eb !important;
+    border-bottom: 1px dashed #cbd5e1 !important;
+}
+.mv-bulk-wrap {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.mv-bulk-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 6px 10px;
+    background: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 6px;
+}
+.mv-bulk-section--secondary {
+    background: #eff6ff;
+    border-color: #c7dafc;
+}
+.mv-bulk-section__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #1d4ed8;
+    font-weight: 700;
+    margin-right: 4px;
+}
+.mv-bulk-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.mv-bulk-field__label {
+    font-size: 10px;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+.mv-bulk-input {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    background: #ffffff;
+}
+.mv-bulk-input--locked {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+.mv-bulk-input--units {
+    width: 80px;
+}
+.mv-bulk-go {
+    padding: 3px 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================================================
+   Bulk row repositioned: aligned UNDER the week cells but visually fused
+   with the data row above. No top border between data row and bulk strip.
+   Empty spacer <td>s sit under DAYPART / TOTAL / ACTIONS.
+   ============================================================================ */
+.mv-units-table .mv-bulk-row > td {
+    border-top: none !important;
+    background-color: #ffffff !important;
+}
+.mv-units-table .mv-bulk-row > .mv-bulk-row__spacer {
+    border-bottom: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+.mv-bulk-row__cell {
+    padding: 8px 8px 10px !important;
+    border-bottom: 1px dashed #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    border-top: 1px dashed #e4e6eb !important;
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sales_plan_list" model="ir.ui.view">
+    <field name="name">mv.sales_plan.list</field>
+    <field name="model">mv.sales_plan</field>
+    <field name="arch" type="xml">
+      <list string="Sales Plan">
+        <field name="name"/>
+        <field name="advertiser"/>
+        <field name="brand"/>
+        <field name="contact"/>
+        <field name="measurement_type"/>
+        <field name="primary_demographic"/>
+        <field name="season"/>
+        <field name="status"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sales_plan_form" model="ir.ui.view">
+    <field name="name">mv.sales_plan.form</field>
+    <field name="model">mv.sales_plan</field>
+    <field name="arch" type="xml">
+      <form string="Sales Plan">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="brand"/>
+                <field name="season"/>
+                <field name="upfront_scatter"/>
+                <field name="advertiser"/>
+              </group>
+              <group>
+                <field name="contact"/>
+                <field name="measurement_type"/>
+                <field name="primary_demographic"/>
+                <field name="status"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sales_plan_search" model="ir.ui.view">
+    <field name="name">mv.sales_plan.search</field>
+    <field name="model">mv.sales_plan</field>
+    <field name="arch" type="xml">
+      <search string="Sales Plan">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sales_plan" model="ir.actions.act_window">
+    <field name="name">Sales Plan</field>
+    <field name="res_model">mv.sales_plan</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sales_plan" name="Sales Plan" parent="menu_mv_sales_ops" action="action_mv_sales_plan"/>
+</odoo>

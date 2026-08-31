@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_working_log_list" model="ir.ui.view">
+    <field name="name">mv.working_log.list</field>
+    <field name="model">mv.working_log</field>
+    <field name="arch" type="xml">
+      <list string="Working Log">
+        <field name="name"/>
+        <field name="air_date_air_time"/>
+        <field name="air_date"/>
+        <field name="air_time"/>
+        <field name="asset_id"/>
+        <field name="broadcast_network"/>
+        <field name="created_date_time"/>
+        <field name="current_version"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_working_log_form" model="ir.ui.view">
+    <field name="name">mv.working_log.form</field>
+    <field name="model">mv.working_log</field>
+    <field name="arch" type="xml">
+      <form string="Working Log">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="schedule"/>
+                <field name="prelog_data"/>
+                <field name="type"/>
+                <field name="air_date"/>
+                <field name="created_date_time"/>
+                <field name="air_date_air_time"/>
+                <field name="air_time"/>
+                <field name="asset_id"/>
+                <field name="broadcast_network"/>
+                <field name="day_of_week"/>
+                <field name="discrepancy_reasoning"/>
+                <field name="double_check_pod"/>
+                <field name="framed_duration"/>
+                <field name="hour_of_day"/>
+                <field name="isci"/>
+                <field name="pod"/>
+              </group>
+              <group>
+                <field name="podded_day"/>
+                <field name="segment_duration"/>
+                <field name="series"/>
+                <field name="title"/>
+                <field name="x800_number"/>
+                <field name="current_version"/>
+                <field name="discrepancy"/>
+                <field name="locked"/>
+                <field name="main_network"/>
+                <field name="main_network_temp"/>
+                <field name="equiv_30"/>
+                <field name="program_version"/>
+                <field name="segment"/>
+                <field name="spot_rate"/>
+                <field name="unfilled_time"/>
+                <field name="version"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_working_log_search" model="ir.ui.view">
+    <field name="name">mv.working_log.search</field>
+    <field name="model">mv.working_log</field>
+    <field name="arch" type="xml">
+      <search string="Working Log">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_working_log" model="ir.actions.act_window">
+    <field name="name">Working Log</field>
+    <field name="res_model">mv.working_log</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_working_log" name="Working Log" parent="menu_mv_operations" action="action_mv_working_log" sequence="12"/>
+</odoo>

@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvUnitsGrid">
+    <div class="mv-units-grid-wrap"
+         t-on-click="() => this.closeMenu()">
+
+      <!-- Delete confirmation dialog -->
+      <div t-if="state.pendingDeleteRow"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelDelete()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Delete Day Part?</div>
+          <div class="mv-confirm-dialog__body">
+            Are you sure you want to delete this row?
+            <span t-if="state.pendingDeleteRow.daypart_label">
+              (<t t-esc="state.pendingDeleteRow.daypart_label"/>)
+            </span>
+            <br/>
+            <small class="text-muted">
+              This will also remove every schedule linked to this Day Part
+              when you click Save.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelDelete()">
+              Cancel
+            </button>
+            <button class="btn btn-danger"
+                    t-on-click.stop.prevent="() => this.confirmDelete()">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discard confirmation dialog. Opens when the planner clicks
+           the Discard button in the Save bar so accidental clicks
+           don't blow away unsaved edits. -->
+      <div t-if="state.pendingDiscard"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelDiscard()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Discard changes?</div>
+          <div class="mv-confirm-dialog__body">
+            Are you sure you want to discard all the changes made?
+            <br/>
+            <small class="text-muted">
+              This action cannot be undone. Any edits you've made since
+              the last save will be lost.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelDiscard()">
+              Cancel
+            </button>
+            <button class="btn btn-danger"
+                    t-on-click.stop.prevent="() => this.confirmDiscard()">
+              Discard
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 12: deal-level start date strip (drives the week columns) -->
+      <div t-if="state.loaded and state.payload" class="mv-deal-startdate-strip">
+        <label class="mv-deal-startdate-label">Deal Start Date</label>
+        <input type="date" class="mv-deal-startdate-input"
+               t-att-value="state.payload.deal.units_start_date || ''"
+               t-on-change="(ev) => this.onDealStartDateChange(ev)"/>
+        <span class="mv-deal-startdate-hint">
+          Week columns run through the last Monday of this quarter.
+        </span>
+      </div>
+
+      <!-- Save bar -->
+      <div class="mv-units-savebar">
+        <span t-if="state.dirty" class="mv-units-savebar__pending">
+          You have unsaved changes
+        </span>
+        <span t-elif="state.justSaved" class="mv-units-savebar__saved">
+          All changes saved
+        </span>
+        <button t-if="state.dirty"
+                class="btn btn-light mv-units-discard"
+                t-on-click.prevent="onDiscard"
+                t-att-disabled="state.saving">Discard</button>
+        <button t-if="state.dirty"
+                class="btn btn-primary"
+                t-on-click.prevent="onSave"
+                t-att-disabled="state.saving">
+          <t t-esc="state.saving ? 'Saving...' : 'Save'"/>
+        </button>
+      </div>
+
+      <div t-if="!state.loaded" class="mv-units-loading">Loading units grid...</div>
+
+      <!-- Bulk action bar: visible when 1+ data rows are checked.
+           Houses an Action <select> that opens a modal for the picked
+           bulk operation (LTC or Max/Day). Each option's modal applies
+           the change to every selected row, staged locally - persisted
+           on Save. -->
+      <div t-if="hasSelection" class="mv-bulk-ltc-bar">
+        <span class="mv-bulk-ltc-bar__count">
+          <t t-esc="selectedRowIds.length"/> row(s) selected
+        </span>
+        <span class="mv-bulk-ltc-bar__field">
+          <span class="mv-bulk-ltc-bar__label">Action</span>
+          <select class="mv-bulk-input"
+                  t-on-change="(ev) => this.onBulkActionSelect(ev)">
+            <option value="">Select action -</option>
+            <option value="ltc">LTC</option>
+            <option value="maxday">Max/Day</option>
+            <option value="hiatus">Hiatus</option>
+            <option value="rate">Update Rate</option>
+          </select>
+        </span>
+        <button class="btn btn-light btn-sm"
+                t-on-click.prevent="clearSelection">
+          Clear selection
+        </button>
+      </div>
+
+      <!-- Bulk LTC modal -->
+      <div t-if="state.bulkAction === 'ltc'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Apply LTC to <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            Pick the LTC date:
+            <div style="margin-top: 8px;">
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkLtcDate || ''"
+                     t-on-input="(ev) => this.onBulkLtcDateInput(ev)"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              Weeks after the LTC week are cancelled and the LTC week
+              itself is split into a new row with truncated days_allowed.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.applyBulkLtc()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Max/Day modal -->
+      <div t-if="state.bulkAction === 'maxday'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Set Max/Day on <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            Enter the Max per Day value:
+            <div style="margin-top: 8px;">
+              <input type="number" step="1" min="0"
+                     class="mv-bulk-input mv-bulk-input--units"
+                     t-att-value="state.bulkMaxDay || ''"
+                     t-on-input="(ev) => this.onBulkMaxDayInput(ev)"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              On Save, the value is written to every selected Deal Line
+              and propagated to all of its schedules.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkMaxDay()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Update Rate modal -->
+      <div t-if="state.bulkAction === 'rate'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Update Rate on <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            <div style="margin-top: 8px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">Start Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkRateStart || ''"
+                     t-on-input="(ev) => this.onBulkRateStartInput(ev)"/>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">End Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkRateEnd || ''"
+                     t-on-input="(ev) => this.onBulkRateEndInput(ev)"/>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">New Rate</label>
+              <input type="number" step="0.01" min="0"
+                     class="mv-bulk-input mv-bulk-input--units"
+                     t-att-value="state.bulkRateValue || ''"
+                     t-on-input="(ev) => this.onBulkRateValueInput(ev)"
+                     placeholder="e.g. 125.00"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              For each selected row, schedules whose week falls in the
+              date range get moved onto the new rate. Whole rows land in a
+              new row grouped by the new rate; partial ranges leave the
+              original weeks at the old rate.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkRate()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Hiatus modal -->
+      <div t-if="state.bulkAction === 'hiatus'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Apply Hiatus to <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            Pick the hiatus date range:
+            <div style="margin-top: 8px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">Start Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkHiatusStart || ''"
+                     t-on-input="(ev) => this.onBulkHiatusStartInput(ev)"/>
+            </div>
+            <div style="margin-top: 6px; display: flex; gap: 12px; align-items: center;">
+              <label style="min-width: 82px;">End Date</label>
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkHiatusEnd || ''"
+                     t-on-input="(ev) => this.onBulkHiatusEndInput(ev)"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              For each selected row, schedules whose week falls in the
+              range get their days_allowed trimmed so they no longer
+              run on hiatus dates. No new rows are created.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkHiatus()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div t-if="state.loaded and state.payload" class="mv-units-table-scroll">
+      <!-- The grid - rendered as soon as we know the week columns -->
+      <table t-if="state.loaded and state.payload" class="mv-units-table">
+        <thead>
+          <tr>
+            <th class="mv-row-check-col">
+              <input type="checkbox" t-on-change="(ev) => this.toggleAll(ev)"/>
+            </th>
+            <th class="mv-daypart-col">DAYPART</th>
+            <th t-foreach="state.payload.weeks" t-as="w" t-key="w" class="mv-week-col">
+              <div class="mv-week-col__date" t-esc="fmtWeekShort(w)"/>
+              <!-- <div class="mv-week-col__dow">Mon</div> -->
+            </th>
+            <th class="mv-total-col">TOTAL</th>
+            <th class="mv-row-actions-col"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Body rows (existing + freshly-added).
+               Each row in payload.rows renders as TWO <tr>s:
+                 1. The data row (daypart / week cells / total / actions)
+                 2. The bulk-allocation row beneath it.
+               Wrapped in a <t t-foreach> so the bulk row iterates with
+               the data row instead of rendering only once. -->
+          <t t-foreach="state.payload.rows" t-as="row" t-key="row.id">
+          <tr t-att-class="row._is_ltc_preview ? 'mv-ltc-preview-row' : null">
+
+            <!-- Row select checkbox - hidden for preview rows since they
+                 aren't real Deal Lines yet (saved only after planner
+                 clicks Save). -->
+            <td class="mv-row-check-col" rowspan="2">
+              <input t-if="!row._is_ltc_preview"
+                     type="checkbox"
+                     t-att-checked="state.selected[row.id] ? 'checked' : null"
+                     t-on-change="(ev) => this.toggleRow(row.id, ev)"/>
+            </td>
+
+            <td class="mv-daypart-cell" rowspan="2">
+              <!-- Daypart selector (always editable; planners can switch) -->
+              <select class="mv-daypart-select"
+                      t-on-change="(ev) => this.onDaypartChange(row, ev)">
+                <option t-foreach="dayparts" t-as="opt" t-key="opt.value"
+                        t-att-value="opt.value"
+                        t-att-selected="opt.value === row.daypart ? 'selected' : null">
+                  <t t-esc="opt.label"/>
+                </option>
+              </select>
+              <!-- Editable Start/End time dropdowns. Picking a pair
+                   that matches a predefined daypart snaps the daypart
+                   selector above; an unrecognised pair auto-switches
+                   the daypart to 'Custom'. -->
+              <div class="mv-daypart-times">
+                <select class="mv-daypart-time mv-daypart-time--start"
+                        t-on-change="(ev) => this.onTimeChange(row, 'start', ev)">
+                  <option value="">Start</option>
+                  <option t-foreach="state.payload.time_options || []" t-as="opt"
+                          t-key="opt.value"
+                          t-att-value="opt.value"
+                          t-att-selected="opt.value === row.start_time ? 'selected' : null">
+                    <t t-esc="opt.label"/>
+                  </option>
+                </select>
+                <span class="mv-daypart-times__sep">-</span>
+                <select class="mv-daypart-time mv-daypart-time--end"
+                        t-on-change="(ev) => this.onTimeChange(row, 'end', ev)">
+                  <option value="">End</option>
+                  <option t-foreach="state.payload.time_options || []" t-as="opt"
+                          t-key="opt.value"
+                          t-att-value="opt.value"
+                          t-att-selected="opt.value === row.end_time ? 'selected' : null">
+                    <t t-esc="opt.label"/>
+                  </option>
+                </select>
+              </div>
+
+              <!-- Day toggles -->
+              <div class="mv-day-toggles">
+                <span t-foreach="['M','T','W','T','F','S','S']" t-as="dl" t-key="dl_index"
+                      t-att-class="'mv-day-toggle' + (row.days_mask[dl_index] ? ' mv-day-toggle--on' : '')"
+                      t-on-click="() => this.onDayToggle(row, dl_index)">
+                  <t t-esc="dl"/>
+                </span>
+              </div>
+
+              <!-- Phase 12: Rate at the row level. Run dates moved to the
+                   deal-level Start Date strip above. Max Per Day was added
+                   in Phase 14 - it propagates to every linked schedule on
+                   Save via mv.deal_line.schedule_inherit_vals(). -->
+              <div class="mv-daypart-foot">
+                <div class="rate_section">
+                  <label class="mv-foot-label">Rate</label>
+                  <input type="number" step="0.01" class="mv-foot-input mv-foot-input--rate"
+                        t-att-value="row.rate || 0"
+                        t-on-input="(ev) => this.onRateChange(row, ev)"/>
+                </div>
+                <div class="mpd_section">
+                  <label class="mv-foot-label">Max/Day</label>
+                  <input type="number" step="1" min="0"
+                        class="mv-foot-input mv-foot-input--maxday"
+                        t-att-value="row.max_per_day || 0"
+                        t-att-title="'Max spots per day - propagated to every schedule on Save'"
+                        t-on-input="(ev) => this.onMaxPerDayChange(row, ev)"/>
+                </div>
+              </div>
+            </td>
+
+            <!-- Week cells -->
+            <td t-foreach="row.cells" t-as="cell" t-key="cell.week"
+                t-att-class="cellClasses(row, cell)">
+              <input t-if="cell.state !== 'hatched'"
+                     type="number"
+                     class="mv-cell-input"
+                     t-att-value="cell.units || ''"
+                     t-on-input="(ev) => this.onCellInput(row, cell, ev)"/>
+              <!-- Cancelled-units annotation: `x: 0/<units>` in red,
+                   only shown if this week has cancelled history. -->
+              <div t-if="(cell.cancelled_units || 0) > 0"
+                   class="mv-cell-cancelled-note"
+                   t-att-title="'Cancelled units: ' + cell.cancelled_units">
+                x: 0/<t t-esc="cell.cancelled_units"/>
+              </div>
+              <!-- Open-schedule eye icon: only rendered for cells
+                   backed by a real mv.schedules record. Click opens
+                   the schedule's form view in a new browser tab. -->
+              <a t-if="cell.sched_id"
+                 class="mv-cell-eye"
+                 target="_blank"
+                 rel="noopener"
+                 t-att-href="scheduleOpenUrl(cell)"
+                 t-att-title="'Open schedule #' + cell.sched_id + ' in a new tab'"
+                 t-on-click.stop="() => {}">
+                <i class="fa fa-eye"/>
+              </a>
+            </td>
+
+            <!-- Row total -->
+            <td class="mv-row-total">
+              <div class="mv-row-total__spots">
+                <t t-esc="(row.total_spots || 0).toLocaleString()"/> spots
+              </div>
+              <div t-if="(row.total_cancelled || 0) > 0"
+                   class="mv-row-total__cancelled">
+                Cancelled: <t t-esc="(row.total_cancelled || 0).toLocaleString()"/>
+              </div>
+              <div class="mv-row-total__money">
+                <t t-esc="fmtCurrency(row.total_revenue)"/>
+              </div>
+            </td>
+
+            <!-- Row context menu (⋯) -->
+            <td class="mv-row-actions">
+              <div class="mv-row-menu-wrap">
+                <button class="btn btn-link mv-row-menu-btn"
+                        title="Row actions"
+                        t-on-click.stop.prevent="() => this.toggleMenu(row)">
+                  &#8942;
+                </button>
+                <div t-if="state.openMenuRowId === row.id"
+                     class="mv-row-menu-dropdown">
+                  <button class="mv-row-menu-item mv-row-menu-item--danger"
+                          t-on-click.stop.prevent="() => this.requestDelete(row)">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+
+          <!-- Bulk allocation strip - aligned directly UNDER the week
+               cells inside the same row container (no separator between
+               data and bulk). Empty cells flank the strip so DAYPART /
+               TOTAL / ACTIONS columns stay visually clean. -->
+          <tr class="mv-bulk-row">
+            <td t-att-colspan="state.payload.weeks.length + 4"
+                class="mv-bulk-row__cell">
+              <div class="mv-bulk-wrap">
+
+                <div class="mv-bulk-section">
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">From</span>
+                    <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                           t-att-value="(row._bulk and row._bulk.sec1_start) || state.payload.deal.units_start_date || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec1_start', ev)"/>
+                  </span>
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">To</span>
+                    <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                           t-att-value="(row._bulk and row._bulk.sec1_end) || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec1_end', ev)"/>
+                  </span>
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">Units</span>
+                    <input type="number" min="0"
+                           class="mv-bulk-input mv-bulk-input--units"
+                           t-att-value="(row._bulk and row._bulk.sec1_units) || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec1_units', ev)"/>
+                  </span>
+                  <button class="btn btn-primary btn-sm mv-bulk-go"
+                          t-on-click.prevent="() => this.applyBulkAllocation(row, 'sec1')">
+                    Go
+                  </button>
+                </div>
+
+              </div>
+            </td>
+          </tr>
+          </t>
+
+          <!-- Add Day Part row: ALWAYS visible, just under the last row -->
+          <tr class="mv-add-row">
+            <td t-att-colspan="state.payload.weeks.length + 4" class="mv-add-cell">
+              <button class="btn btn-link mv-add-daypart"
+                      t-on-click.prevent="addRow">
+                + Add Day Part
+              </button>
+              <span t-if="state.payload.rows.length === 0"
+                    class="mv-add-hint">
+                Click to add your first Day Part. You can pick the daypart,
+                set the rate, choose the run weeks, and enter unit counts
+                per week.
+              </span>
+            </td>
+          </tr>
+
+          <!-- Grand total row -->
+          <tr t-if="state.payload.rows.length > 0" class="mv-grand-row">
+            <td class="mv-row-check-col"></td>
+            <td class="mv-grand-cell">
+              <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
+              <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
+              <span t-if="(state.payload.grand_total_cancelled || 0) > 0"
+                    class="mv-grand-cell__cancelled">
+                (Cancelled: <t t-esc="(state.payload.grand_total_cancelled || 0).toLocaleString()"/>)
+              </span>
+            </td>
+            <td t-att-colspan="state.payload.weeks.length"></td>
+            <td t-att-colspan="2" class="mv-grand-cell mv-grand-cell--money">
+              <t t-esc="fmtCurrency(state.payload.grand_total_revenue)"/> total revenue
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </t>
+
+</templates>

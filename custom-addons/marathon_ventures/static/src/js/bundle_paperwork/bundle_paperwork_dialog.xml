@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <!-- ================================================================
+       Main dialog
+       ================================================================ -->
+  <t t-name="marathon_ventures.BundlePaperworkDialog">
+    <Dialog title="title" size="'lg'">
+      <div class="mv-bp">
+        <t t-if="state.loading">
+          <div class="mv-bp__hint">
+            <i class="fa fa-spinner fa-spin me-2"/> Loading...
+          </div>
+        </t>
+        <t t-elif="state.error">
+          <div class="alert alert-danger">
+            <t t-esc="state.error"/>
+          </div>
+        </t>
+        <t t-else="">
+          <!-- Header: sub-info + primary generate button -->
+          <div class="mv-bp__header">
+            <div class="mv-bp__header-info" t-if="state.snapshot.program">
+              <span class="text-muted">Program:</span>
+              <b><t t-esc="state.snapshot.program"/></b>
+              <t t-if="state.snapshot.brand">
+                <span class="mv-bp__sep">·</span>
+                <span class="text-muted">Brand:</span>
+                <b><t t-esc="state.snapshot.brand"/></b>
+              </t>
+            </div>
+            <button class="btn btn-primary mv-bp__generate-btn"
+                    t-att-disabled="state.busy"
+                    t-on-click.prevent="() => this.onGenerate()">
+              <i class="fa fa-file-text-o me-2"/>
+              <span t-if="!state.busy">Generate Paperwork (New Buy)</span>
+              <span t-else=""><i class="fa fa-spinner fa-spin"/> Generating...</span>
+            </button>
+          </div>
+
+          <!-- Empty hint -->
+          <t t-if="!state.snapshot.xml_files.length and !state.snapshot.excel_files.length">
+            <div class="mv-bp__empty">
+              <i class="fa fa-file-o mv-bp__empty-icon"/>
+              <p class="mb-1"><b>No paperwork generated yet.</b></p>
+              <p class="text-muted mb-0">
+                Click <b>Generate Paperwork (New Buy)</b> above to build
+                the XML files (one per station) and the Excel summary.
+                Files will also appear under this Deal's <b>Related</b>
+                tab and Attachments box.
+              </p>
+            </div>
+          </t>
+
+          <!-- XML section -->
+          <div class="mv-bp__section" t-if="state.snapshot.xml_files.length">
+            <div class="mv-bp__section-head">
+              <i class="fa fa-file-code-o me-2 text-primary"/>
+              <span class="mv-bp__section-title">XML Files</span>
+              <span class="mv-bp__section-count">
+                <t t-esc="state.snapshot.xml_files.length"/>
+              </span>
+            </div>
+            <div class="mv-bp__file-list">
+              <t t-foreach="state.snapshot.xml_files" t-as="f" t-key="f.id">
+                <div class="mv-bp__file">
+                  <div class="mv-bp__file-name">
+                    <a t-att-href="fileHref(f.id)"
+                       target="_blank" rel="noopener"
+                       t-att-title="f.name">
+                      <i class="fa fa-file-code-o me-2 text-primary"/>
+                      <span class="mv-bp__file-name-text"><t t-esc="f.name"/></span>
+                    </a>
+                    <span t-if="f.station"
+                          class="badge text-bg-light mv-bp__file-badge">
+                      <t t-esc="f.station"/>
+                    </span>
+                  </div>
+                  <div class="mv-bp__file-actions">
+                    <button class="btn btn-sm btn-outline-secondary"
+                            t-att-disabled="state.busy"
+                            t-on-click.prevent="() => this.onSend(f)">
+                      <i class="fa fa-paper-plane me-1"/>Send
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary"
+                            t-att-disabled="state.busy"
+                            t-on-click.prevent="() => this.onRegenerate(f)">
+                      <i class="fa fa-refresh me-1"/>Regenerate
+                    </button>
+                  </div>
+                </div>
+              </t>
+            </div>
+          </div>
+
+          <!-- Excel section -->
+          <div class="mv-bp__section" t-if="state.snapshot.excel_files.length">
+            <div class="mv-bp__section-head">
+              <i class="fa fa-file-excel-o me-2 text-success"/>
+              <span class="mv-bp__section-title">Excel Files</span>
+              <span class="mv-bp__section-count">
+                <t t-esc="state.snapshot.excel_files.length"/>
+              </span>
+            </div>
+            <div class="mv-bp__file-list">
+              <t t-foreach="state.snapshot.excel_files" t-as="f" t-key="f.id">
+                <div class="mv-bp__file">
+                  <div class="mv-bp__file-name">
+                    <a t-att-href="fileHref(f.id)"
+                       target="_blank" rel="noopener"
+                       t-att-title="f.name">
+                      <i class="fa fa-file-excel-o me-2 text-success"/>
+                      <span class="mv-bp__file-name-text"><t t-esc="f.name"/></span>
+                    </a>
+                  </div>
+                  <div class="mv-bp__file-actions">
+                    <button class="btn btn-sm btn-outline-secondary"
+                            t-att-disabled="state.busy"
+                            t-on-click.prevent="() => this.onSend(f)">
+                      <i class="fa fa-paper-plane me-1"/>Send
+                    </button>
+                  </div>
+                  <!-- Bundle actions on a dedicated wrap-row below -->
+                  <div class="mv-bp__bundle-actions"
+                       t-if="state.snapshot.bundle_actions.length">
+                    <span class="mv-bp__bundle-actions-label text-muted">
+                      Bundle actions:
+                    </span>
+                    <t t-foreach="state.snapshot.bundle_actions"
+                       t-as="a" t-key="a.code">
+                      <button class="btn btn-sm btn-outline-info"
+                              t-att-disabled="state.busy"
+                              t-on-click.prevent="() => this.onBundleAction(a)">
+                        <t t-esc="a.label"/>
+                      </button>
+                    </t>
+                  </div>
+                </div>
+              </t>
+            </div>
+          </div>
+        </t>
+      </div>
+
+      <t t-set-slot="footer">
+        <button class="btn btn-secondary"
+                t-on-click.prevent="() => this.props.close()">
+          Close
+        </button>
+      </t>
+    </Dialog>
+  </t>
+
+
+  <!-- ================================================================
+       Mini popup - Bundle Start Week
+       ================================================================ -->
+  <t t-name="marathon_ventures.BundleStartWeekDialog">
+    <Dialog title="props.actionLabel || 'Bundle Action'" size="'sm'">
+      <div class="mv-bsw">
+        <p class="mv-bsw__hint">
+          Pick a <b>Bundle Start Week</b> for the
+          <b class="text-info"><t t-esc="props.actionLabel"/></b>
+          action.
+        </p>
+        <div class="form-group">
+          <label class="fw-bold mb-1" for="mv_bsw_input">
+            Bundle Start Week
+          </label>
+          <input id="mv_bsw_input"
+                 type="date"
+                 class="form-control"
+                 t-att-value="state.week"
+                 t-on-input="(ev) => this.onWeekInput(ev)"/>
+        </div>
+        <div t-if="state.error" class="alert alert-danger mt-3 mb-0 py-2">
+          <t t-esc="state.error"/>
+        </div>
+      </div>
+      <t t-set-slot="footer">
+        <button class="btn btn-primary"
+                t-on-click.prevent="() => this.onConfirm()">
+          <i class="fa fa-check me-1"/>Submit
+        </button>
+        <button class="btn btn-secondary"
+                t-on-click.prevent="() => this.onCancel()">
+          Cancel
+        </button>
+      </t>
+    </Dialog>
+  </t>
+
+</templates>

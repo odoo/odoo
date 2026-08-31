@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- PHASE 9 - Schedule Creation form redesign (regrouped per Arianna). -->
+
+  <record id="view_mv_schedules_form_phase9_layout" model="ir.ui.view">
+    <field name="name">mv.schedules.form.phase9.layout</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_form"/>
+    <field name="priority">200</field>
+    <field name="arch" type="xml">
+
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">mv-deal-redesign</attribute>
+      </xpath>
+
+      <!-- (A) Banner: record name on left, Record Type radio on right. -->
+      <xpath expr="//div[hasclass('oe_title')]" position="replace">
+        <div class="mv-deal-banner d-flex justify-content-between align-items-center">
+          <span>
+            <span invisible="id">New Schedule</span>
+            <span invisible="not id">
+              <field name="name" readonly="1" nolabel="1" class="oe_inline"/>
+            </span>
+          </span>
+          <span class="d-flex align-items-center">
+            <span class="mv-section-label me-2"
+                  style="margin:0; border:0; padding:0;">RECORD TYPE</span>
+            <field name="sf_record_type" widget="radio"
+                   options="{'horizontal': true}" nolabel="1"/>
+          </span>
+        </div>
+      </xpath>
+
+      <!-- (B) Replace Details page with the regrouped layout. -->
+      <xpath expr="//notebook/page[1]" position="replace">
+        <page string="Details" name="page_details">
+
+          <!-- ===== 1. TIMING ===== -->
+          <div class="mv-section-label">TIMING</div>
+          <group col="4" name="grp_timing"
+                 class="mv-essentials-grid mv-essentials-grid-4">
+            <group>
+              <field name="week" string="Start Week" required="1"/>
+            </group>
+            <group>
+              <field name="start_time"/>
+            </group>
+            <group>
+              <field name="end_time"/>
+            </group>
+            <group>
+              <field name="days_allowed" widget="many2many_tags"/>
+            </group>
+          </group>
+
+          <!-- ===== 2. PRICING =====
+               currency_id is declared up here so total_dollars's monetary
+               widget can resolve it. The mv-essentials-grid CSS makes
+               labels stack above inputs and inputs go full-width. We use
+               plain (non-monetary) widgets for the editable rate so the
+               input renders as a normal <input type="number"> with no
+               currency-widget rendering surprises. -->
+          <field name="currency_id" invisible="1"/>
+          <div class="mv-section-label">PRICING</div>
+          <group col="4" name="grp_pricing"
+                 class="mv-essentials-grid mv-essentials-grid-4">
+            <group>
+              <field name="rate" readonly="0"/>
+            </group>
+            <group>
+              <field name="units_available" readonly="0"/>
+            </group>
+            <group>
+              <field name="cap"/>
+            </group>
+            <group>
+              <field name="max_per_day"/>
+            </group>
+            <group>
+              <field name="total_dollars" readonly="1"/>
+            </group>
+          </group>
+
+          <!-- ===== 3. TARGETING ===== -->
+          <div class="mv-section-label">TARGETING</div>
+          <group col="3" name="grp_targeting" class="mv-essentials-grid">
+            <group>
+              <field name="status"/>
+            </group>
+            <group>
+              <field name="networks"/>
+            </group>
+            <group>
+              <field name="deal_parent"/>
+            </group>
+            <group>
+              <field name="daypart" readonly="1"/>
+            </group>
+            <group>
+              <field name="program_daypart" readonly="0"/>
+            </group>
+            <group>
+              <field name="program" readonly="1"/>
+            </group>
+          </group>
+
+          <!-- ===== 4. ADDITIONAL ===== -->
+          <div class="mv-section-label">ADDITIONAL</div>
+          <group col="2" name="grp_additional_sched"
+                 class="mv-essentials-grid mv-essentials-grid-2">
+            <group>
+              <field name="additional_weeks"/>
+            </group>
+            <group>
+              <field name="end_week_auto" string="End Week (auto-filled)"/>
+            </group>
+          </group>
+
+          <!-- Campaign Total card sits below Pricing-related sections. -->
+          <div class="mv-campaign-total">
+            <span class="mv-campaign-total-label">CAMPAIGN TOTAL (ALL WEEKS)</span>
+            <span class="mv-campaign-total-value">
+              <field name="total_dollars" widget="monetary"
+                     readonly="1" nolabel="1"/>
+            </span>
+            <span class="mv-campaign-total-formula">
+              = Rate &#215; Units Available &#215; (1 + Additional Weeks)
+            </span>
+          </div>
+
+          <!-- ===== ADVANCED (collapse bar) ===== -->
+          <div class="mv-additional-bar" name="mv_advanced_bar">
+            <span>
+              <button name="action_toggle_advanced_schedule"
+                      type="object"
+                      class="btn btn-link p-0 mv-additional-caret"
+                      string=" "/>
+              <span class="mv-additional-label">
+                Advanced (max per day, sub-day-part overrides, custom flags)
+              </span>
+            </span>
+            <span class="mv-additional-hint">
+              <span invisible="show_advanced_schedule">collapsed by default</span>
+              <span invisible="not show_advanced_schedule">expanded</span>
+            </span>
+          </div>
+          <field name="show_advanced_schedule" invisible="1"/>
+
+          <group col="2" name="grp_advanced"
+                 invisible="not show_advanced_schedule">
+            <group string="Spot Constraints">
+              <field name="max_per_day"/>
+              <field name="status"/>
+              <field name="priority_rank"/>
+              <field name="long_form"/>
+              <field name="special"/>
+              <field name="program_specific"/>
+            </group>
+            <group string="Rollup / Computed">
+              <field name="equiv_30" readonly="1"/>
+              <field name="adus_estimated" readonly="1"/>
+              <field name="adus_generated" readonly="1"/>
+              <field name="total_schedules" readonly="1"/>
+              <field name="start_end_time" readonly="1"/>
+              <field name="weighted_priority" readonly="1"/>
+            </group>
+          </group>
+
+          <!-- ===== FOOTER ===== -->
+
+          <!-- ===== FOOTER ===== -->
+          <div class="mv-form-footer">
+            <button name="action_cancel_schedule" type="object"
+                    string="Cancel" class="btn btn-secondary"/>
+            <button name="action_save_record" type="object"
+                    string="Save Schedule" class="btn btn-primary"/>
+          </div>
+
+        </page>
+      </xpath>
+      <!-- (C) Additional Fields tab - every Schedule field that
+           is not already in the Details tab, laid out in a 3-col
+           mv-essentials-grid (label-on-top per column). -->
+      <xpath expr="//notebook/page[1]" position="after">
+        <page string="Additional Fields" name="page_additional_fields">
+          <group col="3" class="mv-essentials-grid">
+            <group>
+              <field name="access_code" readonly="0"/>
+              <field name="account_advertiser" readonly="0"/>
+              <field name="account_advertiser_program" readonly="0"/>
+              <field name="account_brand_program" readonly="0"/>
+              <field name="actual_total_000_primary_demo" readonly="0"/>
+              <field name="additional_intacct_si_number" readonly="0"/>
+              <field name="additional_intacct_si_number_comments" readonly="0"/>
+              <field name="advertiser_brand_program" readonly="0"/>
+              <field name="archived_prelog_booked_dollars" readonly="0"/>
+              <field name="archived_prelog_count" readonly="0"/>
+              <field name="bgcolor" readonly="0"/>
+              <field name="booked_digital_total_dollars" readonly="0"/>
+              <field name="booked_dollars_live_demo" readonly="0"/>
+              <field name="booked_increvenue" readonly="0"/>
+              <field name="booking_timeline" readonly="0"/>
+              <field name="bpu_units" readonly="0"/>
+              <field name="broadcast_month" readonly="0"/>
+              <field name="broadcast_spot_count" readonly="0"/>
+              <field name="broadcast_spot_total" readonly="0"/>
+              <field name="buyline_number" readonly="0"/>
+              <field name="cable_synd_pp" readonly="0"/>
+              <field name="calc_equiv_30" readonly="0"/>
+              <field name="campaign_total" readonly="0"/>
+              <field name="cancel_date" readonly="0"/>
+              <field name="cap_pct" readonly="0"/>
+              <field name="capped_30_units" readonly="0"/>
+              <field name="capped_booked" readonly="0"/>
+              <field name="capped_dollars" readonly="0"/>
+              <field name="capped_units" readonly="0"/>
+              <field name="cia" readonly="0"/>
+              <field name="cia_status" readonly="0"/>
+              <field name="clearance" readonly="0"/>
+              <field name="comments" readonly="0"/>
+              <field name="contactaccountcolor" readonly="0"/>
+              <field name="countmenot" readonly="0"/>
+              <field name="cpm" readonly="0"/>
+              <field name="created_date_time" readonly="0"/>
+              <field name="created_week_in_quarter" readonly="0"/>
+              <field name="day" readonly="0"/>
+              <field name="day_of_air_check" readonly="0"/>
+              <field name="day_of_week" readonly="0"/>
+              <field name="days_allowed_formula" readonly="0"/>
+              <field name="days_of_air" readonly="0"/>
+              <field name="daysallowedformula" readonly="0"/>
+              <field name="dealaccount" readonly="0"/>
+              <field name="dealadvertiser" readonly="0"/>
+              <field name="dealbrand" readonly="0"/>
+              <field name="dealclientcode" readonly="0"/>
+              <field name="dealcontact" readonly="0"/>
+              <field name="dealcontactid" readonly="0"/>
+              <field name="dealestimate" readonly="0"/>
+              <field name="dealname" readonly="0"/>
+              <field name="dealprogram" readonly="0"/>
+              <field name="dealprogramid" readonly="0"/>
+              <field name="demo_30_rate" readonly="0"/>
+              <field name="demo_program" readonly="0"/>
+              <field name="demo_rate" readonly="0"/>
+              <field name="digital_total_dollars" readonly="0"/>
+              <field name="discrepancy_bundle" readonly="0"/>
+              <field name="discrepancy_report_url" readonly="0"/>
+              <field name="discrepancy_total_amount" readonly="0"/>
+              <field name="dollars_booked" readonly="0"/>
+              <field name="dollars_canceled" readonly="0"/>
+              <field name="dollars_cap" readonly="0"/>
+              <field name="due_date" readonly="0"/>
+              <field name="duplicate_check" readonly="0"/>
+              <field name="duplicate_check_1a" readonly="0"/>
+              <field name="duplicate_check_digital" readonly="0"/>
+              <field name="effective_spots" readonly="0"/>
+              <field name="equiv_30_booked" readonly="0"/>
+            </group>
+            <group>
+              <field name="equiv_30_canceled" readonly="0"/>
+              <field name="error_reason" readonly="0"/>
+              <field name="estimated_total_000_primary_demo" readonly="0"/>
+              <field name="eur_filler_decile" readonly="0"/>
+              <field name="filler" readonly="0"/>
+              <field name="filler_rate" readonly="0"/>
+              <field name="filler_test" readonly="0"/>
+              <field name="ghost_order" readonly="0"/>
+              <field name="guaranteed_000_primary_demo" readonly="0"/>
+              <field name="guaranteed_total_000_primary_demo" readonly="0"/>
+              <field name="half_units_round_up" readonly="0"/>
+              <field name="hh_000" readonly="0"/>
+              <field name="impressions" readonly="0"/>
+              <field name="impressions_000" readonly="0"/>
+              <field name="impressions_aired" readonly="0"/>
+              <field name="increvenue" readonly="0"/>
+              <field name="incumbency" readonly="0"/>
+              <field name="intacct_cm_number" readonly="0"/>
+              <field name="intacct_si_number" readonly="0"/>
+              <field name="intacct_si_number_date_fully_paid" readonly="0"/>
+              <field name="intacct_si_number_payment_status" readonly="0"/>
+              <field name="intg_date" readonly="0"/>
+              <field name="invoice_date" readonly="0"/>
+              <field name="isci2" readonly="0"/>
+              <field name="isci3" readonly="0"/>
+              <field name="isci_code" readonly="0"/>
+              <field name="last_modified_time" readonly="0"/>
+              <field name="lf_brand" readonly="0"/>
+              <field name="lf_daypart" readonly="0"/>
+              <field name="lf_rate_needed" readonly="0"/>
+              <field name="lf_traffic" readonly="0"/>
+              <field name="lf_unique_key" readonly="0"/>
+              <field name="lf_week" readonly="0"/>
+              <field name="lforderlinenumber" readonly="0"/>
+              <field name="liability" readonly="0"/>
+              <field name="liability_000" readonly="0"/>
+              <field name="locked_units" readonly="0"/>
+              <field name="max_allowable_units_per_day" readonly="0"/>
+              <field name="mgm_hd_daypart" readonly="0"/>
+              <field name="program_daypart" readonly="0"/>
+              <field name="militarytime" readonly="0"/>
+              <field name="missing_traffic_current_url" readonly="0"/>
+              <field name="month" readonly="0"/>
+              <field name="net_total" readonly="0"/>
+              <field name="netsuite_invoice_number" readonly="0"/>
+              <field name="netsuite_invoice_url" readonly="0"/>
+              <field name="network_deal_number" readonly="0"/>
+              <field name="new_filler" readonly="0"/>
+              <field name="new_week_in_quarter" readonly="0"/>
+              <field name="orderline_number_mpd" readonly="0"/>
+              <field name="orderlinempd" readonly="0"/>
+              <field name="orderlinenumber" readonly="0"/>
+              <field name="ordernumber" readonly="0"/>
+              <field name="original_rate" readonly="0"/>
+              <field name="original_units_preempted" readonly="0"/>
+              <field name="overran_units_dynamic" readonly="0"/>
+              <field name="overran_units_v1" readonly="0"/>
+              <field name="overran_units_v2" readonly="0"/>
+              <field name="overran_units_v3" readonly="0"/>
+              <field name="overran_units_v4" readonly="0"/>
+              <field name="overran_units_v5" readonly="0"/>
+              <field name="overran_units_v6" readonly="0"/>
+              <field name="performance" readonly="0"/>
+              <field name="performance_dollars" readonly="0"/>
+              <field name="pi" readonly="0"/>
+              <field name="pi_payout" readonly="0"/>
+              <field name="pi_payout_test" readonly="0"/>
+              <field name="pod" readonly="0"/>
+              <field name="pod_check" readonly="0"/>
+              <field name="pp_revision" readonly="0"/>
+              <field name="pp_revision_comment" readonly="0"/>
+              <field name="preempted_and_sent_to_network" readonly="0"/>
+            </group>
+            <group>
+              <field name="prelog_count" readonly="0"/>
+              <field name="prelog_count_dynamic" readonly="0"/>
+              <field name="prelog_count_version_1" readonly="0"/>
+              <field name="prelog_count_version_2" readonly="0"/>
+              <field name="prelog_count_version_3" readonly="0"/>
+              <field name="prelog_count_version_4" readonly="0"/>
+              <field name="prelog_count_version_5" readonly="0"/>
+              <field name="prelog_count_version_6" readonly="0"/>
+              <field name="primary_demographic_cpm" readonly="0"/>
+              <field name="priority" readonly="0"/>
+              <field name="priority_weight_multiplier" readonly="0"/>
+              <field name="product" readonly="0"/>
+              <field name="quarter" readonly="0"/>
+              <field name="quarter_change" readonly="0"/>
+              <field name="rating_check" readonly="0"/>
+              <field name="ratings" readonly="0"/>
+              <field name="ratings_recieved" readonly="0"/>
+              <field name="recommended" readonly="0"/>
+              <field name="reconciled" readonly="0"/>
+              <field name="related_schedule" readonly="0"/>
+              <field name="request_missing_traffic_url" readonly="0"/>
+              <field name="revision_comments" readonly="0"/>
+              <field name="send_as_new" readonly="0"/>
+              <field name="spot_count" readonly="0"/>
+              <field name="spot_data_dollars_check" readonly="0"/>
+              <field name="spot_data_unit_check" readonly="0"/>
+              <field name="spot_total" readonly="0"/>
+              <field name="sum_of_check_payments" readonly="0"/>
+              <field name="sum_spot_equiv_30" readonly="0"/>
+              <field name="temp_working_log_check" readonly="0"/>
+              <field name="test" readonly="0"/>
+              <field name="total_000_primary_demo" readonly="0"/>
+              <field name="total_dollars_earned" readonly="0"/>
+              <field name="total_dollars_live_demo" readonly="0"/>
+              <field name="total_historical_dollars" readonly="0"/>
+              <field name="total_time" readonly="0"/>
+              <field name="traffic" readonly="0"/>
+              <field name="traffic_contact" readonly="0"/>
+              <field name="traffic_days_allowed" readonly="0"/>
+              <field name="uncalculated_check_details" readonly="0"/>
+              <field name="uneq_total_000_primary_demo" readonly="0"/>
+              <field name="unit_sep_check" readonly="0"/>
+              <field name="unitlength" readonly="0"/>
+              <field name="units_aired" readonly="0"/>
+              <field name="units_by_separation" readonly="0"/>
+              <field name="units_cap" readonly="0"/>
+              <field name="units_preempted" readonly="0"/>
+              <field name="units_remaining" readonly="0"/>
+              <field name="video_file" readonly="0"/>
+              <field name="week_in_month" readonly="0"/>
+              <field name="week_in_quarter" readonly="0"/>
+              <field name="week_in_year" readonly="0"/>
+              <field name="week_number" readonly="0"/>
+              <field name="weighted_30_rate" readonly="0"/>
+              <field name="weighted_rate" readonly="0"/>
+              <field name="wo_30_units" readonly="0"/>
+              <field name="wo_booked" readonly="0"/>
+              <field name="wo_dollars" readonly="0"/>
+              <field name="wo_units" readonly="0"/>
+              <field name="working_log_count" readonly="0"/>
+              <field name="working_log_double_check" readonly="0"/>
+              <field name="working_log_version" readonly="0"/>
+              <field name="x120s" readonly="0"/>
+              <field name="x15s" readonly="0"/>
+              <field name="x2calculated_time_period" readonly="0"/>
+              <field name="x30_rate" readonly="0"/>
+              <field name="x30_rate_round" readonly="0"/>
+              <field name="x30s" readonly="0"/>
+              <field name="x800_number" readonly="0"/>
+              <field name="xml_sent" readonly="0"/>
+              <field name="year" readonly="0"/>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

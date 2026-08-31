@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_prelog_import_job_list" model="ir.ui.view">
+    <field name="name">mv.prelog.import.job.list</field>
+    <field name="model">mv.prelog_import_job</field>
+    <field name="arch" type="xml">
+      <list string="Prelog Import Jobs">
+        <field name="name"/>
+        <field name="state"/>
+        <field name="program_id"/>
+        <field name="import_week"/>
+        <field name="prelog_version"/>
+        <field name="upload_filename"/>
+        <field name="submitted_by_id"/>
+        <field name="matched_count"/>
+        <field name="unmatched_count"/>
+        <field name="error_count"/>
+        <field name="total_rate_amount"/>
+        <field name="create_date"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_import_job_form" model="ir.ui.view">
+    <field name="name">mv.prelog.import.job.form</field>
+    <field name="model">mv.prelog_import_job</field>
+    <field name="arch" type="xml">
+      <form string="Prelog Import Job">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <group>
+            <group>
+              <field name="state" readonly="1"/>
+              <field name="program_id" readonly="1"/>
+              <field name="import_week" readonly="1"/>
+              <field name="prelog_version" readonly="1"/>
+              <field name="upload_filename" readonly="1"/>
+              <field name="file_checksum" readonly="1"/>
+              <field name="replace_existing" readonly="1"/>
+            </group>
+            <group>
+              <field name="submitted_by_id" readonly="1"/>
+              <field name="notification_email" readonly="1"/>
+              <field name="started_at" readonly="1"/>
+              <field name="finished_at" readonly="1"/>
+              <field name="notification_sent" readonly="1"/>
+            </group>
+          </group>
+          <group string="Results">
+            <group>
+              <field name="existing_prelogs_deleted_count" readonly="1"/>
+              <field name="total_row_count" readonly="1"/>
+              <field name="matched_count" readonly="1"/>
+              <field name="unmatched_count" readonly="1"/>
+              <field name="error_count" readonly="1"/>
+              <field name="combined_issue_count" readonly="1"/>
+            </group>
+            <group>
+              <field name="total_rate_amount" readonly="1"/>
+              <field name="matched_rate_amount" readonly="1"/>
+              <field name="unmatched_rate_amount" readonly="1"/>
+              <field name="success_attachment_id" readonly="1"/>
+              <field name="error_attachment_id" readonly="1"/>
+            </group>
+          </group>
+          <group string="Messages">
+            <field name="summary_message" readonly="1"/>
+            <field name="failure_message" readonly="1"/>
+            <field name="notification_failure" readonly="1"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_import_job_search" model="ir.ui.view">
+    <field name="name">mv.prelog.import.job.search</field>
+    <field name="model">mv.prelog_import_job</field>
+    <field name="arch" type="xml">
+      <search string="Prelog Import Jobs">
+        <field name="name"/>
+        <field name="state"/>
+        <field name="program_id"/>
+        <field name="import_week"/>
+        <field name="upload_filename"/>
+        <field name="submitted_by_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_prelog_import_job" model="ir.actions.act_window">
+    <field name="name">Prelog Import Jobs</field>
+    <field name="res_model">mv.prelog_import_job</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_prelog_import_job"
+            name="Prelog Import Jobs"
+            parent="menu_mv_operations"
+            action="action_mv_prelog_import_job"
+            sequence="7"/>
+</odoo>

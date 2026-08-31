@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sales_invoice_list" model="ir.ui.view">
+    <field name="name">mv.sales_invoice.list</field>
+    <field name="model">mv.sales_invoice</field>
+    <field name="arch" type="xml">
+      <list string="Sales Invoice">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="amount_due"/>
+        <field name="amount_paid"/>
+        <field name="avg_dtp"/>
+        <field name="bill_to_address_1"/>
+        <field name="bill_to_address_2"/>
+        <field name="bill_to_city"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sales_invoice_form" model="ir.ui.view">
+    <field name="name">mv.sales_invoice.form</field>
+    <field name="model">mv.sales_invoice</field>
+    <field name="arch" type="xml">
+      <form string="Sales Invoice">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="account"/>
+                <field name="opportunity"/>
+                <field name="date"/>
+                <field name="sales_invoice_payment_date"/>
+                <field name="ship_date"/>
+                <field name="bill_to_address_1"/>
+                <field name="bill_to_address_2"/>
+                <field name="bill_to_city"/>
+                <field name="bill_to_company_name"/>
+                <field name="bill_to_country"/>
+                <field name="bill_to_name"/>
+                <field name="bill_to_state"/>
+                <field name="bill_to_zip_code"/>
+                <field name="document_number"/>
+                <field name="document_type"/>
+                <field name="intacct_entity"/>
+                <field name="intacct_sales_invoice_inv"/>
+                <field name="message"/>
+                <field name="parent_entity"/>
+              </group>
+              <group>
+                <field name="payment_status"/>
+                <field name="reference_number"/>
+                <field name="ship_to_address_1"/>
+                <field name="ship_to_address_2"/>
+                <field name="ship_to_city"/>
+                <field name="ship_to_company_name"/>
+                <field name="ship_to_country"/>
+                <field name="ship_to_name"/>
+                <field name="ship_to_state"/>
+                <field name="ship_to_zip_code"/>
+                <field name="state"/>
+                <field name="terms"/>
+                <field name="amount_due"/>
+                <field name="amount_paid"/>
+                <field name="avg_dtp"/>
+                <field name="dso"/>
+                <field name="invoice_amount"/>
+                <field name="subtotal"/>
+                <field name="total"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sales_invoice_search" model="ir.ui.view">
+    <field name="name">mv.sales_invoice.search</field>
+    <field name="model">mv.sales_invoice</field>
+    <field name="arch" type="xml">
+      <search string="Sales Invoice">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sales_invoice" model="ir.actions.act_window">
+    <field name="name">Sales Invoice</field>
+    <field name="res_model">mv.sales_invoice</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sales_invoice" name="Sales Invoice" parent="menu_mv_finance" action="action_mv_sales_invoice"/>
+</odoo>

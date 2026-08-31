@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvDaysPicker">
+    <div class="mv_days_picker">
+      <t t-if="state.loading">
+        <span class="text-muted">Loading days...</span>
+      </t>
+      <t t-else="">
+        <!-- Select All header row -->
+        <div class="mv_days_picker__all form-check">
+          <input type="checkbox"
+                 class="form-check-input"
+                 t-att-id="'mv_days_all_' + props.record.resId"
+                 t-att-checked="allChecked"
+                 t-att-indeterminate="someChecked"
+                 t-att-disabled="props.readonly"
+                 t-on-change="(ev) => this.onToggleAll(ev)"/>
+          <label class="form-check-label fw-bold"
+                 t-att-for="'mv_days_all_' + props.record.resId">
+            Select All
+          </label>
+        </div>
+        <!-- Individual day checkboxes -->
+        <div class="mv_days_picker__list">
+          <t t-foreach="state.options" t-as="opt" t-key="opt.id">
+            <div class="form-check form-check-inline">
+              <input type="checkbox"
+                     class="form-check-input"
+                     t-att-id="'mv_days_' + opt.id + '_' + props.record.resId"
+                     t-att-checked="opt.checked"
+                     t-att-disabled="props.readonly"
+                     t-on-change="(ev) => this.onToggle(opt, ev)"/>
+              <label class="form-check-label"
+                     t-att-for="'mv_days_' + opt.id + '_' + props.record.resId">
+                <t t-esc="opt.name"/>
+              </label>
+            </div>
+          </t>
+        </div>
+      </t>
+    </div>
+  </t>
+
+</templates>

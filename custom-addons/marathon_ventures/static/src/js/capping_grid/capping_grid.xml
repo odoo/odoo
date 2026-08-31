@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvCappingGrid">
+    <div class="mv-cap-grid-wrap">
+
+      <!-- Set Cap % picklist dialog. Opens when the planner clicks
+           "Set cap %" in the bulk action bar. Replaces the old
+           window.prompt with a Selection dropdown sourced from
+           capOptions (Uncapped / 80% / 50% / 0% / Ghost). -->
+      <div t-if="state.pendingBulkCap"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkCap()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Set cap %</div>
+          <div class="mv-confirm-dialog__body">
+            Pick the cap to apply to every selected row:
+            <div style="margin-top: 8px;">
+              <select class="mv-cap-cell__select"
+                      style="width: 180px;"
+                      t-on-change="(ev) => this.onBulkCapSelect(ev)">
+                <option t-foreach="capOptions" t-as="opt"
+                        t-key="opt.value"
+                        t-att-value="opt.value"
+                        t-att-selected="opt.value === state.pendingBulkCapValue ? 'selected' : null">
+                  <t t-esc="opt.label"/>
+                </option>
+              </select>
+            </div>
+            <!-- Date range restriction: cap applies only to weeks whose
+                 Monday falls between Start Date and End Date (inclusive).
+                 Defaults to the full grid range so a blank submit still
+                 covers what the planner sees on-screen. -->
+            <div style="margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap;">
+              <label style="display: flex; flex-direction: column; font-size: 12px; color: #555;">
+                <span>Start Date</span>
+                <input type="date"
+                       class="mv-cap-cell__select"
+                       style="width: 160px;"
+                       t-att-value="state.pendingBulkCapStart"
+                       t-on-input="(ev) => this.onBulkCapStartInput(ev)"/>
+              </label>
+              <label style="display: flex; flex-direction: column; font-size: 12px; color: #555;">
+                <span>End Date</span>
+                <input type="date"
+                       class="mv-cap-cell__select"
+                       style="width: 160px;"
+                       t-att-value="state.pendingBulkCapEnd"
+                       t-on-input="(ev) => this.onBulkCapEndInput(ev)"/>
+              </label>
+            </div>
+            <div style="margin-top: 6px;">
+              <small class="text-muted">
+                Cap % is applied to schedules whose week falls in this range.
+                Defaults to the visible grid range.
+              </small>
+            </div>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkCap()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkCap()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discard confirmation dialog. Opens when the planner clicks
+           the Discard button in the Save bar so accidental clicks
+           don't blow away unsaved cap edits. -->
+      <div t-if="state.pendingDiscard"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelDiscard()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Discard changes?</div>
+          <div class="mv-confirm-dialog__body">
+            Are you sure you want to discard all the changes made?
+            <br/>
+            <small class="text-muted">
+              This action cannot be undone. Any edits you've made since
+              the last save will be lost.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelDiscard()">
+              Cancel
+            </button>
+            <button class="btn btn-danger"
+                    t-on-click.stop.prevent="() => this.confirmDiscard()">
+              Discard
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save / Discard bar -->
+      <div class="mv-units-savebar">
+        <span t-if="state.dirty" class="mv-units-savebar__pending">
+          You have unsaved changes
+        </span>
+        <span t-elif="state.justSaved" class="mv-units-savebar__saved">
+          All changes saved
+        </span>
+        <button t-if="state.dirty"
+                class="btn btn-light"
+                t-on-click.prevent="onDiscard"
+                t-att-disabled="state.saving">Discard</button>
+        <button t-if="state.dirty"
+                class="btn btn-primary"
+                t-on-click.prevent="onSave"
+                t-att-disabled="state.saving">
+          <t t-esc="state.saving ? 'Saving...' : 'Save'"/>
+        </button>
+      </div>
+
+      <!-- Bulk action bar (visible when at least one row selected) -->
+      <div t-if="hasSelection" class="mv-cap-bulkbar">
+        <span class="mv-cap-bulkbar__count">
+          <t t-esc="selectedRowIds.length"/> rows selected
+        </span>
+        <span class="mv-cap-bulkbar__actions">
+          <button class="btn btn-light btn-sm"
+                  t-on-click.prevent="setBulkCapPct">Set cap %</button>
+          <button class="btn btn-light btn-sm"
+                  t-on-click.prevent="ghostAllSelected">Ghost all</button>
+          <button class="btn btn-light btn-sm"
+                  t-on-click.prevent="clearSelection">Clear selection</button>
+        </span>
+      </div>
+
+      <div t-if="!state.loaded" class="mv-units-loading">Loading capping grid...</div>
+
+      <!-- Sticky-header scroll wrapper. Mirrors the Units Report:
+           the thead th becomes position: sticky so the DAYPART /
+           week / DELIVERS row stays pinned while the operator
+           scrolls the rows below it. -->
+      <div t-if="state.loaded and state.payload" class="mv-cap-table-scroll">
+      <table class="mv-units-table mv-cap-table">
+        <thead>
+          <tr>
+            <th class="mv-cap-check-col">
+              <input type="checkbox" t-on-change="toggleAll"/>
+            </th>
+            <th class="mv-daypart-col">DAYPART</th>
+            <th t-foreach="state.payload.weeks" t-as="w" t-key="w" class="mv-week-col">
+              <div class="mv-week-col__date" t-esc="fmtWeekShort(w)"/>
+              <!-- <div class="mv-week-col__dow">Mon</div> -->
+            </th>
+            <th class="mv-total-col">DELIVERS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr t-foreach="state.payload.rows" t-as="row" t-key="row.id"
+              t-att-class="state.selected[row.id] ? 'mv-cap-row mv-cap-row--selected' : 'mv-cap-row'">
+            <td class="mv-cap-check-col">
+              <input type="checkbox"
+                     t-att-checked="state.selected[row.id]"
+                     t-on-change="(ev) => this.toggleRow(row.id, ev)"/>
+            </td>
+            <td class="mv-daypart-cell">
+              <span class="mv-daypart-pill">
+                <t t-esc="row.daypart_label"/>
+              </span>
+              <span class="mv-daypart-range" t-esc="row.time_range"/>
+              <div class="mv-day-toggles">
+                <span t-foreach="['M','T','W','T','F','S','S']" t-as="dl" t-key="dl_index"
+                      t-att-class="'mv-day-toggle' + (row.days_mask[dl_index] ? ' mv-day-toggle--on' : '')">
+                  <t t-esc="dl"/>
+                </span>
+              </div>
+              <div class="mv-daypart-foot">
+                <t t-esc="fmtCurrency(row.rate)"/> per spot
+              </div>
+            </td>
+
+            <!-- Week cells: effective/booked + cap dropdown -->
+            <td t-foreach="row.cells" t-as="cell" t-key="cell.week"
+                t-att-class="cellClasses(cell)">
+              <t t-if="cell.state !== 'hatched'">
+                <div t-if="cell.state !== 'dashed'" class="mv-cap-cell__nums">
+                  <t t-esc="cell.units_effective"/>/<t t-esc="cell.units_booked"/>
+                </div>
+                <div t-elif="cell.state === 'dashed'" class="mv-cap-cell__nums mv-cap-cell__nums--muted">
+                  --
+                </div>
+                <!-- Cap dropdown: same options as the mv.schedules
+                     Selection field, with each option's percentage
+                     coming from this.capOptions (a getter that
+                     falls back to a static default if the backend
+                     payload pre-dates the new key). -->
+                <select t-if="cell.state !== 'dashed'"
+                        class="mv-cap-cell__select"
+                        t-on-change="(ev) => this.onCapSelect(row, cell, ev)">
+                  <option t-foreach="capOptions" t-as="opt"
+                          t-key="opt.value"
+                          t-att-value="opt.value"
+                          t-att-selected="opt.value === cell.cap ? 'selected' : null">
+                    <t t-esc="opt.label"/>
+                  </option>
+                </select>
+              </t>
+            </td>
+
+            <!-- Row total: effective spots + revenue + booked total -->
+            <td class="mv-cap-row-total">
+              <div class="mv-cap-row-total__spots">
+                <t t-esc="Math.round(row.row_effective || 0).toLocaleString()"/> sp
+              </div>
+              <div class="mv-cap-row-total__money">
+                <t t-esc="fmtCurrency(row.row_revenue)"/>
+              </div>
+              <div class="mv-cap-row-total__booked">
+                of <t t-esc="Math.round(row.row_booked || 0).toLocaleString()"/> bkd
+              </div>
+            </td>
+          </tr>
+
+          <!-- Grand total row -->
+          <tr t-if="state.payload.rows.length > 0" class="mv-grand-row">
+            <td></td>
+            <td class="mv-grand-cell">
+              <t t-esc="Math.round(state.payload.grand_effective || 0).toLocaleString()"/>
+              effective spots of <t t-esc="Math.round(state.payload.grand_booked || 0).toLocaleString()"/> booked
+            </td>
+            <td t-att-colspan="state.payload.weeks.length"></td>
+            <td class="mv-grand-cell mv-grand-cell--money">
+              Effective: <t t-esc="fmtCurrency(state.payload.grand_revenue)"/>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>  <!-- /.mv-cap-table-scroll -->
+    </div>
+  </t>
+
+</templates>
