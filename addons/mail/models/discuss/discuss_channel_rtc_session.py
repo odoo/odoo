@@ -64,6 +64,18 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_session},
             )
+            # the member joining the call is no longer merely invited to it, whether they
+            # were invited by a ring or, for a meeting channel, simply for not having joined
+            # yet: reflect it right away rather than waiting for a full re-fetch.
+            stores[rtc_session.channel_id].add(
+                rtc_session.channel_id,
+                lambda res, member=rtc_session.channel_member_id: res.many(
+                    "invited_member_ids",
+                    "_store_avatar_card_fields",
+                    mode="DELETE",
+                    value=member,
+                ),
+            )
         return rtc_sessions
 
     def unlink(self):
@@ -89,11 +101,12 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
             )
-        # sudo - dicuss.rtc.call.history: setting the end date of the call
-        # after it ends is allowed.
+        # sudo - dicuss.rtc.call.history: setting the end date of the call after it ends,
+        # and logging it on the activity that planned it, is allowed.
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
         for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
+            history._link_to_activity()
             stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
         return super().unlink()
 

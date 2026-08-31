@@ -1305,6 +1305,12 @@ class CalendarEvent(models.Model):
         self.videocall_channel_id = self._create_videocall_channel_id(
             self.name, self.partner_ids.user_ids,
         )
+        # attendees without a user account (e.g. a customer) cannot be added as channel
+        # members through their user like above, but are still expected to show up as
+        # invited to the meeting: add them to the channel directly, by partner.
+        attendees_without_user = self.partner_ids - self.partner_ids.user_ids.partner_id
+        if attendees_without_user:
+            self.videocall_channel_id._add_members(partners=attendees_without_user)
         self.videocall_channel_id.channel_change_description(self._get_videocall_channel_description())
 
     def _create_videocall_channel_id(self, name, users):
@@ -2046,3 +2052,4 @@ class CalendarEvent(models.Model):
     def _store_calendar_event_fields(self, res: Store.FieldList):
         res.extend(["name", "start", "stop", "location", "videocall_location"])
         res.many("partner_ids", ["name"])
+        res.one("videocall_channel_id", [])

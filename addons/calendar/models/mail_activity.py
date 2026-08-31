@@ -36,9 +36,10 @@ class MailActivity(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         # The event default partners should be the current user +
-        # the activity related record "customer" (aka main partner)
+        # the activity related record "customer" (aka main partner), the document a
+        # meeting is being scheduled from being expected to attend it too
         default_partners = self.user_id.partner_id
-        if self.res_model and self.res_id:
+        if self.activity_type_id.category == 'meeting' and self.res_model and self.res_id:
             record = self.env[self.res_model].browse(self.res_id).exists()
             if record and record.has_access('read'):
                 default_partners |= record._mail_get_customer()
@@ -76,12 +77,18 @@ class MailActivity(models.Model):
 
     def _get_activity_done_message_extra_values(self, activity):
         """Extra values for the chatter template send on activity marked as done."""
+        values = super()._get_activity_done_message_extra_values(activity)
         event = activity.calendar_event_id
-        if not event.partner_ids:
-            return {}
+        if event and values.get("call_history"):
+            # the summary of a meeting activity only mirrors the meeting name (see
+            # `calendar.event.write`): showing it next to the call label would just repeat it.
+            values["call_summary"] = False
+        if not event.partner_ids or values.get("call_history"):
+            return values
         attendee_names = format_list(self.env, event.partner_ids.mapped("name"))
         attendee_count = len(event.partner_ids)
         return {
+            **values,
             "attendee_names": attendee_names,
             "truncated_attendee_names": (
                 format_list(self.env, [
