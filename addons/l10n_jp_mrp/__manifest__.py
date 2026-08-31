@@ -5,7 +5,7 @@
     'category': 'Accounting/Localizations',
     'depends': [
         'l10n_jp_stock',
-        'mrp',
+        'mrp_account',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
