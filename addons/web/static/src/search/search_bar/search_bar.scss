@@ -68,3 +68,11 @@
         }
     }
 }
+
+.o_cp_searchview {
+    &:has(.o_searchview_dropdown_toggler.show) {
+        .o_searchview {
+            border-color: $input-focus-border-color;
+        }
+    }
+}

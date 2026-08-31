@@ -32,3 +32,20 @@ $o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2 });
         }
     }
 }
+
+.o_searchview_dropdown_toggler {
+    --#{$prefix}btn-hover-border-color: var(--btn-border-color);
+    --#{$prefix}btn-disabled-border-color: #{$input-border-color};
+    --#{$prefix}btn-disabled-opacity: 1;
+
+    @include media-breakpoint-up(md) {
+        &:after {
+            display: none !important;
+            content: none !important;
+        }
+    }
+
+    &.o-dropdown.btn-outline-secondary.show {
+        --#{$prefix}btn-active-border-color: #{$input-focus-border-color};
+    }
+}

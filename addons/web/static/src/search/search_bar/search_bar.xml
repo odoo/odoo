@@ -115,7 +115,7 @@
     </t>
 
     <t t-name="web.SearchBar">
-        <div t-if="this.visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="this.root">
+        <div t-if="this.visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group rounded-pill h-lg-100" role="search" t-ref="this.root">
             <SearchBarDropdown
                 state="this.inputDropdownState"
                 manual="true"
@@ -128,7 +128,7 @@
                 bottomSheet="false"
                 popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
             >
-                <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
+                <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0 rounded-start-pill bg-view ps-3 pe-0"
                     role="search" aria-autocomplete="list">
                     <button class="d-print-none btn border-0 p-0"
                         aria-label="Search..."
