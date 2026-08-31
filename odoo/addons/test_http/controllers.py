@@ -8,8 +8,9 @@ from psycopg2.errorcodes import SERIALIZATION_FAILURE
 from psycopg2.errors import SerializationFailure
 
 from odoo import http
-from odoo.exceptions import AccessError, ConcurrencyError, UserError
+from odoo.exceptions import AccessDenied, AccessError, ConcurrencyError, UserError
 from odoo.http import request
+from odoo.http.dispatcher import conceal_debug_traceback
 from odoo.http.requestlib import fragment_to_query_string
 from odoo.http.session import touch
 from odoo.tools import replace_exceptions, str2bool
@@ -87,6 +88,20 @@ class TestHttp(http.Controller):
         sf = SerializationFailure()
         sf.__setstate__({'pgcode': SERIALIZATION_FAILURE})
         raise sf
+
+    @http.route('/test_http/suppress-traceback/<exception>', type='json2', auth='public')
+    @conceal_debug_traceback(ValueError)
+    def suppress_traceback(self, exception):
+        e = "error message"
+        exc = {
+            'ValueError': ValueError,
+            'UserError': UserError,
+            'AccessDenied': AccessDenied,
+        }[exception](e)
+        # Always log as ERROR and with a traceback.
+        exc.loglevel = logging.ERROR
+        exc.exc_info = True
+        raise exc
 
     # =====================================================
     # Echo-Reply
