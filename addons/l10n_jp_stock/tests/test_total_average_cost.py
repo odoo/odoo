@@ -1,6 +1,8 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_jp_stock.tests.common import TestTotalAverageCostCommon
@@ -26,6 +28,84 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         })
         wizard.action_apply_total_average_cost()
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 200) / 110, places=2)
+
+    def test_opening_scoped_to_the_active_company(self):
+        other_company = self.env['res.company'].create({'name': 'JP Other Co'})
+        other_stock_loc = self.env['stock.warehouse'].search(
+            [('company_id', '=', other_company.id)], limit=1,
+        ).lot_stock_id
+        self._add_opening_stock()
+        self._create_move(
+            500, 100, self.today - timedelta(days=10),
+            self.supplier_loc, other_stock_loc, company=other_company,
+        )
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        # qty_available spans every allowed company, the moves only the active one
+        wizard = self.env['l10n_jp_stock.total.average.cost.wizard'].with_context(
+            allowed_company_ids=[self.env.company.id, other_company.id],
+        ).create({
+            'category_id': self.category.id,
+            'date_from': self.today - timedelta(days=2),
+            'date_to': self.today,
+        })
+        wizard.action_apply_total_average_cost()
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 200) / 110, places=2)
+
+    def test_evaluating_the_same_period_twice_is_stable(self):
+        self._add_opening_stock()
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        self._run_category_wizard()
+        first_cost = self.product.standard_price
+        self.assertAlmostEqual(first_cost, (100 * 100 + 10 * 200) / 110, places=2)
+        action = self._run_category_wizard()
+        self.assertEqual(self.product.standard_price, first_cost)
+        self.assertEqual(action['params']['type'], 'info')
+
+    def test_lot_valuated_product_refused(self):
+        # valuing each lot separately is 個別法, a different elected method
+        self.product.write({'tracking': 'lot', 'lot_valuated': True})
+        with self.assertRaises(UserError):
+            self._run_category_wizard()
+
+    def test_period_issues_leave_at_the_evaluated_cost(self):
+        self._add_opening_stock()
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        sale = self._create_move(20, 0, self.today, self.stock_loc, self.customer_loc)
+        self._run_category_wizard()
+        new_cost = (100 * 100 + 10 * 200) / 110
+        self.assertAlmostEqual(self.product.standard_price, new_cost, places=2)
+        # the sale is not averaged in, but it must leave at what the period averaged to,
+        # so the closing entry is built on that cost
+        self.assertAlmostEqual(abs(sale.value), 20 * self.product.standard_price, places=2)
+
+    def test_closed_period_refused(self):
+        self._add_opening_stock()
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        closing_date = fields.Datetime.to_datetime(self.today)
+        with patch.object(
+            type(self.env.company), '_get_last_closing_date', return_value=closing_date,
+        ), self.assertRaises(UserError):
+            self._run_category_wizard()
+
+    def test_bill_price_beats_the_order_price(self):
+        line = self._create_po_line(self.env.company.currency_id, 10, 100)
+        self._add_opening_stock()
+        self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc, line.id)
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': line.order_id.partner_id.id,
+            'invoice_date': self.today,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'quantity': 10,
+                'price_unit': 150,
+                'purchase_line_id': line.id,
+            })],
+        })
+        bill.action_post()
+        self._run_category_wizard()
+        # the order promised 100, the posted bill says 150 (法人税法施行令 32条1項1号)
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 150) / 110, places=2)
 
     def test_basic_calculation(self):
         self._add_opening_stock()
@@ -62,21 +142,25 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, 102.27, places=2)
 
-    def test_dropship_return_current_ignored(self):
+    def test_dropship_return_current_subtracted(self):
+        # the drop-ship it cancels is in the period, so the acquisition goes back out
         self._create_move(10, 10, self.today, self.supplier_loc, self.stock_loc)
         dropship = self._create_move(20, 20, self.today, self.supplier_loc, self.customer_loc)
         return_move = self._create_move(5, 0, self.today, self.customer_loc, self.supplier_loc)
         return_move.origin_returned_move_id = dropship.id
         self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, (10 * 10 + 20 * 20) / 30, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (10 * 10 + 20 * 20 - 5 * 20) / 25, places=2)
 
-    def test_dropship_return_prior_counted(self):
+    def test_dropship_return_prior_ignored(self):
+        # the drop-ship it cancels was averaged into an earlier period, so removing
+        # it here would distort a pool it never entered
         dropship = self._create_move(10, 125, self.today - timedelta(days=5), self.supplier_loc, self.customer_loc)
         self._add_opening_stock()
         return_move = self._create_move(5, 0, self.today, self.customer_loc, self.supplier_loc)
         return_move.origin_returned_move_id = dropship.id
-        self._run_category_wizard()
-        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 5 * 125) / 105, places=2)
+        action = self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, 100, places=2)
+        self.assertEqual(action['params']['type'], 'info')
 
     def test_dropship_prior_ignored(self):
         self._add_opening_stock()
@@ -113,7 +197,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, (100 * 80 + 10 * 100) / 110, places=2)
 
-    def test_price_history_dated_at_period_end(self):
+    def test_price_history_dated_at_period_start(self):
         self._add_opening_stock()
         self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
         self._run_category_wizard()
@@ -122,9 +206,9 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
             [('product_id', '=', self.product.id), ('move_id', '=', False)],
             order='id desc', limit=1,
         )
-        # the evaluated cost takes effect at the end of the period, not on the
-        # day the wizard happens to be run
-        self.assertEqual(product_value.date.date(), self.today)
+        # the evaluated cost takes effect at the start of the period it covers, so
+        # the period's own issues leave at it, not on the day the wizard was run
+        self.assertEqual(product_value.date.date(), self.today - timedelta(days=2))
         self.assertEqual(product_value.value, self.product.standard_price)
         self.assertIn('Total average cost evaluation', product_value.description)
 
