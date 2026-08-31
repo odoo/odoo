@@ -18,7 +18,7 @@ export class FloatTimeSelectionPopover extends Component {
         },
     };
 
-    static template = "hr_holidays.FloatTimeSelectionPopover";
+    static template = "hr.FloatTimeSelectionPopover";
 
     setup() {
         this.availableHours = HOURS;
