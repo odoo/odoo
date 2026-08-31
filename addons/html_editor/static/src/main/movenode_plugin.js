@@ -247,9 +247,10 @@ export class MoveNodePlugin extends Plugin {
         }
         return elems;
     }
-    getDroppableElements(draggableNode) {
+    getDroppableElements(draggableNodes) {
         return this.getMovableElements().filter(
-            (node) => !closestElement(node.parentElement, (n) => n === draggableNode),
+            (node) =>
+                !closestElement(node.parentElement, (n) => draggableNodes.includes(n)),
         );
     }
     setMovableElement(movableElement) {
@@ -312,24 +313,64 @@ export class MoveNodePlugin extends Plugin {
 
         if (this.scrollableElement) {
             this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
+            let movableElements = [movableElement];
             this.smoothScrollOnDrag = useNativeDraggable(simpleDraggableHook, {
                 ref: { el: this.widgetContainer },
                 elements: ".oe-sidewidget-move",
-                onDragStart: () => this.startDropzones(movableElement, containerRect),
-                onDragEnd: () => this._stopDropzones(movableElement),
+                onDragStart: () => this.startDropzones(movableElements, containerRect),
+                onDragEnd: () => this._stopDropzones(movableElements),
                 helper: () => {
-                    const container =
-                        movableElement.tagName === "LI"
-                            ? movableElement.parentElement.cloneNode(false)
-                            : document.createElement("div");
-                    if (container.tagName === "OL") {
-                        const originalIndex = childNodeIndex(movableElement) + 1;
-                        container.setAttribute("start", originalIndex);
+                    // The handle only carries the whole selection when it
+                    // belongs to it; grabbing an unselected block moves that
+                    // block alone.
+                    const selection =
+                        this.dependencies.selection.getEditableSelection();
+                    const targetedBlocks = this.getMovableElements().filter(
+                        (el) =>
+                            selection.commonAncestorContainer.contains(el) &&
+                            selection.intersectsNode(el),
+                    );
+                    if (targetedBlocks.includes(movableElement)) {
+                        movableElements = targetedBlocks.filter(
+                            (el, _, arr) =>
+                                !closestElement(el.parentElement, (n) => arr.includes(n)),
+                        );
                     }
-                    container.append(movableElement.cloneNode(true));
-                    const style = getComputedStyle(movableElement);
-                    container.style.height = style.height;
-                    container.style.width = style.width;
+                    const container = document.createElement("div");
+                    let totalHeight = 0;
+                    // Consecutive list items keep their list, so the preview
+                    // shows them numbered as they will land.
+                    const processedLists = new Set();
+                    for (const el of movableElements) {
+                        if (el.tagName === "LI") {
+                            const parentList = el.parentElement;
+                            if (processedLists.has(parentList)) {
+                                continue;
+                            }
+                            processedLists.add(parentList);
+                            const selectedItems = movableElements.filter(
+                                (e) =>
+                                    e.tagName === "LI" && e.parentElement === parentList,
+                            );
+                            const listClone = parentList.cloneNode(false);
+                            if (parentList.tagName === "OL") {
+                                listClone.setAttribute(
+                                    "start",
+                                    childNodeIndex(selectedItems[0]) + 1,
+                                );
+                            }
+                            for (const item of selectedItems) {
+                                listClone.append(item.cloneNode(true));
+                                totalHeight += item.getBoundingClientRect().height;
+                            }
+                            container.append(listClone);
+                        } else {
+                            container.append(el.cloneNode(true));
+                            totalHeight += el.getBoundingClientRect().height;
+                        }
+                    }
+                    container.style.height = `${totalHeight}px`;
+                    container.style.maxWidth = `${this.editable.offsetWidth}px`;
                     container.style.paddingLeft = "25px";
                     container.style.opacity = "0.4";
                     this.dragHelperContainer.append(container);
@@ -344,9 +385,9 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;
     }
-    startDropzones(movableElement, containerRect, directions = ["north", "south"]) {
+    startDropzones(movableElements, containerRect, directions = ["north", "south"]) {
         this.removeMoveWidget();
-        const elements = this.getDroppableElements(movableElement);
+        const elements = this.getDroppableElements(movableElements);
 
         this.dropzonesContainer.replaceChildren();
         this.editable.classList.add("oe-editor-dragging");
@@ -455,7 +496,7 @@ export class MoveNodePlugin extends Plugin {
             this.dropzoneHintContainer.append(dropzoneHintBox);
         }
     }
-    _stopDropzones(movableElement) {
+    _stopDropzones(movableElements) {
         this.editable.classList.remove("oe-editor-dragging");
         this.dropzonesContainer.replaceChildren();
         this.dropzoneHintContainer.replaceChildren();
@@ -464,43 +505,50 @@ export class MoveNodePlugin extends Plugin {
             const cursors = this.dependencies.selection.preserveSelection();
             const [position, focusElelement] = this._currentDropHintElementPosition;
             this._currentDropHintElementPosition = undefined;
-            const previousParent = movableElement.parentElement;
+            const previousParents = new Set();
 
             const isFocusInsideList = ["UL", "OL"].includes(
                 focusElelement?.parentElement?.tagName,
             );
-            if (movableElement.tagName === "LI" && !isFocusInsideList) {
-                const wrapperList = previousParent.cloneNode(false);
-                wrapperList.appendChild(movableElement);
-                movableElement = wrapperList;
-            } else if (movableElement.tagName !== "LI" && isFocusInsideList) {
-                const wrapperLI = this.document.createElement("LI");
-                wrapperLI.appendChild(movableElement);
-                movableElement = wrapperLI;
+            for (let i = 0; i < movableElements.length; i++) {
+                const element = movableElements[i];
+                const previousParent = element.parentElement;
+                previousParents.add(previousParent);
+                if (element.tagName === "LI" && !isFocusInsideList) {
+                    const wrapperList = previousParent.cloneNode(false);
+                    wrapperList.appendChild(element);
+                    movableElements[i] = wrapperList;
+                } else if (element.tagName !== "LI" && isFocusInsideList) {
+                    const wrapperLI = this.document.createElement("LI");
+                    wrapperLI.appendChild(element);
+                    movableElements[i] = wrapperLI;
+                }
             }
             if (position === "top") {
-                focusElelement.before(movableElement);
+                focusElelement.before(...movableElements);
             } else if (position === "bottom") {
-                focusElelement.after(movableElement);
+                focusElelement.after(...movableElements);
             }
-            if (previousParent.innerHTML.trim() === "") {
-                if (["UL", "OL"].includes(previousParent.tagName)) {
-                    previousParent.remove();
-                } else {
-                    const baseContainer =
-                        this.dependencies.baseContainer.createBaseContainer();
-                    const br = document.createElement("br");
-                    baseContainer.append(br);
-                    previousParent.append(baseContainer);
+            for (const previousParent of previousParents) {
+                if (previousParent.innerHTML.trim() === "") {
+                    if (["UL", "OL"].includes(previousParent.tagName)) {
+                        previousParent.remove();
+                    } else {
+                        const baseContainer =
+                            this.dependencies.baseContainer.createBaseContainer();
+                        const br = document.createElement("br");
+                        baseContainer.append(br);
+                        previousParent.append(baseContainer);
+                    }
                 }
             }
             const isSelectionInsideMovedNode =
-                movableElement.contains(cursors.anchor.node) &&
-                movableElement.contains(cursors.focus.node);
+                movableElements.some((el) => el.contains(cursors.anchor.node)) &&
+                movableElements.some((el) => el.contains(cursors.focus.node));
             if (isSelectionInsideMovedNode) {
                 cursors.restore();
             } else {
-                const selectionPosition = getDeepestPosition(movableElement, 0);
+                const selectionPosition = getDeepestPosition(movableElements[0], 0);
                 this.dependencies.selection.setSelection({
                     anchorNode: selectionPosition[0],
                     anchorOffset: selectionPosition[1],

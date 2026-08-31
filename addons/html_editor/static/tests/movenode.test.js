@@ -1,6 +1,6 @@
 import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { describe, expect, getFixture, queryOne, test } from "@odoo/hoot";
 import { click, hover } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -355,6 +355,87 @@ describe("drag", () => {
                 <p>gh</p>`,
             ),
         );
+    });
+    describe("multiple blocks", () => {
+        const HELPER = "div[data-oe-local-overlay-id='oe-movenode-helper-container'] > div";
+        test("should be able to drag and drop multiple selected blocks", async () => {
+            const { el } = await setupEditor(`<p>[a</p><h1>b]</h1><p>c</p>`, {
+                styleContent: styles,
+            });
+            await animationFrame();
+            const firstP = el.querySelector("p");
+            await hover(firstP);
+            expect(".oe-dropzone-box-side").toHaveCount(0);
+            await tick();
+            const { drop } = await contains(".oe-sidewidget-move").drag();
+            expect(".oe-dropzone-box-side").toHaveCount(6);
+            expect(queryOne(HELPER)).toHaveInnerHTML("<p>a</p><h1>b</h1>");
+
+            await drop(".oe-dropzone-box-side:eq(5)");
+            expect(getContent(el)).toBe(`<p>c</p><p>[a</p><h1>b]</h1>`);
+        });
+        test("should move a single block when the handle is not one of the selected ones", async () => {
+            const { el } = await setupEditor(`<p>[a</p><h1>b]</h1><p>c</p>`, {
+                styleContent: styles,
+            });
+            await animationFrame();
+            const lastP = el.querySelector("p:last-child");
+            await hover(lastP);
+            expect(".oe-dropzone-box-side").toHaveCount(0);
+            await tick();
+            const { drop } = await contains(".oe-sidewidget-move").drag();
+            expect(".oe-dropzone-box-side").toHaveCount(6);
+            expect(queryOne(HELPER)).toHaveInnerHTML("<p>c</p>");
+
+            await drop(".oe-dropzone-box-side:eq(1)");
+            expect(getContent(el)).toBe(`<p>a</p><p>[]c</p><h1>b</h1>`);
+        });
+        test("should be able to drag and drop multiple selected list items", async () => {
+            const { el } = await setupEditor(
+                "<ol><li>1</li><li>[2</li><li>3]</li><li>4</li></ol>",
+                {
+                    styleContent: styles,
+                },
+            );
+            await animationFrame();
+            const li = el.querySelector("li:nth-child(2)");
+            await hover(li);
+            expect(".oe-dropzone-box-side").toHaveCount(0);
+            await tick();
+            const { drop } = await contains(".oe-sidewidget-move").drag();
+            expect(".oe-dropzone-box-side").toHaveCount(8);
+            expect(queryOne(HELPER)).toHaveInnerHTML(
+                '<ol start="2"><li>2</li><li>3</li></ol>',
+            );
+
+            await drop(".oe-dropzone-box-side:eq(7)");
+            expect(getContent(el)).toBe(
+                "<ol><li>1</li><li>4</li><li>[2</li><li>3]</li></ol>",
+            );
+        });
+        test("should be able to drag and drop a paragraph together with list items", async () => {
+            const { el } = await setupEditor(
+                "<p>a[bc</p><ol><li>1</li><li>2]</li><li>3</li><li>4</li></ol><p>def</p>",
+                {
+                    styleContent: styles,
+                },
+            );
+            await animationFrame();
+            const firstP = el.querySelector("p");
+            await hover(firstP);
+            expect(".oe-dropzone-box-side").toHaveCount(0);
+            await tick();
+            const { drop } = await contains(".oe-sidewidget-move").drag();
+            expect(".oe-dropzone-box-side").toHaveCount(12);
+            expect(queryOne(HELPER)).toHaveInnerHTML(
+                '<p>abc</p><ol start="1"><li>1</li><li>2</li></ol>',
+            );
+
+            await drop(".oe-dropzone-box-side:eq(11)");
+            expect(getContent(el)).toBe(
+                "<ol><li>3</li><li>4</li></ol><p>def</p><p>a[bc</p><ol><li>1</li><li>2]</li></ol>",
+            );
+        });
     });
 });
 
