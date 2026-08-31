@@ -41,6 +41,17 @@ export class PosTicketPrinterPlugin extends Plugin {
         this.initPrinters(); // Will be moved in setup after full conversion to owl 3
     }
 
+    get defaultPrinter() {
+        return this._defaultPrinter;
+    }
+
+    set defaultPrinter(printer) {
+        this._defaultPrinter = printer;
+        if (printer) {
+            localStorage.setItem(this.printerStorageKey, printer.id);
+        }
+    }
+
     get printers() {
         return [...this.preparationPrinters, ...this.receiptPrinters];
     }
@@ -122,11 +133,12 @@ export class PosTicketPrinterPlugin extends Plugin {
     }
 
     async openCashbox() {
-        if (!this.defaultPrinter?._instance?.openCashbox) {
+        const printer = this.defaultPrinter || (await this.selectPrinter());
+        if (!printer?._instance?.openCashbox) {
             return false;
         }
 
-        return await this.defaultPrinter._instance?.openCashbox();
+        return await printer._instance.openCashbox();
     }
 
     async print({ printer, iframe, image = null }) {
@@ -175,7 +187,6 @@ export class PosTicketPrinterPlugin extends Plugin {
                 const printer = receiptPrinters.find(
                     (printer) => printer.id === parseInt(setDefaultPrinter)
                 );
-                localStorage.setItem(this.printerStorageKey, printer.id);
                 this.defaultPrinter = printer;
             }
         }

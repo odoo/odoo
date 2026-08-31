@@ -123,7 +123,7 @@ export class ClosePosPopup extends Component {
     }
     async openDetailsPopup() {
         const action = _t("Cash control - closing");
-        this.pos.openCashbox(action);
+        await this.pos.openCashbox(action);
         this.dialog.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             action: action,
