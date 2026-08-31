@@ -22,7 +22,6 @@ import {
     proxy,
     signal,
     t,
-    untrack,
     useEffect,
     useProps,
 } from "@odoo/owl";
@@ -120,21 +119,21 @@ export class PropertiesField extends Component {
         });
 
         useEffect(() => {
-            // subscribe to the definition record changing
+            // subscribe to the definition record changing, and to the edit mode
+            // being turned on after this setup (a subclass may force it)
             void this.props.record.data[this.definitionRecordField];
-            untrack(() => {
-                // when the field has a new definition record:
-                if (this.props.readonly || (!this.state.isInEditMode && !this.props.editMode)) {
-                    return;
-                }
-                this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
-                    this.state.canChangeDefinition = !!canChangeDefinition;
-                    const editable =
-                        canChangeDefinition &&
-                        !this.props.readonly &&
-                        (this.state.isInEditMode || this.props.editMode);
-                    this.setEditMode(editable);
-                });
+            const isEditable =
+                !this.props.readonly && (this.state.isInEditMode || this.props.editMode);
+            if (!isEditable) {
+                return;
+            }
+            this.checkDefinitionWriteAccess().then((canChangeDefinition) => {
+                this.state.canChangeDefinition = !!canChangeDefinition;
+                const editable =
+                    canChangeDefinition &&
+                    !this.props.readonly &&
+                    (this.state.isInEditMode || this.props.editMode);
+                this.setEditMode(editable);
             });
         });
 
