@@ -3,6 +3,11 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("indirect_subordinates_tour", {
     steps: () => [
         {
+            content: "Click Work tab",
+            trigger: "button[name='work_information']",
+            run: "click",
+        },
+        {
             content: "Click the number next to employee georges",
             trigger: "div[name='child_ids'] .o_org_chart_entry button > .badge:contains('2')",
             run: "click",
