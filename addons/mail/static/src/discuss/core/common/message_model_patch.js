@@ -7,11 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup();
-        this.channel_id = fields.One("discuss.channel", {
-            compute() {
-                return this.thread?.channel;
-            },
-        });
+        this.channel_id = this.computed(() => this.thread?.channel);
         this.hasEveryoneSeen = this.computed(() =>
             this.channel_id?.membersThatCanSeen.every((m) => m.hasSeen(this))
         );

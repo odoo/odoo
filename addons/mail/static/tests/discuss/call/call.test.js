@@ -986,6 +986,26 @@ test("call participant shows appropriate status icon", async () => {
     );
 });
 
+test("collapsed call participants show who is talking", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "bob" }),
+    });
+    const env = await start();
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const bobRemote = network.makeMockRemote(bobMemberId);
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await bobRemote.updateConnectionState("connected");
+    await click("[title='Collapse participants']");
+    await bobRemote.updateInfo({ isTalking: true });
+    await contains(".o-mail-MessagingMenuCallParticipants img[title='bob'].o-isTalking");
+    await bobRemote.updateInfo({ isTalking: false });
+    await contains(".o-mail-MessagingMenuCallParticipants img[title='bob']:not(.o-isTalking)");
+});
+
 test("start call when accepting from push notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

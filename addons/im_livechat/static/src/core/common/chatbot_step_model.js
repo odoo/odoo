@@ -42,11 +42,7 @@ export class ChatbotStep extends Record {
     operatorFoundEver = false;
     scriptStep = fields.One("chatbot.script.step");
     message = fields.One("mail.message", { inverse: "chatbotStep" });
-    answer_ids = fields.Many("chatbot.script.answer", {
-        compute() {
-            return this.scriptStep?.answer_ids;
-        },
-    });
+    answer_ids = this.computed(() => this.scriptStep?.answer_ids ?? []);
     selectedAnswer = fields.One("chatbot.script.answer");
     /** Same unversioned-model problem, and same one-way fix, as `operatorFoundEver`. */
     selectedAnswerEver = fields.One("chatbot.script.answer");

@@ -396,11 +396,7 @@ export class Thread extends Record {
         },
     });
 
-    newestPersistentOfAllMessage = fields.One("mail.message", {
-        compute() {
-            return this.newestPersistentAllMessages[0];
-        },
-    });
+    newestPersistentOfAllMessage = this.computed(() => this.newestPersistentAllMessages[0]);
 
     get oldestPersistentMessage() {
         return this.messages.find((msg) => Number.isInteger(msg.id));

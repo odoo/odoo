@@ -32,17 +32,14 @@ export class Failure extends Record {
                     .filter((id) => !!id),
             ])
     );
-    lastMessage = fields.One("mail.message", {
-        /** @this {import("models").Failure} */
-        compute() {
-            let lastMsg = this.notifications[0]?.mail_message_id;
-            for (const notification of this.notifications) {
-                if (lastMsg?.id < notification.mail_message_id?.id) {
-                    lastMsg = notification.mail_message_id;
-                }
+    lastMessage = this.computed(() => {
+        let lastMsg = this.notifications[0]?.mail_message_id;
+        for (const notification of this.notifications) {
+            if (lastMsg?.id < notification.mail_message_id?.id) {
+                lastMsg = notification.mail_message_id;
             }
-            return lastMsg;
-        },
+        }
+        return lastMsg;
     });
     /** @type {'sms' | 'email'} */
     get type() {
