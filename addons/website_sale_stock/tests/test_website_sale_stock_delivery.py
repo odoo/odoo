@@ -3,8 +3,9 @@
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
+from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -69,3 +70,25 @@ class TestWebsiteSaleStockDeliveryController(PaymentCommon, WebsiteSaleCommon):
             request.cart = sale_order
             with self.assertRaises(ValidationError):
                 WebsiteSaleController.shop_payment_validate()
+
+
+@tagged("post_install", "-at_install")
+class TestWebsiteSaleStockDelivery(DeliveryCommon):
+    def test_rule_delivery_price_uses_manually_entered_weight(self):
+        "Test that the delivery price is computed using the manually entered weight in the wizard."
+        self.product.weight = 0
+        sale_order = self.sale_order
+        delivery = self._prepare_carrier(product=self._prepare_carrier_product(), delivery_type="base_on_rule")
+        delivery.price_rule_ids = [Command.create({
+            "variable": "quantity",
+            "operator": ">=",
+            "max_value": 0,
+            "variable_factor": "weight",
+            "list_price": 2,
+        })]
+        with Form(self.env["choose.delivery.carrier"].with_context(default_order_id=sale_order, default_carrier_id=delivery)) as delivery_wizard:
+            delivery_wizard.total_weight = 10
+            wizard = delivery_wizard.save()
+        wizard.button_confirm()
+        delivery_line = sale_order.order_line.filtered("is_delivery")
+        self.assertRecordValues(delivery_line, [{"product_id": delivery.product_id.id, "product_uom_qty": 1, "price_unit": 20}])

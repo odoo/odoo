@@ -10,7 +10,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     is_pickup_required = fields.Boolean(related="carrier_id.support_pickup_locations")
     partner_shipping_id = fields.Many2one("res.partner", string="Pickup Point")
 
-    @api.onchange("carrier_id")
+    @api.onchange("carrier_id", "total_weight")
     def _onchange_carrier_id(self):
         # Reset the shipping partner if it is a pickup location and the delivery method changes.
         super()._onchange_carrier_id()
