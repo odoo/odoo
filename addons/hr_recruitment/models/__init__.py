@@ -24,5 +24,6 @@ from . import ir_ui_menu
 from . import mail_activity_plan
 from . import hr_job_platform
 from . import hr_job_tag
+from . import hr_skill_type
 
 from . import res_groups
