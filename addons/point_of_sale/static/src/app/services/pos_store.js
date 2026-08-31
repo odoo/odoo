@@ -596,15 +596,16 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processProductAttributes();
         await this.initSnoozedProducts();
     }
-    cashMove() {
-        this.openCashbox(_t("Cash in / out"));
+    async cashMove() {
+        await this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     get canOpenCashdrawer() {
-        return (
-            this.config.receipt_printer_ids.length &&
-            this.ticketPrinter?.defaultPrinter?.use_cashdrawer
-        );
+        const defaultPrinter = this.ticketPrinter?.defaultPrinter;
+        if (defaultPrinter) {
+            return defaultPrinter.use_cashdrawer;
+        }
+        return this.config.receipt_printer_ids.some((printer) => printer.use_cashdrawer);
     }
     async openCashbox(action = undefined) {
         if (this.canOpenCashdrawer) {
