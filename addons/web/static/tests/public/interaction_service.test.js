@@ -138,7 +138,7 @@ test("start interactions even if there is a crash when evaluating selectorHas", 
     expect.verifySteps(["start notboom"]);
 });
 
-test("start interactions with selectorHas", async () => {
+test("start interactions with string selectorHas", async () => {
     class Test extends Interaction {
         static selector = ".test";
         static selectorHas = ".inner";
@@ -160,7 +160,29 @@ test("start interactions with selectorHas", async () => {
     expect(core.interactions[0].interaction.el).toBe(queryOne(".test:has(.inner)"));
 });
 
-test("stop interactions with selectorHas", async () => {
+test("start interactions with array selectorHas", async () => {
+    class Test extends Interaction {
+        static selector = ".test";
+        static selectorHas = [".has1", ".has2"];
+
+        start() {
+            expect.step("start");
+        }
+    }
+
+    const { core } = await startInteraction(
+        Test,
+        `
+        <div id="one" class="test"><div class="has1"></div><div class="has2"></div></div>
+        <div id="two" class="test"><div class="has1"></div></div>
+    `
+    );
+    expect(core.interactions).toHaveLength(1);
+    expect.verifySteps(["start"]);
+    expect(core.interactions[0].interaction.el).toBe(queryOne("#one"));
+});
+
+test("stop interactions with string selectorHas", async () => {
     class Test extends Interaction {
         static selector = ".test";
         static selectorHas = ".inner";
@@ -183,6 +205,33 @@ test("stop interactions with selectorHas", async () => {
     expect.verifySteps(["start"]);
 
     queryOne(".inner").remove();
+    core.stopInteractions(queryOne(".other")); // on sub-element of the Interaction root
+    expect.verifySteps(["destroy"]);
+});
+
+test("stop interactions with array selectorHas", async () => {
+    class Test extends Interaction {
+        static selector = ".test";
+        static selectorHas = [".has1", ".has2"];
+
+        start() {
+            expect.step("start");
+        }
+
+        destroy() {
+            expect.step("destroy");
+        }
+    }
+
+    const { core } = await startInteraction(
+        Test,
+        `
+        <div class="test"><div class="has1"></div><div class="has2"></div><div class="other"></div></div>
+    `
+    );
+    expect.verifySteps(["start"]);
+
+    queryOne(".has2").remove();
     core.stopInteractions(queryOne(".other")); // on sub-element of the Interaction root
     expect.verifySteps(["destroy"]);
 });
@@ -221,7 +270,7 @@ test("start interactions even if there is a crash when evaluating selectorNotHas
     expect.verifySteps(["start notboom"]);
 });
 
-test("start interactions with selectorNotHas", async () => {
+test("start interactions with string selectorNotHas", async () => {
     class Test extends Interaction {
         static selector = ".test";
         static selectorNotHas = ".inner";
@@ -243,7 +292,33 @@ test("start interactions with selectorNotHas", async () => {
     expect(core.interactions[0].interaction.el).toBe(queryOne(".test:not(:has(.inner))"));
 });
 
-test("stop interactions with selectorNotHas", async () => {
+test("start interactions with array selectorNotHas", async () => {
+    class Test extends Interaction {
+        static selector = ".test";
+        static selectorNotHas = [".nor", ".neither"];
+
+        start() {
+            expect.step("start");
+        }
+    }
+
+    const { core } = await startInteraction(
+        Test,
+        `
+        <div class="test" data-test="no"><div class="nor"></div><div class="neither"></div></div>
+        <div class="test" data-test="yes"><div class="nor"></div></div>
+        <div class="test" data-test="yes"><div class="neither"></div></div>
+        <div class="test" data-test="yes"></div></div>
+    `
+    );
+    expect(core.interactions).toHaveLength(3);
+    expect.verifySteps(Array(3).fill("start"));
+    expect(
+        core.interactions.every((interaction) => interaction.el.getAttribute("data-test") === "yes")
+    ).toBe(true);
+});
+
+test("stop interactions with string selectorNotHas", async () => {
     class Test extends Interaction {
         static selector = ".test";
         static selectorNotHas = ".inner";
@@ -264,6 +339,35 @@ test("stop interactions with selectorNotHas", async () => {
     div.className = "inner";
     queryOne(".test").appendChild(div);
     core.stopInteractions(div); // on sub-element of the Interaction root (added node)
+    expect.verifySteps(["destroy"]);
+});
+
+test("stop interactions with array selectorNotHas", async () => {
+    class Test extends Interaction {
+        static selector = ".test";
+        static selectorNotHas = [".nor", ".neither"];
+
+        start() {
+            expect.step("start");
+        }
+
+        destroy() {
+            expect.step("destroy");
+        }
+    }
+
+    const { core } = await startInteraction(
+        Test,
+        `<div class="test"><span class="inner"></span></div>`
+    );
+    expect.verifySteps(["start"]);
+
+    for (const className of ["nor", "neither"]) {
+        const div = document.createElement("div");
+        div.className = className;
+        queryOne(".test").appendChild(div);
+    }
+    core.stopInteractions(queryOne(".inner")); // on sub-element of the Interaction root (added node)
     expect.verifySteps(["destroy"]);
 });
 

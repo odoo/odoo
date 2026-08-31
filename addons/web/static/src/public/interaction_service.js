@@ -128,15 +128,28 @@ class InteractionService {
                     ? [el, ...el.querySelectorAll(I.selector)]
                     : el.querySelectorAll(I.selector);
                 if (I.selectorHas) {
-                    targets = [...targets].filter((el) => !!el.querySelector(I.selectorHas));
+                    if (!Array.isArray(I.selectorHas)) {
+                        I.selectorHas = [I.selectorHas];
+                    }
+                    targets = [...targets].filter((el) =>
+                        I.selectorHas.every((sel) => !!el.querySelector(`:scope ${sel}`))
+                    );
                 }
                 if (I.selectorNotHas) {
-                    targets = [...targets].filter((el) => !el.querySelector(I.selectorNotHas));
+                    if (!Array.isArray(I.selectorNotHas)) {
+                        I.selectorNotHas = [I.selectorNotHas];
+                    }
+                    targets = [...targets].filter(
+                        (el) =>
+                            !I.selectorNotHas.every((sel) => !!el.querySelector(`:scope ${sel}`))
+                    );
                 }
             } catch {
-                const selectorHasError = I.selectorHas ? ` or selectorHas: '${I.selectorHas}'` : "";
+                const selectorHasError = I.selectorHas
+                    ? ` or selectorHas: '${I.selectorHas.join("', '")}'`
+                    : "";
                 const selectorNotHasError = I.selectorNotHas
-                    ? ` or selectorNotHas: '${I.selectorNotHas}'`
+                    ? ` or selectorNotHas: '${I.selectorNotHas.join("', '")}'`
                     : "";
                 const error = new Error(
                     `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError}${selectorNotHasError})`
@@ -185,11 +198,17 @@ class InteractionService {
         if (!interaction.el) {
             return true;
         }
+        const selectorHasArray = Array.isArray(selectorHas) ? selectorHas : [selectorHas];
+        const selectorNotHasArray = Array.isArray(selectorNotHas)
+            ? selectorNotHas
+            : [selectorNotHas];
         return (
             el === interaction.el ||
             el.contains(interaction.el) ||
-            (selectorHas && !interaction.el.querySelector(selectorHas)) ||
-            (selectorNotHas && !!interaction.el.querySelector(selectorNotHas))
+            (selectorHas &&
+                selectorHasArray.some((sel) => !interaction.el.querySelector(`:scope ${sel}`))) ||
+            (selectorNotHas &&
+                selectorNotHasArray.some((sel) => !!interaction.el.querySelector(`:scope ${sel}`)))
         );
     }
 

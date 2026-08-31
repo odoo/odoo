@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 export class ShowPassword extends Interaction {
     static selector = ".input-group";
-    static selectorHas = ":scope > .o_show_password";
+    static selectorHas = "> .o_show_password";
     dynamicContent = {
         ".o_show_password": {
             "t-on-click": () => (this.showPassword = !this.showPassword),
