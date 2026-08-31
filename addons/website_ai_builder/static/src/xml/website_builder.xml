@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- Add AI button between redo (fa-repeat) and mobile (fa-mobile) in the top actions bar -->
+<t t-name="html_builder.Builder" t-inherit="html_builder.Builder" t-inherit-mode="extension">
+    <!-- Insert AI button after the undo/redo group, before the mobile group -->
+    <xpath expr="//div[hasclass('o-snippets-top-actions')]/div[hasclass('d-flex')][1]" position="after">
+        <div class="d-flex gap-1">
+            <button t-on-click="onAiChatClick" type="button"
+                class="o-hb-btn btn d-flex align-items-center justify-content-center"
+                data-action="ai-chat" title="AI Assistant"
+                style="--btn-font-size: 14px; padding: 2px 6px;">
+                <img src="/ai/static/description/icon.png" alt="AI" style="width: 20px; height: 20px; object-fit: contain;"/>
+            </button>
+        </div>
+    </xpath>
+</t>
+
+</templates>
