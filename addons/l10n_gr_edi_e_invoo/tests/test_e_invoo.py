@@ -69,7 +69,7 @@ class TestEInvoo(AccountTestInvoicingCommon):
         proxy_user._l10n_gr_edi_proxy_request.side_effect = results
         patcher = patch.object(
             self.env.registry['res.company'],
-            '_l10n_gr_edi_get_proxy_user',
+            '_l10n_gr_edi_get_or_create_proxy_user',
             return_value=proxy_user,
         )
         return patcher, proxy_user
