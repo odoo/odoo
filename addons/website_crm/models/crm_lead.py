@@ -52,10 +52,9 @@ class CrmLead(models.Model):
         values['medium_id'] = values.get('medium_id') or \
                               self.sudo().default_get(['medium_id']).get('medium_id') or \
                               self.env['utm.mixin']._utm_ref('utm.utm_medium_website').id
-        values['team_id'] = values.get('team_id') or \
-                            self.env.website.crm_default_team_id.id
-        values['user_id'] = values.get('user_id') or \
-                            self.env.website.crm_default_user_id.id
+        # ensure the keys exist to not compute the default values
+        values['team_id'] = values.get('team_id')
+        values['user_id'] = values.get('user_id')
         if values.get('team_id'):
             values['type'] = 'lead' if self.env['crm.team'].sudo().browse(values['team_id']).use_leads else 'opportunity'
         else:
