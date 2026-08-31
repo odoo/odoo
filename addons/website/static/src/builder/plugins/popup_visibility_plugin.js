@@ -113,7 +113,10 @@ export class PopupVisibilityPlugin extends Plugin {
         // flow since the cleaned popup is a clone and is not in the DOM.
         for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {
             modalEl.parentElement.dataset.invisible = "1";
-            this.bootstrap.getOrCreateInstance(this.window.Modal, modalEl).hide();
+            // Do not call `.hide()`, because it is queued (parts of its effects
+            // happens asynchronously and delayed).
+            modalEl.classList.remove("show");
+            this.bootstrap.getOrCreateInstance(this.window.Modal, modalEl)._hideModal();
         }
         return rootEl;
     }
