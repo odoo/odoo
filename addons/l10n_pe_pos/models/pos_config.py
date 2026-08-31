@@ -4,11 +4,6 @@ from odoo import models, api
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    def _default_closing_journal(self):
-        if (self.env.company.account_fiscal_country_id.code or self.env.company.country_id.code) == 'PE':
-            return self.env['account.journal']._ensure_company_closing_journal()
-        return super()._default_closing_journal()
-
     def get_limited_partners_loading(self, offset=0):
         partner_ids = super().get_limited_partners_loading(offset)
         if (self.env.ref('l10n_pe_pos.partner_pe_cf').id,) not in partner_ids:

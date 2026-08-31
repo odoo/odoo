@@ -26,16 +26,13 @@ class PosConfig(models.Model):
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
 
-    def _default_sale_journal(self):
-        company_journal = self.env['account.journal']._ensure_company_account_journal()
+    def _default_journal(self):
+        company_journal = self.env['account.journal']._ensure_pos_journal()
         sale_journal = self.env['account.journal'].search([
             *self.env['account.journal']._check_company_domain(self.env.company),
             ('type', '=', 'sale'),
         ], limit=1)
         return sale_journal or company_journal
-
-    def _default_closing_journal(self):
-        return False
 
     def _default_payment_methods(self):
         """ Should only default to payment methods that are compatible to this config's company and currency.
@@ -78,17 +75,17 @@ class PosConfig(models.Model):
         compute="_compute_is_installed_account_accountant")
     journal_id = fields.Many2one(
         'account.journal', string='Point of Sale Journal',
-        domain=[('type', 'in', ('general', 'sale'))],
+        domain=[('type', '=', 'sale')],
         check_company=True,
         help="Journal used for customer invoices. If no Closing Journal is selected, this journal will also be used for the PoS session closing entries.",
-        default=lambda self: self._default_sale_journal(),
+        default=lambda self: self._default_journal(),
         ondelete='restrict')
     closing_journal_id = fields.Many2one(
         'account.journal', string='Closing Journal',
-        domain=[('type', 'in', ('general', 'sale'))],
+        domain=[('type', '=', 'sale')],
         check_company=True,
         help="Optional journal used specifically for PoS session closing and reverse entries. If left empty, closing and reverse entries will be posted to the Orders journal.",
-        default=lambda self: self._default_closing_journal(),
+        default=lambda self: self._default_journal(),
         ondelete='restrict')
     default_partner_id = fields.Many2one(
         'res.partner',
@@ -235,7 +232,7 @@ class PosConfig(models.Model):
     def _get_closing_journal(self):
         self.ensure_one()
         AccountJournal = self.env['account.journal'].with_company(self.company_id)
-        journal = AccountJournal._ensure_company_account_journal()
+        journal = AccountJournal._ensure_pos_journal()
         if self.journal_id != journal and self.journal_id.type != 'sale':
             self.journal_id = journal
         return self.closing_journal_id or self.journal_id
@@ -1154,7 +1151,7 @@ class PosConfig(models.Model):
     def _create_journal_and_payment_methods(self, cash_ref=None, cash_journal_vals=None):
         """This should only be called at creation of a new pos.config."""
 
-        journal = self.env['account.journal']._ensure_company_account_journal()
+        journal = self.env['account.journal']._ensure_pos_journal()
         payment_methods = self.env['pos.payment.method']
 
         # create cash payment method per config

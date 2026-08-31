@@ -1,11 +1,10 @@
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.l10n_ar.tests.common import TestArCommon
-from odoo.addons.point_of_sale.tests.common import ClosingJournalDefaultCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestPosAR(ClosingJournalDefaultCommon, AccountTestInvoicingHttpCommon, TestArCommon):
+class TestPosAR(AccountTestInvoicingHttpCommon, TestArCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -58,10 +57,3 @@ class TestPosAR(ClosingJournalDefaultCommon, AccountTestInvoicingHttpCommon, Tes
         self.product_a.name = "A test product"
         self.main_pos_config.open_ui()
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosARBaseFlow', login="pos_user")
-
-    def test_pos_closing_journal_default(self):
-        self.assertEqual(
-            self.main_pos_config.closing_journal_id,
-            self.env['account.journal'].sudo()._ensure_company_closing_journal(),
-        )
-        self._assert_default_closing_journal()

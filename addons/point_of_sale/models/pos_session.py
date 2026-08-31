@@ -966,13 +966,11 @@ class PosSession(models.Model):
         self.ensure_one()
         today = fields.Date.context_today(self)
         # All orders are refunds or not
-        journal = self.config_id._get_closing_journal()
         move_type = 'out_refund' if orders[0].is_refund_or_negative() else 'out_invoice'
-        move_type = 'entry' if journal.type == 'general' else move_type
         return {
             'move_type': move_type,
             'company_id': self.company_id.id,
-            'journal_id': journal.id,
+            'journal_id': self.config_id._get_closing_journal().id,
             'partner_id': self.config_id.default_partner_id.id,
             'date': today,
             'invoice_date_due': today,

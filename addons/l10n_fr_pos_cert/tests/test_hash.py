@@ -15,7 +15,7 @@ class TestHash(CommonPosTest):
         super().setUpClass()
 
     def test_hashes_should_be_equal_if_no_alteration(self):
-        journal = self.env['account.journal']._ensure_company_account_journal()
+        journal = self.env['account.journal']._ensure_pos_journal()
         if self.pos_config_usd.journal_id != journal:
             self.pos_config_usd.journal_id = journal
 

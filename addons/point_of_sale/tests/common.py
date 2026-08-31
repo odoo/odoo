@@ -951,7 +951,7 @@ class ClosingJournalDefaultCommon:
         config = self.env['pos.config'].sudo().create({'name': 'Closing Journal Default'})
         self.assertEqual(
             config.closing_journal_id,
-            self.env['account.journal'].sudo()._ensure_company_closing_journal(),
+            self.env['account.journal'].sudo()._ensure_pos_journal(),
             "the session closing entries should default to the dedicated misc journal",
         )
         self.assertEqual(config.closing_journal_id.type, 'general')
