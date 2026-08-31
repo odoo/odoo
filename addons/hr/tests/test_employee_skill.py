@@ -31,8 +31,15 @@ class TestEmployeeSkills(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.employee = cls.env['hr.employee'].create([
-            {'name': 'Test Employee'},
+        cls.company_a, cls.company_b = cls.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        cls.employee = cls.env['hr.employee'].with_company(cls.company_a).create([
+            {
+                'name': 'Test Employee',
+                'company_id': cls.company_a.id,
+            },
         ])
         cls.certification, cls.language = cls._create_skill_types([
             {
@@ -572,3 +579,40 @@ class TestEmployeeSkills(TransactionCase):
             "English should be updated to B1 and Arabic should be removed",
         )
 
+    def test_company_specific_skill_type_hidden_on_employee_company_change(self):
+        """ Moving an employee to another company hides the skills of a type dedicated to the
+            former company, without any error, and shows them again when coming back. """
+        self.language.company_id = self.company_a
+        language_skills = self.employee.employee_skill_ids.filtered(lambda s: s.skill_type_id == self.language)
+        self.assertTrue(language_skills)
+        self.assertLessEqual(language_skills.filtered(lambda s: not s.valid_to), self.employee.current_employee_skill_ids)
+
+        self.employee.company_id = self.company_b
+        self.assertFalse(self.employee.current_employee_skill_ids.filtered(lambda s: s.skill_type_id == self.language))
+        self.assertFalse(self.employee.skill_ids & self.language.skill_ids)
+        self.assertTrue(language_skills.exists(), "The hidden skills are kept")
+        self.assertTrue(self.employee.current_employee_skill_ids.filtered(lambda s: s.skill_type_id == self.certification),
+            "The skills of a shared type stay visible")
+
+        self.employee.company_id = self.company_a
+        self.assertLessEqual(language_skills.filtered(lambda s: not s.valid_to), self.employee.current_employee_skill_ids)
+        self.assertTrue(self.employee.skill_ids & self.language.skill_ids)
+
+    def test_company_specific_skill_type_hidden_on_skill_type_company_change(self):
+        self.language.company_id = self.company_b
+        self.assertFalse(self.employee.current_employee_skill_ids.filtered(lambda s: s.skill_type_id == self.language))
+        self.language.company_id = False
+        self.assertTrue(self.employee.current_employee_skill_ids.filtered(lambda s: s.skill_type_id == self.language))
+
+    def test_company_specific_skill_type_not_proposed(self):
+        self.certification.company_id = self.company_b
+        self.language.company_id = self.company_a
+        EmployeeSkill = self.env['hr.employee.skill'].with_context(default_employee_id=self.employee.id)
+        self.assertFalse(EmployeeSkill._default_skill_type_id().company_id - self.company_a)
+        self.assertNotEqual(EmployeeSkill.with_context(certificate_skill=True)._default_skill_type_id(), self.certification,
+            "The certification type of another company is not proposed")
+        # "Update Skills" dialog: the skill types are filtered on the company of the employee skill
+        self.assertIn("company_id", EmployeeSkill.fields_get(['skill_type_id'])['skill_type_id']['domain'])
+        views = EmployeeSkill.get_views([(self.env.ref('hr.employee_skill_view_form').id, 'form')])
+        self.assertIn('company_id', views['models']['hr.employee.skill']['fields'],
+            "The company is loaded in the dialog to evaluate the skill type domain")

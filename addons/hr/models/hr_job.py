@@ -79,11 +79,11 @@ class HrJob(models.Model):
             job.no_of_employee = result.get(job.id, 0)
             job.expected_employees = result.get(job.id, 0) + job.no_of_recruitment
 
-    @api.depends("job_skill_ids")
+    @api.depends("job_skill_ids", "company_id", "job_skill_ids.skill_type_id.company_id")
     def _compute_current_job_skill_ids(self):
         today = fields.Date.context_today(self)
         for job in self:
-            job.current_job_skill_ids = job.job_skill_ids.filtered(
+            job.current_job_skill_ids = job.job_skill_ids._filter_company_visible().filtered(
                 lambda skill: not skill.valid_to or skill.valid_to >= today,
             )
 
@@ -101,10 +101,10 @@ class HrJob(models.Model):
         job_skill_ids = self.env['hr.job.skill']._search(domain)
         return Domain('job_skill_ids', 'in', job_skill_ids)
 
-    @api.depends("job_skill_ids.skill_id")
+    @api.depends("job_skill_ids.skill_id", "company_id", "job_skill_ids.skill_type_id.company_id")
     def _compute_skill_ids(self):
         for job in self:
-            job.skill_ids = job.job_skill_ids.skill_id
+            job.skill_ids = job.job_skill_ids._filter_company_visible().skill_id
 
     @api.model
     def _pop_job_skill_commands(self, vals):

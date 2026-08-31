@@ -445,21 +445,21 @@ class HrEmployee(models.Model):
             })
         return new_vals_list
 
-    @api.depends('employee_skill_ids')
+    @api.depends('employee_skill_ids', 'company_id', 'employee_skill_ids.skill_type_id.company_id')
     def _compute_current_employee_skill_ids(self):
-        current_employee_skill_by_employee = self.employee_skill_ids.get_current_skills_by_employee()
+        current_employee_skill_by_employee = self.employee_skill_ids._filter_company_visible().get_current_skills_by_employee()
         for employee in self:
             employee.current_employee_skill_ids = current_employee_skill_by_employee[employee.id]
 
-    @api.depends('employee_skill_ids.skill_id')
+    @api.depends('employee_skill_ids.skill_id', 'company_id', 'employee_skill_ids.skill_type_id.company_id')
     def _compute_skill_ids(self):
         for employee in self:
-            employee.skill_ids = employee.employee_skill_ids.skill_id
+            employee.skill_ids = employee.employee_skill_ids._filter_company_visible().skill_id
 
-    @api.depends('employee_skill_ids')
+    @api.depends('employee_skill_ids', 'company_id', 'employee_skill_ids.skill_type_id.company_id')
     def _compute_certification_ids(self):
         for employee in self:
-            employee.certification_ids = employee.employee_skill_ids.filtered('is_certification')
+            employee.certification_ids = employee.employee_skill_ids._filter_company_visible().filtered('is_certification')
 
     def _compute_display_certification_page(self):
         self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1))
