@@ -15,8 +15,8 @@ class TestTotalAverageCostCommon(TransactionCase):
         cls.stock_loc = cls.env.ref('stock.stock_location_stock')
         cls.customer_loc = cls.env.ref('stock.stock_location_customers')
 
-    def _create_move(self, qty, price, date, src_loc, dest_loc, purchase_line_id=None, product=None):
-        move = self.env['stock.move'].create({
+    def _create_move(self, qty, price, date, src_loc, dest_loc, purchase_line_id=None, product=None, company=None):
+        move = self.env['stock.move'].with_company(company or self.env.company).create({
             'product_id': (product or self.product).id,
             'product_uom_qty': qty,
             'location_id': src_loc.id,
