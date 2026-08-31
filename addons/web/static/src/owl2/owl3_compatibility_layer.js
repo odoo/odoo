@@ -73,6 +73,7 @@ owl.onWillRender = function onWillRender(cb) {
     };
 };
 
+/** kept for spreadsheet */
 owl.useComponent = function useComponent() {
     return owl.useScope().component;
 };
