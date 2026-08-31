@@ -283,6 +283,7 @@ registerCallAction("change-layout", {
 /** @type {CallActionDefinition} */
 export const acceptWithCamera = {
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         channel?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
         typeof channel?.useCameraByDefault !== "boolean",
@@ -302,6 +303,7 @@ registerCallAction("join-back", {
             "mx-1": !owner.env.inCallInvitation,
         }),
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -317,6 +319,7 @@ registerCallAction("join-back", {
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         !channel?.isSelfInCall &&
         !channel?.self_member_id?.rtc_inviting_session_id &&
@@ -339,6 +342,7 @@ registerCallAction("join-with-camera", {
 /** @type {CallActionDefinition} */
 export const joinAction = {
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -358,6 +362,7 @@ export const rejectAction = {
             "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
         }),
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",

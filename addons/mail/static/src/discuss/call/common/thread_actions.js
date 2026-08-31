@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("call", {
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "phone",
     iconClass: "oi-filled",
@@ -19,6 +20,7 @@ registerThreadAction("call", {
 });
 registerThreadAction("camera-call", {
     buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "videocam",
     iconClass: "oi-filled",
