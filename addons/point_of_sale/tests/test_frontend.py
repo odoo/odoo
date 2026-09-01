@@ -1411,6 +1411,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_customer_popup(self):
         """Verify that the customer popup search & inifnite scroll work properly"""
+        # Preload enough partners to make the list scrollable without loading the new ones yet
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_customer_count', 15)
         self.env["res.partner"].create([{"name": "Z partner to search"}, {"name": "Z partner to scroll"}])
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CustomerPopupTour', login="pos_user")
