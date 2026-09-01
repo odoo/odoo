@@ -11,8 +11,9 @@
         <div t-else="" class="confirmation-page o_pos_status_shell d-flex flex-column align-items-center h-100 p-3 text-center bg-100">
             <!-- Brand -->
             <div class="o_pos_status_brand flex-shrink-0">
-                <img t-if="this.selfOrder.config.logo"
-                     t-attf-src="data:image/png;base64,{{this.selfOrder.config.logo}}"
+                <t t-set="logo" t-value="this.selfOrder.config.logo?.content"/>
+                <img t-if="logo"
+                     t-attf-src="data:image/png;base64,{{logo}}"
                      class="o_pos_status_logo object-fit-contain" t-att-alt="this.selfOrder.company.name"/>
             </div>
             <!-- Stage -->
@@ -39,7 +40,14 @@
                             </h1>
                         </t>
                         <t t-else="">
-                            <h1 class="mb-0">We're preparing your order!</h1>
+                            <h1 class="mb-0">
+                                <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk'">
+                                    Collect your order from pickup counter!
+                                </t>
+                                <t t-else="">
+                                    We're preparing your order!
+                                </t>
+                            </h1>
                         </t>
                     </div>
                 </div>

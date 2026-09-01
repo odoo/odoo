@@ -1,0 +1,42 @@
+.pos-unique-code-popup {
+    // The input sits on top of the boxes so a click anywhere on them gives it the focus. It is
+    // painted away rather than hidden with `opacity`, which would take it out of the a11y tree.
+    .unique-code-field {
+        z-index: 1;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        color: transparent;
+        background-color: transparent;
+        caret-color: transparent;
+        cursor: pointer;
+
+        &::selection {
+            background-color: transparent;
+        }
+    }
+
+    .unique-code-digit {
+        width: 2.5rem;
+        height: 3rem;
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+
+    // Reserve the line so the numpad does not jump when a code is refused.
+    .unique-code-error {
+        min-height: 1.25rem;
+    }
+
+    .unique-code-digits.shake {
+        animation: pos-unique-code-shake 400ms ease-in-out;
+    }
+}
+
+@keyframes pos-unique-code-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-0.6rem); }
+    40% { transform: translateX(0.6rem); }
+    60% { transform: translateX(-0.35rem); }
+    80% { transform: translateX(0.35rem); }
+}

@@ -234,6 +234,8 @@ class PosOrder(models.Model):
             pos_reference, tracking_number = pos_config._get_next_order_refs()
             prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
 
+            if table:
+                floating_order_name = f"PB-{table.table_number}"
             if not floating_order_name:
                 if device_type == 'kiosk':
                     floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else f"Kiosk Order {tracking_number}"

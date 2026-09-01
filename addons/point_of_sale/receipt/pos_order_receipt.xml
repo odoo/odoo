@@ -183,6 +183,9 @@
                         <t t-elif="order.get('floating_order_name') and order.get('floating_order_name') != order.get('tracking_number')">
                             <span t-out="order['floating_order_name']"/>
                         </t>
+                        <div t-if="order.get('unique_code')">
+                            <span class="text-bold">Coupon No: <t t-out="order['unique_code']"/> </span>
+                        </div>
                     </div>
                 </t>
             </div>

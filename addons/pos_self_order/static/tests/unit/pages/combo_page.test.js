@@ -1,10 +1,32 @@
 import { test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ComboPage } from "@pos_self_order/app/pages/combo_page/combo_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
+
+test("combo quantity is capped at five", async () => {
+    const store = await setupSelfPosEnv();
+    const comboProduct = store.models["product.template"].get(7);
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    comp.state.qty = 4;
+    patchWithCleanup(store.notification, {
+        add(message, options) {
+            expect(message).toBe("You can add up to 5 quantity per product.");
+            expect(options).toEqual({ type: "warning" });
+            expect.step("notification");
+        },
+    });
+
+    comp.changeQuantity(true);
+
+    expect(comp.state.qty).toBe(5);
+    expect(comp.isQuantityAtMaximum()).toBe(true);
+    expect.verifySteps(["notification"]);
+});
 
 test("onChoiceClicked and selectItem", async () => {
     const store = await setupSelfPosEnv();

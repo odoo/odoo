@@ -59,6 +59,8 @@
                                             <button type="button"
                                                     t-on-click="() => this.changeQuantity(line, true)"
                                                     class="btn btn-secondary py-1 px-2"
+                                                    t-att-class="{'border-secondary': this.isLineQuantityAtMaximum(line)}"
+                                                    t-att-disabled="this.isLineQuantityAtMaximum(line)"
                                                     ><i class="oi oi-fw" data-icon="add"/></button>
                                         </div>
                                         <div t-else=""/>

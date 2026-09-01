@@ -1,7 +1,10 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import {
+    MAX_SELF_ORDER_LINE_QTY,
+    useSelfOrder,
+} from "@pos_self_order/app/services/self_order_service";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
@@ -609,6 +612,10 @@ export class CartPage extends Component {
         return !lastChange ? true : lastChange.qty !== line.qty;
     }
 
+    isLineQuantityAtMaximum(line) {
+        return this.getLineDisplayQty(line) >= MAX_SELF_ORDER_LINE_QTY;
+    }
+
     removeLine(line, event) {
         if (!this.canDeleteLine(line)) {
             return;
@@ -638,17 +645,26 @@ export class CartPage extends Component {
         card.classList.add("delete-fade-out");
     }
 
-    changeQuantity(line, increase) {
+    changeQuantity(line, increase, notifyAtMaximum = true) {
         if (!increase && !this.canChangeQuantity(line)) {
             return;
         }
         this.setTip(false);
+        if (increase && this.isLineQuantityAtMaximum(line)) {
+            this.selfOrder.showMaxQtyNotification();
+            return;
+        }
+
         // Update combo first
         for (const cline of line.combo_line_ids) {
-            this.changeQuantity(cline, increase);
+            this.changeQuantity(cline, increase, false);
         }
 
         increase ? line.qty++ : line.qty--;
+
+        if (increase && notifyAtMaximum && this.isLineQuantityAtMaximum(line)) {
+            this.selfOrder.showMaxQtyNotification();
+        }
 
         if (line.qty <= 0) {
             this.removeLine(line);

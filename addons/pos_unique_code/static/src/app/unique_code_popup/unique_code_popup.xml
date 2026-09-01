@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_unique_code.UniqueCodePopup">
+        <Dialog title="this.title" size="'sm'" contentClass="'pos-unique-code-popup'" bodyClass="'d-flex flex-column justify-content-center py-0'">
+            <div class="text-muted text-center mb-3">
+                Type the 5-digit code to confirm this order.
+            </div>
+            <div class="unique-code-input position-relative mb-2">
+                <!-- inputmode="none" keeps the on-screen keyboard away on a kiosk while a
+                     physical keyboard still types into it. -->
+                <input type="text" inputmode="none" autocomplete="off" aria-label="Order code"
+                    class="unique-code-field position-absolute top-0 start-0 w-100 h-100"
+                    t-ref="this.inputRef"
+                    t-on-input="this.onInput"
+                    t-on-keydown="this.onKeydown"/>
+                <div class="unique-code-digits d-flex justify-content-center gap-2"
+                    t-att-class="{ shake: this.state.shake }"
+                    t-on-animationend="() => this.state.shake = false">
+                    <t t-foreach="this.digits" t-as="digit" t-key="digit_index">
+                        <div class="unique-code-digit d-flex align-items-center justify-content-center border rounded fw-bolder"
+                            t-att-class="{
+                                'border-2 border-danger text-danger': this.state.error,
+                                'border-primary': !this.state.error and digit_index === this.state.code.length,
+                            }"
+                            t-out="digit"/>
+                    </t>
+                </div>
+            </div>
+            <div class="unique-code-error text-danger text-center small mb-2" t-out="this.state.error"/>
+            <Numpad buttons="this.buttons" onClick.bind="this.onNumpadClick"/>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-column w-100 gap-2">
+                    <div class="d-flex w-100 gap-2">
+                        <button class="btn btn-primary btn-lg flex-fill unique-code-confirm"
+                            t-att-disabled="!this.isComplete or this.state.loading"
+                            t-on-click="this.confirm">
+                            Confirm
+                        </button>
+                        <button class="btn btn-secondary btn-lg flex-fill unique-code-discard"
+                            t-att-disabled="this.state.loading"
+                            t-on-click="() => this.props.close()">
+                            Discard
+                        </button>
+                    </div>
+                    <button t-if="this.props.allowForce"
+                        class="btn btn-outline-danger w-100 unique-code-force"
+                        t-att-disabled="this.state.loading"
+                        t-on-click="this.forceValidate">
+                        Force Validate
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
