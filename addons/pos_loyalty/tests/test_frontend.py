@@ -657,8 +657,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Check the created gift cards.
         self.assertEqual(len(programs['gift_card_1'].coupon_ids), 1)
         self.assertAlmostEqual(programs['gift_card_1'].coupon_ids.points, 10)
-        self.assertEqual(len(programs['gift_card_2'].coupon_ids), 1)
-        self.assertAlmostEqual(programs['gift_card_2'].coupon_ids.points, 20)
+        self.assertEqual(len(programs['gift_card_2'].coupon_ids), 2)
+        physical_gift_card_2 = programs['gift_card_2'].coupon_ids.filtered(lambda c: c.code == 'physical-gift-card-2')
+        self.assertEqual(len(physical_gift_card_2), 1)
+        self.assertAlmostEqual(physical_gift_card_2.points, 15)
+        manual_gift_card_2 = programs['gift_card_2'].coupon_ids - physical_gift_card_2
+        self.assertEqual(len(manual_gift_card_2), 1)
+        self.assertAlmostEqual(manual_gift_card_2.points, 20)
         # Check the created ewallets.
         ewallet_1_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', programs['ewallet_1'].id)])
         self.assertEqual(len(ewallet_1_aaa), 1)
