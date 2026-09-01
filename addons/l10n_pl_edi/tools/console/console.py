@@ -9,6 +9,7 @@ import os
 import re
 import sys
 import time
+import subprocess
 import zipfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -29,6 +30,7 @@ except ImportError:
 _logger = logging.getLogger(__name__)
 TIMEOUT = 30
 AUTH_TIMEOUT = 90
+MB = 2 ** 20
 
 
 # -----------------------------------------------------------------------------
@@ -206,22 +208,12 @@ class KsefApiService:
         )
         self.cache_dir = Path(cache_dir)
         self.cache_file = self.cache_dir / ".ksef_app_cache.json"
-
-        self.access_token = None
-        self.refresh_token = None
-        self.session_id = None
-        self.raw_symmetric_key = None
-        self.raw_iv = None
-        self.batch_reference = None
-        self.export_symmetric_key = None
-        self.export_iv = None
-        self.nip = None
-
         self.load_cache()
 
     def save_cache(self):
         data = {
             "access_token": self.access_token,
+            "vat_whitelist": str(self.vat_whitelist),
             "refresh_token": self.refresh_token,
             "session_id": self.session_id,
             "raw_symmetric_key_b64": b64(self.raw_symmetric_key) if self.raw_symmetric_key else None,
@@ -238,6 +230,7 @@ class KsefApiService:
         self.cache_file.write_text(json.dumps(data, indent=2))
 
     def load_cache(self):
+        self.clear_cache()
         if not self.cache_file.exists():
             return
         data = json.loads(self.cache_file.read_text())
@@ -245,6 +238,8 @@ class KsefApiService:
         self.refresh_token = data.get("refresh_token")
         self.session_id = data.get("session_id")
         self.nip = data.get("nip")
+        if vat_whitelist := data.get("vat_whitelist"):
+            self.vat_whitelist = Path(vat_whitelist)
         if data.get("raw_symmetric_key_b64"):
             self.raw_symmetric_key = base64.b64decode(data["raw_symmetric_key_b64"])
         if data.get("raw_iv_b64"):
@@ -268,7 +263,7 @@ class KsefApiService:
         self.batch_reference = None
         self.export_symmetric_key = None
         self.export_iv = None
-        self.cache_file.unlink(missing_ok=True)
+        self.vat_whitelist = None
 
     def _make_headers(self, token=None):
         headers = {"Content-Type": "application/json"}
@@ -518,11 +513,23 @@ class KsefApiService:
     def get_batch_status(self, batch_reference):
         return self._make_request("GET", f"{self.api_url}/invoices/exports/{batch_reference}").json()
 
-    def stream_download_part(self, download_url, dest_path, chunk_size=1024, break_at_byte=0):
+    def stream_download_part(self, download_url, dest_path, chunk_size=MB, break_at_byte=0):
         dest_path.parent.mkdir(parents=True, exist_ok=True)
         downloaded_bytes = dest_path.stat().st_size if dest_path.exists() else 0
 
-        headers = {}
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+
+        # Fetch total content length using GET headers if HEAD fails
+        total_bytes = 0
+        head_headers = headers.copy()
+        head_resp = requests.head(download_url, headers=head_headers, timeout=10)
+        if head_resp.status_code in (200, 206):
+            total_bytes = int(head_resp.headers.get("content-length", 0))
+            if downloaded_bytes > 0 and "Content-Range" in head_resp.headers:
+                # Content-Range format: "bytes 1000-4999/5000"
+                total_bytes = int(head_resp.headers.get("Content-Range").split("/")[-1])
+
+        # Apply Range header for actual payload streaming (resume support)
         if downloaded_bytes > 0:
             headers["Range"] = f"bytes={downloaded_bytes}-"
 
@@ -533,7 +540,19 @@ class KsefApiService:
         if response.status_code not in (200, 206):
             raise KSeFAPIError(f"Download failed ({response.status_code}): {response.text}")
 
+        # Extract total_bytes if absent from HEAD
+        if total_bytes == 0 and "content-length" in response.headers:
+            total_bytes = downloaded_bytes + int(response.headers["content-length"])
+
         mode = "ab" if response.status_code == 206 else "wb"
+        if response.status_code == 200:
+            downloaded_bytes = 0
+
+        print("  └ Initiating data stream...", flush=True)
+
+        stream_start = time.perf_counter()
+        session_start_bytes = downloaded_bytes
+
         with dest_path.open(mode) as f:
             for chunk in response.iter_content(chunk_size=chunk_size):
                 if not chunk:
@@ -541,10 +560,41 @@ class KsefApiService:
                 f.write(chunk)
                 downloaded_bytes += len(chunk)
 
+                # Performance & Bandwidth Calculations
+                elapsed = max(time.perf_counter() - stream_start, 0.001)
+                bytes_this_session = downloaded_bytes - session_start_bytes
+                speed_mbps = (bytes_this_session / MB) / elapsed
+                ram_mb = get_process_memory_mb()
+
+                if total_bytes > 0:
+                    pct = min(100.0, (downloaded_bytes / total_bytes) * 100)
+                    dots_count = int((pct / 100) * 30)
+                    dots = "." * dots_count
+                    spaces = " " * (30 - dots_count)
+
+                    remaining_bytes = max(total_bytes - downloaded_bytes, 0)
+                    eta_sec = (remaining_bytes / MB) / speed_mbps if speed_mbps > 0 else 0
+
+                    sys.stdout.write(
+                        f"\r  └ Progress: [{dots}{spaces}] {pct:5.1f}% "
+                        f"({downloaded_bytes / MB:6.1f} / {total_bytes / MB:6.1f} MB) "
+                        f"[{speed_mbps:5.2f} MB/s | ETA: {eta_sec:4.0f}s | RAM: {ram_mb:5.1f} MB]"
+                    )
+                else:
+                    sys.stdout.write(
+                        f"\r  └ Downloaded: {downloaded_bytes / MB:6.1f} MB... "
+                        f"[{speed_mbps:5.2f} MB/s | RAM: {ram_mb:5.1f} MB]"
+                    )
+                sys.stdout.flush()
+
                 if break_at_byte > 0 and downloaded_bytes >= break_at_byte:
+                    sys.stdout.write("\n")
+                    sys.stdout.flush()
                     raise KSeFAPIError(f"Simulated break reached at {downloaded_bytes} bytes")
 
-        return downloaded_bytes, False
+            sys.stdout.write("\n")
+            sys.stdout.flush()
+            return downloaded_bytes, False
 
 
 # -----------------------------------------------------------------------------
@@ -1043,12 +1093,159 @@ def action_list_directory(service):
         print(f"{stat.st_size:>8} {mtime_str} {name}")
 
 
+def get_process_memory_mb():
+    """Returns current process Resident Set Size (RSS) memory in MB."""
+    try:
+        import psutil  # ruff: ignore [import-outside-top-level]
+        return psutil.Process(os.getpid()).memory_info().rss / (1024 * 1024)
+    except ImportError:
+        import resource  # ruff: ignore [import-outside-top-level]
+        usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        return usage / 1024 if sys.platform != "darwin" else usage / (1024 * 1024)
+
+
+def action_download_vat_whitelist(service):
+    """
+    PHASE 1: Download/Resume Polish VAT Whitelist archive using service.stream_download_part.
+    Saves temporary file path metadata into service.cache_file.
+    """
+    start_time = time.perf_counter()
+    today_str = datetime.now().strftime("%Y%m%d")
+    url = f"https://plikplaski.mf.gov.pl/pliki/{today_str}.7z"
+    temp_archive_path = Path(f"vat_whitelist_flat_{today_str}.json.7z")
+
+    print(f"\n[+] OS Temporary Archive Target: {temp_archive_path.resolve()}")
+    print(f"    Initial RAM Usage: {get_process_memory_mb():.1f} MB")
+
+    service.vat_whitelist = temp_archive_path.resolve()
+    service.save_cache()
+
+    break_mb_input = input(
+        "Enter MB threshold to simulate download break (0 = finish download): "
+    ).strip()
+    break_at_byte = (int(break_mb_input) * MB) if break_mb_input.isdigit() else 0
+
+    downloaded_bytes = 0
+    is_complete = False
+
+    try:
+        downloaded_bytes, is_complete = service.stream_download_part(
+            download_url=url,
+            dest_path=service.vat_whitelist,
+            chunk_size=MB,
+            break_at_byte=break_at_byte,
+        )
+    except KSeFAPIError as err:
+        elapsed = time.perf_counter() - start_time
+        avg_speed = (downloaded_bytes / MB) / max(elapsed, 0.001)
+        print(f"\n[!] Download paused/interrupted: {err}")
+        print(f"    Progress preserved at: {service.vat_whitelist.name}. Re-run to resume.")
+        print(
+            f"    Final Stats: {downloaded_bytes / MB:.1f} MB downloaded | "
+            f"Avg Speed: {avg_speed:.2f} MB/s | RAM: {get_process_memory_mb():.1f} MB | Elapsed: {elapsed:.2f}s"
+        )
+        return
+
+    elapsed = time.perf_counter() - start_time
+    avg_speed = (downloaded_bytes / MB) / max(elapsed, 0.001)
+
+    if is_complete:
+        print(
+            f"  └ Archive already fully downloaded ({downloaded_bytes / MB:.1f} MB). "
+            f"[RAM: {get_process_memory_mb():.1f} MB] (Took {elapsed:.2f}s)"
+        )
+    else:
+        print(
+            f"  └ Phase 1 Complete: Saved {downloaded_bytes / MB:.1f} MB to {service.vat_whitelist.name} "
+            f"[{avg_speed:.2f} MB/s | RAM: {get_process_memory_mb():.1f} MB | Elapsed: {elapsed:.2f}s]"
+        )
+
+
+def action_extract_vat_whitelist(service):
+    """
+    PHASE 2: Extract downloaded local archive line-by-line via 7z,
+    splitting records into 3 flat TSV files ready for PostgreSQL COPY.
+    """
+    start_time = time.perf_counter()
+
+    if not service.vat_whitelist or not service.vat_whitelist.exists():
+        print("\n[!] Archive file not found.")
+        print("    Run Phase 1 (Download) first.")
+        return
+
+    today_str = datetime.now().strftime("%Y%m%d")
+    output_dir = Path(f"vat_whitelist_output_{today_str}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        subprocess.run(["7z"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    except FileNotFoundError:
+        print("[!] Error: '7z' executable not found in PATH. Install p7zip / 7-Zip first.")
+        return
+
+    print(f"\n[+] Processing archive from disk: {service.vat_whitelist.name}")
+    print(f"    Initial RAM Usage: {get_process_memory_mb():.1f} MB")
+
+    proc = subprocess.Popen(
+        ["7z", "e", str(service.vat_whitelist), "-so"],
+        stdout=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="ignore",
+    )
+
+    open_files = {}
+    current_key = "default"
+    current_file = None
+    line_count = 0
+
+    try:
+        for line in proc.stdout:
+            line_str = line.strip()
+
+            if ":" in line_str and ("[" in line_str or "array" in line_str.lower()):
+                raw_key = line_str.split(":")[0].strip(" '\"{}:")
+                if raw_key:
+                    current_key = raw_key
+                    if current_key not in open_files:
+                        target_file = output_dir / f"{current_key}.txt"
+                        open_files[current_key] = target_file.open("w", encoding="utf-8")
+                        print(f"  └ Initialized text file: {target_file.name}")
+                    current_file = open_files[current_key]
+                continue
+
+            cleaned_hash = line_str.strip(" '\",[]{}")
+            if len(cleaned_hash) >= 32 and current_file:
+                current_file.write(f"{cleaned_hash}\n")
+                line_count += 1
+
+                if line_count % 100_000 == 0:
+                    elapsed = time.perf_counter() - start_time
+                    ram_mb = get_process_memory_mb()
+                    print(f"  └ Extracted {line_count:,} records... [RAM: {ram_mb:.1f} MB] [Time: {elapsed:.1f}s]")
+
+        proc.wait()
+
+    finally:
+        for handle in open_files.values():
+            handle.close()
+
+    total_time = time.perf_counter() - start_time
+    final_ram = get_process_memory_mb()
+    print(
+        f"\n[+] Extraction finished! Extracted {line_count:,} total records into: '{output_dir.name}/'\n"
+        f"    Final RAM Usage: {final_ram:.1f} MB | Total Time: {total_time:.2f}s"
+    )
+
+
 # -----------------------------------------------------------------------------
 # Console Menu Engine using Dictionary Dispatch
 # -----------------------------------------------------------------------------
 def get_menu_actions(service, cert_path, key_path, password):
     return [
         {"desc": "Print cache JSON", "action": lambda: action_print_cache(service)},
+        {"desc": "Download VAT whitelist", "action": lambda: action_download_vat_whitelist(service)},
+        {"desc": "Extract VAT whitelist", "action": lambda: action_extract_vat_whitelist(service)},
         {"desc": "Get access token (XAdES Auth)", "action": lambda: action_get_token(service, cert_path, key_path, password)},
         {"desc": "Start session", "action": lambda: action_start_session(service)},
         {"desc": "Ask for invoices (create part placeholders)", "action": lambda: action_ask_invoices(service)},
