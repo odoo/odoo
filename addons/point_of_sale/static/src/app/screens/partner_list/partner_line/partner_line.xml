@@ -10,6 +10,7 @@
                         <b t-out="this.props.partner.name or ''" />
                         <div class="company-field text-bg-muted" t-out="this.props.partner.parent_name or ''" />
                     </div>
+<<<<<<< 6dd4c4d4af086f19ee6b128c26cc7966c2e88864
                     <div t-if="this.pos.cashier._role !== 'minimal'" class="d-flex justify-content-between align-items-center">
                         <div class="partner-line-balance-mobile" t-if="this.props.isBalanceDisplayed" />
                         <Dropdown>
@@ -24,6 +25,34 @@
                             </t>
                         </Dropdown>
                     </div>
+||||||| f05122476ea1f15c86c28319aebf9b3fdc93503a
+                    <Dropdown t-if="this.pos.cashier._role !== 'minimal'">
+                        <button class="btn btn-ligth fa fa-bars" />
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
+                                Edit Details
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
+                                All Orders
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+=======
+                    <t t-if="this.pos.cashier._role !== 'minimal'">
+                        <Dropdown t-if="this.dropdown.isOpen" state="this.dropdown">
+                            <button class="btn btn-ligth fa fa-bars" />
+                            <t t-set-slot="content">
+                                <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
+                                    Edit Details
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.props.onClickOrders(this.props.partner)">
+                                    All Orders
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                        <button t-else="" class="btn btn-ligth fa fa-bars dropdown o-dropdown dropdown-toggle" t-on-click.stop="() => this.dropdown.open()" />
+                    </t>
+>>>>>>> 3c8b55153065f8c5abaa0d16d41480d24cc70075
                 </div>
                 <div class="partner-line-adress p-1" t-if="this.props.partner.address" t-out="this.props.partner.address" />
                 <div class="partner-line-email p-1">
@@ -69,7 +98,7 @@
                 </td>
                 <td class="edit-partner-button-cell align-middle">
                     <t t-if="this.pos.cashier._role !== 'minimal'">
-                        <Dropdown>
+                        <Dropdown t-if="this.dropdown.isOpen" state="this.dropdown">
                             <button class="btn btn-light btn-lg lh-lg border float-end">
                                 <i class="oi oi-fw" data-icon="menu"/>
                             </button>
@@ -82,6 +111,9 @@
                                 </DropdownItem>
                             </t>
                         </Dropdown>
+                        <button t-else="" class="btn btn-light btn-lg lh-lg border float-end dropdown o-dropdown dropdown-toggle" t-on-click.stop="() => this.dropdown.open()">
+                            <i class="fa fa-fw fa-bars"/>
+                        </button>
                     </t>
                 </td>
             </tr>
