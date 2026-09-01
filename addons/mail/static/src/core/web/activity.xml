@@ -51,7 +51,11 @@
                     <button class="o-mail-Activity-markDone btn btn-link btn-success p-0 me-3" t-on-click="this.onClickMarkAsDone">
                         <i class="oi" data-icon="check"/> Done
                     </button>
-                    <FileUploader t-if="this.activity().activity_category === 'upload_file'" onUploaded.bind="this.onFileUploaded">
+                    <FileUploader t-if="this.activity().activity_category === 'upload_file'"
+                        onUploaded.bind="this.onFileUploaded" 
+                        onUploadComplete.bind="this.onFilesUploadComplete"
+                        multiUpload="true"
+                    >
                         <t t-set-slot="toggler">
                             <button class="btn btn-link text-action p-0 me-3">
                                 <i t-attf-class="oi" t-att-data-icon="this.activity().icon"/> <t t-out="this.activity().display_name"/>

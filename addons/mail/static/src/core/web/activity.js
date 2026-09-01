@@ -33,6 +33,7 @@ export class Activity extends Component {
             })
         );
         this.attachmentUploader = useAttachmentUploader(this.thread);
+        this.pendingAttachmentIds = [];
     }
 
     get displayName() {
@@ -136,12 +137,21 @@ export class Activity extends Component {
     }
 
     async onFileUploaded(data) {
+        const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
+            activity: this.activity(),
+        });
+        this.pendingAttachmentIds.push(attachmentId);
+    }
+
+    async onFilesUploadComplete() {
+        const attachmentIds = this.pendingAttachmentIds;
+        this.pendingAttachmentIds = [];
+        if (!attachmentIds.length) {
+            return;
+        }
         const activity = this.activity();
         const thread = this.thread();
-        const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
-        });
-        await activity.markAsDone([attachmentId]);
+        await activity.markAsDone(attachmentIds);
         this.onActivityChanged(thread);
         await thread.fetchNewMessages();
     }
