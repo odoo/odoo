@@ -1,6 +1,6 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, mockLocation, test } from "@odoo/hoot";
 import {
     animationFrame,
     clear,
@@ -599,6 +599,252 @@ test("form submit result cleaned but not removed on stop", async () => {
     expect(queryOne("#s_website_form_result").children.length).toEqual(1);
     core.stopInteractions();
     expect(queryOne("#s_website_form_result").children.length).toEqual(0);
+});
+
+const allFieldsFormTemplate = /* html */ `
+    <form class="s_website_form" data-shareable-id="form-1a2b3">
+        <div class="s_website_form_field">
+            <input type="text" name="name"/>
+        </div>
+        <div class="s_website_form_field">
+            <input type="email" name="email_from"/>
+        </div>
+        <div class="s_website_form_field">
+            <input type="tel" name="phone"/>
+        </div>
+        <div class="s_website_form_field">
+            <textarea name="message"></textarea>
+        </div>
+        <div class="s_website_form_field">
+            <select name="Select">
+                <option value="Option 1">Option 1</option>
+                <option value="Option 2">Option 2</option>
+            </select>
+        </div>
+        <div class="s_website_form_field">
+            <input type="checkbox" name="Your Company" value="Option 1"/>
+            <input type="checkbox" name="Your Company" value="Option 2"/>
+        </div>
+        <div class="s_website_form_field">
+            <input type="checkbox" name="Subscribe"/>
+        </div>
+        <div class="s_website_form_field">
+            <input type="checkbox" name="Unsubscribe" checked="checked"/>
+        </div>
+        <div class="s_website_form_field">
+            <input type="radio" name="Radio Button" value="Option 1"/>
+            <input type="radio" name="Radio Button" value="Option 2"/>
+        </div>
+        <div class="s_website_form_field s_website_form_datetime">
+            <input type="text" class="datetimepicker-input" name="When"/>
+        </div>
+        <div class="s_website_form_field" data-no-prefill="true">
+            <input type="text" name="no_prefill"/>
+        </div>
+    </form>
+`;
+
+test("URL params prefill all standard field types", async () => {
+    const params = new URLSearchParams({
+        name: " Tony  ",
+        email_from: "india@odoo.com",
+        phone: "+999-888-7777",
+        message: "Hello there !",
+        Select: "Option 2",
+        Subscribe: "true",
+        Unsubscribe: "false",
+        "Radio Button": "Option 1",
+        When: "2026-10-22T18:00",
+        no_prefill: "no pre fill",
+    });
+    params.append("Your Company", "Option 1");
+    params.append("Your Company", "Option 2");
+    mockLocation.href = `/page?${params.toString()}`;
+
+    const { core } = await startInteractions(allFieldsFormTemplate);
+    expect(core.interactions).toHaveLength(1);
+
+    // Whitespace should be trimmed.
+    expect("form input[name=name]").toHaveValue("Tony");
+    expect("form input[name=email_from]").toHaveValue("india@odoo.com");
+    expect("form input[name=phone]").toHaveValue("+999-888-7777");
+    expect("form textarea[name=message]").toHaveValue("Hello there !");
+    expect("form select[name=Select]").toHaveValue("Option 2");
+    expect("form input[name=Subscribe]").toBeChecked();
+    expect("form input[name=Unsubscribe]").not.toBeChecked();
+    expect("form input[name='Your Company'][value='Option 1']").toBeChecked();
+    expect("form input[name='Your Company'][value='Option 2']").toBeChecked();
+    expect("form input[name='Radio Button'][value='Option 1']").toBeChecked();
+    expect("form input[name='Radio Button'][value='Option 2']").not.toBeChecked();
+    expect("form input[name=When]").toHaveValue("10/22/2026 18:00:00");
+    // Field with no-prefill attribute should not be filled even if there is a
+    // corresponding URL parameter.
+    expect("form input[name='no_prefill']").toHaveValue("");
+});
+
+const twoShareableFormsTemplate = /* html */ `
+    <form class="s_website_form" data-shareable-id="form-1a2b3">
+        <div class="s_website_form_field">
+            <input type="text" name="name"/>
+        </div>
+    </form>
+    <form class="s_website_form" data-shareable-id="form-3b2a1">
+        <div class="s_website_form_field">
+            <input type="text" name="name"/>
+        </div>
+    </form>
+`;
+
+test("URL prefill only applies to forms with sharing enabled", async () => {
+    mockLocation.href = "?name=Tony";
+    await startInteractions(`
+        <form class="s_website_form" data-shareable-id="form-1a2b3">
+            <div class="s_website_form_field">
+                <input type="text" name="name"/>
+            </div>
+        </form>
+        <form class="s_website_form">
+            <div class="s_website_form_field">
+                <input type="text" name="name"/>
+            </div>
+        </form>
+    `);
+    expect("form[data-shareable-id] input[name=name]").toHaveValue("Tony");
+    expect("form:not([data-shareable-id]) input[name=name]").toHaveValue("");
+});
+
+test("URL prefill is scoped to the form matching the usp_pp token", async () => {
+    mockLocation.href = "?usp_pp=form-1a2b3&name=Tony";
+    await startInteractions(twoShareableFormsTemplate);
+    expect("form[data-shareable-id=form-1a2b3] input[name=name]").toHaveValue("Tony");
+    expect("form[data-shareable-id=form-3b2a1] input[name=name]").toHaveValue("");
+});
+
+test("URL prefill without a usp_pp token applies to every shareable form", async () => {
+    mockLocation.href = "?name=Tony";
+    await startInteractions(twoShareableFormsTemplate);
+    expect("form[data-shareable-id=form-1a2b3] input[name=name]").toHaveValue("Tony");
+    expect("form[data-shareable-id=form-3b2a1] input[name=name]").toHaveValue("Tony");
+});
+
+test("data-for (server values) overrides data-fill-with and URL params", async () => {
+    mockLocation.href = "?name=Tony&email_from=url@gujarat.com&Priority=Low";
+    const { core } = await startInteractions(`
+        <div data-for="test-form" data-values='{"name": "Server Name", "email_from": "server@gujarat.com", "Priority": "High"}'></div>
+        <form id="test-form" class="s_website_form" data-shareable-id="form-1a2b3">
+            <div class="s_website_form_field">
+                <input type="text" name="name" data-fill-with="name"/>
+            </div>
+            <div class="s_website_form_field">
+                <input type="email" name="email_from" data-fill-with="email"/>
+            </div>
+            <div class="s_website_form_field">
+                <input type="checkbox" name="Priority" value="Low"/>
+                <input type="checkbox" name="Priority" value="High"/>
+            </div>
+        </form>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect("form input[name=name]").toHaveValue("Server Name");
+    expect("form input[name=email_from]").toHaveValue("server@gujarat.com");
+    expect("form input[value='High']").toBeChecked();
+    expect("form input[value='Low']").not.toBeChecked();
+});
+
+test("data-fill-with (logged-in user data) overrides URL params", async () => {
+    mockLocation.href = "?name=Tony";
+    const { core } = await startInteractions(`
+        <form class="s_website_form" data-shareable-id="form-1a2b3">
+            <div class="s_website_form_field">
+                <input type="text" name="name" data-fill-with="name"/>
+            </div>
+        </form>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect("form input[name=name]").toHaveValue("Mitchell Admin");
+});
+
+test("URL prefill ignores invalid values, keeping the default values", async () => {
+    mockLocation.href = "?Select=Bogus&Radio Button=Bogus&Subscribe=Bogus&When=Bogus";
+    await startInteractions(`
+        <form class="s_website_form" data-shareable-id="form-1a2b3">
+            <div class="s_website_form_field">
+                <select name="Select">
+                    <option value="Option 1">Option 1</option>
+                    <option value="Option 2" selected="selected">Option 2</option>
+                </select>
+            </div>
+            <div class="s_website_form_field">
+                <input type="radio" name="Radio Button" value="Option 1"/>
+                <input type="radio" name="Radio Button" value="Option 2" checked="checked"/>
+            </div>
+            <div class="s_website_form_field">
+                <input type="checkbox" name="Subscribe" checked="checked"/>
+            </div>
+            <div class="s_website_form_field s_website_form_datetime">
+                <input type="text" class="datetimepicker-input" name="When"/>
+            </div>
+        </form>
+    `);
+    // An invalid value must be dropped without clearing the pre-selected default.
+    expect("form select[name=Select]").toHaveValue("Option 2");
+    expect("form input[name='Radio Button'][value='Option 1']").not.toBeChecked();
+    expect("form input[name=Subscribe]").toBeChecked();
+    expect("form input[name=When]").toHaveValue("");
+});
+
+test("URL prefill selects the 'Other' option when no choice matches", async () => {
+    mockLocation.href = "?Radio Button=Banana&Select=Option 1";
+    await startInteractions(/* html */ `
+        <form class="s_website_form" data-shareable-id="form-1a2b3">
+            <div class="s_website_form_field" data-other-option-allowed="true" data-other-option-placeholder="radio">
+                <div class="row s_website_form_multiple" data-name="Radio Button">
+                    <div class="form-check">
+                        <input type="radio" class="s_website_form_input" id="oradiooption1" name="Radio Button" value="Option 1"/>
+                        <label class="form-check-label" for="oradiooption1">Option 1</label>
+                    </div>
+                </div>
+            </div>
+            <div class="s_website_form_field" data-other-option-allowed="true" data-other-option-placeholder="select">
+                <select class="form-select s_website_form_input" name="Select">
+                    <option value="Option 1" selected="selected">Option 1</option>
+                </select>
+            </div>
+        </form>
+    `);
+    // The unmatched value selects "Other" and lands in its input.
+    expect("input[name='Radio Button'][value='_other']").toBeChecked();
+    expect(".o_other_input[placeholder=radio]").toHaveValue("Banana");
+    expect(".o_other_input[placeholder=radio]").not.toHaveClass("d-none");
+    // A matched value leaves "Other" alone.
+    expect("select[name=Select]").toHaveValue("Option 1");
+    expect(".o_other_input[placeholder=select]").toHaveValue("");
+});
+
+const formWithHiddenFieldsTemplate = /* html */ `
+    <form class="s_website_form" data-shareable-id="form-1a2b3">
+        <div class="s_website_form_field">
+            <input type="text" class="s_website_form_input" name="visible" value="default-visible"/>
+        </div>
+        <div class="s_website_form_field s_website_form_field_hidden">
+            <input type="text" class="s_website_form_input" name="source" value="Website"/>
+        </div>
+        <div class="s_website_form_field s_website_form_dnone">
+            <input type="hidden" class="s_website_form_input" name="internal" value="internal-default"/>
+        </div>
+        <div class="s_website_form_field s_website_form_field_hidden_if d-none" data-visibility-dependency="visible" data-visibility-comparator="set">
+            <input type="text" class="s_website_form_input" name="conditional"/>
+        </div>
+    </form>
+`;
+
+test("URL prefill is ignored for fields hidden from the visitor", async () => {
+    mockLocation.href = "?visible=from-url&source=Trick&internal=Trick&conditional=revealed";
+    await startInteractions(formWithHiddenFieldsTemplate);
+    expect("form input[name=visible]").toHaveValue("from-url");
+    expect("form input[name=source]").toHaveValue("Website");
+    expect("form input[name=internal]").toHaveValue("internal-default");
+    expect("form input[name=conditional]").toHaveValue("revealed");
 });
 
 function formWithVisibilityRulesOnCheckbox(condition) {

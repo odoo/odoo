@@ -22,6 +22,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
+import { browser } from "@web/core/browser/browser";
 
 const { DateTime } = luxon;
 
@@ -133,8 +134,10 @@ export class Form extends Interaction {
     }
 
     start() {
+        if (this.prefillValues()) {
+            this.el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
         this.prepareDateFields();
-        this.prefillValues();
 
         // Visibility might need to be adapted according to pre-filled values.
         this.lastFormData = this.getFormDataIncludingDisabledFields(this.el);
@@ -323,27 +326,42 @@ export class Form extends Interaction {
         // It's necessary to handle field values generated on server-side
         // Because, using t-att- inside form make it non-editable
         // Data-fill-with attribute is given during registry and is used by
-        // to know which user data should be used to prfill fields.
+        // to know which user data should be used to prefill fields.
         let dataForValues = getParsedDataFor(this.el.id, document);
+        const searchParams = new URLSearchParams(browser.location.search);
+        const shareableId = this.el.dataset.shareableId;
+        const scopeId = searchParams.get("usp_pp");
+        const urlParams =
+            shareableId && (!scopeId || scopeId === shareableId)
+                ? searchParams
+                : new URLSearchParams();
         // On the "edit_translations" mode, a <span/> with a translated term
         // will replace the attribute value, leading to some inconsistencies
         // (setting again the <span> on the attributes after the editor's
         // cleanup, setting wrong values on the attributes after translating
         // default values...)
-        if (dataForValues || Object.keys(this.preFillValues).length) {
+        if (dataForValues || Object.keys(this.preFillValues).length || urlParams.size) {
             dataForValues = dataForValues || {};
-            const fieldNames = [...this.el.querySelectorAll("[name]")]
-                .filter((el) => !["submit", "button", "image", "reset", "file"].includes(el.type))
-                .map((el) => el.name);
-            // All types of inputs do not have a value property (eg:hidden),
-            // for these inputs any function that is supposed to put a value
-            // property actually puts a HTML value attribute. Because of
-            // this, we have to clean up these values at destroy or else the
-            // data loaded here could become default values. We could set
-            // the values to submit() for these fields but this could break
-            // customizations that use the current behavior as a feature.
-            for (const name of fieldNames) {
-                const fieldEl = this.el.querySelector(`[name="${CSS.escape(name)}"]`);
+            const fieldEls = [...this.el.elements].filter(
+                (el) =>
+                    el.name &&
+                    !["submit", "button", "reset", "file"].includes(el.type) &&
+                    // The "Other" input shares its name with the select or
+                    // radio group it belongs to. It is filled by
+                    // `selectOtherOption()`, never on its own.
+                    !el.classList.contains("o_other_input")
+            );
+            const acceptsUrlValue = (el) => {
+                const wrapperEl = el.closest(".s_website_form_field");
+                return (
+                    wrapperEl.dataset.noPrefill !== "true" &&
+                    el.type !== "hidden" &&
+                    !wrapperEl.classList.contains("s_website_form_field_hidden") &&
+                    !wrapperEl.classList.contains("s_website_form_dnone")
+                );
+            };
+            for (const fieldEl of fieldEls) {
+                const name = fieldEl.name;
 
                 // In general, we want the data-for and prefill values to
                 // take priority over set default values. The 'email_to'
@@ -353,18 +371,103 @@ export class Form extends Interaction {
                     continue;
                 }
 
-                let newValue;
-                if (dataForValues && dataForValues[name]) {
+                // Resolve the value by priority:
+                // data-for > data-fill-with > URL params.
+                let newValue, isValueFromUrl;
+                if (dataForValues[name]) {
                     newValue = dataForValues[name];
                 } else if (this.preFillValues[fieldEl.dataset.fillWith]) {
                     newValue = this.preFillValues[fieldEl.dataset.fillWith];
+                } else if (urlParams.has(name) && acceptsUrlValue(fieldEl)) {
+                    newValue = urlParams.get(name).trim();
+                    isValueFromUrl = true;
+                }
+                if (isValueFromUrl && newValue === "_other") {
+                    continue;
                 }
                 if (newValue) {
-                    this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
-                    fieldEl.value = newValue;
+                    newValue = String(newValue);
+                    if (fieldEl.type === "checkbox" || fieldEl.type === "radio") {
+                        const groupEls = fieldEls.filter((el) => el.name === name);
+                        const isSoloCheckbox = fieldEl.type === "checkbox" && groupEls.length === 1;
+                        if (isSoloCheckbox) {
+                            const booleanValue = newValue.toLowerCase();
+                            if (["true", "1", "on"].includes(booleanValue)) {
+                                fieldEl.checked = true;
+                            } else if (["false", "0", "off"].includes(booleanValue)) {
+                                fieldEl.checked = false;
+                            }
+                        } else {
+                            const values = (
+                                isValueFromUrl ? urlParams.getAll(name) : [newValue]
+                            ).map((v) => v.trim());
+                            const hasNativeMatch = groupEls.some((el) => values.includes(el.value));
+                            if (isValueFromUrl && hasNativeMatch) {
+                                fieldEl.checked = values.includes(fieldEl.value);
+                            } else if (values.includes(fieldEl.value)) {
+                                fieldEl.checked = true;
+                            } else if (
+                                fieldEl.type === "radio" &&
+                                fieldEl.value === "_other" &&
+                                !hasNativeMatch
+                            ) {
+                                this.selectOtherOption(fieldEl, newValue);
+                            }
+                        }
+                    } else if (fieldEl.classList.contains("datetimepicker-input")) {
+                        const dateTime = DateTime.fromISO(newValue);
+                        if (dateTime.isValid) {
+                            // The picker reads its initial value from the
+                            // "value" attribute, so the prefilled value has to
+                            // be written there. Keep the original one to
+                            // restore it on destroy, or it would become the
+                            // default value of the field.
+                            this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
+                            fieldEl.setAttribute("value", Math.floor(dateTime.toSeconds()));
+                        }
+                    } else if (
+                        fieldEl.nodeName !== "SELECT" ||
+                        [...fieldEl.options].some((option) => option.value === newValue)
+                    ) {
+                        // Hidden inputs reflect their value to the "value"
+                        // attribute, so prefilling one (e.g. "email_to") writes
+                        // the attribute. Keep the original to restore it on
+                        // destroy, or the prefilled value would be saved as the
+                        // field's default and stop being dynamic.
+                        this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
+                        fieldEl.value = newValue;
+                    } else if ([...fieldEl.options].some((option) => option.value === "_other")) {
+                        // No matching option, but the select offers an "Other"
+                        // choice, select it.
+                        this.selectOtherOption(fieldEl, newValue);
+                    }
                 }
             }
+            return fieldEls.some((el) => urlParams.has(el.name) && acceptsUrlValue(el));
         }
+        return false;
+    }
+
+    /**
+     * Selects the "Other" choice of a select or radio field, fills its
+     * ".o_other_input" with the unmatched value and notifies the "add other
+     * option" interaction so that input gets visible.
+     *
+     * @param {HTMLSelectElement|HTMLInputElement} fieldEl The select element or
+     *      the "Other" radio element.
+     * @param {string} value The value matching none of the field's choices.
+     */
+    selectOtherOption(fieldEl, value) {
+        if (fieldEl.nodeName === "SELECT") {
+            fieldEl.value = "_other";
+        } else {
+            fieldEl.checked = true;
+        }
+        const otherInputEl = fieldEl
+            .closest(".s_website_form_field")
+            .querySelector(".o_other_input");
+        otherInputEl.value = value;
+        fieldEl.dispatchEvent(new Event("change", { bubbles: true }));
     }
 
     async send() {

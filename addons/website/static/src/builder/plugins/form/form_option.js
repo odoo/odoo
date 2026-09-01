@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { getModelName } from "./utils";
+import { getModelName, getShareableFormUrl } from "./utils";
+import { generateHTMLId } from "@web/core/utils/strings";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -50,6 +51,7 @@ export class FormOption extends BaseOptionComponent {
             ".s_website_form_field:not(.s_website_form_dnone)"
         );
         this.showEndMessage = false;
+        this.shareableToken = el.dataset.shareableId || generateHTMLId("form-").slice(0, 10);
         this.state = useDomState(async (el) => {
             const modelName = getModelName(el);
 
@@ -73,6 +75,10 @@ export class FormOption extends BaseOptionComponent {
                 activeForm,
             };
         });
+    }
+
+    get shareableUrl() {
+        return getShareableFormUrl(this.env.getEditingElement());
     }
 }
 
