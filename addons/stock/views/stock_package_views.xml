@@ -162,4 +162,23 @@
     </record>
 
     <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
+    <record id="action_print_package_label_pdf" model="ir.actions.server">
+        <field name="name">Package Barcode (PDF)</field>
+        <field name="model_id" ref="stock.model_stock_package"/>
+        <field name="binding_model_id" ref="stock.model_stock_package"/>
+        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['stock.package.label.layout']._process_package_labels(records, 'pdf')</field>
+    </record>
+
+    <record id="action_print_package_label_zpl" model="ir.actions.server">
+        <field name="name">Package Barcode (ZPL)</field>
+        <field name="model_id" ref="stock.model_stock_package"/>
+        <field name="binding_model_id" ref="stock.model_stock_package"/>
+        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['stock.package.label.layout']._process_package_labels(records, 'zpl')</field>
+    </record>
 </odoo>

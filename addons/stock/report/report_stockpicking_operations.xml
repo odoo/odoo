@@ -285,9 +285,26 @@
                 </div>
             </t>
         </template>
-        <template id="report_picking_type_label">
-            <t t-set="title">Operation Types</t>
-            <t t-call="stock.report_generic_barcode"/>
+        <template id="picking_type_barcode_4x7_label">
+            <td t-att-style="label['invisible'] and 'visibility:hidden;'">
+                <div class="o_label_full o_label_4x7">
+                    <t t-if="not label.get('invisible')">
+                        <t t-call="product.report_label_contour_marks"/>
+                        <div class="o_label_centering_table">
+                            <div class="o_label_centered_content">
+                                <div class="o_label_name" t-out="label['name']"/>
+                                <div class="o_label_content">
+                                    <div class="o_label_barcode_block">
+                                        <t t-call="product.report_label_barcode"
+                                           barcode_size="'width:100%;height:8mm'"/>
+                                        <div class="o_label_barcode_text" t-out="label['barcode_text']"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </td>
         </template>
     </data>
 </odoo>
