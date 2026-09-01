@@ -116,8 +116,6 @@ class PosOrder(models.Model):
         pricelist_id = pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
-        partner_id = order.get('partner_id')
-        partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
 
         return {
             'id': order.get('id'),
@@ -134,13 +132,12 @@ class PosOrder(models.Model):
             'amount_return': order.get('amount_return'),
             'company_id': company.id,
             'pricelist_id': pricelist_id.id if pricelist_id else False,
-            'partner_id': order.get('partner_id'),
             'sequence_number': order.get('sequence_number'),
             'session_id': pos_config.current_session_id.id,
             'takeaway': is_takeaway,
             'fiscal_position_id': fiscal_position.id if fiscal_position else False,
             'tracking_number': order.get('tracking_number'),
-            'email': partner.email if partner else order.get('email'),
+            'email': order.get('email'),
             'mobile': order.get('mobile'),
             'state': order.get('state'),
             'account_move': order.get('account_move'),
