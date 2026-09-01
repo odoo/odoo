@@ -107,6 +107,15 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         # the order promised 100, the posted bill says 150 (法人税法施行令 32条1項1号)
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 150) / 110, places=2)
 
+    def test_consigned_receipt_ignored(self):
+        self._add_opening_stock()
+        consigned = self._create_move(50, 200, self.today, self.supplier_loc, self.stock_loc)
+        consigned.restrict_partner_id = self.env['res.partner'].create({'name': 'JP Consignor'})
+        action = self._run_category_wizard()
+        # core values a consignor's goods at nothing, so they are not acquisitions either
+        self.assertAlmostEqual(self.product.standard_price, 100, places=2)
+        self.assertEqual(action['params']['type'], 'info')
+
     def test_basic_calculation(self):
         self._add_opening_stock()
         self._create_move(10, 125, self.today, self.supplier_loc, self.stock_loc)

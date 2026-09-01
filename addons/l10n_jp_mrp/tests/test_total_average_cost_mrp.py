@@ -104,3 +104,26 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         self._run_category_wizard()
         # 労務費 belongs in the cost of what was produced
         self.assertAlmostEqual(self.product.standard_price, (120 + work_center_cost) / 3, places=2)
+
+    def test_byproduct_share_does_not_depend_on_the_selection(self):
+        mo, _byproduct = self._create_mo(byproduct_cost_share=25)
+        self._finish_mo(mo)
+        # only the finished good is evaluated, but the order still gave a quarter away
+        self._run_wizard(product_ids=[self.product.id])
+        self.assertAlmostEqual(self.product.standard_price, 90 / 3, places=2)
+
+    def test_unbuild_is_not_an_acquisition(self):
+        mo, _byproduct = self._create_mo()
+        self._finish_mo(mo)
+        component = mo.move_raw_ids.product_id
+        unbuild = self.env['mrp.unbuild'].create({
+            'mo_id': mo.id,
+            'product_id': self.product.id,
+            'product_qty': mo.product_qty,
+        })
+        unbuild.action_unbuild()
+        unbuild.produce_line_ids.date = fields.Datetime.to_datetime(self.today)
+        self._run_category_wizard()
+        # the components come back because an issue was reversed, not because they
+        # were acquired, so they must not dilute the average
+        self.assertAlmostEqual(component.standard_price, 250 / 10, places=2)

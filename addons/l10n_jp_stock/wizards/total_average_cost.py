@@ -66,13 +66,9 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     date_from=self.date_from,
                 ),
             )
-        moves = self.env['stock.move'].sudo().search_fetch([
-                ('product_id', 'in', products.ids),
-                ('company_id', '=', self.env.company.id),
-                ('state', '=', 'done'),
-                ('date', '>=', period_start),
-                ('date', '<=', period_end),
-            ], [
+        moves = self.env['stock.move'].sudo().search_fetch(
+            self._get_move_domain(products, period_start, period_end),
+            [
                 'product_id',
                 'date',
                 'quantity_product_uom',
@@ -82,6 +78,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'purchase_line_id',
                 'price_unit',
                 'is_dropship',
+                'restrict_partner_id',
                 'company_id',
                 'move_orig_ids',
             ],
@@ -94,12 +91,13 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         opening_values = products._get_last_product_value(before_period)
         for product in products:
             init_qty = product.sudo().with_context(
-                to_date=before_period,
                 allowed_company_ids=self.env.company.ids,
-            ).qty_available
+            )._with_valuation_context().with_context(to_date=before_period).qty_available
             purchases_qty = purchases_val = returns_qty = returns_val = 0.0
             # 施行令28条1項1号ハ averages acquisitions only
             for move in moves_by_product.get(product, ()):
+                if move._should_exclude_for_valuation():
+                    continue
                 qty = move.quantity_product_uom
                 origin_usage = move.location_id.usage
                 dest_usage = move.location_dest_id.usage
@@ -208,6 +206,16 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             move.id: move.quantity_product_uom * self._get_purchase_unit_price(move)
             for move in moves
         }
+
+    def _get_move_domain(self, products, period_start, period_end):
+        """Return the moves the period is evaluated over, for the bridges to narrow."""
+        return [
+            ('product_id', 'in', products.ids),
+            ('company_id', '=', self.env.company.id),
+            ('state', '=', 'done'),
+            ('date', '>=', period_start),
+            ('date', '<=', period_end),
+        ]
 
     def _get_acquisition_value(self, move, qty):
         """Return what the acquisition cost, from the bill wherever one is posted.
