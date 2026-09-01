@@ -23,7 +23,7 @@ import { isValidTargetForDomListener, Plugin } from "../plugin.js";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection", "delete"];
+    static dependencies = ["userCommand", "selection", "delete", "split"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -104,15 +104,27 @@ export class ShortCutPlugin extends Plugin {
         )) {
             return;
         }
-        const blockEl = closestBlock(selection.anchorNode);
+        let blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
+        // Offset of the beginning of the line the caret is on, within the
+        // block: everything after the closest line break to its left.
+        let lineBreak;
+        let lineOffset = 0;
         let leftLeaf = leftDOMPath.next().value;
         while (leftLeaf) {
-            spaceOffset += leftLeaf.length;
+            spaceOffset += leftLeaf.length || 0;
+            if (lineBreak) {
+                lineOffset += leftLeaf.length || 0;
+            } else if (leftLeaf.nodeName === "BR") {
+                lineBreak = leftLeaf;
+            }
             leftLeaf = leftDOMPath.next().value;
         }
-        const precedingText = blockEl.textContent.substring(0, spaceOffset - 1);
+        const precedingText = blockEl.textContent.substring(
+            lineOffset,
+            spaceOffset - 1,
+        );
         const matchedShortcut = this.shorthands.find(({ pattern }) =>
             pattern.test(precedingText),
         );
@@ -121,6 +133,12 @@ export class ShortCutPlugin extends Plugin {
                 matchedShortcut.commandId,
             );
             if (command && command.isAvailable(selection)) {
+                if (lineBreak) {
+                    // Isolate the line so that the command applies to it alone
+                    // and `blockEl.firstChild` below is the start of the line.
+                    this.dependencies.split.splitBlockSegments();
+                    blockEl = closestBlock(selection.anchorNode);
+                }
                 this.dependencies.selection.setSelection({
                     anchorNode: blockEl.firstChild,
                     anchorOffset: 0,
