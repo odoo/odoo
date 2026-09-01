@@ -566,3 +566,38 @@ class TestHolidaysOvertime(TransactionCase):
         leave.action_approve()
 
         self.assertAlmostEqual(self.employee.total_overtime, 0.0, 2)
+
+    def test_global_leave_attendance_domain_timezone_clipping(self):
+        """
+        Test that a global leave correctly includes attendances of employees
+        in different timezones by expanding the UTC search boundaries (+/- 1 day).
+        """
+        self.employee.tz = 'Africa/Nairobi'
+        self.employee.resource_calendar_id.tz = 'UTC'
+
+        # Create an attendance that is on Jan 15th locally in Nairobi (UTC+3)
+        # but falls on Jan 14th in UTC.
+        # Local (Nairobi): Jan 15 01:00:00 to 02:00:00
+        # UTC:             Jan 14 22:00:00 to 23:00:00
+        attendance = self.new_attendance(
+            check_in=datetime(2024, 1, 14, 22, 0, 0),
+            check_out=datetime(2024, 1, 14, 23, 0, 0)
+        )
+
+        # Create a global leave (Public Holiday) for Jan 15th (Company time / UTC).
+        global_leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Global Holiday',
+            'calendar_id': self.employee.resource_calendar_id.id,
+            'company_id': self.company.id,
+            'time_type': 'leave',
+            'date_from': datetime(2024, 1, 15, 0, 0, 0),
+            'date_to': datetime(2024, 1, 15, 23, 59, 59),
+        })
+
+        domain = global_leave._get_attendance_domain()
+        affected_attendances = self.env['hr.attendance'].search(domain)
+        self.assertIn(
+            attendance,
+            affected_attendances,
+            "The attendance should be caught by the global leave domain despite timezone boundary differences."
+        )
