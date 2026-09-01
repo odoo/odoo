@@ -8,6 +8,9 @@ from . import stock_inventory_adjustment_name
 from . import stock_inventory_conflict
 from . import stock_inventory_warning
 from . import stock_label_type
+from . import stock_location_label_layout
+from . import stock_package_label_layout
+from . import stock_picking_type_label_layout
 from . import stock_lot_label_layout
 from . import stock_orderpoint_snooze
 from . import stock_orderpoint_suggest

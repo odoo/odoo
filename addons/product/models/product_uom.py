@@ -2,7 +2,7 @@
 
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProductUom(models.Model):
@@ -38,3 +38,15 @@ class ProductUom(models.Model):
                 lambda s: not s.product_id or s.product_id == product
             ).uom_id
             product_uom.allowed_uom_ids = product._get_available_uoms() | seller_uom
+
+    def action_open_label_layout(self):
+        packagings = self.mapped('uom_id')
+        if len(packagings) != 1:
+            raise UserError(_('You can only print labels for packaging barcodes using the same packaging.'))
+
+        action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
+        action['context'] = {
+            'default_product_uom_ids': self.ids,
+            'default_packaging_id': packagings.id,
+        }
+        return action
