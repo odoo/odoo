@@ -9,6 +9,7 @@ from . import test_mail
 from . import test_res_partner
 from . import test_security
 from . import test_slide_channel
+from . import test_slide_channel_rating
 from . import test_slide_question
 from . import test_slide_resource
 from . import test_slide_slide

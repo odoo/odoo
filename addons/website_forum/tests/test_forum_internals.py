@@ -174,4 +174,4 @@ class TestTags(TestForumCommon):
                 'content': content,
                 'forum_id': self.forum.id,
             })
-        self.assertEqual(post.content, '<p>This is a test link: <a rel="nofollow" href="https://www.example.com/route?param1=a&amp;param2=b">test</a> Let make sure it works.</p>')
+        self.assertEqual(post.content, '<p>This is a test link: <a href="https://www.example.com/route?param1=a&amp;param2=b" rel="nofollow noopener noreferrer ugc">test</a> Let make sure it works.</p>')

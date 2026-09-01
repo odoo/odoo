@@ -2,6 +2,8 @@
 import json
 
 from werkzeug.exceptions import NotFound
+from markupsafe import Markup
+
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import users, HttpCase, tagged, TransactionCase
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -189,6 +191,16 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         external_image = 'https://download.odoocdn.com/icons/website/static/description/icon.svg'
         self.test_blog_post.content = f'<p><img src="{external_image}"></p>'
         self.assertEqual(self.test_blog_post._prepare_jsonld_vals()['image'], external_image)
+
+    def test_links_in_comments_created_by_users_have_seo_rel_attributes(self):
+        body = '<p>Check <a href="https://example.com">this</a> blog post</p>'
+        message = self.test_blog_post.message_post(body=Markup(body))
+        self.assertEqual(message.body, '<p>Check <a href="https://example.com" rel="nofollow noopener noreferrer ugc">this</a> blog post</p>')
+
+    def test_links_in_comments_updated_by_users_have_seo_rel_attributes(self):
+        message = self.test_blog_post.message_post(body=Markup('<p>No links</p>'))
+        message.write({'body': '<p><a href="https://example.com">click here</a></p>'})
+        self.assertEqual(message.body, '<p><a href="https://example.com" rel="nofollow noopener noreferrer ugc">click here</a></p>')
 
 
 @tagged('-at_install', 'post_install')
