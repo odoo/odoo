@@ -9,7 +9,7 @@
             <i class="fa fa-bug" aria-hidden="true" />
         </div>
         <div class="debug-widget position-absolute bottom-0 end-0 bg-100 shadow-lg p-2 d-flex flex-column gap-1 m-2"
-            t-attf-class="{{ this.state.isOpen ? '' : 'd-none' }}">
+            t-attf-class="{{ this.state.isOpen and !this.isDisabled ? '' : 'd-none' }}">
             <div class="d-flex gap-1 mb-2">
                 <span class="badge o_colorlist_item_color_3 rounded">Device ID: <t t-out="this.state.device_identifier" /></span>
                 <span class="badge o_colorlist_item_color_3 rounded">Next number: <t t-out="this.state.next_number" /></span>
