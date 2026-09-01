@@ -1,18 +1,17 @@
 import { useProps, t } from "@odoo/owl";
 import {
     MO_OVERVIEW_SUMMARY_SHAPE,
-    MoOverviewOperationsBlock,
-    moOverviewOperationsBlockProps,
+    MoOverviewBaseBlock,
+    moOverviewBaseBlockProps,
 } from "../mo_overview_operations_block/mrp_mo_overview_operations_block";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 
-export class MoOverviewByproductsBlock extends MoOverviewOperationsBlock {
+export class MoOverviewByproductsBlock extends MoOverviewBaseBlock {
     static components = {
         MoOverviewLine,
     };
     props = useProps({
-        // Keep all props except "operations"
-        ...(({ operations, ...rest }) => rest)(moOverviewOperationsBlockProps),
+        ...moOverviewBaseBlockProps,
         byproducts: t.array(),
         summary: t.object({
             ...MO_OVERVIEW_SUMMARY_SHAPE,
