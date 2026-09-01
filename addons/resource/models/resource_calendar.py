@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import defaultdict
-from datetime import date, datetime, time, timedelta, UTC
-from itertools import chain
+from datetime import UTC, date, datetime, time, timedelta
 from functools import partial
+from itertools import chain
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
@@ -13,9 +14,11 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
-from odoo.tools.date_utils import float_to_time, localized, to_timezone
+from odoo.tools.date_utils import float_to_time, localized, time_to_float, to_timezone
 from odoo.tools.float_utils import float_round
 from odoo.tools.intervals import Intervals
+
+_logger = logging.getLogger(__name__)
 
 
 class ResourceCalendar(models.Model):
@@ -240,6 +243,7 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     def _attendance_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
+        _logger.warning("The method _attendance_intervals_batch is deprecated. Use TODO BEDO NEW NAME instead.")
         assert start_dt.tzinfo and end_dt.tzinfo
         if self:
             self.ensure_one()
@@ -419,6 +423,7 @@ class ResourceCalendar(models.Model):
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
+        _logger.warning("The method _leave_intervals_batch is deprecated. Use TODO BEDO NEW NAME instead.")
 
         if domain is None:
             domain = [('count_as', '=', 'absence')]
@@ -473,6 +478,7 @@ class ResourceCalendar(models.Model):
 
     def _work_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """
+        _logger.warning("The method _work_intervals_batch is deprecated. Use TODO BEDO NEW NAME instead.")
         all_resources = set()
         if not resources_per_tz or self:
             all_resources.add(self.env['resource.resource'])
@@ -797,9 +803,13 @@ class ResourceCalendar(models.Model):
     def _works_on_date(self, date):
         return bool(self.attendance_ids._filter_by_date(date, lambda a: a._is_work_period()))
 
-    def _get_attendances_by_date(self, date_from, date_to, domain=None):
+    def _get_attendances_by_date(self, date_from, date_to, domain=None):  # TODO BEDO grep the calls to this and check if can't be batched
+        self.ensure_one()
+        return self._get_attendances_by_date_batch(date_from, date_to, domain)[self]
+
+    def _get_attendances_by_date_batch(self, date_from, date_to, domain=None):
         """
-        Get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
+        For each calendar in self, get the attendances between date_from and date_to, grouped by day, as a recordset of resource.calendar.attendance.
             - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
             - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
 
@@ -807,8 +817,7 @@ class ResourceCalendar(models.Model):
         :param date_to: end date of the period (included)
         :param domain: optional domain to filter attendances
         """
-        self.ensure_one()
-        result = defaultdict(lambda: self.env['resource.calendar.attendance'])
+        result = defaultdict(lambda: defaultdict(lambda: self.env['resource.calendar.attendance']))
 
         domain_fixed = Domain([('date', '=', False)])
         domain_variable_recurrency = Domain([
@@ -828,15 +837,16 @@ class ResourceCalendar(models.Model):
                 domain_variable_recurrency,
                 domain_variable_adhoc,
             ]),
-            Domain('calendar_id', '=', self.id),
+            Domain('calendar_id', 'in', self.ids),
         ])
-        attendances = self.env["resource.calendar.attendance"].search_fetch(domain_to_fetch)
-        recurrent_attendances = attendances.filtered("recurrency")
-        ad_hoc_attendances = (attendances - recurrent_attendances).grouped(lambda a: a.date or a.dayofweek)
-        for day in rrule(DAILY, date_from, until=date_to):
-            result[day.date()] = ad_hoc_attendances.get(day.date(), self.env['resource.calendar.attendance'])
-            result[day.date()] += ad_hoc_attendances.get(str(day.weekday()), self.env['resource.calendar.attendance'])
-            result[day.date()] += recurrent_attendances._filter_by_date(day.date())
+        all_attendances = self.env["resource.calendar.attendance"].search_fetch(domain_to_fetch)
+        for calendar, attendances in all_attendances.grouped('calendar_id').items():
+            recurrent_attendances = attendances.filtered("recurrency")
+            ad_hoc_attendances = (attendances - recurrent_attendances).grouped(lambda a: a.date or a.dayofweek)
+            for day in rrule(DAILY, date_from, until=date_to):
+                result[calendar][day.date()] = ad_hoc_attendances.get(day.date(), self.env['resource.calendar.attendance'])
+                result[calendar][day.date()] += ad_hoc_attendances.get(str(day.weekday()), self.env['resource.calendar.attendance'])
+                result[calendar][day.date()] += recurrent_attendances._filter_by_date(day.date())
         return result
 
     def get_attendances(self, date_from, date_to, fields_to_fetch, domain=None):
@@ -854,3 +864,68 @@ class ResourceCalendar(models.Model):
                     attendance['other_dates'] = []
                     formatted_attendances[attendance['id']] = attendance
         return list(formatted_attendances.values())
+
+    # --------------------------------------------------
+    # New API
+    # --------------------------------------------------
+
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
+        """
+        Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
+            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
+            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
+        As calendars aren't bound to timezones, the return intervals are given back with naive datetimes.
+
+        :param dt_from: start date of the period (included).
+        :param dt_to: end date of the period (included)
+        :param domain: optional domain to filter attendances
+        :param availability: optional attribute for availability computation.
+            If attendances do not have any start/end specified, it is technically not possible to get them a real interval.
+            When `availability` is False, it will try to fit the attendance around noon and create an interval respecting the duration
+            When `availability` is True, it will return the entire day as the employee is supposedly present the entire day
+        :return dict:
+        """
+        dt_from = dt_from.replace(tzinfo=None)
+        dt_to = dt_to.replace(tzinfo=None)
+        intervals_per_calendar = {}
+        attendances_per_calendar = self._get_attendances_by_date_batch(dt_from.date(), dt_to.date(), domain)
+        for calendar, att_per_date in attendances_per_calendar.items():
+            interval_tuple_list = []
+            for att_date, attendances in att_per_date.items():
+                if not attendances:
+                    continue
+                att_start = time.min
+                if attendances[0].duration_based and not availability:
+                    total_duration = sum(attendances.mapped('duration_hours'))
+                    att_start = float_to_time(12 - total_duration / 2)
+                    # This part is to avoid having no attendances when we take specific schedules on a day;
+                    # For example, attendances from 9PM to 11PM should return 2 hours with a duration-based, 8 hours/day
+                    # schedule. Without this, the expected attendances would be 8AM-4PM and the period for which we called
+                    # the method would return 0. Same reasoning the other way around, if we look for attendances at 2AM-4AM.
+                    if att_date == dt_from.date():
+                        att_start = dt_from.time()
+                    elif att_date == dt_to.date():
+                        att_start = time.min
+                for att in attendances:
+                    if not att.duration_based:
+                        hour_start = float_to_time(att.hour_from)
+                        hour_stop = float_to_time(att.hour_to)
+                    elif not availability:
+                        hour_start = att_start
+                        hour_stop = float_to_time(min(time_to_float(att_start) + att.duration_hours, 24))
+                        att_start = hour_stop
+                        if hour_start == hour_stop:
+                            break
+                    else:
+                        start = datetime.combine(att_date, time.min)
+                        stop = datetime.combine(att_date, time.max)
+                        interval_tuple_list.append((start, stop, att))
+                        # When checking availabilities, the information regarding the attendance record don't really
+                        # matter, so we can skip other attendances of the day.
+                        break
+                    start = datetime.combine(att_date, hour_start)
+                    stop = datetime.combine(att_date, hour_stop)
+                    interval_tuple_list.append((start, stop, att))
+            intervals_per_calendar[calendar] = Intervals(interval_tuple_list, keep_distinct=True) & Intervals([(dt_from, dt_to, self.env['resource.calendar.attendance'])]) # TODO BEDO
+        return intervals_per_calendar
+
