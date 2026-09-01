@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Service Margins in Sales Orders',
-    'summary': 'Bridge module between Sales Margin and Sales Timesheet',
+    'name': 'Service Margin Estimation for Sales Orders',
+    'summary': 'Obtain an estimate of your margin for services on your sales orders',
     'description': """
 Allows to compute accurate margin for Service sales.
 ======================================================

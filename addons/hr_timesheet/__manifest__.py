@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
-    'name': 'Task Logs',
+    'name': 'Time Tracking',
     'category': 'Services/Timesheets',
     'sequence': 23,
     'summary': 'Track employee time on tasks',

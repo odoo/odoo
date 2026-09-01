@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': "Sales - Service",
-    'summary': "Interaction between Sales and services apps (project and planning)",
+    'name': 'Enhanced Sales Order Browsing in Project and Planning',
+    'summary': 'Access additional information while browsing sales order items in the project and planning apps',
     'description': """
 Allows to display sale information in the SOL services apps
 ===========================================================

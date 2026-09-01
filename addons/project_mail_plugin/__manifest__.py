@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project Mail Plugin',
+    'name': 'Email-to-Task Conversion',
     'category': 'Services/Project',
     'sequence': 5,
-    'summary': 'Integrate your inbox with projects',
+    'summary': 'Transform emails received in your mailbox into tasks.',
     'description': "Turn emails received in your mailbox into tasks and log their content as internal notes.",
     'website': 'https://www.odoo.com/app/project',
     'depends': [
