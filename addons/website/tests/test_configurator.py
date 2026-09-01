@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import odoo.tests
 from odoo.addons.website.controllers.main import Website as WebsiteController
 from odoo.addons.website.models.website import Website as WebsiteModel
 from odoo.tests.common import new_test_user
+from odoo.tools import mute_logger
 
 class TestConfiguratorCommon(odoo.tests.HttpCase):
 
@@ -89,6 +90,10 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
         iap_patch = patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_configurator)
         self.startPatcher(iap_patch)
 
+        # the configurator AI routes are plain HTTP, give them no answer
+        olg_patch = patch('requests.post', return_value=Mock(**{'json.return_value': {}}))
+        self.startPatcher(olg_patch)
+
         patcher = patch(
             'odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream',
             new=TestConfiguratorCommon._theme_upgrade_upstream,
@@ -100,13 +105,12 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 class TestConfigurator(TestConfiguratorCommon):
 
     def test_ai_recommend_themes(self):
-        def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '["theme_clean", "theme_cobalt", "theme_unknown"]',
-            }
+        response = Mock(**{'json.return_value': {
+            'status': 'success',
+            'themes': ['theme_clean', 'theme_cobalt'],
+        }})
 
-        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
+        with patch('requests.post', return_value=response):
             themes = self.env['website']._ai_recommend_themes(
                 {
                     'theme_clean': 'Clean theme',
@@ -120,14 +124,12 @@ class TestConfigurator(TestConfiguratorCommon):
 
         self.assertEqual(themes, ['theme_clean', 'theme_cobalt'])
 
-    def test_ai_recommend_themes_wrong_answer(self):
-        def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '[{"name": "New Arrivals", "description": "Fresh styles"}]',
-            }
+    @mute_logger('odoo.addons.website.models.website')
+    def test_ai_recommend_themes_error(self):
+        # OLG answered something that is not JSON
+        response = Mock(**{'json.side_effect': ValueError})
 
-        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
+        with patch('requests.post', return_value=response):
             themes = self.env['website']._ai_recommend_themes(
                 {
                     'theme_clean': 'Clean theme',
