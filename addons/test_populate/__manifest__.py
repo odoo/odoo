@@ -10,4 +10,5 @@
     'data': [
         'security/ir.access.csv',
     ],
+    'is_test_module': True,
 }

@@ -6,5 +6,6 @@
     'sequence': 10,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'depends': ['test_data_module']
+    'depends': ['test_data_module'],
+    'is_test_module': True,
 }

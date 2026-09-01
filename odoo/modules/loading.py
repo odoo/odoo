@@ -171,6 +171,8 @@ def load_module_graph(
         load_openerp_module(package.name)
 
         if update_operation == 'install':
+            if package.manifest.get('is_test_module') and not tools.config['init']:
+                raise ImportError(f"Module {package.name} is a test module and cannot be installed in a production environment.")
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.manifest.get('pre_init_hook')
             if pre_init:

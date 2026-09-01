@@ -28,4 +28,5 @@ tests independently to functional aspects of other models. """,
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'is_test_module': True,
 }

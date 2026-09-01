@@ -14,4 +14,5 @@
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'data': ['security/spreadsheet_test_security.xml', 'security/ir.access.csv'],
+    'is_test_module': True,
 }
