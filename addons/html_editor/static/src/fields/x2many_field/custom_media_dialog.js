@@ -36,6 +36,7 @@ export class CustomMediaDialog extends MediaDialog {
                 orm: this.orm,
                 activeTab: this.activeTab(),
                 availableTabs: this.tabs,
+                document: this.props.document,
                 oldMediaNode: this.props.media,
                 selectedMedia: nonPreloadedAttachments,
                 extraClassesToAdd: this.extraClassesToAdd(),
