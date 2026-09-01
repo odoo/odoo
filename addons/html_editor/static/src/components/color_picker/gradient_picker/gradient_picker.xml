@@ -64,12 +64,30 @@
                             <div class="position-absolute gradient-angle-thumb"></div>
                         </div>
                         <div class="o_color_gradient_input d-flex align-items-center">
+<<<<<<< 2069853428165bd49d2e8355de429c1319c96f70:addons/html_editor/static/src/components/color_picker/gradient_picker/gradient_picker.xml
                             <IframeInput
                                 value="this.state.angle"
                                 inputAttrs="{ name: 'angle_input', type: 'number', min: -360, max: 360 }"
                                 iframeClass="'o_angle_iframe'"
                                 inputStyle="'background-color: transparent; font-family: monospace; font-size: 12px;'"
                                 onChange.bind="this.onAngleChange"
+||||||| bd6e81421288469ac41653eb148615b911f77a9e:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml
+                            <input
+                                name="angle"
+                                type="number"
+                                min="-360"
+                                max="360"
+                                t-att-value="this.state.angle"
+                                t-on-change="this.onAngleChange"
+=======
+                            <input
+                                name="angle"
+                                type="number"
+                                min="-360"
+                                max="360"
+                                t-att-value="this.state.angle"
+                                t-on-input="this.onAngleChange"
+>>>>>>> 4f5dff938f997c9cc156723ffb1e93ee846804e2:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml
                             />
                             <span>deg</span>
                         </div>
