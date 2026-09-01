@@ -211,6 +211,11 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
+        should_defer_color_predicates: (sel, mode) => {
+            if (mode === "backgroundColor" && closestElement(sel.anchorNode, ".o_selected_td")) {
+                return false;
+            }
+        },
 
         /** Selectors */
         move_node_whitelist_selectors: "table",
