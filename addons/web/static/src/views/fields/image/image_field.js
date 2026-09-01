@@ -123,7 +123,7 @@ export class ImageField extends Component {
         if (!this.props.record.data[this.props.name] || !this.state.isValid) {
             return placeholder;
         }
-        const data = this.props.record.data[imageFieldName];
+        const data = this.props.record.data[this.props.name];
         const content = data?.content;
         if (this.fieldType === "many2one") {
             this.lastURL = imageUrl(
