@@ -2,7 +2,7 @@
 
     <t t-name="account.DashboardKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
         <xpath expr="//div[@t-ref='this.rootRef']" position="before">
-            <div t-if="this.coaState.showBanner and this.isUserAdmin" class="alert alert-warning d-flex align-items-center p-3 m-3 mb-0" role="alert">
+            <div t-if="this.coaState.showBanner" class="alert alert-warning d-flex align-items-center p-3 m-3" role="alert">
                 <span>
                     You have updates in <strong><t t-out="this.coaState.coaName"/></strong>.
                     <a class="btn btn-link p-0 align-baseline mx-2" role="button" t-on-click="this.reloadCoa">Reload COA</a>

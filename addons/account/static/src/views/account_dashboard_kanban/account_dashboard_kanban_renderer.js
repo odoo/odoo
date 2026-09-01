@@ -3,7 +3,6 @@ import { useSubEnv } from "@web/owl2/utils";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { AccountDashboardKpis } from "@account/components/account_dashboard_kpis/account_dashboard_kpis";
 import { DashboardKanbanRecord } from "./account_dashboard_kanban_record";
-import { user } from "@web/core/user";
 
 
 export class DashboardKanbanRenderer extends KanbanRenderer {
@@ -22,17 +21,13 @@ export class DashboardKanbanRenderer extends KanbanRenderer {
         });
     }
 
-    get isUserAdmin() {
-        return user.isSystem;
-    }
-
     get coaState() {
-        const first = this.props.list.records[0];
-        if (first) {
-            const dashboard = JSON.parse(first.data.kanban_dashboard);
+        const banner = this.props.list.records[0];
+        if (banner) {
+            const bannerData = JSON.parse(banner.data.kanban_dashboard);
             return {
-                showBanner: dashboard.show_coa_banner,
-                coaName: dashboard.coa_name,
+                showBanner: bannerData.show_coa_banner,
+                coaName: bannerData.coa_name,
             };
         }
         return { showBanner: false, coaName: "" };

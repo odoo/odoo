@@ -17,6 +17,7 @@ def _get_chart_template_mapping(self, get_all=False):
         'country_code': None,
         'module': 'account',
         'parent': None,
+        'version': '1.0',
     }}
 
 
@@ -1212,24 +1213,25 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])
 
-    def test_coa_version_update(self):
-        module = self.env['ir.module.module'].search([('name', '=', 'account')], limit=1)
-        self.assertTrue(module)
-
-        self.company.coa_version = '19.5.1.0'
-        installed_version = module.installed_version
-
+    def test_coa_update_banner_detection(self):
+        self.company.chart_template = 'test'
+        self.company.coa_version = '1.0'
         journal = self.env['account.journal'].search([('company_id', '=', self.company.id)], limit=1)
-        self.assertTrue(journal)
 
-        # Now the db version becoms the installed version
-        module.latest_version = installed_version
-        dashboard_data_updated = journal._get_journal_dashboard_data_batched()
-        self.assertTrue(dashboard_data_updated[journal.id]['show_coa_banner'])
-        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
-            journal.action_reload_coa()
-        self.assertEqual(self.company.coa_version, installed_version)
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            data['template_data']['version'] = '2.0'
+            return data
 
-        # After reload, the banner should be gone
-        dashboard_data_final = journal._get_journal_dashboard_data_batched()
-        self.assertFalse(dashboard_data_final[journal.id]['show_coa_banner'])
+        def get_chart_template_mapping(self, get_all=False):
+            mapping = _get_chart_template_mapping(self, get_all)
+            mapping['test']['version'] = '2.0'
+            return mapping
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_mapping', side_effect=get_chart_template_mapping, autospec=True):
+            dashboard_data = journal._get_journal_dashboard_data_batched()
+            self.assertTrue(dashboard_data[journal.id]['show_coa_banner'])
+            with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+                journal.action_reload_coa()
+            dashboard_data_updated = journal._get_journal_dashboard_data_batched()
+            self.assertFalse(dashboard_data_updated[journal.id]['show_coa_banner'])

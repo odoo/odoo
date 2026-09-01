@@ -641,34 +641,29 @@ class AccountJournal(models.Model):
         self.env['account.move.line'].flush_model()
         self.env['account.payment'].flush_model()
         dashboard_data = {}  # container that will be filled by functions below
-
-        company_banner = {}
+        company_data = {}
+        chart_template_data = self.env['account.chart.template']._get_chart_template_mapping()
         for company in self.mapped('company_id'):
             template_code = company.chart_template
+            template_data = chart_template_data.get(template_code, {})
             show_banner = False
             coa_name = ''
-            if template_code:
-                template_info = self.env['account.chart.template']._get_chart_template_mapping().get(template_code, {})
-                module = self.env['ir.module.module'].search([
-                    ('name', '=', template_info.get('module')),
-                    ('state', '=', 'installed'),
-                ], limit=1)
-                # due to Odoo's legacy naming, latest_version contains the module version installed in the db
-                if module and company.coa_version != module.latest_version:
+            if template_code and self.env.is_admin():
+                template_version = template_data.get('version')
+                if template_version and company.coa_version and company.coa_version != template_version:
                     show_banner = True
-                    coa_name = template_info.get('name', '')
-            company_banner[company.id] = {
+                    coa_name = template_data.get('name')
+            company_data[company.id] = {
                 'show_banner': show_banner,
                 'coa_name': coa_name,
             }
-
         for journal in self:
             dashboard_data[journal.id] = {
                 'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
                 'show_company': len(self.env.companies) > 1 or journal.company_id.id != self.env.company.id,
                 'company_name': journal.company_id.sudo().name,
-                'show_coa_banner': company_banner[journal.company_id.id]['show_banner'],
-                'coa_name': company_banner[journal.company_id.id]['coa_name'],
+                'show_coa_banner': company_data[journal.company_id.id]['show_banner'],
+                'coa_name': company_data[journal.company_id.id]['coa_name'],
             }
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
@@ -1455,8 +1450,9 @@ class AccountJournal(models.Model):
 
     def action_reload_coa(self):
         self.ensure_one()
-        company = self.company_id
-        template_code = company.chart_template
-        if not template_code:
+        if not self.company_id.chart_template:
             return
-        self.env['account.chart.template'].try_loading(template_code, company=company)
+        return self.env['account.chart.template'].try_loading(
+            template_code=self.company_id.chart_template,
+            company=self.company_id,
+        )
