@@ -568,7 +568,7 @@ class IrModel(models.Model):
 
 # retrieve field types defined by the framework only (not extensions)
 FIELD_TYPES = [(key, key) for key in sorted(fields.Field._by_type__)]
-
+WRITABLE_FIELD_PROPERTIES = set()
 
 class IrModelFields(models.Model):
     _name = 'ir.model.fields'
@@ -1150,12 +1150,13 @@ class IrModelFields(models.Model):
         # if set, *one* column can be renamed here
         column_rename = None
 
+        only_writable_properties = set(vals) <= WRITABLE_FIELD_PROPERTIES
         # names of the models to patch
         patched_models = set()
         translate_only = all(self._fields[field_name].translate for field_name in vals)
         if vals and self and not translate_only:
             for item in self:
-                if item.state != 'manual':
+                if item.state != 'manual' and not only_writable_properties:
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
                                       'Please modify them through Python code, '
                                       'preferably through a custom addon!'))
@@ -1221,7 +1222,7 @@ class IrModelFields(models.Model):
                         SQL.identifier(f'{table}_{newname}_index'),
                     ))
 
-        if column_rename or patched_models or translate_only:
+        if column_rename or patched_models or translate_only or only_writable_properties:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             model_names = OrderedSet(self.mapped('model'))
