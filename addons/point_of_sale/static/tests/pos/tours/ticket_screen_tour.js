@@ -436,6 +436,7 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            Chrome.waitForOrdersSync(),
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.search("Invoice Number", "00001"),
