@@ -27,20 +27,21 @@ class TestWorkEntryTypeData(TransactionCase):
 
     def test_ensure_global_work_entry_type_redifinition_by_country(self):
         generic_codes = {
-            'WORK100',  # Attendance
-            'OVERTIME',  # Overtime
-            'OUT',  # Out of Contract
+            '002.00',  # Attendance
+            '040.00',  # Overtime
+            '000.00',  # Out of Contract
             'LEAVE100',  # Generic Time Off
             'LEAVE105',  # Compensatory Time Off
-            'WORK110',  # Home Working
-            'LEAVE90',  # Unpaid
-            'LEAVE110',  # Sick Time Off
-            'LEAVE120',  # Paid Time Off
-            'LEAVE500',  # Public Holiday
+            '002.08',  # Home Working
+            '158.00',  # Unpaid
+            '013.00',  # Sick Time Off
+            '016.00',  # Paid Time Off
+            '006.00',  # Public Holiday
         }
         excluded_codes_per_country = {
-            'us': {'OVERTIME', 'OUT', 'LEAVE100', 'LEAVE105'},
-            'eg': {'LEAVE110'},
+            'us': {'040.00', '000.00', 'LEAVE100', 'LEAVE105'},
+            'be': {'LEAVE100', 'LEAVE105'},
+            'eg': {'013.00'},
         }
         for module in self.env['ir.module.module'].search([('name', '=like', 'l10n____hr_payroll')]):
             country_code = module.name.split('_')[1]

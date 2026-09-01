@@ -24,7 +24,7 @@ class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
             ('country_id', 'in', self.company_id.country_id.ids),
             ('country_id', '=', False),
         ])
-        public_holiday_work_entry_types = allowed_work_entry_types.filtered_domain([('code', '=', 'LEAVE500')])
+        public_holiday_work_entry_types = allowed_work_entry_types.filtered_domain([('code', '=', '006.00')])
         for line in self:
             country = line.company_id.country_id
             if not country or not allowed_work_entry_types.filtered_domain([('country_id', '=', country.id)]):

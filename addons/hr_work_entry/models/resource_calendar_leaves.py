@@ -19,7 +19,7 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_work_entry_type_id(self):
         country_ids = [(leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id).id for leave in self]
         public_holiday_types = self.env['hr.work.entry.type'].search([
-            ('code', '=', 'LEAVE500'),
+            ('code', '=', '006.00'),
             ('country_id', 'in', country_ids),
         ]).grouped('country_id')
         for leave in self:

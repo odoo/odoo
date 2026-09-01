@@ -1644,20 +1644,20 @@ class HrLeave(models.Model):
 
     def _get_leaves_on_public_holiday(self):
         bypass_work_entry_types = [
-            'LEAVE110',  # Sick Time Off
-            'LEAVE210',  # Maternity Time Off
-            'LEAVE280',  # Long Term Sick
-            'LEAVE264',  # Incapacity for work with guaranteed salary - 1st week
-            'LEAVE218',  # Incapacity for work with guaranteed salary system for workers - 2nd week
+            '013.00',  # Sick Time Off
+            '128.00',  # Maternity Time Off
+            '123.00',  # Long Term Sick
+            '010.00',  # Incapacity for work with guaranteed salary - 1st week
+            '082.00',  # Incapacity for work with guaranteed salary system for workers - 2nd week
             'LEAVE272',  # Incapacity for work with guaranteed salary system for workers - 2nd week (Short Term Employee)
-            'LEAVE219',  # Incapacity for work with salary supplement for workers - after the 2nd week CCT 12bis/13bis
-            'LEAVE214',  # Sick Time Off (Without Guaranteed Salary)
-            'LEAVE227',  # Work accident or occupational illness with normal daily pay at 100% for the first week
-            'LEAVE229',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis
+            '072.00',  # Incapacity for work with salary supplement for workers - after the 2nd week CCT 12bis/13bis
+            '122.00',  # days of illness after 30th day
+            '009.00',  # Work accident or occupational illness with normal daily pay at 100% for the first week
+            '070.00',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis
             'LEAVE271',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis (Short Term Employee)
-            'LEAVE117',  # Work Accident (Unpaid)
+            '110.00',  # Work Accident (Unpaid)
             'LEAVE086',  # Public holiday during temporary unemployment - no onss
-            'LEAVE207',  # Public holiday during temporary unemployment - with onss
+            '006.11',  # Public holiday during temporary unemployment - with onss
         ]
         return self.filtered(
             lambda l: l.employee_id and not l.number_of_days and not l.number_of_hours and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)

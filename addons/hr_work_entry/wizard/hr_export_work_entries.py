@@ -105,7 +105,7 @@ class HrExportWorkEntries(models.TransientModel):
         work_entry.start_date;company.name;company.external_code;work_entry.code;work_entry.name;work_entry.external_code;employee.external_code;employee.name;work_entry.duration
         DATE(DEFAULT FORMAT);CHAR;INT;CHAR;CHAR;INT;CHAR;FLOAT(HOURS)
 
-        eg: 01/05/2026;YourCompany;3434;WORK100;Attendance;1212;5656;Mitchell Admin;8
+        eg: 01/05/2026;YourCompany;3434;002.00;Work;1212;5656;Mitchell Admin;8
         """
         columns = self._get_columns(company)
         args = {
