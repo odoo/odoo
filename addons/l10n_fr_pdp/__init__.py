@@ -20,14 +20,6 @@ def _pre_init_pdp(env):
 
 
 def _post_init_pdp(env):
-    """Update templates for Factur-X."""
-    for view_name in [
-        'account_edi_ubl_cii.account_invoice_partner_facturx_export_22',
-        'account_edi_ubl_cii.account_invoice_facturx_export_22',
-    ]:
-        view = env.ref(view_name).sudo()
-        view.reset_arch(mode="hard")
-
     demo_company_partner = env.ref('base.partner_demo_company_fr', raise_if_not_found=False)
     demo_company_partner = demo_company_partner and demo_company_partner.filtered_domain(env['res.partner']._domain_peppol_do_not_modify_routing_identifier())
     if demo_company_partner:
