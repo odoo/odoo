@@ -19,7 +19,7 @@ export class PosAlertPlugin extends Plugin {
 
     add(message, options = {}, overlayOptions = {}) {
         this.remove();
-        this.dismiss = this.overlay.add(
+        this._dismiss = this.overlay.add(
             Alert,
             {
                 message,
