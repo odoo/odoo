@@ -421,50 +421,30 @@ export class DomPlugin extends Plugin {
         const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
         for (const [index, item] of nodes.entries()) {
             const insertedNodes = [];
-            // Restore lost split before the item in case of unwrapping.
             const previousItem = index > 0 && nodes[index - 1];
-            if (isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
-                const [targetNode, targetOffset] = leftPos(marker);
-                const split = this.dependencies.split.splitBlockNode({
-                    targetNode,
-                    targetOffset,
-                });
-                switch (split.type) {
-                    case SPLIT_OPERATION_TYPES.LINE: {
-                        const trailingBr = split.lineBreaks.at(-1);
-                        if (split.lineBreaks.length > 1 && isFakeLineBreak(trailingBr)) {
-                            // The fake line break that was created will be
-                            // rendered unnecessary with the insertion.
-                            trailingBr.remove();
-                            split.lineBreaks.pop();
-                        }
-                        insertedNodes.push(...split.lineBreaks);
-                        break;
-                    }
-                    case SPLIT_OPERATION_TYPES.BLOCK: {
-                        const reference = preserveInlineContext
-                            ? firstLeaf(split.after)
-                            : split.after.firstChild;
-                        if (reference !== marker) {
-                            reference.before(marker);
-                        }
-                        break;
-                    }
-                }
-            }
-            for (const node of isFragment(item) ? childNodes(item) : [item]) {
+            const itemNodes = isFragment(item) ? childNodes(item) : [item];
+            for (const [nodeIndex, node] of itemNodes.entries()) {
                 // A root marker may still point into the block on its right.
                 const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
-                if (this.moveMarkerToNextInsertionPosition(node, marker)) {
+                if (
+                    nodeIndex === 0 &&
+                    isFragment(previousItem) &&
+                    !isBlock(item) &&
+                    isVisible(item)
+                ) {
+                    insertedNodes.push(...this.splitBeforeInsertion(marker, preserveInlineContext));
+                }
+                if (this.moveMarkerToNextInsertionPosition(node, marker, preserveInlineContext)) {
                     const shouldReplaceEmptyBlock =
                         node === firstNode &&
                         isEmptyBlock(referenceBlock) &&
                         findDownTo(node, isPhrasingContainer);
-                    let next = marker.nextSibling;
+                    const next = marker.nextSibling;
                     const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
                     marker.before(node);
                     insertedNodes.push(node);
-                    if (wasBeforeFakeLineBreak && !isBlock(node)) {
+                    const didInsertBlock = isBlock(node);
+                    if (wasBeforeFakeLineBreak && !didInsertBlock) {
                         // Inserting inline content before a fake line break
                         // will make it real. Remove it.
                         next.remove();
@@ -474,19 +454,8 @@ export class DomPlugin extends Plugin {
                         // The original empty block has been replaced entirely.
                         referenceBlock.before(marker);
                         referenceBlock.remove();
-                    } else if (isBlock(node)) {
-                        // Move the marker to the next deepest position.
-                        next = marker.nextSibling;
-                        while (
-                            next &&
-                            isElement(next) &&
-                            (isBlock(next) || preserveInlineContext) &&
-                            !isSelfClosingElement(next) &&
-                            isContentEditable(next)
-                        ) {
-                            next.prepend(marker);
-                            next = marker.nextSibling;
-                        }
+                    } else if (didInsertBlock) {
+                        this.moveMarkerToNextPosition(node, marker, { preserveInlineContext });
                     }
                 }
             }
@@ -521,15 +490,64 @@ export class DomPlugin extends Plugin {
     }
 
     /**
-     * Take a node to insert and the last valid reference leaf for its
-     * insertion, adapt the reference for the next insertion, and return it.
+     * Restore a lost split before an item that was unwrapped.
+     *
+     * @param {Node} marker
+     * @param {boolean} preserveInlineContext
+     * @returns {HTMLBRElement[]} line breaks that were inserted if any
+     */
+    splitBeforeInsertion(marker, preserveInlineContext) {
+        const [targetNode, targetOffset] = leftPos(marker);
+        const split = this.dependencies.split.splitBlockNode({
+            targetNode,
+            targetOffset,
+        });
+        if (split.type === SPLIT_OPERATION_TYPES.LINE) {
+            const trailingBr = split.lineBreaks.at(-1);
+            if (split.lineBreaks.length > 1 && isFakeLineBreak(trailingBr)) {
+                // The fake line break that was created will be
+                // rendered unnecessary with the insertion.
+                trailingBr.remove();
+                split.lineBreaks.pop();
+            }
+            return split.lineBreaks;
+        }
+        if (split.type === SPLIT_OPERATION_TYPES.BLOCK) {
+            const reference = preserveInlineContext
+                ? firstLeaf(split.after)
+                : split.after.firstChild;
+            if (reference !== marker) {
+                reference.before(marker);
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Move the marker to the position where the given node should be inserted.
      *
      * @param {Node} node
-     * @param {Node} reference
      * @param {Node} marker
+     * @param {boolean} preserveInlineContext
      * @returns {Node | undefined}
      */
-    moveMarkerToNextInsertionPosition(node, marker) {
+    moveMarkerToNextInsertionPosition(node, marker, preserveInlineContext) {
+        // Move to the next deepest position after inserting a block.
+        if (node.nextSibling === marker) {
+            let next = marker.nextSibling;
+            while (
+                next &&
+                isElement(next) &&
+                (isBlock(next) || preserveInlineContext) &&
+                !isSelfClosingElement(next) &&
+                isContentEditable(next)
+            ) {
+                next.prepend(marker);
+                next = marker.nextSibling;
+            }
+            return marker;
+        }
+
         const parent = marker.parentElement;
         const checkPredicates = () =>
             this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent, node);
