@@ -4,7 +4,7 @@ export function partnerListTrigger(name = "") {
     return `.modal .partner-list b:contains(${name})`;
 }
 
-export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
+export function clickPartner(name = "", { expectUnloadPage = false, pressEnter = true } = {}) {
     if (!name) {
         return [
             {
@@ -15,7 +15,7 @@ export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
             },
         ];
     }
-    return [
+    const steps = [
         {
             isActive: ["mobile"],
             content: `Click search field`,
@@ -27,13 +27,24 @@ export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
             trigger: `.modal-dialog .input-group input`,
             run: `edit ${name}`,
         },
-        {
-            content: `click partner '${name}' from partner list screen`,
-            trigger: partnerListTrigger(name),
-            run: "click",
-            expectUnloadPage,
-        },
     ];
+    if (pressEnter) {
+        steps.push({
+            content: `Press Enter to trigger "search more"`,
+            trigger: `.modal-dialog .input-group input`,
+            run: () =>
+                document
+                    .querySelector(".modal-dialog .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" })),
+        });
+    }
+    steps.push({
+        content: `click partner '${name}' from partner list screen`,
+        trigger: partnerListTrigger(name),
+        run: "click",
+        expectUnloadPage,
+    });
+    return steps;
 }
 export function clickPartnerOptions(name) {
     return {
