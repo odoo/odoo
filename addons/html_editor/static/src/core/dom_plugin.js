@@ -295,18 +295,19 @@ export class DomPlugin extends Plugin {
 
     /**
      * @param {string | DocumentFragment | Element | null} content
+     * @param {object} [options]
+     * @param {boolean} [options.verbatim = false] if true, insert without processing.
      * @returns {Node[]} the inserted nodes
      */
-    insert(content) {
-        this.dependencies.delete.deleteSelection();
-
+    insert(content, { verbatim = false } = {}) {
         // 1. Process the content to insert.
         // =================================
 
-        const fragment = this.processThrough(
-            "fragment_to_insert_processors",
-            this.makeFragment(content)
-        );
+        let fragment = this.makeFragment(content);
+        if (!verbatim) {
+            fragment = this.processThrough("fragment_to_insert_processors", fragment);
+        }
+        this.dependencies.delete.deleteSelection();
         const sel = this.dependencies.selection.getEditableSelection();
         const refBlock = closestBlock(sel.anchorNode);
         const preserveInlineContext = closestElement(sel.anchorNode) !== refBlock;
