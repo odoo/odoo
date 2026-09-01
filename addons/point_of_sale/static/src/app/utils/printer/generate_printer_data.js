@@ -376,7 +376,7 @@ export class GeneratePrinterData {
                         ...this.commonExtraData,
                         prefix: _t("Order"),
                         order_label: order.floating_order_name || false,
-                        reprint: order.uiState.isReprinting,
+                        reprint: Boolean(reprint),
                         time: DateTime.now().toFormat("HH:mm"),
                         internal_note: getStrNotes(change.internal_note) || false,
                         general_customer_note: change.general_customer_note || false,
