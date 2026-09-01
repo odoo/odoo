@@ -3079,7 +3079,7 @@ class MailThread(models.AbstractModel):
             if val.get('company_name'):
                 line += Markup('<em>%s</em>') % (val['company_name'] + ': ')
             if val.get('old_value'):
-                line += val['old_value']
+                line += Markup('%s') % val['old_value']
             line += " → "
             line += Markup('<b>%s</b> <i>(%s)</i>') % (val['new_value'], val['field_label'])
             if i < len(tracking_values) - 1:
