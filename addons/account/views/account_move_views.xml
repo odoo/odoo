@@ -1425,11 +1425,13 @@
                                         <field name="debit"
                                                sum="Total Debit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
+                                               decoration-muted="debit == 0.0"
                                                readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
                                         />
                                         <field name="credit"
                                                sum="Total Credit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
+                                               decoration-muted="credit == 0.0"
                                                readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
                                         />
                                         <field name="balance" column_invisible="True"/>
