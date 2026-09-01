@@ -68,6 +68,7 @@ class PosSelfOrderController(http.Controller):
         for o in orders:
             del o['email']
             del o['mobile']
+            o['partner_id'] = order._get_signed_self_partner_id(config_id, o['partner_id']) if o.get('partner_id') else False
 
         return {
             'pos.order': orders,
@@ -83,11 +84,11 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
         pos_config = self._verify_pos_config(access_token)
-        existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
-
+        POSOrder = pos_config.env['pos.order']
+        existing_partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
         if existing_partner and existing_partner.exists():
             return {
-                'res.partner': existing_partner.read(['id'], load=False),
+                "res.partner": [{'id': partner_id}],
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -105,7 +106,7 @@ class PosSelfOrderController(http.Controller):
         })
 
         return {
-            'res.partner': partner_sudo.read(['id'], load=False),
+            "res.partner": [{'id': POSOrder._get_signed_self_partner_id(pos_config, partner_sudo.id)}],
         }
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
