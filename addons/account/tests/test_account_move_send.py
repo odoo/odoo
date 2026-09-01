@@ -20,6 +20,11 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    def _activate_multi_company(cls):
+        # Disable the MailCommon company creation that clashes with the accounting ones
+        return
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
 

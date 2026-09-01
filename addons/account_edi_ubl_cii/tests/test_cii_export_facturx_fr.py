@@ -19,8 +19,8 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         cls.tax_20 = cls.percent_tax(cls, 20.0)
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
 
         # Mandatory fields for Factur-x
         company.partner_id.write({

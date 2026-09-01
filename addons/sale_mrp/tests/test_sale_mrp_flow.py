@@ -1741,6 +1741,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         """
 
         # Create environment
+        # product was not installed when creating the template test company so we don't have the default created USD pricelist
+        self.env.company._activate_or_create_pricelists()
         self.env.company.currency_id = self.env.ref('base.USD')
         self.env.company.anglo_saxon_accounting = True
         self.partner = self.env['res.partner'].create({'name': 'Test Partner'})

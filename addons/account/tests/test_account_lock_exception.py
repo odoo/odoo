@@ -2,7 +2,9 @@ from contextlib import closing
 
 from datetime import datetime, timedelta
 
-from odoo import Command, fields
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.addons.account.models.company import SOFT_LOCK_DATE_FIELDS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCase
@@ -15,6 +17,11 @@ from odoo.tools.misc import format_datetime
 class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
 
     _test_user_groups = None  # FIXME list needed groups
+
+    @classmethod
+    def setup_independent_company(cls):
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+        return cls.env.ref('base.test_company_with_branch')
 
     @classmethod
     def setUpClass(cls):
@@ -109,9 +116,9 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
         """
 
         root_company = self.company_data['company']
-        root_company.write({'child_ids': [Command.create({'name': 'branch'})]})
         self.cr.precommit.run()  # load the CoA
-        branch = root_company.child_ids
+        self.env.user.company_ids += root_company.child_ids
+        branch, _branch = root_company.child_ids
 
         for lock_date_field, move_type in self.soft_lock_date_info:
             with self.subTest(lock_date_field=lock_date_field, move_type=move_type), closing(self.cr.savepoint()):

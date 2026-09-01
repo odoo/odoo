@@ -48,6 +48,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     chart_template = False
     country_code = False
     extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
+    _test_company_xmlid = 'base.test_company'
 
     @classmethod
     def safe_copy(cls, record):
@@ -101,6 +102,10 @@ class AccountTestInvoicingCommon(ProductCommon):
             list_price=1000.0,
             standard_price=800.0,
             uom_id=cls.uom_unit.id,
+            # taxes_id/supplier_taxes_id default to one tax per company the (shared) test user
+            # has access to; pin them explicitly like product_b does below.
+            taxes_id=[Command.set(cls.tax_sale_a.ids)],
+            supplier_taxes_id=[Command.set(cls.tax_purchase_a.ids)],
         )
         cls.product_b = cls._create_product(
             name='product_b',
@@ -226,9 +231,25 @@ class AccountTestInvoicingCommon(ProductCommon):
             )
 
     @classmethod
-    def setup_other_company(cls, **kwargs):
-        # OVERRIDE
-        company = cls._create_company(**{'name': 'company_2'} | kwargs)
+    def setup_other_company(cls, name='company_2', **kwargs):
+        company = None
+        if not kwargs:
+            for test_company_xmlid in 'base.test_company', 'base.test_company_with_branch', 'base.test_company_template':
+                # we may check it a specific country or chart template was requested before returning an existing company
+                candidate_company = cls.env.ref(test_company_xmlid)
+                if candidate_company not in cls.env.user.company_ids:
+                    _logger.info('Selecting existing company %s as other company', test_company_xmlid)
+                    company = candidate_company
+                    if not company.chart_template:
+                        cls._use_chart_template(company, cls.chart_template)
+                    company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
+                    cls.env.user.company_ids += company
+                    cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+                    break
+
+        if not company:
+            _logger.info('No eligibile company found, creating a new one')
+            company = cls._create_company(name=name, **kwargs)
         data = cls.collect_company_accounting_data(company)
         cls.product_category.with_company(company).write({
             'property_account_income_categ_id': data['default_account_revenue'].id,
@@ -237,17 +258,27 @@ class AccountTestInvoicingCommon(ProductCommon):
         return data
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        if cls.env.registry.loaded:
-            # Only create a new company for post-install tests
-            return cls._create_company(name='company_1_data', **kwargs)
+    def setup_independent_company(cls):
+        if cls.country_code or cls.chart_template:
+            # else:
+            # A specific country/chart was requested: it needs a dedicated company created from
+            # scratch, not the shared base.test_company (already loaded with generic_coa, with
+            # payment providers linked to its journals). Reusing/mutating one shared company
+            # across different country_code test classes would mean reloading its chart of
+            # accounts each time a different country is requested, which tries to delete the
+            # previous chart's journals/accounts - unsafely, since a payment provider may
+            # already be linked to one of them by then (deletion blocked, UserError).
+            company = cls._create_company()
         else:
-            cls.env['account.tax.group'].create({
-                'name': 'Test tax group',
-                'company_id': cls.env.company.id,
-            })
-            cls.env.company.country_id = cls.quick_ref('base.be')
-        return super().setup_independent_company(**kwargs)
+            company = cls.env.ref(cls._test_company_xmlid or 'base.test_company')
+            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+            company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
+        # TODO try to remove this, may be the cause of the failure in test_tax_unit
+        cls.env['account.tax.group'].sudo().create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+        })
+        return company
 
     @classmethod
     def setup_independent_user(cls):
@@ -271,7 +302,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                 create_values['country_id'] = country.id
             if 'currency_id' not in create_values:
                 create_values['currency_id'] = country.currency_id.id
-
+                # country.currency_id.active = True # there is a difference between company create and write
+                # activating the currency could be a solution to lessen this difference in the tests
         if 'account_opening_date' not in create_values:
             # To ease tests on returns: don't create the returns by default ; TestAccountReturn assigns that field while patching the return generation
             create_values['account_opening_date'] = False
@@ -575,7 +607,6 @@ class AccountTestInvoicingCommon(ProductCommon):
             cls._prepare_invoice_line(name='test line', price_unit=amount, tax_ids=taxes)
             for amount in (amounts or [])
         ]
-
         return cls._create_invoice(
             move_type=move_type,
             partner_id=partner or cls.partner_a,

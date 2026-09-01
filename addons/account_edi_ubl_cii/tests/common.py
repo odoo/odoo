@@ -5,8 +5,10 @@ import uuid
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
+from odoo.tests import tagged
 
 
+@tagged('TestUblCiiCommon')
 class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
@@ -22,11 +24,22 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setup_independent_company(cls):
-        # EXTENDS 'account': this suite's country-specific subclasses (BE/FR/NO/...) rely on
-        # their own _create_company() override (EUR currency, country-specific partner/VAT/bank
-        # details) always running, which the shared base.test_company/test_company_be fixtures
-        # don't provide, so always create a dedicated company here instead.
-        return cls._create_company()
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+        company = cls.env.ref('base.test_company_template')
+        eur = cls.env.ref('base.EUR')
+        company.currency_id = eur
+        cls._use_chart_template(company, cls.chart_template)
+        # set currency again because _use_chart_template may have changed them back to USD when loading the generic coa
+        company.currency_id = eur
+        company.tax_calculation_rounding_method = 'round_globally'
+        company.name = "Secondary Test Company"  # backward compatibility with existing assertions
+        company.terms_type = 'plain'
+        cls.env['account.tax.group'].sudo().create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+        })
+        cls.env.user.company_ids = [Command.link(company.id)]
+        return company
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -279,9 +292,8 @@ class TestUblCiiBECommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
-
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
         company.partner_id.write({
             'street': "Chaussée de Namur 40",
             'zip': "1367",
@@ -304,8 +316,8 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
 
         company.partner_id.write({
             'street': "Rue Grand Port 1",
@@ -328,8 +340,8 @@ class TestUblCiiNOCommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
         company.partner_id.write({
             'street': "Drammensveien 1",
             'zip': "0271",

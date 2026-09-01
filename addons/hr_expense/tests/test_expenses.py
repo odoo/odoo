@@ -18,6 +18,7 @@ class TestExpenses(TestExpenseCommon):
     #  Test Expense flows
     #############################################
     _test_user_groups = None  # FIXME list needed groups
+    _test_company_xmlid = 'base.test_company_with_branch'
 
     def test_expense_main_flow(self):
         """
@@ -1044,7 +1045,7 @@ class TestExpenses(TestExpenseCommon):
         """
         Test that when an expense is created in a branch company, the associated move is also in the branch company.
         """
-        branch_company = self.setup_other_company(name='Branch', parent_id=self.company_data['company'].id)['company']
+        branch_company = self.company_data['company'].child_ids[0]
         employee = self.env['hr.employee'].sudo().create({
             'name': 'Employee XYZ',
             'company_id': branch_company.id,

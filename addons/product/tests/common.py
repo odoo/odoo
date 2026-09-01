@@ -32,6 +32,13 @@ class ProductCommon(UomCommon):
             'list_price': 50.0,
             'categ_id': cls.product_category.id,
         }])
+        if 'taxes_id' in cls.product._fields:
+            # taxes_id/supplier_taxes_id default to one tax per company the (shared) test user
+            # has access to (self.env.companies), not just the current one; pin them explicitly.
+            (cls.product + cls.service_product).write({
+                'taxes_id': [Command.set(cls.env.company.account_sale_tax_id.ids)],
+                'supplier_taxes_id': [Command.set(cls.env.company.account_purchase_tax_id.ids)],
+            })
         # Archive all existing pricelists and disable feature group
         # Ensures a consistent default setup for tests run through this common
         # Please call `_enable_pricelists` if a test is meant to test pricelist logic

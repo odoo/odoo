@@ -12,6 +12,7 @@ from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
+from odoo.tests import tagged
 from odoo import models, tools
 
 INCOMING_EMAIL = """Return-Path: {return_path}
@@ -46,6 +47,7 @@ Cheers,
 Somebody."""
 
 
+@tagged('TestCrmCommon')
 class TestCrmCommon(TestSalesCommon, MailCase):
 
     FIELDS_FIRST_SET = [
@@ -254,7 +256,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
     @classmethod
     def _activate_multi_company(cls):
-        cls.company_2 = cls.env['res.company'].create({
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+        cls.company_2 = cls.env.ref('base.test_company_template')
+        # TODO add check for potential double use of test_company_template
+        cls.env.user.company_ids |= cls.company_2
+        cls.company_2.write({
             'country_id': cls.env.ref('base.au').id,
             'currency_id': cls.env.ref('base.AUD').id,
             'email': 'company.2@test.example.com',

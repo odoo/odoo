@@ -29,7 +29,7 @@ from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import common, RecordCapturer, new_test_user
+from odoo.tests import common, RecordCapturer, new_test_user, tagged
 from odoo.tools import LazyTranslate, mute_logger, mail as mail_lib
 from odoo.tools.mail import email_normalize, email_split_and_format_normalize, formataddr
 from odoo.tools.misc import formatLang, format_amount
@@ -1633,7 +1633,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
     def assertMailNotifications(self, messages, recipients_info, bus_notif_count=1):
         """Check bus notifications content.
 
-        Mandatory and basic check is about channels being notified. Content check is optional.
+        Mandatory and basic check is about channels being notified. Content check is optional.tagged
 
         **GENERATED INPUT**
 
@@ -1922,6 +1922,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             self.assertEqual(recipient_notif.notification_type, rinfo['type'])
 
 
+@tagged('MailCommon')
 class MailCommon(MailCase):
     """ Almost-void class definition setting the savepoint case + mock of mail.
     Used mainly for class inheritance in other applications and test modules. """
@@ -2023,13 +2024,20 @@ class MailCommon(MailCase):
         cls._mc_enabled = True
 
         # new companies
-        cls.company_2 = cls.env['res.company'].create({
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+        cls.company_2 = cls.env.ref('base.test_company_template')
+        # TODO add check for potential double use of test_company_template
+        cls.env.user.company_ids |= cls.company_2
+
+        cls.company_2.write({
             'country_id': cls.env.ref('base.ca').id,
             'currency_id': cls.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',
             'name': 'Company 2',
         })
-        cls.company_3 = cls.env['res.company'].create({
+        cls.company_3 = cls.env.ref('base.test_company')
+
+        cls.company_3.write({
             'country_id': cls.env.ref('base.be').id,
             'currency_id': cls.env.ref('base.EUR').id,
             'email': 'company_3@test.example.com',

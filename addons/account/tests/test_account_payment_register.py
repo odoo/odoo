@@ -18,7 +18,12 @@ from odoo.addons.payment.tests.common import PaymentCommon
 @tagged('post_install', '-at_install')
 class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = None  # FIXME list needed
+
+    @classmethod
+    def setup_independent_company(cls):
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+        return cls.env.ref('base.test_company_with_branch')
 
     @classmethod
     def setUpClass(cls):
@@ -1991,7 +1996,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         self.cr.precommit.run()
         branches = self.branch + (self.env.company.child_ids - self.branch)
         self.user_branch.company_ids = branches
-        company_2 = self.env.ref('base.test_company_be')
+        company_2 = self.add_company('base.test_company')
         self.env.user.company_ids = self.env.company + branches + company_2
         # PART 1: Basic cases
         # create invoices on branches

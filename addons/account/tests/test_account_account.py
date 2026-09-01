@@ -909,16 +909,22 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         with Form(account) as account_form:
             # Test that the code mapping gives correct values once the form has been opened (which should call search)
-            self.assertRecordValues(account.code_mapping_ids, [
+            # `code_mapping_ids` is auto-populated for every company the (shared) test user has
+            # access to, not just the 3 relevant to this test, so scope the assertion to them.
+            expected_company_ids = (self.company_data['company'] + self.company_data_2['company'] + company_3).ids
+            self.assertRecordValues(account.code_mapping_ids.filtered(lambda m: m.company_id.id in expected_company_ids), [
                 {'company_id': self.company_data['company'].id, 'code': 'test1'},
                 {'company_id': self.company_data_2['company'].id, 'code': False},
                 {'company_id': company_3.id, 'code': False},
             ])
 
             # Test that we are able to set a new code for companies 2 and 3 via the company mapping
-            with account_form.code_mapping_ids.edit(1) as code_mapping_form:
+            # The mapping may also contain rows for the test user's other companies, so look up
+            # the row indexes by company instead of assuming positions 1 and 2.
+            company_ids_in_form = [vals['company_id'] for vals in account_form.code_mapping_ids._records]
+            with account_form.code_mapping_ids.edit(company_ids_in_form.index(self.company_data_2['company'].id)) as code_mapping_form:
                 code_mapping_form.code = 'test2'
-            with account_form.code_mapping_ids.edit(2) as code_mapping_form:
+            with account_form.code_mapping_ids.edit(company_ids_in_form.index(company_3.id)) as code_mapping_form:
                 code_mapping_form.code = 'test3'
 
             # Test that writing codes and companies at the same time doesn't trigger the constraint
@@ -944,7 +950,13 @@ class TestAccountAccount(TestAccountMergeCommon):
                 {'company_id': self.company_data_2['company'].id, 'code': False},
                 {'company_id': company_3.id, 'code': False},
             ]
-            actual_code_mapping_vals_list = account_form.code_mapping_ids._records
+            # `code_mapping_ids` is auto-populated for every company the (shared) test user has
+            # access to, not just the 3 relevant to this test, so scope the assertion to them.
+            expected_company_ids = {self.company_data['company'].id, self.company_data_2['company'].id, company_3.id}
+            actual_code_mapping_vals_list = [
+                vals for vals in account_form.code_mapping_ids._records
+                if vals['company_id'] in expected_company_ids
+            ]
 
             for expected_code_mapping_vals, actual_code_mapping_vals in zip(expected_code_mapping_vals_list, actual_code_mapping_vals_list):
                 for key, expected_val in expected_code_mapping_vals.items():
@@ -953,9 +965,12 @@ class TestAccountAccount(TestAccountMergeCommon):
             account_form.name = "My Test Account"
             account_form.code = 'test1'
             account_form.account_type = 'asset_current'
-            with account_form.code_mapping_ids.edit(1) as code_mapping_form:
+            # The mapping may also contain rows for the test user's other companies, so look up
+            # the row indexes by company instead of assuming positions 1 and 2.
+            company_ids_in_form = [vals['company_id'] for vals in account_form.code_mapping_ids._records]
+            with account_form.code_mapping_ids.edit(company_ids_in_form.index(self.company_data_2['company'].id)) as code_mapping_form:
                 code_mapping_form.code = 'test2'
-            with account_form.code_mapping_ids.edit(2) as code_mapping_form:
+            with account_form.code_mapping_ids.edit(company_ids_in_form.index(company_3.id)) as code_mapping_form:
                 code_mapping_form.code = 'test3'
 
             # Test that writing codes and companies at the same time doesn't trigger the constraint

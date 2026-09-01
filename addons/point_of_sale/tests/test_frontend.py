@@ -112,6 +112,14 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.pos_user.partner_id.email = 'pos_user@test.com'
         cls.pos_admin.partner_id.email = 'pos_admin@test.com'
 
+        # Remove any pre-existing payment methods (e.g. delivery-provider ones like
+        # GoFood/GrabFood from pos_platform_order, which aren't tied to any pos.config) so they
+        # don't get silently picked up as "already configured" defaults for main_pos_config below.
+        # Archiving isn't enough: pos.payment.method's _load_pos_data_domain matches both active
+        # and inactive records, so an archived stray would still be loaded client-side and could
+        # be picked up by code that just grabs "the first" loaded payment method.
+        env['pos.payment.method'].search([('company_id', '=', main_company.id)]).unlink()
+
         cls.bank_journal = journal_obj.create({
             'name': 'Bank Test',
             'type': 'bank',

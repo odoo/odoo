@@ -255,10 +255,6 @@ class ModuleGraph:
             result += [m[0] for m in self._cr.fetchall()]
         return OrderedSet(result)
 
-    @functools.cached_property
-    def _test_data_column(self) -> str:
-        return 'test_data' if column_exists(self._cr, 'ir_module_module', 'test_data') else 'FALSE'
-
     def _update_depends(self, names: Iterable[str]) -> None:
         for name in names:
             if module := self._modules.get(name):
@@ -287,8 +283,8 @@ class ModuleGraph:
         if not names:
             return
         # update modules with values from the database (if exist)
-        query = f'''
-            SELECT name, id, state, demo, {self._test_data_column}, latest_version AS installed_version
+        query = '''
+            SELECT name, id, state, demo, test_data, latest_version AS installed_version
             FROM ir_module_module
             WHERE name IN %s
         '''
