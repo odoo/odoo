@@ -203,11 +203,9 @@ export class TicketScreen extends Component {
         }
     }
     async onClickReprintAll(order) {
-        order.uiState.isReprinting = true;
-        try {
-            await this.pos.sendOrderInPreparation(order);
-        } finally {
-            order.uiState.isReprinting = false;
+        const printingChanges = order.lastPrints;
+        if (printingChanges.length) {
+            await this.pos.printChanges(order, printingChanges, true);
         }
     }
     async onNextPage() {

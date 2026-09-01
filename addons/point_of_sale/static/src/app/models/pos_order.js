@@ -84,7 +84,6 @@ export class PosOrder extends PosOrderAccounting {
             },
             requiredPartnerDetails: {},
             tip: { value: false, type: false },
-            isReprinting: false,
         };
     }
 
@@ -825,7 +824,7 @@ export class PosOrder extends PosOrderAccounting {
 
     getOrderData(reprint = false) {
         return {
-            reprint: this.uiState.isReprinting,
+            reprint: reprint,
             pos_reference: this.preparationName,
             config_name: this.config_id?.name || this.config.name,
             time: luxon.DateTime.now().toFormat("HH:mm"),
