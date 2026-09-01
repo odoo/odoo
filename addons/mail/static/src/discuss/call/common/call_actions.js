@@ -72,13 +72,16 @@ export const muteAction = {
             });
         }
     },
-    tags: ({ action, store }) => {
+    btnVariant: ({ action, store }) =>
+        action.isActive ||
+        store.rtc.microphonePermission !== "granted" ||
+        store.rtc.showMicrophoneSilentWarning
+            ? "btn-danger"
+            : undefined,
+    tags: ({ store }) => {
         const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.DANGER);
-        }
         if (store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
+            tags.push(ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
     },
@@ -110,10 +113,8 @@ registerCallAction("deafen", {
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
     sequenceGroup: 100,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.DANGER : undefined,
-    ],
+    btnVariant: ({ action }) => (action.isActive ? "btn-danger" : undefined),
+    tags: [ACTION_TAGS.CALL_ACTION_TRACKED],
 });
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
@@ -136,6 +137,11 @@ export const cameraOnAction = {
         store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
+    btnVariant: ({ store, channel }) =>
+        channel?.default_display_mode === "video_full_screen" &&
+        store.rtc.cameraPermission !== "granted"
+            ? "btn-danger"
+            : undefined,
     tags: ({ action, store, channel }) => {
         const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
         if (action.isActive) {
@@ -145,7 +151,7 @@ export const cameraOnAction = {
             channel?.default_display_mode === "video_full_screen" &&
             store.rtc.cameraPermission !== "granted"
         ) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
+            tags.push(ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
     },
@@ -379,7 +385,7 @@ export const rejectAction = {
     },
     sequence: 140,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 };
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
@@ -393,7 +399,7 @@ registerCallAction("disconnect", {
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 });
 
 export class CallAction extends Action {

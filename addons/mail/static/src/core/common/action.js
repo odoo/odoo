@@ -6,7 +6,6 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { Reactive } from "@web/core/utils/reactive";
 
 export const ACTION_TAGS = Object.freeze({
-    DANGER: "DANGER",
     SUCCESS: "SUCCESS",
     IMPORTANT_BADGE: "IMPORTANT_BADGE",
     WARNING_BADGE: "WARNING_BADGE",

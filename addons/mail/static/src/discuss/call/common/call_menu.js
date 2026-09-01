@@ -35,7 +35,7 @@ export class CallMenu extends Component {
             return {};
         }
         return {
-            "text-danger": lastSelfAction.isActive && lastSelfAction.tags.includes("DANGER"),
+            "text-danger": lastSelfAction.isActive && lastSelfAction.btnVariant === "btn-danger",
             "text-success": lastSelfAction.isActive && lastSelfAction.tags.includes("SUCCESS"),
         };
     }

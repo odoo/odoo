@@ -182,13 +182,11 @@ export class CallPreview extends Component {
             isActive: () => this.state.videoStream,
             name: ({ action }) => (action.isActive ? _t("Turn camera off") : _t("Turn camera on")),
             onSelected: () => this.toggleCamera(),
-            tags: (...args) => {
-                const tags = cameraOnAction.tags?.(...args) ?? [];
-                if (!args[0].action.isActive && this.rtc.cameraPermission !== "granted") {
-                    tags.push(ACTION_TAGS.DANGER);
-                }
-                return tags;
-            },
+            btnVariant: (...args) =>
+                cameraOnAction.btnVariant?.(...args) ??
+                (!args[0].action.isActive && this.rtc.cameraPermission !== "granted"
+                    ? "btn-danger"
+                    : undefined),
         };
         const muteActionUpdated = {
             ...muteAction,

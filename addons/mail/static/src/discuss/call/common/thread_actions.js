@@ -60,5 +60,5 @@ registerThreadAction("disconnect", {
     name: _t("Disconnect"),
     sequence: 30,
     sequenceGroup: 10,
-    tags: [ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 });

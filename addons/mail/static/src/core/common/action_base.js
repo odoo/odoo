@@ -56,13 +56,8 @@ export class ActionBase extends Component {
             "bg-secondary":
                 this.action.isActive &&
                 !this.action.btnVariant &&
-                !this.action.tags.includes("DANGER") &&
                 !this.action.tags.includes("SUCCESS"),
-            "btn-secondary":
-                !this.action.btnVariant &&
-                !this.action.tags.includes("DANGER") &&
-                !this.action.tags.includes("SUCCESS"),
-            "btn-danger": this.action.tags.includes("DANGER"),
+            "btn-secondary": !this.action.btnVariant && !this.action.tags.includes("SUCCESS"),
             "btn-success": this.action.tags.includes("SUCCESS"),
         };
     }
