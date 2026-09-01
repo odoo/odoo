@@ -22,7 +22,7 @@ export class PaymentQFpay extends PaymentInterface {
         const order = line.pos_order_id;
         const uuid = line.uuid;
         if (line.amount < 0) {
-            const originalPayment = order.refunded_order_id.payment_ids.find(
+            const originalPayment = order.refunded_order_id?.payment_ids.find(
                 (l) => l.payment_method_id.id === this.payment_method_id.id
             );
             if (!originalPayment) {
