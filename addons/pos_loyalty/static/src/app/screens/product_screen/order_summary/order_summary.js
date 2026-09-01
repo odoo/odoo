@@ -112,6 +112,7 @@ patch(OrderSummary.prototype, {
     async _updateGiftCardOrderline(code, points) {
         let selectedLine = this.currentOrder.getSelectedOrderline();
         const product = selectedLine.product_id;
+        const program = selectedLine._e_wallet_program_id;
 
         if (selectedLine.getQuantity() > 1) {
             selectedLine.setQuantity(selectedLine.getQuantity() - 1);
@@ -119,9 +120,6 @@ patch(OrderSummary.prototype, {
             this.currentOrder.removeOrderline(selectedLine);
         }
 
-        const program = this.pos.models["loyalty.program"].find(
-            (p) => p.program_type === "gift_card"
-        );
         const existingCouponIds = Object.keys(this.currentOrder.uiState.couponPointChanges).filter(
             (key) => {
                 const change = this.currentOrder.uiState.couponPointChanges[key];
@@ -140,7 +138,7 @@ patch(OrderSummary.prototype, {
 
         await this.pos.addLineToCurrentOrder(
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
-            { price_unit: points }
+            { price_unit: points, eWalletGiftCardProgram: program }
         );
         selectedLine = this.currentOrder.getSelectedOrderline();
         selectedLine.gift_code = code;
