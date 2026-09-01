@@ -562,6 +562,10 @@ class ResourceCalendar(models.Model):
             resources_list = list(resources) + [self.env['resource.resource']]
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
+        attendance_intervals = {
+            r.id: Intervals((i for i in attendance_intervals[r.id] if any(a._is_work_period() for a in i[2].sudo())), keep_distinct=True)
+            for r in resources_list
+        }
         if compute_leaves:
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
             return {
