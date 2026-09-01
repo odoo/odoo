@@ -187,7 +187,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(
             ValidationError,
-            r"can only have one PPN tax group \(excluding STLG\)[\s\S]*Luxury-Goods and Non-Luxury-Goods taxes"
+            r"can only have one PPN tax group \(excluding STLG\)[\s\S]*from both the VAT and Other Value VAT tax groups"
         ):
             out_invoice_luxury_non_luxury.download_efaktur()
 
@@ -205,7 +205,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(
             ValidationError,
-            r"contains both Non-Luxury-Goods and STLG taxes.[\s\S]*has STLG tax but missing the required Luxury-Goods tax."
+            r"from both the Other Value VAT and STLG tax groups\.[\s\S]*has a tax from the STLG tax group but none from the VAT tax group\."
         ):
             out_invoice_stlg_non_luxury.download_efaktur()
 
@@ -222,7 +222,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         })
         out_invoice_zero_tax.action_post()
 
-        with self.assertRaisesRegex(ValidationError, r".*does not allow 0% \(Zero-rated or Exempt\) taxes\."):
+        with self.assertRaisesRegex(ValidationError, r".*does not allow 0% \(Zero-Rated, Exempted or Not Collected\) taxes\."):
             out_invoice_zero_tax.download_efaktur()
 
         # Report invoice with code 07/08 with not zero rate tax
@@ -501,13 +501,13 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <FacilityStamp>TD.01105</FacilityStamp>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.00</OtherTaxBase>
+                <OtherTaxBase>91666.67</OtherTaxBase>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>12</VATRate>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>12000.00</VAT>
+                <VAT>11000.00</VAT>
             </xpath>
             <xpath expr="//CustomDoc" position="replace">
                 <CustomDoc>custom doc</CustomDoc>
@@ -783,10 +783,10 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             etree.fromstring(self.sample_xml),
             '''
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.00</OtherTaxBase>
+                <OtherTaxBase>91666.67</OtherTaxBase>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>12000.00</VAT>
+                <VAT>11000.00</VAT>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>12</VATRate>
