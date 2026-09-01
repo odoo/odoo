@@ -188,7 +188,9 @@ export class CarouselSlider extends Interaction {
     onSlideSingleScroll(ev) {
         // We need to keep the active element at the beginning of the carousel-items elements
         // This allows to have a smooth transition when the carousel is sliding
-        if (ev.direction === "right") {
+        const isRTL = document.documentElement.dir === "rtl";
+        const targetDirection = isRTL ? "left" : "right";
+        if (ev.direction === targetDirection) {
             const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
             this.carouselInnerEl.prepend(carouselItemsEls.pop());
         }
@@ -205,7 +207,9 @@ export class CarouselSlider extends Interaction {
         // element at the beginning of the carousel-items list in the DOM. So
         // when animation is done, we move the first item (which is not active
         // anymore) to the end.
-        if (ev.direction === "left") {
+        const isRTL = document.documentElement.dir === "rtl";
+        const targetDirection = isRTL ? "right" : "left";
+        if (ev.direction === targetDirection) {
             const carouselItemsEls = this.carouselInnerEl.querySelectorAll(".carousel-item");
             this.carouselInnerEl.appendChild(carouselItemsEls[0]);
         }
