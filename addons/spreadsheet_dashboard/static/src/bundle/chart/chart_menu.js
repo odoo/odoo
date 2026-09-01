@@ -8,10 +8,10 @@ patch(ChartMenu.prototype, {
         return this.env.model.getters.getAvailableChartGranularities(this.props.chartId);
     },
 
-    onGranularitySelected(ev) {
+    onGranularitySelected(granularity) {
         this.env.model.dispatch("UPDATE_CHART_GRANULARITY", {
             chartId: this.props.chartId,
-            granularity: ev.target.value,
+            granularity,
         });
     },
 });

@@ -17,7 +17,7 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 
-const { corePluginRegistry, coreViewsPluginRegistry, featurePluginRegistry } =
+const { corePluginRegistry, evaluationPluginRegistry, featurePluginRegistry } =
     spreadsheet.registries;
 
 import {
@@ -121,16 +121,20 @@ corePluginRegistry.add("OdooListCoreGlobalFilterPlugin", ListCoreGlobalFilterPlu
 corePluginRegistry.add("odooChartCorePlugin", OdooChartCorePlugin);
 corePluginRegistry.add("ChartOdooLinkPlugin", ChartOdooLinkPlugin);
 
-coreViewsPluginRegistry.add("OdooGlobalFiltersCoreViewPlugin", GlobalFiltersCoreViewPlugin);
-coreViewsPluginRegistry.add(
+// local command handled by the list and Odoo chart core view plugins, which are
+// evaluation plugins: it has to be declared as an evaluation command to reach them.
+spreadsheet.evaluationCommandTypes.add("REFRESH_ALL_DATA_SOURCES");
+
+evaluationPluginRegistry.add("OdooGlobalFiltersCoreViewPlugin", GlobalFiltersCoreViewPlugin);
+evaluationPluginRegistry.add(
     "OdooPivotGlobalFiltersCoreViewPlugin",
     PivotCoreViewGlobalFilterPlugin
 );
-coreViewsPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
-coreViewsPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
-coreViewsPluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);
-coreViewsPluginRegistry.add("PivotOdooCoreViewPlugin", PivotOdooCoreViewPlugin);
+evaluationPluginRegistry.add("OdooListCoreViewPlugin", ListCoreViewPlugin);
+evaluationPluginRegistry.add("OdooChartCoreViewPlugin", OdooChartCoreViewPlugin);
+evaluationPluginRegistry.add("PivotOdooCoreViewPlugin", PivotOdooCoreViewPlugin);
 
+featurePluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);
 featurePluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 featurePluginRegistry.add("odooPivotUIPlugin", PivotOdooUIPlugin);
 featurePluginRegistry.add("odooListUIPlugin", ListUIPlugin);

@@ -1,11 +1,11 @@
 import { EvaluationError, registries } from "@odoo/o-spreadsheet";
-import { OdooUIPlugin } from "@spreadsheet/plugins";
+import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { computeFormatFromCurrency } from "../helpers";
-const { featurePluginRegistry } = registries;
+const { evaluationPluginRegistry } = registries;
 
-export class CurrencyPlugin extends OdooUIPlugin {
+export class CurrencyPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ (["getCurrencyRate", "getCompanyCurrencyFormat"]);
 
     constructor(config) {
@@ -72,4 +72,4 @@ export class CurrencyPlugin extends OdooUIPlugin {
     }
 }
 
-featurePluginRegistry.add("odooCurrency", CurrencyPlugin);
+evaluationPluginRegistry.add("odooCurrency", CurrencyPlugin);

@@ -1,9 +1,9 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
-import { OdooUIPlugin } from "@spreadsheet/plugins";
+import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 
 const { arg, toString } = spreadsheet.helpers;
-const { functionRegistry, featurePluginRegistry, NonSquishableFunctionRegistry } =
+const { functionRegistry, NonSquishableFunctionRegistry, evaluationPluginRegistry } =
     spreadsheet.registries;
 
 /**
@@ -16,7 +16,7 @@ export function dynamicSpreadsheetTranslate(translationNamespace, term) {
     return appTranslateFn(term, translationNamespace);
 }
 
-class TranslationNamespace extends OdooUIPlugin {
+class TranslationNamespace extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ (["dynamicTranslate"]);
 
     constructor(config) {
@@ -35,7 +35,7 @@ class TranslationNamespace extends OdooUIPlugin {
         return term;
     }
 }
-featurePluginRegistry.replace("dynamic_translate", TranslationNamespace);
+evaluationPluginRegistry.replace("dynamic_translate", TranslationNamespace);
 
 functionRegistry.add("_t", {
     description: _t("Get the translated value of the given string"),

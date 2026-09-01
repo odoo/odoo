@@ -1,5 +1,5 @@
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-import { coreTypes, constants } from "@odoo/o-spreadsheet";
+import { coreTypes, evaluationCommandTypes, constants } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { deepCopy } from "@web/core/utils/objects";
 import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
@@ -167,3 +167,9 @@ export class ChartOdooLinkPlugin extends OdooCorePlugin {
 }
 
 coreTypes.add("UPDATE_ODOO_LINK_TO_CHART");
+
+// `evaluationCommandTypes` is a snapshot of `coreTypes` taken when o-spreadsheet
+// is loaded, so every core type added here has to be registered again for
+// evaluation plugins to receive it.
+// TODO: remove once `isEvaluationCommand` also checks `coreTypes` at call time.
+evaluationCommandTypes.add("UPDATE_ODOO_LINK_TO_CHART");

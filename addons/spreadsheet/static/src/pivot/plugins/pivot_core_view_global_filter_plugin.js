@@ -1,6 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
-import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
+import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 
 /**
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
@@ -62,7 +62,7 @@ function pivotPeriodToFilterValue(timeRange, value) {
     }
 }
 
-export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
+export class PivotCoreViewGlobalFilterPlugin extends OdooEvaluationPlugin {
     static getters = /** @type {const} */ ([
         "getPivotComputedDomain",
         "getFiltersMatchingPivotArgs",
