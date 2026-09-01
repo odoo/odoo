@@ -4,7 +4,7 @@
     --o-mail-ActionList-dangerNoBgColor: #{lighten($danger, 10%)};
     --o-mail-ActionList-primaryNoBgColor: #{lighten($primary, 10%)};
 
-    .o-hasBtnBg.o-tag-SUCCESS {
+    .o-hasBtnBg.btn-success {
         @include button-variant(darken($success, 10%), darken($success, 10%));
         --btn-color: white;
         --btn-active-color: white;
@@ -14,7 +14,7 @@
         }
     }
 
-    & button.o-inDiscussCall.o-hasBtnBg:not(.btn-danger):not(.o-tag-SUCCESS):not(.btn-primary) {
+    & button.o-inDiscussCall.o-hasBtnBg:not(.btn-danger):not(.btn-success):not(.btn-primary) {
         background-color: #{$gray-200};
         border: 1px solid rgba(white, 0.1);
 

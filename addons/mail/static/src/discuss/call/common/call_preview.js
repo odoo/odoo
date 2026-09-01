@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Action, ACTION_TAGS } from "@mail/core/common/action";
+import { Action } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
     cameraOnAction,
@@ -204,7 +204,7 @@ export class CallPreview extends Component {
             onSelected: ({ store }) => {
                 store.settings.useBlur = !store.settings.useBlur;
             },
-            tags: ({ action }) => (action.isActive ? [ACTION_TAGS.SUCCESS] : []),
+            btnVariant: ({ action }) => (action.isActive ? "btn-success" : undefined),
         };
         const callAudioActions = [
             new Action({

@@ -137,16 +137,17 @@ export const cameraOnAction = {
         store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
-    btnVariant: ({ store, channel }) =>
-        channel?.default_display_mode === "video_full_screen" &&
-        store.rtc.cameraPermission !== "granted"
-            ? "btn-danger"
-            : undefined,
-    tags: ({ action, store, channel }) => {
-        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.SUCCESS);
+    btnVariant: ({ action, store, channel }) => {
+        if (
+            channel?.default_display_mode === "video_full_screen" &&
+            store.rtc.cameraPermission !== "granted"
+        ) {
+            return "btn-danger";
         }
+        return action.isActive ? "btn-success" : undefined;
+    },
+    tags: ({ store, channel }) => {
+        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
         if (
             channel?.default_display_mode === "video_full_screen" &&
             store.rtc.cameraPermission !== "granted"
@@ -194,10 +195,8 @@ registerCallAction("raise-hand", {
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
+    tags: [ACTION_TAGS.CALL_ACTION_TRACKED],
+    btnVariant: ({ action }) => (action.isActive ? "btn-success" : undefined),
 });
 registerCallAction("share-screen", {
     condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
@@ -213,10 +212,8 @@ registerCallAction("share-screen", {
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
+    tags: [ACTION_TAGS.CALL_ACTION_TRACKED],
+    btnVariant: ({ action }) => (action.isActive ? "btn-success" : undefined),
 });
 registerCallAction("fullscreen", {
     btnAttrs: { "data-available-offline": true },
@@ -299,7 +296,7 @@ export const acceptWithCamera = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 };
 registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
@@ -320,7 +317,7 @@ registerCallAction("join-back", {
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 });
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
@@ -343,7 +340,7 @@ registerCallAction("join-with-camera", {
     },
     sequence: 120,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 });
 /** @type {CallActionDefinition} */
 export const joinAction = {
@@ -357,7 +354,7 @@ export const joinAction = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 };
 registerCallAction("join", joinAction);
 /** @type {CallActionDefinition} */

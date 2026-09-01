@@ -36,7 +36,7 @@ export class CallMenu extends Component {
         }
         return {
             "text-danger": lastSelfAction.isActive && lastSelfAction.btnVariant === "btn-danger",
-            "text-success": lastSelfAction.isActive && lastSelfAction.tags.includes("SUCCESS"),
+            "text-success": lastSelfAction.isActive && lastSelfAction.btnVariant === "btn-success",
         };
     }
 

@@ -53,12 +53,8 @@ export class ActionBase extends Component {
             active: this.action.isActive,
             "o-odooControlPanelSwitchStyle": this.props.odooControlPanelSwitchStyle,
             "o-hasBtnBg": this.hasBtnBg,
-            "bg-secondary":
-                this.action.isActive &&
-                !this.action.btnVariant &&
-                !this.action.tags.includes("SUCCESS"),
-            "btn-secondary": !this.action.btnVariant && !this.action.tags.includes("SUCCESS"),
-            "btn-success": this.action.tags.includes("SUCCESS"),
+            "bg-secondary": this.action.isActive && !this.action.btnVariant,
+            "btn-secondary": !this.action.btnVariant,
         };
     }
 

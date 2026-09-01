@@ -1,4 +1,3 @@
-import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { ActionCallButton } from "@mail/discuss/call/common/action_call_button";
 import { ActionCallDropdown } from "@mail/discuss/call/common/action_call_dropdown";
@@ -16,7 +15,7 @@ registerThreadAction("call", {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 10,
     sequenceQuick: 30,
-    tags: [ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 });
 registerThreadAction("camera-call", {
     buttonComponent: ActionCallButton,
@@ -33,7 +32,7 @@ registerThreadAction("camera-call", {
         }),
     sequence: 5,
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
-    tags: [ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 });
 registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
