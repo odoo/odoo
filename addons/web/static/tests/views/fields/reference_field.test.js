@@ -997,10 +997,13 @@ test("ReferenceField preserves the original model even if emptied", async () => 
     expect(".o_field_reference input").toHaveValue("xphone");
     // remove the value, to make the field use the initial value of the model
     await contains(".o_field_reference input").clear();
+    await runAllTimers();
+    // unfocus input so next click triggers dropdown opening
+    await click(".o_form_view");
     expect(".o_field_reference input").toBeVisible();
     await click(".o_field_reference input");
     await animationFrame();
-    await click(".ui-autocomplete .ui-menu-item:nth-child(2)");
+    await contains(".ui-autocomplete .ui-menu-item:nth-child(2)").click();
     await animationFrame();
     expect(".o_field_reference input").toHaveValue("xpad");
 });
