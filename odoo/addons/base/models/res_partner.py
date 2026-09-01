@@ -316,7 +316,7 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, inverse='_inverse_vat', help="You can use '/' to indicate that the customer has no Tax ID.")
+    vat = fields.Char(string='Tax ID', index='btree_not_null', inverse='_inverse_vat', help="You can use '/' to indicate that the customer has no Tax ID.")
     has_vat = fields.Boolean(
         string="Has Tax ID",
         compute="_compute_has_vat",
