@@ -207,7 +207,8 @@ class IrActionsReport(models.Model):
             if prefix and page.get('/Annots'):
                 # Modifying the annots that hold every information about the form fields
                 for j in range(len(page['/Annots'])):
-                    reader_annot = page['/Annots'][j].getObject()
+                    widget = page['/Annots'][j].getObject()
+                    reader_annot = widget
                     # Check parent object for '/T' if missing.
                     if '/T' not in reader_annot and '/Parent' in reader_annot:
                         reader_annot = reader_annot['/Parent'].getObject()
@@ -225,8 +226,13 @@ class IrActionsReport(models.Model):
                         multiline_flag = 1 << 12  # 13th bit sets multiline text
                         new_flags = form_flags | readonly_flag | multiline_flag
 
-                        reader_annot.update({
+                        updates = {
                             NameObject("/T"): createStringObject(new_key),
                             NameObject("/Ff"): NumberObject(new_flags),
-                        })
+                        }
+                        reader_annot.update(updates)
+                        if reader_annot is not widget:
+                            if '/FT' in reader_annot:
+                                updates[NameObject("/FT")] = reader_annot['/FT']
+                            widget.update(updates)
             writer.addPage(page)
