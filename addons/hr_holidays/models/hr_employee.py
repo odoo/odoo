@@ -767,7 +767,8 @@ class HrEmployee(models.Model):
                 return (0, 24)
             calendar = version.resource_calendar_id
             duration_based_attendances = calendar.attendance_ids.filtered('duration_based')._filter_by_date(target_date)
-            if version.is_flexible or duration_based_attendances or count_non_working_days:
+            calendar_is_duration_based = calendar.attendance_ids and all(calendar.attendance_ids.mapped('duration_based'))
+            if version.is_flexible or duration_based_attendances or count_non_working_days or calendar_is_duration_based:
                 # Quick calculation to center flexible hours around 12PM midday
                 if version.is_flexible:
                     hours_day = version.hours_per_day
@@ -776,8 +777,10 @@ class HrEmployee(models.Model):
                         return (0, 24)
                 elif count_non_working_days:
                     hours_day = calendar.hours_per_day
-                else:
+                elif duration_based_attendances:
                     hours_day = sum(duration_based_attendances.mapped('duration_hours'))
+                else:
+                    hours_day = calendar.hours_per_day
                 datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]
                 if day_period:
                     return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])

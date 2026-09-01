@@ -941,6 +941,11 @@ class HrLeave(models.Model):
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                    if (hours, days) == (0, 0) and leave.work_entry_type_id.count_as == "working_time":
+                        # outside the schedule working time is still valid, count the days.
+                        days = (leave.request_date_to - leave.request_date_from).days + 1
+                        hours_per_day = calendar.hours_per_day if calendar else leave.employee_id.sudo().hours_per_day
+                        hours = days * (hours_per_day or HOURS_PER_DAY)
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
@@ -1037,10 +1042,26 @@ class HrLeave(models.Model):
                 date_hour_to_user_tz = request_date_hour_to.astimezone(leave_tz).replace(tzinfo=None)
                 new_request_date_to = date_hour_to_user_tz.date()
                 new_request_hour_to = time_to_float(date_hour_to_user_tz.time())
+                changes = {}
                 if leave.request_date_to != new_request_date_to:
-                    leave.request_date_to = new_request_date_to
+                    changes['request_date_to'] = new_request_date_to
                 if float_compare(leave.request_hour_to, new_request_hour_to, precision_digits=2) != 0:
-                    leave.request_hour_to = new_request_hour_to
+                    changes['request_hour_to'] = new_request_hour_to
+                if changes:
+                    # date_to was first computed (during create) from a fallback hour
+                    # range wider than the actual requested duration, so it needs to
+                    # be recomputed from the corrected fields above. create() protects
+                    # these fields against recomputation while running its inverse
+                    # methods, so a plain `leave.field = value` assignment here would
+                    # only update the cache, silently skipping date_to's invalidation.
+                    # write() bypasses that protection and triggers the normal
+                    # recompute. Don't assign leave.date_to directly instead: that
+                    # also goes through write(), whose date_to -> request_date_to
+                    # resync truncates the UTC datetime back to a date, silently
+                    # reverting the date roll above whenever the employee's timezone
+                    # offset shifts the calendar date (e.g. a night shift ending at
+                    # local midnight).
+                    leave.write(changes)
 
                 self.env.remove_to_compute(self._fields['work_entry_type_id'], leave)   # to stop onchange methods from resetting the wet chosen earlier
 
@@ -1208,7 +1229,8 @@ class HrLeave(models.Model):
         employees_without_allocation = self.env['hr.employee']
         zero_duration_employees = self.env['hr.employee']
         for leave in self:
-            if float_is_zero(leave.number_of_hours, precision_digits=3) and self.env.context.get('multi_leave_request', False):
+            if float_is_zero(leave.number_of_hours, precision_digits=3) and self.env.context.get('multi_leave_request', False) \
+                    and leave.work_entry_type_id.count_as == 'absence':
                 zero_duration_employees |= leave.employee_id
             sorted_leaves[leave.work_entry_type_id, leave.date_from.date()] |= leave
         for (work_entry_type, date_from), leaves in sorted_leaves.items():
@@ -1403,6 +1425,11 @@ class HrLeave(models.Model):
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
                 'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', invalid_employee_names),
+            })
+        if zero_duration_employees:
+            self.env.user._bus_send('simple_notification', {
+                'type': 'danger',
+                'message': self.env._('The time off is outside the working schedule of the employee'),
             })
         return holidays
 
@@ -2164,11 +2191,17 @@ class HrLeave(models.Model):
         If there are no attendances on the exact days of the request, return
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
-        if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time":
+        if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time" \
+                and self.request_hour_to > self.request_hour_from:
+            # explicit hours given
             hour_from, hour_to = self.request_hour_from, self.request_hour_to
         else:
             hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)
             _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period, count_non_working_days)
+            if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time" \
+                    and hour_to - hour_from >= 24:
+                half_day = HOURS_PER_DAY / 2
+                hour_from, hour_to = 12.0 - half_day, 12.0 + half_day
 
         return (hour_from, hour_to)
 

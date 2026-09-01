@@ -12,6 +12,7 @@ from . import test_accrual_allocations
 from . import test_change_department
 from . import test_calendar_reschedule
 from . import test_calendar_resize_tour
+from . import test_leave_outside_schedule
 from . import test_leave_requests
 from . import test_out_of_office
 from . import test_company_leave
