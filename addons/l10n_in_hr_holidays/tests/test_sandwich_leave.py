@@ -747,3 +747,22 @@ class TestSandwichLeave(TransactionCase):
         })
         self.assertFalse(holiday_leave_without_ph.l10n_in_contains_sandwich_leaves)
         self.assertEqual(holiday_leave_without_ph.number_of_days, 1)
+
+    @freeze_time('2025-01-15')
+    def test_sandwich_leave_flexible_employee(self):
+        """
+            Flexible employee: no personal calendar.
+            -- working days: all except 29th
+            -- non-working day: 29th January (public holiday)
+        """
+        self.indian_company.resource_calendar_id = False
+        self.demo_employee.resource_calendar_id = False
+        holiday_leave = self.env['hr.leave'].create({
+            'name': 'Test Leave',
+            'employee_id': self.demo_employee.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2025-01-25",
+            'request_date_to': "2025-01-30",
+        })
+        self.assertTrue(holiday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(holiday_leave.number_of_days, 6)
