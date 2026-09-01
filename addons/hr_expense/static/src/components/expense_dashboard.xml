@@ -5,9 +5,19 @@
             <t t-foreach="Object.entries(this.state.expenses)" t-as="expense" t-key="expense[0]">
                 <t t-set="name" t-value="expense[0]"/>
                 <t t-set="data" t-value="expense[1]"/>
+<<<<<<< 3c7ca86d1719187c6bfe60cefee85bfc59a751cb
                 <div t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column p-3 border-bottom text-center cursor-pointer"
                      t-att-data-tooltip="data['tooltip']" t-on-click="() => this.applyFilter(name)">
                     <span t-out="this.renderMonetaryField(data['amount'], data['currency'])" class="h2 m-0 text-primary"/>
+||||||| a5424bff9b477b1350456ddd91582399eeaa1fd6
+                <div t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column p-3 border-bottom text-center cursor-pointer"
+                     t-att-data-tooltip="data['tooltip']" t-on-click="() => this.applyFilter(name)">
+                    <span t-out="renderMonetaryField(data['amount'], data['currency'])" class="h2 m-0 text-primary"/>
+=======
+                <div t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column p-3 border-bottom text-center"
+                     t-att-data-tooltip="data['tooltip']">
+                    <span t-out="renderMonetaryField(data['amount'], data['currency'])" class="h2 m-0 text-primary"/>
+>>>>>>> 3c9ed13042232ce07bf40bfd94e8ee177618559e
                     <b class="mx-2" t-out="data['description']"/>
                 </div>
                 <div t-if="name !== 'approved'" t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column p-3 border-bottom text-center">
