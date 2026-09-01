@@ -95,9 +95,7 @@ export class PartnerAutoCompleteCharField extends CharField {
             }
         }
 
-        if (this.props.setDirty) {
-            this.props.setDirty(false);
-        }
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
     }
 }
 
