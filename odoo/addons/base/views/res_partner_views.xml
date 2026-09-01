@@ -48,7 +48,7 @@
                         <field name="parent_id"
                             widget="res_partner_many2one"
                             placeholder="Company Name..."
-                            domain="[('parent_id', '=', False)]" context="{'show_vat': True, 'default_user_id': user_id}"/>
+                            domain="[('parent_id', '=', False)]" context="{'show_identifier': True, 'default_user_id': user_id}"/>
                     </div>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director"/>
@@ -104,7 +104,7 @@
                 <form string="Partners">
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
                     Potential duplicates:
-                    <field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>
+                    <field name="same_vat_partner_id" context="{'show_address': False, 'show_identifier': False}"/>
                     (Same <field name="vat_label"/>)
                 </div>
                 <sheet>

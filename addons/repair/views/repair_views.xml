@@ -114,7 +114,7 @@
                         <group>
                             <field name="allowed_lot_ids" invisible="1"/>
                             <field name="repair_request" invisible="not sale_order_line_id"/>
-                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" readonly="sale_order_id"/>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_identifier': True}" readonly="sale_order_id"/>
                             <field name="product_id" readonly="state in ['cancel', 'done']"/>
                             <label for="lot_id" invisible="tracking not in ['serial', 'lot']"/>
                             <div class="o_row" invisible="tracking not in ['serial', 'lot']">
