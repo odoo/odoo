@@ -44,6 +44,162 @@ patch(OrderSummary.prototype, {
      * printed code and amount. The code is written on `gift_card_vals` and passed to the
      * server, which creates the real card from it when the order is saved.
      */
+<<<<<<< 3b5ffdc4184b25128fa8204bccffcce82cad345e
+||||||| df947972f49099b7cd5638f4d277f36d19339b2c
+    _setValue(val) {
+        const selectedLine = this.currentOrder.getSelectedOrderline();
+        if (!selectedLine) {
+            return;
+        }
+        if (selectedLine.is_reward_line && val === "remove") {
+            this.currentOrder.uiState.disabledRewards.add(selectedLine.reward_id.id);
+            const coupon = selectedLine.coupon_id;
+            if (
+                coupon &&
+                coupon.id > 0 &&
+                this.currentOrder._code_activated_coupon_ids.find((c) => c.code === coupon.code)
+            ) {
+                coupon.delete();
+            }
+        }
+        if (
+            !selectedLine ||
+            !selectedLine.is_reward_line ||
+            (selectedLine.is_reward_line && ["", "remove"].includes(val))
+        ) {
+            super._setValue(val);
+        }
+        if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
+            this.pos.updateRewards();
+        }
+    },
+
+    async _showDecreaseQuantityPopup() {
+        const result = await super._showDecreaseQuantityPopup();
+        if (result) {
+            this.pos.updateRewards();
+        }
+    },
+
+    /**
+     * Updates the order line with the gift card information:
+     * 1. Reduce the quantity if greater than one, otherwise remove the order line.
+     * 2. Add a new order line with updated gift card code and points, removing any existing related couponPointChanges.
+     */
+    async _updateGiftCardOrderline(code, points) {
+        let selectedLine = this.currentOrder.getSelectedOrderline();
+        const product = selectedLine.product_id;
+
+        if (selectedLine.getQuantity() > 1) {
+            selectedLine.setQuantity(selectedLine.getQuantity() - 1);
+        } else {
+            this.currentOrder.removeOrderline(selectedLine);
+        }
+
+        const program = this.pos.models["loyalty.program"].find(
+            (p) => p.program_type === "gift_card"
+        );
+        const existingCouponIds = Object.keys(this.currentOrder.uiState.couponPointChanges).filter(
+            (key) => {
+                const change = this.currentOrder.uiState.couponPointChanges[key];
+                return (
+                    change.points === product.lst_price &&
+                    change.program_id === program.id &&
+                    change.product_id === product.id &&
+                    !change.manual
+                );
+            }
+        );
+        if (existingCouponIds.length) {
+            const couponId = existingCouponIds.shift();
+            delete this.currentOrder.uiState.couponPointChanges[couponId];
+        }
+
+        await this.pos.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { price_unit: points }
+        );
+        selectedLine = this.currentOrder.getSelectedOrderline();
+        selectedLine.gift_code = code;
+    },
+
+=======
+    _setValue(val) {
+        const selectedLine = this.currentOrder.getSelectedOrderline();
+        if (!selectedLine) {
+            return;
+        }
+        if (selectedLine.is_reward_line && val === "remove") {
+            this.currentOrder.uiState.disabledRewards.add(selectedLine.reward_id.id);
+            const coupon = selectedLine.coupon_id;
+            if (
+                coupon &&
+                coupon.id > 0 &&
+                this.currentOrder._code_activated_coupon_ids.find((c) => c.code === coupon.code)
+            ) {
+                coupon.delete();
+            }
+        }
+        if (
+            !selectedLine ||
+            !selectedLine.is_reward_line ||
+            (selectedLine.is_reward_line && ["", "remove"].includes(val))
+        ) {
+            super._setValue(val);
+        }
+        if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
+            this.pos.updateRewards();
+        }
+    },
+
+    async _showDecreaseQuantityPopup() {
+        const result = await super._showDecreaseQuantityPopup();
+        if (result) {
+            this.pos.updateRewards();
+        }
+    },
+
+    /**
+     * Updates the order line with the gift card information:
+     * 1. Reduce the quantity if greater than one, otherwise remove the order line.
+     * 2. Add a new order line with updated gift card code and points, removing any existing related couponPointChanges.
+     */
+    async _updateGiftCardOrderline(code, points) {
+        let selectedLine = this.currentOrder.getSelectedOrderline();
+        const product = selectedLine.product_id;
+        const program = selectedLine._e_wallet_program_id;
+
+        if (selectedLine.getQuantity() > 1) {
+            selectedLine.setQuantity(selectedLine.getQuantity() - 1);
+        } else {
+            this.currentOrder.removeOrderline(selectedLine);
+        }
+
+        const existingCouponIds = Object.keys(this.currentOrder.uiState.couponPointChanges).filter(
+            (key) => {
+                const change = this.currentOrder.uiState.couponPointChanges[key];
+                return (
+                    change.points === product.lst_price &&
+                    change.program_id === program.id &&
+                    change.product_id === product.id &&
+                    !change.manual
+                );
+            }
+        );
+        if (existingCouponIds.length) {
+            const couponId = existingCouponIds.shift();
+            delete this.currentOrder.uiState.couponPointChanges[couponId];
+        }
+
+        await this.pos.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { price_unit: points, eWalletGiftCardProgram: program }
+        );
+        selectedLine = this.currentOrder.getSelectedOrderline();
+        selectedLine.gift_code = code;
+    },
+
+>>>>>>> 5c7cedf731ae735be0ce2fdd1edd306f3230697c
     manageGiftCard(line) {
         this.dialog.add(ManageGiftCardPopup, {
             title: _t("Sell/Manage physical gift card"),

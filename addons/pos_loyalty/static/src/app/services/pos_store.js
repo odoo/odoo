@@ -164,6 +164,7 @@ patch(PosStore.prototype, {
                     .filter((p) => ["gift_card", "ewallet"].includes(p.program_type))
             ),
         ];
+<<<<<<< 3b5ffdc4184b25128fa8204bccffcce82cad345e
         if (programs.length === 0) {
             return null;
         }
@@ -179,6 +180,41 @@ patch(PosStore.prototype, {
                     label: program.name,
                 })),
             });
+||||||| df947972f49099b7cd5638f4d277f36d19339b2c
+        let selectedProgram = null;
+        if (linkedPrograms.length > 1) {
+            selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Select program"),
+                list: linkedPrograms.map((program) => ({
+                    id: program.id,
+                    item: program,
+                    label: program.name,
+                })),
+            });
+            if (!selectedProgram) {
+                return;
+            }
+        } else if (linkedPrograms.length === 1) {
+            selectedProgram = linkedPrograms[0];
+=======
+        let selectedProgram = opt.eWalletGiftCardProgram || null;
+        if (!selectedProgram) {
+            if (linkedPrograms.length > 1) {
+                selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
+                    title: _t("Select program"),
+                    list: linkedPrograms.map((program) => ({
+                        id: program.id,
+                        item: program,
+                        label: program.name,
+                    })),
+                });
+                if (!selectedProgram) {
+                    return;
+                }
+            } else if (linkedPrograms.length === 1) {
+                selectedProgram = linkedPrograms[0];
+            }
+>>>>>>> 5c7cedf731ae735be0ce2fdd1edd306f3230697c
         }
         if (!program) {
             return false;

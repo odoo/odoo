@@ -16,7 +16,45 @@ test("manageGiftCard writes the code, amount and expiration date onto the line",
     // No active programs: keep setUnitPrice's recompute from adding reward lines.
     deactivateAllProgramsExcept(store, []);
 
+<<<<<<< 3b5ffdc4184b25128fa8204bccffcce82cad345e
     const line = await addProductLineToOrder(store, order);
+||||||| df947972f49099b7cd5638f4d277f36d19339b2c
+    const product = models["product.product"].get(1);
+    // Program #3 - loyalty program for gift cards
+    const program = models["loyalty.program"].get(3);
+    // Card #3 - gift card which program type is gift_card
+    const card = models["loyalty.card"].get(3);
+
+    await addProductLineToOrder(store, order);
+
+    const points = product.lst_price;
+
+    order.uiState.couponPointChanges[card.id] = {
+        coupon_id: card.id,
+        program_id: program.id,
+        product_id: product.id,
+        points: points,
+        manual: false,
+    };
+=======
+    const product = models["product.product"].get(1);
+    // Program #3 - loyalty program for gift cards
+    const program = models["loyalty.program"].get(3);
+    // Card #3 - gift card which program type is gift_card
+    const card = models["loyalty.card"].get(3);
+
+    await addProductLineToOrder(store, order, {}, { eWalletGiftCardProgram: program });
+
+    const points = product.lst_price;
+
+    order.uiState.couponPointChanges[card.id] = {
+        coupon_id: card.id,
+        program_id: program.id,
+        product_id: product.id,
+        points: points,
+        manual: false,
+    };
+>>>>>>> 5c7cedf731ae735be0ce2fdd1edd306f3230697c
 
     const component = await mountWithCleanup(OrderSummary);
 

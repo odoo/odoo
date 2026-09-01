@@ -6,7 +6,7 @@ import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { debounce } from "@bus/workers/bus_worker_utils";
+import { useDebounced } from "@web/core/utils/timing";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
@@ -40,7 +40,17 @@ export class ManageGiftCardPopup extends Component {
             amountError: false,
             expirationDate: luxon.DateTime.now().plus({ year: 1 }),
         });
+<<<<<<< 3b5ffdc4184b25128fa8204bccffcce82cad345e
         this.batchedGiftcardCodeKeydown = debounce(this.checkGiftCard.bind(this), 500);
+||||||| df947972f49099b7cd5638f4d277f36d19339b2c
+        this.inputRef = useRef("input");
+        this.amountInputRef = useRef("amountInput");
+        this.batchedGiftcardCodeKeydown = debounce(this.checkGiftCard.bind(this), 500);
+=======
+        this.inputRef = useRef("input");
+        this.amountInputRef = useRef("amountInput");
+        this.batchedGiftcardCodeKeydown = useDebounced(this.checkGiftCard, 500);
+>>>>>>> 5c7cedf731ae735be0ce2fdd1edd306f3230697c
         onMounted(this.onMounted);
     }
 
