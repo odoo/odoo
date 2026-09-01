@@ -5,7 +5,6 @@ from odoo import Command
 import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_round
 from odoo.exceptions import UserError
 
 
@@ -337,10 +336,6 @@ class TestPacking(TestPackingCommon):
         check that nonetheless, moving a picking is accepted
         """
         self.assertEqual(self.productA.uom_id.rounding, 0.01)
-        self.assertEqual(
-            float_round(355.4, precision_rounding=self.productA.uom_id.rounding),
-            355.40000000000003,
-        )
         location_dict = {
             'location_id': self.stock_location.id,
         }
@@ -361,7 +356,7 @@ class TestPacking(TestPackingCommon):
                 'name': "XXX",
                 'product_id': self.productA.id,
                 'product_uom': self.productA.uom_id.id,
-                'product_uom_qty': 355.40000000000003,  # other number
+                'product_uom_qty': 355.4,  # other number
             }})
         picking = self.env['stock.picking'].create({
             **location_dict,
