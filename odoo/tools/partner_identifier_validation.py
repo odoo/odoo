@@ -77,3 +77,10 @@ def validate_email(value):
     if not single_email_re.match(value):
         raise InvalidFormat()
     return value
+
+
+def it_cuc_validate(value):
+    value = value.strip()
+    if len(value) != 8 or not value.isalnum():
+        raise InvalidFormat()
+    return value.upper()
