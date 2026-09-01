@@ -70,6 +70,23 @@
 }
 
 .o_cp_searchview {
+    // The group owns the pill: children inherit its radius, input-group squares
+    // the inner corners, so whichever element ends the group closes the pill.
+    &.input-group.rounded-pill > * {
+        border-radius: inherit;
+        padding-inline: $spacer;
+
+        &:not(:first-child) {
+            border-inline-start: 0;
+            padding-inline-start: 0;
+        }
+
+        &:not(:last-child) {
+            border-inline-end: 0;
+            padding-inline-end: 0;
+        }
+    }
+
     &:has(.o_searchview_dropdown_toggler.show) {
         .o_searchview {
             border-color: $input-focus-border-color;
