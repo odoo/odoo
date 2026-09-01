@@ -304,7 +304,7 @@ class ProductProduct(models.Model):
         product_ids_lot_valuated = set()
         date = self.env.context.get('valuation_date') or fields.Datetime.now()
         for product in self:
-            if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
+            if product.standard_price == old_price.get(product):
                 continue
 
             if product.lot_valuated:
@@ -360,6 +360,9 @@ class ProductProduct(models.Model):
         last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
         if date:
             last_in_domain &= Domain([('date', '<=', date)])
+        last_in_lot = self.env.context.get('last_in_lot')
+        if last_in_lot:
+            last_in_domain &= Domain([('move_line_ids.lot_id', '=', last_in_lot.id)])
         last_in = self.env['stock.move'].search(last_in_domain, order='date desc, id desc', limit=1)
         return last_in
 
@@ -552,19 +555,23 @@ class ProductProduct(models.Model):
         if self.uom_id.compare(quantity, 0) <= 0:
             std_price = lot.standard_price if lot else self.standard_price
             if at_date:
-                last_in = self._get_last_in(at_date)
+                last_in = self.with_context(last_in_lot=lot)._get_last_in(at_date)
                 return quantity * (last_in._get_price_unit() if last_in else std_price)
             return quantity * std_price
-        external_location = location and location.is_valued_external
 
         fifo_cost = 0
         fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
+        product_value = self._get_last_product_value(date=at_date, lot=lot).get(self)
         last_move = False
         # Going up to get the quantity in the argument
         while quantity > 0 and fifo_stack:
             move = fifo_stack.pop(0)
             last_move = move
-            move_value = move.value
+            # There is a price change after this move. The remaining quantity will be valued with the new price
+            if product_value and product_value.date >= move.date:
+                move_value = move._get_valued_qty() * product_value.value
+            else:
+                move_value = move.value
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move

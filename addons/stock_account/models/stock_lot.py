@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 
 
 class StockLot(models.Model):
@@ -85,7 +86,17 @@ class StockLot(models.Model):
             elif lot.product_id.cost_method == 'average':
                 lot.standard_price = lot.product_id._run_avco(lot=lot)[0]
             else:
-                lot.standard_price = lot.product_id._run_fifo_batch(lot=lot)[0].get(lot.product_id.id, lot.standard_price)
+                last_in_domain = Domain(
+                    [
+                        ('is_in', '=', True),
+                        ('product_id', '=', lot.product_id.id),
+                        ('move_line_ids.lot_id', 'in', lot.id),
+                    ],
+                )
+                last_in = self.env['stock.move'].search(last_in_domain, order='date desc, id desc', limit=1)
+                if last_in:
+                    last_in_price_unit = last_in._get_price_unit()
+                    lot.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
 
     def _change_standard_price(self, old_price):
         """Helper to create the stock valuation layers and the account moves
