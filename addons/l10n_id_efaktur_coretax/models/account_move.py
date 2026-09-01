@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.tools import float_is_zero
 
 COUNTRY_CODE_MAP = {
     "BD": "BGD", "BE": "BEL", "BF": "BFA", "BG": "BGR", "BA": "BIH", "BB": "BRB", "WF": "WLF", "BL": "BLM", "BM": "BMU",
@@ -200,12 +201,12 @@ class AccountMove(models.Model):
             zero_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_0", raise_if_not_found=False)
             exempt_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_exempt", raise_if_not_found=False)
             stlg_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_stlg", raise_if_not_found=False)
-            default_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("default_tax_group", raise_if_not_found=False)
+            not_collected_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_not_collected", raise_if_not_found=False)
             vat_collector_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_vat_collector", raise_if_not_found=False)
             product_lines = move.line_ids.filtered(lambda line: line.display_type == 'product')
             all_taxes = product_lines.mapped('tax_ids')
             tax_groups = set(all_taxes.mapped('tax_group_id'))
-            ppn_groups = {non_luxury_group, luxury_group, zero_group, exempt_group, default_group, vat_collector_group}
+            ppn_groups = {non_luxury_group, luxury_group, zero_group, exempt_group, not_collected_group, vat_collector_group}
             ppn_groups.discard(False)
             ppn_tax_groups = [g for g in tax_groups if g in ppn_groups]
             stlg_tax_groups = [g for g in tax_groups if g == stlg_group]
@@ -224,36 +225,37 @@ class AccountMove(models.Model):
                     line_tax_groups = set(line.tax_ids.mapped('tax_group_id'))
                     if luxury_group and non_luxury_group and {luxury_group, non_luxury_group}.issubset(line_tax_groups):
                         err_messages.append(_(
-                            "Invoice %(inv)s: line '%(line)s' contains both Luxury-Goods and Non-Luxury-Goods taxes.",
-                            inv=move.name or '', line=line.product_id.display_name or '')
+                            "Invoice %(inv)s: line '%(line)s' has taxes from both the %(vat_group)s and %(other_value_vat_group)s tax groups.",
+                            inv=move.name or '', line=line.product_id.display_name or '',
+                            vat_group=luxury_group.name, other_value_vat_group=non_luxury_group.name)
                         )
                     if non_luxury_group and stlg_group and {non_luxury_group, stlg_group}.issubset(line_tax_groups):
                         err_messages.append(_(
-                            "Invoice %(inv)s: line '%(line)s' contains both Non-Luxury-Goods and STLG taxes.",
-                            inv=move.name or '', line=line.product_id.display_name or '')
+                            "Invoice %(inv)s: line '%(line)s' has taxes from both the %(other_value_vat_group)s and %(stlg_group)s tax groups.",
+                            inv=move.name or '', line=line.product_id.display_name or '',
+                            other_value_vat_group=non_luxury_group.name, stlg_group=stlg_group.name)
                         )
                     if stlg_group and stlg_group in line_tax_groups:
                         if not (luxury_group and luxury_group in line_tax_groups):
                             err_messages.append(_(
-                                "Invoice %(inv)s: line '%(line)s' has STLG tax but missing the required Luxury-Goods tax.",
-                                inv=move.name or '', line=line.product_id.display_name or '')
+                                "Invoice %(inv)s: line '%(line)s' has a tax from the %(stlg_group)s tax group but none from the %(vat_group)s tax group.",
+                                inv=move.name or '', line=line.product_id.display_name or '',
+                                stlg_group=stlg_group.name, vat_group=luxury_group.name if luxury_group else _("VAT"))
                             )
                     for tax in line.tax_ids:
-                        if ((hasattr(tax, 'amount') and float(tax.amount) == 0.0) or (tax.tax_group_id in {zero_group, exempt_group})):
+                        if float_is_zero(tax.amount, precision_digits=4) or tax.tax_group_id in {zero_group, exempt_group, not_collected_group}:
                             err_messages.append(_(
-                                "Invoice %(inv)s: transaction code %(kode)s does not allow 0%% (Zero-rated or Exempt) taxes.",
+                                "Invoice %(inv)s: transaction code %(kode)s does not allow 0%% (Zero-Rated, Exempted or Not Collected) taxes.",
                                 inv=move.name or '', kode=kode)
                             )
 
             # Must-be-zero codes (07-08)
             elif kode in must_be_zero_codes:
-                for line in product_lines:
-                    for tax in line.tax_ids:
-                        if hasattr(tax, 'amount') and float(tax.amount) != 0.0:
-                            err_messages.append(_(
-                                "Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%.",
-                                inv=move.name or '', kode=kode)
-                            )
+                if not move.currency_id.is_zero(move.amount_tax):
+                    err_messages.append(_(
+                        "Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%.",
+                        inv=move.name or '', kode=kode)
+                    )
         return err_messages
 
     def download_efaktur(self):

@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_id_tax_report_spt_masa_ppn" model="account.report">
+            <field name="name">SPT Masa PPN</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="country_id" ref="base.id"/>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="l10n_id_tax_report_column_ppn_base" model="account.report.column">
+                    <field name="name">Selling Price/Reimbursement/Import Value/Tax Base</field>
+                    <field name="name@id">Harga Jual/Pengganti/Nilai Impor/DPP</field>
+                    <field name="expression_label">ppn_base</field>
+                    <field name="figure_type">monetary</field>
+                    <field name="sequence">1</field>
+                </record>
+                <record id="l10n_id_tax_report_column_ppn_dpp" model="account.report.column">
+                    <field name="name">Other Tax Base/Tax Base</field>
+                    <field name="name@id">DPP Nilai Lain/DPP</field>
+                    <field name="expression_label">ppn_dpp</field>
+                    <field name="figure_type">monetary</field>
+                    <field name="sequence">2</field>
+                </record>
+                <record id="l10n_id_tax_report_column_ppn_ppn" model="account.report.column">
+                    <field name="name">VAT</field>
+                    <field name="name@id">PPN</field>
+                    <field name="expression_label">ppn_ppn</field>
+                    <field name="figure_type">monetary</field>
+                    <field name="sequence">3</field>
+                </record>
+                <record id="l10n_id_tax_report_column_ppn_ppnbm" model="account.report.column">
+                    <field name="name">Luxury Goods Sales Tax</field>
+                    <field name="name@id">PPnBM</field>
+                    <field name="expression_label">ppn_ppnbm</field>
+                    <field name="figure_type">monetary</field>
+                    <field name="sequence">4</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="l10n_id_tax_report_line_i" model="account.report.line">
+                    <field name="name">I. Supply of Goods and Services</field>
+                    <field name="name@id">I. Penyerahan Barang dan Jasa</field>
+                    <field name="code">ID_I</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="l10n_id_tax_report_line_ia" model="account.report.line">
+                            <field name="name">A. Supply of Taxable Goods/Services Subject to VAT</field>
+                            <field name="name@id">A. Penyerahan BPK/JKP yang terutang PPN</field>
+                            <field name="code">ID_IA</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="children_ids">
+                                <record id="l10n_id_tax_report_line_ia1" model="account.report.line">
+                                    <field name="name">1.  Export of Taxable Goods/Intangible Taxable Goods/Taxable Services</field>
+                                    <field name="name@id">1. Ekspor BKP/BKP Tidak Berwujud/JKP</field>
+                                    <field name="code">ID_IA1</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia1_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">-spt_export</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia2" model="account.report.line">
+                                    <field name="name">2.  Deliveries of which VAT or VAT and Sales Tax on Luxury Goods must be self-collected with Other Value Tax Base or Certain Amounts (with Tax Invoice Code 04 and 05)</field>
+                                    <field name="name@id">2. Penyerahan yang PPN atau PPN dan PPnBM-nya harus dipungut sendiri dengan DPP Nilai Lain atau Besaran Tertentu (dengan Faktur Pajak Kode 04 dan 05)</field>
+                                    <field name="code">ID_IA2</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia2_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia2_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA2.dpp_nilai_lain*11/12) + (ID_IA2.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia2_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia2_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia2_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia2_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia3" model="account.report.line">
+                                    <field name="name">3.  Deliveries of which VAT or VAT and Sales Tax on Luxury Goods must be collected directly from tourists in accordance with Article 16E of the VAT Law (with Tax Invoice Code 06)</field>
+                                    <field name="name@id">3. Penyerahan yang PPN atau PPN dan PPnBM-nya harus dipungut sendiri kepada turis sesuai dengan Pasal 16E UU PPN (dengan Faktur Pajak Kode 06)</field>
+                                    <field name="code">ID_IA3</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia3_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', '=', '06')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia3_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA3.dpp_nilai_lain*11/12) + (ID_IA3.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia3_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['06'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia3_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['06'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia3_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', '=', '06')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia3_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', '=', '06')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia4" model="account.report.line">
+                                    <field name="name">4.  Other supplies for which VAT or VAT and Sales Tax on Luxury Goods must be self-collected (with Tax Invoice Code 01, 09 and 10)</field>
+                                    <field name="name@id">4. Penyerahan yang PPN atau PPN dan PPnBM-nya harus dipungut sendiri lainnya (dengan Faktur Pajak Kode 01, 09 dan 10)</field>
+                                    <field name="code">ID_IA4</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia4_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', 'in', ['01', '09', '10'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia4_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['01', '09', '10'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia4_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['01', '09', '10'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia5" model="account.report.line">
+                                    <field name="name">5.  Deliveries for which VAT or VAT and Sales Tax on Luxury Goods must be self-collected with aggregated Tax Invoices</field>
+                                    <field name="name@id">5. Penyerahan yang PPN atau PPN dan PPnBM-nya harus dipungut sendiri dengan Faktur Pajak yang dilaporkan secara digunggung</field>
+                                    <field name="code">ID_IA5</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia5_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', 'not in', ['spt_sale_facility'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia5_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA5.dpp_nilai_lain*11/12) + (ID_IA5.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia5_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', 'not in', ['spt_sale_facility'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia5_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', '=', False)]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia5_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', '=', False)]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia5_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', 'not in', ['spt_sale_facility'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia6" model="account.report.line">
+                                    <field name="name">6.  Deliveries of which VAT or VAT and Sales Tax on Luxury Goods must be collected by the VAT Collector (with Tax Invoice Code 02 and 03)</field>
+                                    <field name="name@id">6. Penyerahan yang PPN atau PPN dan PPnBM-nya harus dipungut oleh Pemungut PPN (dengan Faktur Pajak Kode 02 dan 03)</field>
+                                    <field name="code">ID_IA6</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia6_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('move_id.move_type', '=', 'out_invoice')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia6_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA6.dpp_nilai_lain*11/12) + (ID_IA6.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia6_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('move_id.move_type', '=', 'out_invoice')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia6_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03'])]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia6_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('move_id.move_type', '=', 'out_invoice')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia6_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('move_id.move_type', '=', 'out_invoice')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia7" model="account.report.line">
+                                    <field name="name">7.  Deliveries receiving VAT or Sales Tax on Luxury Goods Not Collected facilities (with Tax Invoice Code 07)</field>
+                                    <field name="name@id">7. Penyerahan yang mendapat fasilitas PPN atau PPnBM Tidak Dipungut (dengan Faktur Pajak Kode 07)</field>
+                                    <field name="code">ID_IA7</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia7_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', '=', '07')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia7_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA7.dpp_nilai_lain*11/12) + (ID_IA7.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia7_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', '=', '07')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia7_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', '=', '07')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia7_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', '=', '07')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia7_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', '=', '07')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia8" model="account.report.line">
+                                    <field name="name">8.  Deliveries receiving VAT or Luxury Goods Sales Tax Exemption facility (with Tax Invoice Code 08)</field>
+                                    <field name="name@id">8. Penyerahan yang mendapat fasilitas PPN atau PPnBM Dibebaskan (dengan Faktur Pajak Kode 08)</field>
+                                    <field name="code">ID_IA8</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia8_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', '=', '08')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia8_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA8.dpp_nilai_lain*11/12) + (ID_IA8.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia8_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', '=', '08')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia8_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', '=', '08')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia8_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', '=', '08')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia8_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', '=', '08')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_ia9" model="account.report.line">
+                                    <field name="name">9.  Deliveries that receive VAT or Luxury Goods Sales Tax (PPnBM) facilities with Tax Invoices reported in aggregate</field>
+                                    <field name="name@id">9. Penyerahan yang mendapat fasilitas PPN atau PPnBM dengan Faktur Pajak yang dilaporkan secara digunggung</field>
+                                    <field name="code">ID_IA9</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_ia9_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', 'in', ['spt_sale_dpp', 'spt_sale_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', '=', 'spt_sale_facility')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia9_ppn_dpp" model="account.report.expression">
+                                            <field name="label">ppn_dpp</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">(ID_IA9.dpp_nilai_lain*11/12) + (ID_IA9.dpp_harga_jual)</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia9_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', '=', 'spt_sale_facility')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia9_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppnbm'), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', '=', 'spt_sale_facility')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia9_dpp_harga_jual" model="account.report.expression">
+                                            <field name="label">dpp_harga_jual</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp'), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', '=', 'spt_sale_facility')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_ia9_dpp_nilai_lain" model="account.report.expression">
+                                            <field name="label">dpp_nilai_lain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula">[('tax_tag_ids', '=', 'spt_sale_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', '=', False), ('tax_tag_ids', '=', 'spt_sale_facility')]</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_sumia" model="account.report.line">
+                                    <field name="name">Total (I.A.1 + I.A.2 + I.A.3 + I.A.4 + I.A.5 + I.A.6 + I.A.7 + I.A.8 + I.A.9)</field>
+                                    <field name="name@id">Jumlah (I.A.1 + I.A.2 + I.A.3 + I.A.4 + I.A.5 + I.A.6 + I.A.7 + I.A.8 + I.A.9)</field>
+                                    <field name="code">ID_SUMIA</field>
+                                    <field name="hierarchy_level">5</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_id_tax_report_line_sumia_ppn_base" model="account.report.expression">
+                                            <field name="label">ppn_base</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">ID_IA1.ppn_base+ID_IA2.ppn_base+ID_IA3.ppn_base+ID_IA4.ppn_base+ID_IA5.ppn_base+ID_IA6.ppn_base+ID_IA7.ppn_base+ID_IA8.ppn_base+ID_IA9.ppn_base</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_sumia_ppn_ppn" model="account.report.expression">
+                                            <field name="label">ppn_ppn</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">ID_IA2.ppn_ppn+ID_IA3.ppn_ppn+ID_IA4.ppn_ppn+ID_IA5.ppn_ppn+ID_IA6.ppn_ppn+ID_IA7.ppn_ppn+ID_IA8.ppn_ppn+ID_IA9.ppn_ppn</field>
+                                        </record>
+                                        <record id="l10n_id_tax_report_line_sumia_ppn_ppnbm" model="account.report.expression">
+                                            <field name="label">ppn_ppnbm</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">ID_IA2.ppn_ppnbm+ID_IA3.ppn_ppnbm+ID_IA4.ppn_ppnbm+ID_IA5.ppn_ppnbm+ID_IA6.ppn_ppnbm+ID_IA7.ppn_ppnbm+ID_IA8.ppn_ppnbm+ID_IA9.ppn_ppnbm</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_ib" model="account.report.line">
+                            <field name="name">B. Supply of Goods/Services Not Subject to VAT</field>
+                            <field name="name@id">B. Penyerahan barang/jasa yang tidak terutang PPN</field>
+                            <field name="code">ID_IB</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_ib_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_ids', '=', False), ('account_id.account_type', '=', 'income')]</field>
+                                    <field name="subformula">-sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_ic" model="account.report.line">
+                            <field name="name">C. Total supply of goods and services (A+B)</field>
+                            <field name="name@id">C. Jumlah seluruh penyerahan barang dan jasa (A+B)</field>
+                            <field name="code">ID_IC</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_ic_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_SUMIA.ppn_base + ID_IB.ppn_base</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_id_tax_report_line_ii" model="account.report.line">
+                    <field name="name">II. Acquisition of Goods and Services</field>
+                    <field name="name@id">II. Peroleh Barang dan Jasa</field>
+                    <field name="code">ID_II</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="l10n_id_tax_report_line_iia" model="account.report.line">
+                            <field name="name">A. Import of Taxable Goods, Utilization of Intangible Taxable Goods and/or Taxable Services from Outside the Customs Area Within the Customs Area Whose Input Tax is Creditable</field>
+                            <field name="name@id">A. Impor BKP, Pemanfaatan BKP Tidak Berwujud dan/atau JKP dari luar Daerah Pabean di dalam Daerah Pabean yang Pajak Masukannya dapat dikreditkan</field>
+                            <field name="code">ID_IIA</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iia_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">spt_import</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iia_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">spt_import_ppn</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iia_ppn_ppnbm" model="account.report.expression">
+                                    <field name="label">ppn_ppnbm</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">spt_import_ppnbm</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iib" model="account.report.line">
+                            <field name="name">B. Domestic acquisition of Taxable Goods/Services with Tax Base of Other Value or Certain Amount whose Input Tax can be credited (with Tax Invoice Code 04 and 05)</field>
+                            <field name="name@id">B. Perolehan BKP/JKP dari dalam negeri dengan DPP Nilai Lain atau Besaran Tertentu yang Pajak Masukannya dapat dikreditkan (dengan Faktur Pajak Kode 04 dan 05)</field>
+                            <field name="code">ID_IIB</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iib_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', 'in', ['spt_purchase_dpp', 'spt_purchase_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iib_ppn_dpp" model="account.report.expression">
+                                    <field name="label">ppn_dpp</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">(ID_IIB.dpp_nilai_lain*11/12)+(ID_IIB.dpp_harga_jual)</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iib_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iib_ppn_ppnbm" model="account.report.expression">
+                                    <field name="label">ppn_ppnbm</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iib_dpp_harga_jual" model="account.report.expression">
+                                    <field name="label">dpp_harga_jual</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_dpp'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iib_dpp_nilai_lain" model="account.report.expression">
+                                    <field name="label">dpp_nilai_lain</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', 'in', ['04', '05']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iic" model="account.report.line">
+                            <field name="name">C. Domestic acquisition of Taxable Goods/Services other than with Other Value Tax Base whose Input Tax is creditable (with Tax Invoice Code 01, 09, and 10)</field>
+                            <field name="name@id">C. Perolehan BKP/JKP dari dalam negeri selain dengan DPP Nilai Lain yang Pajak Masukannya dapat dikreditkan (dengan Faktur Pajak Kode 01, 09, dan 10)</field>
+                            <field name="code">ID_IIC</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iic_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', 'in', ['spt_purchase_dpp', 'spt_purchase_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', 'in', ['01', '09', '10']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iic_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['01', '09', '10'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iic_ppn_ppnbm" model="account.report.expression">
+                                    <field name="label">ppn_ppnbm</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['01', '09', '10'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iid" model="account.report.line">
+                            <field name="name">D. Acquisition of Domestic Taxable Goods/Services as VAT Collector Whose Input Tax Can Be Credited (with Tax Invoice Codes 02 and 03)</field>
+                            <field name="name@id">D. Perolehan BKP/JKP dari dalam negeri sebagai Pemungut PPN yang Pajak Masukannya dapat dikreditkan (dengan Faktur Pajak Kode 02 dan 03)</field>
+                            <field name="code">ID_IID</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iid_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', 'in', ['spt_purchase_dpp', 'spt_purchase_dpp_nilai_lain']), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iid_ppn_dpp" model="account.report.expression">
+                                    <field name="label">ppn_dpp</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">(ID_IID.dpp_nilai_lain*11/12)+(ID_IID.dpp_harga_jual)</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iid_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iid_ppn_ppnbm" model="account.report.expression">
+                                    <field name="label">ppn_ppnbm</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iid_dpp_harga_jual" model="account.report.expression">
+                                    <field name="label">dpp_harga_jual</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_dpp'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iid_dpp_nilai_lain" model="account.report.expression">
+                                    <field name="label">dpp_nilai_lain</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_dpp_nilai_lain'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('tax_tag_ids', 'not in', ['spt_purchase_ncr'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iie" model="account.report.line">
+                            <field name="name">E. Compensation of Excess Input Tax</field>
+                            <field name="name@id">E. Kompensasi kelebihan Pajak Masukan</field>
+                            <field name="code">ID_IIE</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iie_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">account_codes</field>
+                                    <field name="formula">tag(l10n_id.tag_spt_excess_compensation)</field>
+                                    <field name="date_scope">previous_return_period</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iif" model="account.report.line">
+                            <field name="name">F. Result of Recalculation of Credited Input Tax</field>
+                            <field name="name@id">F. Hasil penghitungan kembali Pajak Masukan yang telah dikreditkan</field>
+                            <field name="code">ID_IIF</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iif_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iig" model="account.report.line">
+                            <field name="name">G. Total Creditable Input Tax (II.A + II.B + II.C + II.D + II.E + II.F)</field>
+                            <field name="name@id">G. Jumlah Pajak Masukan yang dapat diperhitungkan (II.A + II.B + II.C + II.D + II.E + II.F)</field>
+                            <field name="code">ID_IIG</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iig_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IIA.ppn_base + ID_IIB.ppn_base + ID_IIC.ppn_base + ID_IID.ppn_base</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iig_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IIA.ppn_ppn + ID_IIB.ppn_ppn + ID_IIC.ppn_ppn + ID_IID.ppn_ppn + ID_IIE.ppn_ppn + ID_IIF.ppn_ppn</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iih" model="account.report.line">
+                            <field name="name">H. Import or acquisition of Taxable Goods/Services whose Input Tax is non-creditable and/or import or acquisition of Taxable Goods/Services that receive facilities</field>
+                            <field name="name@id">H. Impor atau perolehan BKP/JKP yang Pajak Masukannya tidak dikreditkan dan/atau impor atau perolehan BKP/JKP yang mendapat fasilitas</field>
+                            <field name="code">ID_IIH</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iih_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">['&amp;', '|', ('tax_tag_ids', '=', 'spt_purchase_ncr'), ('move_id.l10n_id_kode_transaksi', 'in', ['07', '08']), ('tax_tag_ids', 'in', ['spt_purchase_dpp', 'spt_purchase_dpp_nilai_lain'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iih_ppn_dpp" model="account.report.expression">
+                                    <field name="label">ppn_dpp</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">(ID_IIH.dpp_nilai_lain*11/12)+(ID_IIH.dpp_harga_jual)</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iih_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">['|', ('tax_tag_ids', '=', 'spt_purchase_ncr_ppn'), '&amp;', ('tax_tag_ids', '=', 'spt_purchase_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['07', '08'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iih_ppn_ppnbm" model="account.report.expression">
+                                    <field name="label">ppn_ppnbm</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_purchase_ppnbm'), ('move_id.l10n_id_kode_transaksi', 'in', ['07', '08'])]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iih_dpp_harga_jual" model="account.report.expression">
+                                    <field name="label">dpp_harga_jual</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">['&amp;', '|', ('tax_tag_ids', '=', 'spt_purchase_ncr'), ('move_id.l10n_id_kode_transaksi', 'in', ['07', '08']), ('tax_tag_ids', '=', 'spt_purchase_dpp')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                                <record id="l10n_id_tax_report_line_iih_dpp_nilai_lain" model="account.report.expression">
+                                    <field name="label">dpp_nilai_lain</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">['&amp;', '|', ('tax_tag_ids', '=', 'spt_purchase_ncr'), ('move_id.l10n_id_kode_transaksi', 'in', ['07', '08']), ('tax_tag_ids', '=', 'spt_purchase_dpp_nilai_lain')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_ii_i" model="account.report.line">
+                            <field name="name">I. Import or acquisition of Taxable Goods/Services with Tax Invoices reported in aggregate and goods/services not subject to VAT</field>
+                            <field name="name@id">I. Impor atau perolehan BKP/JKP dengan Faktur Pajak yang dilaporkan secara digunggung dan barang/jasa yang tidak terutang PPN</field>
+                            <field name="code">ID_II_I</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_ii_i_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iij" model="account.report.line">
+                            <field name="name">J. Total Acquisition (II.A + II.B + II.C + II.D + II.H + II.I)</field>
+                            <field name="name@id">J. Jumlah Perolehan (II.A + II.B + II.C + II.D + II.H + II.I)</field>
+                            <field name="code">ID_IIJ</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iij_ppn_base" model="account.report.expression">
+                                    <field name="label">ppn_base</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IIA.ppn_base + ID_IIB.ppn_base + ID_IIC.ppn_base + ID_IID.ppn_base + ID_IIH.ppn_base + ID_II_I.ppn_base</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_id_tax_report_line_iii" model="account.report.line">
+                    <field name="name">III. Calculation of VAT Underpayment / Overpayment</field>
+                    <field name="name@id">III. Penghitungan PPN Kurang Bayar / Lebih Bayar</field>
+                    <field name="code">ID_III</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="l10n_id_tax_report_line_iiia" model="account.report.line">
+                            <field name="name">A. Output Tax to be collected by oneself (I.A.2 + I.A.3 + I.A.4 + I.A.5)</field>
+                            <field name="name@id">A. Pajak Keluaran yang harus dipungut sendiri (I.A.2 + I.A.3 + I.A.4 + I.A.5)</field>
+                            <field name="code">ID_IIIA</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiia_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IA2.ppn_ppn + ID_IA3.ppn_ppn + ID_IA4.ppn_ppn + ID_IA5.ppn_ppn</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iiib" model="account.report.line">
+                            <field name="name">B. VAT paid in advance in the same tax period</field>
+                            <field name="name@id">B. PPN disetor di muka dalam masa pajak yang sama</field>
+                            <field name="code">ID_IIIB</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiib_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('account_id.tag_ids', '=', 'spt_prepaid'), ('debit', '>', 0)]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iiic" model="account.report.line">
+                            <field name="name">C. Creditable Input Tax (II.G)</field>
+                            <field name="name@id">C. Pajak Masukan yang dapat diperhitungkan (II.G)</field>
+                            <field name="code">ID_IIIC</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiic_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IIG.ppn_ppn</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iiid" model="account.report.line">
+                            <field name="name">D. Excess VAT collection by VAT Collector</field>
+                            <field name="name@id">D. Kelebihan pemungutan PPN oleh Pemungut PPN</field>
+                            <field name="code">ID_IIID</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiid_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">domain</field>
+                                    <field name="formula">[('tax_tag_ids', '=', 'spt_sale_ppn'), ('move_id.l10n_id_kode_transaksi', 'in', ['02', '03']), ('move_id.move_type', '=', 'out_refund')]</field>
+                                    <field name="subformula">sum</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iiie" model="account.report.line">
+                            <field name="name">E. VAT underpayment or (overpayment) (III.A - III.B - III.C - III.D)</field>
+                            <field name="name@id">E. PPN kurang atau (lebih) bayar (III.A - III.B - III.C - III.D)</field>
+                            <field name="code">ID_IIIE</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiie_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IIIA.ppn_ppn - ID_IIIB.ppn_ppn - ID_IIIC.ppn_ppn - ID_IIID.ppn_ppn</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iiif" model="account.report.line">
+                            <field name="name">F. VAT underpaid or (overpaid) on previously amended tax return</field>
+                            <field name="name@id">F. PPN kurang atau (lebih) bayar pada SPT yang dibetulkan sebelumnya</field>
+                            <field name="code">ID_IIIF</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiif_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_id_tax_report_line_iiig" model="account.report.line">
+                            <field name="name">G. VAT underpayment or (overpayment) due to tax return amendment (III.E - III.F)</field>
+                            <field name="name@id">G. PPN kurang atau (lebih) bayar karena pembetulan SPT (III.E - III.F)</field>
+                            <field name="code">ID_IIIG</field>
+                            <field name="hierarchy_level">3</field>
+                            <field name="expression_ids">
+                                <record id="l10n_id_tax_report_line_iiig_ppn_ppn" model="account.report.expression">
+                                    <field name="label">ppn_ppn</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ID_IIIE.ppn_ppn - ID_IIIF.ppn_ppn</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>
