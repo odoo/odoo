@@ -6,13 +6,47 @@ import sys
 from pathlib import Path
 from unittest import case
 
-from .. import tools
+from .. import api, tools
+from ..modules.module import Manifest, TEST_DATA_ENABLED_PARAM
+from ..modules.registry import Registry
 from .tag_selector import TagsSelector
 from .suite import OdooSuite
 from .result import OdooTestResult
 
 
 _logger = logging.getLogger(__name__)
+
+
+def _assert_test_data_loaded(env):
+    if not env['ir.config_parameter'].sudo().get_bool(TEST_DATA_ENABLED_PARAM):
+        raise RuntimeError(
+            "Tests require a database created with --with-test-data. "
+            "Test data cannot be enabled on an existing database."
+        )
+
+    modules = env['ir.module.module'].sudo().search_fetch(
+        [('state', '=', 'installed'), ('test_data', '=', False)],
+        ['name'],
+        order='name',
+    )
+    missing = [
+        module.name
+        for module in modules
+        if (manifest := Manifest.for_addon(module.name)) and manifest['test_data']
+    ]
+    if missing:
+        raise RuntimeError(
+            "Tests require synchronized test data. Update the following modules: "
+            + ', '.join(missing)
+        )
+
+
+def assert_test_data_loaded(db_name=None):
+    if db_name is None:
+        from .common import get_db_name  # noqa: PLC0415
+        db_name = get_db_name()
+    with Registry(db_name).cursor() as cr:
+        _assert_test_data_loaded(api.Environment(cr, api.SUPERUSER_ID, {}))
 
 
 def get_module_test_cases(module):
@@ -108,7 +142,8 @@ def make_suite(module_names, position='at_install'):
     return OdooSuite(sorted(tests, key=lambda t: getattr(t, 'test_sequence', 0)))
 
 
-def run_suite(suite, global_report=None):
+def run_suite(suite, global_report=None, *, db_name=None):
+    # assert_test_data_loaded(db_name) for a strange reason, triggers a registry reload because of the new environment, to investigate
     results = OdooTestResult(global_report=global_report)
     suite(results)
     return results

@@ -92,6 +92,9 @@ You could use this simplified accounting in case you work with an (external) acc
         'demo/account_demo.xml',
         'demo/res_partner_bank_demo.xml',
     ],
+    'test_data': [
+        'data/tests/account_chart_template.xml',
+    ],
     'application': True,
     'post_init_hook': '_account_post_init',
     'assets': {

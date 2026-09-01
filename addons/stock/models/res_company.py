@@ -205,7 +205,7 @@ class ResCompany(models.Model):
             company.sudo()._create_per_company_picking_types()
             company.sudo()._create_per_company_rules()
             company.sudo()._set_per_company_inter_company_locations(inter_company_location)
-        if modules.module.current_test:
+        if modules.module.current_test:  # TODO remove
             self.env['stock.warehouse'].sudo().create([{'company_id': company.id} for company in companies])
         return companies
 

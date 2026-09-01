@@ -165,8 +165,8 @@ class TestCustomizeView(common.HttpCase):
     def test_enabling_optional_template_with_editor(self):
         """ Ensure that a non-admin editor can enable a view """
         website = self.env['website'].search([], limit=1)
-        auth = {'login': 'test', 'password': 'testtest'}
-        user = self.env['res.users'].create({'name': 'test', **auth})
+        auth = {'login': 'test', 'password': 'test'}
+        user = self.env.ref('base.test_user')
         user.group_ids += self.env.ref('website.group_website_designer')
         View = self.env['ir.ui.view']
         default = View.create({

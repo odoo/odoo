@@ -12,9 +12,7 @@ class TestPerfSessionInfo(common.HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         # Improve stability of query count by using dedicated company and user.
-        cls.company = cls.env['res.company'].create({
-            'name': 'Test Company',
-        })
+        cls.company = cls.env.ref('base.test_company')
         cls.user = common.new_test_user(
             cls.env,
             "session",

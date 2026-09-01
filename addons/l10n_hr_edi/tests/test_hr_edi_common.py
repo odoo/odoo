@@ -24,13 +24,6 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
             'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
         })
 
-    @classmethod
-    def _create_company(cls, **create_values):
-        # EXTENDS 'account'
-        create_values['currency_id'] = cls.env.ref('base.EUR').id
-        create_values['country_id'] = cls.env.ref('base.hr').id
-        return super()._create_company(**create_values)
-
     def setup_partner_as_hr(self, partner):
         partner.write({
             'street': "Croatian Street 1",

@@ -68,6 +68,7 @@ class TestModuleManifest(BaseCase):
             'static_path': None,
             'summary': '',
             'test': [],
+            'test_data': [],
             'theme_customizations': {},
             'uninstall_hook': '',
             'version': f'{major_version}.1.0',

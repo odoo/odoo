@@ -20,12 +20,6 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
 
-        cls.company_data['company'].write({
-            'child_ids': [
-                Command.create({'name': 'Branch A'}),
-                Command.create({'name': 'Branch B'}),
-            ],
-        })
         cls.cr.precommit.run()  # load the CoA
 
         cls.root_company = cls.company_data['company']
@@ -121,6 +115,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         payment_lines.reconcile()
         self.assertEqual(payment_lines.mapped('amount_residual'), [0, 0])
         self.assertTrue(payment_lines.matched_debit_ids.exchange_move_id)
+
         self.assertTrue(payment_lines.matched_debit_ids.exchange_move_id.journal_id.company_id, invoice.company_id)
 
         # Can still open the invoice with only it's branch accessible
