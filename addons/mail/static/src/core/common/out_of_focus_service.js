@@ -59,10 +59,11 @@ export class OutOfFocusService {
                 notificationTitle = message.authorName;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.previewText).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
+        let notificationContent = htmlToTextContentInline(message.bodyPreview);
+        if (message.hasOnlyAttachments && message.previewSymbol) {
+            notificationContent = `${message.previewSymbol}\u00A0\u00A0${notificationContent}`;
+        }
+        notificationContent = notificationContent.substring(0, PREVIEW_MSG_MAX_SIZE);
         await this.sendNotification({
             message: notificationContent,
             sound: Boolean(message.channel_id),

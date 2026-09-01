@@ -4141,6 +4141,27 @@ class MailThread(models.AbstractModel):
             } for device in devices])
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()
 
+    def _web_push_get_attachment_symbols(self):
+        # Use emoji rather than pictographic symbols (e.g. U+1F5BB, U+1F5B9): the
+        # latter have no emoji presentation and could render as tofu on some OSes.
+        return {
+            "audio": "🎵",
+            "file": "📄",
+            "image": "📷",
+            "video": "🎥",
+            "voice": "🎤",
+        }
+
+    def _web_push_get_attachment_symbol_and_name(self, attachment):
+        symbols = self._web_push_get_attachment_symbols()
+        if attachment.voice_ids:
+            return symbols["voice"], self.env._("Voice Message")
+        match (attachment.mimetype or "").partition("/")[0]:
+            case "image" | "video" | "audio" as kind:
+                return symbols[kind], attachment.name
+            case _:
+                return symbols["file"], attachment.name
+
     def _notify_by_web_push_prepare_payload(self, message, force_record_name=False):
         """ Returns dictionary containing message information for a browser device.
         This info will be delivered to a browser device via its recorded endpoint.
@@ -4161,27 +4182,29 @@ class MailThread(models.AbstractModel):
             icon = '/web/static/img/odoo-icon-192x192.png'
 
         if tools.is_html_empty(body) and message.attachment_ids:
-            total_attachments = len(message.attachment_ids)
-            # sudo: ir.attachment - access voice_ids linked to an attachment, if present.
-            attachments = message.attachment_ids.sudo()
-
-            def get_attachment_label(attachment):
-                return self.env._("Voice Message") if attachment.voice_ids else attachment.name
-
+            attachments = message.attachment_ids
+            total_attachments = len(attachments)
+            symbol, first_name = self._web_push_get_attachment_symbol_and_name(attachments[0])
             if total_attachments == 1:
-                body = get_attachment_label(attachments[0])
+                label = first_name
             elif total_attachments == 2:
-                body = self.env._(
-                    "%(file1)s and %(file2)s",
-                    file1=get_attachment_label(attachments[0]),
-                    file2=get_attachment_label(attachments[1]),
+                _, second_name = self._web_push_get_attachment_symbol_and_name(attachments[1])
+                label = self.env._(
+                    "%(first_attachment)s and %(second_attachment)s",
+                    first_attachment=first_name,
+                    second_attachment=second_name,
                 )
             else:
-                body = self.env._(
-                    "%(file1)s and %(count)d other attachments",
-                    file1=get_attachment_label(attachments[0]),
+                label = self.env._(
+                    "%(first_attachment)s and %(count)d other attachments",
                     count=total_attachments - 1,
+                    first_attachment=first_name,
                 )
+            body = self.env._(
+                "%(symbol)s\N{NO-BREAK SPACE} %(label)s",
+                label=label,
+                symbol=symbol,
+            )
 
         return {
             'title': title,
