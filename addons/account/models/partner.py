@@ -372,6 +372,14 @@ class ResPartner(models.Model):
                 for code in company.account_fiscal_country_group_codes
             })
 
+    @api.depends('country_id')
+    def _compute_is_company(self):
+        """
+        Adding dependency of `country_id` because localization can then further refine this definition according to legal
+        definition of what is a company and that will be based on country_code
+        """
+        super()._compute_is_company()
+
     @property
     def _order(self):
         res = super()._order
