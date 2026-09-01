@@ -403,6 +403,12 @@ class TestEdiZatca(TestSaEdiCommon):
         )
 
     def testCompanyOnSimplifiedInvoiceQR(self):
+        # Make the branch use the parent company as its commercial entity.
+        self.sa_branch.partner_id.write({
+            'is_company': False,
+            'parent_id': self.company.partner_id.id,
+        })
+
         move_data = {
             'name': 'INV/2025/00012',
             'invoice_date': '2025-07-05',
@@ -416,15 +422,25 @@ class TestEdiZatca(TestSaEdiCommon):
             }],
         }
 
-        # Fetch company name from xml
+        # Fetch company name from XML
         invoice = self._create_test_invoice(**move_data)
         invoice.action_post()
         xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
         xml_root = etree.fromstring(xml_content)
         xml_company_name = xml_root.xpath(
-            "//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name",
-            namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+            "//cac:AccountingSupplierParty//cac:PartyLegalEntity/cbc:RegistrationName",
+            namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces(),
         )[0].text.strip()
+
+        self.assertEqual(
+            self.sa_branch.partner_id.commercial_partner_id,
+            self.company.partner_id,
+        )
+        self.assertNotEqual(
+            invoice.company_id.display_name,
+            xml_company_name,
+            "Test setup must reproduce different branch and legal seller names",
+        )
 
         # Fetch company name from QR code
         # Format: Tag (1 Byte) - Length (1 Byte) - Value
@@ -433,7 +449,11 @@ class TestEdiZatca(TestSaEdiCommon):
         length = decoded_qr[1]
         qr_company_name = decoded_qr[2:2 + length].decode()
 
-        self.assertEqual(xml_company_name, qr_company_name, "Seller name on the xml does not match the seller name on the QR code")
+        self.assertEqual(
+            xml_company_name,
+            qr_company_name,
+            "Seller name on the XML does not match the seller name on the QR code",
+        )
 
     def test_company_missing_country_on_standard_invoice(self):
         """Test standard invoice generation when the company does not have a country set."""
