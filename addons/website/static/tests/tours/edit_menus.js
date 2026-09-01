@@ -178,22 +178,10 @@ registerWebsitePreviewTour('edit_menus', {
     // Edit the menu item from the "edit menu" popover button
     ...clickOnEditAndWaitEditMode(),
     {
-        content: "Wait for the builder sidebar to fully open",
-        trigger: ":iframe .editor_enable",
-        run: async function() {
-            // Entering the edit mode opens the builder sidebar, which triggers
-            // multiple iframe resize events, which in turn rebuilds the extra
-            // menu items dropdown (see `auto_hide_menu.js` resize handler).
-            //
-            // We wait briefly to ensure all recalculations complete,
-            // avoiding race conditions when opening the link popover.
-            //
-            // NOTE: the delay below (200ms) matches the CSS `transition-delay`
-            // defined for `o-website-builder_sidebar`.
-            await delay(200);
-        },
+        content: "Wait and click on the extra menu dropdown toggle",
+        trigger: ":iframe .top_menu .o_extra_menu_items a.nav-link",
+        run: "click"
     },
-    clickOnExtraMenuItem({}, true),
     ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar", 1),
     {
         content: "Click on the popover Edit Menu button",
