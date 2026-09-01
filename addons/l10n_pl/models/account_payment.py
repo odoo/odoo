@@ -19,6 +19,20 @@ class L10nPlAccountPayment(models.Model):
     l10n_pl_verification_timestamp = fields.Datetime(related='l10n_pl_verification_id.verification_timestamp')
     l10n_pl_verification_request_id = fields.Char(related='l10n_pl_verification_id.verification_request_id')
 
+<<<<<<< 5c98d0fc84b18dd7a509f552164b054830376de4:addons/l10n_pl/models/account_payment.py
+||||||| 9fc11bbc9cc60ab89364229d7076b5e3088e447e:addons/l10n_pl_bank_verification/models/account_payment.py
+    def init(self):
+        super().init()
+        if not column_exists(self.env.cr, 'account_payment', 'l10n_pl_verification_id'):
+            create_column(self.env.cr, 'account_payment', 'l10n_pl_verification_id', 'integer')
+
+=======
+    def _auto_init(self):
+        if not column_exists(self.env.cr, 'account_payment', 'l10n_pl_verification_id'):
+            create_column(self.env.cr, 'account_payment', 'l10n_pl_verification_id', 'integer')
+        super()._auto_init()
+
+>>>>>>> 2f94e37befce5f7346c8393152284bcc90cdc165:addons/l10n_pl_bank_verification/models/account_payment.py
     @api.model
     def _payment_need_check(self, partner, payment_type, amounts, currency):
         """
