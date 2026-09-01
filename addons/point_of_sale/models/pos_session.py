@@ -971,7 +971,8 @@ class PosSession(models.Model):
         return {
             'move_type': move_type,
             'company_id': self.company_id.id,
-            'journal_id': self.config_id.journal_id.id,
+            'journal_id': self.config_id.closing_journal_id.id,
+            'currency_id': self.currency_id.id,
             'partner_id': self.config_id.default_partner_id.id,
             'date': today,
             'invoice_date_due': today,
