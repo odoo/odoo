@@ -116,6 +116,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
 
         root_company = self.company_data['company']
         self.cr.precommit.run()  # load the CoA
+        self.env.user.company_ids += root_company.child_ids
         branch, _branch = root_company.child_ids
 
         for lock_date_field, move_type in self.soft_lock_date_info:

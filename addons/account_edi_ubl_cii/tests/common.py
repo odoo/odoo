@@ -21,10 +21,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setup_independent_company(cls):
-        # EXTENDS 'account': this suite's country-specific subclasses (BE/FR/NO/...) rely on
-        # their own _create_company() override (EUR currency, country-specific partner/VAT/bank
-        # details) always running, which the shared base.test_company/test_company_be fixtures
-        # don't provide, so always create a dedicated company here instead.
+        # todo remove should be handled correcly by account
         return cls._create_company()
 
     @classmethod

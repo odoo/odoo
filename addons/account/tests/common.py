@@ -258,6 +258,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         else:
             company = cls.env.ref('base.test_company')
             company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
+        # TODO try to remove this, may be the cause of the failure in test_tax_unit
         cls.env['account.tax.group'].sudo().create({
             'name': 'Test tax group',
             'company_id': company.id,
@@ -273,16 +274,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             password='accountman',
             email='accountman@test.com',
             group_ids=cls.get_default_groups().ids,
-            company_id=cls.company.id,
-            company_ids=[
-                Command.link(cls.company.id),
-                Command.link(cls.env.company.id),
-                Command.link(cls.env.ref('base.test_company').id),
-                Command.link(cls.env.ref('base.test_company_be').id),
-                Command.link(cls.env.ref('base.test_company_branch_a').id),
-                Command.link(cls.env.ref('base.test_company_branch_b').id),
-                Command.link(cls.env.ref('base.test_company_with_branch').id),
-            ]
+            company_id=cls.env.company.id,
         )
 
     @classmethod

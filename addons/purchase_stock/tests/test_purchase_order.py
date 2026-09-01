@@ -263,7 +263,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     def test_05_multi_company(self):
         company_a = self.env.user.company_id
-        company_b = self.env.ref('base.test_company_be')
+        company_b = self.add_company('base.test_company_be')
         self.env.user.write({
             'company_id': company_b.id,
             'company_ids': [(4, company_b.id), (4, company_a.id)],
@@ -276,7 +276,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     def test_06_on_time_rate(self):
         company_a = self.env.user.company_id
-        company_b = self.env.ref('base.test_company_be')
+        company_b = self.add_company('base.test_company_be')
         # Create a purchase order with 90% qty received for company A
         self.env.user.write({
             'company_id': company_a.id,

@@ -1519,6 +1519,12 @@ class TransactionCase(BaseCase):
             transaction.ormcaches__[name] = CacheLayer(layer)
 
     @classmethod
+    def add_company(cls, xmlid):
+        company = cls.env.ref(xmlid)
+        cls.env.user.company_ids += company | company.child_ids
+        return company
+
+    @classmethod
     @contextmanager
     def mock_datetime_and_now(cls, mock_dt):
         """ Used when synchronization date (using env.cr.now()) is important
