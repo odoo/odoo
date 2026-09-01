@@ -691,7 +691,12 @@ export class LinkPopover extends Component {
     }
 
     isLogoutUrl() {
-        return !!this.state.url.match(/\/web\/session\/logout\b/);
+        return (
+            !!this.state.url.match(/\/web\/session\/logout\b/) ||
+            !!this.state.url.match(/\/hr_attendance\/kiosk_mode_menu\/\d+/) ||
+            !!this.state.url.match(/\/hr_attendance\/[0-9a-f]{32}/) ||
+            !!this.state.url.match(/\/hr_attendance\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}/)
+        );
     }
     isAttachmentUrl() {
         return !!this.state.url.match(/\/web\/content\/\d+/);
