@@ -3215,6 +3215,7 @@ class AccountTax(models.Model):
             if not taxes_data:
                 continue
 
+            base_line['price_unit'] += tax_details['delta_total_excluded_currency']
             base_line['manual_total_excluded_currency'] = (
                 tax_details['total_excluded_currency']
                 + tax_details['delta_total_excluded_currency']
@@ -3876,8 +3877,6 @@ class AccountTax(models.Model):
                 base_line = target_factor['base_line']
                 tax_details = base_line['tax_details']
                 tax_details[f'delta_total_excluded{delta_suffix}'] += amount_to_distribute
-                if delta_suffix == '_currency':
-                    base_line['price_unit'] += amount_to_distribute
 
         return new_base_lines
 

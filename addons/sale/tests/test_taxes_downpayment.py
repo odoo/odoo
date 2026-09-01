@@ -1202,3 +1202,49 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         final_invoice = self.env["account.move"].browse(action["res_id"])
 
         self.assertEqual(final_invoice.amount_total, 50.0)
+
+    def test_unit_price_sync_in_down_payment_with_distributed_rounding(self):
+        """
+        Test that the unit price is based on the final subtotal when the subtotal is adapted
+        by a tax rounding in a down payment.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax_18 = self.percent_tax(18.0)
+        tax_0_a = self.percent_tax(0.0)
+        tax_0_b = self.percent_tax(0.0)
+        product_a = self._create_product(list_price=370.475, taxes_id=tax_18)
+        product_b = self._create_product(list_price=55.088433, taxes_id=tax_0_a)
+        product_c = self._create_product(list_price=43.490868, taxes_id=tax_0_b)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': product_a.id}),
+                Command.create({'product_id': product_b.id}),
+                Command.create({'product_id': product_c.id}),
+            ],
+        })
+        so.action_confirm()
+
+        dp_invoice = self._create_down_payment_invoice(so, 'percent', 40)
+        self.assertRecordValues(dp_invoice, [{
+            'amount_untaxed': 187.62,
+            'amount_tax': 26.68,
+            'amount_total': 214.30,
+        }])
+        self.assertRecordValues(dp_invoice.invoice_line_ids, [{
+            'tax_ids': tax_18.ids,
+            'quantity': 1.0,
+            'price_unit': 148.18000000000004,
+            'price_subtotal': 148.18,
+        }, {
+            'tax_ids': tax_0_a.ids,
+            'quantity': 1.0,
+            'price_unit': 22.035373200000002,
+            'price_subtotal': 22.04,
+        }, {
+            'tax_ids': tax_0_b.ids,
+            'quantity': 1.0,
+            'price_unit': 17.3963472,
+            'price_subtotal': 17.40,
+        }])
