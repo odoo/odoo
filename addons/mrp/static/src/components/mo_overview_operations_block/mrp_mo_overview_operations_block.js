@@ -19,19 +19,18 @@ export const MO_OVERVIEW_SUMMARY_SHAPE = {
     done: t.boolean().optional(),
 };
 
-export const moOverviewOperationsBlockProps = {
+export const moOverviewBaseBlockProps = {
     unfoldAll: t.boolean().optional(false),
-    operations: t.array(),
     summary: t.object(MO_OVERVIEW_SUMMARY_SHAPE),
     showOptions: SHOW_OPTIONS,
 };
 
-export class MoOverviewOperationsBlock extends Component {
-    static template = "mrp.MoOverviewOperationsBlock";
+export class MoOverviewBaseBlock extends Component {
+    static template = "mrp.MoOverviewBaseBlock";
     static components = {
         MoOverviewLine,
     };
-    props = useProps(moOverviewOperationsBlockProps);
+    props = useProps(moOverviewBaseBlockProps);
 
     setup() {
         this.formatFloatTime = formatFloatTime;
@@ -70,12 +69,8 @@ export class MoOverviewOperationsBlock extends Component {
 
     //---- Getters ----
 
-    get hasOperations() {
-        return this.props?.operations?.length > 0;
-    }
-
     get level() {
-        return this.hasOperations ? this.props.operations[0].level - 1 : 0;
+        throw new Error("Not Implemented");
     }
 
     get index() {
@@ -87,5 +82,26 @@ export class MoOverviewOperationsBlock extends Component {
         return this.props.summary?.done ?
             formatFloatTime(this.props.summary.quantity, { unit: "hours", showSeconds: true }) :
             formatFloatTime(this.props.summary.quantity, { unit: "minutes", showSeconds: true })
+    }
+}
+
+export class MoOverviewOperationsBlock extends MoOverviewBaseBlock {
+    static template = "mrp.MoOverviewOperationsBlock";
+    static components = {
+        MoOverviewLine,
+    };
+    props = useProps({
+        ...moOverviewBaseBlockProps,
+        operations: t.array(),
+    });
+
+    //---- Getters ----
+
+    get hasOperations() {
+        return this.props?.operations?.length > 0;
+    }
+
+    get level() {
+        return this.hasOperations ? this.props.operations[0].level - 1 : 0;
     }
 }
