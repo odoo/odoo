@@ -53,3 +53,28 @@ from .test_orm import (
     # test_uninstall  # Cannot be handled by the runbot. Makes Odoo loop forever when done during an installation.
     test_views,
 )
+
+from .test_tools import (
+    test_barcode,
+    test_binary,
+    test_cloc,
+    test_config,
+    test_convert,
+    test_date_utils,
+    test_float_utils,
+    test_func,
+    test_i18n,
+    test_image,
+    test_intervals,
+    test_mail,
+    test_mimetypes,
+    test_misc,
+    test_pdf,
+    test_profiler,
+    test_safe_eval,
+    test_safe_eval_expr,
+    test_set_expression,
+    test_sql,
+    test_translate,
+    test_xml_utils,
+)

@@ -329,7 +329,7 @@ class TestAddonsFileAccess(BaseCase):
         self.assertEqual(os.path.dirname(__file__), file_path(os.path.join(__file__, '..')))
 
         # relative path
-        relpath = os.path.join(*(__file__.split(os.sep)[-3:])) # 'base/tests/test_misc.py'
+        relpath = os.path.join(*(__file__.split(os.sep)[-4:])) # 'base/tests/test_misc.py'
         self.assertEqual(__file__, file_path(relpath))
         self.assertEqual(__file__, file_path(relpath, filter_ext=('.py',)))
 
@@ -375,7 +375,7 @@ class TestAddonsFileAccess(BaseCase):
             file_open(os.path.join(__file__, '..'))
 
         # relative path
-        relpath = os.path.join(*(__file__.split(os.sep)[-3:])) # 'base/tests/test_misc.py'
+        relpath = os.path.join(*(__file__.split(os.sep)[-4:])) # 'base/tests/test_misc.py'
         self.assertCanRead(relpath, test_needle)
         self.assertCanRead(relpath, test_needle.encode(), mode='rb')
         self.assertCanRead(relpath, test_needle.encode(), mode='rb', filter_ext=('.py',))

@@ -1,9 +1,11 @@
 from . import (
     common,
+    models_translation,
     test_access_rights,
     test_acl,
     test_action_bindings,
     test_config,
+    test_convert,
     test_domain_expression,
     test_fields,
     test_inherits,
@@ -13,6 +15,7 @@ from . import (
     test_properties,
     test_read_group,
     test_schema,
+    test_tools,
     test_search,
     test_unity_read,
 )
