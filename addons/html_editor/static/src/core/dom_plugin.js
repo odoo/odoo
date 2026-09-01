@@ -292,6 +292,7 @@ export class DomPlugin extends Plugin {
      * @returns {Node[]} the inserted nodes
      */
     insert(content, { verbatim = false } = {}) {
+        // Pre-process
         let fragment = this.makeFragment(content);
         if (!verbatim) {
             fragment = this.processThrough("fragment_to_insert_processors", fragment);
@@ -305,6 +306,7 @@ export class DomPlugin extends Plugin {
             return [];
         }
 
+        // Insert
         this.trigger(
             "on_will_insert_handlers",
             nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item))
@@ -315,25 +317,8 @@ export class DomPlugin extends Plugin {
             this.insertNodesAt(nodes, focusNode, focusOffset, { preserveInlineContext: !isInBlock })
         );
 
-        // Move the selection after the insertion.
-        const lastNode = insertedContent.at(-1);
-        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
-        if (elementToEnter) {
-            this.dependencies.selection.setCursorEnd(elementToEnter);
-        } else if (lastNode) {
-            // Set the selection after the last inserted node.
-            let position = rightPos(lastNode);
-            position = normalizeCursorPosition(position[0], position[1], "right");
-            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
-                // Correct the position if it happens to be in the editable root.
-                position = getDeepestEditablePosition(...position);
-            }
-            this.dependencies.selection.setSelection(
-                { anchorNode: position[0], anchorOffset: position[1] },
-                { normalize: false }
-            );
-        }
-
+        // Move selection
+        this.moveSelectionAfterInsertion(insertedContent);
         return insertedContent;
     }
 
@@ -343,7 +328,6 @@ export class DomPlugin extends Plugin {
      * nodes).
      *
      * @see insert
-     *
      * @param {DocumentFragment} fragment
      * @returns {(Node|DocumentFragment)[]}
      */
@@ -457,7 +441,6 @@ export class DomPlugin extends Plugin {
      * inserted.
      *
      * @see insert
-     *
      * @param {Node[]} nodes
      * @param {Node} targetNode
      * @param {number} targetOffset
@@ -523,7 +506,6 @@ export class DomPlugin extends Plugin {
      * Restore a lost split before an item that was unwrapped.
      *
      * @see insert
-     *
      * @param {Node} marker
      * @param {Object} [options]
      * @param {boolean} [options.preserveInlineContext = false]
@@ -559,6 +541,7 @@ export class DomPlugin extends Plugin {
     /**
      * Move the marker to the position where the given node should be inserted.
      *
+     * @see insert
      * @param {Node} node
      * @param {Node} marker
      * @param {Object} [options]
@@ -606,6 +589,32 @@ export class DomPlugin extends Plugin {
             // the two sides.
             after.before(marker);
             return this.moveMarkerToNextPosition(node, marker);
+        }
+    }
+
+    /**
+     * Move the selection after insertion.
+     *
+     * @see insert
+     * @param {Node[]} insertedNodes
+     */
+    moveSelectionAfterInsertion(insertedNodes) {
+        const lastNode = insertedNodes.at(-1);
+        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
+        if (elementToEnter) {
+            this.dependencies.selection.setCursorEnd(elementToEnter);
+        } else if (lastNode) {
+            // Set the selection after the last inserted node.
+            let position = rightPos(lastNode);
+            position = normalizeCursorPosition(position[0], position[1], "right");
+            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
+                // Correct the position if it happens to be in the editable root.
+                position = getDeepestEditablePosition(...position);
+            }
+            this.dependencies.selection.setSelection(
+                { anchorNode: position[0], anchorOffset: position[1] },
+                { normalize: false }
+            );
         }
     }
 
