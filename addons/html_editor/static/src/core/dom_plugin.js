@@ -276,17 +276,129 @@ export class DomPlugin extends Plugin {
      * @returns {Node[]} the inserted nodes
      */
     insert(content, { verbatim = false } = {}) {
-        // 1. Process the content to insert.
-        // =================================
-
         let fragment = this.makeFragment(content);
         if (!verbatim) {
             fragment = this.processThrough("fragment_to_insert_processors", fragment);
         }
         this.dependencies.delete.deleteSelection();
+        const isInBlock = isBlock(
+            closestElement(this.dependencies.selection.getEditableSelection().focusNode)
+        );
+        const nodes = this.processFragmentToInsert(fragment);
+        if (!nodes.length) {
+            return [];
+        }
+
+        // Insert the content.
+        // ======================
+
+        this.trigger(
+            "on_will_insert_handlers",
+            nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item))
+        );
+
+        // An empty text node may be needed to mark the position of insertion.
+        const marker = createMarkerNode(this.document);
+        // Find the first insertion reference (the node before which to insert).
+        const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
+        if (isTextNode(focusNode)) {
+            if (focusOffset === 0) {
+                focusNode.before(marker);
+            } else if (focusOffset === focusNode.length) {
+                focusNode.after(marker);
+            } else {
+                focusNode.splitText(focusOffset).before(marker);
+            }
+        } else if (isSelfClosingElement(focusNode)) {
+            focusNode.before(marker);
+        } else {
+            focusNode.insertBefore(marker, focusNode.childNodes[focusOffset] || null);
+        }
+
+        // Insert the nodes.
+        let insertedContent = [];
+        const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
+        for (const [index, item] of nodes.entries()) {
+            const insertedNodes = [];
+            const previousItem = index > 0 && nodes[index - 1];
+            const itemNodes = isFragment(item) ? childNodes(item) : [item];
+            for (const [nodeIndex, node] of itemNodes.entries()) {
+                // A root marker may still point into the block on its right.
+                const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
+                if (
+                    nodeIndex === 0 &&
+                    isFragment(previousItem) &&
+                    !isBlock(item) &&
+                    isVisible(item)
+                ) {
+                    insertedNodes.push(...this.splitBeforeInsertion(marker, !isInBlock));
+                }
+                if (this.moveMarkerToNextInsertionPosition(node, marker, !isInBlock)) {
+                    const shouldReplaceEmptyBlock =
+                        node === firstNode &&
+                        isEmptyBlock(referenceBlock) &&
+                        findDownTo(node, isPhrasingContainer);
+                    const next = marker.nextSibling;
+                    const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
+                    marker.before(node);
+                    insertedNodes.push(node);
+                    const didInsertBlock = isBlock(node);
+                    if (wasBeforeFakeLineBreak && !didInsertBlock) {
+                        // Inserting inline content before a fake line break
+                        // will make it real. Remove it.
+                        next.remove();
+                    }
+                    if (shouldReplaceEmptyBlock && !referenceBlock.contains(node)) {
+                        // A block was inserted outside the original empty block.
+                        // The original empty block has been replaced entirely.
+                        referenceBlock.before(marker);
+                        referenceBlock.remove();
+                    } else if (didInsertBlock) {
+                        this.moveMarkerToNextPosition(node, marker, !isInBlock);
+                    }
+                }
+            }
+            insertedContent.push(...insertedNodes);
+        }
+        marker.remove();
+
+        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
+
+        // 3. Move the selection after the insertion.
+        // ==========================================
+
+        const lastNode = insertedContent.at(-1);
+        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
+        if (elementToEnter) {
+            this.dependencies.selection.setCursorEnd(elementToEnter);
+        } else if (lastNode) {
+            // Set the selection after the last inserted node.
+            let position = rightPos(lastNode);
+            position = normalizeCursorPosition(position[0], position[1], "right");
+            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
+                // Correct the position if it happens to be in the editable root.
+                position = getDeepestEditablePosition(...position);
+            }
+            this.dependencies.selection.setSelection(
+                { anchorNode: position[0], anchorOffset: position[1] },
+                { normalize: false }
+            );
+        }
+
+        return insertedContent;
+    }
+
+    /**
+     * Process a fragment before insertion, unwrapping what needs unwrapping,
+     * then return a list of nodes to insert (fragments in the case of unwrapped
+     * nodes).
+     *
+     * @param {DocumentFragment} fragment
+     * @returns {(Node|DocumentFragment)[]}
+     */
+    processFragmentToInsert(fragment) {
         const sel = this.dependencies.selection.getEditableSelection();
         const refBlock = closestBlock(sel.anchorNode);
-        const preserveInlineContext = closestElement(sel.anchorNode) !== refBlock;
         const editableContext = closestElement(sel.focusNode, "[contenteditable=true]");
         const isEditableBlock = isBlock(editableContext);
         const isInEmpty = !isTextNode(sel.focusNode) && isEmpty(sel.focusNode);
@@ -386,107 +498,7 @@ export class DomPlugin extends Plugin {
                 nodes.push(node);
             }
         }
-        if (!nodes.length) {
-            return [];
-        }
-
-        // 2. Insert the content.
-        // ======================
-
-        this.trigger(
-            "on_will_insert_handlers",
-            nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item))
-        );
-
-        // An empty text node may be needed to mark the position of insertion.
-        const marker = createMarkerNode(this.document);
-        // Find the first insertion reference (the node before which to insert).
-        const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
-        if (isTextNode(focusNode)) {
-            if (focusOffset === 0) {
-                focusNode.before(marker);
-            } else if (focusOffset === focusNode.length) {
-                focusNode.after(marker);
-            } else {
-                focusNode.splitText(focusOffset).before(marker);
-            }
-        } else if (isSelfClosingElement(focusNode)) {
-            focusNode.before(marker);
-        } else {
-            focusNode.insertBefore(marker, focusNode.childNodes[focusOffset] || null);
-        }
-
-        // Insert the nodes.
-        let insertedContent = [];
-        const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
-        for (const [index, item] of nodes.entries()) {
-            const insertedNodes = [];
-            const previousItem = index > 0 && nodes[index - 1];
-            const itemNodes = isFragment(item) ? childNodes(item) : [item];
-            for (const [nodeIndex, node] of itemNodes.entries()) {
-                // A root marker may still point into the block on its right.
-                const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
-                if (
-                    nodeIndex === 0 &&
-                    isFragment(previousItem) &&
-                    !isBlock(item) &&
-                    isVisible(item)
-                ) {
-                    insertedNodes.push(...this.splitBeforeInsertion(marker, preserveInlineContext));
-                }
-                if (this.moveMarkerToNextInsertionPosition(node, marker, preserveInlineContext)) {
-                    const shouldReplaceEmptyBlock =
-                        node === firstNode &&
-                        isEmptyBlock(referenceBlock) &&
-                        findDownTo(node, isPhrasingContainer);
-                    const next = marker.nextSibling;
-                    const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
-                    marker.before(node);
-                    insertedNodes.push(node);
-                    const didInsertBlock = isBlock(node);
-                    if (wasBeforeFakeLineBreak && !didInsertBlock) {
-                        // Inserting inline content before a fake line break
-                        // will make it real. Remove it.
-                        next.remove();
-                    }
-                    if (shouldReplaceEmptyBlock && !referenceBlock.contains(node)) {
-                        // A block was inserted outside the original empty block.
-                        // The original empty block has been replaced entirely.
-                        referenceBlock.before(marker);
-                        referenceBlock.remove();
-                    } else if (didInsertBlock) {
-                        this.moveMarkerToNextPosition(node, marker, { preserveInlineContext });
-                    }
-                }
-            }
-            insertedContent.push(...insertedNodes);
-        }
-        marker.remove();
-
-        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
-
-        // 3. Move the selection after the insertion.
-        // ==========================================
-
-        const lastNode = insertedContent.at(-1);
-        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
-        if (elementToEnter) {
-            this.dependencies.selection.setCursorEnd(elementToEnter);
-        } else if (lastNode) {
-            // Set the selection after the last inserted node.
-            let position = rightPos(lastNode);
-            position = normalizeCursorPosition(position[0], position[1], "right");
-            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
-                // Correct the position if it happens to be in the editable root.
-                position = getDeepestEditablePosition(...position);
-            }
-            this.dependencies.selection.setSelection(
-                { anchorNode: position[0], anchorOffset: position[1] },
-                { normalize: false }
-            );
-        }
-
-        return insertedContent;
+        return nodes;
     }
 
     /**
