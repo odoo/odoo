@@ -224,8 +224,11 @@ class PosController(PortalAccount):
             invoice_values, prefixed_invoice_values = _parse_additional_values(additional_invoice_fields, 'invoice_', kwargs)
             form_values['extra_field_values'].update(prefixed_invoice_values)
             # Check the basic form fields if the user is not connected as we will need these information to create the new user.
-            partner, feedback_dict = self._create_or_update_address(partner, **(kwargs | partner_values))
-            form_values.update(feedback_dict)
+            if user_is_connected and self._user_can_edit_partner(partner, request.env.user.partner_id):
+                authorized_partner_fields = request.env['res.partner']._get_frontend_writable_fields()
+                address_values = {k: v for k, v in kwargs.items() if k in authorized_partner_fields} | partner_values
+                partner, feedback_dict = self._create_or_update_address(partner, **address_values)
+                form_values.update(feedback_dict)
             missing_fields, error_messages = self._validate_extra_form_details(
                 partner_values | invoice_values,
                 additional_partner_fields + additional_invoice_fields

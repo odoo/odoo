@@ -660,10 +660,12 @@ export class SelfOrder extends Reactive {
             if (this.shouldUpdateLastOrderChange()) {
                 this.currentOrder.updateLastOrderChange();
             }
+            const serializedOrder = this.currentOrder.serializeForORM();
+            serializedOrder.partner_id = this.currentOrder.raw.partner_id || false;
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
-                    order: this.currentOrder.serializeForORM(),
+                    order: serializedOrder,
                     access_token: this.access_token,
                     table_identifier: this.currentOrder?.table_id?.identifier || tableIdentifier,
                 }

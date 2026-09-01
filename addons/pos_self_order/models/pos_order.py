@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import float_round
+from odoo.tools import float_round, consteq, hmac
 
 
 class PosOrderLine(models.Model):
@@ -143,8 +143,7 @@ class PosOrder(models.Model):
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
-        partner_id = order.get('partner_id')
-        partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
+        partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
 
         return {
             'id': order.get('id'),
@@ -163,7 +162,7 @@ class PosOrder(models.Model):
             'preset_id': preset_id.id if preset_id else False,
             'preset_time': order.get('preset_time'),
             'pricelist_id': pricelist_id.id if pricelist_id else False,
-            'partner_id': order.get('partner_id'),
+            'partner_id': partner.id if partner else False,
             'sequence_number': order.get('sequence_number'),
             'session_id': pos_config.current_session_id.id,
             'fiscal_position_id': fiscal_position.id if fiscal_position else False,
@@ -187,6 +186,28 @@ class PosOrder(models.Model):
             'lines': lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
+
+    @api.model
+    def _get_self_partner_token(self, pos_config, partner_id):
+        return hmac(self.env(su=True), 'pos-self-order-partner', (pos_config.id, partner_id))
+
+    @api.model
+    def _get_signed_self_partner_id(self, pos_config, partner_id):
+        return f"{partner_id}-{self._get_self_partner_token(pos_config, partner_id)}"
+
+    @api.model
+    def _get_self_partner_from_token(self, pos_config, signed_partner):
+        if not signed_partner or "-" not in signed_partner:
+            return False
+        raw_id, _sep, token = signed_partner.partition("-")
+        try:
+            partner_id = int(raw_id)
+        except ValueError:
+            return False
+        if not consteq(token, self._get_self_partner_token(pos_config, partner_id)):
+            return False
+        partner = pos_config.env['res.partner'].sudo().browse(partner_id)
+        return partner if partner.exists() else False
 
     def recompute_prices(self):
         self.ensure_one()
