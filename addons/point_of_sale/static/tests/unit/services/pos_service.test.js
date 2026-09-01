@@ -408,7 +408,7 @@ describe("pos_store.js", () => {
         const order = await getFilledOrder(store);
         const orderData = store.getOrderData(order);
         expect(orderData).toEqual({
-            reprint: false,
+            reprint: undefined,
             pos_reference: "1001",
             config_name: "Hoot",
             time: "10:30",
