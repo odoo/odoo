@@ -78,6 +78,7 @@
                     <div name="o_payment_status"
                          class="o_pos_status_stage flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center px-3 w-100"
                          data-min-dwell="900"
+                         t-att-data-transaction-reference="tx.reference"
                          t-att-data-landing-route="tx.landing_route"
                          t-att-data-notification-channel="notification_channel">
                         <h1 class="o_pos_status_title m-0 fw-bolder">Almost there!</h1>
