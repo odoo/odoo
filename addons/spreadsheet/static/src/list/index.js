@@ -15,7 +15,7 @@ function identity(cmd) {
     return [cmd];
 }
 
-const { coreTypes, invalidateEvaluationCommands } = spreadsheet;
+const { coreTypes, evaluationCommandTypes, invalidateEvaluationCommands } = spreadsheet;
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -27,6 +27,19 @@ coreTypes.add("UPDATE_ODOO_LIST_DOMAIN");
 coreTypes.add("UPDATE_ODOO_LIST");
 coreTypes.add("ADD_LIST_DOMAIN");
 coreTypes.add("DUPLICATE_ODOO_LIST");
+
+// `evaluationCommandTypes` is a snapshot of `coreTypes` taken when o-spreadsheet
+// is loaded, so every core type added here has to be registered again for
+// evaluation plugins to receive it.
+// TODO: remove once `isEvaluationCommand` also checks `coreTypes` at call time.
+evaluationCommandTypes.add("INSERT_ODOO_LIST");
+evaluationCommandTypes.add("RENAME_ODOO_LIST");
+evaluationCommandTypes.add("REMOVE_ODOO_LIST");
+evaluationCommandTypes.add("RE_INSERT_ODOO_LIST");
+evaluationCommandTypes.add("UPDATE_ODOO_LIST_DOMAIN");
+evaluationCommandTypes.add("UPDATE_ODOO_LIST");
+evaluationCommandTypes.add("ADD_LIST_DOMAIN");
+evaluationCommandTypes.add("DUPLICATE_ODOO_LIST");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
 invalidateEvaluationCommands.add("UPDATE_ODOO_LIST");
