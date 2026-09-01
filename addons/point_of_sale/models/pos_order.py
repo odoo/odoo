@@ -174,9 +174,19 @@ class PosOrder(models.Model):
                     _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
                 order[field] = []
 
+    def _get_customer_account_payments(self):
+        """Payments leaving an amount due on the customer account.
+
+        Such an order is always invoiced individually, so that the receivable is
+        tracked per customer instead of ending up in the session receivable.
+        """
+        return self.payment_ids.filtered(
+            lambda payment: payment.payment_method_id.type == 'pay_later',
+        )
+
     def _generate_order_invoice(self):
         self.ensure_one()
-        has_paylater_pm = any(payment.payment_method_id.type == 'pay_later' for payment in self.payment_ids)
+        has_paylater_pm = bool(self._get_customer_account_payments())
         if (self.to_invoice or has_paylater_pm) and self.state == 'paid' and self.config_id.journal_id and not self.is_singly_invoiced:
             self.to_invoice = True  # Ensure true if has_paylater_pm is true
             should_generate_pdf = self.env.context.get('generate_pdf') or self.config_id.use_download_invoice

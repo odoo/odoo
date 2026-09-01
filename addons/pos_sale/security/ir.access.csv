@@ -2,3 +2,6 @@ id,name,model_id,group_id/id,operation,domain
 pos_sale_rule_pos_channel_pos_manager,POS Sales Team,crm.team,point_of_sale.group_pos_manager,crud,
 rule_pos_sale_order,POS Sales Orders,sale.order,point_of_sale.group_pos_user,r,
 rule_pos_sale_order_line,POS Sales Order Lines,sale.order.line,point_of_sale.group_pos_user,r,
+rule_pos_payment_transaction,POS Sale Order Transactions,payment.transaction,point_of_sale.group_pos_user,r,"[('sale_order_ids', '!=', False)]"
+rule_pos_sale_order_payment,POS Sale Order Payments,account.payment,point_of_sale.group_pos_user,ru,"[('payment_transaction_id.sale_order_ids', '!=', False)]"
+rule_pos_sale_order_payment_move,POS Sale Order Payment Entries,account.move,point_of_sale.group_pos_user,r,"[('origin_payment_id.payment_transaction_id.sale_order_ids', '!=', False)]"

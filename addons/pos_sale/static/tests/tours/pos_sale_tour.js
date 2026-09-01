@@ -60,3 +60,36 @@ registry.category("web_tour.tours").add("PoSApplyDownpaymentWithExtraLine", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_settle_pre_paid_so", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.checkOrdersListEmpty(),
+            PosSale.removeUnpaidFilter(),
+            PosSale.isOrdersListNotEmpty(),
+            {
+                content: "Select paid sale order",
+                trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row td:contains('partner_a')`,
+                run: "click",
+            },
+            ProductScreen.totalAmountIs("1,150.00"),
+            ProductScreen.clickPayButton(),
+            // Kept the payment name dynamic as this tour is reused across tests;
+            // the actual payment is either PBNK1/2007/00001 or PBNK1/2007/00002.
+            {
+                trigger: ["00001", "00002"]
+                    .map((sequence) =>
+                        PaymentScreen._getPaymentlineSelector({
+                            name: `Online Payment: PBNK1/2007/${sequence}`,
+                            amount: "1,150.00",
+                        })
+                    )
+                    .join(", "),
+            },
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+            PosSale.checkOrdersListEmpty(),
+        ].flat(),
+});

@@ -31,8 +31,8 @@ class PosPayment(models.Model):
                 if None in oaps_id:
                     raise UserError(_("Cannot create a POS online payment without an accounting payment."))
                 online_account_payments_to_check_id.update(oaps_id)
-            elif any(oaps_id):
-                raise UserError(_("Cannot create a POS payment with a not online payment method and an online accounting payment."))
+            else:
+                self._check_online_account_payment_consistency(pm_id, oaps_id)
 
         if online_account_payments_to_check_id:
             valid_oap_amount = self.env['account.payment'].search_count([('id', 'in', list(online_account_payments_to_check_id))])
@@ -40,6 +40,13 @@ class PosPayment(models.Model):
                 raise UserError(_("Cannot create a POS online payment without an accounting payment."))
 
         return super().create(vals_list)
+
+    def _check_online_account_payment_consistency(self, payment_method_id, online_account_payment_ids):
+        """Validate payment method/account payment consistency."""
+        if any(online_account_payment_ids):
+            raise UserError(
+                _('Cannot create a POS payment with a not online payment method and an online accounting payment.')
+            )
 
     def write(self, vals):
         if vals.keys() & ('amount', 'payment_date', 'payment_method_id', 'online_account_payment_id', 'pos_order_id') and any(payment.online_account_payment_id or payment.payment_method_id.type == 'online' for payment in self):

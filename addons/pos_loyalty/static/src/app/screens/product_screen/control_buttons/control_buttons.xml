@@ -29,12 +29,14 @@
                 </t>
             </t>
             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))" t-call="point_of_sale.controlButton"
+                name="o_loyalty_code_button"
                 icon="'percent'"
                 btnText.translate="Enter Code"
                 btnClasses="'btn-secondary '"
                 onClick="() => this.clickPromoCode()">
             </t>
             <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+                name="o_reward_button"
                 icon="'star'"
                 iconClasses="'oi-filled ' + (this.nbrRewards() ? 'o_reward-icon-active' : '')"
                 btnText.translate="Reward"

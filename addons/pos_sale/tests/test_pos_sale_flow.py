@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
+from freezegun import freeze_time
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import format_date
-from odoo.addons.payment.tests.common import PaymentCommon
+
+from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-import uuid
 
 
 class PoSSaleSyncCommon:
@@ -1248,7 +1251,7 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         self.env["pos.config"].with_company(branch).create({
             "name": "Branch Point of Sale"
         })
-        self.env['pos.config']._ensure_default_products()
+        self.env['pos.config']._ensure_default_configurations()
 
     def test_amount_unpaid_with_refund_pos_order(self):
         product = self.env['product.product'].create({
@@ -1358,7 +1361,33 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCommon):
+class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, AccountPaymentCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.enable_post_process_patcher = False
+
+    def _create_pre_paid_sale_order(self):
+        """Create a sale order fully paid by an online transaction."""
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': self.product_a.lst_price,
+            })],
+        })
+        tx = self._create_transaction(
+            flow='direct',
+            amount=sale_order.amount_total,
+            partner_id=sale_order.partner_id.id,
+            sale_order_ids=[sale_order.id],
+            state='done',
+            reference=f'Test Transaction {sale_order.id}',
+        )
+        self._run_post_processing(tx)
+        return sale_order
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -1454,3 +1483,112 @@ class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCo
         so_downpayment_lines = invoice.invoice_line_ids.filtered('is_downpayment')
         self.assertTrue(so_downpayment_lines.is_downpayment)
         self.assertEqual(so_downpayment_lines.account_id.id, account.id)
+
+    @freeze_time('2007-07-07')
+    def test_pos_settle_pre_paid_so(self):
+        """Settle a Sale Order the customer already paid online.
+
+        The online payment credited the receivable of the customer.
+        - When that is already the POS receivable there is nothing to move
+          and the session move reconciles against the payment itself.
+        - Otherwise the amount is transferred to the POS receivable first.
+        Either way the money is never collected a second time.
+        """
+        self.product_a.available_in_pos = True
+        own_receivable = self.env['account.account'].create({
+            'code': 'CUSTREC',
+            'name': 'Customer Receivable - Test',
+            'account_type': 'asset_receivable',
+        })
+
+        for customer_receivable in (None, own_receivable):
+            with self.subTest(customer_receivable=customer_receivable.code if customer_receivable else 'POS receivable'):
+                if customer_receivable:
+                    self.partner_a.property_account_receivable_id = customer_receivable
+
+                sale_order = self._create_pre_paid_sale_order()
+                account_payment = sale_order.transaction_ids.payment_id
+                self.main_pos_config.open_ui()
+                session = self.main_pos_config.current_session_id
+                pos_receivable = session._get_receivable_account()
+                must_transfer = account_payment.destination_account_id != pos_receivable
+                self.assertEqual(
+                    must_transfer, bool(customer_receivable),
+                    'the online payment must land on the receivable of the customer',
+                )
+                transfers_before = self.env['account.move'].search([('ref', 'like', 'Transfer settled Sale Orders')])
+
+                self.start_pos_tour('test_pos_settle_pre_paid_so', login='accountman')
+                session.close_session_from_ui()
+
+                payment = session.order_ids.payment_ids
+                self.assertEqual(payment.payment_method_id, self.main_pos_config.sale_order_payment_method_id)
+                self.assertEqual(payment.online_account_payment_id, account_payment)
+                self.assertEqual(sale_order.pos_order_count, 1)
+
+                # The pre-paid amount settles the session move, and nothing is collected a
+                # second time for money the customer already paid online.
+                payment_term_line = session.sales_move_id.line_ids.filtered(
+                    lambda line: line.display_type == 'payment_term',
+                )
+                self.assertEqual(payment_term_line.balance, sale_order.amount_total)
+                self.assertTrue(payment_term_line.reconciled)
+                self.assertFalse(self.env['account.payment'].search_count([('pos_session_id', '=', session.id)]))
+
+                # A transfer entry is only booked when the payment landed elsewhere.
+                transfer = self.env['account.move'].search([('ref', 'like', 'Transfer settled Sale Orders')]) - transfers_before
+                if not must_transfer:
+                    self.assertFalse(transfer)
+                    continue
+                self.assertEqual(
+                    transfer.line_ids.filtered(lambda line: line.account_id == customer_receivable).debit,
+                    sale_order.amount_total,
+                )
+                self.assertEqual(
+                    transfer.line_ids.filtered(lambda line: line.account_id == pos_receivable).credit,
+                    sale_order.amount_total,
+                )
+
+    @freeze_time('2007-07-07')
+    def test_pos_settle_pre_paid_so_mixed_session(self):
+        """A session holding both a pre-paid SO order and a regular counter order balances.
+
+        The pre-paid payment is transferred rather than collected, so its receivable
+        counterpart comes from a separate move: check the two payment term lines of the
+        session move are still each reconciled with the right payment line.
+        """
+        self.product_a.available_in_pos = True
+        sale_order = self._create_pre_paid_sale_order()
+        self.main_pos_config.open_ui()
+        session = self.main_pos_config.current_session_id
+
+        # A regular order, collected at the counter, in the very same session.
+        self._sync_paid_pos_order(
+            [{
+                'product': self.product_a,
+                'price_unit': 100.0,
+                'taxes': self.env['account.tax'],
+            }],
+            partner=self.partner_a,
+            payment_method=self.bank_payment_method
+        )
+
+        self.start_pos_tour('test_pos_settle_pre_paid_so', login='accountman')
+        session.close_session_from_ui()
+
+        session_move = session.sales_move_id
+        self.assertEqual(session_move.state, 'posted')
+        self.assertTrue(
+            session_move.currency_id.is_zero(sum(session_move.line_ids.mapped('balance'))),
+            'the session move of a mixed pre-paid / counter session must balance',
+        )
+        payment_term_lines = session_move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertEqual(
+            sum(payment_term_lines.mapped('balance')),
+            sale_order.amount_total + 100.0,
+            'both the settled sale order and the counter order must be on the receivable side',
+        )
+        self.assertTrue(
+            all(line.reconciled for line in payment_term_lines),
+            'each payment term line must be reconciled with its own payment line',
+        )

@@ -6,7 +6,7 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
-const _getPaymentlineSelector = ({ name, amount, nth, selected } = {}) => {
+export const _getPaymentlineSelector = ({ name, amount, nth, selected } = {}) => {
     const selectedSelector = selected ? ".selected" : "";
     const nameSelector = name ? `:has(.payment-name:contains("${name}"))` : "";
     const amountSelector = amount ? `:has(.payment-amount:contains("${amount}"))` : "";

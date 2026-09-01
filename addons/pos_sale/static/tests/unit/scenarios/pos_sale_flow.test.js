@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryAll, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { MockServer } from "@web/../tests/web_test_helpers";
 import { setupAndMountPosApp } from "@point_of_sale/../tests/unit/utils";
@@ -276,4 +276,27 @@ test("test_settle_so_custom_attribute_value: the custom attribute value is shown
     expect(Utils.hasOrderline({ attributeLine: "Sprinkles, Customization: Yes: Value" })).toBe(
         true
     );
+});
+
+test("test_pos_settle_pre_paid_so: Settle fully Prepaid sale order", async () => {
+    await setupAndMountPosApp();
+    await Utils.settlePaidSaleOrder("S00019");
+    expect(Utils.hasOrderline({ productName: "TEST", quantity: "1" })).toBe(true);
+    await Utils.clickPayButton();
+    await waitFor(".payment-screen");
+
+    const paymentLines = queryAll(".paymentline");
+    expect(paymentLines).toHaveLength(1);
+    expect(paymentLines[0].querySelector(".payment-name")).toHaveText(
+        "Online Payment: PBNK1/2026/00001"
+    );
+    expect(paymentLines[0].querySelector(".payment-amount")).toHaveText("$101.00");
+    expect(paymentLines[0].querySelector(".payment-name")).toHaveText(
+        "Online Payment: PBNK1/2026/00001"
+    );
+    expect(paymentLines[0].querySelector(".delete-button")).toBeEmpty();
+    await Utils.clickValidatePayment();
+
+    await Utils.clickNextOrder();
+    await waitFor(".product-screen");
 });

@@ -566,6 +566,25 @@ export class SaleOrderLine extends models.ServerModel {
             extra_tax_data: {},
             write_date: "2025-07-03 17:04:14",
         },
+        {
+            id: 31,
+            display_name: "Test Product",
+            product_id: 5,
+            product_uom_qty: 1,
+            order_id: 19,
+            price_unit: 101,
+            price_total: 101,
+            discount: 0,
+            qty_delivered: 0,
+            qty_invoiced: 0,
+            qty_to_invoice: 1,
+            display_type: false,
+            name: "Test Product",
+            tax_ids: [],
+            is_downpayment: false,
+            extra_tax_data: {},
+            write_date: "2025-07-03 17:04:14",
+        },
     ];
 
     async read_converted(ids) {

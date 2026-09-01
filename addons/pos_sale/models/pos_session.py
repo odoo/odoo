@@ -12,5 +12,5 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config):
         data = super()._load_pos_data_models(config)
-        data += ['sale.order', 'sale.order.line']
+        data += ['sale.order', 'sale.order.line', 'payment.transaction', 'account.payment']
         return data

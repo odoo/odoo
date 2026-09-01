@@ -52,7 +52,19 @@ class PosOrder(models.Model):
             sale_orders = self.lines.mapped('sale_order_origin_id')
             for so in sale_orders.filtered(lambda s: s.state in ('draft', 'sent')):
                 so.action_confirm()
+        # Link POS payment method on pre-paid account payments for sale order settlement payments.
+        for payment in self.payment_ids:
+            if payment.payment_method_id.use_sale_order_payment and not payment.online_account_payment_id.pos_payment_method_id:
+                payment.online_account_payment_id.pos_payment_method_id = payment.payment_method_id
         return res
+
+    def _get_customer_account_payments(self):
+        # The settlement payment method is a `pay_later` one, but the customer already
+        # paid it online on the sale order: nothing is due on their account, so such an
+        # order must not be force-invoiced out of the session move.
+        return super()._get_customer_account_payments().filtered(
+            lambda payment: not payment.payment_method_id.use_sale_order_payment,
+        )
 
     @api.model
     def sync_from_ui(self, orders):

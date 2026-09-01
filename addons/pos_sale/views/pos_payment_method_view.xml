@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_sale" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pos.sale</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <group name="Payment methods" position="attributes">
+                <attribute name="invisible" add="use_sale_order_payment" separator=" or "/>
+            </group>
+            <group name="Payment methods" position="after">
+                <group invisible="not use_sale_order_payment">
+                    <field name="use_sale_order_payment" readonly="1"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

@@ -7,4 +7,4 @@ from . import report
 
 
 def _pos_sale_post_init(env):
-    env['pos.config']._ensure_default_products()
+    env['pos.config']._ensure_default_configurations()

@@ -18,6 +18,30 @@ patch(PosStore.prototype, {
         const currentSaleOrigin = this.getOrder()
             .getOrderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
+
+        let selectedOption = "settle"; // Default to "settle" when the order is already paid online
+        if (sale_order.amount_unpaid != 0) {
+            selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("What do you want to do?"),
+                list: [
+                    { id: "0", label: _t("Settle the order"), item: "settle" },
+                    {
+                        id: "1",
+                        label: _t("Apply a down payment (percentage)"),
+                        item: "dpPercentage",
+                    },
+                    {
+                        id: "2",
+                        label: _t("Apply a down payment (fixed amount)"),
+                        item: "dpAmount",
+                    },
+                ],
+            });
+            if (!selectedOption) {
+                return;
+            }
+        }
+
         if (currentSaleOrigin?.id) {
             const linkedSO = await this._getSaleOrder(currentSaleOrigin.id);
             if (
@@ -43,25 +67,6 @@ patch(PosStore.prototype, {
             fiscal_position_id: orderFiscalPos,
         });
 
-        const selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
-            title: _t("What do you want to do?"),
-            list: [
-                { id: "0", label: _t("Settle the order"), item: "settle" },
-                {
-                    id: "1",
-                    label: _t("Apply a down payment (percentage)"),
-                    item: "dpPercentage",
-                },
-                {
-                    id: "2",
-                    label: _t("Apply a down payment (fixed amount)"),
-                    item: "dpAmount",
-                },
-            ],
-        });
-        if (!selectedOption) {
-            return;
-        }
         selectedOption == "settle"
             ? await this.settleSO(sale_order, orderFiscalPos)
             : await this.downPaymentSO(sale_order, selectedOption == "dpPercentage");
@@ -98,8 +103,9 @@ patch(PosStore.prototype, {
         }
     },
     async settleSO(sale_order, orderFiscalPos) {
+        const posOrder = this.getOrder();
         if (sale_order.pricelist_id) {
-            this.getOrder().setPricelist(sale_order.pricelist_id);
+            posOrder.setPricelist(sale_order.pricelist_id);
         }
         let previousProductLine = null;
 
@@ -136,7 +142,7 @@ patch(PosStore.prototype, {
                 sale_order_line_id: line,
                 customer_note: line.customer_note,
                 description: line.name,
-                order_id: this.getOrder(),
+                order_id: posOrder,
                 attribute_value_ids: [
                     ...(line.product_no_variant_attribute_value_ids || [])
                         .filter((ptav) => !ptav.is_custom)
@@ -166,19 +172,60 @@ patch(PosStore.prototype, {
                 continue;
             }
 
-            const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
+            let newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
+            if (!newLine) {
+                newLine = posOrder.lines.find((ol) => ol.sale_order_line_id.id === line.id);
+            }
             previousProductLine = newLine;
             await this.updateSOLines(line, converted_line, newLine, newLineValues, state);
         }
-        // Add a down payment for transactions when automatic invoice is disabled
-        const paidDiff = this.getOrder().amount_total - sale_order.amount_unpaid;
+
+        const settledOnlineAmount = this._settleSOOnlinePayments(sale_order);
+
+        // Add a down payment for the transactions that are not settled by a payment line,
+        // when automatic invoice is disabled
+        const paidDiff = posOrder.amount_total - sale_order.amount_unpaid - settledOnlineAmount;
+        const remainingPaid = sale_order.amount_paid - settledOnlineAmount;
         const currency = sale_order.currency_id || this.currency;
-        if (currency.isPositive(sale_order.amount_paid) && !currency.isZero(paidDiff)) {
+        if (currency.isPositive(remainingPaid) && !currency.isZero(paidDiff)) {
             if (!(await this.loadDownPaymentProduct())) {
                 return;
             }
             this.addDownPaymentProductOrderlineToOrder(sale_order, -paidDiff, false);
         }
+    },
+    /**
+     * Add a non editable payment line for each payment already made on the sale order,
+     * so the cashier only has to collect what is left to pay.
+     *
+     * @returns {number} the amount of the sale order settled by those payment lines
+     */
+    _settleSOOnlinePayments(sale_order) {
+        const paymentMethod = this.config.sale_order_payment_method_id;
+        if (!paymentMethod) {
+            return 0;
+        }
+
+        const posOrder = this.getOrder();
+        let settledAmount = 0;
+        for (const transaction of sale_order.transaction_ids) {
+            const accountPayment = transaction.payment_id;
+            // The getter is read again on each pass, so a payment line added for an
+            // earlier transaction already counts as settled here.
+            if (!accountPayment || posOrder.settledSOAccountPaymentIds.has(accountPayment.id)) {
+                continue;
+            }
+            this.models["pos.payment"].create({
+                pos_order_id: posOrder,
+                payment_method_id: paymentMethod,
+                name: _t("Online Payment: %s", accountPayment.name),
+                account_move_id: accountPayment.move_id,
+                amount: transaction.amount,
+                online_account_payment_id: accountPayment,
+            });
+            settledAmount += transaction.amount;
+        }
+        return settledAmount;
     },
 
     async updateSOLines(line, convertedLine, newLine, newLineValues, state) {
