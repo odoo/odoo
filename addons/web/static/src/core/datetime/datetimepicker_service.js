@@ -243,7 +243,10 @@ export const datetimePickerService = {
                         return open(ev.target === getInput(1) ? 1 : 0);
                     }
                     switch (ev.key) {
-                        case "Enter":
+                        case "Enter": {
+                            updateValueFromInputs();
+                            return saveAndClose();
+                        }
                         case "Escape": {
                             return saveAndClose();
                         }
