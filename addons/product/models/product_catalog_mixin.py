@@ -19,7 +19,10 @@ class ProductCatalogMixin(models.AbstractModel):
         kanban_view_id = self.env.ref("product.product_view_kanban_catalog").id
         search_view_id = self.env.ref("product.product_view_search_catalog").id
         additional_context = self._get_action_add_from_catalog_extra_context()
+        context = {**self.env.context, **additional_context}
+        context.pop('form_view_ref', None)
         return {
+<<<<<<< 7ec29070a5d996679374671437c461cbd1336754
             "type": "ir.actions.act_window",
             "name": self.env._("Products"),
             "res_model": "product.product",
@@ -27,6 +30,23 @@ class ProductCatalogMixin(models.AbstractModel):
             "search_view_id": [search_view_id, "search"],
             "domain": self._get_product_catalog_domain(),
             "context": {**self.env.context, **additional_context},
+||||||| 3dd41395e2e4205fa477eb474d4a4dba0a976154
+            'type': 'ir.actions.act_window',
+            'name': _('Products'),
+            'res_model': 'product.product',
+            'views': [(kanban_view_id, 'kanban'), (False, 'form')],
+            'search_view_id': [search_view_id, 'search'],
+            'domain': self._get_product_catalog_domain(),
+            'context': {**self.env.context, **additional_context},
+=======
+            'type': 'ir.actions.act_window',
+            'name': _('Products'),
+            'res_model': 'product.product',
+            'views': [(kanban_view_id, 'kanban'), (False, 'form')],
+            'search_view_id': [search_view_id, 'search'],
+            'domain': self._get_product_catalog_domain(),
+            'context': context,
+>>>>>>> e4295edc8af22bee5a516c07242778387921996a
         }
 
     def _get_action_add_from_catalog_extra_context(self) -> dict:
