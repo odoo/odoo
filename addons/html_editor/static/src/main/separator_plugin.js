@@ -1,18 +1,24 @@
 /** @odoo-module native */
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { removeClass } from "@html_editor/utils/dom";
+import { DIRECTIONS, nodeSize, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/translation";
 
 import { Plugin } from "../plugin.js";
 import { closestBlock } from "../utils/blocks.js";
-import { fillEmpty } from "../utils/dom.js";
+import { fillEmpty, splitTextNode } from "../utils/dom.js";
 import {
     isEmptyBlock,
     isListItemElement,
     paragraphRelatedElementsSelector,
 } from "../utils/dom_info.js";
-import { closestElement, firstLeaf, selectElements } from "../utils/dom_traversal.js";
+import {
+    closestElement,
+    firstLeaf,
+    lastLeaf,
+    selectElements,
+} from "../utils/dom_traversal.js";
 
 export class SeparatorPlugin extends Plugin {
     static id = "separator";
@@ -21,6 +27,7 @@ export class SeparatorPlugin extends Plugin {
         "history",
         "split",
         "delete",
+        "dom",
         "lineBreak",
         "baseContainer",
     ];
@@ -70,18 +77,41 @@ export class SeparatorPlugin extends Plugin {
         if (element && element !== this.editable) {
             const sep = this.document.createElement("hr");
             const firstLeafNode = firstLeaf(block);
+            const isSelectionAtEnd =
+                lastLeaf(block) === selection.focusNode &&
+                selection.focusOffset === nodeSize(selection.focusNode);
             if (
                 isEmptyBlock(element) ||
                 (selection.anchorNode === firstLeafNode && selection.anchorOffset === 0)
             ) {
                 element.before(sep);
-            } else {
+            } else if (isSelectionAtEnd) {
                 element.after(sep);
                 const baseContainer =
                     this.dependencies.baseContainer.createBaseContainer();
                 fillEmpty(baseContainer);
                 sep.after(baseContainer);
                 this.dependencies.selection.setCursorStart(baseContainer);
+            } else {
+                // Split the block at the cursor and drop the separator in
+                // between, so that what follows the cursor stays below it.
+                const anchorNode = selection.anchorNode;
+                const newAnchorNode =
+                    anchorNode.nodeType === Node.TEXT_NODE
+                        ? splitTextNode(
+                              anchorNode,
+                              selection.anchorOffset,
+                              DIRECTIONS.LEFT,
+                          ) + 1 && anchorNode
+                        : this.dependencies.split
+                              .splitElement(anchorNode, selection.anchorOffset)
+                              .shift();
+                const [newAnchor, newOffset] = rightPos(newAnchorNode);
+                this.dependencies.selection.setSelection(
+                    { anchorNode: newAnchor, anchorOffset: newOffset },
+                    { normalize: false },
+                );
+                this.dependencies.dom.insert(sep);
             }
         }
         this.dependencies.history.addStep();
