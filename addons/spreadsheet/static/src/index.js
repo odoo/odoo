@@ -121,6 +121,10 @@ corePluginRegistry.add("OdooListCoreGlobalFilterPlugin", ListCoreGlobalFilterPlu
 corePluginRegistry.add("odooChartCorePlugin", OdooChartCorePlugin);
 corePluginRegistry.add("ChartOdooLinkPlugin", ChartOdooLinkPlugin);
 
+// local command handled by the list and Odoo chart core view plugins, which are
+// evaluation plugins: it has to be declared as an evaluation command to reach them.
+spreadsheet.evaluationCommandTypes.add("REFRESH_ALL_DATA_SOURCES");
+
 evaluationPluginRegistry.add("OdooGlobalFiltersCoreViewPlugin", GlobalFiltersCoreViewPlugin);
 evaluationPluginRegistry.add(
     "OdooPivotGlobalFiltersCoreViewPlugin",

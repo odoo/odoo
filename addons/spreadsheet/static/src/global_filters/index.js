@@ -11,6 +11,7 @@ function identity(cmd) {
 
 const {
     coreTypes,
+    evaluationCommandTypes,
     invalidateEvaluationCommands,
     readonlyAllowedCommands,
     lockedSheetAllowedCommands,
@@ -20,6 +21,17 @@ coreTypes.add("ADD_GLOBAL_FILTER");
 coreTypes.add("EDIT_GLOBAL_FILTER");
 coreTypes.add("REMOVE_GLOBAL_FILTER");
 coreTypes.add("MOVE_GLOBAL_FILTER");
+
+// `evaluationCommandTypes` is a snapshot of `coreTypes` taken when o-spreadsheet
+// is loaded, so every core type added here has to be registered again for
+// evaluation plugins to receive it.
+// TODO: remove once `isEvaluationCommand` also checks `coreTypes` at call time.
+evaluationCommandTypes.add("ADD_GLOBAL_FILTER");
+evaluationCommandTypes.add("EDIT_GLOBAL_FILTER");
+evaluationCommandTypes.add("REMOVE_GLOBAL_FILTER");
+evaluationCommandTypes.add("MOVE_GLOBAL_FILTER");
+// local command handled by the global filters, list, pivot and chart core view plugins
+evaluationCommandTypes.add("SET_GLOBAL_FILTER_VALUE");
 
 invalidateEvaluationCommands.add("ADD_GLOBAL_FILTER");
 invalidateEvaluationCommands.add("EDIT_GLOBAL_FILTER");

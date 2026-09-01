@@ -6,7 +6,7 @@ import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "./pivot_actions";
 import { PivotOdooCorePlugin } from "./plugins/pivot_odoo_core_plugin";
 import { PivotCoreViewGlobalFilterPlugin } from "./plugins/pivot_core_view_global_filter_plugin";
 
-const { coreTypes, invalidateEvaluationCommands } = spreadsheet;
+const { coreTypes, evaluationCommandTypes, invalidateEvaluationCommands } = spreadsheet;
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -17,6 +17,12 @@ function identity(cmd) {
 }
 
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
+
+// `evaluationCommandTypes` is a snapshot of `coreTypes` taken when o-spreadsheet
+// is loaded, so every core type added here has to be registered again for
+// evaluation plugins to receive it.
+// TODO: remove once `isEvaluationCommand` also checks `coreTypes` at call time.
+evaluationCommandTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
 invalidateEvaluationCommands.add("REFRESH_PIVOT");
