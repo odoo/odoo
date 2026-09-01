@@ -215,6 +215,7 @@ class ProjectProject(models.Model):
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
     def _compute_next_milestone_id(self):
+<<<<<<< 24e028551e932f8b9bdd41d8be7edc573f298112
         milestones_per_project_id = {
             project.id: milestones
             for project, milestones in self.env['project.milestone']._read_group(
@@ -237,6 +238,21 @@ class ProjectProject(models.Model):
             else:
                 opened_task_count += count
             task_count_per_milestones[milestone.id] = opened_task_count, closed_task_count
+||||||| 765174be270813442df6c497456fe2864517da0b
+        milestone_ids_per_project_id = {
+            project.id: milestone_ids
+            for project, milestone_ids in self.env['project.milestone']._read_group(
+                [('project_id', 'in', self.ids), ('is_reached', '=', False)],
+                ['project_id'],
+                ['id:recordset'],
+            )
+        }
+=======
+        milestone_ids_per_project_id = self.env['project.milestone'].search([
+            ('project_id', 'in', self.ids),
+            ('is_reached', '=', False),
+        ]).grouped(lambda milestone: milestone.project_id.id)
+>>>>>>> d51557cdf30751c980357565e165fa90e2b7de4a
         for project in self:
             milestones = milestones_per_project_id.get(project.id, self.env['project.milestone'])
             project.next_milestone_id = milestones[:1]

@@ -40,6 +40,16 @@ class TestProjectMilestone(TestProjectCommon):
             project_form.name = 'My Mouses Project'
             self.assertTrue(project_form.allow_milestones, 'New projects allow_milestones should be True by default.')
 
+    def test_next_milestone_ordered_by_deadline(self):
+        self.milestone_pigs.deadline = '2100-02-01'
+        earlier_milestone = self.env['project.milestone'].create({
+            'name': 'Earlier Milestone',
+            'project_id': self.project_pigs.id,
+            'deadline': '2100-01-01',
+        })
+
+        self.assertEqual(self.project_pigs.next_milestone_id, earlier_milestone)
+
     def test_change_project_in_task(self):
         """ Test when a task is linked to a milestone and when we change its project the milestone is removed (and
             we fallback on the parent milestone if it belongs to the same project)
