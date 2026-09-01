@@ -230,7 +230,10 @@ export class ColorPlugin extends Plugin {
 
     requestColor(color, mode, previewMode = false) {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (sel.isCollapsed) {
+        if (
+            sel.isCollapsed &&
+            (this.checkPredicates("should_defer_format_predicates", sel) ?? true)
+        ) {
             const block = closestBlock(sel.anchorNode);
             const colorNode = findUpTo(closestElement(sel.anchorNode), block, (node) =>
                 getColorOrClass(node, mode)
@@ -266,7 +269,10 @@ export class ColorPlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         let targetedNodes;
         // Get the <font> nodes to color
-        if (selection.isCollapsed) {
+        if (
+            selection.isCollapsed &&
+            (this.checkPredicates("should_defer_format_predicates", selection) ?? true)
+        ) {
             const zws = this.dependencies.format.getOrCreateZws();
             this.dependencies.selection.setSelection(
                 {

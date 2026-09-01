@@ -468,7 +468,10 @@ export class FormatPlugin extends Plugin {
      */
     requestFormat(formatName, options) {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (!sel.isCollapsed) {
+        if (
+            !sel.isCollapsed ||
+            !(this.checkPredicates("should_defer_format_predicates", sel) ?? true)
+        ) {
             this.formatSelection(formatName, options);
             return;
         }

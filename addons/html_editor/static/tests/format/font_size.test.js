@@ -287,3 +287,19 @@ test("should format inside of content editable boundary (setFontSize)", async ()
             '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
     });
 });
+
+test("should apply font-size to single selected cell", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="o_selected_table"><tbody>
+                <tr><td class="o_selected_td"><p>[]<br></p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: setFontSize("36px"),
+        contentAfter: unformat(`
+            <table><tbody>
+                <tr><td><p><span style="font-size: 36px;">[]<br></span></p></td></tr>
+            </tbody></table>
+        `),
+    });
+});
