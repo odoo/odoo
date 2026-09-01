@@ -39,7 +39,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
         """ Helper method for creating the expected lines """
         msg = b'1' + b';'.join([                       # 0x31, command to add a line
             line_dict.get('name', b''.ljust(36)),      # 36 characters for the name
-            line_dict.get('vat_class', b'A'),          # 1 symbol for vat class (a because the tax is 16.0%)
+            line_dict.get('vat_class', b'B'),          # 1 symbol for vat class (b, the KRA byte for the 16% standard rate, when no item code is set)
             line_dict.get('price', b'1'),              # up to 15 symbols for the unit price, tax included (up to 5 decimal places)
             line_dict.get('uom', b'Uni'),              # 3 symbols for uom
             line_dict.get('item_code', b''.ljust(10)), # 10 symbols for item code (only reported when the tax is not 16.0%)
@@ -81,7 +81,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'quantity': b'10.0',
             'discount': b'-25.0%',
             'vat_rate': b'0.0',
-            'vat_class': b'E',
+            'vat_class': b'A',  # item_code_2023_00391153 is stored as tax_rate='E' (Exempted), remapped to the KRA byte 'A'
         })
         expected_messages = [
             # open invoice
@@ -227,3 +227,55 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'discount': b'-25.0%',
         })
         self.assertEqual(generated_messages, [expected_sale_line])
+
+    def test_export_wire_tax_rate_remap(self):
+        """ The vat class byte sent to the device is not l10n_ke.item.code's stored tax_rate
+            value as-is: it is remapped to the byte KRA actually expects for that category
+            (see L10N_KE_WIRE_TAX_RATE), since the stored values predate that mapping and
+            don't match it 1:1. This should hold for every stored value, and for lines with
+            no item code at all (implying the standard 16% rate).
+        """
+        test_cases = [
+            # (item_code xmlid, tax amount, expected wire vat_class byte, expected vat_rate byte)
+            ('l10n_ke.item_code_2023_00391153', 0, b'A', b'0.0'),    # stored 'E' (Exempted) -> wire 'A'
+            ('l10n_ke.item_code_2023_00011301', 8, b'E', b'8.0'),    # stored 'B' (Taxable at 8%) -> wire 'E'
+            ('l10n_ke.item_code_2023_00011200', 0, b'C', b'0.0'),    # stored 'C' (Zero Rated) -> wire 'C'
+            ('l10n_ke.item_code_2023_00016500', 16, b'B', b'16.0'),  # stored 'A' (Taxable at 16%) -> wire 'B'
+            ('l10n_ke.item_code_2023_00015400', 0, b'D', b'0.0'),    # stored 'D' (Special Category) -> wire 'D'
+            (None, 16, b'B', b'16.0'),                                # no item code (standard rate) -> wire 'B'
+        ]
+        expected_prices = {0: b'100', 8: b'108', 16: b'116'}
+        for xmlid, amount, expected_vat_class, expected_vat_rate in test_cases:
+            with self.subTest(xmlid=xmlid):
+                item_code = self.env.ref(xmlid) if xmlid else self.env['l10n_ke.item.code']
+                tax = self.env['account.tax'].create({
+                    'name': f'Test tax {xmlid or "no code"}',
+                    'amount': amount,
+                    'amount_type': 'percent',
+                    'company_id': self.company_data['company'].id,
+                    'l10n_ke_item_code_id': item_code.id,
+                })
+                invoice = self.env['account.move'].create({
+                    'move_type': 'out_invoice',
+                    'partner_id': self.partner_a.id,
+                    'invoice_line_ids': [(0, 0, {
+                        'product_id': self.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 100,
+                        'tax_ids': [(6, 0, [tax.id])],
+                    })],
+                })
+                invoice.action_post()
+                generated_messages = invoice._l10n_ke_cu_lines_messages()
+                expected_sale_line = self.line_dict_to_bytes({
+                    'name': b'Infinite Improbability Drive        ',
+                    'price': expected_prices[amount],
+                    'quantity': b'1.0',
+                    # Formatting of item_code/item_desc is covered by the other tests; delegate to the
+                    # actual helper here so this test stays focused on the vat_class/vat_rate remap.
+                    'item_code': (item_code.code or '').ljust(10).encode('cp1251'),
+                    'item_desc': invoice._l10n_ke_fmt(item_code.description, 20),
+                    'vat_rate': expected_vat_rate,
+                    'vat_class': expected_vat_class,
+                })
+                self.assertEqual(generated_messages, [expected_sale_line])
