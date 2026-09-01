@@ -15,7 +15,6 @@ export class MailComposerFormController extends formView.Controller {
     });
     setup() {
         super.setup();
-        this.env.dialogData.model = this.props.resModel;
         useSubEnv({
             fullComposerBus: this.props.fullComposerBus,
         });
