@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit } from "@odoo/hoot-dom";
+import { click, edit, keyDown } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { Component, xml, proxy } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -159,6 +159,43 @@ test("value is not updated if it did not change", async () => {
     await edit("07/07/2023");
     await click(document.body);
 
+    expect(getShortDate(pickerProps.value)).toBe("2023-07-07");
+    expect.verifySteps(["2023-07-07"]);
+});
+
+test("value is applied when pressing Enter after typing without opening the picker", async () => {
+    const getShortDate = (date) => date.toSQL().split(" ")[0];
+
+    let pickerProps;
+    const defaultPickerProps = {
+        value: DateTime.fromSQL("2023-06-06"),
+        type: "date",
+    };
+
+    await mountInput(() => {
+        pickerProps = useDateTimePicker({
+            pickerProps: defaultPickerProps,
+            onApply: (value) => {
+                expect.step(getShortDate(value));
+            },
+        }).state;
+    });
+
+    expect(".datetime_hook_input").toHaveValue("06/06/2023");
+
+    // Focus the input directly (as opposed to clicking on it) so that the
+    // picker popover never opens, then type a new date with `keyDown`
+    // (as opposed to `fill`/`edit`) and press Enter, without ever blurring
+    // the input.
+
+    document.querySelector(".datetime_hook_input").focus();
+    for (const char of "07/07/2023") {
+        await keyDown(char);
+    }
+    await keyDown("Enter");
+    await animationFrame();
+
+    expect(".datetime_hook_input").toHaveValue("07/07/2023");
     expect(getShortDate(pickerProps.value)).toBe("2023-07-07");
     expect.verifySteps(["2023-07-07"]);
 });
