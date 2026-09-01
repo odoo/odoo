@@ -1518,7 +1518,12 @@ export class PivotModel extends Model {
                 measureSpecs.push("__count");
             }
             const resModel = config.metaData.resModel;
-            const kwargs = { context: this.searchParams.context };
+            const kwargs = {
+                context: {
+                    read_group_expand: true,
+                    ...this.searchParams.context,
+                },
+            };
             const groupingSets = [];
             const groupInfo = [];
             divisors.forEach((divisor) => {
