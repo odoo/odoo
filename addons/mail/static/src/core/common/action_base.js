@@ -13,7 +13,6 @@ export class ActionBase extends Component {
     static propsSchema = {
         action: t.instanceOf(ActionModel),
         attrs: t.object(),
-        isInlineCircleButton: t.boolean(),
         fw: t.boolean().optional(),
         isFirstInGroup: t.boolean().optional(),
         isLastInGroup: t.boolean().optional(),

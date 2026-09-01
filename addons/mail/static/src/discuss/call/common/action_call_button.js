@@ -11,4 +11,9 @@ export class ActionCallButton extends ActionButton {
     get btnRootClass() {
         return "o-mail-ActionCallButton";
     }
+
+    /** A call button is a bare circular icon button unless it carries an inline text label. */
+    get isInlineCircleButton() {
+        return super.isInlineCircleButton || (Boolean(this.action.icon) && !this.action.inlineName);
+    }
 }

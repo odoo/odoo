@@ -55,16 +55,6 @@ class Action extends Component {
         return this.props.action;
     }
 
-    get isInlineCircleButtonValue() {
-        if (!this.props.inline || !this.action.icon) {
-            return false;
-        }
-        if (this.env.inComposer || this.env.inMessage) {
-            return true;
-        }
-        return Boolean(this.action.buttonComponent) && !this.action.inlineName;
-    }
-
     onSelected(action, ev) {
         action.onSelected?.(ev);
         this.env.inCallDropdown?.close();

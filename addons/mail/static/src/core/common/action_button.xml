@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActionButton">
-    <t t-set="isInlineCircleButton" t-value="this.props.isInlineCircleButton"/>
+    <t t-set="isInlineCircleButton" t-value="this.isInlineCircleButton"/>
     <t t-set="hasLargeIcon" t-value="this.hasLargeIcon"/>
     <button class="o-mail-ActionList-button btn btn-group-item position-relative o-inline" t-ref="this.props.action.actionRef" t-att-class="this.btnClass" t-att="Object.assign(this.props.attrs, { 'title': this.props.action.name })" t-on-click="(ev) => this.props.onSelected(ev)" t-att-data-hotkey="this.props.action.hotkey" t-att-style="this.props.style">
         <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"

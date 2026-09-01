@@ -28,9 +28,17 @@ export class ActionButton extends ActionBase {
         };
     }
 
+    /**
+     * Whether this action renders as a bare circular icon button (no rounded-group corners,
+     * circular icon background): composer/message inline actions.
+     */
+    get isInlineCircleButton() {
+        return Boolean(this.action.icon) && (this.env.inComposer || this.env.inMessage);
+    }
+
     get alignmentClass() {
         return {
-            "d-flex align-items-center": this.props.isInlineCircleButton,
+            "d-flex align-items-center": this.isInlineCircleButton,
         };
     }
 
@@ -42,7 +50,7 @@ export class ActionButton extends ActionBase {
     }
 
     get roundnessClass() {
-        const isInlineCircleButton = this.props.isInlineCircleButton;
+        const isInlineCircleButton = this.isInlineCircleButton;
         return {
             "rounded-circle": isInlineCircleButton,
             "rounded-start-3": !isInlineCircleButton && this.props.isFirstInGroup,
@@ -57,7 +65,7 @@ export class ActionButton extends ActionBase {
     }
 
     get paddingClass() {
-        const isInlineCircleButton = this.props.isInlineCircleButton;
+        const isInlineCircleButton = this.isInlineCircleButton;
         return {
             "o-px-1_5 py-1":
                 (this.hasBtnBg && !isInlineCircleButton && !this.env.inMeetingView) ||
