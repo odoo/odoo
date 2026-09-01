@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.addons.l10n_id_efaktur_coretax.models.account_move import TAX_TRANSACTION_CODE
 
 
 class Partner(models.Model):
@@ -15,13 +14,6 @@ class Partner(models.Model):
         ('Other', 'Others')
     ], default='TIN', string="Document Type")
     l10n_id_buyer_document_number = fields.Char(string="Document Number")
-    l10n_id_kode_transaksi = fields.Selection(
-        selection=TAX_TRANSACTION_CODE,
-        string='Invoice Transaction Code',
-        help="he first 2 digits of tax code",
-        default='04',
-        tracking=True,
-    )
 
     def _l10n_id_efaktur_tku_branch(self):
         """TKU branch digits for CoreTax e-Faktur (from ``additional_identifiers['ID_TKU']``)."""
