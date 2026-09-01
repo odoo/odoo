@@ -155,6 +155,7 @@ class TestOrmMessage(models.Model):
     priority = fields.Integer()
     active = fields.Boolean(default=True)
     has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling', search='_search_has_important_sibling')
+    body_search = fields.Char(compute='_compute_body_search', search='_search_body_search')
 
     attributes = fields.Properties(
         string='Discussion Properties',
@@ -172,6 +173,14 @@ class TestOrmMessage(models.Model):
             return NotImplemented
         # not entirely correct, but sufficent for tests
         return [('discussion.messages.important', '=', True)]
+
+    @api.depends('body')
+    def _compute_body_search(self):
+        for message in self:
+            message.body_search = message.body
+
+    def _search_body_search(self, operator, value):
+        return [('id', 'in', self._search([('body', operator, value)]))]
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
