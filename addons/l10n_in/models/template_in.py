@@ -183,3 +183,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_in_self_invoice': True,
             },
         }
+
+    def _create_outstanding_accounts(self, company, bank_prefix, code_digits):
+        super()._create_outstanding_accounts(company, bank_prefix, code_digits)
+        outstanding_payments = self.ref('account_journal_payment_credit_account_id', raise_if_not_found=False)
+        if company.chart_template == 'in' and outstanding_payments:
+            outstanding_payments.account_type = 'liability_current'
