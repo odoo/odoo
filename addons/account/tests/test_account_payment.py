@@ -823,8 +823,8 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
         self.assertEqual(payment.name, f'PBNK1/{year}/00002')
 
     def test_vendor_payment_save_user_selected_journal_id(self):
-        journal_bank = self.env['account.journal'].search([('name', '=', 'Bank')])
-        journal_cash = self.env['account.journal'].search([('name', '=', 'Cash')])
+        journal_bank = self.env['account.journal'].search([('name', '=', 'Bank'), ('company_id', '=', self.env.company.id)])
+        journal_cash = self.env['account.journal'].search([('name', '=', 'Cash'), ('company_id', '=', self.env.company.id)])
 
         self.partner.property_outbound_payment_method_line_id = journal_cash.outbound_payment_method_line_ids
         payment = self.env['account.payment'].create({

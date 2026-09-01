@@ -10,6 +10,12 @@ class TestHasGroup(TransactionCase):
     def setUp(self):
         super().setUp()
 
+        # `res.currency._toggle_group_multi_currency` grants `group_multi_currency` to
+        # `group_user` as soon as 2+ currencies are active (e.g. because of a multi-currency
+        # test company fixture), which would otherwise show up in `all_group_ids` below and
+        # make the expected values depend on which currencies happen to be in use.
+        self.env.ref('base.group_user').sudo()._remove_group(self.env.ref('base.group_multi_currency'))
+
         self.group0 = 'test_user_has_group.group0'
         self.group1 = 'test_user_has_group.group1'
         group0, _group1 = self.env['res.groups']._load_records([

@@ -22,7 +22,9 @@ class PoSSaleSyncCommon:
         self.main_pos_config.open_ui()
         session = self.main_pos_config.current_session_id
         currency = session.currency_id
-        payment_method = payment_method or self.main_pos_config.payment_method_ids[0]
+        # Pick the cash method explicitly: payment_method_ids[0] is not necessarily a usable
+        # bank method (e.g. a delivery-provider payment method with no outstanding account set).
+        payment_method = payment_method or self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[:1]
         order_uuid = str(uuid.uuid4())
         amount_total = 0
         amount_tax = 0
@@ -232,9 +234,12 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         }], partner=partner_1)
         current_session = order.session_id
         payment_context = {"active_ids": order.ids, "active_id": order.id}
+        # Pick the cash method explicitly: payment_method_ids[0] is not necessarily a usable
+        # bank method (e.g. a delivery-provider payment method with no outstanding account set).
+        payment_method = current_session.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[:1]
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
             'amount': order.amount_total,
-            'payment_method_id': current_session.payment_method_ids[0].id,
+            'payment_method_id': payment_method.id,
         })
         order_payment.with_context(**payment_context).check()
 

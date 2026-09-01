@@ -8,6 +8,13 @@ class TestGroupsOdoo(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # `res.currency._toggle_group_multi_currency` grants `group_multi_currency` to
+        # `group_user` as soon as 2+ currencies are active (e.g. because of a multi-currency
+        # test company fixture), which structurally changes the group graph. Undo that here so
+        # the group algebra below is independent of which currencies happen to be in use.
+        group_user = cls.env.ref('base.group_user')
+        group_mc = cls.env.ref('base.group_multi_currency')
+        group_user.sudo()._remove_group(group_mc)
         cls.test_group = cls.env['res.groups'].create({
             'name': 'test with implied user',
             'implied_ids': [Command.link(cls.env.ref('base.group_user').id)]

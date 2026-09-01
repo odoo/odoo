@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from freezegun import freeze_time
 
-from odoo import Command, fields
+from odoo import fields
 from odoo.addons.account.models.company import SOFT_LOCK_DATE_FIELDS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCase
@@ -111,9 +111,8 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
         """
 
         root_company = self.company_data['company']
-        root_company.write({'child_ids': [Command.create({'name': 'branch'})]})
         self.cr.precommit.run()  # load the CoA
-        branch = root_company.child_ids
+        branch, _branch = root_company.child_ids
 
         for lock_date_field, move_type in self.soft_lock_date_info:
             with self.subTest(lock_date_field=lock_date_field, move_type=move_type), closing(self.cr.savepoint()):

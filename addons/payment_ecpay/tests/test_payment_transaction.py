@@ -117,6 +117,4 @@ class TestPaymentTransaction(EcpayCommon):
         """Test that the payment method is updated from the payment data."""
         tx = self._create_transaction("redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
-        self.assertEqual(
-            tx.payment_method_id, self.env.ref("payment_ecpay.payment_method_ipass_money")
-        )
+        self.assertEqual(tx.payment_method_id, self.provider._get_pm_from_code("ipass_money"))

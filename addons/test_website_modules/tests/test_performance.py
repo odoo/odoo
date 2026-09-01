@@ -353,12 +353,12 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         # To increase the query count you must ask the permission to al
         queries = self._get_queries_shop()
 
+        queries['account_tax'] += 1
         if self.env["res.groups"]._is_feature_enabled("product.group_show_uom_price"):
             queries += 1
             queries['product_product'] += 1
 
         if self._has_demo_data():
-            queries['account_tax'] += 1
             queries['account_account_tag'] = 1
             queries['ir_attachment'] += -1
             queries['product_ribbon'] += -1
@@ -384,6 +384,7 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
         queries['account_tax'] += 1
         queries['account_account_tag'] = 2
+        queries['res_company'] += 1
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
             queries['uom_uom'] += 2

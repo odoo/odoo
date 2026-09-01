@@ -3522,6 +3522,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         Sync from UI is now syncing orders one by one.
         confirm_coupon_programs should be called 6 times in this tour (6 orders created).
         """
+        # pos.payment.method's _load_pos_data_domain matches every payment method regardless
+        # of company/config, relying on standard multi-company record rules to narrow it down;
+        # the (shared) test user's broad env.companies defeats that, so the client would load
+        # payment methods from other companies too and the tour's getFirst() could grab one
+        # that isn't actually in this config's payment_method_ids. Restrict to this test's own
+        # company to match the original single-company test assumption.
+        self.env.user.company_ids = self.env.company
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         pos_order = self.env.registry.models['pos.order']
         sync_counter = {'count': 0}

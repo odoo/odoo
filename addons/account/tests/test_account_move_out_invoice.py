@@ -4422,15 +4422,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         """You should not be able to reverse moves from different branches."""
 
         # create a new branch
-        self.env.company.write({
-            'child_ids': [
-                Command.create({'name': 'Branch A'}),
-            ],
-        })
         self.cr.precommit.run()  # load the CoA
-
-        # create an invoice on the new branch
-        branch_a = self.env.company.child_ids
+        branch_a, _branch_b = self.env.company.child_ids
         branch_invoice = self.init_invoice('out_invoice', products=self.product_a, company=branch_a)
 
         branch_invoice.action_post()
@@ -5270,16 +5263,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'original_tax_ids': [Command.set(tax_10_incl.ids)],
         })
 
-        # create a new branch
-        self.env.company.write({
-            'child_ids': [
-                Command.create({'name': 'Branch A'}),
-            ],
-        })
         self.cr.precommit.run()  # load the CoA
 
-        # create an invoice on the new branch
-        branch_a = self.env.company.child_ids
+        # create an invoice on the branch (use the shared base.test_company_branch
+        # fixture instead of creating a new one)
+        branch_a, _branch_b = self.env.company.child_ids
 
         # Create invoice - product will auto-apply price_unit from product with tax
         move_form = Form(self.env['account.move'].with_company(branch_a).with_context(default_move_type='out_invoice'))

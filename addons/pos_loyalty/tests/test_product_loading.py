@@ -67,6 +67,14 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         gift_card = self.env.ref('loyalty.gift_card_product_50').sudo()
         gift_card.company_id = self.env.company
 
+        # _get_program_ids() has no explicit company filter; it relies on standard
+        # multi-company record rules to keep it scoped to companies the acting user has
+        # access to. The (shared) test user has broad access, so it can still see the
+        # standard loyalty.gift_card_program (owned by whatever company was active at
+        # module-install time) from company_b below; restrict to this test's own company
+        # to match the original single-company test assumption.
+        self.env.user.company_ids = self.env.company
+
         company_b_data = self.setup_other_company(name='Company B')
         company_b = company_b_data['company']
         payment_method = self.env['pos.payment.method'].create({

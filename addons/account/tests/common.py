@@ -101,6 +101,10 @@ class AccountTestInvoicingCommon(ProductCommon):
             list_price=1000.0,
             standard_price=800.0,
             uom_id=cls.uom_unit.id,
+            # taxes_id/supplier_taxes_id default to one tax per company the (shared) test user
+            # has access to; pin them explicitly like product_b does below.
+            taxes_id=[Command.set(cls.tax_sale_a.ids)],
+            supplier_taxes_id=[Command.set(cls.tax_purchase_a.ids)],
         )
         cls.product_b = cls._create_product(
             name='product_b',
@@ -237,17 +241,28 @@ class AccountTestInvoicingCommon(ProductCommon):
         return data
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        if cls.env.registry.loaded:
-            # Only create a new company for post-install tests
-            return cls._create_company(name='company_1_data', **kwargs)
+    def setup_independent_company(cls):
+        if cls.country_code or cls.chart_template:
+            # if cls.country_code.lower() == "be":
+            #    # already loaded with generic_coa by base.test_company_be's test_data fixture
+            #    company = cls.env.ref('base.test_company_be')
+            # else:
+            # A specific country/chart was requested: it needs a dedicated company created from
+            # scratch, not the shared base.test_company (already loaded with generic_coa, with
+            # payment providers linked to its journals). Reusing/mutating one shared company
+            # across different country_code test classes would mean reloading its chart of
+            # accounts each time a different country is requested, which tries to delete the
+            # previous chart's journals/accounts - unsafely, since a payment provider may
+            # already be linked to one of them by then (deletion blocked, UserError).
+            company = cls._create_company()
         else:
-            cls.env['account.tax.group'].create({
-                'name': 'Test tax group',
-                'company_id': cls.env.company.id,
-            })
-            cls.env.company.country_id = cls.quick_ref('base.be')
-        return super().setup_independent_company(**kwargs)
+            company = cls.env.ref('base.test_company')
+            company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
+        cls.env['account.tax.group'].sudo().create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+        })
+        return company
 
     @classmethod
     def setup_independent_user(cls):
@@ -258,7 +273,16 @@ class AccountTestInvoicingCommon(ProductCommon):
             password='accountman',
             email='accountman@test.com',
             group_ids=cls.get_default_groups().ids,
-            company_id=cls.env.company.id,
+            company_id=cls.company.id,
+            company_ids=[
+                Command.link(cls.company.id),
+                Command.link(cls.env.company.id),
+                Command.link(cls.env.ref('base.test_company').id),
+                Command.link(cls.env.ref('base.test_company_be').id),
+                Command.link(cls.env.ref('base.test_company_branch_a').id),
+                Command.link(cls.env.ref('base.test_company_branch_b').id),
+                Command.link(cls.env.ref('base.test_company_without_branch').id),
+            ]
         )
 
     @classmethod
@@ -570,7 +594,6 @@ class AccountTestInvoicingCommon(ProductCommon):
             cls._prepare_invoice_line(name='test line', price_unit=amount, tax_ids=taxes)
             for amount in (amounts or [])
         ]
-
         return cls._create_invoice(
             move_type=move_type,
             partner_id=partner or cls.partner_a,
