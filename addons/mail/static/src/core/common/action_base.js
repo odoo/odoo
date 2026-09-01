@@ -55,14 +55,13 @@ export class ActionBase extends Component {
             "o-hasBtnBg": this.hasBtnBg,
             "bg-secondary":
                 this.action.isActive &&
-                !this.action.tags.includes("PRIMARY") &&
+                !this.action.btnVariant &&
                 !this.action.tags.includes("DANGER") &&
                 !this.action.tags.includes("SUCCESS"),
             "btn-secondary":
-                !this.action.tags.includes("PRIMARY") &&
+                !this.action.btnVariant &&
                 !this.action.tags.includes("DANGER") &&
                 !this.action.tags.includes("SUCCESS"),
-            "btn-primary": this.action.tags.includes("PRIMARY"),
             "btn-danger": this.action.tags.includes("DANGER"),
             "btn-success": this.action.tags.includes("SUCCESS"),
         };
@@ -84,6 +83,7 @@ export class ActionBase extends Component {
     get actionSpecificClass() {
         return {
             [this.action.btnClass ?? ""]: true,
+            [this.action.btnVariant]: true,
             [this.action.tagClassNames]: true,
         };
     }

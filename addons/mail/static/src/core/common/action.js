@@ -8,7 +8,6 @@ import { Reactive } from "@web/core/utils/reactive";
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
     SUCCESS: "SUCCESS",
-    PRIMARY: "PRIMARY",
     IMPORTANT_BADGE: "IMPORTANT_BADGE",
     WARNING_BADGE: "WARNING_BADGE",
     CALL_ACTION_TRACKED: "CALL_ACTION_TRACKED",
@@ -59,6 +58,8 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [badgeText]
  * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
  * @property {string|(params: ActionParams_T) => string} [btnClass]
+ * @property {(params: ActionParams_T) => string} [btnVariant] Bootstrap button variant class
+ *   (e.g. `btn-primary`) applied to the action's button.
  * @property {Component} [buttonComponent]
  * @property {Component} [component]
  * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
@@ -308,6 +309,16 @@ export class Action {
             (typeof this.definition.btnClass === "function"
                 ? this.definition.btnClass.call(this, this.params)
                 : this.definition.btnClass)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _btnVariant(action) {}
+    get btnVariant() {
+        return (
+            this._btnVariant(this.params) ??
+            this.definition.btnVariant?.call(this, this.params) ??
+            ""
         );
     }
 
