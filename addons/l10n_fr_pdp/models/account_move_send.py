@@ -34,6 +34,10 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_document_params(self, partner, invoice, invoice_data):
         edi_user, document = super()._get_peppol_document_params(partner, invoice, invoice_data)
+        xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+        if len(xml_file) > 10000000:
+            invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Approved Platform.", invoice.name)
+            return None, None
         if edi_user and document and edi_user.proxy_type == 'pdp':
             document.update({
                 'flow_number': 2,
