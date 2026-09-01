@@ -20,7 +20,7 @@ from requests import RequestException
 from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, release
+from odoo import api, fields, models, modules, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import (
     adapt_dark_palette_content,
@@ -583,6 +583,24 @@ class Website(models.CachedModel):
         # For text content generation
         return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, **kwargs)
 
+    def _get_configurator_olg_endpoint(self):
+        return DEFAULT_OLG_ENDPOINT
+
+    def _configurator_olg_request(self, route, params):
+        """Call an OLG configurator route, returning {} if it did not answer."""
+        if modules.module.current_test:
+            return {}
+        params['database_id'] = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+        params['version'] = release.version
+        url = tools.urls.urljoin(self._get_configurator_olg_endpoint(), route)
+        try:
+            response = requests.post(url, json=params, timeout=(3, 25))
+            response.raise_for_status()
+            return response.json()
+        except RequestException as e:
+            logger.warning("OLG %s failed: %s", route, e)
+            return {}
+
     @api.private
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus', 'shop_btn_href': '#'}
@@ -829,42 +847,73 @@ class Website(models.CachedModel):
                 break
         return themes_with_previews
 
-    def _ai_recommend_themes(self, theme_catalog, industry_name, website_type, positioning, count):
+    def _ai_recommend_themes(self, theme_catalog, industry_name, website_type, positioning, limit):
         """Use OLG to pick the best themes for a given business context."""
         if not industry_name:
             return []
-        try:
-            catalog_desc = "\n".join(
-                f"- {name}: {description}" for name, description in theme_catalog.items() if description
-            )
-            prompt = (
-                f"I'm building {website_type or 'a'} website for a {industry_name} business "
-                f"with a {positioning or 'general'} positioning.\n"
-                f"Available themes:\n{catalog_desc}\n\n"
-                f"Pick the {count} best-fitting themes. Return ONLY a JSON array of theme names, "
-                f"e.g. [\"theme_clean\", \"theme_cobalt\"]. No explanation."
-            )
-            database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-            response = self._OLG_api_rpc(
-                route='/api/olg/1/chat',
-                params={
-                    'prompt': prompt,
-                    'conversation_history': [],
-                    'database_id': database_id,
-                },
-                timeout=15,
-            )
-            content = response.get('content', '') if isinstance(response, dict) else ''
-            if isinstance(content, str) and (match := re.search(r'\[[\s\S]*?\]', content)):
-                suggestions = json.loads(match.group())
-                if isinstance(suggestions, list):
-                    return [
-                        theme for theme in suggestions
-                        if isinstance(theme, str) and theme in theme_catalog
-                    ][:count]
-        except (AccessError, iap_tools.InsufficientCreditError, json.JSONDecodeError, RequestException):
-            pass
-        return []
+        response = self._configurator_olg_request('/api/olg/1/theme_recommendation', {
+            'themes': theme_catalog,
+            'industry': industry_name,
+            'website_type': website_type,
+            'positioning': positioning,
+            'limit': limit,
+        })
+        return response.get('themes', [])
+
+    @api.model
+    def configurator_palette_recommendation(self, palettes, industry_name, website_type='', positioning=''):
+        """Use OLG to pick the color palette fitting a business the best."""
+        self._check_configurator_access()
+        if not industry_name:
+            return {}
+        response = self._configurator_olg_request('/api/olg/1/palette_recommendation', {
+            'palettes': palettes,
+            'industry': industry_name,
+            'website_type': website_type,
+            'positioning': positioning,
+            'lang': self.env['res.lang']._get_data(code=self.env.user.lang).name,
+        })
+        return response.get('palette', {})
+
+    @api.model
+    def configurator_closest_industry(self, industries, unknown_industry):
+        """Use OLG to match a typed industry against the ones the user was shown."""
+        self._check_configurator_access()
+        if not (industries and unknown_industry):
+            return {}
+        response = self._configurator_olg_request('/api/olg/1/closest_industry', {
+            'unknown_industry': unknown_industry,
+            'lang': self.env.user.lang or 'en_US',
+        })
+        return response.get('industry', {})
+
+    @api.model
+    def configurator_preview_headers(self, industry_name, website_type='', positioning='', limit=6):
+        """Use OLG to suggest homepage hero titles for a given business context."""
+        self._check_configurator_access()
+        if not industry_name:
+            return []
+        response = self._configurator_olg_request('/api/olg/1/preview_headers', {
+            'industry': industry_name,
+            'website_type': website_type,
+            'positioning': positioning,
+            'limit': limit,
+        })
+        return response.get('headers', [])
+
+    @api.model
+    def configurator_positionings(self, industry_name, sentence='', limit=6):
+        """Use OLG to suggest positionings for a given industry."""
+        self._check_configurator_access()
+        if not industry_name:
+            return []
+        response = self._configurator_olg_request('/api/olg/1/positioning', {
+            'industry': industry_name,
+            'sentence': sentence,
+            'lang': self.env['res.lang']._get_data(code=self.env.user.lang).name,
+            'limit': limit,
+        })
+        return response.get('positionings', [])
 
     @api.model
     def configurator_skip(self):
