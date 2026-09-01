@@ -251,21 +251,27 @@ class HrLeave(models.Model):
         date_from = self.request_date_from
         date_to = self.request_date_to
         calendar = self.resource_calendar_id
+        timezone = ZoneInfo(self.company_id.tz or self.env.user.tz or "UTC")
+
+        def get_local_date(value):
+            return value.replace(tzinfo=UTC).astimezone(timezone).date()
 
         exceptional_dates = set()
         compensatory_dates = set()
 
         for holiday in exceptional_days:
             if holiday.date_from and holiday.date_to:
-                start = holiday.date_from.date()
-                end = holiday.date_to.date()
+                start = get_local_date(holiday.date_from)
+                end = get_local_date(holiday.date_to)
                 exceptional_dates.update(
                     start + timedelta(days=i) for i in range((end - start).days + 1)
                 )
             if holiday.working_start_date and holiday.working_end_date:
+                compensatory_start = get_local_date(holiday.working_start_date)
+                compensatory_end = get_local_date(holiday.working_end_date)
                 compensatory_dates.update(
-                    holiday.working_start_date + timedelta(days=i)
-                    for i in range((holiday.working_end_date - holiday.working_start_date).days + 1)
+                    compensatory_start + timedelta(days=i)
+                    for i in range((compensatory_end - compensatory_start).days + 1)
                 )
 
         for current_date in (

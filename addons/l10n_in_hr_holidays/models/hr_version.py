@@ -18,8 +18,8 @@ class HrVersion(models.Model):
     def _get_version_work_entries_values(self, date_start, date_stop):
         result = super()._get_version_work_entries_values(date_start, date_stop)
 
-        indian_version = self.filtered(lambda version: version.company_id.country_id.code == "IN")
-        if not indian_version:
+        indian_versions = self.filtered(lambda version: version.company_id.country_id.code == "IN")
+        if not indian_versions:
             return result
 
         start_dt = date_start.astimezone(UTC).replace(tzinfo=None) if date_start.tzinfo else date_start
@@ -31,7 +31,7 @@ class HrVersion(models.Model):
 
         grouped_leaves = self.env["hr.leave"]._read_group(
             domain=[
-                ("employee_id", "in", indian_version.employee_id.ids),
+                ("employee_id", "in", indian_versions.employee_id.ids),
                 ("state", "=", "validate"),
                 ("date_from", "<=", end_dt),
                 ("date_to", ">=", start_dt),
@@ -40,13 +40,22 @@ class HrVersion(models.Model):
             aggregates=["id:recordset"],
         )
         leaves_per_employee = dict(grouped_leaves)
+        special_dates_by_version = {}
+        exceptional_work_entries = []
 
-        for version in indian_version:
+        for version in indian_versions:
             tz = ZoneInfo(version._get_tz())
+            version_exceptional_days = exceptional_days.filtered(
+                lambda holiday: holiday.company_id == version.company_id
+                and (not holiday.calendar_id or holiday.calendar_id == version.resource_calendar_id)
+            )
+            if not version_exceptional_days:
+                continue
+
             exceptional_dates = set()
             compensatory_dates = set()
 
-            for holiday in exceptional_days:
+            for holiday in version_exceptional_days:
                 holiday_start = holiday.date_from.replace(tzinfo=UTC).astimezone(tz).date()
                 holiday_end = holiday.date_to.replace(tzinfo=UTC).astimezone(tz).date()
 
@@ -55,24 +64,27 @@ class HrVersion(models.Model):
                     for i in range((holiday_end - holiday_start).days + 1)
                 )
                 if holiday.working_start_date and holiday.working_end_date:
-                    comp_start = holiday.working_start_date.date()
-                    comp_end = holiday.working_end_date.date()
+                    comp_start = holiday.working_start_date.replace(tzinfo=UTC).astimezone(tz).date()
+                    comp_end = holiday.working_end_date.replace(tzinfo=UTC).astimezone(tz).date()
 
                     compensatory_dates.update(
                         comp_start + timedelta(days=i)
                         for i in range((comp_end - comp_start).days + 1)
                     )
 
+            period_start = start_dt.replace(tzinfo=UTC).astimezone(tz).date()
+            period_end = end_dt.replace(tzinfo=UTC).astimezone(tz).date()
+
             version_exceptional_dates = {
                 day
                 for day in exceptional_dates
-                if start_dt.date() <= day <= end_dt.date()
+                if period_start <= day <= period_end
             }
 
             version_compensatory_dates = {
                 day
                 for day in compensatory_dates
-                if start_dt.date() <= day <= end_dt.date()
+                if period_start <= day <= period_end
             }
 
             if not version_exceptional_dates and not version_compensatory_dates:
@@ -80,39 +92,37 @@ class HrVersion(models.Model):
 
             approved_leaves = leaves_per_employee.get(version.employee_id, self.env["hr.leave"])
 
-            leave_type_by_date = {}
+            leave_by_date = {}
             for leave in approved_leaves:
                 leave_start = leave.date_from.replace(tzinfo=UTC).astimezone(tz).date()
                 leave_end = leave.date_to.replace(tzinfo=UTC).astimezone(tz).date()
 
                 for day in version_exceptional_dates:
                     if leave_start <= day <= leave_end:
-                        leave_type_by_date[day] = leave.work_entry_type_id
+                        leave_by_date[day] = leave
 
-            leave_dates = set(leave_type_by_date.keys())
+            leave_dates = set(leave_by_date)
             attendance_dates = version_exceptional_dates - leave_dates
-
-            result = [
-                vals
-                for vals in result
-                if not (
-                    vals["employee_id"] == version.employee_id
-                    and (
-                        vals["date_start"].replace(tzinfo=UTC).astimezone(tz).date()
-                        in version_exceptional_dates
-                        or (
-                            vals["date_start"].replace(tzinfo=UTC).astimezone(tz).date()
-                            in version_compensatory_dates
-                            and vals["work_entry_type_id"].count_as == "working_time"
-                        )
-                    )
-                )
-            ]
+            special_dates_by_version[version.id] = (
+                tz, version_exceptional_dates | version_compensatory_dates,
+            )
 
             if attendance_dates:
-                result += version._l10n_in_get_exceptional_day_attendance_vals(attendance_dates)
+                exceptional_work_entries += version._l10n_in_get_exceptional_day_attendance_vals(attendance_dates)
             if leave_dates:
-                result += version._l10n_in_get_exceptional_day_leave_vals(leave_type_by_date)
+                exceptional_work_entries += version._l10n_in_get_exceptional_day_leave_vals(leave_by_date)
+
+        def is_exceptional_or_compensatory_entry(vals):
+            special_dates = special_dates_by_version.get(vals["version_id"].id)
+            if not special_dates:
+                return False
+            tz, dates = special_dates
+            date_start = vals["date_start"]
+            date_start = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
+            return date_start.astimezone(tz).date() in dates
+
+        result = [vals for vals in result if not is_exceptional_or_compensatory_entry(vals)]
+        result += exceptional_work_entries
         return result
 
     def _l10n_in_get_attendance_intervals_for_date(self, target_date):
@@ -134,7 +144,7 @@ class HrVersion(models.Model):
             return [(line.hour_from, line.hour_to) for line in day_lines]
         return [(0, self._get_hours_per_day() or 8.0)]
 
-    def _l10n_in_get_exceptional_day_leave_vals(self, leave_type_by_date):
+    def _l10n_in_get_exceptional_day_leave_vals(self, leave_by_date):
         """Generate leave work entries for exceptional dates that are covered
         by an approved leave, using the same hour template as a normal
         working day but stamped with the leave's own work entry type.
@@ -142,8 +152,8 @@ class HrVersion(models.Model):
         self.ensure_one()
 
         vals_list = []
-        for leave_date, work_entry_type in leave_type_by_date.items():
-            if not work_entry_type:
+        for leave_date, leave in leave_by_date.items():
+            if not leave.work_entry_type_id:
                 continue
             day_midnight = datetime.combine(leave_date, time.min, tzinfo=ZoneInfo(self._get_tz()))
             for hour_from, hour_to in self._l10n_in_get_attendance_intervals_for_date(leave_date):
@@ -152,17 +162,11 @@ class HrVersion(models.Model):
                 vals_list.append({
                     'date_start': interval_start.astimezone(UTC).replace(tzinfo=None),
                     'date_stop': interval_stop.astimezone(UTC).replace(tzinfo=None),
-                    'work_entry_type_id': work_entry_type,
+                    'work_entry_type_id': leave.work_entry_type_id,
                     'employee_id': self.employee_id,
                     'version_id': self,
                     'company_id': self.company_id,
-                    # Leave work entry types are normally 'count_as': 'absence', which makes
-                    # the base engine recompute the duration from the calendar's own weekly
-                    # schedule instead of the interval above - and that recompute yields 0
-                    # hours on a date the calendar doesn't normally work (e.g. a public
-                    # holiday that fell on a weekly day off). This flag tells
-                    # _generate_work_entries_postprocess_adapt_to_calendar to keep our
-                    # explicit hour_from/hour_to instead.
+                    'leave_ids': leave,
                     '_l10n_in_exceptional_day': True,
                 })
         return vals_list

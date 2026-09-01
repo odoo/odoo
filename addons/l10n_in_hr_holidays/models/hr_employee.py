@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import UTC, datetime, time, timedelta
+from zoneinfo import ZoneInfo
+
 from odoo import api, fields, models
-from datetime import datetime, time, timedelta
 
 
 class HrEmployees(models.Model):
@@ -72,12 +74,19 @@ class HrEmployees(models.Model):
 
         working_dates = set()
         compensatory_dates = set()
+        timezone = ZoneInfo(self.company_id.tz or self.env.user.tz or "UTC")
 
         for holiday in holidays:
-            working_dates |= date_range(holiday.date_from.date(), holiday.date_to.date())
+            working_dates |= date_range(
+                holiday.date_from.replace(tzinfo=UTC).astimezone(timezone).date(),
+                holiday.date_to.replace(tzinfo=UTC).astimezone(timezone).date(),
+            )
 
             if holiday.working_start_date and holiday.working_end_date:
-                compensatory_dates |= date_range(holiday.working_start_date.date(), holiday.working_end_date.date())
+                compensatory_dates |= date_range(
+                    holiday.working_start_date.replace(tzinfo=UTC).astimezone(timezone).date(),
+                    holiday.working_end_date.replace(tzinfo=UTC).astimezone(timezone).date(),
+                )
 
         for date in unusual_days:
             if date in working_dates:
