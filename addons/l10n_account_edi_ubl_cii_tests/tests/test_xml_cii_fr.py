@@ -102,14 +102,14 @@ class TestCIIFR(TestUBLCommon):
         })
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        return super().setup_independent_company(
-            phone='+1 (650) 555-0111',  # [BR-DE-6] "Seller contact telephone number" (BT-42) is required
-            email="info@yourcompany.com",  # [BR-DE-7] The element "Seller contact email address" (BT-43) is required
-            vat='FR23334175221', # [BR-CO-26]-In order for the buyer to automatically ...
-            zip='123', # [BR-DE-4] The element "Seller post code" (BT-38) must be transmitted.
-            **kwargs,
-        )
+    def setup_independent_company(cls):
+        # TODO try remove
+        company = super().setup_independent_company()
+        company.phone = '+1 (650) 555-0111'
+        company.email = "info@yourcompany.com"
+        company.vat = 'FR23334175221'
+        company.zip = '123'
+        return company
 
     ####################################################
     # Test export - import

@@ -56,12 +56,12 @@ class TestUBLDE(TestUBLCommon):
         })
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        return super().setup_independent_company(
-            phone="+49(0) 30 227-0",
-            email="test@xrechnung@com",
-            **kwargs,
-        )
+    def setup_independent_company(cls):
+        # TODO try remove
+        company = super().setup_independent_company()
+        company.phone = "+49(0) 30 227-0"
+        company.email = "test@xrechnung@com"
+        return company
 
     def _detach_attachment(self, attachment):
         # attachments are protected from being edited because of the audit trail

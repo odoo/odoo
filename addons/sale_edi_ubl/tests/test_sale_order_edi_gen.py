@@ -15,6 +15,7 @@ class TestSaleOrderEDIGen(TestSaleCommon):
     def test_sale_order_download_edi(self):
         self.env.company.country_id = self.env.ref('base.be').id
         self.env.company.vat = 'BE0477472701'
+        self.env.company.invoice_terms_html = ''
         self.partner_a.country_id = self.env.ref('base.nl')
         self.partner_a.vat = 'NL123456782B90'
         tax = self.company_data['default_tax_sale']
@@ -46,7 +47,6 @@ class TestSaleOrderEDIGen(TestSaleCommon):
 
         file_content = self.env['sale.edi.xml.ubl_bis3']._export_order(so)
         generated_xml = etree.fromstring(file_content)
-
         with file_open('sale_edi_ubl/tests/data/test_so_edi.xml', 'r') as f:
             current_date = f'{so.create_date.date()}'
             validity_date = f'{so.validity_date}'

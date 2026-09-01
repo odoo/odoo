@@ -1180,7 +1180,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'mail_template': self.env.ref('account.email_template_edi_invoice'),
             'mail_lang': 'en_US',
             'mail_body': wizard.body,
-            'mail_subject': 'company_1_data Invoice (Ref INV/2019/00001)',
+            'mail_subject': f'{self.env.company.name} Invoice (Ref INV/2019/00001)',
             'mail_partner_ids': invoice.partner_id.ids,
             'mail_attachments_widget': [{'id': 'placeholder_INV_2019_00001.pdf', 'name': 'INV_2019_00001.pdf', 'mimetype': 'application/pdf', 'placeholder': True}],
         }

@@ -302,7 +302,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
 
         self.assertSentEmail(
-            '"company_1_data" <hq@example.com>',
+            '"Test Company" <hq@example.com>',
             ['oops_another_bill@example.com'],
             subject=f"{self.env.company.name} - New invoice in {peppol_purchase_journal.display_name} journal",
         )
