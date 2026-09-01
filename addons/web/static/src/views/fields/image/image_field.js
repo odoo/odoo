@@ -124,7 +124,13 @@ export class ImageField extends Component {
             return placeholder;
         }
         const data = this.props.record.data[imageFieldName];
-        const content = data?.content;
+        let content = data?.content;
+        if (!content) {
+            // try to get the content from the real field
+            // instead of the preview field if content is missing
+            content = this.props.record.data[this.props.name]?.content;
+        }
+
         if (this.fieldType === "many2one") {
             this.lastURL = imageUrl(
                 this.props.record.fields[this.props.name].relation,
