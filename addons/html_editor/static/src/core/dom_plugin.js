@@ -479,12 +479,7 @@ export class DomPlugin extends Plugin {
             for (const [nodeIndex, node] of itemNodes.entries()) {
                 // A root marker may still point into the block on its right.
                 const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
-                if (
-                    nodeIndex === 0 &&
-                    isFragment(previousItem) &&
-                    !isBlock(item) &&
-                    isVisible(item)
-                ) {
+                if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
                     const addedNodes = this.splitBeforeInsertion(marker, { preserveInlineContext });
                     insertedNodes.push(...addedNodes);
                 }
