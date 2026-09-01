@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 from odoo import fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
+from odoo.tools import float_compare, float_round
 
 
 class L10nJpTotalAverageCostWizard(models.TransientModel):
@@ -26,6 +26,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
     def action_apply_total_average_cost(self):
         """Recompute the 総平均法 total average cost over the period and write
         it to the product's standard price, so later sales are costed at it."""
+        self.ensure_one()
         if self.date_from > self.date_to:
             raise UserError(self.env._("The start date must not be after the end date."))
         if self.product_ids:
@@ -51,12 +52,12 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             )
         updated_count = 0
         revalued = self.env['product.product']
+        price_precision = self.env['decimal.precision'].precision_get('Product Price')
         unchanged_count = 0
         tz = ZoneInfo(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         period_start = datetime.combine(self.date_from, time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         period_end = datetime.combine(self.date_to, time.max, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-        # sudo: the closing entries a product manager may not read decide whether
-        # this period can still be evaluated
+        # sudo: a product manager does not read the closing entries
         if period_start <= (last_closing := self.env.company.sudo()._get_last_closing_date()):
             raise UserError(
                 self.env._(
@@ -66,6 +67,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     date_from=self.date_from,
                 ),
             )
+        # sudo: nor the moves, purchase lines and orders feeding the evaluation
         moves = self.env['stock.move'].sudo().search_fetch(
             self._get_move_domain(products, period_start, period_end),
             [
@@ -90,6 +92,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         before_period = period_start - timedelta(seconds=1)
         opening_values = products._get_last_product_value(before_period)
         for product in products:
+            # sudo: the quantity at hand is computed from those same moves
             init_qty = product.sudo().with_context(
                 allowed_company_ids=self.env.company.ids,
             )._with_valuation_context().with_context(to_date=before_period).qty_available
@@ -141,14 +144,12 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             init_val = init_qty * opening_cost
             tot_qty = init_qty + purchases_qty - returns_qty
             tot_val = init_val + purchases_val - returns_val
-            if tot_qty > 0 and tot_val > 0:
-                new_cost = float_round(
-                    tot_val / tot_qty,
-                    precision_digits=self.env['decimal.precision'].precision_get('Product Price'),
-                )
-                if new_cost != (old_price := product.standard_price):
+            if product.uom_id.compare(tot_qty, 0) > 0 and product.currency_id.compare_amounts(tot_val, 0) > 0:
+                new_cost = float_round(tot_val / tot_qty, precision_digits=price_precision)
+                if float_compare(new_cost, old_price := product.standard_price, precision_digits=price_precision):
                     product.with_context(disable_auto_revaluation=True).standard_price = new_cost
                     product._change_standard_price({product: old_price}, valuation_date=period_start)
+                    # sudo: core created this history record elevated too
                     product_value = self.env['product.value'].sudo().search(
                         [('product_id', '=', product.id), ('move_id', '=', False)],
                         order='id desc', limit=1,
@@ -167,6 +168,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         if revalued:
             # the issues of the period must leave at the average it produced, so the
             # closing entry is built on it (施行令28条1項1号ハ)
+            # sudo: replaying the valuation writes the value of every move it covers
             revalued.sudo()._correct_inventory_valuation(period_start)
         if updated_count:
             message = self.env._('Updated the standard price of %s products.', updated_count)
